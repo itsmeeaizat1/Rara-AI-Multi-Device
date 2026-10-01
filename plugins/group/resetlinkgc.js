@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from '../../src/lib/nova-error.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from '../../src/lib/rara-error.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'resetlinkgc',
     alias: ["resetlinkgc"],
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
         { const __navText = `✅ *link grup direset*\nLink grup lama sudah tidak berlaku.\nGunakan \`${m.prefix}linkgc\` untuk mendapatkan link baru.`; await m.reply(__navText); }
         
     } catch (err) {
-        m.reply(novaWrap("resetlinkgc", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("resetlinkgc", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

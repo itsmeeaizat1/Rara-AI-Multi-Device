@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { mconverter } from "../../src/scraper/mconverter.js";
 import { downloadContentFromMessage } from "nova";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { mediaInfoCaption, fmtBytes } from "../../src/lib/nova-media-info.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption, fmtBytes } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
   name: "converter",
   alias: ["converter"],
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const targetFormat = m.text?.trim()?.toLowerCase();
 
   if (!m.quoted && !m.isMedia) {
-    return m.reply(novaWrap("converter", [
+    return m.reply(raraWrap("converter", [
       `🔄 *converter*`,
       `Reply file dengan format tujuan`,
       `\`${m.prefix}converter <format>\``,
@@ -57,9 +57,9 @@ async function handler(m, { sock }) {
   }
 
   if (!mediaMessage) {
-    return m.reply(novaWrap("Converter", `❌ Reply file yang mau diconvert!`));
+    return m.reply(raraWrap("Converter", `❌ Reply file yang mau diconvert!`));
   }
-  await m.reply(novaWrap("Converter", `🕕 *MENGUNDUH ғILE...*`));
+  await m.reply(raraWrap("Converter", `🕕 *MENGUNDUH ғILE...*`));
 
   try {
     await m.react("🕒");
@@ -92,11 +92,11 @@ async function handler(m, { sock }) {
     }
 
     if (result.error) {
-      return m.reply(novaWrap("converter", `❌ *gagal convert*\n\n${result.error}`));
+      return m.reply(raraWrap("converter", `❌ *gagal convert*\n\n${result.error}`));
     }
 
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     await m.react("🐣");
     await sock.sendMessage(
@@ -113,16 +113,16 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
     // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-    await m.reply(mediaInfoCaption({ header: "Nova Converter", fields: [
+    await m.reply(mediaInfoCaption({ header: "Rara Converter", fields: [
       { icon: "📥", label: "Input", value: `${String(ext).toUpperCase()} (${fmtBytes(buffer.length)})` },
       { icon: "📤", label: "Output", value: String(targetFormat).toUpperCase() },
-      { icon: "⚙️", label: "Engine", value: "Nova Converter" },
+      { icon: "⚙️", label: "Engine", value: "Rara Converter" },
       { icon: "⬇️", label: "Hasil", value: "Dokumen" },
     ] }));
   } catch (err) {
     await m.react("❌");
     console.error("[Converter] Error:", err.message);
-    return m.reply(novaWrap("converter", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("converter", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

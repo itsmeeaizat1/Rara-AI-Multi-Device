@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // support.js — Sumber tunggal link Join Grup Resmi & Saluran Resmi
 //
 // Dipakai: tombol popup Support (Join Grup Resmi / Ikuti Saluran Resmi),
-// command .gcbot & .channelnovaofficial.
+// command .gcbot & .channelraraofficial.
 //
 // Nilai yang di-set owner via .setsupport disimpan di DB (settings.support)
 // dan MENIMPA default config (config.info.grupwa & config.saluran).
 
 import config from "../../../config.js";
-import { getDatabase } from "../nova-database.js";
+import { getDatabase } from "../rara-database.js";
 
 /**
  * Ambil konfigurasi support terkini (DB override → default config).
@@ -24,12 +24,12 @@ export function getSupport() {
 
   return {
     group: {
-      name: stored.groupName || "Grup Resmi Nova AI",
+      name: stored.groupName || "Grup Resmi Rara AI",
       link: stored.groupLink || config.info?.grupwa || "",
     },
     saluran: {
       id: stored.saluranId || config.saluran?.id || "@newsletter",
-      name: stored.saluranName || config.saluran?.name || "Nova AI Official",
+      name: stored.saluranName || config.saluran?.name || "Rara AI Official",
       link: stored.saluranLink || config.saluran?.link || "",
     },
   };

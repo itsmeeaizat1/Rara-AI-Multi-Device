@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autofailover — Auto-Failover API Router
  *
@@ -30,8 +30,8 @@
  */
 
 import { CronJob } from "cron";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 import { getTioEndpoint, getTioBase } from "../../src/lib/config/env-loader.js";
 
@@ -172,7 +172,7 @@ async function pingApi(url, timeoutMs = 8000) {
     const res = await fetch(url, {
       method: "GET",
       signal: controller.signal,
-      headers: { "User-Agent": "NovaBot/21.12.0" },
+      headers: { "User-Agent": "RaraBot/21.12.0" },
     });
     const elapsed = Date.now() - start;
     clearTimeout(timeout);
@@ -359,7 +359,7 @@ async function checkAllApis(sock) {
         recoveryEvents.forEach((name) => lines.push(`| ${name} back UP`));
       }
       try {
-        await sock.sendMessage(ownerJid, { text: novaBox("API FAILOVER", lines) });
+        await sock.sendMessage(ownerJid, { text: raraBox("API FAILOVER", lines) });
       } catch {}
     }
   }
@@ -464,7 +464,7 @@ async function handler(m, { sock, config: botConfig }) {
         if (h.circuitState === CIRCUIT.OPEN) circuitOpen++;
       });
 
-      const msg = novaBox("AUTO-FAILOVER API ROUTER", [
+      const msg = raraBox("AUTO-FAILOVER API ROUTER", [
         `Status: ${status}`,
         `Interval: ${settings.interval} min`,
         `Routes: ${routeCount} categories`,
@@ -484,7 +484,7 @@ async function handler(m, { sock, config: botConfig }) {
         `| Last check: ${settings.stats.lastCheck || "Belum ada"}`,
       ]);
 
-      await m.reply(msg + "\n\n" + novaBox("COMMANDS", [
+      await m.reply(msg + "\n\n" + raraBox("COMMANDS", [
         `${prefix}autofailover on/off`,
         `${prefix}autofailover now`,
         `${prefix}autofailover routes`,
@@ -507,7 +507,7 @@ async function handler(m, { sock, config: botConfig }) {
       startCronJob(sock);
       // Initial check
       setTimeout(() => checkAllApis(sock), 3000);
-      await m.reply(novaBox("AUTO-FAILOVER", [
+      await m.reply(raraBox("AUTO-FAILOVER", [
         "Status: ON",
         "API health monitoring aktif",
         `Interval: ${settings.interval} min`,
@@ -522,13 +522,13 @@ async function handler(m, { sock, config: botConfig }) {
       settings.enabled = false;
       db.db.write();
       if (cronJob) cronJob.stop();
-      await m.reply(novaBox("AUTO-FAILOVER", ["Status: OFF", "API health monitoring dimatikan"]));
+      await m.reply(raraBox("AUTO-FAILOVER", ["Status: OFF", "API health monitoring dimatikan"]));
       return { handled: true };
     }
 
     // ─── NOW (Health check all) ───
     if (sub === "now") {
-      await m.reply(novaBox("AUTO-FAILOVER", ["Checking all APIs..."]));
+      await m.reply(raraBox("AUTO-FAILOVER", ["Checking all APIs..."]));
       await checkAllApis(sock);
       // Show results
       const allApis = new Set();
@@ -539,7 +539,7 @@ async function handler(m, { sock, config: botConfig }) {
         const circuit = h.circuitState === CIRCUIT.CLOSED ? "" : h.circuitState === CIRCUIT.OPEN ? " [CIRCUIT OPEN]" : " [HALF-OPEN]";
         return `${h.status === "up" ? "UP" : "DOWN"} | ${name} | ${h.latency}ms | uptime: ${uptime !== null ? uptime + "%" : "?"}${circuit}`;
       }).join("\n| ");
-      await m.reply(novaBox("API HEALTH — CHECK RESULT", [`| ${results}`]));
+      await m.reply(raraBox("API HEALTH — CHECK RESULT", [`| ${results}`]));
       return { handled: true };
     }
 
@@ -549,7 +549,7 @@ async function handler(m, { sock, config: botConfig }) {
         const chain = route.apis.map((a, i) => `${i === 0 ? "PRIMARY" : "FALLBACK"}: ${a.name}`).join("\n| ");
         return `${cat}\n| ${chain}`;
       }).join("\n| \n| ");
-      await m.reply(novaBox("FAILOVER — ROUTING TABLE", [routeList]));
+      await m.reply(raraBox("FAILOVER — ROUTING TABLE", [routeList]));
       return { handled: true };
     }
 
@@ -558,7 +558,7 @@ async function handler(m, { sock, config: botConfig }) {
       const category = (args[1] || "").toLowerCase();
       const apis = args.slice(2);
       if (!category || apis.length < 2) {
-        await m.reply(novaBox("AUTO-FAILOVER", [
+        await m.reply(raraBox("AUTO-FAILOVER", [
           `Format: ${prefix}autofailover add <category> <primary_url> <backup_url> [backup2_url]`,
           `Contoh: ${prefix}autofailover add download https://api-wh.fastdl.app/api/ https://api.cobalt.tools/api/json`,
         ]));
@@ -573,7 +573,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.routes[category] = { apis: apiList };
       db.db.write();
       const chain = apiList.map((a, i) => `${i === 0 ? "PRIMARY" : "FALLBACK"}: ${a.name}`).join("\n| ");
-      await m.reply(novaBox("AUTO-FAILOVER", [
+      await m.reply(raraBox("AUTO-FAILOVER", [
         `Route ditambah: ${category}`,
         `| ${chain}`,
       ]));
@@ -584,12 +584,12 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "del") {
       const category = (args[1] || "").toLowerCase();
       if (!settings.routes[category]) {
-        await m.reply(novaBox("AUTO-FAILOVER", [`Category tidak ditemukan: ${category}`]));
+        await m.reply(raraBox("AUTO-FAILOVER", [`Category tidak ditemukan: ${category}`]));
         return { handled: true };
       }
       delete settings.routes[category];
       db.db.write();
-      await m.reply(novaBox("AUTO-FAILOVER", [`Route dihapus: ${category}`]));
+      await m.reply(raraBox("AUTO-FAILOVER", [`Route dihapus: ${category}`]));
       return { handled: true };
     }
 
@@ -597,7 +597,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "interval") {
       const val = parseInt(args[1]);
       if (isNaN(val) || val < 1) {
-        await m.reply(novaBox("AUTO-FAILOVER", [`Interval: ${settings.interval} min`, `Ketik: ${prefix}autofailover interval <menit>`]));
+        await m.reply(raraBox("AUTO-FAILOVER", [`Interval: ${settings.interval} min`, `Ketik: ${prefix}autofailover interval <menit>`]));
         return { handled: true };
       }
       settings.interval = val;
@@ -606,7 +606,7 @@ async function handler(m, { sock, config: botConfig }) {
         if (cronJob) cronJob.stop();
         startCronJob(sock);
       }
-      await m.reply(novaBox("AUTO-FAILOVER", [`Interval: ${val} min`]));
+      await m.reply(raraBox("AUTO-FAILOVER", [`Interval: ${val} min`]));
       return { handled: true };
     }
 
@@ -614,13 +614,13 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "status") {
       const name = args[1];
       if (!name) {
-        await m.reply(novaBox("AUTO-FAILOVER", [`Ketik: ${prefix}autofailover status <api_name>`]));
+        await m.reply(raraBox("AUTO-FAILOVER", [`Ketik: ${prefix}autofailover status <api_name>`]));
         return { handled: true };
       }
       const h = getApiHealth(name);
       const uptime = getUptime(name);
       const circuitLabel = h.circuitState === CIRCUIT.CLOSED ? "CLOSED (healthy)" : h.circuitState === CIRCUIT.OPEN ? "OPEN (down)" : "HALF-OPEN (testing)";
-      await m.reply(novaBox(`API STATUS — ${name}`, [
+      await m.reply(raraBox(`API STATUS — ${name}`, [
         `Status: ${h.status}`,
         `Latency: ${h.latency}ms`,
         `Uptime: ${uptime !== null ? uptime + "%" : "no data"}`,
@@ -644,7 +644,7 @@ async function handler(m, { sock, config: botConfig }) {
         .map(([cat, s]) => `${cat}: ${s.failovers || 0} failovers, last: ${s.lastFailover || "never"}`)
         .join("\n| ") || "Belum ada";
 
-      await m.reply(novaBox("FAILOVER — STATISTIK", [
+      await m.reply(raraBox("FAILOVER — STATISTIK", [
         `Total checks: ${settings.stats.totalChecks}`,
         `Total failovers: ${settings.stats.totalFailovers}`,
         `Total recoveries: ${settings.stats.totalRecoveries}`,
@@ -663,7 +663,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "test") {
       const category = (args[1] || "").toLowerCase();
       if (!settings.routes[category]) {
-        await m.reply(novaBox("AUTO-FAILOVER", [`Category tidak ditemukan: ${category}`]));
+        await m.reply(raraBox("AUTO-FAILOVER", [`Category tidak ditemukan: ${category}`]));
         return { handled: true };
       }
       const route = settings.routes[category];
@@ -674,7 +674,7 @@ async function handler(m, { sock, config: botConfig }) {
         results.push(`${r.ok ? "UP" : "DOWN"} | ${api.name} | ${r.latency}ms | circuit: ${getApiHealth(api.name).circuitState}${available ? "" : " (skipped)"}`);
       }
       const active = getActiveApi(category);
-      await m.reply(novaBox(`FAILOVER TEST — ${category}`, [
+      await m.reply(raraBox(`FAILOVER TEST — ${category}`, [
         `| ${results.join("\n| ")}`,
         "---",
         `Active: ${active?.name || "none"}`,
@@ -686,14 +686,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "reset") {
       const name = args[1];
       if (!name) {
-        await m.reply(novaBox("AUTO-FAILOVER", [`Ketik: ${prefix}autofailover reset <api_name>`]));
+        await m.reply(raraBox("AUTO-FAILOVER", [`Ketik: ${prefix}autofailover reset <api_name>`]));
         return { handled: true };
       }
       const h = getApiHealth(name);
       h.circuitState = CIRCUIT.CLOSED;
       h.circuitUntil = 0;
       h.failCount = 0;
-      await m.reply(novaBox("AUTO-FAILOVER", [
+      await m.reply(raraBox("AUTO-FAILOVER", [
         `Circuit breaker reset: ${name}`,
         `State: CLOSED`,
         `Fail count: 0`,
@@ -707,24 +707,24 @@ async function handler(m, { sock, config: botConfig }) {
       if (action === "on") {
         settings.notifyOwner = true;
         db.db.write();
-        await m.reply(novaBox("AUTO-FAILOVER", ["Notify: ON", "Owner akan dikabari saat failover/recovery"]));
+        await m.reply(raraBox("AUTO-FAILOVER", ["Notify: ON", "Owner akan dikabari saat failover/recovery"]));
       } else if (action === "off") {
         settings.notifyOwner = false;
         db.db.write();
-        await m.reply(novaBox("AUTO-FAILOVER", ["Notify: OFF"]));
+        await m.reply(raraBox("AUTO-FAILOVER", ["Notify: OFF"]));
       } else {
-        await m.reply(novaBox("AUTO-FAILOVER", [`Notify: ${settings.notifyOwner ? "ON" : "OFF"}`, `Ketik: ${prefix}autofailover notify on/off`]));
+        await m.reply(raraBox("AUTO-FAILOVER", [`Notify: ${settings.notifyOwner ? "ON" : "OFF"}`, `Ketik: ${prefix}autofailover notify on/off`]));
       }
       return { handled: true };
     }
 
     // ─── UNKNOWN ───
-    await m.reply(novaBox("AUTO-FAILOVER", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autofailover untuk dashboard`]));
+    await m.reply(raraBox("AUTO-FAILOVER", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autofailover untuk dashboard`]));
     return { handled: true };
 
   } catch (error) {
     console.error("[autofailover] handler error:", error.message);
-    await m.reply(novaError("AutoFailover", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("AutoFailover", "Gagal nih, coba lagi ya"));
     return { handled: true };
   }
 }

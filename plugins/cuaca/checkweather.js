@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import {
   fetchWeather,
   formatWeatherMessage,
   getWeatherStatus,
   resolveWeatherLocation,
-} from "../../src/lib/nova-weather-scheduler.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-weather-scheduler.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "cekcuaca",
@@ -37,9 +37,9 @@ async function handler(m, { sock }) {
       { label: "Sekarang" },
     );
     const _lines = message.split("\n");
-    return await m.reply(novaWrap("Cek Cuaca", _lines));
+    return await m.reply(raraWrap("Cek Cuaca", _lines));
   } catch (error) {
-    return m.reply(novaWrap("cekcuaca", [
+    return m.reply(raraWrap("cekcuaca", [
         "Gagal ambil cuaca nih",
         error.message,
         "",

@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import os from "os";
 import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
-import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
-import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
+import { getWeatherFooter } from "../../src/lib/rara-weather-footer.js";
+import { sendMenuCard } from "../../src/lib/rara-menu-card.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
-import { getPluginCount, getCategories } from "../../src/lib/nova-plugins.js";
-import { getCaseCount } from "../../case/nova.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, toSC } from "../../src/lib/nova-menu-style.js";
+import { getPluginCount, getCategories } from "../../src/lib/rara-plugins.js";
+import { getCaseCount } from "../../case/rara.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, toSC } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "info",
@@ -74,7 +74,7 @@ function getDiskUsage() {
 async function handler(m, { sock, config: botConfig, db, uptime }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
-    const botName = botConfig.bot?.name || "Nova AI WhatsApp Bot";
+    const botName = botConfig.bot?.name || "Rara AI WhatsApp Bot";
 
     const dbInstance = getDatabase();
     const users = dbInstance?.db?.data?.users || {};
@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     // gak cuma grup yang fiturnya pernah diset manual — cache 5 mnt + fallback db
     let totalGroups = Object.keys(groups).length;
     try {
-      const { countGroupsLive } = await import("../../src/lib/nova-group-registry.js");
+      const { countGroupsLive } = await import("../../src/lib/rara-group-registry.js");
       const live = await countGroupsLive(sock, dbInstance);
       if (live > 0) totalGroups = live;
     } catch {}
@@ -157,7 +157,7 @@ ${disk.ok ? `*${toSC("Disk")}:* ${formatBytes(disk.used)} / ${formatBytes(disk.t
 *${toSC("Uptime Server")}:* ${serverUptime}
 *${toSC("Uptime Bot")}:* ${botUptime}
 
-${toSC("Nova AI WhatsApp Bot")}`;
+${toSC("Rara AI WhatsApp Bot")}`;
 
     // FIX OWNER 2026-09-07: card info = plain text + thumbnail externalAdReply
     // (payload interactive gak dirender di client penerima — "versi WA lama")
@@ -172,7 +172,7 @@ ${toSC("Nova AI WhatsApp Bot")}`;
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[info] handler error:", e.message);
-    try { await m.reply(novaError("Info", "Ada error nih, coba lagi ya")); } catch {}
+    try { await m.reply(raraError("Info", "Ada error nih, coba lagi ya")); } catch {}
   }
 
   return { handled: true };

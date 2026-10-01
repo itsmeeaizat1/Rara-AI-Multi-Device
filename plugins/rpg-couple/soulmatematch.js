@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Soulmatch (Cek compatibility berdasarkan RPG stats)
 
-import { getRpgData } from "../../src/lib/nova-rpg-service.js";
-import { getCintaData } from "../../src/lib/nova-rpg-cinta.js";
-import { novaGameBox, gameCTA, novaRpgBox, novaRpgGuide } from "../../src/lib/nova-games.js";
+import { getRpgData } from "../../src/lib/rara-rpg-service.js";
+import { getCintaData } from "../../src/lib/rara-rpg-cinta.js";
+import { raraGameBox, gameCTA, raraRpgBox, raraRpgGuide } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "soulmatematch",
@@ -63,11 +63,11 @@ async function handler(m, { sock }) {
   try {
     let targetJid = m.mentionedJid?.[0] || (m.quoted ? m.quoted.sender : null);
     if (!targetJid) {
-      return m.reply(novaRpgGuide("soulmatematch", "Cek compatibility kamu sama seseorang berdasarkan RPG stats!", `${m.prefix}soulmatematch @tag`));
+      return m.reply(raraRpgGuide("soulmatematch", "Cek compatibility kamu sama seseorang berdasarkan RPG stats!", `${m.prefix}soulmatematch @tag`));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(novaRpgBox("Soulmate Match", "Cek compatibility sama diri sendiri? 100% narcisist!", "warn"));
+      return m.reply(raraRpgBox("Soulmate Match", "Cek compatibility sama diri sendiri? 100% narcisist!", "warn"));
     }
 
     const myRpg = getRpgData(m);
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
     if (myCinta.spouse === targetJid) {
       soulLines.push(`│ • 💕 Bonus +15 karena sudah berpacaran (Affection: ${myCinta.affection || 0})`);
     }
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "rpg cinta", icon: "💞",
       flavor: `${tier.emoji} *KECOCOKAN ${score}%!*`,
       body: soulLines.join("\n"),

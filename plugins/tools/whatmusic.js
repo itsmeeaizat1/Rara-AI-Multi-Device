@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import { downloadMediaMessage } from "nova";
-import te from "../../src/lib/nova-error.js";
-import novaApi from "../../src/lib/nova-apimanager.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import raraApi from "../../src/lib/rara-apimanager.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "musikapaini",
@@ -18,10 +18,10 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// Upload via engine nova-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
+// Upload via engine rara-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
 // FIX laten: dulu balikin OBJECT (res.data) padahal call site butuh URL STRING
 // (neoxr whatMusic kirim [object Object] ke param url)
-import { uploadImage } from "../../src/lib/nova-uploader.js";
+import { uploadImage } from "../../src/lib/rara-uploader.js";
 
 async function uploadTo0x0(buffer, filename) {
   return uploadImage(buffer, filename);
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   }
 
   if (!audioBuffer) {
-    return m.reply(novaWrap("musikapaini", [
+    return m.reply(raraWrap("musikapaini", [
       `🎵 *MUsIK APA INI?*`,
       `Identifikasi lagu dari audio`,
       ``,
@@ -71,12 +71,12 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const audioUrl = await uploadTo0x0(audioBuffer, filename);
 
-    await m.reply(novaWrap("Musikapaini", "🔍 *mengidentifikasi...*\n\nMencari info lagu..."));
+    await m.reply(raraWrap("Musikapaini", "🔍 *mengidentifikasi...*\n\nMencari info lagu..."));
 
-    const data = await novaApi.neoxr.whatMusic(
+    const data = await raraApi.neoxr.whatMusic(
       {
         url: audioUrl,
-        apikey: config.APIkey?.neoxr || "Milik-Bot-NovaMD",
+        apikey: config.APIkey?.neoxr || "Milik-Bot-RaraMD",
       },
       {
         timeout: 60000,
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data?.status || !data?.data) {
-      return m.reply(novaWrap("musikapaini", "❌ *gagal*\n\nLagu tidak dikenali atau API error"));
+      return m.reply(raraWrap("musikapaini", "❌ *gagal*\n\nLagu tidak dikenali atau API error"));
     }
 
     const music = data.data;
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(m.chat, msgContent, { quoted: m });
   } catch (error) {
     await m.react("❌");
-    m.reply(novaWrap("musikapaini", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("musikapaini", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

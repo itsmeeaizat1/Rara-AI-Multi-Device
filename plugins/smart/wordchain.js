@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "wordchain",
@@ -72,7 +72,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "start" || sub === "mulai") {
     if (game && game.status === "active") {
-      await m.reply(novaWrap("Word Chain", "Game masih aktif. Ketik " + prefix + "wordchain stop."));
+      await m.reply(raraWrap("Word Chain", "Game masih aktif. Ketik " + prefix + "wordchain stop."));
       return { handled: true };
     }
     const startWord = WORDS[Math.floor(Math.random() * WORDS.length)];
@@ -86,7 +86,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       turnCount: 0,
     };
     saveConfig(db, gid, data);
-    await m.reply(novaWrap("Word Chain", [
+    await m.reply(raraWrap("Word Chain", [
       "GAME DIMULAI!",
       "",
       "Kata pertama: " + startWord,
@@ -103,15 +103,15 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "play" || sub === "jawab" || sub === "lanjut") {
     const word = args.slice(2).join(" ").trim().toLowerCase();
     if (!game || game.status !== "active") {
-      await m.reply(novaWrap("Word Chain", "Belum ada game. Ketik " + prefix + "wordchain start."));
+      await m.reply(raraWrap("Word Chain", "Belum ada game. Ketik " + prefix + "wordchain start."));
       return { handled: true };
     }
     if (!word) {
-      await m.reply(novaWrap("Word Chain", "Ketik kata: " + prefix + "wordchain play <kata>"));
+      await m.reply(raraWrap("Word Chain", "Ketik kata: " + prefix + "wordchain play <kata>"));
       return { handled: true };
     }
     if (!isValidWord(word)) {
-      await m.reply(novaError("WordChain", "Kata gak valid nih! Hanya huruf, min 2 karakter"));
+      await m.reply(raraError("WordChain", "Kata gak valid nih! Hanya huruf, min 2 karakter"));
       return { handled: true };
     }
     if (game.lastUser === m.sender) {
@@ -119,11 +119,11 @@ async function handler(m, { sock, db, config: botConfig }) {
     const expected = getLastChar(game.lastWord);
     const actual = getFirstChar(word);
     if (actual !== expected) {
-      await m.reply(novaWrap("Word Chain", "Salah! Kata harus mulai dari huruf " + expected.toUpperCase() + "\nKata kamu: " + word + " (mulai dari " + actual.toUpperCase() + ")"));
+      await m.reply(raraWrap("Word Chain", "Salah! Kata harus mulai dari huruf " + expected.toUpperCase() + "\nKata kamu: " + word + " (mulai dari " + actual.toUpperCase() + ")"));
       return { handled: true };
     }
     if (game.chain.includes(word)) {
-      await m.reply(novaWrap("Word Chain", "Kata \"" + word + "\" sudah dipakai sebelumnya! Carikan kata lain."));
+      await m.reply(raraWrap("Word Chain", "Kata \"" + word + "\" sudah dipakai sebelumnya! Carikan kata lain."));
       return { handled: true };
     }
     game.chain.push(word);
@@ -134,7 +134,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     game.scores[m.sender]++;
     saveConfig(db, gid, game);
     const nextChar = getLastChar(word).toUpperCase();
-    await m.reply(novaWrap("Word Chain", [
+    await m.reply(raraWrap("Word Chain", [
       "Benar! +" + 1 + " poin",
       "@" + m.sender.split("@")[0] + ": " + word,
       "Chain: " + game.chain.length + " kata",
@@ -146,39 +146,39 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "scores" || sub === "skor") {
     if (!game) {
-      await m.reply(novaWrap("Word Chain", "Belum ada game."));
+      await m.reply(raraWrap("Word Chain", "Belum ada game."));
       return { handled: true };
     }
     const sorted = Object.entries(game.scores).sort((a, b) => b[1] - a[1]);
     const list = sorted.map(([jid, score], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + score + " poin").join("\n") || "(kosong)";
-    await m.reply(novaWrap("Word Chain Scores", "Chain: " + game.chain.length + " kata\n\n" + list), { mentions: sorted.map(([jid]) => jid) });
+    await m.reply(raraWrap("Word Chain Scores", "Chain: " + game.chain.length + " kata\n\n" + list), { mentions: sorted.map(([jid]) => jid) });
     return { handled: true };
   }
 
   if (sub === "history" || sub === "riwayat") {
     if (!game) {
-      await m.reply(novaWrap("Word Chain", "Belum ada game."));
+      await m.reply(raraWrap("Word Chain", "Belum ada game."));
       return { handled: true };
     }
     const recent = game.chain.slice(-10);
     const list = recent.map((w, i) => (game.chain.length - recent.length + i + 1) + ". " + w).join("\n");
-    await m.reply(novaWrap("Word Chain History", "Kata terakhir (" + game.chain.length + " total):\n" + list));
+    await m.reply(raraWrap("Word Chain History", "Kata terakhir (" + game.chain.length + " total):\n" + list));
     return { handled: true };
   }
 
   if (sub === "stop" || sub === "batal") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Word Chain", "Khusus admin/owner."));
+      await m.reply(raraWrap("Word Chain", "Khusus admin/owner."));
       return { handled: true };
     }
     if (!game) {
-      await m.reply(novaWrap("Word Chain", "Belum ada game."));
+      await m.reply(raraWrap("Word Chain", "Belum ada game."));
       return { handled: true };
     }
     const sorted = Object.entries(game.scores).sort((a, b) => b[1] - a[1]);
     const winner = sorted[0] ? "@" + sorted[0][0].split("@")[0] : "-";
     const list = sorted.map(([jid, score], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + score).join("\n") || "(kosong)";
-    await m.reply(novaWrap("Word Chain Selesai", [
+    await m.reply(raraWrap("Word Chain Selesai", [
       "Chain terpanjang: " + game.chain.length + " kata",
       "Pemenang: " + winner,
       "",
@@ -191,10 +191,10 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "status" || sub === "cek" || !sub) {
     if (!game) {
-      await m.reply(novaWrap("Word Chain", "Belum ada game.\n" + prefix + "wordchain start untuk mulai."));
+      await m.reply(raraWrap("Word Chain", "Belum ada game.\n" + prefix + "wordchain start untuk mulai."));
       return { handled: true };
     }
-    await m.reply(novaWrap("Word Chain", [
+    await m.reply(raraWrap("Word Chain", [
       "Status: " + game.status,
       "Kata terakhir: " + game.lastWord,
       "Huruf lanjutan: " + getLastChar(game.lastWord).toUpperCase(),
@@ -204,7 +204,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Word Chain", [
+  await m.reply(raraWrap("Word Chain", [
     "WORD CHAIN - SAMBUNG KATA",
     "",
     prefix + "wordchain start - mulai game",

@@ -7,13 +7,13 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { buildAbsenMeter, countGroupMembers } = await import(R + "/src/lib/nova-absen-meter.js");
+const { buildAbsenMeter, countGroupMembers } = await import(R + "/src/lib/rara-absen-meter.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s)).toLowerCase();
 
-const DB_DIR = "/tmp/nova-absen-db-" + Date.now();
+const DB_DIR = "/tmp/rara-absen-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const { handler: absenHandler } = await import(R + "/plugins/group/absen.js");

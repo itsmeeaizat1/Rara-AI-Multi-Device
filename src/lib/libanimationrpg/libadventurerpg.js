@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libadventurerpg.js — LIB ANIMASI EMOJI-GRID khusus Adventure / petualangan
 // (upgrade owner 28 Sep 2026 #2: "petualangan = animasinya PALING BANYAK" — cutscene 1 babak 6 frame
 //  → EKSPEDISI MULTI-BABAK ~12-13 frame: PERSIAPAN → PERJALANAN peta kompas → BABAK KHAS EVENT
@@ -8,7 +8,7 @@
 // KHUSUS adventure (aturan "beda game beda animasi"). Isi MURNI KODE ANIMASI (pure dari ctx, gak import plugin).
 // Fallback: playAdventureCinematic false → playPetaAnim (jalur perjalanan doang) → animAdventure (teks lama).
 
-import { editFramesAnim, editSceneAnim } from "../nova-anim-runner.js";
+import { editFramesAnim, editSceneAnim } from "../rara-anim-runner.js";
 
 const ANIM_BASE = process.env.ADVENTURE_CINEMATIC_MS !== undefined ? Number(process.env.ADVENTURE_CINEMATIC_MS) : 700;
 let _animBaseMs = ANIM_BASE;

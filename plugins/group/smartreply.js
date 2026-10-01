@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText, novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { tipText, raraWrap, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
 import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
@@ -147,7 +147,7 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
 
     if (!action) {
-      await m.reply(novaGuide('SmartReply', 'Fitur AI auto-jawab FAQ grup. Set keyword + context, AI akan jawab otomatis!', `${prefix}smartreply add jam buka|Toko buka 8-21`));
+      await m.reply(raraGuide('SmartReply', 'Fitur AI auto-jawab FAQ grup. Set keyword + context, AI akan jawab otomatis!', `${prefix}smartreply add jam buka|Toko buka 8-21`));
       return { handled: true };
     }
 
@@ -158,7 +158,7 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.enabled = true;
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        novaWrap("Smart Reply", [`Status: *aktif*`,
+        raraWrap("Smart Reply", [`Status: *aktif*`,
           `Provider: *${smartReply.provider.toUpperCase()}*`,
           `Topics: *${smartReply.topics.length}*`,
           `Bot akan auto-jawab pertanyaan yang match keyword`].join("\n")) + "\n" +
@@ -172,7 +172,7 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.enabled = false;
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        novaWrap("Smart Reply", [`Status: *nonaktif*`,
+        raraWrap("Smart Reply", [`Status: *nonaktif*`,
           `Topics tersimpan, bisa diaktifkan lagi`].join("\n")) + "\n" +
         tipText(`Aktifkan: ${prefix}smartreply on`);
 
@@ -185,7 +185,7 @@ async function handler(m, { sock, config: botConfig }) {
       const pipeIdx = fullBody.indexOf("|");
 
       if (pipeIdx === -1) {
-        await m.reply(novaGuide('SmartReply', 'Format tidak sesuai. Pisahkan keyword dan context dengan tanda |', `${prefix}smartreply add jam buka|Toko buka 8-21`));
+        await m.reply(raraGuide('SmartReply', 'Format tidak sesuai. Pisahkan keyword dan context dengan tanda |', `${prefix}smartreply add jam buka|Toko buka 8-21`));
         return { handled: true };
       }
 
@@ -193,7 +193,7 @@ async function handler(m, { sock, config: botConfig }) {
       const context = fullBody.substring(pipeIdx + 1).trim();
 
       if (!keyword || !context) {
-        await m.reply(novaNoInput('SmartReply', 'Keyword dan context tidak boleh kosong ya'));
+        await m.reply(raraNoInput('SmartReply', 'Keyword dan context tidak boleh kosong ya'));
         return { handled: true };
       }
 
@@ -210,7 +210,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        novaWrap("Smart Reply", [`Keyword: *${keyword}*`,
+        raraWrap("Smart Reply", [`Keyword: *${keyword}*`,
           `Context: *${context.slice(0, 80)}${context.length > 80 ? "..." : ""}*`,
           `Total topics: *${smartReply.topics.length}*`,
           `${smartReply.enabled ? "" : `Catatan: Smart Reply belum aktif, ketik ${prefix}smartreply on`}`].join("\n")) + "\n" +
@@ -224,7 +224,7 @@ async function handler(m, { sock, config: botConfig }) {
       const keyword = args.slice(1).join(" ").trim().toLowerCase();
 
       if (!keyword) {
-        await m.reply(novaNoInput('SmartReply', 'Sebutkan keyword yang ingin dihapus dari smart reply'));
+        await m.reply(raraNoInput('SmartReply', 'Sebutkan keyword yang ingin dihapus dari smart reply'));
         return { handled: true };
       }
 
@@ -233,14 +233,14 @@ async function handler(m, { sock, config: botConfig }) {
       );
 
       if (idx === -1) {
-        await m.reply(novaEmpty('SmartReply', `Keyword '${keyword}' gak ketemu di daftar topic grup ini`));
+        await m.reply(raraEmpty('SmartReply', `Keyword '${keyword}' gak ketemu di daftar topic grup ini`));
         return { handled: true };
       }
 
       smartReply.topics.splice(idx, 1);
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        novaWrap("Smart Reply", [`Keyword: *${keyword}*`,
+        raraWrap("Smart Reply", [`Keyword: *${keyword}*`,
           `Sisa topics: *${smartReply.topics.length}*`].join("\n")) + "\n" +
         tipText(`Lihat daftar: ${prefix}smartreply list`);
 
@@ -250,7 +250,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (action === "list") {
       if (!smartReply.topics || smartReply.topics.length === 0) {
-        await m.reply(novaEmpty('SmartReply', 'Belum ada topic AI di grup ini. Yuk tambah pakai .smartreply add'));
+        await m.reply(raraEmpty('SmartReply', 'Belum ada topic AI di grup ini. Yuk tambah pakai .smartreply add'));
         return { handled: true };
       }
 
@@ -259,7 +259,7 @@ async function handler(m, { sock, config: botConfig }) {
       );
 
       const text =
-        novaWrap("Smart Reply", [`Status: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`,
+        raraWrap("Smart Reply", [`Status: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`,
           `Provider: *${smartReply.provider.toUpperCase()}*`,
           `Total: *${smartReply.topics.length}* topics`,
           ``,
@@ -274,14 +274,14 @@ async function handler(m, { sock, config: botConfig }) {
       const model = args[1]?.toLowerCase();
 
       if (!model || !["puter", "tio"].includes(model)) {
-        await m.reply(novaGuide('SmartReply', `Pilih model provider AI: puter / tio\nModel saat ini: ${smartReply.provider.toUpperCase()}`, `${prefix}smartreply model puter`));
+        await m.reply(raraGuide('SmartReply', `Pilih model provider AI: puter / tio\nModel saat ini: ${smartReply.provider.toUpperCase()}`, `${prefix}smartreply model puter`));
         return { handled: true };
       }
 
       smartReply.provider = model;
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        novaWrap("Smart Reply", [`Provider: *${model.toUpperCase()}*`,
+        raraWrap("Smart Reply", [`Provider: *${model.toUpperCase()}*`,
           `${model === "tio" ? "Pastikan API key Tio AI sudah di-set di config" : "Free, no API key needed"}`].join("\n")) + "\n" +
         tipText("AI akan menggunakan provider ini untuk auto-reply");
 
@@ -293,7 +293,7 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.topics = [];
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        novaWrap("Smart Reply", [`Semua topic dihapus`,
+        raraWrap("Smart Reply", [`Semua topic dihapus`,
           `Smart Reply: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`].join("\n")) + "\n" +
         tipText(`Tambah baru: ${prefix}smartreply add <keyword>|<context>`);
 
@@ -304,7 +304,7 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     console.error("[SmartReply Error]", error);
-    await m.reply(novaError('SmartReply', `Gagal memproses smart reply: ${error.message || "Terjadi kesalahan"}`));
+    await m.reply(raraError('SmartReply', `Gagal memproses smart reply: ${error.message || "Terjadi kesalahan"}`));
     return { handled: true };
   }
 }

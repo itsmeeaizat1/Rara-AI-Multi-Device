@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Duel — PvP 1v1 against another player
 
 import {
   ensureRpg, saveRpg, getEquipStats, addExp, addGold,
   pvpResult, checkCooldown, setCooldown, formatTime,
-  getCash} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
+  getCash} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animBattle, rpgSleep } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "duel",
@@ -37,37 +37,37 @@ async function handler(m, { sock }) {
 
     if (!targetJid) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("duelrpg", "Tag lawan yang mau kamu duel!\nContoh: .duelrpg @user", "warn"));
+      return m.reply(raraRpgBox("duelrpg", "Tag lawan yang mau kamu duel!\nContoh: .duelrpg @user", "warn"));
     }
 
     if (targetJid === m.sender) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("duelrpg", "Nggak bisa duel sama diri sendiri 😅", "warn"));
+      return m.reply(raraRpgBox("duelrpg", "Nggak bisa duel sama diri sendiri 😅", "warn"));
     }
 
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("duelrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("duelrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (rpg.level < MIN_LEVEL) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("duelrpg", `Butuh minimal *Level ${MIN_LEVEL}* untuk duel. Level kamu: *${rpg.level}*.`, "warn"));
+      return m.reply(raraRpgBox("duelrpg", `Butuh minimal *Level ${MIN_LEVEL}* untuk duel. Level kamu: *${rpg.level}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastPvP");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("duelrpg", `Cooldown PvP tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("duelrpg", `Cooldown PvP tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     // Init lawan
     const targetRpg = ensureRpg({ sender: targetJid }, targetJid.split("@")[0]);
-    if (!targetRpg) return m.reply(novaRpgBox("duelrpg", "Lawan belum terdaftar di RPG.", "warn"));
+    if (!targetRpg) return m.reply(raraRpgBox("duelrpg", "Lawan belum terdaftar di RPG.", "warn"));
 
     if (targetRpg.level < MIN_LEVEL) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("duelrpg", `Lawan belum *Level ${MIN_LEVEL}*. Level lawan: *${targetRpg.level}*.`, "warn"));
+      return m.reply(raraRpgBox("duelrpg", `Lawan belum *Level ${MIN_LEVEL}*. Level lawan: *${targetRpg.level}*.`, "warn"));
     }
 
     // Combat stats
@@ -187,7 +187,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     // Combat log (5 terakhir)
     const recentLog = log.slice(-5);
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "duelrpg", icon: "⚔️",
       flavor: draw ? "🤝 *DUEL SERI!*" : iWon ? "🏆 *MENANG!*" : "💀 *KALAH!*",
       body: [
@@ -219,7 +219,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("duelrpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("duelrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("duelrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

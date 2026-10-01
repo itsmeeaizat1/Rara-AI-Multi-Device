@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .afk v2 — interaktif (request owner 13 Sep 2026: "di .afk g ada wktu
 // kpan user mulai afk dan wktu brapa lama user afknya gt"):
 // kartu lengkap jam mulai + durasi + alasan + nama, persist di db
 // (selamat restart), subcommand cek/list/off, auto jawab yang mention.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   getAfkUser, setAfkUser, removeAfkUser, isUserAfk, loadAfkMap,
   formatWib, formatDuration,
-} from "../../src/lib/nova-afk.js";
-import { runLiveTicker } from "../../src/lib/nova-countdown.js";
+} from "../../src/lib/rara-afk.js";
+import { runLiveTicker } from "../../src/lib/rara-countdown.js";
 
 const pluginConfig = {
   name: 'afk',
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     if (Array.isArray(m.mentionedJid) && m.mentionedJid.length) target = m.mentionedJid[0];
     if (!target && m.quoted?.sender) target = m.quoted.sender;
     if (!target) {
-      return m.reply(novaWrap("Cek AFK", [
+      return m.reply(raraWrap("Cek AFK", [
         "Cek status AFK orang lain:",
         "• Reply pesan dia + `.afk cek`",
         "• Atau tag dia + `.afk cek @user`",
@@ -45,14 +45,14 @@ async function handler(m, { sock }) {
     }
     const info = getAfkUser(target);
     if (!info) {
-      return m.reply(novaWrap("Cek AFK", [
+      return m.reply(raraWrap("Cek AFK", [
         `\`@${target.split("@")[0]}\` gak lagi AFK — dia lagi ada di sini.`,
       ].join("\n")), { mentions: [target] });
     }
     const tnum = target.split("@")[0];
     // 🔹 LIVE TICKER (13 Sep): durasi AFK nge-tick hidup di kartu — bukan
     // angka beku. Kartu di-edit tiap detik ±12 dtk lalu settle final.
-    const card = (durasiMs) => novaWrap("Cek AFK", [
+    const card = (durasiMs) => raraWrap("Cek AFK", [
       `👤 Nama : ${info.name || "@" + tnum}`,
       `⏰ Mulai : ${formatWib(info.since)}`,
       `⏱️ Durasi : ${formatDuration(durasiMs)}`,
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
       mode: "up", sinceTs: Number(info.since), upRunMs: Number(process.env.NOVAFK_TICKER_MS) || 12000,
       initialCard: card(Date.now() - info.since),
       tickCard: (st) => card(st.elapsedMs),
-      finalCard: (st) => novaWrap("Cek AFK", [
+      finalCard: (st) => raraWrap("Cek AFK", [
         `👤 Nama : ${info.name || "@" + tnum}`,
         `⏰ Mulai : ${formatWib(info.since)}`,
         `⏱️ Durasi : ${formatDuration(st.elapsedMs)} (dan terus berjalan)`,
@@ -83,9 +83,9 @@ async function handler(m, { sock }) {
       return `• ${n} — ${formatWib(info.since)} (${formatDuration(now - info.since)})`;
     });
     if (!rows.length) {
-      return m.reply(novaWrap("Daftar AFK", "Belum ada yang AFK sekarang — semua lagi online!", "info"));
+      return m.reply(raraWrap("Daftar AFK", "Belum ada yang AFK sekarang — semua lagi online!", "info"));
     }
-    return m.reply(novaWrap("Daftar AFK", [
+    return m.reply(raraWrap("Daftar AFK", [
       `${rows.length} orang lagi AFK:`,
       ``,
       ...rows,
@@ -96,9 +96,9 @@ async function handler(m, { sock }) {
   if (sub === "off" || sub === "stop" || sub === "batal") {
     const old = removeAfkUser(m.sender);
     if (!old) {
-      return m.reply(novaWrap("AFK", "Kamu emang gak lagi AFK — santai.", "info"));
+      return m.reply(raraWrap("AFK", "Kamu emang gak lagi AFK — santai.", "info"));
     }
-    return m.reply(novaWrap("AFK Dibatalkan", [
+    return m.reply(raraWrap("AFK Dibatalkan", [
       `\`AFK kamu dibatalkan\``,
       `⏰ Tadi mulai : ${formatWib(old.since)}`,
       `⏱️ Durasi : ${formatDuration(Date.now() - old.since)}`,
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
   const { entry, prev } = setAfkUser(m.sender, { reason, name: label, chat: m.chat });
 
   if (prev) {
-    return m.reply(novaWrap("AFK Diperbarui", [
+    return m.reply(raraWrap("AFK Diperbarui", [
       `👤 Nama : ${label}`,
       `📝 Alasan Baru : ${reason}`,
       `⏰ Mulai Baru : ${formatWib(entry.since)}`,
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
 
   // 🔹 LIVE TICKER (13 Sep): kartu AFK aktif nunjukin durasi yang nge-tick
   // hidup ±12 dtk — keliatan timer-nya jalan beneran, bukan kartu beku.
-  const setCard = (durasiMs) => novaWrap("AFK Aktif", [
+  const setCard = (durasiMs) => raraWrap("AFK Aktif", [
     `👤 Nama : ${label}`,
     `📝 Alasan : ${reason}`,
     `⏰ Mulai : ${formatWib(entry.since)}`,

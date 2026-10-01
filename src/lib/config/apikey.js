@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // apikey.js — PUSAT SEMUA API KEY & TOKEN
 // Single source of truth untuk semua key/sandi/credentials
 // Key sensitif di sini, config non-key di file lain
@@ -9,7 +9,7 @@
 import { getApiKeys, getTioKey, getPteroConfig } from "./env-loader.js";
 
 // PUSATISASI 17 Sep 2026 (request owner): SEMUA key sekarang ada di
-// src/lib/apikey/apikeys.json (section aiSatuan/aiMultiprovider/novaai/
+// src/lib/apikey/apikeys.json (section aiSatuan/aiMultiprovider/raraai/
 // scraper/fitur). File ini CUMA mapping — gak ada key hardcoded di sini
 // lagi. Ganti key = edit apikeys.json → .reloadkey / restart.
 

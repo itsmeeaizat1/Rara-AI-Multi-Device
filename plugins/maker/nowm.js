@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import sharp from "sharp";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "nowm",
@@ -224,7 +224,7 @@ async function handler(m, { sock }) {
     qmsg.mimetype?.includes("image");
 
   if (!isImage) {
-    return m.reply(novaWrap("nowm", [
+    return m.reply(raraWrap("nowm", [
       "Hapus watermark, logo, teks, atau object dari gambar.",
       "",
       "📌 Format:",
@@ -247,7 +247,7 @@ async function handler(m, { sock }) {
   try {
     const imageBuffer = await qmsg.download();
     if (!imageBuffer) {
-      return m.reply(novaWrap("nowm", "Gagal download gambar. Coba lagi."));
+      return m.reply(raraWrap("nowm", "Gagal download gambar. Coba lagi."));
     }
 
     // Resize if too large (ClipDrop max 16MP, but keep small for speed)
@@ -279,7 +279,7 @@ async function handler(m, { sock }) {
           : status === 401
             ? "API key tidak valid. Fallback ke local mode."
             : "ClipDrop error (" + (apiErr.message || "unknown") + "). Fallback ke local mode.";
-        await m.reply(novaWrap("nowm", errMsg));
+        await m.reply(raraWrap("nowm", errMsg));
         resultBuffer = await localWatermarkRemove(processedBuffer, maskBuffer);
       }
     } else {
@@ -287,20 +287,20 @@ async function handler(m, { sock }) {
     }
 
     if (!resultBuffer) {
-      return m.reply(novaWrap("nowm", "Gagal memproses gambar. Coba gambar lain."));
+      return m.reply(raraWrap("nowm", "Gagal memproses gambar. Coba gambar lain."));
     }
     await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
         image: resultBuffer,
-        caption: novaBerhasil() + "\nEngine: " + (usedApi ? "ClipDrop AI" : "Local"),
+        caption: raraBerhasil() + "\nEngine: " + (usedApi ? "ClipDrop AI" : "Local"),
       },
       { quoted: m },
     );
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("nowm", "Gagal: " + e.message, "error"));
+    m.reply(raraWrap("nowm", "Gagal: " + e.message, "error"));
   }
 }
 

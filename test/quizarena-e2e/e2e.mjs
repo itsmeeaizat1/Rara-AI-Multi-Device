@@ -1,8 +1,8 @@
 // E2E quizarena — Arena Kuis RPG
 import path from "node:path";
 import fs from "node:fs";
-import { initDatabase } from "../../src/lib/nova-database.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase } from "../../src/lib/rara-database.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 process.env.QUIZARENA_Q_MS = "60000"; // 60 dtk biar gak lepas pas test jalan
 const R = path.resolve(process.cwd());

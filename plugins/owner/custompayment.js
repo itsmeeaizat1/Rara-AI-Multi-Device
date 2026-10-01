@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "custompayment",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
   if (input.toLowerCase() === 'reset') {
     db.setting('customPaymentText', '')
-    return m.reply(novaWrap("Custompayment", '✅ Teks custom payment direset ke default.'))
+    return m.reply(raraWrap("Custompayment", '✅ Teks custom payment direset ke default.'))
   }
 
   db.setting('customPaymentText', input)

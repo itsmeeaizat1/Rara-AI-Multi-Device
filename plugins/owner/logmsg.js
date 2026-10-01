@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "logmsg",
@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig, args }) {
     `Info: ${text}\n\n` +
     `Catatan: Private chat tidak akan pernah di-log, hanya grup yang aktif`;
 
-  return m.reply(novaWrap("logmsg", result));
+  return m.reply(raraWrap("logmsg", result));
 }
 
 export { pluginConfig as config, handler };

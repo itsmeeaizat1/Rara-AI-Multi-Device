@@ -1,5 +1,5 @@
 // E2E .chart — mock m + sock, db eksplisit (gotcha: initDatabase wajib path!)
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
 
 await initDatabase("/tmp/chart-e2e-db.json");
 
@@ -98,7 +98,7 @@ const pngRp = await renderChart({ title: "T", items: [{ label: "x", value: 25000
 check("render money: PNG valid", isPng(pngRp));
 
 // 14. leaderboard beneran sort desc — cek via getLeaderboard
-const { getLeaderboard } = await import("../../src/lib/nova-rpg-service.js");
+const { getLeaderboard } = await import("../../src/lib/rara-rpg-service.js");
 const lb = getLeaderboard("cash", 10);
 check("leaderboard cash sort desc (Citra #1)", lb.length === 3 && lb[0].name === "Citra" && lb[0].value === 25000000);
 

@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Recycle — Recycle items, exchange for coins, stash all
 
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "recycle",
@@ -20,14 +20,14 @@ const pluginConfig = {
 async function handler(m, { sock, text, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("recycle", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("recycle", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (command === "recycle") {
       const itemName = (text || "").trim();
-      if (!itemName) return m.reply(novaRpgBox("recycle", "Masukkan nama item. Contoh: .recycle rawMeat", "guide"));
+      if (!itemName) return m.reply(raraRpgBox("recycle", "Masukkan nama item. Contoh: .recycle rawMeat", "guide"));
       rpg.inventory = rpg.inventory || {};
   await animGeneric(m, sock, "♻️", "Recycling");
-      if (!rpg.inventory[itemName] || rpg.inventory[itemName] < 1) return m.reply(novaRpgBox("recycle", "Item *" + itemName + "* tidak ada di inventory.", "info"));
+      if (!rpg.inventory[itemName] || rpg.inventory[itemName] < 1) return m.reply(raraRpgBox("recycle", "Item *" + itemName + "* tidak ada di inventory.", "info"));
 
       await m.react("🕒");
       rpg.inventory[itemName] -= 1;
@@ -40,9 +40,9 @@ async function handler(m, { sock, text, command }) {
 
     if (command === "exchange") {
       const itemName = (text || "").trim();
-      if (!itemName) return m.reply(novaRpgBox("exchange", "Masukkan nama item. Contoh: .exchange rawMeat", "guide"));
+      if (!itemName) return m.reply(raraRpgBox("exchange", "Masukkan nama item. Contoh: .exchange rawMeat", "guide"));
       rpg.inventory = rpg.inventory || {};
-      if (!rpg.inventory[itemName] || rpg.inventory[itemName] < 1) return m.reply(novaRpgBox("exchange", "Item *" + itemName + "* tidak ada di inventory.", "info"));
+      if (!rpg.inventory[itemName] || rpg.inventory[itemName] < 1) return m.reply(raraRpgBox("exchange", "Item *" + itemName + "* tidak ada di inventory.", "info"));
 
       await m.react("🕒");
       rpg.inventory[itemName] -= 1;
@@ -58,7 +58,7 @@ async function handler(m, { sock, text, command }) {
       rpg.inventory = rpg.inventory || {};
       rpg.storage = rpg.storage || {};
       const itemCount = Object.keys(rpg.inventory).length;
-      if (itemCount === 0) return m.reply(novaRpgBox("stashall", "Inventory kosong.", "info"));
+      if (itemCount === 0) return m.reply(raraRpgBox("stashall", "Inventory kosong.", "info"));
 
       await m.react("🕒");
       for (const [item, count] of Object.entries(rpg.inventory)) {
@@ -72,7 +72,7 @@ async function handler(m, { sock, text, command }) {
   } catch (e) {
     console.error("recycle error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox(m.command || "recycle", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox(m.command || "recycle", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

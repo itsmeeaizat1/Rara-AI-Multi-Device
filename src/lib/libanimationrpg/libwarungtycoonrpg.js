@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/warungtycoon.js — LIB ANIMASI CINEMATIC khusus Warung Tycoon (owner 25 Sep 2026)
 // Gaya cuplikan Nintendo: cutscene multi-babak, durasi OTOMATIS nyesuaikan situasi jualan.
 // Konvensi lib animasi per game (folder src/lib/libanimationrpg/): PURE scene-builder dari ctx —

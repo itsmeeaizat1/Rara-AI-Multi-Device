@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, bracketBox, novaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, bracketBox, raraCaption, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const EFFECTS = {
     bass:      { emoji: '🔊', filter: 'bass=g=20:f=110:w=0.6', desc: 'Bass boost' },
@@ -86,7 +86,7 @@ function buildEffectList(prefix) {
     }
 
     return boxes.join('\n\n') +
-        '\n\n' + novaCaption({
+        '\n\n' + raraCaption({
   emoji: "🎵",
   name: "audiofun",
   description: "Audio effects & voice changer (25 efek)",
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
     const fx = EFFECTS[effectName]
     if (!fx) {
         return m.reply(
-            novaWrap("Audiofun",
+            raraWrap("Audiofun",
                 'Efek *' + effectName + '* tidak ditemukan\n\n' +
                 'Ketik *' + prefix + 'audiofun list* untuk daftar efek'),
             "audiofun")
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     const media = getMediaSource(m)
     if (!media) {
         return m.reply(
-            novaWrap("Audiofun",
+            raraWrap("Audiofun",
                 fx.emoji + ' *' + effectName.toUpperCase() + '*\n\n' +
                 'Reply audio/video dengan command ini\n' +
                 'Contoh: reply audio lalu ketik *' + prefix + 'audiofun ' + effectName + '*'),
@@ -141,14 +141,14 @@ async function handler(m, { sock }) {
     try {
         const buffer = await media.download()
         if (!buffer?.length) {
-            return m.reply(novaGagal("AudioFX"))
+            return m.reply(raraGagal("AudioFX"))
         }
 
         fs.writeFileSync(inputPath, buffer)
         await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + fx.filter + '" -vn "' + outputPath + '"')
 
         if (!fs.existsSync(outputPath)) {
-            return m.reply(novaGagal("AudioFX"))
+            return m.reply(raraGagal("AudioFX"))
         }
 
         const audioBuffer = fs.readFileSync(outputPath)
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, audioBuffer, null, m, {
             type: 'audio'
         })
-        await m.reply(novaBerhasil("audiofun"));
+        await m.reply(raraBerhasil("audiofun"));
     } catch (error) {
         m.reply(te(m.prefix, m.command, m.pushName))
     } finally {

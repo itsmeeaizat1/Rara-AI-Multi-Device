@@ -1,18 +1,18 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 //
 // .rentauto — AUTO SEWA & PREMIUM MANAGER (27 Sep 2026, fitur automation
 // no.2). Sewa & premium gak lagi "mati diam-diam": reminder H-3/H-1 ke
 // penyewa, premium kedaluwarsa otomatis dibersihin, grup sewa kedaluwarsa
 // diumuminin lalu bot keluar sendiri setelah grace period, digest harian
-// ke DM owner. Engine: src/lib/nova-rent-auto.js (jangan duplikasi logika).
+// ke DM owner. Engine: src/lib/rara-rent-auto.js (jangan duplikasi logika).
 
-import { novaGuide } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import {
   ensureRentAutoState,
   buildRentAutoStatus,
   processRentAutoTick,
-} from "../../src/lib/nova-rent-auto.js";
+} from "../../src/lib/rara-rent-auto.js";
 
 const pluginConfig = {
   name: "rentauto",
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     m.react?.(sub ? "🛠️" : "🧠");
     await m.reply(buildRentAutoStatus(db));
     if (!sub) {
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "rentauto",
         "Manajer otomatis untuk sewa & premium:\n.rentauto on/off — nyalakan atau matikan sistem\n.rentauto tes — jalankan satu putaran sekarang (lihat apa yang dikerjakan)\n.rentauto jam <HH:mm> — atur jam laporan harian ke DM kamu\n.rentauto grace <hari> — atur tenggang sebelum bot keluar dari grup kedaluwarsa (0-30)",
         ".rentauto tes\n.rentauto jam 20:30\n.rentauto grace 7",
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     st.on = true;
     db.db.write();
     m.react?.("⚡");
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "rentauto",
       "Sistem sewa & premium otomatis saya nyalakan kembali.\nMulai putaran berikutnya, reminder, pembersihan, dan digest bakal jalan lagi.",
       ".rentauto tes",
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   if (sub === "off" || sub === "mati" || sub === "stop") {
     st.on = false;
     db.db.write();
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "rentauto",
       "Oke, sistem otomatisnya saya matikan.\nSewa & premium tetap berlaku seperti biasa — yang berhenti cuma pengingat, pembersihan otomatis, dan keluar grup otomatis.",
       ".rentauto on",
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
     m.react?.("🛠️");
     const actions = await processRentAutoTick(sock);
     if (!actions.length) {
-      return m.reply(novaGuide(
+      return m.reply(raraGuide(
         "rentauto",
         "Sudah saya jalankan satu putaran penuh — belum ada yang perlu dikerjakan.\nArtinya: tidak ada sewa/premium yang mendekati habis, tidak ada yang kedaluwarsa hari ini.",
         ".rentauto status",
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
       ));
     }
     const lines = actions.map((a) => `• ${a}`);
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "rentauto",
       `Selesai! Dalam satu putaran tadi saya mengerjakan ${actions.length} hal:\n${lines.join("\n")}`,
       ".rentauto status",
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
     st.digestJam = jam;
     st.lastDigestDate = ""; // biar hari yang sama bisa kirim ulang pakai jam baru
     db.db.write();
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "rentauto",
       `Siap! Mulai sekarang laporan harian bakal saya kirim ke DM kamu sekitar jam ${jam} WIB.`,
       ".rentauto tes",
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     }
     st.graceDays = hari;
     db.db.write();
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "rentauto",
       `Siap! Grace period diatur jadi ${hari} hari.\nGrup yang sewanya kedaluwarsa diberi waktu ${hari} hari untuk perpanjang sebelum bot keluar otomatis.`,
       ".rentauto status",
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
     ));
   }
 
-  return m.reply(novaGuide(
+  return m.reply(raraGuide(
     "rentauto",
     "Sub perintahnya belum saya kenali. Yang tersedia: on · off · status · tes · jam <HH:mm> · grace <hari>",
     ".rentauto tes",

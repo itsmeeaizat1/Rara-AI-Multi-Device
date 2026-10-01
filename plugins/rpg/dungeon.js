@@ -1,17 +1,17 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Dungeon — Explore dungeon for big rewards (high risk)
 
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy, useMana,
   addItem, getEquipStats, getRandomMonster, rollDrop, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
-  getCash, spendCash, formatRp} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { shapeDungeon } from "../../src/lib/nova-rpg-shapes.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import te from "../../src/lib/nova-error.js";
+  getCash, spendCash, formatRp} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { shapeDungeon } from "../../src/lib/rara-rpg-shapes.js";
+import { rpgSleep } from "../../src/lib/rara-rpg-anim.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "dungeon",
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("dungeon", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("dungeon", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // ── subcommand khas dungeon: lentera status & upgrade ──
     const sub = (m.args?.[0] || "").toLowerCase();
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     const lv = tool.level || 0;
 
     if (sub === "lentera" || sub === "status") {
-      return m.reply(novaRpgBox("dungeon",
+      return m.reply(raraRpgBox("dungeon",
         `🕯️ LENTERA ABIADI KAMU\n\n` +
         `Level : *Lv.${lv}*\n✨ Bonus EXP dungeon : +${10 * lv}%\n💰 Bonus gold dungeon : +${10 * lv}%\n🗿 Relik Kegelapan : ${tool.relics || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
         `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.relicCost(lv)}x Relik + ${formatRp(TOOL.rpCost(lv))}\nKetik: .dungeon upgrade`));
@@ -66,11 +66,11 @@ async function handler(m, { sock }) {
       const needRelic = TOOL.relicCost(lv);
       const needRp = TOOL.rpCost(lv);
       if ((tool.relics || 0) < needRelic) {
-        return m.reply(novaRpgBox("dungeon",
+        return m.reply(raraRpgBox("dungeon",
           `🗿 Upgrade Lentera ke Lv.${lv + 1} butuh:\n\n• Relik Kegelapan : ${needRelic}x (punya ${tool.relics || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Relik didapat dari .dungeon sendiri — 25% per stage clear, full clear dijamin +2!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
-        return m.reply(novaRpgBox("dungeon", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("dungeon", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = getTool(m.sender);
       fresh.relics = (fresh.relics || 0) - needRelic;
@@ -78,24 +78,24 @@ async function handler(m, { sock }) {
       fresh.spent = (fresh.spent || 0) + needRp;
       getDatabase().setPlayerData(m.sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("dungeon",
+      return m.reply(raraRpgBox("dungeon",
         `🕯️ LENTERA UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n✨ Bonus EXP dungeon : +${10 * (lv + 1)}%\n💰 Bonus gold dungeon : +${10 * (lv + 1)}%\n\n🗿 Material : −${needRelic} Relik Kegelapan\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
     if (rpg.level < DG_MIN_LEVEL) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("dungeon", `Butuh minimal *Level ${DG_MIN_LEVEL}* untuk masuk dungeon. Level kamu: *${rpg.level}*.`, "warn"));
+      return m.reply(raraRpgBox("dungeon", `Butuh minimal *Level ${DG_MIN_LEVEL}* untuk masuk dungeon. Level kamu: *${rpg.level}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastDungeon");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("dungeon", `Cooldown dungeon tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("dungeon", `Cooldown dungeon tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < DG_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("dungeon", `Energi kurang! Butuh *${DG_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
+      return m.reply(raraRpgBox("dungeon", `Energi kurang! Butuh *${DG_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
     }
 
     // Cek kunci dungeon
@@ -217,7 +217,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    return m.reply(novaRpgBox("dungeon",
+    return m.reply(raraRpgBox("dungeon",
       `${stagesCleared === stageCount ? "🏆 DUNGEON DIBERSIHKAN!" : stagesCleared > 0 ? "⚔️ EKSPEDISI SELESAI!" : "💀 GAGAL DI DUNGEON!"}\n\n` +
       `🏰 Stage clear : ${stagesCleared}/${stageCount}\n` +
       `${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}\n\n` +
@@ -230,7 +230,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("dungeon error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("dungeon", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("dungeon", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

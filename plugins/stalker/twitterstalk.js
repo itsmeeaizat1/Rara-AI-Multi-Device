@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "twitterstalk",
@@ -24,7 +24,7 @@ function shortNum(num) {
 async function handler(m, { sock }) {
   const username = m.args[0]?.replace("@", "")?.trim();
   if (!username) {
-    return m.reply(novaWrap("Twitter Stalk", `Masukkan username Twitter/X.\n\nContoh: ${m.prefix}twitterstalk elonmusk`));
+    return m.reply(raraWrap("Twitter Stalk", `Masukkan username Twitter/X.\n\nContoh: ${m.prefix}twitterstalk elonmusk`));
   }
   try {
     const res = await axios.get(
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
       { timeout: 30000 }
     );
     if (!res.data?.status || !res.data?.data) {
-      return m.reply(novaWrap("Twitter Stalk", `Akun @${username} tidak ditemukan.`));
+      return m.reply(raraWrap("Twitter Stalk", `Akun @${username} tidak ditemukan.`));
     }
 
     const d = res.data.data;
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
           timeout: 15000,
         });
         const ppBuf = Buffer.from(ppRes.data);
-        const caption = novaWrap("Twitter Stalk", lines);
+        const caption = raraWrap("Twitter Stalk", lines);
         await sock.sendMessage(m.chat, { image: ppBuf, caption }, { quoted: m });
         return;
       } catch {
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       }
     }
     lines += `\n_Link: https://x.com/${d.username || username}_`;
-    await m.reply(novaWrap("Twitter Stalk", lines));
+    await m.reply(raraWrap("Twitter Stalk", lines));
   } catch (err) {
     console.error("[TwitterStalk] Error:", err.message);
     return m.reply(te(m.prefix, m.command, m.pushName));

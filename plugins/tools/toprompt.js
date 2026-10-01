@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import imgtoprompt from "../../src/scraper/img2prompt.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "toprompt",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage" || m.quoted.mtype === "imageMessage"));
     if (!isImage) {
-      return m.reply(novaWrap("toprompt", "Reply atau kirim gambar dengan caption .toprompt untuk mendapatkan prompt AI.", "guide"));
+      return m.reply(raraWrap("toprompt", "Reply atau kirim gambar dengan caption .toprompt untuk mendapatkan prompt AI.", "guide"));
     }
 
     await m.react("🕒");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       await m.react("❌");
-      return m.reply(novaWrap("toprompt", "❌ Gagal mengunduh gambar."));
+      return m.reply(raraWrap("toprompt", "❌ Gagal mengunduh gambar."));
     }
 
     const tempDir = path.join(process.cwd(), "tmp");
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
 
     if (!result || result.status === "eror" || !result.prompt) {
       await m.react("❌");
-      return m.reply(novaWrap("toprompt", `❌ Gagal menghasilkan prompt: ${result?.msg || "Tidak ada deskripsi"}`));
+      return m.reply(raraWrap("toprompt", `❌ Gagal menghasilkan prompt: ${result?.msg || "Tidak ada deskripsi"}`));
     }
 
     await m.react("🐣");
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("toprompt error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("toprompt", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("toprompt", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

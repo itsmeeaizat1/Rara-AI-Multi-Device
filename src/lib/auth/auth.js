@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // File ini aman untuk di-obfuscate dengan obfuscator.io
 // Jangan obfuscate file lain (connection.js, dll)
 
@@ -21,7 +21,7 @@ export function verifyAuth(input) {
 
 export function getOwnerContact() {
   return [
-    "「 ✦ NOVA AI ✦ 」",
+    "「 ✦ RARA AI ✦ 」",
     "",
     "• Owner   : Aizat",
     "• Telp    : 08174887770",

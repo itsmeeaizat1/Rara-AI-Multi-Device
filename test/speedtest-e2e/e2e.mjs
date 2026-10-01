@@ -87,7 +87,7 @@ w("\n— 2. tanpa sock → fallback m.reply (gak crash) —");
   check("handled true + reply fallback terisi", r?.handled === true && replies.length > 0 && replies[replies.length - 1].includes(toSC("Hasil Tes")), `n=${replies.length}`);
 }
 
-w("\n— 3. network mati total → novaError —");
+w("\n— 3. network mati total → raraError —");
 {
   const realFetch = globalThis.fetch;
   globalThis.fetch = async () => { throw new Error("network down"); };
@@ -96,7 +96,7 @@ w("\n— 3. network mati total → novaError —");
   await stHandler(m, {});
   globalThis.fetch = realFetch;
   const err = replies[replies.length - 1] || "";
-  check("novaError ❌ box", err.includes("❌") && err.includes(toSC("SPEEDTEST")), err.slice(0, 60));
+  check("raraError ❌ box", err.includes("❌") && err.includes(toSC("SPEEDTEST")), err.slice(0, 60));
 }
 
 w("\n— 4. pluginConfig —");
@@ -105,7 +105,7 @@ check("cooldown lama (hemat bandwidth)", stConfig.cooldown >= 30, String(stConfi
 
 w("\n— 5. hasil tes TERSIMPAN + baris Info Server —");
 {
-  const lib = await import("../../src/lib/nova-speedtest.js");
+  const lib = await import("../../src/lib/rara-speedtest.js");
 
   // db mock: setting(key) get / setting(key, value) set
   const mkDb = () => {
@@ -145,7 +145,7 @@ w("\n— 6. plugin .speedtest simpan hasil tiap run —");
 
 w("\n— 7. serverNetworkRows: IP publik/lokal, port, DNS —");
 {
-  const { serverNetworkRows } = await import("../../src/lib/nova-info-section.js");
+  const { serverNetworkRows } = await import("../../src/lib/rara-info-section.js");
   const store = {};
   const db = { setting: (k, v) => { if (v !== undefined) { store[k] = v; return store[k]; } return store[k]; } };
 

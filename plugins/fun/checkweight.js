@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { cekFunAI } from "../../src/lib/nova-fun-ai.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { cekFunAI } from "../../src/lib/rara-fun-ai.js";
 const pluginConfig = {
     name: 'cekberat',
     alias: ["cekberat"],
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
          `Berat badan dia: ${berat} kg`,
          `"${desc}"`].join("\n")
     
-    await m.reply(novaWrap("cekberat", txt), { mentions: [mentioned] });
+    await m.reply(raraWrap("cekberat", txt), { mentions: [mentioned] });
 }
 
 export { pluginConfig as config, handler }

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
-import * as timeHelper from '../../src/lib/nova-time.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import * as timeHelper from '../../src/lib/rara-time.js'
 const pluginConfig = {
   name: "listwarn",
   alias: ["listwarn"],
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const targetName = targetUser.split("@")[0];
 
     if (userWarnings.length === 0) {
-      await m.reply(novaWrap("Listwarn", `@${targetName} tidak memiliki warning.`, "success"), {
+      await m.reply(raraWrap("Listwarn", `@${targetName} tidak memiliki warning.`, "success"), {
         mentions: [targetUser],
       });
       return;
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
       lines.push(`   └ _${date}_`);
     });
 
-    await m.reply(novaWrap("Warning " + targetName, lines), { mentions: [targetUser] });
+    await m.reply(raraWrap("Warning " + targetName, lines), { mentions: [targetUser] });
   } else {
     // Show all users with warnings
     const usersWithWarnings = Object.keys(warnings).filter(
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     );
 
     if (usersWithWarnings.length === 0) {
-      { const __navText = novaWrap("listwarn", `Tidak ada member dengan warning di grup ini.`, "success"); await m.reply(__navText); };
+      { const __navText = raraWrap("listwarn", `Tidak ada member dengan warning di grup ini.`, "success"); await m.reply(__navText); };
       return;
     }
 

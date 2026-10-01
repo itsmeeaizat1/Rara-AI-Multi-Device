@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'slowmode',
     alias: ["slowmode"],
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === 'off') {
         db.setGroup(m.chat, { ...groupData, slowmode: { enabled: false } })
-        return m.reply(novaWrap("Slowmode", `Slowmode dinonaktifkan`, "success"))
+        return m.reply(raraWrap("Slowmode", `Slowmode dinonaktifkan`, "success"))
     }
 
     let mode = 'all'
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     } else {
         delay = parseInt(subCmd)
         if (isNaN(delay)) {
-            return m.reply(novaWrap("Slowmode", `Gunakan .slowmode on 30 atau .slowmode onlycommand 30`, "error"))
+            return m.reply(raraWrap("Slowmode", `Gunakan .slowmode on 30 atau .slowmode onlycommand 30`, "error"))
         }
     }
 

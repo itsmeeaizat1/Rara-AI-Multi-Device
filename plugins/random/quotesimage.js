@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import config from '../../config.js'
-import { f } from '../../src/lib/nova-http.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
+import { f } from '../../src/lib/rara-http.js'
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-RaraMD'
 
 const pluginConfig = {
     name: 'quotesimage',
@@ -27,14 +27,14 @@ async function handler(m, { sock }) {
         const res = await f(`https://api.neoxr.eu/api/quotesimage?apikey=${NEOXR_APIKEY}`)
         
         if (!res.status || !res.data?.url) {
-            return m.reply(novaWrap("quotesimage", `Gagal mengambil quotes image`))
+            return m.reply(raraWrap("quotesimage", `Gagal mengambil quotes image`))
         }
         
         await sock.sendMedia(m.chat, res.data.url, null, m, {
             type: 'image'
         })
     } catch (err) {
-        return m.reply(novaWrap("quotesimage", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("quotesimage", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

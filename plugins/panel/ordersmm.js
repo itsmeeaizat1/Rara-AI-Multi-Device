@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ordersmm.js — AUTO ORDER SMM Pacific Pedia (buyer): pilih layanan sosmed
 // (followers/likes/views/dll) dari api.pacific-pedia.co.id → bayar QRIS
 // Pakasir → lunas → pesanan otomatis ke API → pantau status → struk DM.
@@ -9,18 +9,18 @@
 // Harga = modal API (rate 1000 = per 1000 pesanan; rate 1 = per paket)
 // + markup persen owner (.autoorder markupsmm). API key: .autoorder pacific.
 import { config } from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import {
   ensureOrderCfg, buildPakasir, fmtRupiah, getOrderTimings,
   _setPakasirFactoryForTest, _resetPakasirFactoryForTest,
   _setOrderTimingsForTest, _resetOrderTimingsForTest,
-} from "../../src/lib/nova-auto-order.js";
+} from "../../src/lib/rara-auto-order.js";
 import {
   pacProfile, pacServices, pacFindService, pacPrice,
   pacOrder, pacStatus, pacRefill, smmOrderId,
   _setPacificHttpForTest, _resetPacificHttpForTest,
-} from "../../src/lib/nova-pacific.js";
+} from "../../src/lib/rara-pacific.js";
 
 const pluginConfig = {
   name: "ordersmm",
@@ -61,15 +61,15 @@ function cleanTarget(v) { return String(v || "").trim().replace(/\s+/g, "").slic
 async function listServices(m, { db }, keyword) {
   const cfg = ensureOrderCfg(db);
   if (!cfg.pacific.apiKey) {
-    return m.reply(novaWrap("Auto Order SMM", "Layanan belum siap (owner belum set API Pacific).", "error"));
+    return m.reply(raraWrap("Auto Order SMM", "Layanan belum siap (owner belum set API Pacific).", "error"));
   }
   const r = await pacServices(cfg);
-  if (!r.ok) return m.reply(novaWrap("Auto Order SMM", `Gak bisa ambil layanan: ${r.error}`, "error"));
+  if (!r.ok) return m.reply(raraWrap("Auto Order SMM", `Gak bisa ambil layanan: ${r.error}`, "error"));
   let list = r.list;
   const kw = String(keyword || "").toLowerCase().trim();
   if (kw) list = list.filter((s) => s.kategori.toLowerCase().includes(kw) || s.layanan.toLowerCase().includes(kw));
   const total = r.list.length;
-  if (!list.length) return m.reply(novaWrap("Auto Order SMM", `Gak ada layanan${kw ? ` yang cocok "${keyword}"` : ""}. Coba keyword lain.`));
+  if (!list.length) return m.reply(raraWrap("Auto Order SMM", `Gak ada layanan${kw ? ` yang cocok "${keyword}"` : ""}. Coba keyword lain.`));
   const markup = Number(cfg.pacific.markupPct || 0);
   const shown = list.slice(0, 15);
   const rows = shown.map((s) => {
@@ -78,7 +78,7 @@ async function listServices(m, { db }, keyword) {
     const jual = Math.ceil(modal * (100 + markup) / 100);
     return `• [${s.sid}] ${s.kategori} — ${s.layanan}\n   Min ${s.min.toLocaleString("id-ID")} · Maks ${s.max.toLocaleString("id-ID")} · ${fmtRupiah(jual)} ${satuan}${s.refill ? " · 🔁 refill" : ""}`;
   });
-  return m.reply(novaWrap("Auto Order SMM", [
+  return m.reply(raraWrap("Auto Order SMM", [
     `Total layanan aktif: ${total.toLocaleString("id-ID")}${kw ? ` · cocok "${keyword}": ${list.length}` : ""} (tampil maks 15)`,
     ...(kw ? [] : ["", `Cari: .smmlist <keyword> (contoh: .smmlist followers)`]),
     "",
@@ -106,17 +106,17 @@ async function statusOrder(m, { db }, orderId) {
   const cfg = ensureOrderCfg(db);
   const isOwner = m.sender === ownerJid();
   const found = findOrder(cfg, orderId);
-  if (!found) return m.reply(novaWrap("Auto Order SMM", `Order ${orderId} gak ketemu di catatan bot. Cek ID-nya lagi ya.`, "error"));
+  if (!found) return m.reply(raraWrap("Auto Order SMM", `Order ${orderId} gak ketemu di catatan bot. Cek ID-nya lagi ya.`, "error"));
   if (found.rec.buyer !== m.sender && !isOwner) {
-    return m.reply(novaWrap("Auto Order SMM", "Order itu bukan punya kamu — cek pakai order_id kamu sendiri ya.", "error"));
+    return m.reply(raraWrap("Auto Order SMM", "Order itu bukan punya kamu — cek pakai order_id kamu sendiri ya.", "error"));
   }
-  if (!cfg.pacific.apiKey) return m.reply(novaWrap("Auto Order SMM", "API Pacific belum di-set owner.", "error"));
+  if (!cfg.pacific.apiKey) return m.reply(raraWrap("Auto Order SMM", "API Pacific belum di-set owner.", "error"));
   const r = await pacStatus(cfg, found.rec.pacificId);
-  if (!r.ok) return m.reply(novaWrap("Auto Order SMM", `Cek status gagal: ${r.error}`, "error"));
+  if (!r.ok) return m.reply(raraWrap("Auto Order SMM", `Cek status gagal: ${r.error}`, "error"));
   const d = r.data;
   const map = { success: "✅ SUKSES", partial: "⚠️ PARSIAL (sebagian terkirim)", error: "❌ ERROR (hubungi owner)", pending: "⏳ PENDING (dalam antrean)", processing: "🔄 DIPROSES", inprogress: "🔄 DIPROSES", cancel: "❌ DIBATALKAN" };
   const st = String(d.status || "").toLowerCase();
-  return m.reply(novaWrap("Status Order SMM", [
+  return m.reply(raraWrap("Status Order SMM", [
     `Order ID: ${found.key}`,
     `ID Pacific: ${d.id || found.rec.pacificId}`,
     `Layanan: ${found.rec.service}`,
@@ -133,18 +133,18 @@ async function refillOrder(m, { sock, db }, orderId) {
   const cfg = ensureOrderCfg(db);
   const isOwner = m.sender === ownerJid();
   const found = findOrder(cfg, orderId);
-  if (!found) return m.reply(novaWrap("Auto Order SMM", `Order ${orderId} gak ketemu di catatan bot.`, "error"));
+  if (!found) return m.reply(raraWrap("Auto Order SMM", `Order ${orderId} gak ketemu di catatan bot.`, "error"));
   if (found.rec.buyer !== m.sender && !isOwner) {
-    return m.reply(novaWrap("Auto Order SMM", "Order itu bukan punya kamu.", "error"));
+    return m.reply(raraWrap("Auto Order SMM", "Order itu bukan punya kamu.", "error"));
   }
   if (!found.rec.refill) {
-    return m.reply(novaWrap("Auto Order SMM", "Layanan pesanan itu gak bergaransi refill. Cek info refill di .smmlist ya.", "error"));
+    return m.reply(raraWrap("Auto Order SMM", "Layanan pesanan itu gak bergaransi refill. Cek info refill di .smmlist ya.", "error"));
   }
   const r = await pacRefill(cfg, found.rec.pacificId);
-  if (!r.ok) return m.reply(novaWrap("Auto Order SMM", `Refill gagal: ${r.error}`, "error"));
+  if (!r.ok) return m.reply(raraWrap("Auto Order SMM", `Refill gagal: ${r.error}`, "error"));
   found.rec.refillId = r.data?.id || null;
   db.save();
-  await m.reply(novaWrap("Refill Diajukan", [
+  await m.reply(raraWrap("Refill Diajukan", [
     `Order ID: ${found.key}`,
     ...(r.data?.id ? [`ID Refill: ${r.data.id}`] : []),
     ...(r.data?.pesan ? [`Info: ${r.data.pesan}`] : []),
@@ -161,15 +161,15 @@ async function runSmm(m, { sock, db }, raw) {
   const buyer = m.sender;
   const chat = m.chat;
 
-  if (!cfg.on) return m.reply(novaWrap("Auto Order SMM", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
+  if (!cfg.on) return m.reply(raraWrap("Auto Order SMM", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
   if (!cfg.pakasir.slug || !cfg.pakasir.apikey) {
-    return m.reply(novaWrap("Auto Order SMM", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
+    return m.reply(raraWrap("Auto Order SMM", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
   }
   if (!cfg.pacific.apiKey) {
-    return m.reply(novaWrap("Auto Order SMM", "Layanan belum siap (owner belum set API Pacific).", "error"));
+    return m.reply(raraWrap("Auto Order SMM", "Layanan belum siap (owner belum set API Pacific).", "error"));
   }
   if (pendingSmm.has(buyer)) {
-    return m.reply(novaWrap("Auto Order SMM", "Kamu masih punya order berjalan. Tunggu selesai dulu ya.", "error"));
+    return m.reply(raraWrap("Auto Order SMM", "Kamu masih punya order berjalan. Tunggu selesai dulu ya.", "error"));
   }
 
   const [sidRaw, targetRaw, qtyRaw] = String(raw || "").split("|").map((v) => (v || "").trim());
@@ -177,13 +177,13 @@ async function runSmm(m, { sock, db }, raw) {
   const target = cleanTarget(targetRaw);
   const jumlah = parseInt(qtyRaw, 10);
   if (!sid || !target || !Number.isFinite(jumlah)) {
-    return m.reply(novaWrap("Auto Order SMM", novaGuide(".ordersmm <sid>|<target>|<jumlah>", [
+    return m.reply(raraWrap("Auto Order SMM", raraGuide(".ordersmm <sid>|<target>|<jumlah>", [
       "Lihat daftar layanan: .smmlist",
       "Contoh: .ordersmm 12|username_ig|1000",
     ])));
   }
   if (target.length < 2) {
-    return m.reply(novaWrap("Auto Order SMM", "Target (link/username) terlalu pendek. Contoh: .ordersmm 12|username_ig|1000", "error"));
+    return m.reply(raraWrap("Auto Order SMM", "Target (link/username) terlalu pendek. Contoh: .ordersmm 12|username_ig|1000", "error"));
   }
 
   pendingSmm.add(buyer);
@@ -192,9 +192,9 @@ async function runSmm(m, { sock, db }, raw) {
     const prof = await pacProfile(cfg);
     if (!prof.ok) throw new Error(`cek profile gagal: ${prof.error}`);
     const svc = await pacFindService(cfg, sid);
-    if (!svc.ok) return m.reply(novaWrap("Auto Order SMM", svc.error, "error"));
+    if (!svc.ok) return m.reply(raraWrap("Auto Order SMM", svc.error, "error"));
     if (jumlah < svc.svc.min || jumlah > svc.svc.max) {
-      return m.reply(novaWrap("Auto Order SMM", `Jumlah harus antara ${svc.svc.min.toLocaleString("id-ID")} - ${svc.svc.max.toLocaleString("id-ID")} buat layanan ini.`, "error"));
+      return m.reply(raraWrap("Auto Order SMM", `Jumlah harus antara ${svc.svc.min.toLocaleString("id-ID")} - ${svc.svc.max.toLocaleString("id-ID")} buat layanan ini.`, "error"));
     }
     const modal = pacPrice(svc.svc, jumlah);
     if (!Number.isFinite(modal) || modal <= 0) throw new Error("harga layanan gak valid di API");
@@ -229,8 +229,8 @@ async function runSmm(m, { sock, db }, raw) {
       "",
       `Order kedaluwarsa otomatis ${Math.round(timeoutMs / 60000)} menit. Lunas = pesanan langsung dikirim ke sistem.`,
     ].join("\n");
-    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: novaWrap("Invoice SMM", invoiceTextBody) }, { quoted: m });
-    else await m.reply(novaWrap("Invoice SMM", invoiceTextBody));
+    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: raraWrap("Invoice SMM", invoiceTextBody) }, { quoted: m });
+    else await m.reply(raraWrap("Invoice SMM", invoiceTextBody));
 
     // poll sampai lunas/kedaluwarsa
     const t0 = Date.now();
@@ -245,21 +245,21 @@ async function runSmm(m, { sock, db }, raw) {
     }
 
     if (status === "canceled") {
-      await m.reply(novaWrap("Auto Order SMM", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
+      await m.reply(raraWrap("Auto Order SMM", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
       return;
     }
     if (status !== "completed") {
-      await m.reply(novaWrap("Auto Order SMM", `Order ${orderId} kedaluwarsa (belum dibayar). Pesanan tidak dibuat.`));
+      await m.reply(raraWrap("Auto Order SMM", `Order ${orderId} kedaluwarsa (belum dibayar). Pesanan tidak dibuat.`));
       return;
     }
 
     // LUNAS → order ke Pacific
-    await m.reply(novaWrap("Auto Order SMM", `Pembayaran diterima! Mengirim pesanan ${produk} ke sistem…`));
+    await m.reply(raraWrap("Auto Order SMM", `Pembayaran diterima! Mengirim pesanan ${produk} ke sistem…`));
     const ord = await pacOrder(cfg, { sid, target, jumlah });
     if (!ord.ok) {
       const msgFail = `Order ${orderId} LUNAS tapi pengiriman ke Pacific GAGAL: ${ord.error}. Dana diproses manual — owner sudah dihubungi.`;
       await dm(sock, ownerJid(), `[AUTO ORDER SMM] Order ${orderId} (${produk}, ${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}) LUNAS tapi API gagal: ${ord.error}. Mohon proses manual/refund.`);
-      return m.reply(novaWrap("Auto Order SMM", msgFail, "error"));
+      return m.reply(raraWrap("Auto Order SMM", msgFail, "error"));
     }
 
     // catat order (buat .smmstatus / .smmrefill)
@@ -299,25 +299,25 @@ async function runSmm(m, { sock, db }, raw) {
         `Cek kapan pun: .smmstatus ${orderId}`,
         ...(rec.refill ? [`Garansi refill: .smmrefill ${orderId}`] : []),
       ].join("\n");
-      const sentDm = await dm(sock, buyer, novaWrap("Order SMM Berhasil", receipt));
+      const sentDm = await dm(sock, buyer, raraWrap("Order SMM Berhasil", receipt));
       if (!sentDm) {
-        await m.reply(novaWrap("Auto Order SMM", `Order SMM kamu SUKSES tapi bot gak bisa DM kamu — chat bot dulu (kirim "halo"), lalu cek .smmstatus ${orderId}.`));
+        await m.reply(raraWrap("Auto Order SMM", `Order SMM kamu SUKSES tapi bot gak bisa DM kamu — chat bot dulu (kirim "halo"), lalu cek .smmstatus ${orderId}.`));
       } else if (m.isGroup) {
-        await m.reply(novaWrap("Auto Order SMM", `Order SMM SUKSES — struk dikirim ke DM kamu ya (${orderId}).`));
+        await m.reply(raraWrap("Auto Order SMM", `Order SMM SUKSES — struk dikirim ke DM kamu ya (${orderId}).`));
       }
       await dm(sock, ownerJid(), `[AUTO ORDER SMM] Order ${orderId} SUKSES: ${produk} ×${jumlah} ${fmtRupiah(price)} — buyer ${buyer.split("@")[0]}.`);
     } else if (stLower.includes("error") || stLower.includes("cancel")) {
-      await m.reply(novaWrap("Auto Order SMM", `Order ${orderId} ERROR/DIBATALKAN di sistem. Owner sudah dihubungi ya. Cek: .smmstatus ${orderId}`, "error"));
+      await m.reply(raraWrap("Auto Order SMM", `Order ${orderId} ERROR/DIBATALKAN di sistem. Owner sudah dihubungi ya. Cek: .smmstatus ${orderId}`, "error"));
       await dm(sock, ownerJid(), `[AUTO ORDER SMM] Order ${orderId} ERROR di provider (${produk}, ${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}). Mohon proses refund buyer.`);
     } else if (stLower.includes("partial")) {
-      await m.reply(novaWrap("Auto Order SMM", `Order ${orderId} PARSIAL (sebagian terkirim). Detail: .smmstatus ${orderId}`));
+      await m.reply(raraWrap("Auto Order SMM", `Order ${orderId} PARSIAL (sebagian terkirim). Detail: .smmstatus ${orderId}`));
       await dm(sock, ownerJid(), `[AUTO ORDER SMM] Order ${orderId} PARSIAL di provider (${produk}, buyer ${buyer.split("@")[0]}).`);
     } else {
-      await m.reply(novaWrap("Auto Order SMM", `Pesanan ${orderId} masih DIPROSES provider (SMM kadang butuh waktu lama). Cek statusnya nanti: .smmstatus ${orderId}`));
+      await m.reply(raraWrap("Auto Order SMM", `Pesanan ${orderId} masih DIPROSES provider (SMM kadang butuh waktu lama). Cek statusnya nanti: .smmstatus ${orderId}`));
       await dm(sock, ownerJid(), `[AUTO ORDER SMM] Order ${orderId} masih diproses provider (${produk}, buyer ${buyer.split("@")[0]}).`);
     }
   } catch (e) {
-    await m.reply(novaWrap("Auto Order SMM", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
+    await m.reply(raraWrap("Auto Order SMM", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
   } finally {
     pendingSmm.delete(buyer);
   }

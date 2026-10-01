@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "captionig",
@@ -113,14 +113,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const mood = MOOD_LIST.find(m => m.includes(input) || m === input)
     if (!mood) {
-      return m.reply(novaWrap("captionig", "Mood tidak ditemukan: " + input + "\nTersedia: " + MOOD_LIST.join(", ")))
+      return m.reply(raraWrap("captionig", "Mood tidak ditemukan: " + input + "\nTersedia: " + MOOD_LIST.join(", ")))
     }
 
     const cap = CAPTION[mood][Math.floor(Math.random() * CAPTION[mood].length)]
     await m.react("🐣")
     return m.reply(cap)
   } catch (e) {
-    return m.reply(novaWrap("captionig", "Error: " + e.message))
+    return m.reply(raraWrap("captionig", "Error: " + e.message))
   }
 }
 

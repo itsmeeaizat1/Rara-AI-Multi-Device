@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "listproduk",
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
 
   if (m.isGroup) {
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
     await sock.sendMessage(
       m.chat,
       {
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } else {
-    await m.reply(novaWrap("listproduk", txt));
+    await m.reply(raraWrap("listproduk", txt));
   }
 }
 

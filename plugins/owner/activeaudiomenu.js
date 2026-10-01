@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'menuwithmusic',
@@ -25,12 +25,12 @@ async function handler(m, { sock, db }) {
         const current = db.setting('audioMenu') !== false
 
         if (!option) {
-            return await m.reply(novaWrap("Aktifaudiomenu", `Status: *${current ? '✅ Aktif' : '❌ Nonaktif'}*\n\n*cara pakai:*\n\`${m.prefix}aktifaudiomenu ya\` - Aktifkan audio\n\`${m.prefix}aktifaudiomenu gak\` - Nonaktifkan audio`))
+            return await m.reply(raraWrap("Aktifaudiomenu", `Status: *${current ? '✅ Aktif' : '❌ Nonaktif'}*\n\n*cara pakai:*\n\`${m.prefix}aktifaudiomenu ya\` - Aktifkan audio\n\`${m.prefix}aktifaudiomenu gak\` - Nonaktifkan audio`))
         }
 
         if (option === 'ya' || option === 'on' || option === '1' || option === 'aktif') {
             if (current) {
-                return m.reply(novaWrap("Aktifaudiomenu", `⚠️ Audio menu sudah aktif!`))
+                return m.reply(raraWrap("Aktifaudiomenu", `⚠️ Audio menu sudah aktif!`))
             }
             db.setting('audioMenu', true)
             await db.save()
@@ -39,7 +39,7 @@ async function handler(m, { sock, db }) {
 
         if (option === 'gak' || option === 'off' || option === '0' || option === 'nonaktif') {
             if (!current) {
-                return m.reply(novaWrap("Aktifaudiomenu", `⚠️ Audio menu sudah nonaktif!`))
+                return m.reply(raraWrap("Aktifaudiomenu", `⚠️ Audio menu sudah nonaktif!`))
             }
             db.setting('audioMenu', false)
             await db.save()

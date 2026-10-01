@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Casino — Gamble your gold (slot machine)
 
 import {
   ensureRpg, addGold, removeGold,
   checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "casino",
@@ -46,29 +46,29 @@ const PAYOUT = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("casinorpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("casinorpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const bet = parseInt(args[0]);
 
     if (!bet || bet < MIN_BET) {
   await animGeneric(m, sock, "🎰", "Casino");
-      return m.reply(novaRpgBox("casinorpg", `Minimal bet *${MIN_BET} gold*. Contoh: .casinorpg 100`, "warn"));
+      return m.reply(raraRpgBox("casinorpg", `Minimal bet *${MIN_BET} gold*. Contoh: .casinorpg 100`, "warn"));
     }
 
     if (bet > MAX_BET) {
-      return m.reply(novaRpgBox("casinorpg", `Maksimal bet *${MAX_BET} gold* per putaran.`, "warn"));
+      return m.reply(raraRpgBox("casinorpg", `Maksimal bet *${MAX_BET} gold* per putaran.`, "warn"));
     }
 
     if (rpg.gold < bet) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("casinorpg", `Gold tidak cukup! Kamu punya *${rpg.gold} gold*, butuh *${bet}*.`, "warn"));
+      return m.reply(raraRpgBox("casinorpg", `Gold tidak cukup! Kamu punya *${rpg.gold} gold*, butuh *${bet}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastGacha");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("casinorpg", `Cooldown casino tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("casinorpg", `Cooldown casino tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     await m.react("🕒");
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastGacha", CASINO_COOLDOWN);
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "casinorpg", icon: "🎰",
       flavor: result === "JACKPOT!" ? "🎊 *JACKPOT!*" : payout > 0 ? "🎉 *MENANG!*" : "💸 *ZONK!*",
       body: [
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("casinorpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("casinorpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("casinorpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

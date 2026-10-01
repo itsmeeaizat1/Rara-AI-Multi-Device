@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/scraper/spotify-lyrics.js — Lirik lagu Spotify-style via LRCLIB
 // Request owner 12 Sep 2026: "tmbah fitur baru lirik versi spotify .lirikspotify"
 // Port dari kode owner (Deno/TS → ESM JS):

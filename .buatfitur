@@ -1,4 +1,4 @@
-# .buatfitur — PANDUAN BIKIN FITUR BARU (Nova AI WhatsApp Bot)
+# .buatfitur — PANDUAN BIKIN FITUR BARU (Rara AI WhatsApp Bot)
 
 Checklist WAJIB sebelum nulis plugin baru / ubah fitur lama.
 
@@ -12,7 +12,7 @@ Checklist WAJIB sebelum nulis plugin baru / ubah fitur lama.
 - Kalimat panjang input TETAP DITULIS UTUH di kode — jangan dipendekkan manual; yang memotong tampilannya adalah wrapText, bukan kamu.
 - Alur: input bebas panjang → output lewat guard. Selama semua pesan kotak lewat boxLeft(), border rata kiri dijaga otomatis.
 - Plugin yang masih nulis `│ ` manual = pintu bocor (border patah saat WhatsApp melipat baris panjang tanpa prefix).
-- Plugin game RPG pakai novaRpgBox/novaGameBox (dashboard PS-style, tanpa border kiri) — body JANGAN diawali `│ ` manual; renderer yang urus.
+- Plugin game RPG pakai raraRpgBox/raraGameBox (dashboard PS-style, tanpa border kiri) — body JANGAN diawali `│ ` manual; renderer yang urus.
 - Verifikasi: `node test-plugins.js` — semua baris isi wajib prefix `│ ` & ≤30 char, 0 baris bocor.
 
 ## ATURAN LAIN (ringkasan)

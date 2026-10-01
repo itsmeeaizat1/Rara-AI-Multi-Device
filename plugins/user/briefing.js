@@ -1,15 +1,15 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// .briefing — NOVA DAILY BRIEFING PERSONAL (25 Sep 2026)
+// .briefing — RARA DAILY BRIEFING PERSONAL (25 Sep 2026)
 // Kartu pagi otomatis ke DM: cuaca lokasi kamu, gempa 24 jam, jadwal tim
 // favorit, agenda reminder, saldo RPG, catatan personal — semua API LIVE.
-// Engine: src/lib/nova-briefing.js (jangan duplikasi logika di sini).
+// Engine: src/lib/rara-briefing.js (jangan duplikasi logika di sini).
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { novaGuide } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import {
   getBriefingUser, parseJam, buildBriefingCard,
-} from "../../src/lib/nova-briefing.js";
+} from "../../src/lib/rara-briefing.js";
 
 const pluginConfig = {
   name: "briefing",
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const card = await buildBriefingCard(sender, m.pushName || "");
     await m.reply(card);
     if (!text) {
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "briefing",
         "Kartu di atas dibikin langsung dari data live.\nMau dikirim otomatis tiap pagi ke DM kamu?\n.briefing on [jam] — nyalakan pengiriman harian (default 06:00)\n.briefing lokasi <kota> — cuaca sesuai kota kamu\n.briefing tim <nama tim> — pantau jadwal tim favorit (maks " + MAX_TIM + ")\n.briefing off — matikan kapan saja",
         ".briefing on 06:30\n.briefing lokasi bandung\n.briefing tim arsenal",
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     if (jamArg && !jam) return m.reply("Format jam gak valid. Contoh yang bener: .briefing on 06:30");
     u.on = true;
     u.jam = jam;
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "briefing",
       "Siap! Mulai besok pagi, kartu briefing bakal saya kirim ke DM kamu tiap hari jam " + jam + " WIB.\n.briefing lokasi <kota> — sesuaikan cuaca\n.briefing tim <tim> — pantau tim favorit\n.briefing off — matikan kapan saja",
       ".briefing lokasi surabaya",
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
   // ── OFF ──
   if (sub === "off" || sub === "mati" || sub === "stop") {
     u.on = false;
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "briefing",
       "Oke, pengiriman harian saya matikan.\nKartu masih bisa kamu minta kapan saja dengan ketik .briefing.\n.briefing on [jam] — nyalain lagi",
       ".briefing on",

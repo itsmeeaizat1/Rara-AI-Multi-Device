@@ -1,5 +1,5 @@
-// E2E nova-uploader (1 Okt 2026) — ENGINE UPLOAD MULTI-HOST
-// src/lib/nova-uploader.js — Termai dilepas (free-tier limit kecil, logic-bell
+// E2E rara-uploader (1 Okt 2026) — ENGINE UPLOAD MULTI-HOST
+// src/lib/rara-uploader.js — Termai dilepas (free-tier limit kecil, logic-bell
 // 429 permanen) → rantai host publik TANPA KEY: kappa.lol → pone.rs → uguu.se.
 // Zelapi gak dipakai: /tools/upload-nya mati (diuji live semua varian).
 // Jalankan dari repo root: node test/uploader-e2e/e2e.mjs
@@ -11,8 +11,8 @@ import { fileURLToPath, pathToFileURL } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..", "..");
 
-const up = await import(pathToFileURL(path.join(REPO, "src/lib/nova-uploader.js")).href);
-const tmp = await import(pathToFileURL(path.join(REPO, "src/lib/nova-tmpfiles.js")).href);
+const up = await import(pathToFileURL(path.join(REPO, "src/lib/rara-uploader.js")).href);
+const tmp = await import(pathToFileURL(path.join(REPO, "src/lib/rara-tmpfiles.js")).href);
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
@@ -84,8 +84,8 @@ w("\n— 4. seam total —");
   up._resetUploaderHttpForTest();
 }
 
-// ── 5. nova-tmpfiles signature {url, directUrl} ─────────────────────
-w("\n— 5. nova-tmpfiles shim —");
+// ── 5. rara-tmpfiles signature {url, directUrl} ─────────────────────
+w("\n— 5. rara-tmpfiles shim —");
 {
   const r = await tmp.uploadTo0x0(Buffer.from("gambar"), { filename: "image.jpg", contentType: "image/jpeg" });
   t("5a. return {url, directUrl} (fakeml/fakeff aman)", typeof r === "object" && r.url && r.directUrl === r.url, JSON.stringify(r));
@@ -105,9 +105,9 @@ w("\n— 6. termai dilepas penuh —");
     "plugins/tools/qrcustom.js",
     "plugins/tools/onephoto.js",
     "plugins/main/tqto.js",
-    "src/lib/nova-uploader.js",
-    "src/lib/nova-tmpfiles.js",
-    "src/lib/nova-boot-doctor.js",
+    "src/lib/rara-uploader.js",
+    "src/lib/rara-tmpfiles.js",
+    "src/lib/rara-boot-doctor.js",
   ];
   let clean = true;
   for (const f of files) {
@@ -118,10 +118,10 @@ w("\n— 6. termai dilepas penuh —");
   t("6a. 0 referensi endpoint/key termai di semua file dimigrasi", clean);
   t("6b. logic-bell.js dihapus (orphaned)", !fs.existsSync(path.join(REPO, "src/scraper/logic-bell.js")));
   t("6c. tourl: host Termai dibuang dari UPLOADERS", !rd("plugins/browser/tourl.js").includes('name: "Termai"'));
-  t("6d. boot-doctor: entry termai dibuang", !rd("src/lib/nova-boot-doctor.js").includes('key: "termai"'));
+  t("6d. boot-doctor: entry termai dibuang", !rd("src/lib/rara-boot-doctor.js").includes('key: "termai"'));
   t("6e. whatmusic: uploadTo0x0 balikin URL string (fix laten object)", rd("plugins/tools/whatmusic.js").includes("return uploadImage(buffer, filename)"));
-  t("6f. animeapaini: upload pakai engine nova-uploader", rd("plugins/search/animeapaini.js").includes("uploadImage(buffer, 'image.jpg')"));
-  t("6g. qrcustom: upload pakai engine nova-uploader", rd("plugins/tools/qrcustom.js").includes("uploadImage(buffer, 'logo.png')"));
+  t("6f. animeapaini: upload pakai engine rara-uploader", rd("plugins/search/animeapaini.js").includes("uploadImage(buffer, 'image.jpg')"));
+  t("6g. qrcustom: upload pakai engine rara-uploader", rd("plugins/tools/qrcustom.js").includes("uploadImage(buffer, 'logo.png')"));
 }
 
 // ── 7. LIVE (opsional, default off) ────────────────────────────────

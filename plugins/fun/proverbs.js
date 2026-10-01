@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "pepatah",
@@ -67,7 +67,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     await m.react("🕒");
     if (args[0]?.toLowerCase() === "info") {
-      return m.reply(novaWrap("Pepatah", [
+      return m.reply(raraWrap("Pepatah", [
         "PEPATAH ABSURD",
         "Mix & match pepatah asli dengan ending absurd",
         "Hasilnya bijaksana tapi gak jelas",
@@ -80,7 +80,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const akhir = PEPATAH_AKHIR[Math.floor(Math.random() * PEPATAH_AKHIR.length)];
 
     await m.react("🐣");
-    return m.reply(novaWrap("Pepatah", [
+    return m.reply(raraWrap("Pepatah", [
       "PEPATAH ABSURD",
       "",
       awal + " " + akhir,
@@ -89,7 +89,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ], "info"));
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("Pepatah", "Error: " + e.message, "error"));
+    return m.reply(raraWrap("Pepatah", "Error: " + e.message, "error"));
   }
 }
 

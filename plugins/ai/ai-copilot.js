@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { callAI, callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,7 +53,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!code) {
       const modes = Object.keys(COPILOT_PROMPTS).join(", ");
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🤖",
   name: "ai-copilot",
   description: "Mode copilot: lanjutkan, refactor, atau jelaskan code",
@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
       apiEndpoint: (botConfig.aiHelp || {}).apiEndpoint,
     });
 
-    const text = novaWrap("AI Copilot",
+    const text = raraWrap("AI Copilot",
       `Mode: *${selectedMode}*\n` +
       `Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`
     );
@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(text);
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
-    const text = novaError("AICopilot",
+    const text = raraError("AICopilot",
       `Status: *gagal*\n` +
       `Alasan: *${error.message}*`,
       "error"

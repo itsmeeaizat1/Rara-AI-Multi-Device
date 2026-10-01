@@ -5,19 +5,19 @@
 // .setanovaagent, pertanyaan mengandung "suara" TIDAK ditelan subcommand.
 // Deterministik tanpa network. Jalankan dari cwd DIR KOSONG:
 //   mkdir -p /tmp/superanova-suara && cd /tmp/superanova-suara && mkdir -p src/data && node <repo>/test/superagent-anova-suara-e2e/e2e.mjs
-import { setAgentDeps, resetAgentDeps } from "../../src/lib/nova-agent.js";
+import { setAgentDeps, resetAgentDeps } from "../../src/lib/rara-agent.js";
 import {
   VOICE_KEYS, VOICE_OPTIONS,
   getVoiceCfg, setVoiceCfg, wantsVoice, voiceSubReply,
   _setVoiceTtsForTest,
-} from "../../src/lib/nova-voice-reply.js";
+} from "../../src/lib/rara-voice-reply.js";
 import { config as agConfig, handler as agHandler } from "../../plugins/ai-agent/agent.js";
 import { handler as anovaHandler, createRule, _setAutonovaRuleAiForTest } from "../../plugins/ai/autonovaai.js";
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
-// novaWrap smallcaps → balikin ke latin buat asersi
+// raraWrap smallcaps → balikin ke latin buat asersi
 const SC_REV = { "ᴀ":"a","ʙ":"b","ᴄ":"c","ᴅ":"d","ᴇ":"e","ꜰ":"f","ɢ":"g","ʜ":"h","ɪ":"i","ᴊ":"j","ᴋ":"k","ʟ":"l","ᴍ":"m","ɴ":"n","ᴏ":"o","ᴘ":"p","ʀ":"r","ꜱ":"s","ᴛ":"t","ᴜ":"u","ᴠ":"v","ᴡ":"w","ʏ":"y","ᴢ":"z" };
 const fromSC = (s) => String(s || "").replace(/[ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘʀꜱᴛᴜᴠᴡʏᴢ]/g, c => SC_REV[c] || c);
 
@@ -51,7 +51,7 @@ w("\n— lib: multi-key cfg + subcommand bersama —");
   const r1 = voiceSubReply(db, "c1", "pakai suara", VOICE_KEYS.aisuperagent);
   check("pakai suara → reply AKTIF", Array.isArray(r1) && fromSC(r1.join(" ")).includes("AKTIF"));
   check("cfg aisuperagent ON", getVoiceCfg(db, "c1", VOICE_KEYS.aisuperagent).on === true);
-  check("cfg novaagent TIDAK ikut nyala (terisolasi)", getVoiceCfg(db, "c1", VOICE_KEYS.novaagent).on === false);
+  check("cfg raraagent TIDAK ikut nyala (terisolasi)", getVoiceCfg(db, "c1", VOICE_KEYS.raraagent).on === false);
   check("cfg anovaagent TIDAK ikut nyala (terisolasi)", getVoiceCfg(db, "c1", VOICE_KEYS.anovaagent).on === false);
   // suara ardi → ganti suara + auto on
   const r2 = voiceSubReply(db, "c1", "suara ardi", VOICE_KEYS.aisuperagent);

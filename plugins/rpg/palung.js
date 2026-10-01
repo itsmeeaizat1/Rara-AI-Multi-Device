@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // palung.js — PALUNG MISTERI (request owner 21 Sep 2026, game petualangan #6, standar Game Designer)
 // Petualangan bawah laut: makin DALAM makin kaya & berbahaya. 4 zona kedalaman (Cahaya/Senja/Abisal/Hadal),
 // kelola OKSIGEN (regen 1/5 mnt, naik ke permukaan = regen penuh), jalur AMAN vs RISIKO (loot ×2 tapi 35% bahaya),
@@ -7,12 +7,12 @@
 // Common→Mitos). Daily + streak + starter pack + leaderboard. State persist db.data.palung tahan restart.
 // 🎬 ANIMASI KHAS: selam VERTIKAL — penyelam 🤿 turun kolom kedalaman, jejak gelembung 🫧, denyut sonar ◎.
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
-import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
-import { addCash, spendCash, getCash } from "../../src/lib/nova-rpg-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
+import { addExpWithLevelCheck } from "../../src/lib/rara-level.js";
+import { addCash, spendCash, getCash } from "../../src/lib/rara-rpg-service.js";
 import { playTrenchdiverCinematic, selamCinematic, naikCinematic } from "../../src/lib/libanimationrpg/libtrenchdiverrpg.js";
-import { getLocalDateObject } from "../../src/lib/nova-time.js";
+import { getLocalDateObject } from "../../src/lib/rara-time.js";
 
 // ── knob ──
 const O2_MAX_BASE = process.env.PALUNG_O2_MAX !== undefined ? Number(process.env.PALUNG_O2_MAX) : 10;
@@ -87,7 +87,7 @@ function newUser(m) {
 }
 function saveDb() { try { getDatabase().save(); } catch (e) { console.error("[palung] gagal simpan:", e); } }
 
-const box = (icon, flavor, body) => novaGameBox({ title: "palung", icon, flavor, body });
+const box = (icon, flavor, body) => raraGameBox({ title: "palung", icon, flavor, body });
 
 async function handler(m, { sock }) {
   const sub = (m.args?.[0] || "").toLowerCase();

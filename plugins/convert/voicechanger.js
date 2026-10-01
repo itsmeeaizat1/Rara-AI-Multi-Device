@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { spawn } from 'child_process'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "voicechanger",
@@ -210,7 +210,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("Contoh: " + usedPrefix + "vc anime raiden");
       lines.push("");
       lines.push("Note: RVC API butuh 5-15 detik untuk proses");
-      return m.reply(novaWrap("Voice Changer - Anime", lines.join("\n")));
+      return m.reply(raraWrap("Voice Changer - Anime", lines.join("\n")));
     }
 
     // === MENU: local list ===
@@ -237,25 +237,25 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("");
       lines.push("Cara: Reply audio/VN lalu ketik " + usedPrefix + "vc <model>");
       lines.push("Contoh: " + usedPrefix + "vc loli | " + usedPrefix + "vc anime raiden");
-      return m.reply(novaWrap("Voice Changer", lines.join("\n")));
+      return m.reply(raraWrap("Voice Changer", lines.join("\n")));
     }
 
     // === RVC ANIME MODE ===
     if (input === "anime" && subInput) {
       const char = ANIME_MODELS.find(c => c.id === subInput || c.name.toLowerCase() === subInput);
       if (!char) {
-        return m.reply(novaWrap("Voice Changer", [
+        return m.reply(raraWrap("Voice Changer", [
           "Karakter anime tidak ditemukan: " + subInput,
           "Ketik " + usedPrefix + "vc anime list untuk lihat semua.",
         ].join("\n")));
       }
 
       if (!hasAudio) {
-        return m.reply(novaWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu " + usedPrefix + "vc anime " + char.id));
+        return m.reply(raraWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu " + usedPrefix + "vc anime " + char.id));
       }
 
       const statusMsg = await conn.sendMessage(m.key.remoteJid, {
-        text: novaWrap("Voice Changer", "Memproses RVC AI: " + char.name + " (" + char.region + ")...\nEstimasi: 5-15 detik"),
+        text: raraWrap("Voice Changer", "Memproses RVC AI: " + char.name + " (" + char.region + ")...\nEstimasi: 5-15 detik"),
       });
 
       // Download audio
@@ -266,15 +266,15 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           message: quoted,
         });
       } catch (e) {
-        return m.reply(novaGagal("VoiceChanger"));
+        return m.reply(raraGagal("VoiceChanger"));
       }
 
       if (!audioBuffer || audioBuffer.length < 100) {
-        return m.reply(novaError("VoiceChanger", "Audio gak valid atau kekecilan nih"));
+        return m.reply(raraError("VoiceChanger", "Audio gak valid atau kekecilan nih"));
       }
 
       // Convert to WAV first (RVC expects WAV)
-      const tmpDir = path.join(os.tmpdir(), 'nova-vc-rvc');
+      const tmpDir = path.join(os.tmpdir(), 'rara-vc-rvc');
       if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
       const inputWav = path.join(tmpDir, 'input_' + Date.now() + '.wav');
@@ -307,7 +307,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (!uploadedPath) throw new Error('Gagal upload ke RVC server nih');
 
       // Join queue with character fn_index
-      const sessionHash = 'nova_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      const sessionHash = 'rara_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
       const queueRes = await axios.post(RVC_API_BASE + '/queue/join', {
         data: [
           "Upload audio",
@@ -395,7 +395,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         audio: outputBuf,
         mimetype: 'audio/ogg; codecs=opus',
         ptt: true,
-        caption: novaWrap("Voice Changer - RVC Anime", [
+        caption: raraWrap("Voice Changer - RVC Anime", [
           char.name + " (" + char.region + ")",
           "AI Voice Conversion - Genshin Impact",
         ].join("\n")),
@@ -419,7 +419,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // === LOCAL FFMPEG MODE ===
     if (!LOCAL_MODELS[input]) {
-      return m.reply(novaWrap("Voice Changer", [
+      return m.reply(raraWrap("Voice Changer", [
         "Model tidak ditemukan: " + input,
         "Ketik " + usedPrefix + "vc list untuk model lokal",
         "Ketik " + usedPrefix + "vc anime list untuk karakter anime",
@@ -427,12 +427,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!hasAudio) {
-      return m.reply(novaWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu ketik " + usedPrefix + "vc " + input));
+      return m.reply(raraWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu ketik " + usedPrefix + "vc " + input));
     }
 
     const vm = LOCAL_MODELS[input];
     const statusMsg = await conn.sendMessage(m.key.remoteJid, {
-      text: novaWrap("Voice Changer", "Memproses: " + input + "..."),
+      text: raraWrap("Voice Changer", "Memproses: " + input + "..."),
     });
 
     let audioBuffer;
@@ -442,14 +442,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         message: quoted,
       });
     } catch (e) {
-      return m.reply(novaGagal("VoiceChanger"));
+      return m.reply(raraGagal("VoiceChanger"));
     }
 
     if (!audioBuffer || audioBuffer.length < 100) {
-      return m.reply(novaError("VoiceChanger", "Audio gak valid atau kekecilan nih"));
+      return m.reply(raraError("VoiceChanger", "Audio gak valid atau kekecilan nih"));
     }
 
-    const tmpDir = path.join(os.tmpdir(), 'nova-vc-local');
+    const tmpDir = path.join(os.tmpdir(), 'rara-vc-local');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, 'in_' + Date.now() + '.mp3');
@@ -482,7 +482,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: outputBuf,
       mimetype: 'audio/ogg; codecs=opus',
       ptt: true,
-      caption: novaWrap("Voice Changer", [
+      caption: raraWrap("Voice Changer", [
         input.toUpperCase(),
         vm.desc,
       ].join("\n")),
@@ -493,10 +493,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await conn.sendMessage(m.key.remoteJid, { delete: { remoteJid: m.key.remoteJid, id: statusMsg.key.id, fromMe: true } });
     } catch (e) { console.error('[voicechanger.js]:', e.message); }
 
-      await m.reply(novaBerhasil("voicechanger"));
+      await m.reply(raraBerhasil("voicechanger"));
   } catch (e) {
     console.error("voicechanger error:", e.message);
-    return m.reply(novaWrap("Voice Changer", "Error: " + e.message));
+    return m.reply(raraWrap("Voice Changer", "Error: " + e.message));
   }
 }
 

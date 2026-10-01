@@ -1,6 +1,6 @@
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animEnchant } from "../../src/lib/nova-rpg-anim.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animEnchant } from "../../src/lib/rara-rpg-anim.js";
 
 const pluginConfig = {
   name: "blacksmith",
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "info" || !subCmd) {
       await m.react('🐣');
-      return m.reply(novaRpgBox("blacksmith", [
+      return m.reply(raraRpgBox("blacksmith", [
         `Senjata : ${weapon.name}`,
         `Level : ${currentLevel} / ${maxLevel}`,
         `Total ATK : ${currentAtk} (+${currentLevel * 5})`,
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       if (currentLevel >= maxLevel) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "blacksmith",
             `Senjata *${weapon.name}* sudah mencapai level maksimal (${maxLevel})!`,
             "error"
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
       if (currentGold < upgradeCost) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "blacksmith",
             `Gold tidak cukup untuk tempa senjata!\n\nBiaya: ${upgradeCost} Gold | Punya: ${currentGold} Gold`,
             "error"
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
         await db.setPlayerData?.(sender, "weapon", weapon);
 
         await m.react('🐣');
-        return m.reply(novaGameBox({
+        return m.reply(raraGameBox({
           title: "blacksmith", icon: "⚒️",
           flavor: "⚒️ *TEMPAAN BERHASIL!*",
           body: [
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
         await db.setPlayerData?.(sender, "weapon", weapon);
 
         await m.react('❌');
-        return m.reply(novaGameBox({
+        return m.reply(raraGameBox({
           title: "blacksmith", icon: "⚒️",
           flavor: "🔥 *TEMPAAN GAGAL!*",
           body: [
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
 
     await m.react('❌');
     return m.reply(
-      novaRpgBox(
+      raraRpgBox(
         "blacksmith",
         `Gunakan perintah:\n\n• ${m.prefix}blacksmith info — Cek status senjata & biaya\n• ${m.prefix}blacksmith upgrade <nama_senjata> — Upgrade senjata`,
         "guide"
@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("blacksmith error:", err);
     await m.react('❌');
-    return m.reply(novaRpgBox("blacksmith", err.message || "Terjadi kesalahan pada sistem Pandai Besi.", "error"));
+    return m.reply(raraRpgBox("blacksmith", err.message || "Terjadi kesalahan pada sistem Pandai Besi.", "error"));
   }
 }
 

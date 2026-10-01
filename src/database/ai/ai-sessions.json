@@ -39,6 +39,86 @@
       "role": "assistant",
       "content": "jawaban-mock",
       "ts": 1790874481269
+    },
+    {
+      "role": "user",
+      "content": "jelaskan siapa presiden indonesia",
+      "ts": 1790876229399
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock",
+      "ts": 1790876229399
+    },
+    {
+      "role": "user",
+      "content": "halo",
+      "ts": 1790876229422
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock",
+      "ts": 1790876229422
+    },
+    {
+      "role": "user",
+      "content": "ini foto apa?",
+      "ts": 1790876229436
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock-multimodal",
+      "ts": 1790876229436
+    },
+    {
+      "role": "user",
+      "content": "halo",
+      "ts": 1790876229439
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock",
+      "ts": 1790876229439
+    },
+    {
+      "role": "user",
+      "content": "jelaskan siapa presiden indonesia",
+      "ts": 1790876236645
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock",
+      "ts": 1790876236645
+    },
+    {
+      "role": "user",
+      "content": "halo",
+      "ts": 1790876236666
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock",
+      "ts": 1790876236666
+    },
+    {
+      "role": "user",
+      "content": "ini foto apa?",
+      "ts": 1790876236680
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock-multimodal",
+      "ts": 1790876236680
+    },
+    {
+      "role": "user",
+      "content": "halo",
+      "ts": 1790876236684
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock",
+      "ts": 1790876236684
     }
   ]
 }

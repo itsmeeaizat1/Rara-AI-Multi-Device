@@ -9,9 +9,9 @@ import path from "path";
 // (bukan process.cwd(), karena test ini dijalankan dari cwd direktori KOSONG).
 import { fileURLToPath } from "node:url";
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-await import(REPO + "/src/lib/nova-database.js").then((m) => m.initDatabase(path.join(process.cwd(), "db")));
+await import(REPO + "/src/lib/rara-database.js").then((m) => m.initDatabase(path.join(process.cwd(), "db")));
 
-const M = await import(REPO + "/src/lib/nova-movie-notifier.js");
+const M = await import(REPO + "/src/lib/rara-movie-notifier.js");
 const JID = "6281234567890@s.whatsapp.net";
 const RM = "\u200E".repeat(4001);
 

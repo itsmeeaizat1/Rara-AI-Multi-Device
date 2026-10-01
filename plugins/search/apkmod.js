@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import axios from "axios";
 import config from "../../config.js";
 import fs from "fs";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "apkmod",
   alias: ["apkmod"],
@@ -21,7 +21,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
+const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 async function handler(m, { sock }) {
   const text = m.text?.trim();
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     const apps = data.data.slice(0, 15);
 
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     let caption = `📱 *Hasil pencarian dari ${text}*\n\n`;
 
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
       },
     );
   } catch (err) {
-    return m.reply(novaWrap("apkmod", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("apkmod", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

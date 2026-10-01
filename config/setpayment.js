@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // File terpisah untuk data payment & donasi
 // Bisa di-obfuscate sendiri tanpa ganggu config.js utama
 //

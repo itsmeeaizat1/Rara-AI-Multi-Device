@@ -1,6 +1,6 @@
 // E2E AICALL (17 Sep 2026) — plugin .aicall2 + service Go aicall/ (HTTP mock).
 // Jalankan: node test/aicall-e2e/e2e.mjs
-import { initDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase } from "../../src/lib/rara-database.js";
 import { fromSC } from "../../src/lib/styler.js";
 
 let pass = 0, fail = 0;
@@ -29,7 +29,7 @@ async function mkM(text, { isOwner = true } = {}) {
     reacts,
   };
 }
-// novaWrap bikin semua teks jadi smallcaps — asersi WAJIB dinormalkan balik
+// raraWrap bikin semua teks jadi smallcaps — asersi WAJIB dinormalkan balik
 const box = (e) => fromSC((e.sent.find((s) => s.type === "reply") || { txt: "" }).txt);
 
 // ═══ 1. config ═══

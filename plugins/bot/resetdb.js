@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
 import config from '../../config.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'resetdb',
     alias: ["resetdb"],
@@ -25,7 +25,7 @@ if (!global.resetDbPending) global.resetDbPending = {}
 
 async function handler(m, { sock }) {
     if (!config.isOwner(m.sender)) {
-        return m.reply(novaWrap("Resetdb", '❌ *Owner Only!*'))
+        return m.reply(raraWrap("Resetdb", '❌ *Owner Only!*'))
     }
     
     const confirm = m.args?.[0]?.toLowerCase()
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     if (confirm !== 'confirm') {
         global.resetDbPending[m.sender] = Date.now()
         
-        return m.reply(novaWrap("resetdb", `⚠️ *Peringatan!*\n\n` +
+        return m.reply(raraWrap("resetdb", `⚠️ *Peringatan!*\n\n` +
             `Ini akan menghapus SEMUA data:\n` +
             `Data user\n` +
             `Data group\n` +
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const pending = global.resetDbPending[m.sender]
     if (!pending || (Date.now() - pending) > 60000) {
         delete global.resetDbPending[m.sender]
-        return m.reply(novaWrap("Resetdb", `❌ Timeout! Ketik *.resetdb* ulang untuk memulai.`))
+        return m.reply(raraWrap("Resetdb", `❌ Timeout! Ketik *.resetdb* ulang untuk memulai.`))
     }
     
     delete global.resetDbPending[m.sender]
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
             `\`${path.basename(backupPath)}\``)
         
     } catch (error) {
-        await m.reply(novaWrap("resetdb", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(raraWrap("resetdb", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

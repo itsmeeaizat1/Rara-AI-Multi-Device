@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js"
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js"
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js"
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js"
 
 const pluginConfig = {
     name: 'togglecpanelinfo',
@@ -45,11 +45,11 @@ async function handler(m, { sock }) {
         txt += '  dmdangroup = DM + Group (dua-duanya)\n\n'
         txt += 'Cara pakai: ' + prefix + 'togglecpanelinfo dm'
 
-        return m.reply(novaWrap('panelmode', txt))
+        return m.reply(raraWrap('panelmode', txt))
     }
 
     if (!MODES[text]) {
-        return m.reply(novaWrap('panelmode', 
+        return m.reply(raraWrap('panelmode', 
             'Mode tidak valid. Pilih: dm, group, atau dmdangroup\n\n' +
             prefix + 'togglecpanelinfo dm\n' +
             prefix + 'togglecpanelinfo group\n' +
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     txt += '  .1gbv1 - .10gbv1\n'
     txt += '  .cadminv1 - .cadminv5'
 
-    await m.reply(novaWrap('panelmode', txt))
+    await m.reply(raraWrap('panelmode', txt))
 }
 
 export { pluginConfig as config, handler }

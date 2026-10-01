@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { startAiStatus } from "../../src/lib/nova-ai-status.js";
-import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { startAiStatus } from "../../src/lib/rara-ai-status.js";
+import { callAI, callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "aiidea",
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!topic) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🤖",
   name: "aiidea",
   description: "Dapatkan ide/ brainstorming dengan AI",
@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      novaWrap("AI Idea", [`Topik: *${topic}*`,
+      raraWrap("AI Idea", [`Topik: *${topic}*`,
         `Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aiidea <topik> untuk ide lain`) +
@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AIIdea", "Gagal nih, coba lagi ya");
+      raraError("AIIdea", "Gagal nih, coba lagi ya");
 
     if (aiStatus) await aiStatus.fail("AI gagal merespons — coba lagi ya");
     else { await m.react("❌"); await m.reply(text, "aiidea"); }

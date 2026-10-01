@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!buffer) {
       const text =
-        novaWrap("Cecan", ["Status: *gagal*",
+        raraWrap("Cecan", ["Status: *gagal*",
           "Alasan: *endpoint cecan saat ini tidak merespons.*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -94,7 +94,7 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      novaWrap("Cecan", ["Sumber: *api*",
+      raraWrap("Cecan", ["Sumber: *api*",
         "Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}cecan untuk hasil lain`) +
@@ -105,7 +105,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Cecan", "Gagal nih, coba lagi ya");
+      raraError("Cecan", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "cecan");
   }

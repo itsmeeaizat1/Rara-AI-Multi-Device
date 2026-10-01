@@ -1,6 +1,6 @@
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { rpgSleep } from "../../src/lib/rara-rpg-anim.js";
 
 const pluginConfig = {
   name: "bounty",
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "list" || !subCmd) {
       await m.react('🐣');
-      return m.reply(novaRpgBox("bounty", [
+      return m.reply(raraRpgBox("bounty", [
         `Energi kamu : ${player.energi}`,
         "---",
         "Daftar buronan aktif :",
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
       if (!target) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "bounty",
             `Target buronan tidak ditemukan!\n\nLihat daftar buronan dengan: ${m.prefix}bounty list`,
             "error"
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
       if (player.energi < target.energiCost) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "bounty",
             `Energi kamu tidak cukup untuk memburu *${target.name}*!\n\nMembutuhkan: ${target.energiCost} Energi | Memiliki: ${player.energi} Energi`,
             "error"
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
         await db.setPlayerData?.(sender, "bounty", player);
 
         await m.react('🐣');
-        return m.reply(novaGameBox({
+        return m.reply(raraGameBox({
           title: "bounty", icon: "🎯",
           flavor: "⚔️ *BURONAN TUMBANG!*",
           body: [
@@ -155,7 +155,7 @@ async function handler(m, { sock }) {
         await db.setPlayerData?.(sender, "bounty", player);
 
         await m.react('❌');
-        return m.reply(novaGameBox({
+        return m.reply(raraGameBox({
           title: "bounty", icon: "🎯",
           flavor: "💥 *KAMU KALAH!*",
           body: [
@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
 
     await m.react('❌');
     return m.reply(
-      novaRpgBox(
+      raraRpgBox(
         "bounty",
         `Perintah tidak diketahui!\n\nGunakan:\n• ${m.prefix}bounty list\n• ${m.prefix}bounty hunt <id>`,
         "guide"
@@ -180,7 +180,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("bounty error:", err);
     await m.react('❌');
-    return m.reply(novaRpgBox("bounty", err.message || "Terjadi kesalahan pada sistem Bounty.", "error"));
+    return m.reply(raraRpgBox("bounty", err.message || "Terjadi kesalahan pada sistem Bounty.", "error"));
   }
 }
 

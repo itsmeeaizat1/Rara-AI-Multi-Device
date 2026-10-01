@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/group/absenjam.js — Absen otomatis grup (1 file, ESM)
 // Command: .absenjam buka <durasi> [judul] | .absen tutup | .absen status | .absen
 
 import fs from "fs";
-import { runLiveTicker } from "../../src/lib/nova-countdown.js";
-import { buildAbsenMeter } from "../../src/lib/nova-absen-meter.js";
+import { runLiveTicker } from "../../src/lib/rara-countdown.js";
+import { buildAbsenMeter } from "../../src/lib/rara-absen-meter.js";
 import path from "path";
 
 // ── Module state (restart-safe: data di JSON, bukan RAM) ──

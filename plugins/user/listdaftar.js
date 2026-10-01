@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const PAGE_SIZE = 20;
 
 function getRegistrationContextInfo() {
   const saluranId = config.saluran?.id || "@newsletter";
-  const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+  const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
   return {
     forwardingScore: 0,
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
   let registeredUsers = Object.values(allUsers).filter((u) => u.isRegistered);
 
   if (registeredUsers.length === 0) {
-    return m.reply(novaWrap("listdaftar", `❌ Belum ada user yang terdaftar!`));
+    return m.reply(raraWrap("listdaftar", `❌ Belum ada user yang terdaftar!`));
   }
 
   if (options.search) {
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
   }
 
   if (registeredUsers.length === 0) {
-    return m.reply(novaWrap("listdaftar", `❌ Tidak ada user yang cocok dengan pencarian: *${options.search}*`));
+    return m.reply(raraWrap("listdaftar", `❌ Tidak ada user yang cocok dengan pencarian: *${options.search}*`));
   }
 
   const totalPages = Math.max(1, Math.ceil(registeredUsers.length / PAGE_SIZE));

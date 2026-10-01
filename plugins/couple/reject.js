@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Sistem Pacaran — Tolak tembakan
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "tolak",
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     }
 
     if (!shooterJid) {
-      return m.reply(novaWrap("tolak", [
+      return m.reply(raraWrap("tolak", [
         `Tolak tembakan seseorang dengan halus.`,
         ``,
         `📌 Format: reply pesan tembakan + ${m.prefix}tolak`,
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     const sessionKey = `${m.chat}_${m.sender}`;
     if (global.jadianSessions?.[sessionKey]) delete global.jadianSessions[sessionKey];
 
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "ditolak", icon: "💔",
       flavor: "💔 *DITOLAK, SABAR YA...*",
       body: [

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "kisahnabi",
@@ -28,7 +28,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = (args[0] || "").toLowerCase().trim();
 
     if (!input || input === "list") {
-      return m.reply(novaWrap("Kisah Nabi", [
+      return m.reply(raraWrap("Kisah Nabi", [
         "Kisah 25 Nabi & Rasul",
         "",
         NABI_LIST.map((n, i) => (i + 1) + ". " + n.charAt(0).toUpperCase() + n.slice(1)).join("\n"),
@@ -39,13 +39,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!NABI_LIST.includes(input)) {
-      return m.reply(novaWrap("Kisah Nabi", "Nama nabi tidak ditemukan: " + input + "\nKetik " + usedPrefix + "kisahnabi list untuk lihat semua."));
+      return m.reply(raraWrap("Kisah Nabi", "Nama nabi tidak ditemukan: " + input + "\nKetik " + usedPrefix + "kisahnabi list untuk lihat semua."));
     }
 
     const res = await axios.get(API_URL + "/" + input, { timeout: 10000 });
 
     if (!res.data || !res.data.nabi) {
-      return m.reply(novaWrap("Kisah Nabi", "Gagal ambil nih kisah."));
+      return m.reply(raraWrap("Kisah Nabi", "Gagal ambil nih kisah."));
     }
 
     const d = res.data.nabi;
@@ -59,10 +59,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       d.kisah || "Tidak ada kisah tersedia.",
     ];
 
-    return m.reply(novaWrap("Kisah Nabi " + d.nama, lines.join("\n")));
+    return m.reply(raraWrap("Kisah Nabi " + d.nama, lines.join("\n")));
   } catch (e) {
     console.error("kisahnabi error:", e.message);
-    return m.reply(novaWrap("Kisah Nabi", "Error: " + e.message));
+    return m.reply(raraWrap("Kisah Nabi", "Error: " + e.message));
   }
 }
 

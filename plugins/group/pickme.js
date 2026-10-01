@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getParticipantJid, getParticipantJids } from "../../src/lib/nova-lid.js";
-import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { delay } from "../../src/lib/nova-utils.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getParticipantJid, getParticipantJids } from "../../src/lib/rara-lid.js";
+import { raraWrap, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { delay } from "../../src/lib/rara-utils.js";
 
 const pluginConfig = {
   name: "pickmegc",
@@ -56,7 +56,7 @@ async function handler(m, { sock, text: args }) {
     const participants = groupMeta?.participants || [];
 
     if (participants.length === 0) {
-      await m.reply(novaError("Pick Me", "Gagal mengambil daftar member grup nih."));
+      await m.reply(raraError("Pick Me", "Gagal mengambil daftar member grup nih."));
       return { handled: true };
     }
 
@@ -76,7 +76,7 @@ async function handler(m, { sock, text: args }) {
 
     // .pickme help
     if (argStr.toLowerCase() === "help" || argStr === "?") {
-      await m.reply(novaGuide("Pick Me", "Pilih member grup secara acak untuk tugas/kelompok!", `${prefix}pickme [jumlah]\n${prefix}pickme @tag1 @tag2\n${prefix}pickme team 2`));
+      await m.reply(raraGuide("Pick Me", "Pilih member grup secara acak untuk tugas/kelompok!", `${prefix}pickme [jumlah]\n${prefix}pickme @tag1 @tag2\n${prefix}pickme team 2`));
       return { handled: true };
     }
 
@@ -99,12 +99,12 @@ async function handler(m, { sock, text: args }) {
         const rerollKey = `pickme_last_${m.chat}`;
         const lastPool = global[rerollKey];
         if (!lastPool || lastPool.length === 0) {
-          await m.reply(novaEmpty("Pick Me Reroll", "Belum ada riwayat undian sebelumnya buat di-reroll nih."));
+          await m.reply(raraEmpty("Pick Me Reroll", "Belum ada riwayat undian sebelumnya buat di-reroll nih."));
           return { handled: true };
         }
         const picked = randomPick(lastPool, 1);
         await m.reply(
-          novaWrap("Pick Me - Reroll", 
+          raraWrap("Pick Me - Reroll", 
             `Pilihan ulang:\n\n@${picked[0].split("@")[0]}`,
             "success"),
           { mentions: picked }
@@ -131,7 +131,7 @@ async function handler(m, { sock, text: args }) {
     }
 
     if (pool.length === 0) {
-      await m.reply(novaEmpty("Pick Me", "Gak ada member yang bisa dipilih nih."));
+      await m.reply(raraEmpty("Pick Me", "Gak ada member yang bisa dipilih nih."));
       return { handled: true };
     }
 
@@ -167,7 +167,7 @@ async function handler(m, { sock, text: args }) {
         if (i < actualTeamCount - 1) teamText += "\n";
       }
 
-      await m.reply(novaWrap("Pick Me - Team", teamText, "success"), { mentions: allMentions });
+      await m.reply(raraWrap("Pick Me - Team", teamText, "success"), { mentions: allMentions });
       return { handled: true };
     }
 
@@ -185,7 +185,7 @@ async function handler(m, { sock, text: args }) {
 
     if (actualCount === 1) {
       // Single pick with suspense
-      await m.reply(novaWrap("Pick Me", suspense, "info"));
+      await m.reply(raraWrap("Pick Me", suspense, "info"));
       await delay(1500);
 
       const pickedJid = picked[0];
@@ -203,7 +203,7 @@ async function handler(m, { sock, text: args }) {
         "Selamat! Kamu ditunjuk untuk misi ini.",
       ].join("\n");
 
-      await m.reply(novaWrap("Pick Me", pickText, "success"), { mentions: picked });
+      await m.reply(raraWrap("Pick Me", pickText, "success"), { mentions: picked });
     } else {
       // Multi pick
       let pickText = `Pilihan Acak (${actualCount} orang):\n\n`;
@@ -212,12 +212,12 @@ async function handler(m, { sock, text: args }) {
       });
       pickText += "\nSelamat untuk yang terpilih!";
 
-      await m.reply(novaWrap("Pick Me", pickText, "success"), { mentions: picked });
+      await m.reply(raraWrap("Pick Me", pickText, "success"), { mentions: picked });
     }
     return { handled: true };
   } catch (error) {
     console.error("pickme error:", error);
-    await m.reply(novaError("Pick Me", `Terjadi kesalahan saat memilih member: ${error.message || error}`));
+    await m.reply(raraError("Pick Me", `Terjadi kesalahan saat memilih member: ${error.message || error}`));
     return { handled: true };
   }
 }

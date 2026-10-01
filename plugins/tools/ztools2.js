@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .ztools2 — BACKUP z-variant tools zelapi (owner 15 Sep 2026:
 //   "z di depan = cadangan, meski bot udah punya fiturnya").
@@ -14,7 +14,7 @@ import {
   _setZelToolsHttpForTest, _setZelToolsKeyForTest,
 } from "../../src/scraper/zeltools.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ztools2",
@@ -54,7 +54,7 @@ async function fetchImg(url) {
 }
 
 function usageCard() {
-  return novaWrap("ztools2", [
+  return raraWrap("ztools2", [
     "🧰 ZELAPI TOOLS — BACKUP (z-variant):",
     "",
     "▸ .zqr <teks> — bikin QR code",
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
 
     // .zepho list — daftar efek
     if (kind === "ephoto" && ["list", "efek", "menu"].includes((args[0] || "").toLowerCase())) {
-      return m.reply(novaWrap("ztools2", "🎨 EPHOTO360 — 30 efek:\n\n" + ZEL_EPHOTO_EFFECTS.map((e) => "▸ " + e).join("\n") + "\n\npakai: .zepho <efek> <teks>"));
+      return m.reply(raraWrap("ztools2", "🎨 EPHOTO360 — 30 efek:\n\n" + ZEL_EPHOTO_EFFECTS.map((e) => "▸ " + e).join("\n") + "\n\npakai: .zepho <efek> <teks>"));
     }
 
     let params = {};
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
         const up = await imageUrlFromReply(m);
         if (!up) {
           await m.react("❌");
-          return m.reply(novaWrap("ztools2", kind === "readqr" ? "Reply gambar QR-nya, atau kirim URL gambarnya" : "Reply gambarnya, atau kirim URL gambarnya"));
+          return m.reply(raraWrap("ztools2", kind === "readqr" ? "Reply gambar QR-nya, atau kirim URL gambarnya" : "Reply gambarnya, atau kirim URL gambarnya"));
         }
         url = up;
       }
@@ -143,14 +143,14 @@ async function handler(m, { sock }) {
 
     if (!params.url && !params.text && !params.amount && !params.effect && !params.code) {
       await m.react("❌");
-      return m.reply(novaWrap("ztools2", `Input kosong — cek *.${command}* di daftar .ztools2`));
+      return m.reply(raraWrap("ztools2", `Input kosong — cek *.${command}* di daftar .ztools2`));
     }
 
     if (!m.reacts || !m.reacts.length) await m.react("🧠");
     const r = await zelToolCall(kind, params);
     if (!r.ok) {
       await m.react("❌");
-      return m.reply(novaWrap("ztools2", `Backup ${kind} zelapi bermasalah: ${r.error}`));
+      return m.reply(raraWrap("ztools2", `Backup ${kind} zelapi bermasalah: ${r.error}`));
     }
     const d = r.data;
 
@@ -158,32 +158,32 @@ async function handler(m, { sock }) {
       await sock.sendMessage(m.chat, { image: r.buffer, caption: "_(QR via zelapi)_" }, { quoted: m });
     } else if (kind === "readqr") {
       const txt = d?.data?.text || d?.result?.text;
-      if (!txt) { await m.react("❌"); return m.reply(novaWrap("ztools2", "QR gak kebaca — pastikan gambarnya jelas")); }
-      await m.reply(novaWrap("ztools2", "✅ QR DIBACA (zelapi)\n\n📝 " + txt));
+      if (!txt) { await m.react("❌"); return m.reply(raraWrap("ztools2", "QR gak kebaca — pastikan gambarnya jelas")); }
+      await m.reply(raraWrap("ztools2", "✅ QR DIBACA (zelapi)\n\n📝 " + txt));
     } else if (kind === "morse") {
       const lines = [];
       if (v(d.morse)) lines.push("📡 " + d.morse);
       if (v(d.chart)) lines.push("", short(d.chart, 400));
-      await m.reply(novaWrap("ztools2", "✅ MORSE (zelapi)\n\n" + lines.join("\n")));
+      await m.reply(raraWrap("ztools2", "✅ MORSE (zelapi)\n\n" + lines.join("\n")));
     } else if (kind === "kurs") {
-      await m.reply(novaWrap("ztools2", "✅ KURS (zelapi)\n\n💱 " + (v(d.message) || `${d.originalAmount} USD = ${d.convertedAmount} IDR`) + (v(d.rate) ? `\n📊 rate ${Number(d.rate).toLocaleString("id-ID")}` : "") + (v(d.date) ? `\n📅 ${d.date}` : "")));
+      await m.reply(raraWrap("ztools2", "✅ KURS (zelapi)\n\n💱 " + (v(d.message) || `${d.originalAmount} USD = ${d.convertedAmount} IDR`) + (v(d.rate) ? `\n📊 rate ${Number(d.rate).toLocaleString("id-ID")}` : "") + (v(d.date) ? `\n📅 ${d.date}` : "")));
     } else if (kind === "shortlink") {
-      await m.reply(novaWrap("ztools2", "✅ SHORTLINK (zelapi)\n\n🔗 " + (v(d.result) || v(d.short)) + (v(d.expired_at) ? `\n🕒 aktif ${d.expired_at}` : "")));
+      await m.reply(raraWrap("ztools2", "✅ SHORTLINK (zelapi)\n\n🔗 " + (v(d.result) || v(d.short)) + (v(d.expired_at) ? `\n🕒 aktif ${d.expired_at}` : "")));
     } else if (kind === "tinyurl") {
-      await m.reply(novaWrap("ztools2", "✅ TINYURL (zelapi)\n\n🔗 " + (v(d.result) || v(d.url))));
+      await m.reply(raraWrap("ztools2", "✅ TINYURL (zelapi)\n\n🔗 " + (v(d.result) || v(d.url))));
     } else if (kind === "ephoto") {
       const url = v(d.result) || (typeof d?.result === "object" ? v(d.result?.url) : null);
-      if (!url || !/^https?:\/\//.test(url)) { await m.react("❌"); return m.reply(novaWrap("ztools2", "Efek ephoto gagal — coba lagi / efek lain (.zepho list)")); }
+      if (!url || !/^https?:\/\//.test(url)) { await m.react("❌"); return m.reply(raraWrap("ztools2", "Efek ephoto gagal — coba lagi / efek lain (.zepho list)")); }
       const buf = await fetchImg(url);
       await sock.sendMessage(m.chat, { image: buf, caption: `_(ephoto360 ${params.effect} via zelapi)_` }, { quoted: m });
     } else if (kind === "whatanime") {
       const card = cardWhatanime(d);
-      if (!card) { await m.react("❌"); return m.reply(novaWrap("ztools2", "Gak nemu anime dari gambar itu — coba screenshot scene yang lebih jelas")); }
-      await m.reply(novaWrap("ztools2", "✅ WHATANIME (zelapi)\n\n" + card));
+      if (!card) { await m.react("❌"); return m.reply(raraWrap("ztools2", "Gak nemu anime dari gambar itu — coba screenshot scene yang lebih jelas")); }
+      await m.reply(raraWrap("ztools2", "✅ WHATANIME (zelapi)\n\n" + card));
     } else if (kind === "img2prompt") {
       const prompt = v(d?.result?.prompt) || v(d?.prompt);
-      if (!prompt) { await m.react("❌"); return m.reply(novaWrap("ztools2", "Prompt gak kehasil — coba gambar lain")); }
-      await m.reply(novaWrap("ztools2", "✅ IMAGE → PROMPT (zelapi)\n\n📝 " + short(prompt, 900)));
+      if (!prompt) { await m.react("❌"); return m.reply(raraWrap("ztools2", "Prompt gak kehasil — coba gambar lain")); }
+      await m.reply(raraWrap("ztools2", "✅ IMAGE → PROMPT (zelapi)\n\n📝 " + short(prompt, 900)));
     } else if (kind === "gist" || kind === "pastebin") {
       const files = d?.files;
       if (files && typeof files === "object" && !Array.isArray(files)) {
@@ -195,18 +195,18 @@ async function handler(m, { sock }) {
           if (content.length <= 3000) lines.push("", `── ${first} ──`, short(content, 2800));
           else {
             lines.push("", "isi lengkap nyusul sebagai file…");
-            await m.reply(novaWrap("ztools2", lines.join("\n")));
+            await m.reply(raraWrap("ztools2", lines.join("\n")));
             await sock.sendMessage(m.chat, { document: Buffer.from(content, "utf-8"), fileName: first.replace(/[\\/:*?"<>|]/g, "_"), mimetype: "text/plain", caption: "_(via zelapi)_" }, { quoted: m });
             return m.react("🐣");
           }
         }
-        await m.reply(novaWrap("ztools2", lines.join("\n")));
+        await m.reply(raraWrap("ztools2", lines.join("\n")));
       } else {
         const content = v(d?.content) || v(d?.result) || v(d?.text);
-        if (!content) { await m.react("❌"); return m.reply(novaWrap("ztools2", v(d?.message) || v(d?.error) || "Isi paste gak keambil — cek URL-nya")); }
-        if (content.length <= 3000) await m.reply(novaWrap("ztools2", `✅ ${kind.toUpperCase()} (zelapi)\n\n${short(content, 2800)}`));
+        if (!content) { await m.react("❌"); return m.reply(raraWrap("ztools2", v(d?.message) || v(d?.error) || "Isi paste gak keambil — cek URL-nya")); }
+        if (content.length <= 3000) await m.reply(raraWrap("ztools2", `✅ ${kind.toUpperCase()} (zelapi)\n\n${short(content, 2800)}`));
         else {
-          await m.reply(novaWrap("ztools2", `✅ ${kind.toUpperCase()} (zelapi) — ${content.length.toLocaleString("id-ID")} karakter, file nyusul…`));
+          await m.reply(raraWrap("ztools2", `✅ ${kind.toUpperCase()} (zelapi) — ${content.length.toLocaleString("id-ID")} karakter, file nyusul…`));
           await sock.sendMessage(m.chat, { document: Buffer.from(content, "utf-8"), fileName: `${kind}-content.txt`, mimetype: "text/plain", caption: "_(via zelapi)_" }, { quoted: m });
         }
       }
@@ -214,7 +214,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(novaWrap("ztools2", `fitur error: ${e?.message || e}`));
+    await m.reply(raraWrap("ztools2", `fitur error: ${e?.message || e}`));
   }
 }
 

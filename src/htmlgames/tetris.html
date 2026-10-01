@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Nova Arcade — Tetris</title>
+<title>Rara Arcade — Tetris</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { background:#0b1220; color:#e8eefc; font-family:system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:12px; touch-action:none; }
@@ -18,7 +18,7 @@
 </style>
 </head>
 <body>
-<h1>🧱 NOVA TETRIS</h1>
+<h1>🧱 RARA TETRIS</h1>
 <div class="sub">Susun balok, bersihkan baris, jangan numpuk sampai atas</div>
 <div id="score">Skor: 0 · Baris: 0 · Level: 1</div>
 <canvas id="c" width="180" height="360"></canvas>
@@ -30,7 +30,7 @@
 const W=10,H=20,S=18,C=document.getElementById("c"),X=C.getContext("2d");
 const P=[[[1,1,1,1]],[[1,1],[1,1]],[[0,1,0],[1,1,1]],[[1,0,0],[1,1,1]],[[0,0,1],[1,1,1]],[[1,1,0],[0,1,1]],[[0,1,1],[1,1,0]]];
 const CL=["#4dd2ff","#ffd166","#c792ea","#66d97f","#ff8fa3","#ffb74d","#7fdbff"];
-let grid,cur,curIdx,nxt,nxtIdx,pos,score,lines,level,dead,timer,best=+(localStorage.novaTetrisBest||0);
+let grid,cur,curIdx,nxt,nxtIdx,pos,score,lines,level,dead,timer,best=+(localStorage.raraTetrisBest||0);
 const scoreEl=document.getElementById("score"), msgEl=document.getElementById("msg");
 const randIdx=()=>~~(Math.random()*P.length);
 function spawn(){ if(nxt===undefined){ nxtIdx=randIdx(); nxt=P[nxtIdx].map(r=>[...r]); }
@@ -48,7 +48,7 @@ function rotate(){ const r=cur[0].map((_,i)=>cur.map(row=>row[i]).reverse()); if
 function drop(){ if(!hit(pos.x,pos.y+1,cur)) pos.y++; else lock(); draw(); }
 function move(dx){ if(!hit(pos.x+dx,pos.y,cur)) pos.x+=dx; draw(); }
 function die(){ dead=true; clearInterval(timer);
-  if(score>best){ best=score; localStorage.novaTetrisBest=best; msgEl.textContent="🏆 REKOR BARU: "+score; }
+  if(score>best){ best=score; localStorage.raraTetrisBest=best; msgEl.textContent="🏆 REKOR BARU: "+score; }
   else msgEl.textContent="💀 Game Over — ketuk ▶ untuk main lagi"; draw(); }
 function draw(){
   X.fillStyle="#101a30"; X.fillRect(0,0,180,360);

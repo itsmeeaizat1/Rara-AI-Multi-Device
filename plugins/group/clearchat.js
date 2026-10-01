@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: ['clearchat', 'cc', 'cleangc', 'deletechat', 'delchat'],
     alias: ["clearchat", "cc", "cleangc", "deletechat", "delchat"],
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
             }] 
         }, m.chat)
         
-        await m.reply(novaWrap("Clearchat", `chat dibersihkan\n\nChat grup telah dibersihkan oleh @${m.sender.split('@')[0]}`, "success"))
+        await m.reply(raraWrap("Clearchat", `chat dibersihkan\n\nChat grup telah dibersihkan oleh @${m.sender.split('@')[0]}`, "success"))
         
     } catch (error) {
         try {
@@ -46,9 +46,9 @@ async function handler(m, { sock }) {
                 } 
             }, m.chat)
             
-            m.reply(novaWrap("Clearchat", `chat dibersihkan\n\nChat grup di wa bot telah dibersihkan oleh @${m.sender.split('@')[0]}\nSilahkan lihat sendiri di wa bot kamu`, "success"))
+            m.reply(raraWrap("Clearchat", `chat dibersihkan\n\nChat grup di wa bot telah dibersihkan oleh @${m.sender.split('@')[0]}\nSilahkan lihat sendiri di wa bot kamu`, "success"))
         } catch (e) {
-            m.reply(novaWrap("clearchat", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(raraWrap("clearchat", te(m.prefix, m.command, m.pushName), "error"))
         }
     }
 }

@@ -13,7 +13,7 @@ const TMP = "/tmp/zel-e2e";
 fs.rmSync(TMP, { recursive: true, force: true });
 fs.mkdirSync(TMP, { recursive: true });
 process.env.NOVA_DB_DIR = TMP;
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(TMP + "/db.json");
 const { fromSC } = await import("../../src/lib/styler.js");
 const scr = await import("../../src/scraper/zelapi.js");
@@ -84,7 +84,7 @@ w("\n— .zcici tanpa pesan —");
 w("\n— .zel list —");
 {
   const card = await run(hub, "zel", []);
-  const { ZEL_AI_REGISTRY } = await import("../../src/lib/nova-zel-registry.js");
+  const { ZEL_AI_REGISTRY } = await import("../../src/lib/rara-zel-registry.js");
   check("jumlah command disebut", card.includes(`${Object.keys(ZEL_AI_REGISTRY).length} ai`));
   check("ada .zchatgpt", card.includes(".zchatgpt"));
   check("ada .zzai", card.includes(".zzai"));
@@ -135,7 +135,7 @@ w("\n— key kosong —");
 // ── 10. .zai (z.ai) → cmd .zzai ──
 w("\n— .zzai registry —");
 {
-  const { getZelSpec } = await import("../../src/lib/nova-zel-registry.js");
+  const { getZelSpec } = await import("../../src/lib/rara-zel-registry.js");
   check("zzai ada di registry", getZelSpec("zzai")?.slug === "zai");
   check("zgoogle → google slug", getZelSpec("zgoogle")?.slug === "google");
   check("zqwenchat → qwen-chat", getZelSpec("zqwenchat")?.slug === "qwen-chat");
@@ -267,7 +267,7 @@ w("\n— selesai —");
 
 w("\n— registry image —");
 {
-  const { getZelImageSpec, ZEL_IMAGE_REGISTRY } = await import("../../src/lib/nova-zel-registry.js");
+  const { getZelImageSpec, ZEL_IMAGE_REGISTRY } = await import("../../src/lib/rara-zel-registry.js");
   check("22 generator terdaftar", Object.keys(ZEL_IMAGE_REGISTRY).length === 22);
   check("nanobanana type flex", getZelImageSpec("znanobanana")?.type === "flex");
   check("nanobananedit type imgedit", getZelImageSpec("znanobananedit")?.type === "imgedit");

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "diff",
@@ -179,14 +179,14 @@ async function handler(m, { sock, config: botConfig }) {
     // Split by pipe
     const parts = input.split("|").map((s) => s.trim());
     if (parts.length < 2) {
-      return m.reply(novaWrap("Diff", "Gunakan tanda | untuk pisahkan teks\n💡 *Contoh:* " + prefix + "diff Halo | Hai"));
+      return m.reply(raraWrap("Diff", "Gunakan tanda | untuk pisahkan teks\n💡 *Contoh:* " + prefix + "diff Halo | Hai"));
     }
 
     const textA = parts[0];
     const textB = parts.slice(1).join("|").trim();
 
     if (!textA || !textB) {
-      return m.reply(novaWrap("Diff", "Kedua teks tidak boleh kosong!"));
+      return m.reply(raraWrap("Diff", "Kedua teks tidak boleh kosong!"));
     }
     let diffs;
 
@@ -211,11 +211,11 @@ async function handler(m, { sock, config: botConfig }) {
     const output = formatDiff(diffs, mode);
     const modeLabel = mode === "word" ? "Word Level" : "Line Level";
     await m.react("🐣");
-    return m.reply(novaWrap("Diff Result (" + modeLabel + ")", output));
+    return m.reply(raraWrap("Diff Result (" + modeLabel + ")", output));
   } catch (e) {
     await m.react("❌");
     console.error("diff error:", e);
-    return m.reply(novaWrap("Diff", "Error: " + e.message));
+    return m.reply(raraWrap("Diff", "Error: " + e.message));
   }
 }
 

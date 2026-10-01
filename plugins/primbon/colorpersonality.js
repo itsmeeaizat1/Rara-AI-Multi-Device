@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "kepribadianwarna",
@@ -42,17 +42,17 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "kepribadianwarna <warna>")
       lines.push("Contoh: " + usedPrefix + "kepribadianwarna biru")
-      return m.reply(novaWrap("Kepribadian Warna", lines.join("\n")))
+      return m.reply(raraWrap("Kepribadian Warna", lines.join("\n")))
     }
 
     const warna = WARNA.find(w => w.nama.toLowerCase().includes(input))
 
     if (!warna) {
-      return m.reply(novaWrap("Kepribadian Warna", "Warna tidak ditemukan: " + input + "\nKetik " + usedPrefix + "kepribadianwarna untuk lihat list.")
+      return m.reply(raraWrap("Kepribadian Warna", "Warna tidak ditemukan: " + input + "\nKetik " + usedPrefix + "kepribadianwarna untuk lihat list.")
       )
     }
 
-    return m.reply(novaWrap("Kepribadian Warna " + warna.nama, [
+    return m.reply(raraWrap("Kepribadian Warna " + warna.nama, [
       "Sifat Utama:",
       warna.sifat.join(", "),
       "",
@@ -69,7 +69,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       warna.tips,
     ].join("\n")))
   } catch (e) {
-    return m.reply(novaWrap("Kepribadian Warna", "Error: " + e.message))
+    return m.reply(raraWrap("Kepribadian Warna", "Error: " + e.message))
   }
 }
 

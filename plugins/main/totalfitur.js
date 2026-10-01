@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getAllPlugins } from '../../src/lib/nova-plugins.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getAllPlugins } from '../../src/lib/rara-plugins.js'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 
 const pluginConfig = {
     name: 'totalfitur',
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
         )
 
     } catch (error) {
-        m.reply(novaWrap("totalfitur", te(m.prefix, m.command, m.pushName), "error"))}
+        m.reply(raraWrap("totalfitur", te(m.prefix, m.command, m.pushName), "error"))}
 }
 
 export { pluginConfig as config, handler }

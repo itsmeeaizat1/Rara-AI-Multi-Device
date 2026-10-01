@@ -1,18 +1,18 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .channelhub — SALURAN HUB: pusat kendali integrasi Saluran WA (fitur no.1
 // "bot masa depan", 25 Sep 2026). Tiga modul:
 //   autopost  — konten harian AI-generated ke saluran (jam bebas, topic bebas)
 //   react     — auto-react post di saluran (emoji + cooldown)
 //   reply     — auto-reply keyword di saluran (rules add/list/del)
 //   stat      — analitik follower: growth harian/mingguan/bulanan + milestone
-// Engine: src/lib/nova-saluran-hub.js (JANGAN duplikasi logika di sini).
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// Engine: src/lib/rara-saluran-hub.js (JANGAN duplikasi logika di sini).
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import {
   ensureHubState, parseJamSaluran, buildDailyContent, buildStatCard,
-} from "../../src/lib/nova-saluran-hub.js";
-import { getSaluranChannel } from "../../src/lib/nova-saluran.js";
-import { sendSaluranSafe } from "../../src/lib/nova-saluran-safe.js";
+} from "../../src/lib/rara-saluran-hub.js";
+import { getSaluranChannel } from "../../src/lib/rara-saluran.js";
+import { sendSaluranSafe } from "../../src/lib/rara-saluran-safe.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
   // ── tanpa arg → panduan ──
   if (!sub) {
     await m.react("🐣");
-    return m.reply(novaWrap("Saluran Hub", HELP, "guide"));
+    return m.reply(raraWrap("Saluran Hub", HELP, "guide"));
   }
 
   // ── status ──
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
       "_kartu lengkap: .channelhub stat_",
     ];
     await m.react("🐣");
-    return m.reply(novaWrap("Saluran Status", lines));
+    return m.reply(raraWrap("Saluran Status", lines));
   }
 
   // ── stat ──
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
     const ch = await getSaluranChannel(sock).catch(() => null);
     // snapshot segi refresh (dedupe internal 30 mnt — gak berat)
     try {
-      const { snapshotFollowers } = await import("../../src/lib/nova-saluran-hub.js");
+      const { snapshotFollowers } = await import("../../src/lib/rara-saluran-hub.js");
       await snapshotFollowers(sock, { force: false });
     } catch { /* snapshot gagal → kartu pakai data lama, jujur di kartunya */ }
     await m.react("🐣");
@@ -225,7 +225,7 @@ async function handler(m, { sock }) {
       if (!(rp.rules || []).length) { await m.react("❌"); return m.reply("⚠ Belum ada rule — tambah: .channelhub reply add menu|ketik .menu di chat bot"); }
       const lines = rp.rules.map((x, i) => (i + 1) + ". \"" + x.key + "\" · terpakai " + (x.hits || 0) + "x\n   → " + String(x.text).slice(0, 80));
       await m.react("🐣");
-      return m.reply(novaWrap("Reply Rules", ["status: " + (rp.on ? "ON" : "off"), ""].concat(lines)));
+      return m.reply(raraWrap("Reply Rules", ["status: " + (rp.on ? "ON" : "off"), ""].concat(lines)));
     }
     if (verb === "del" || verb === "delete") {
       const n = Number(rest[1]) || 0;

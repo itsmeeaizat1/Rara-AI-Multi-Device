@@ -1,7 +1,7 @@
 // E2E AI AGENT (11 Sep 2026) — stub aiChat/search/preview via setAgentDeps.
 // Deterministik tanpa network. Jalankan dari cwd DIR KOSONG:
 //   mkdir -p /tmp/agent-e2e && cd /tmp/agent-e2e && node <repo>/test/agent-e2e/e2e.mjs
-import { setAgentDeps, resetAgentDeps, runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
+import { setAgentDeps, resetAgentDeps, runAgent, generatePlugin } from "../../src/lib/rara-agent.js";
 import { config as agConfig, handler as agHandler } from "../../plugins/ai-agent/agent.js";
 
 let pass = 0, fail = 0;
@@ -139,24 +139,24 @@ w("\n— MODE ACT: LLM plan → kick —");
 w("\n— MODE ACT: multi aksi (tutup grup + rename) —");
 {
   resetAgentDeps();
-  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"close"},{"action":"rename","value":"Nova Squad"}]}` });
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"close"},{"action":"rename","value":"Rara Squad"}]}` });
   const acts = [];
-  const r = await runAgent("tutup grup dan ubah nama jadi Nova Squad", {
+  const r = await runAgent("tutup grup dan ubah nama jadi Rara Squad", {
     act: async (a) => { acts.push(a); return { ok: true, msg: "ok " + a.action }; },
     context: { isGroup: true, isAdmin: true, isBotAdmin: true },
   });
-  check("2 aksi dieksekusi", acts.length === 2 && acts[1].value === "Nova Squad");
+  check("2 aksi dieksekusi", acts.length === 2 && acts[1].value === "Rara Squad");
   check("laporan 2 baris", r.answer.split("\n").length === 2);
 }
 
 w("\n— MODE ACT via handler: desc + rename pakai groupMetadataUpdate (FIX no function) —");
 {
   resetAgentDeps();
-  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"desc","value":"Grup resmi Nova Squad, jaga kebersihan"},{"action":"rename","value":"Nova Squad Official"}]}` });
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"desc","value":"Grup resmi Rara Squad, jaga kebersihan"},{"action":"rename","value":"Rara Squad Official"}]}` });
   const sent = [];
   const metas = [];
   const m = {
-    text: ".agent buatin deskripsi grup dan ganti nama grup jadi Nova Squad Official", args: ["buatin", "deskripsi", "grup"],
+    text: ".agent buatin deskripsi grup dan ganti nama grup jadi Rara Squad Official", args: ["buatin", "deskripsi", "grup"],
     chat: "x@g.us", sender: "admin@w", pushName: "Admin", command: "agent", prefix: ".",
     isGroup: true, isAdmin: true, isOwner: false, isBotAdmin: true,
     react: async () => true, reply: async (t) => { sent.push(String(t)); },
@@ -173,8 +173,8 @@ w("\n— MODE ACT via handler: desc + rename pakai groupMetadataUpdate (FIX no f
   };
   await agHandler(m, { sock, db: { setting: () => ({}) }, deps: {} });
   const finalMsg = (sent.filter(s => s.startsWith("[edit]")).pop() || "").replace("\[edit\] ", "") || sent.filter(Boolean).pop() || "";
-  check("desc via groupMetadataUpdate", metas.length === 2 && metas[0].fields?.description === "Grup resmi Nova Squad, jaga kebersihan", JSON.stringify(metas));
-  check("rename via groupMetadataUpdate", metas[1]?.fields?.subject === "Nova Squad Official", JSON.stringify(metas[1]));
+  check("desc via groupMetadataUpdate", metas.length === 2 && metas[0].fields?.description === "Grup resmi Rara Squad, jaga kebersihan", JSON.stringify(metas));
+  check("rename via groupMetadataUpdate", metas[1]?.fields?.subject === "Rara Squad Official", JSON.stringify(metas[1]));
   check("gak ada error no function", !finalMsg.includes("is not a function"), finalMsg.slice(0, 80));
   check("laporan sukses 2 aksi", finalMsg.includes("✅") && finalMsg.includes("Deskripsi grup diperbarui"), finalMsg.slice(0, 100));
 }
@@ -412,7 +412,7 @@ w("\n— plugin TOOLS: executor download ASLI (fetch mock) —");
     headers: { "content-type": "application/zip", "content-length": String(fakeBytes.length) },
   });
   const m = {
-    text: ".agent download zip nova-v1", args: ["download", "zip", "nova-v1"],
+    text: ".agent download zip rara-v1", args: ["download", "zip", "rara-v1"],
     chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
     isGroup: true,
     react: async () => true, reply: async (t) => { sent.push(String(t)); },
@@ -811,7 +811,7 @@ w("\n— buildToolbox: daftar skill pack live dari plugin —");
 // perlu, skill/mcp cuma kalau bingung") ═══
 w("\n— prioritas info + flat plan —");
 {
-  const { SYS_PLAN } = await import("../../src/lib/nova-agent.js");
+  const { SYS_PLAN } = await import("../../src/lib/rara-agent.js");
   check("SYS_PLAN ada aturan prioritas: jawab sendiri dulu (persona)", /JAWAB SENDIRI DULU/.test(SYS_PLAN) && /mode persona/i.test(SYS_PLAN));
   check("SYS_PLAN: skill/mcp senjata terakhir", /SENJATA TERAKHIR/.test(SYS_PLAN) && /JANGAN pernah pilih skill\/mcp buat pertanyaan pengetahuan umum/.test(SYS_PLAN));
   check("SYS_PLAN: persona = jalur utama pertanyaan info", /JALUR UTAMA buat pertanyaan informasi/.test(SYS_PLAN));

@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { notifyPremiumAdd } from "../../src/lib/nova-saluran-broadcast.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { notifyPremiumAdd } from "../../src/lib/rara-saluran-broadcast.js";
 const pluginConfig = {
     name: 'addpremall',
     alias: ["addpremall"],
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         const participants = groupMeta.participants || []
         
         if (participants.length === 0) {
-            return m.reply(novaWrap("Addpremall", `❌ *Gagal*\n\nTidak ada member di grup ini`))
+            return m.reply(raraWrap("Addpremall", `❌ *Gagal*\n\nTidak ada member di grup ini`))
         }
         const db = getDatabase()
         if (!db.data.premium) db.data.premium = []
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
             `Grup: ${groupMeta.subject}`)
         
     } catch (error) {
-        await m.reply(novaWrap("addpremall", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(raraWrap("addpremall", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

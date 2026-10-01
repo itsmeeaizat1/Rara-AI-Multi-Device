@@ -1,5 +1,5 @@
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "autoreaction",
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!["on", "off"].includes(args)) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "⚡",
   name: "autoreaction",
   description: "Auto reaction pesan di grup",
@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
     db.setGroup(m.chat, { autoreaction: args === "on" });
 
     const text =
-      novaWrap("Autoreaction", ["Fitur: *auto reaction*",
+      raraWrap("Autoreaction", ["Fitur: *auto reaction*",
         `Status: *${args === "on" ? "ON" : "OFF"}*`,
         `Group: *${m.chat}*`].join("\n")) +
       "\n" +
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AutoReaction", "Gagal nih, coba lagi ya");
+      raraError("AutoReaction", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "autoreaction");
   }

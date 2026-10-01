@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'cekonline',
     alias: ["cekonline"],
@@ -23,9 +23,9 @@ async function handler(m, { sock }) {
         const participants = m.groupMembers
         
         if (participants.length === 0) {
-            return m.reply(novaWrap("cekonline", `gagal\n\nTidak bisa mendapatkan data member grup`, "error"))
+            return m.reply(raraWrap("cekonline", `gagal\n\nTidak bisa mendapatkan data member grup`, "error"))
         }
-        await m.reply(novaWrap("Cekonline", `🔍 mencari member online...\n\nMenunggu response dari ${participants.length} member\nEstimasi: 5-10 detik`, "info"))
+        await m.reply(raraWrap("Cekonline", `🔍 mencari member online...\n\nMenunggu response dari ${participants.length} member\nEstimasi: 5-10 detik`, "info"))
         
         const presences = {}
         
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
         await m.reply(text, { mentions });
         
     } catch (error) {
-        m.reply(novaWrap("cekonline", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("cekonline", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

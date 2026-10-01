@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // 9router.js — 9ROUTER LOKAL NATIVE (rename owner 25 Sep: cmd .9router, bukan .ai9)
 //
 // Seakan-akan bot sudah menginstal & menjalankan 9router BENERAN di Node.js:
-// engine src/lib/nova-9router-local.js spawn `9router` bareng bot
+// engine src/lib/rara-9router-local.js spawn `9router` bareng bot
 // (127.0.0.1:20128), gateway key di-auto-provision, key provider berbayar
 // di-sync dari src/lib/apikey/9routerapikey.json. Chat 100% lewat 9router
 // lokal — TANPA fallback ke AI API lain (nexai/ikyy/zhipu/groq/dll).
@@ -19,7 +19,7 @@
 // + VISION NATIVE: kirim/reply foto + caption → model vision live (glm-4.6v
 //   dsb) via multimodal chat 9router — bukan Gemini external.
 // + Model yang dipakai nongol di footer tiap jawaban (transparansi routing).
-import { novaBox, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { raraBox, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import {
   ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys, killStalePort9Router,
@@ -27,13 +27,13 @@ import {
   router9Models, router9FindModel, router9Chat, router9ImageGen,
   router9ImageModels, router9VisionModels, router9Stats,
   getRouter9Base, getRouter9Port, ROUTER9_DEFAULT_MODEL,
-} from "../../src/lib/nova-9router-local.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getSession, appendTurn, toMessages } from "../../src/lib/nova-ai-session.js";
+} from "../../src/lib/rara-9router-local.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getSession, appendTurn, toMessages } from "../../src/lib/rara-ai-session.js";
 
 const pluginConfig = {
   name: "9router",
-  alias: ["ai9", "router9", "novarouter"], // nama lama tetap jalan
+  alias: ["ai9", "router9", "rararouter"], // nama lama tetap jalan
   category: "ai",
   description: "9Router Lokal — chat AI 747 model via 9router native yang jalan bareng bot (tanpa API luar)",
   usage: ".9router <pesan> | .9router gambar <prompt> | .9router model [keyword] | .9router setmodel <id> | .9router status | .9router sync (owner) | .9router restart (owner)",
@@ -63,7 +63,7 @@ function getModelPref(chatId) {
 
 // ── kartu panduan (usage V2) ──
 function guide(m) {
-  return m.reply(novaGuideV2("9router", {
+  return m.reply(raraGuideV2("9router", {
     kaomoji: "ヾ(≧▽≦*)o 🚀",
     sapaan: "9Router lokal udah jalan bareng bot — 747 model AI siap dipakai!",
     cara: "tiket pertanyaan buat chat AI, ag <tugas> buat suruh agent browsing/bikin kode/bikin file, gambar buat bikin gambar, model buat liat daftar model, setmodel buat ganti model default",
@@ -86,7 +86,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
       if (!buffer?.length) {
         await m.react("❌");
-        return m.reply(novaBox("9Router", ["Gagal download gambar — coba kirim ulang."]));
+        return m.reply(raraBox("9Router", ["Gagal download gambar — coba kirim ulang."]));
       }
       const prompt =
         (m.isImage && m.message?.imageMessage?.caption?.trim()) ||
@@ -94,7 +94,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
         "Analisis gambar ini dan jelaskan dengan detail dalam bahasa Indonesia.";
       if (!prompt || /^(gambar|image|img|buat)$/i.test(prompt)) {
         await m.react("❌");
-        return m.reply(novaBox("9Router", [
+        return m.reply(raraBox("9Router", [
           "Caption-nya kosong — tulis pertanyaannya di caption foto,",
           "atau reply foto pakai .9router <pertanyaan>",
         ]));
@@ -130,7 +130,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
     } catch (e) {
       console.error("[9router-vision]:", e.message);
       await m.react("❌");
-      return m.reply(novaBox("9Router", ["Gagal: " + String(e.message).slice(0, 200)]));
+      return m.reply(raraBox("9Router", ["Gagal: " + String(e.message).slice(0, 200)]));
     }
   }
 
@@ -162,7 +162,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       `Sync ulang   : .9router sync (owner)`,
       `Model aktif  : ${getModelPref(m.chat)}`,
     ].filter(Boolean);
-    return m.reply(novaBox("9Router Lokal — Status", lines));
+    return m.reply(raraBox("9Router Lokal — Status", lines));
   }
 
   // ── .9router model [keyword] — daftar model LIVE ──
@@ -177,7 +177,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       if (kw) pool = all.filter((x) => x.id.toLowerCase().includes(kw) || x.owner.toLowerCase().includes(kw));
       if (!pool.length) {
         await m.react("❌");
-        return m.reply(novaBox("9Router", [
+        return m.reply(raraBox("9Router", [
           `Gak ada model yang cocok dengan "${kw}".`,
           `Total model live: ${all.length} — lihat semua: .9router model`,
         ]));
@@ -191,10 +191,10 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       if (pool.length > cap) lines.push(`… dan ${pool.length - cap} lagi — sempit pakai keyword: .9router model ${kw || "glm"}`);
       lines.push("---", `Pakai model ini: .9router setmodel <id>`, `Model aktif kamu: ${getModelPref(m.chat)}`);
       await m.react("🐣");
-      return m.reply(novaBox("9Router — Daftar Model", lines));
+      return m.reply(raraBox("9Router — Daftar Model", lines));
     } catch (e) {
       await m.react("❌");
-      return m.reply(novaBox("9Router", ["Gagal ambil daftar model: " + String(e.message).slice(0, 160)]));
+      return m.reply(raraBox("9Router", ["Gagal ambil daftar model: " + String(e.message).slice(0, 160)]));
     }
   }
 
@@ -202,7 +202,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
   if (sub === "setmodel" || sub === "modelset") {
     const id = argList[1];
     if (!id) {
-      return m.reply(novaBox("9Router", [
+      return m.reply(raraBox("9Router", [
         `Format: .9router setmodel <id-model>`,
         `Contoh : .9router setmodel ${ROUTER9_DEFAULT_MODEL}`,
         `Daftar  : .9router model [keyword]`,
@@ -214,7 +214,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       const found = await router9FindModel(id);
       if (!found) {
         await m.react("❌");
-        return m.reply(novaBox("9Router", [
+        return m.reply(raraBox("9Router", [
           `Model "${id}" gak ada di daftar live 9Router.`,
           `Cari yang mirip: .9router model ${id.split("/").pop()}`,
         ]));
@@ -223,7 +223,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       getDatabase().save?.();
       await m.react("🐣");
       const tags = [found.vision ? "👁 bisa baca gambar" : null, found.imageOutput ? "🎨 bisa bikin gambar" : null, found.reasoning ? "🧠 reasoning" : null].filter(Boolean);
-      return m.reply(novaBox("9Router — Model Diganti", [
+      return m.reply(raraBox("9Router — Model Diganti", [
         `Model default chat ini: ${found.id}`,
         tags.length ? `Kemampuan: ${tags.join(" • ")}` : null,
         `Context: ${found.ctx ? found.ctx.toLocaleString("id-ID") + " token" : "-"} • Max out: ${found.maxOut || "-"}`,
@@ -233,21 +233,21 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       ].filter(Boolean)));
     } catch (e) {
       await m.react("❌");
-      return m.reply(novaBox("9Router", ["Gagal: " + String(e.message).slice(0, 160)]));
+      return m.reply(raraBox("9Router", ["Gagal: " + String(e.message).slice(0, 160)]));
     }
   }
 
   // ── .9router sync (owner) — kirim key provider dari 9routerapikey.json ──
   if (sub === "sync") {
     if (!m.isOwner) {
-      return m.reply(novaBox("9Router", ["Khusus owner."]));
+      return m.reply(raraBox("9Router", ["Khusus owner."]));
     }
     try {
       await m.react("🕒");
       const up = await ensure9RouterRunning({ waitMs: 20000 });
       if (!up.up) {
         await m.react("❌");
-        return m.reply(novaBox("9Router", [`9Router belum jalan: ${up.error || "-"}`]));
+        return m.reply(raraBox("9Router", [`9Router belum jalan: ${up.error || "-"}`]));
       }
       await ensureRouter9GatewayKey().catch((e) => console.error("[9router-sync]:", e.message));
       const r = await syncRouter9ProviderKeys();
@@ -258,28 +258,28 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       ];
       if (r.errors?.length) lines.push("---", "Gagal:", ...r.errors.map((x) => "• " + x));
       lines.push("---", `Sumber: src/lib/apikey/9routerapikey.json`, `Status: .9router status`);
-      return m.reply(novaBox("9Router — Sync Key Provider", lines));
+      return m.reply(raraBox("9Router — Sync Key Provider", lines));
     } catch (e) {
       await m.react("❌");
-      return m.reply(novaBox("9Router", ["Gagal sync: " + String(e.message).slice(0, 160)]));
+      return m.reply(raraBox("9Router", ["Gagal sync: " + String(e.message).slice(0, 160)]));
     }
   }
 
   // ── .9router start (owner) — paksa nyalain 9router ──
   if (sub === "start") {
     if (!m.isOwner) {
-      return m.reply(novaBox("9Router", ["Khusus owner."]));
+      return m.reply(raraBox("9Router", ["Khusus owner."]));
     }
     await m.react("🕒");
     const up = await ensure9RouterRunning({ waitMs: 30000 });
     if (!up.up) {
       await m.react("❌");
-      return m.reply(novaBox("9Router", [`Gagal: ${up.error || "unknown"}`, "Cek logs/9router-local.log"]));
+      return m.reply(raraBox("9Router", [`Gagal: ${up.error || "unknown"}`, "Cek logs/9router-local.log"]));
     }
     let count = "-";
     try { count = (await router9Models()).length; } catch { /* telat gak masalah */ }
     await m.react("🐣");
-    return m.reply(novaBox("9Router — Hidup", [
+    return m.reply(raraBox("9Router — Hidup", [
       `9Router jalan di ${getRouter9Base()}`,
       `Model live: ${count}`,
       `Dashboard: ${getRouter9Base()}/dashboard`,
@@ -293,14 +293,14 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
   // 9router (HTTP 401)" padahal status bilang sudah hidup (1 Okt 2026).
   if (sub === "restart") {
     if (!m.isOwner) {
-      return m.reply(novaBox("9Router", ["Khusus owner."]));
+      return m.reply(raraBox("9Router", ["Khusus owner."]));
     }
     await m.react("🕒");
     const killed = await killStalePort9Router();
     const up = await ensure9RouterRunning({ waitMs: 30000 });
     if (!up.up) {
       await m.react("❌");
-      return m.reply(novaBox("9Router", [
+      return m.reply(raraBox("9Router", [
         `Proses lama: ${killed.killed ? `dimatikan (PID ${killed.pid})` : killed.reason}`,
         `Gagal nyalain ulang: ${up.error || "unknown"}`,
         "Cek logs/9router-local.log",
@@ -325,7 +325,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
     let count = "-";
     try { count = (await router9Models()).length; } catch { /* telat gak masalah */ }
     await m.react("🐣");
-    return m.reply(novaBox("9Router — Restart", [
+    return m.reply(raraBox("9Router — Restart", [
       `Proses lama : ${killed.killed ? `dimatikan (PID ${killed.pid})` : killed.reason}`,
       `9Router     : jalan di ${getRouter9Base()}`,
       `Gateway key : ${gw}`,
@@ -340,7 +340,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
     while (rest.length && IMG_WORDS.includes(rest[0]?.toLowerCase())) rest.shift();
     const prompt = rest.join(" ").trim();
     if (!prompt) {
-      return m.reply(novaBox("9Router", [
+      return m.reply(raraBox("9Router", [
         "Format: .9router gambar <yang mau digambar>",
         "Contoh : .9router buatkan gambar kucing astronot",
       ]));
@@ -369,7 +369,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
     } catch (e) {
       console.error("[9router-gambar]:", e.message);
       await m.react("❌");
-      return m.reply(novaBox("9Router", ["Generate gambar gagal: " + String(e.message).slice(0, 200)]));
+      return m.reply(raraBox("9Router", ["Generate gambar gagal: " + String(e.message).slice(0, 200)]));
     }
   }
 
@@ -379,7 +379,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
   if (sub === "ag" || sub === "agent") {
     const task = argList.slice(1).join(" ").trim();
     if (!task) {
-      return m.reply(novaBox("9Router", [
+      return m.reply(raraBox("9Router", [
         "Kasih tugasnya setelah 'ag':",
         "",
         "• .9router ag browsing berita gempa hari ini",
@@ -394,16 +394,16 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       const up = await ensure9RouterRunning();
       if (!up.up) {
         await m.react("❌");
-        return m.reply(novaBox("9Router", [
+        return m.reply(raraBox("9Router", [
           "9Router lokal belum jalan" + (up.error ? " — " + up.error : ""),
           "Coba lagi atau .9router start (owner)",
         ]));
       }
       const [{ runAgent }, { buildExecutors, buildToolbox }, { memoryBlock }, { skillsBlock }] = await Promise.all([
-        import("../../src/lib/nova-agent.js"),
+        import("../../src/lib/rara-agent.js"),
         import("../ai-agent/agent.js"),
-        import("../../src/lib/nova-memory.js"),
-        import("../../src/lib/nova-askills.js"),
+        import("../../src/lib/rara-memory.js"),
+        import("../../src/lib/rara-askills.js"),
       ]);
       const model = getModelPref(m.chat);
       // semua panggilan AI agent diarahkan ke model 9Router lokal (override per-call, gak ganti deps global)
@@ -442,7 +442,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       });
       if (res?.error) {
         await m.react("❌");
-        return m.reply(novaBox("9Router", [res.error]));
+        return m.reply(raraBox("9Router", [res.error]));
       }
       // tools/browse/riset udah kirim hasilnya sendiri via executor; jawaban akhir tetep dikirim
       const via = "— via 9Router Lokal • " + model + " • mode " + (res?.mode || "agent");
@@ -456,7 +456,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
     } catch (e) {
       console.error("[9router-ag]:", e.message);
       await m.react("❌");
-      return m.reply(novaBox("9Router", ["Gagal: " + String(e.message).slice(0, 200)]));
+      return m.reply(raraBox("9Router", ["Gagal: " + String(e.message).slice(0, 200)]));
     }
     return;
   }
@@ -481,7 +481,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
   } catch (e) {
     console.error("[9router]:", e.message);
     await m.react("❌");
-    return m.reply(novaBox("9Router", [
+    return m.reply(raraBox("9Router", [
       "9Router lokal gagal 😔",
       `Info: ${String(e.message).slice(0, 220)}`,
       "---",

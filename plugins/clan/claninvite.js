@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'claninvite',
     alias: ["claninvite"],
@@ -21,11 +21,11 @@ async function handler(m, { sock }) {
     const db = getDatabase()
     const user = db.getUser(m.sender)
 
-    if (!user?.clanId) return m.reply(novaWrap("claninvite", `❌ Kamu belum punya clan`))
+    if (!user?.clanId) return m.reply(raraWrap("claninvite", `❌ Kamu belum punya clan`))
     if (!db.db.data.clans) db.db.data.clans = {}
 
     const clan = db.db.data.clans[user.clanId]
-    if (!clan) return m.reply(novaWrap("Claninvite", `❌ Clan tidak ditemukan`))
+    if (!clan) return m.reply(raraWrap("Claninvite", `❌ Clan tidak ditemukan`))
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender
     if (!target) {
@@ -34,11 +34,11 @@ async function handler(m, { sock }) {
             `Contoh: *.claninvite @user*`, "claninvite")
     }
 
-    if (target === m.sender) return m.reply(novaWrap("claninvite", `❌ Tidak bisa invite diri sendiri`))
+    if (target === m.sender) return m.reply(raraWrap("claninvite", `❌ Tidak bisa invite diri sendiri`))
 
     const targetUser = db.getUser(target)
-    if (targetUser?.clanId) return m.reply(novaWrap("Claninvite", `❌ User tersebut sudah punya clan`))
-    if (clan.members.length >= 50) return m.reply(novaWrap("Claninvite", `❌ Clan sudah penuh (50/50)`))
+    if (targetUser?.clanId) return m.reply(raraWrap("Claninvite", `❌ User tersebut sudah punya clan`))
+    if (clan.members.length >= 50) return m.reply(raraWrap("Claninvite", `❌ Clan sudah penuh (50/50)`))
 
     clan.members.push(target)
     db.setUser(target, { clanId: user.clanId })

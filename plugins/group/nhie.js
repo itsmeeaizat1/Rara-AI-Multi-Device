@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { delay } from "../../src/lib/nova-utils.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { delay } from "../../src/lib/rara-utils.js";
 
 const pluginConfig = {
   name: "nhiegc",
@@ -222,7 +222,7 @@ async function handler(m, { sock }) {
       "Cara jawab: ketik pernah atau belum",
       "Voting otomatis 60 detik lalu hasil keluar",
     ].join("\n");
-    await safeReply(m, sock, novaWrap("Never Have I Ever", helpText));
+    await safeReply(m, sock, raraWrap("Never Have I Ever", helpText));
     return { handled: true };
   }
 
@@ -230,10 +230,10 @@ async function handler(m, { sock }) {
   if (subCmd === "result" || subCmd === "hasil" || subCmd === "skor") {
     const game = findGame(m.chat);
     if (!game) {
-      await safeReply(m, sock, novaWrap("Never Have I Ever", "Tidak ada voting aktif.", "warn"));
+      await safeReply(m, sock, raraWrap("Never Have I Ever", "Tidak ada voting aktif.", "warn"));
       return { handled: true };
     }
-    await safeReply(m, sock, novaWrap("Never Have I Ever - Live Results", buildResultsText(game)));
+    await safeReply(m, sock, raraWrap("Never Have I Ever - Live Results", buildResultsText(game)));
     return { handled: true };
   }
 
@@ -241,7 +241,7 @@ async function handler(m, { sock }) {
   if (subCmd === "stop" || subCmd === "tutup" || subCmd === "end") {
     const game = findGame(m.chat);
     if (!game) {
-      await safeReply(m, sock, novaWrap("Never Have I Ever", "Tidak ada voting aktif.", "warn"));
+      await safeReply(m, sock, raraWrap("Never Have I Ever", "Tidak ada voting aktif.", "warn"));
       return { handled: true };
     }
 
@@ -250,7 +250,7 @@ async function handler(m, { sock }) {
 
     const gameId = Object.keys(global.nhieGames).find(k => global.nhieGames[k] === game);
 
-    await safeReply(m, sock, novaWrap("Never Have I Ever - Final", buildResultsText(game, true), "success"),
+    await safeReply(m, sock, raraWrap("Never Have I Ever - Final", buildResultsText(game, true), "success"),
       { mentions: Object.keys(game.answers) });
     delete global.nhieGames[gameId];
     return { handled: true };
@@ -270,7 +270,7 @@ async function handler(m, { sock }) {
   // .nhie (start new)
   const existingGame = findGame(m.chat);
   if (existingGame) {
-    await safeReply(m, sock, novaWrap("Never Have I Ever",
+    await safeReply(m, sock, raraWrap("Never Have I Ever",
       `Masih ada voting aktif!\n\nKetik ${prefix}nhie result untuk lihat hasil\nKetik ${prefix}nhie stop untuk tutup\nKetik ${prefix}nhie next untuk ganti`,
       "warn"));
     return { handled: true };
@@ -302,7 +302,7 @@ async function handler(m, { sock }) {
     "Voting otomatis 60 detik",
   ].join("\n");
 
-  await safeReply(m, sock, novaWrap("Never Have I Ever", qText, "info"));
+  await safeReply(m, sock, raraWrap("Never Have I Ever", qText, "info"));
 
   // Auto-close timer
   game.timer = setTimeout(async () => {
@@ -314,7 +314,7 @@ async function handler(m, { sock }) {
 
     try {
       await sock.sendMessage(m.chat, {
-        text: novaWrap("Never Have I Ever - Time Up", closeText, "success"),
+        text: raraWrap("Never Have I Ever - Time Up", closeText, "success"),
         mentions: Object.keys(game.answers),
       });
     } catch (e) { console.error('[nhie.js]:', e.message); }

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { setNotifTidur, toggleNotif, getNotif, deleteNotif, parseJadwal } from '../../src/lib/nova-notif-scheduler.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { setNotifTidur, toggleNotif, getNotif, deleteNotif, parseJadwal } from '../../src/lib/rara-notif-scheduler.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'notiftidur',
@@ -51,20 +51,20 @@ function handler(m, { sock }) {
 
     if (sub === 'off') {
         if (!existing) {
-            return m.reply(novaWrap("Notiftidur", `belum ada pengingat tidur yang aktif di chat ini`, "error"))
+            return m.reply(raraWrap("Notiftidur", `belum ada pengingat tidur yang aktif di chat ini`, "error"))
         }
         toggleNotif('tidur', sender, chatJid, false)
-        return m.reply(novaWrap("Notif tidur", `Pengingat Tidur Dinonaktifkan 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`, "success"))
+        return m.reply(raraWrap("Notif tidur", `Pengingat Tidur Dinonaktifkan 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`, "success"))
     }
 
     if (sub === 'on') {
         if (existing?.enabled && args.length === 1) {
-            return m.reply(novaWrap("Notif tidur", `Pengingat tidur sudah aktif!\n\n⏰ Jadwal: ${existing.jadwal.map(j => `${j}`).join(', ')} WIB\n\nGunakan \`${m.prefix}notiftidur edit\` untuk mengubah jadwal`, "warn"))
+            return m.reply(raraWrap("Notif tidur", `Pengingat tidur sudah aktif!\n\n⏰ Jadwal: ${existing.jadwal.map(j => `${j}`).join(', ')} WIB\n\nGunakan \`${m.prefix}notiftidur edit\` untuk mengubah jadwal`, "warn"))
         }
 
         if (existing && args.length === 1) {
             toggleNotif('tidur', sender, chatJid, true)
-            return m.reply(novaWrap("Notif tidur", `Pengingat tidur diaktifkan kembali! 🔔\n\n⏰ Jadwal: ${existing.jadwal.map(j => `${j}`).join(', ')} WIB`, "success"))
+            return m.reply(raraWrap("Notif tidur", `Pengingat tidur diaktifkan kembali! 🔔\n\n⏰ Jadwal: ${existing.jadwal.map(j => `${j}`).join(', ')} WIB`, "success"))
         }
 
         const timeInput = args[1]
@@ -74,7 +74,7 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(novaWrap("Notif tidur", `Format jam salah!\n\nGunakan format HH.MM atau HH:MM\n💡 Contoh: \`22.00\` atau \`23.30\``, "error"))
+            return m.reply(raraWrap("Notif tidur", `Format jam salah!\n\nGunakan format HH.MM atau HH:MM\n💡 Contoh: \`22.00\` atau \`23.30\``, "error"))
         }
 
         setNotifTidur(sender, chatJid, jadwal)
@@ -96,12 +96,12 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply(novaWrap("Notif tidur", `Masukkan jadwal baru!\n\n💡 Contoh: \`${m.prefix}notiftidur edit 23.00\``, "error"))
+            return m.reply(raraWrap("Notif tidur", `Masukkan jadwal baru!\n\n💡 Contoh: \`${m.prefix}notiftidur edit 23.00\``, "error"))
         }
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(novaWrap("Notif tidur", `Format jam salah!\n\nGunakan format HH.MM atau HH:MM\n💡 Contoh: \`23.00\` atau \`22.30\``, "error"))
+            return m.reply(raraWrap("Notif tidur", `Format jam salah!\n\nGunakan format HH.MM atau HH:MM\n💡 Contoh: \`23.00\` atau \`22.30\``, "error"))
         }
 
         setNotifTidur(sender, chatJid, jadwal)

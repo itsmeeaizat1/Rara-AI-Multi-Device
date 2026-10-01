@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // UNO — Multiplayer Card Game
-import { novaWrap, novaBox } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraBox } from "../../src/lib/rara-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
-import te from "../../src/lib/nova-error.js";
-import { formatRp } from "../../src/lib/nova-rpg-service.js";
-import { rollBonus } from "../../src/lib/nova-game-rewards.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
+import te from "../../src/lib/rara-error.js";
+import { formatRp } from "../../src/lib/rara-rpg-service.js";
+import { rollBonus } from "../../src/lib/rara-game-rewards.js";
 
 const pluginConfig = {
   name: "uno",
@@ -49,7 +49,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (!games.has(chatId)) {
       games.set(chatId, { players: [], deck: createDeck(), discardPile: [], currentPlayer: 0, direction: 1, currentCard: null, drawStack: 0, stopVotes: new Set(), awaitingColorChoice: false });
-      return m.reply(novaBox("Uno", [
+      return m.reply(raraBox("Uno", [
         "Permainan dimulai",
         "---",
         ".uno join — bergabung",
@@ -60,13 +60,13 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     const game = games.get(chatId);
 
     if (sub === "join") {
-      if (game.players.find(p => p.id === sender)) return m.reply(novaWrap("uno", "Kamu sudah bergabung.", "info"));
+      if (game.players.find(p => p.id === sender)) return m.reply(raraWrap("uno", "Kamu sudah bergabung.", "info"));
       game.players.push({ id: sender, hand: [] });
-      return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "🃏 *GABUNG!*", body: "@" + sender.split("@")[0] + " masuk meja!\nTotal: " + game.players.length + " pemain" }), { mentions: [sender] });
+      return m.reply(raraGameBox({ title: "uno", icon: "🃏", flavor: "🃏 *GABUNG!*", body: "@" + sender.split("@")[0] + " masuk meja!\nTotal: " + game.players.length + " pemain" }), { mentions: [sender] });
     }
 
     if (sub === "start") {
-      if (game.players.length < 2) return m.reply(novaWrap("uno", "Minimal 2 pemain.", "info"));
+      if (game.players.length < 2) return m.reply(raraWrap("uno", "Minimal 2 pemain.", "info"));
       game.deck = shuffle(createDeck());
       game.players.forEach(p => { p.hand = []; for (let i = 0; i < 7; i++) p.hand.push(game.deck.pop()); });
       game.currentCard = game.deck.pop();
@@ -75,7 +75,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     }
 
     if (sub === "info") {
-      return m.reply(novaBox("Panduan Uno", [
+      return m.reply(raraBox("Panduan Uno", [
         ".uno join — Gabung",
         ".uno start — Mulai (min 2)",
         ".uno play <no> — Main kartu",
@@ -89,22 +89,22 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (sub === "hand") {
       const p = game.players.find(p => p.id === sender);
-      if (!p) return m.reply(novaWrap("uno", "Kamu belum bergabung.", "info"));
+      if (!p) return m.reply(raraWrap("uno", "Kamu belum bergabung.", "info"));
       const hand = p.hand.map((c, i) => i + ": " + c.color + " " + c.value).join("\n");
       await sock.sendMessage(sender, { text: smallcapsText("🎴 *Kartu UNO-mu:*\n\n" + hand) });
-      return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "📩 *KARTU TERKIRIM!*", body: "Cek DM kamu — kartu sudah dikirim rahasia ke pesan pribadi." }));
+      return m.reply(raraGameBox({ title: "uno", icon: "🃏", flavor: "📩 *KARTU TERKIRIM!*", body: "Cek DM kamu — kartu sudah dikirim rahasia ke pesan pribadi." }));
     }
 
     if (sub === "draw") {
       const p = game.players[game.currentPlayer];
-      if (!p || p.id !== sender) return m.reply(novaWrap("uno", "Bukan giliranmu!", "info"));
+      if (!p || p.id !== sender) return m.reply(raraWrap("uno", "Bukan giliranmu!", "info"));
       if (game.drawStack > 0) {
         for (let i = 0; i < game.drawStack; i++) { if (!game.deck.length) { game.deck = shuffle(game.discardPile); game.discardPile = []; } p.hand.push(game.deck.pop()); }
-        m.reply(novaGameBox({ title: "uno", icon: "🃏", body: "📥 Kamu ambil " + game.drawStack + " kartu — sanksi penalti tuntas!" })); game.drawStack = 0;
+        m.reply(raraGameBox({ title: "uno", icon: "🃏", body: "📥 Kamu ambil " + game.drawStack + " kartu — sanksi penalti tuntas!" })); game.drawStack = 0;
       } else {
         if (!game.deck.length) { game.deck = shuffle(game.discardPile); game.discardPile = []; }
         const c = game.deck.pop(); p.hand.push(c);
-        m.reply(novaGameBox({ title: "uno", icon: "🃏", body: "📥 Kamu ambil: " + c.color + " " + c.value }));
+        m.reply(raraGameBox({ title: "uno", icon: "🃏", body: "📥 Kamu ambil: " + c.color + " " + c.value }));
       }
       game.currentPlayer = getNextPlayer(game);
       return sendStatus(m, sock, game);
@@ -112,11 +112,11 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (sub === "play") {
       const p = game.players[game.currentPlayer];
-      if (!p || p.id !== sender) return m.reply(novaWrap("uno", "Bukan giliranmu!", "info"));
+      if (!p || p.id !== sender) return m.reply(raraWrap("uno", "Bukan giliranmu!", "info"));
       const idx = parseInt(args[1]);
-      if (isNaN(idx) || idx < 0 || idx >= p.hand.length) return m.reply(novaWrap("uno", "Nomor kartu tidak valid.", "info"));
+      if (isNaN(idx) || idx < 0 || idx >= p.hand.length) return m.reply(raraWrap("uno", "Nomor kartu tidak valid.", "info"));
       const card = p.hand[idx];
-      if (!isValidPlay(game.currentCard, card)) return m.reply(novaWrap("uno", "Kartu tidak bisa dimainkan.", "info"));
+      if (!isValidPlay(game.currentCard, card)) return m.reply(raraWrap("uno", "Kartu tidak bisa dimainkan.", "info"));
       if (card.value === "12") game.drawStack += 2;
       else if (card.value === "wild14") { game.drawStack += 4; game.awaitingColorChoice = true; }
       else if (card.value === "10") game.currentPlayer = getNextPlayer(game);
@@ -127,22 +127,22 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
         let uCash = { gain: 0, saldo: 0 };
         try { uCash = rollBonus(m, "uno"); } catch {}
         const uBody = "@" + sender.split("@")[0] + " habiskan semua kartunya!\n💵 Uang: +" + formatRp(uCash.gain) + " (saldo " + formatRp(uCash.saldo) + ")" + (uCash.jackpot ? "\n🎰 JACKPOT! Bonus 3x uang!" : "");
-        return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "🎉 *UNO! MENANG TOTAL!*", body: uBody, cta: gameCTA("uno") }), { mentions: [sender] }); }
+        return m.reply(raraGameBox({ title: "uno", icon: "🃏", flavor: "🎉 *UNO! MENANG TOTAL!*", body: uBody, cta: gameCTA("uno") }), { mentions: [sender] }); }
       game.currentPlayer = getNextPlayer(game);
       return sendStatus(m, sock, game);
     }
 
     if (sub === "pass") {
       const p = game.players[game.currentPlayer];
-      if (!p || p.id !== sender) return m.reply(novaWrap("uno", "Bukan giliranmu!", "info"));
+      if (!p || p.id !== sender) return m.reply(raraWrap("uno", "Bukan giliranmu!", "info"));
       game.currentPlayer = getNextPlayer(game);
       return sendStatus(m, sock, game);
     }
 
     if (sub === "color") {
-      if (!game.awaitingColorChoice || game.players[game.currentPlayer]?.id !== sender) return m.reply(novaWrap("uno", "Tidak ada pilihan warna saat ini.", "info"));
+      if (!game.awaitingColorChoice || game.players[game.currentPlayer]?.id !== sender) return m.reply(raraWrap("uno", "Tidak ada pilihan warna saat ini.", "info"));
       const color = (args[1] || "").toLowerCase();
-      if (!["red","yellow","green","blue"].includes(color)) return m.reply(novaWrap("uno", "Warna: red, yellow, green, blue.", "guide"));
+      if (!["red","yellow","green","blue"].includes(color)) return m.reply(raraWrap("uno", "Warna: red, yellow, green, blue.", "guide"));
       game.currentCard.color = color; game.awaitingColorChoice = false;
       game.currentPlayer = getNextPlayer(game);
       return sendStatus(m, sock, game);
@@ -150,18 +150,18 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (sub === "stop") {
       const p = game.players.find(p => p.id === sender);
-      if (!p) return m.reply(novaWrap("uno", "Kamu belum bergabung.", "info"));
-      if (isAdmins || isOwner) { games.delete(chatId); return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "⏹️ *STOP!*", body: "UNO dihentikan oleh admin.", cta: gameCTA("uno") })); }
+      if (!p) return m.reply(raraWrap("uno", "Kamu belum bergabung.", "info"));
+      if (isAdmins || isOwner) { games.delete(chatId); return m.reply(raraGameBox({ title: "uno", icon: "🃏", flavor: "⏹️ *STOP!*", body: "UNO dihentikan oleh admin.", cta: gameCTA("uno") })); }
       game.stopVotes.add(sender);
-      if (game.stopVotes.size === game.players.length) { games.delete(chatId); return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "⏹️ *STOP!*", body: "UNO dihentikan — semua pemain setuju.", cta: gameCTA("uno") })); }
-      return m.reply(novaGameBox({ title: "uno", icon: "🃏", body: "📢 Butuh " + (game.players.length - game.stopVotes.size) + " vote lagi buat stop." }));
+      if (game.stopVotes.size === game.players.length) { games.delete(chatId); return m.reply(raraGameBox({ title: "uno", icon: "🃏", flavor: "⏹️ *STOP!*", body: "UNO dihentikan — semua pemain setuju.", cta: gameCTA("uno") })); }
+      return m.reply(raraGameBox({ title: "uno", icon: "🃏", body: "📢 Butuh " + (game.players.length - game.stopVotes.size) + " vote lagi buat stop." }));
     }
 
-    return m.reply(novaWrap("uno", "Perintah tidak dikenali. .uno info untuk panduan.", "guide"));
+    return m.reply(raraWrap("uno", "Perintah tidak dikenali. .uno info untuk panduan.", "guide"));
   } catch (e) {
     console.error("uno error:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("uno", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("uno", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

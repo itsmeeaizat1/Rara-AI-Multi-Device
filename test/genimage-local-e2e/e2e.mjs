@@ -1,12 +1,12 @@
-// E2E — FIX .novaagent "buatkan gambar kucing" nyantol ke aksi lain (13 Sep 2026)
+// E2E — FIX .raraagent "buatkan gambar kucing" nyantol ke aksi lain (13 Sep 2026)
 // Bug dilaporkan owner: giliran ke-2 di sesi (setelah "ubah deskripsi grup")
-// minta ".novaagent buatkan gambar kucing" malah dibalas teks yang NGARANG
+// minta ".raraagent buatkan gambar kucing" malah dibalas teks yang NGARANG
 // soal deskripsi grup — think() (AI classify) bingung sama histori sesi,
 // balikin tool "setdesc" LAGI, reply cuma nambahin kalimat "gambar kucing
 // sedang dibuat" TANPA genimage beneran kepanggil.
 // FIX 1: localParse deteksi lokal INSTAN "buatkan/buat/bikin gambar X" →
 //        tool genimage — gak lewat AI classification sama sekali.
-// FIX 2: executor .novaagent WAJIB pakai tool.done (akurat) buat teks
+// FIX 2: executor .raraagent WAJIB pakai tool.done (akurat) buat teks
 //        konfirmasi, bukan decision.reply (bisa halusinasi).
 import { localParse, TOOLS } from "../../src/lib/aiagent.js";
 

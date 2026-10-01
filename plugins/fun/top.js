@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "topfun",
     alias: ["topfun", "top"],
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
             .filter(id => id && id !== sock.user?.id?.split(':')[0] + '@s.whatsapp.net')
         
         if (members.length < 2) {
-            return m.reply(novaWrap("Top", `❌ Member grup kurang dari 5 orang!`))
+            return m.reply(raraWrap("Top", `❌ Member grup kurang dari 5 orang!`))
         }
         
         const shuffled = members.sort(() => Math.random() - 0.5)
@@ -47,10 +47,10 @@ async function handler(m, { sock }) {
         })
         
         await m.react("🐣");
-        await m.reply(novaWrap("Top", `🏆 *Top 5 ${kategori.toUpperCase()}*\n${list}`))
+        await m.reply(raraWrap("Top", `🏆 *Top 5 ${kategori.toUpperCase()}*\n${list}`))
     } catch (error) {
     await m.react("❌");
-        m.reply(novaWrap("topfun", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("topfun", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

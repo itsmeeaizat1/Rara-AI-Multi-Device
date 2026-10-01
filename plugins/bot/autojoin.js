@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // autojoin.js — owner: jadwalkan bot join/leave grup & channel otomatis
 // (fitur "akses penuh di bot", 26 Sep 2026):
 //   Aturan waktu: pakai ":" (12:00) = JAM PASTI · tanpa ":" (7d/2j/30m) = COUNTDOWN
@@ -13,8 +13,8 @@ import {
   addAutojoinTask, cancelAutojoinTask, listAutojoinTasks,
   parseWaktuAutojoin, formatWaktuAutojoin, extractGroupCode, isChannelLink,
   _autojoinForTest,
-} from "../../src/lib/nova-autojoin.js";
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-autojoin.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autojoin",
@@ -49,7 +49,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ─── usage card ───
     if (!sub) {
-      return m.reply(novaGuideV2("autojoin", {
+      return m.reply(raraGuideV2("autojoin", {
         sapaan: "Jadwalkan bot join/leave grup & channel otomatis di waktu ditentukan",
         cara: [
           `${prefix}autojoin group|gc <link grup> <waktu> — join grup terjadwal`,
@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "list") {
       const tasks = listAutojoinTasks(owner);
       if (tasks.length === 0) {
-        return m.reply(novaWrap(label, "Belum ada tugas autojoin/autoout pending."), "autojoin");
+        return m.reply(raraWrap(label, "Belum ada tugas autojoin/autoout pending."), "autojoin");
       }
       const lines = [`🕒 ${tasks.length} tugas pending:`, ""];
       for (const t of tasks) {
@@ -79,25 +79,25 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(`   🔗 ${t.link}`);
         lines.push("");
       }
-      return m.reply(novaWrap(label, lines.join("\n").trim()), "autojoin");
+      return m.reply(raraWrap(label, lines.join("\n").trim()), "autojoin");
     }
 
     // ─── cancel ───
     if (sub === "cancel" || sub === "batal") {
       const id = m.args[1];
       if (!id) {
-        return m.reply(novaSalahV2("autojoin", { pesan: "id tugas kosong — lihat id di " + prefix + "autojoin list", contoh: prefix + "autojoin cancel AJ-XXXX1" }), "autojoin");
+        return m.reply(raraSalahV2("autojoin", { pesan: "id tugas kosong — lihat id di " + prefix + "autojoin list", contoh: prefix + "autojoin cancel AJ-XXXX1" }), "autojoin");
       }
       const t = cancelAutojoinTask(String(id).toUpperCase(), owner);
       if (!t) {
-        return m.reply(novaWrap(label, [
+        return m.reply(raraWrap(label, [
           "❌ Tugas gak ketemu / udah dieksekusi.",
           "",
           `Cek id di ${prefix}autojoin list.`,
         ]), "autojoin");
       }
       await m.react("🐣");
-      return m.reply(novaWrap(label, [
+      return m.reply(raraWrap(label, [
         "✅ Tugas dibatalkan.",
         "",
         `${t.id} — ${t.action === "join" ? "join" : "out"} ${t.target}`,
@@ -107,7 +107,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ─── pasang tugas: group|channel <link> <waktu> ───
     if (!["group", "gc", "grup", "channel", "ch", "saluran"].includes(sub)) {
-      return m.reply(novaSalahV2("autojoin", { pesan: "target gak dikenal — group/gc · channel/ch · list · cancel", contoh: prefix + "autojoin gc https://chat.whatsapp.com/xxx 7d" }), "autojoin");
+      return m.reply(raraSalahV2("autojoin", { pesan: "target gak dikenal — group/gc · channel/ch · list · cancel", contoh: prefix + "autojoin gc https://chat.whatsapp.com/xxx 7d" }), "autojoin");
     }
     const target = ["group", "gc", "grup"].includes(sub) ? "group" : "channel";
     const link = m.args[1] || "";
@@ -115,7 +115,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (target === "group" && !extractGroupCode(link)) {
       await m.react("❌");
-      return m.reply(novaWrap(label, [
+      return m.reply(raraWrap(label, [
         "❌ Link grup gak valid.",
         "",
         `Harus berformat chat.whatsapp.com/<kode> — contoh:`,
@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (target === "channel" && !isChannelLink(link)) {
       await m.react("❌");
-      return m.reply(novaWrap(label, [
+      return m.reply(raraWrap(label, [
         "❌ Link channel gak valid.",
         "",
         `Harus berformat whatsapp.com/channel/<kode> — contoh:`,
@@ -133,7 +133,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (!waktuStr) {
       await m.react("❌");
-      return m.reply(novaWrap(label, [
+      return m.reply(raraWrap(label, [
         "❌ Waktu belum ditentukan.",
         "",
         WAKTU_HINT,
@@ -142,7 +142,7 @@ async function handler(m, { sock, config: botConfig }) {
     const at = parseWaktuAutojoin(waktuStr);
     if (!at) {
       await m.react("❌");
-      return m.reply(novaWrap(label, [
+      return m.reply(raraWrap(label, [
         "❌ Waktu gak valid / terlalu dekat / terlalu jauh.",
         "",
         WAKTU_HINT,
@@ -152,14 +152,14 @@ async function handler(m, { sock, config: botConfig }) {
     const res = addAutojoinTask(sock, { action, target, link, at, owner });
     if (!res.ok) {
       await m.react("❌");
-      return m.reply(novaWrap(label, [
+      return m.reply(raraWrap(label, [
         "❌ Tugas gagal dipasang.",
         "",
         res.reason || "",
       ]), "autojoin");
     }
     await m.react("🐣");
-    return m.reply(novaWrap(label, [
+    return m.reply(raraWrap(label, [
       `🕒 Tugas terpasang — ${res.task.id}`,
       "",
       `Aksi: ${action === "join" ? "📥 join" : "📤 keluar"} ${target === "group" ? "grup" : "channel"}`,
@@ -171,7 +171,7 @@ async function handler(m, { sock, config: botConfig }) {
     ]), "autojoin");
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("autojoin", `❌ Gagal: ${e?.message || e}`), "autojoin");
+    return m.reply(raraWrap("autojoin", `❌ Gagal: ${e?.message || e}`), "autojoin");
   }
 }
 

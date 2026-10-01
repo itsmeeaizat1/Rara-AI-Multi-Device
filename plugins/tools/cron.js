@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "cron",
@@ -249,12 +249,12 @@ async function handler(m, { sock, config: botConfig }) {
     if (text.toLowerCase().startsWith("build ")) {
       const input = text.substring(6).trim();
       if (!input) {
-        return m.reply(novaWrap("Cron", "Masukkan opsi build!\n💡 *Contoh:* " + prefix + "cron build every 5 minutes"));
+        return m.reply(raraWrap("Cron", "Masukkan opsi build!\n💡 *Contoh:* " + prefix + "cron build every 5 minutes"));
       }
 
       const result = buildCron(input);
       if (!result) {
-        return m.reply(novaWrap("Cron Build", "Pola tidak dikenal!\n\nPola tersedia:\n" +
+        return m.reply(raraWrap("Cron Build", "Pola tidak dikenal!\n\nPola tersedia:\n" +
           "every N minutes\n" +
           "every N hours\n" +
           "every N days\n" +
@@ -265,7 +265,7 @@ async function handler(m, { sock, config: botConfig }) {
           "every <day> at HH:MM\n" +
           "every <day>"));
       }
-      return m.reply(novaWrap("Cron Build", [
+      return m.reply(raraWrap("Cron Build", [
         "Input: " + input,
         "Expression: " + result.expr,
         "Desc: " + result.desc,
@@ -275,14 +275,14 @@ async function handler(m, { sock, config: botConfig }) {
     // Explain mode
     const result = explainCron(text);
     if (result.error) {
-      return m.reply(novaWrap("Cron", result.error));
+      return m.reply(raraWrap("Cron", result.error));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("Cron Explain: " + text, result.lines.join("\n")));
+    return m.reply(raraWrap("Cron Explain: " + text, result.lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("cron error:", e);
-    return m.reply(novaWrap("Cron", "Error: " + e.message));
+    return m.reply(raraWrap("Cron", "Error: " + e.message));
   }
 }
 

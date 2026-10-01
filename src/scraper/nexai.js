@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/scraper/nexai.js — NexAI (apinex.bond) multi-provider AI
 // Request owner 12 Sep 2026: "tmbah ai multi provider baru nexai" —
 // OpenAI-compatible: POST https://api.apinex.bond/v1/chat/completions

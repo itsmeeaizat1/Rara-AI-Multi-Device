@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // play.js — Search YouTube → download audio → kirim langsung
 // Bitrate: 128 / 256 (default) / 320 kbps
 // REVISI 14 Sep 2026 (owner: "variasi menu chat card — bagian
@@ -9,10 +9,10 @@
 // API (gratis, no key, sama seperti yang dipakai plugins/download/songs.js).
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/nova-ytdlp.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
+import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/rara-ytdlp.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
 
@@ -150,14 +150,14 @@ async function searchYoutube(query) {
 }
 
 async function downloadAudio(url, kbps) {
-  // Try 1: yt-dlp / cobalt (nova-ytdlp) — kontrol bitrate persis
+  // Try 1: yt-dlp / cobalt (rara-ytdlp) — kontrol bitrate persis
   try {
     const result = await downloadAudioYtDlp(url, kbps);
     if (result?.buffer?.length > 10000) {
       return { buffer: result.buffer, title: result.title };
     }
   } catch (e) {
-    console.error("[Play] nova-ytdlp error:", e.message);
+    console.error("[Play] rara-ytdlp error:", e.message);
   }
 
   // Try 2: ytdl.js (ymcdn)
@@ -204,7 +204,7 @@ async function sendPlayAudio(sock, m, video, kbps) {
   const audio = await downloadAudio(video.url, kbps);
   if (!audio?.buffer || audio.buffer.length < 10000) {
     await m.react("❌");
-    return m.reply(novaGagal("Play"));
+    return m.reply(raraGagal("Play"));
   }
   console.log(`[Play] Audio OK: ${audio.buffer.length} bytes (${kbps}kbps)`);
 
@@ -255,7 +255,7 @@ async function sendPlayAudio(sock, m, video, kbps) {
 
   // 4. Tawaran convert di bawahnya
   await offerConvert(sock, m, { buffer: audio.buffer, type: "audio", platform: "YouTube", title: titleForLyrics, sourceUrl: video.url });
-  await m.reply(novaBerhasil("Play"));
+  await m.reply(raraBerhasil("Play"));
 }
 
 async function handler(m, { sock }) {
@@ -264,7 +264,7 @@ async function handler(m, { sock }) {
 
   // Usage: pilihan bitrate (default 256kbps)
   if (!query) {
-    return m.reply(novaGuideV2("play", {
+    return m.reply(raraGuideV2("play", {
  kaomoji: "ヾ(≧▽≦*)o",
  sapaan: "mau lagu favorit? ketik aja judulnya! (≧◡≦)",
       cara: "ketik judul lagunya sesudah command",
@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
   // SALAH CMD CUTE (owner 25 Sep): ketik link padahal .play mau judul lagu
   if (/^(https?:\/\/|www\.)|\b(?:facebook|fb\.watch|tiktok|instagram|youtu\.?be)\.com/i.test(query)) {
     await m.react("🐣");
-    return m.reply(novaSalahV2("play", {
+    return m.reply(raraSalahV2("play", {
  kaomoji: "(>_<)",
       pesan: "kakak malah ketik linknya, padahal ini mah mau judul lagunya~",
       contoh: `${m.prefix}play nama lagu`,
@@ -291,7 +291,7 @@ async function handler(m, { sock }) {
     const video = await searchYoutube(query);
     if (!video) {
       await m.react("❌");
-      return m.reply(novaGagal("Play"));
+      return m.reply(raraGagal("Play"));
     }
     console.log(`[Play] Found: ${video.title} → ${video.url} (${kbps}kbps)`);
 
@@ -311,7 +311,7 @@ async function handler(m, { sock }) {
         `🔧 *FIX:* ekspor cookies YouTube dari browser yang login (akun sekunder aja biar aman) pakai extension "Get cookies.txt LOCALLY" → simpan ke *data/yt-cookies.txt* → restart bot. Panduan lengkap: changelogs/FIXES.md`
       );
     }
-    return m.reply(novaGangguan("Play"));
+    return m.reply(raraGangguan("Play"));
   }
 }
 

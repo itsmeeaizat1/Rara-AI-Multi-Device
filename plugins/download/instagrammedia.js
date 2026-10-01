@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // instagrammedia.js — Download Instagram per format (URL-based):
 //   .igvideo <url> → kirim video aja
 //   .igimage <url> → kirim foto aja (carousel/slideshow)
@@ -9,13 +9,13 @@
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import { offerConvert } from "../../src/lib/nova-convert.js";
-import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
+import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { novaWrap, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { raraWrap, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -143,7 +143,7 @@ async function extractMp3(videoUrl) {
 
 function usageReply(m) {
   const p = m.prefix;
-  return m.reply(novaWrap("Instagram Media", [
+  return m.reply(raraWrap("Instagram Media", [
     `📌 Kirim link post Instagram, hasil dikirim sesuai formatnya:`,
     ``,
     `💡 Contoh:`,
@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
     const result = await fetchIgMedias(url);
     if (!result || !result.medias?.length) {
       await m.react("❌");
-      return m.reply(novaGagal("Instagram Media"));
+      return m.reply(raraGagal("Instagram Media"));
     }
     const title = result.title || "Instagram Media";
 
@@ -172,7 +172,7 @@ async function handler(m, { sock }) {
       const videos = result.medias.filter((i) => i.type === "video");
       if (!videos.length) {
         await m.react("❗");
-        return m.reply(novaWrap("Instagram Media", `Post ini gak ada video — coba .igimage buat ambil fotonya`));
+        return m.reply(raraWrap("Instagram Media", `Post ini gak ada video — coba .igimage buat ambil fotonya`));
       }
       for (const item of videos.slice(0, 5)) {
         // format owner 19 Sep — disamakan ke semua downloader
@@ -203,7 +203,7 @@ async function handler(m, { sock }) {
       const images = result.medias.filter((i) => i.type === "image" || /\.(jpe?g|png|webp)(\?|$)/i.test(itemUrlSafe(i)));
       if (!images.length) {
         await m.react("❗");
-        return m.reply(novaWrap("Instagram Media", `Post ini gak ada foto — coba .igvideo buat ambil videonya`));
+        return m.reply(raraWrap("Instagram Media", `Post ini gak ada foto — coba .igvideo buat ambil videonya`));
       }
       // format owner 19 Sep — disamakan ke semua downloader
       const caption = tiktokCaption({
@@ -234,7 +234,7 @@ async function handler(m, { sock }) {
       const video = result.medias.find((i) => i.type === "video" || i.type === "audio");
       if (!video) {
         await m.react("❗");
-        return m.reply(novaWrap("Instagram Media", `Post ini gak ada video/audio buat diekstrak audionya — coba .igimage`));
+        return m.reply(raraWrap("Instagram Media", `Post ini gak ada video/audio buat diekstrak audionya — coba .igimage`));
       }
       const isDirectAudio = video.type === "audio" || /\.(mp3|m4a|ogg|opus)(\?|$)/i.test(video.url);
       const audioBuffer = isDirectAudio ? null : await extractMp3(video.url);
@@ -265,7 +265,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     console.error("[IGMedia]", error.message || error);
     await m.react("❌");
-    return m.reply(novaGangguan("Instagram Media"));
+    return m.reply(raraGangguan("Instagram Media"));
   }
 }
 

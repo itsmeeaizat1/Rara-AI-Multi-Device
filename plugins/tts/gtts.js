@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "gtts",
@@ -28,11 +28,11 @@ async function handler(m, { sock }) {
     }
 
     if (!text) {
-      return m.reply(novaWrap("gtts", `Format: ${m.prefix}gtts <bahasa> | <teks>\n\nContoh:\n${m.prefix}gtts id | Halo semuanya\n${m.prefix}gtts en | Hello world\n${m.prefix}gtts ja | こんにちは`, "guide"));
+      return m.reply(raraWrap("gtts", `Format: ${m.prefix}gtts <bahasa> | <teks>\n\nContoh:\n${m.prefix}gtts id | Halo semuanya\n${m.prefix}gtts en | Hello world\n${m.prefix}gtts ja | こんにちは`, "guide"));
     }
 
     if (text.length > 500) {
-      return m.reply(novaWrap("gtts", "Teks terlalu panjang! Maksimal 500 karakter.", "error"));
+      return m.reply(raraWrap("gtts", "Teks terlalu panjang! Maksimal 500 karakter.", "error"));
     }
 
     await m.react("🕒");
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("gtts error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("gtts", err.message || "Error", "error"));
+    return m.reply(raraWrap("gtts", err.message || "Error", "error"));
   }
 }
 

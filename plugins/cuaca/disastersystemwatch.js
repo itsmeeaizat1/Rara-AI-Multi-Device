@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // disastersystemwatch.js — Langganan auto-alert bencana (opt-in, default OFF) (rename file owner 15 Sep 2026)
 //   • Gempa Indonesia baru M >= 5.0 (BMKG)   — poll 60 dtk
 //   • Gempa global baru M >= 6.0 (USGS)      — poll 5 mnt
@@ -22,13 +22,13 @@ import {
   setWatcherEws, setWatcherProvider, getEwsHistory, EWS_MIN_MAG, setWatcherMinMag, DEFAULT_MIN_MAG, MIN_MAG_FLOOR, MIN_MAG_CEIL,
   setWatcherParam, ALERT_PARAM_JENIS, LEVEL_ORDER,
   getMagmaVolcanoes, MAGMA_LEVELS, sendRegionalAlert,
-} from "../../src/lib/nova-bencana.js";
+} from "../../src/lib/rara-bencana.js";
 // ── GUARD FORMAT (request owner 2026-09-07): SEMUA pesan berkotak plugin
 // ini WAJIB lewat boxLeft() dari src/lib/styler.js — kalimat input tetap
 // ditulis utuh panjang di kode (gak usah dipendekkan manual), output
 // dijamin ≤30 char/baris & tiap baris diawali "│ ", dikirim dalam code
 // block supaya border rata. DILARANG nulis "│ " manual di file ini.
-// Adapter di bawah nyanding API lama (novaBox/novaError/novaGuide) ke
+// Adapter di bawah nyanding API lama (raraBox/raraError/raraGuide) ke
 // guard baru, jadi SEMUA call site otomatis lewat boxLeft.
 import { boxMessage } from "../../src/lib/styler.js";
 
@@ -45,10 +45,10 @@ function toGuardedBox(header, lines = []) {
   return boxMessage(title, body.join("\n"));
 }
 
-const novaBox = (header, lines = []) => toGuardedBox(header, lines);
-const novaError = (header, msg) => toGuardedBox(header, ["❌ " + (msg || "Terjadi error, coba lagi.")]);
-const novaSuccess = (header, msg) => toGuardedBox(header, ["✅ " + (msg || "Berhasil.")]);
-const novaGuide = (header, intro, example) =>
+const raraBox = (header, lines = []) => toGuardedBox(header, lines);
+const raraError = (header, msg) => toGuardedBox(header, ["❌ " + (msg || "Terjadi error, coba lagi.")]);
+const raraSuccess = (header, msg) => toGuardedBox(header, ["✅ " + (msg || "Berhasil.")]);
+const raraGuide = (header, intro, example) =>
   toGuardedBox(header, [
     ...(intro ? [String(intro)] : []),
     ...(example ? [`Contoh: ${example}`] : []),
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
       const fJenis = Array.isArray(me0?.jenis) && me0.jenis.length ? me0.jenis.join(", ") : "semua";
       const fSumber = Array.isArray(me0?.sumber) && me0.sumber.length ? me0.sumber.join(", ").toUpperCase() : "semua";
       const fJadwal = Array.isArray(me0?.schedules) && me0.schedules.length ? me0.schedules.join(", ") : "belum ada";
-      const text = novaBox("Bencana Watch — Atur", [
+      const text = raraBox("Bencana Watch — Atur", [
         `Status : ${onLabel}`,
         `Mode : ${(me0?.mode || "otomatis").toUpperCase()}`,
         `→ .dsw mode darurat`,
@@ -159,7 +159,7 @@ async function handler(m, { sock }) {
     if (action === "lokasi" || action === "setlokasi" || action === "loc") {
       const place = (m.args || []).slice(1).join(" ").trim();
       if (!place) {
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           "Set lokasi buat peringatan khusus wilayah.",
           "Bot kasih tahu kalau ada bencana baru DEKAT lokasi kamu.",
           "---",
@@ -177,7 +177,7 @@ async function handler(m, { sock }) {
         clearWatcherLocation(targetKey);
         const alsoG = await mirrorGlobal((k) => clearWatcherLocation(k));
         await m.react("🐣");
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           "Lokasi dihapus. Peringatan wilayah mati, alert umum tetap jalan.",
           ...(alsoG ? ["Lokasi langganan global ikut dihapus."] : []),
         ]));
@@ -186,7 +186,7 @@ async function handler(m, { sock }) {
         const rec = await setWatcherLocation(targetKey, place);
         const alsoG = await mirrorGlobal((k) => setWatcherLocation(k, place));
         await m.react("🐣");
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           `Lokasi tersimpan.`,
           `Nama    : ${rec.city}`,
           `Scope   : ${scopeLabel(rec.scope)}`,
@@ -211,7 +211,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -221,7 +221,7 @@ async function handler(m, { sock }) {
       if (!rawKm0) {
         const subs0 = await getWatchersSafe();
         const me0 = subs0[targetKey];
-        return m.reply(novaBox("Bencana Watch — Radius", [
+        return m.reply(raraBox("Bencana Watch — Radius", [
           me0?.city
             ? `Radius aktif : ${me0.radius || 300} km dari ${me0.city}`
             : "Lokasi belum di-set.",
@@ -244,7 +244,7 @@ async function handler(m, { sock }) {
         const alsoG = await mirrorGlobal((k) => setWatcherRadius(k, rawKm));
         await m.react("🐣");
         const radiusLabel = rec.radius >= 20000 ? "SELURUH DUNIA (radius maksimum)" : `${rec.radius} km`;
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           `Radius monitoring: ${radiusLabel} dari ${rec.city || "lokasi kamu"}.`,
           "Gempa dekat lokasi (termasuk < M 5.0) dalam",
           `radius ini langsung dinotifkin. ${rec.radius} km =`,
@@ -254,7 +254,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message || "Radius harus 50-20000 km. Contoh: .dsw radius 500 / radius dunia"));
+        return m.reply(raraError("Bencana Watch", e.message || "Radius harus 50-20000 km. Contoh: .dsw radius 500 / radius dunia"));
       }
 
     // ── set ambang magnitudo minimum alert gempa (owner 15 Sep 2026:
@@ -265,7 +265,7 @@ async function handler(m, { sock }) {
       if (!rawM) {
         const subsM = await getWatchersSafe();
         const meM = subsM[targetKey];
-        return m.reply(novaBox("Bencana Watch — Min Mag", [
+        return m.reply(raraBox("Bencana Watch — Min Mag", [
           `Ambang aktif : M ${meM?.minMag ?? DEFAULT_MIN_MAG}+`,
           meM?.minMag != null ? "(custom — reset: .dsw minmag reset)" : "(default bawaan)",
           "---",
@@ -285,7 +285,7 @@ async function handler(m, { sock }) {
         const alsoG = await mirrorGlobal((k) => setWatcherMinMag(k, rawM));
         await m.react("🐣");
         const isReset = /^(reset|default|bawaan)$/i.test(String(rawM));
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           isReset
             ? `Ambang dikembalikan ke default M ${DEFAULT_MIN_MAG}+.`
             : `Ambang minimum alert gempa: M ${rec.minMag ?? DEFAULT_MIN_MAG}+.`,
@@ -296,7 +296,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message || `Magnitudo minimum M ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL}. Contoh: .dsw minmag 3.5`));
+        return m.reply(raraError("Bencana Watch", e.message || `Magnitudo minimum M ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL}. Contoh: .dsw minmag 3.5`));
       }
 
     // ── PARAMETER ALERT PER JENIS BENCANA (owner 15 Sep 2026: "dibencana
@@ -319,7 +319,7 @@ async function handler(m, { sock }) {
       };
 
       if (!jenisRaw) {
-        return m.reply(novaBox("Bencana Watch — Param", [
+        return m.reply(raraBox("Bencana Watch — Param", [
           "Set parameter alert per jenis bencana.",
           "---",
           ...ALERT_PARAM_JENIS.map(fmtJenis),
@@ -334,9 +334,9 @@ async function handler(m, { sock }) {
       }
       if (jenisRaw && !keyRaw) {
         const j = ALERT_PARAM_JENIS.find((x) => x.key === String(jenisRaw).toLowerCase().replace(/\s+/g, "").replace("-", "") || x.label.toLowerCase().startsWith(String(jenisRaw).toLowerCase()));
-        if (!j) return m.reply(novaError("Bencana Watch", `Jenis gak dikenal. Pilihan: ${ALERT_PARAM_JENIS.map((x) => x.label).join(", ")}`));
+        if (!j) return m.reply(raraError("Bencana Watch", `Jenis gak dikenal. Pilihan: ${ALERT_PARAM_JENIS.map((x) => x.label).join(", ")}`));
         const pr = curParams[j.key] || {};
-        return m.reply(novaBox(`Bencana Watch — ${j.label}`, [
+        return m.reply(raraBox(`Bencana Watch — ${j.label}`, [
           "Parameter yang tersedia untuk jenis ini:",
           ...(j.params.includes("minmag") ? [
             `minmag : M ${(j.key === "gempa" ? (meP?.minMag ?? DEFAULT_MIN_MAG) : "-")}+ (default ${DEFAULT_MIN_MAG})`,
@@ -364,7 +364,7 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         const prNow = (rec?.params || {})[String(jenisRaw).toLowerCase()] || {};
         const shown = Object.keys(prNow).length ? Object.entries(prNow).map(([k2, v2]) => `${k2}=${v2}`).join(" | ") : "default";
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           `Parameter ${jenisRaw} diperbarui: ${shown}.`,
           ...(alsoG ? ["Pengaturan langganan global ikut diubah."] : []),
           "---",
@@ -372,7 +372,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -380,7 +380,7 @@ async function handler(m, { sock }) {
     if (action === "minlevel") {
       const [, jenisRaw, lvlRaw] = m.args || [];
       if (!jenisRaw || !lvlRaw) {
-        return m.reply(novaBox("Bencana Watch — Min Level", [
+        return m.reply(raraBox("Bencana Watch — Min Level", [
           "Atur level minimum alert per jenis bencana.",
           "---",
           "HIJAU  : semua alert (default)",
@@ -398,14 +398,14 @@ async function handler(m, { sock }) {
         const alsoG = await mirrorGlobal((k) => setWatcherParam(k, jenisRaw, "minlevel", lvlRaw));
         await m.react("🐣");
         const isReset = /^(reset|default|bawaan)$/i.test(String(lvlRaw ?? ""));
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           isReset ? `Level minimum ${jenisRaw} kembali default (HIJAU).` : `Level minimum alert ${jenisRaw}: ${rec?.params?.[String(jenisRaw).toLowerCase()]?.minlevel || lvlRaw.toUpperCase()}.`,
           "Alert di bawah level itu gak dikirim.",
           ...(alsoG ? ["Langganan global ikut diubah."] : []),
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -419,7 +419,7 @@ async function handler(m, { sock }) {
       if (!v) {
         const subs0 = await getWatchersSafe();
         const cur = subs0[targetKey]?.kirim || "utama";
-        const text = novaBox("Bencana Watch — Kirim", [
+        const text = raraBox("Bencana Watch — Kirim", [
           `Kirim aktif : ${cur.toUpperCase()}`,
           "---",
           "• UTAMA — tiap pembaruan cuma 1 info",
@@ -435,7 +435,7 @@ async function handler(m, { sock }) {
         const rec = setWatcherKirim(targetKey, v);
         const alsoG = await mirrorGlobal((k) => setWatcherKirim(k, v));
         await m.react("🐣");
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           `Mode kirim: ${rec.kirim.toUpperCase()}`,
           ...(alsoG ? ["Mode kirim langganan global ikut diubah."] : []),
           "---",
@@ -445,7 +445,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -455,7 +455,7 @@ async function handler(m, { sock }) {
       if (!rest) {
         const subs0 = await getWatchersSafe();
         const cur = subs0[targetKey]?.jenis;
-        const text = novaBox("Bencana Watch — Jenis", [
+        const text = raraBox("Bencana Watch — Jenis", [
           `Jenis aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ") : "semua jenis"}`,
           "---",
           "Pilihan : " + BENCANA_JENIS.join(", "),
@@ -469,7 +469,7 @@ async function handler(m, { sock }) {
           setWatcherJenis(targetKey, []);
           const alsoG = await mirrorGlobal((k) => setWatcherJenis(k, []));
           await m.react("🐣");
-          return m.reply(novaBox("Bencana Watch", [
+          return m.reply(raraBox("Bencana Watch", [
             "Filter jenis direset — semua jenis bencana dikirim lagi.",
             ...(alsoG ? ["Filter langganan global ikut direset."] : []),
           ]));
@@ -489,7 +489,7 @@ async function handler(m, { sock }) {
         setWatcherJenis(targetKey, kinds);
         const alsoG = await mirrorGlobal((k) => setWatcherJenis(k, kinds));
         await m.react("🐣");
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           `Filter jenis aktif: ${kinds.join(", ")}`,
           "---",
           "Hanya jenis di atas yang dikirim (semua mode).",
@@ -498,7 +498,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -508,7 +508,7 @@ async function handler(m, { sock }) {
       if (!rest) {
         const subs0 = await getWatchersSafe();
         const cur = subs0[targetKey]?.sumber;
-        const text = novaBox("Bencana Watch — Sumber", [
+        const text = raraBox("Bencana Watch — Sumber", [
           `Sumber aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ").toUpperCase() : "semua"}`,
           "---",
           "• BMKG — gempa Indonesia M 5.0+",
@@ -525,7 +525,7 @@ async function handler(m, { sock }) {
           setWatcherSumber(targetKey, []);
           const alsoG = await mirrorGlobal((k) => setWatcherSumber(k, []));
           await m.react("🐣");
-          return m.reply(novaBox("Bencana Watch", [
+          return m.reply(raraBox("Bencana Watch", [
             "Filter sumber direset — semua sumber dikirim lagi.",
             ...(alsoG ? ["Filter langganan global ikut direset."] : []),
           ]));
@@ -536,7 +536,7 @@ async function handler(m, { sock }) {
         setWatcherSumber(targetKey, sources);
         const alsoG = await mirrorGlobal((k) => setWatcherSumber(k, sources));
         await m.react("🐣");
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           `Filter sumber aktif: ${sources.join(", ").toUpperCase()}`,
           "---",
           "Hanya alert dari sumber di atas yang dikirim",
@@ -546,7 +546,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -578,18 +578,18 @@ async function handler(m, { sock }) {
           lines.push("Notif otomatis perubahan status: aktifin jenis gunungapi (.dsw jenis gunungapi)");
           lines.push("Sumber: magma.esdm.go.id (PVMBG)");
           await m.react("\u{1F42A}");
-          return m.reply(novaBox("Status Gunung Api — PVMBG", lines));
+          return m.reply(raraBox("Status Gunung Api — PVMBG", lines));
         }
         const needle = q.toLowerCase();
         const v = page.list.find((x) => x.nama.toLowerCase() === needle)
           || page.list.find((x) => x.nama.toLowerCase().includes(needle));
         if (!v) {
           await m.react("\u274C");
-          return m.reply(novaError("Bencana Watch", 'Gunung api "' + q + '" gak ketemu di daftar PVMBG. Ketik .dsw gunung buat lihat daftar.'));
+          return m.reply(raraError("Bencana Watch", 'Gunung api "' + q + '" gak ketemu di daftar PVMBG. Ketik .dsw gunung buat lihat daftar.'));
         }
         const lv = MAGMA_LEVELS[v.levelNum] || MAGMA_LEVELS[1];
         await m.react("\u{1F42A}");
-        return m.reply(novaBox("Gunung Api — " + v.nama, [
+        return m.reply(raraBox("Gunung Api — " + v.nama, [
           "Status : " + lv.icon + " " + lv.romawi + " (" + lv.label + ")",
           "Wilayah : " + v.prov,
           "---",
@@ -601,7 +601,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("\u274C");
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -627,7 +627,7 @@ async function handler(m, { sock }) {
       try {
         await sendRegionalAlert(sock, chatId, ev, sub, { test: true });
         await m.react("\u{1F42A}");
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           "Alert SIMULASI dikirim ke chat ini —",
           "cek pesan PERINGATAN di atas.",
           "---",
@@ -642,7 +642,7 @@ async function handler(m, { sock }) {
       } catch (e) {
         await m.react("\u274C");
         console.error("[bencana] ❌ .dsw test gagal kirim:", e?.message || e);
-        return m.reply(novaError("Bencana Watch", "Gagal kirim alert simulasi: " + e.message));
+        return m.reply(raraError("Bencana Watch", "Gagal kirim alert simulasi: " + e.message));
       }
     }
 
@@ -652,7 +652,7 @@ async function handler(m, { sock }) {
       if (!mode) {
         const subs0 = await getWatchersSafe();
         const cur = (subs0[targetKey]?.mode || "otomatis").toUpperCase();
-        const text = novaBox("Bencana Watch — Mode", [
+        const text = raraBox("Bencana Watch — Mode", [
           `Mode aktif : ${cur}`,
           "---",
           "• OTOMATIS — semua bencana baru langsung",
@@ -675,7 +675,7 @@ async function handler(m, { sock }) {
           jadwal: "Bencana baru dikumpulkan & dikirim sebagai rangkuman di jam yang di-set. Set jam: .dsw jadwal add 07:00. Bencana DARURAT besar tetap langsung dikirim realtime, gak nunggu rangkuman.",
           darurat: "Hanya bencana paling penting yang dikirim: dekat lokasi kamu (radius) atau bencana besar. Set lokasi dulu biar maksimal: .dsw lokasi <kota>",
         };
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           `Mode: ${rec.mode}`,
           ...(alsoG ? ["Mode langganan global ikut diubah."] : []),
           "---",
@@ -683,7 +683,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -696,7 +696,7 @@ async function handler(m, { sock }) {
           const rec = addWatcherSchedule(targetKey, hhmm);
           const alsoG = await mirrorGlobal((k) => addWatcherSchedule(k, hhmm));
           await m.react("🐣");
-          return m.reply(novaBox("Bencana Watch", [
+          return m.reply(raraBox("Bencana Watch", [
             `Jadwal ${rec.schedules.at(-1)} ditambah (mode jadwal aktif).`,
             `Total ${rec.schedules.length} jadwal: ${rec.schedules.join(", ")}`,
             "---",
@@ -710,7 +710,7 @@ async function handler(m, { sock }) {
           const rec = removeWatcherSchedule(targetKey, hhmm);
           const alsoG = await mirrorGlobal((k) => removeWatcherSchedule(k, hhmm));
           await m.react("🐣");
-          return m.reply(novaBox("Bencana Watch", [
+          return m.reply(raraBox("Bencana Watch", [
             `Jadwal dihapus. Sisa: ${rec.schedules.length ? rec.schedules.join(", ") : "kosong"}`,
             ...(alsoG ? ["Jadwal langganan global ikut dihapus."] : []),
           ]));
@@ -719,7 +719,7 @@ async function handler(m, { sock }) {
           clearWatcherSchedules(targetKey);
           const alsoG = await mirrorGlobal((k) => clearWatcherSchedules(k));
           await m.react("🐣");
-          return m.reply(novaBox("Bencana Watch", [
+          return m.reply(raraBox("Bencana Watch", [
             "Semua jadwal rangkuman dihapus.",
             ...(alsoG ? ["Jadwal langganan global ikut dihapus."] : []),
           ]));
@@ -728,7 +728,7 @@ async function handler(m, { sock }) {
         const subs = await getWatchersSafe();
         const me = subs[targetKey];
         const scheds = Array.isArray(me?.schedules) ? me.schedules : [];
-        const text = novaBox("Bencana Watch — Jadwal", [
+        const text = raraBox("Bencana Watch — Jadwal", [
           `Jadwal : ${scheds.length ? scheds.join(", ") : "belum ada"}`,
           `Mode   : ${me?.mode || "otomatis"}`,
           "---",
@@ -741,7 +741,7 @@ async function handler(m, { sock }) {
         return m.reply(text);
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -750,7 +750,7 @@ async function handler(m, { sock }) {
       await addWatcher(chatId);
       syncBencanaMonitor(sock);
       await m.react("🐣");
-      await m.reply(novaBox("Bencana Watch", [
+      await m.reply(raraBox("Bencana Watch", [
         "Auto-alert bencana aktif di chat ini.",
         "---",
         "• Gempa Indonesia baru M 5.0+ (BMKG)",
@@ -774,7 +774,7 @@ async function handler(m, { sock }) {
       await addGlobalWatcher(m.sender);
       syncBencanaMonitor(sock);
       await m.react("🐣");
-      await m.reply(novaBox("Bencana Watch", [
+      await m.reply(raraBox("Bencana Watch", [
         "Mode GLOBAL aktif — DM + semua grup.",
         "---",
         "Alert bencana realtime dikirim ke:",
@@ -796,7 +796,7 @@ async function handler(m, { sock }) {
       removeGlobalWatcher(m.sender);
       syncBencanaMonitor(sock);
       await m.react("🐣");
-      return m.reply(novaBox("Bencana Watch", [
+      return m.reply(raraBox("Bencana Watch", [
         "Langganan global dimatikan.",
         "Langganan per chat/grup yang lain tetap jalan.",
       ]));
@@ -810,7 +810,7 @@ async function handler(m, { sock }) {
         .map((g) => ({ jid: g.id, subject: (g.subject || g.id || "").trim(), count: (g.participants || []).length }))
         .sort((a, b) => a.subject.localeCompare(b.subject));
       if (!list.length) {
-        return m.reply(novaBox("Bencana Watch", [
+        return m.reply(raraBox("Bencana Watch", [
           "Bot belum berada di grup mana pun,",
           "jadi belum ada target yang bisa dipilih.",
         ]));
@@ -825,7 +825,7 @@ async function handler(m, { sock }) {
         description: `${g.count} member — OFF alert bencana di grup ini`,
         id: `.dsw grup ${g.jid} off`,
       }));
-      const text = novaBox("Bencana Watch", [
+      const text = raraBox("Bencana Watch", [
         `Fitur  : auto-alert bencana`,
         `Mode   : per grup target`,
         "---",
@@ -859,7 +859,7 @@ async function handler(m, { sock }) {
     if (action === "grup" || action === "group") {
       const target = String(args[1] || "");
       if (!target.endsWith("@g.us")) {
-        return m.reply(novaError("Bencana Watch", `ID grup tidak valid. Gunakan .dsw pilihgrup`));
+        return m.reply(raraError("Bencana Watch", `ID grup tidak valid. Gunakan .dsw pilihgrup`));
       }
       const onoff = args[2] === "off" ? "off" : "on";
       if (onoff === "on") await addWatcher(target);
@@ -868,7 +868,7 @@ async function handler(m, { sock }) {
       let subject = target;
       try { subject = (await sock.groupMetadata(target))?.subject || target; } catch {}
       await m.react("🐣");
-      await m.reply(novaBox("Bencana Watch", [
+      await m.reply(raraBox("Bencana Watch", [
         `Auto-alert bencana: ${onoff.toUpperCase()} di grup target.`,
         `Grup : ${subject}`,
         onoff === "on"
@@ -885,7 +885,7 @@ async function handler(m, { sock }) {
         await addWatcher(chatId);
         syncBencanaMonitor(sock);
         await m.react("🐣");
-        await m.reply(novaBox("Bencana Watch", [
+        await m.reply(raraBox("Bencana Watch", [
           "Auto-alert bencana aktif di grup ini.",
           "---",
           "• Gempa Indonesia baru M 5.0+ (BMKG)",
@@ -910,7 +910,7 @@ async function handler(m, { sock }) {
       const g = hasGlobalWatcher(m.sender);
       const subs = await getWatchersSafe();
       const dmActive = !!subs[chatId];
-      const text = novaBox("Bencana Watch", [
+      const text = raraBox("Bencana Watch", [
         `Fitur : auto-alert bencana realtime`,
         `Lokasi : chat pribadi`,
         `DM ini : ${dmActive ? "AKTIF" : "OFF"}`,
@@ -936,7 +936,7 @@ async function handler(m, { sock }) {
       if (isDm && hasGlobalWatcher(m.sender)) {
         lines.push("---", "Langganan GLOBAL masih aktif (DM + semua grup).", "Matikan dengan .dsw offglobal");
       }
-      return m.reply(novaBox("Bencana Watch", lines));
+      return m.reply(raraBox("Bencana Watch", lines));
     }
 
     // ── EWS: PERINGATAN DINI GEMPA (pengaman darurat — request owner 8 Sep 2026) ──
@@ -949,7 +949,7 @@ async function handler(m, { sock }) {
         const health = getMonitorHealth();
         const ph = health.ewsProviderHealth || {};
         const provLine = ["BMKG", "USGS", "JMA", "EMSC"].map((k) => `${k} ${ph[k]?.down ? "X" : "OK"}`).join(" | ");
-        return m.reply(novaBox("Ews Peringatan Dini v2", [
+        return m.reply(raraBox("Ews Peringatan Dini v2", [
           `Status  : ${me ? (me.ews === false ? "OFF (gak ikut peringatan dini)" : "ON (pengaman darurat aktif)") : "TIDAK LANGGANAN"}`,
           `Monitor : ${health.ewsRunning ? "HIDUP" : "MATI (nyalakan .dsw on)"}`,
           `Riwayat : ${health.ewsHistoryCount ?? 0} event tercatat`,
@@ -981,9 +981,9 @@ async function handler(m, { sock }) {
       }
       try {
         const sub = setWatcherEws(targetKey, on);
-        return m.reply(novaSuccess("Bencana Watch", `peringatan dini gempa (EWS) ${on ? "AKTIF — kamu bakal diberi tau dalam hitungan detik pas gempa M${EWS_MIN_MAG}+ dekat lokasimu" : "NONAKTIF — gempa dekat gak bakal EWS-nya (alert bencana normal tetap jalan)"}`));
+        return m.reply(raraSuccess("Bencana Watch", `peringatan dini gempa (EWS) ${on ? "AKTIF — kamu bakal diberi tau dalam hitungan detik pas gempa M${EWS_MIN_MAG}+ dekat lokasimu" : "NONAKTIF — gempa dekat gak bakal EWS-nya (alert bencana normal tetap jalan)"}`));
       } catch (e) {
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -993,7 +993,7 @@ async function handler(m, { sock }) {
       if (!wanted.length) {
         const subs = await getWatchersSafe();
         const me = subs[targetKey];
-        return m.reply(novaBox("Provider Ews", [
+        return m.reply(raraBox("Provider Ews", [
           `Filter  : ${Array.isArray(me?.provider) && me.provider.length ? me.provider.join(", ").toUpperCase() : "SEMUA (bmkg, usgs, jepang, global)"}`,
           "---",
           "Pilihan provider:",
@@ -1009,9 +1009,9 @@ async function handler(m, { sock }) {
       }
       try {
         const sub = setWatcherProvider(targetKey, wanted);
-        return m.reply(novaSuccess("Bencana Watch", `filter provider EWS: ${Array.isArray(sub.provider) && sub.provider.length ? sub.provider.join(", ").toUpperCase() : "SEMUA"}`));
+        return m.reply(raraSuccess("Bencana Watch", `filter provider EWS: ${Array.isArray(sub.provider) && sub.provider.length ? sub.provider.join(", ").toUpperCase() : "SEMUA"}`));
       } catch (e) {
-        return m.reply(novaError("Bencana Watch", e.message));
+        return m.reply(raraError("Bencana Watch", e.message));
       }
     }
 
@@ -1019,7 +1019,7 @@ async function handler(m, { sock }) {
     if (action === "riwayat") {
       const hist = getEwsHistory(10);
       if (!hist.length) {
-        return m.reply(novaBox("Riwayat Ews", [
+        return m.reply(raraBox("Riwayat Ews", [
           "Belum ada event EWS tercatat.",
           "Riwayat keisi begitu ada gempa M" + EWS_MIN_MAG + "+ baru",
           "yang lolos filter subscriber.",
@@ -1030,7 +1030,7 @@ async function handler(m, { sock }) {
         lines.push(`${i + 1}. [${h.provider}] M${h.mag} — ${h.wilayah}`);
         lines.push(`   🕐 ${h.waktu}${h.terkirim ? ` → ${h.terkirim} chat` : ""}`);
       });
-      return m.reply(novaBox("Riwayat Ews", lines));
+      return m.reply(raraBox("Riwayat Ews", lines));
     }
 
     if (action === "status" || action === "") {
@@ -1111,7 +1111,7 @@ async function handler(m, { sock }) {
       lines.push("   param | jadwal add 07:00 | kirim");
       lines.push("📖 Panduan: .dsw guide");
       lines.push("💡 .dsw = singkatan .dsw");
-      return m.reply(novaBox("Bencana Watch", lines));
+      return m.reply(raraBox("Bencana Watch", lines));
     }
 
     // ── FIX OWNER 2026-09-07: guide jelas & terstruktur (bukan 1 paragraf
@@ -1119,7 +1119,7 @@ async function handler(m, { sock }) {
     // tolong guide-nya yang jelas cara aktifin opsi tertentu". ──
     if (action === "guide") {
       // Semua baris dijaga pendek biar gak kena wrap aneh.
-      return m.reply(novaBox("Bencana Watch — Guide", [
+      return m.reply(raraBox("Bencana Watch — Guide", [
         "Semua command diawali .dsw (singkatan",
         ".dsw — dua-duanya jalan)",
         "---",
@@ -1160,7 +1160,7 @@ async function handler(m, { sock }) {
       ]));
     }
 
-    return m.reply(novaBox("Bencana Watch", [
+    return m.reply(raraBox("Bencana Watch", [
       "Command gak dikenali.",
       "---",
       "💡 Ketik .dsw guide untuk panduan lengkap",
@@ -1177,7 +1177,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[bencanawatch]", err);
     await m.react("❌");
-    return m.reply(novaError("Bencana Watch"));
+    return m.reply(raraError("Bencana Watch"));
   }
 }
 

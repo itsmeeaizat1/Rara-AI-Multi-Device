@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import sharp from "sharp";
 import { downloadMediaMessage, getContentType } from "nova";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "topixel",
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (!type || type !== "imageMessage") {
-      return m.reply(novaWrap("Topixel", "⚠️ Kak, tolong reply ke pesan gambar ya!"));
+      return m.reply(raraWrap("Topixel", "⚠️ Kak, tolong reply ke pesan gambar ya!"));
     }
     media = await downloadMediaMessage(m.quoted, "buffer", {});
   } else if (m.message) {
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     media = await downloadMediaMessage(m, "buffer", {});
   }
 
-  if (!media) return m.reply(novaError("ToPixel", "Gagal baca media nih, coba lagi ya"));
+  if (!media) return m.reply(raraError("ToPixel", "Gagal baca media nih, coba lagi ya"));
   try {
     const pixelatedBuffer = await pixelArt(media, level);
     
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
       { quoted: m }
     );
   } catch (err) {
-    m.reply(novaWrap("topixel", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("topixel", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

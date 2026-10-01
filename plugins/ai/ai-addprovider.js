@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { DEFAULT_PROVIDERS } from "../../src/lib/rara-ai-service.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
           })
         : ["(belum ada provider custom)"];
 
-      const text = novaWrap("AI Providers",
+      const text = raraWrap("AI Providers",
         "🤖 BAWAAN:\n" + builtinLines.join("\n") +
         "\n\n➕ CUSTOM:\n" + customLines.join("\n") +
         "\n\n📋 PAKAI:\n" +
@@ -84,7 +84,7 @@ async function handler(m, { sock, config: botConfig }) {
       const key = String(parts[2] || "").trim().toLowerCase();
       if (!key) {
         const text =
-          novaWrap("Hapus Provider", [`Nama provider tidak boleh kosong.`,
+          raraWrap("Hapus Provider", [`Nama provider tidak boleh kosong.`,
             `Contoh: *${prefix}ai-addprovider delete myai*`].join("\n")) +
           "\n" +
           tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -96,7 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
       const custom = getCustomProviders();
       if (!custom[key]) {
         const text =
-          novaWrap("Tidak Ditemukan", [`Provider *${key}* tidak ditemukan.`,
+          raraWrap("Tidak Ditemukan", [`Provider *${key}* tidak ditemukan.`,
             `Ketik *${prefix}ai-addprovider list* untuk lihat daftar.`].join("\n")) +
           "\n" +
           tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig }) {
       setCustomProviders(custom);
 
       const text =
-        novaWrap("AI Providers", [`Provider *${key}* sudah dihapus.`].join("\n")) +
+        raraWrap("AI Providers", [`Provider *${key}* sudah dihapus.`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}ai-addprovider list untuk cek sisa provider`) +
         "\n" +
@@ -126,7 +126,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!name || !endpoint || !model) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🤖",
   name: "ai-addprovider",
   description: "Tambah provider AI custom lewat chat",
@@ -154,7 +154,7 @@ async function handler(m, { sock, config: botConfig }) {
     setCustomProviders(custom);
 
     const text =
-      novaWrap("AI Providers", [`Nama: *${name}*`,
+      raraWrap("AI Providers", [`Nama: *${name}*`,
         `Endpoint: *${endpoint}*`,
         `Model: *${model}*`,
         `API Key: *${apiKey ? "Tersimpan" : "Kosong"}*`].join("\n")) +
@@ -169,7 +169,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AIAddProvider", "Gagal nih, coba lagi ya");
+      raraError("AIAddProvider", "Gagal nih, coba lagi ya");
 
     await m.reply(text);
   }

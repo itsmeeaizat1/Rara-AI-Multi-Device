@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "node:fs";
 import path from "node:path";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { Canvas } from "skia-canvas";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "txttopdf",
@@ -1478,20 +1478,20 @@ async function handler(m, { sock, config: botConfig }) {
       // AI-generated CV
       const userInput = afterFlags.replace(/^aicv\s+|^cvai\s+/i, "").trim();
       if (!userInput || userInput.length < 3) {
-        return m.reply(novaWrap("TxtToPDF AI", "Kasih info buat CV!\n💡 *Contoh:* .txttopdf aicv buatkan cv lamaran ke restoran. Nama Andi, pengalaman cafe 2 thn, skill: masak, pelayanan pelanggan"));
+        return m.reply(raraWrap("TxtToPDF AI", "Kasih info buat CV!\n💡 *Contoh:* .txttopdf aicv buatkan cv lamaran ke restoran. Nama Andi, pengalaman cafe 2 thn, skill: masak, pelayanan pelanggan"));
       }
-      await m.reply(novaWrap("Joki CV AI", "AI lagi nulis CV kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
+      await m.reply(raraWrap("Joki CV AI", "AI lagi nulis CV kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
       try {
-        const aiResult = await UnlimitedAI(CV_PROMPT.replace("__INPUT__", userInput), "nova-ai");
+        const aiResult = await UnlimitedAI(CV_PROMPT.replace("__INPUT__", userInput), "rara-ai");
         if (!aiResult || aiResult.status === false) {
-          return m.reply(novaWrap("TxtToPDF AI", "AI gagal generate CV. Coba lagi nanti."));
+          return m.reply(raraWrap("TxtToPDF AI", "AI gagal generate CV. Coba lagi nanti."));
         }
         const aiText = typeof aiResult === "string" ? aiResult : (aiResult.answer || "");
         content = cleanAIOutput(aiText);
         format = "cv";
         aiGenerated = true;
       } catch (aiErr) {
-        return m.reply(novaWrap("TxtToPDF AI", "Error AI: " + aiErr.message));
+        return m.reply(raraWrap("TxtToPDF AI", "Error AI: " + aiErr.message));
       }
     } else if (lowerInput.startsWith("aiporto ") || lowerInput.startsWith("aiporto\n") ||
                lowerInput.startsWith("portoai ") || lowerInput.startsWith("portoai\n") ||
@@ -1499,20 +1499,20 @@ async function handler(m, { sock, config: botConfig }) {
       // AI-generated Portfolio
       const userInput = afterFlags.replace(/^aiporto\s+|^portoai\s+|^aiportofolio\s+/i, "").trim();
       if (!userInput || userInput.length < 3) {
-        return m.reply(novaWrap("TxtToPDF AI", "Kasih info buat portofolio!\n💡 *Contoh:* .txttopdf aiporto buatkan portofolio web dev. Nama Sari, proyek: website company, app laundry, design poster"));
+        return m.reply(raraWrap("TxtToPDF AI", "Kasih info buat portofolio!\n💡 *Contoh:* .txttopdf aiporto buatkan portofolio web dev. Nama Sari, proyek: website company, app laundry, design poster"));
       }
-      await m.reply(novaWrap("Joki Portofolio AI", "AI lagi nulis portofolio kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
+      await m.reply(raraWrap("Joki Portofolio AI", "AI lagi nulis portofolio kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
       try {
-        const aiResult = await UnlimitedAI(PORTO_PROMPT.replace("__INPUT__", userInput), "nova-ai");
+        const aiResult = await UnlimitedAI(PORTO_PROMPT.replace("__INPUT__", userInput), "rara-ai");
         if (!aiResult || aiResult.status === false) {
-          return m.reply(novaWrap("TxtToPDF AI", "AI gagal generate portofolio. Coba lagi nanti."));
+          return m.reply(raraWrap("TxtToPDF AI", "AI gagal generate portofolio. Coba lagi nanti."));
         }
         const aiText = typeof aiResult === "string" ? aiResult : (aiResult.answer || "");
         content = cleanAIOutput(aiText);
         format = "cv";
         aiGenerated = true;
       } catch (aiErr) {
-        return m.reply(novaWrap("TxtToPDF AI", "Error AI: " + aiErr.message));
+        return m.reply(raraWrap("TxtToPDF AI", "Error AI: " + aiErr.message));
       }
     } else if (lowerInput.startsWith("word ") || lowerInput.startsWith("word\n") ||
                lowerInput.startsWith("doc ") || lowerInput.startsWith("doc\n")) {
@@ -1526,10 +1526,10 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!content || content.length < 2) {
-      return m.reply(novaWrap("TxtToPDF", "Teks terlalu pendek!\nMinimal 2 karakter."));
+      return m.reply(raraWrap("TxtToPDF", "Teks terlalu pendek!\nMinimal 2 karakter."));
     }
     if (content.length > 8000) {
-      return m.reply(novaWrap("TxtToPDF", "Teks terlalu panjang!\nMaksimal 8000 karakter."));
+      return m.reply(raraWrap("TxtToPDF", "Teks terlalu panjang!\nMaksimal 8000 karakter."));
     }
     const timestamp = Date.now();
     const tmpDir = "/tmp";
@@ -1540,7 +1540,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (outputType === "pdf") {
       const pdfBytes = await createPDF(content, format, opts);
-      const fileName = "nova_" + timestamp + ".pdf";
+      const fileName = "rara_" + timestamp + ".pdf";
       const filePath = path.join(tmpDir, fileName);
       fs.writeFileSync(filePath, pdfBytes);
 
@@ -1557,7 +1557,7 @@ async function handler(m, { sock, config: botConfig }) {
         document: { url: filePath },
         fileName: "dokumen_" + timestamp + ".pdf",
         mimetype: "application/pdf",
-        caption: novaWrap("TxtToPDF Berhasil", [
+        caption: raraWrap("TxtToPDF Berhasil", [
           "Format: " + formatLabel,
           "Font: " + fontName,
           "Warna: " + colorDisplay,
@@ -1573,7 +1573,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (opts.img > 0) {
         try {
           const imgBuf = await renderImage(content, format, opts, opts.img);
-          const imgPath = path.join(tmpDir, "nova_img_" + timestamp + ".png");
+          const imgPath = path.join(tmpDir, "rara_img_" + timestamp + ".png");
           fs.writeFileSync(imgPath, imgBuf);
           const imgKB = (imgBuf.length / 1024).toFixed(1);
           const resLabel = opts.img === 4 ? "150dpi" : opts.img === 8 ? "300dpi" : "600dpi";
@@ -1584,7 +1584,7 @@ async function handler(m, { sock, config: botConfig }) {
               document: { url: imgPath },
               fileName: "hd_" + opts.img + "x_" + timestamp + ".png",
               mimetype: "image/png",
-              caption: novaWrap("HD " + opts.img + "x (Document)", [
+              caption: raraWrap("HD " + opts.img + "x (Document)", [
                 "Resolusi: " + resLabel,
                 "Ukuran: " + imgKB + " KB",
                 "Mode: Document (no compression)",
@@ -1594,7 +1594,7 @@ async function handler(m, { sock, config: botConfig }) {
             // Send as image — WA compresses but inline preview
             await sock.sendMessage(m.chat, {
               image: { url: imgPath },
-              caption: novaWrap("HD Preview " + opts.img + "x", [
+              caption: raraWrap("HD Preview " + opts.img + "x", [
                 "Resolusi: " + resLabel,
                 "Ukuran: " + imgKB + " KB",
                 "Mode: Gambar (WA compressed)",
@@ -1612,7 +1612,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     } else {
       const html = createDoc(content, format, opts);
-      const fileName = "nova_" + timestamp + ".doc";
+      const fileName = "rara_" + timestamp + ".doc";
       const filePath = path.join(tmpDir, fileName);
       fs.writeFileSync(filePath, html, "utf-8");
 
@@ -1623,7 +1623,7 @@ async function handler(m, { sock, config: botConfig }) {
         document: { url: filePath },
         fileName: "dokumen_" + timestamp + ".doc",
         mimetype: "application/msword",
-        caption: novaWrap("TxtToWord Berhasil", [
+        caption: raraWrap("TxtToWord Berhasil", [
           "Format: Word .doc",
           "Font: " + fontName,
           "Warna: " + colorDisplay,
@@ -1638,7 +1638,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (opts.img > 0) {
         try {
           const imgBuf = await renderImage(content, format, opts, opts.img);
-          const imgPath = path.join(tmpDir, "nova_img_" + timestamp + ".png");
+          const imgPath = path.join(tmpDir, "rara_img_" + timestamp + ".png");
           fs.writeFileSync(imgPath, imgBuf);
           const imgKB = (imgBuf.length / 1024).toFixed(1);
           const resLabel = opts.img === 4 ? "150dpi" : opts.img === 8 ? "300dpi" : "600dpi";
@@ -1649,7 +1649,7 @@ async function handler(m, { sock, config: botConfig }) {
               document: { url: imgPath },
               fileName: "hd_" + opts.img + "x_" + timestamp + ".png",
               mimetype: "image/png",
-              caption: novaWrap("HD " + opts.img + "x (Document)", [
+              caption: raraWrap("HD " + opts.img + "x (Document)", [
                 "Resolusi: " + resLabel,
                 "Ukuran: " + imgKB + " KB",
                 "Mode: Document (no compression)",
@@ -1660,7 +1660,7 @@ async function handler(m, { sock, config: botConfig }) {
             await m.react("🐣");
             await sock.sendMessage(m.chat, {
               image: { url: imgPath },
-              caption: novaWrap("HD Preview " + opts.img + "x", [
+              caption: raraWrap("HD Preview " + opts.img + "x", [
                 "Resolusi: " + resLabel,
                 "Ukuran: " + imgKB + " KB",
                 "Mode: Gambar (WA compressed)",
@@ -1679,7 +1679,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (e) {
     await m.react("❌");
     console.error("txttopdf error:", e);
-    return m.reply(novaWrap("TxtToPDF", "Error: " + e.message));
+    return m.reply(raraWrap("TxtToPDF", "Error: " + e.message));
   }
 }
 

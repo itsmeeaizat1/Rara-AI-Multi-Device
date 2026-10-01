@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { startSchedulerByName, getFullSchedulerStatus } from '../../src/lib/nova-scheduler.js'
-import { initSholatScheduler } from '../../src/lib/nova-sholat-scheduler.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { startSchedulerByName, getFullSchedulerStatus } from '../../src/lib/rara-scheduler.js'
+import { initSholatScheduler } from '../../src/lib/rara-sholat-scheduler.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'startschedule',
     alias: ["startschedule"],
@@ -51,14 +51,14 @@ async function handler(m, { sock, args }) {
             const wasEnabled = db.setting('autoSholat');
             
             if (wasEnabled) {
-                await m.reply(novaWrap("Startschedule", `ℹ️ Sholat Scheduler sudah dalam keadaan aktif`));
+                await m.reply(raraWrap("Startschedule", `ℹ️ Sholat Scheduler sudah dalam keadaan aktif`));
                 return;
             }
             
             initSholatScheduler(sock);
             db.setting('autoSholat', true);
             
-            await m.reply(novaWrap("Startschedule", `▶️ *sCheduler Dimulai*
+            await m.reply(raraWrap("Startschedule", `▶️ *sCheduler Dimulai*
 
 │ Scheduler: *Sholat Scheduler*
 │ Status: ✅ Aktif
@@ -76,7 +76,7 @@ _Notifikasi waktu sholat akan dikirim ke grup yang mengaktifkan fitur ini_`));
         const result = startSchedulerByName(target, sock);
         
         if (result.started) {
-            await m.reply(novaWrap("Startschedule", `▶️ *sCheduler Dimulai*
+            await m.reply(raraWrap("Startschedule", `▶️ *sCheduler Dimulai*
 
 │ Scheduler: *${result.name}*
 │ Status: ✅ Aktif
@@ -89,7 +89,7 @@ Gunakan \`.startschedule\` untuk melihat daftar scheduler`; await m.reply(__navT
         }
     } catch (error) {
         console.error('[StartSchedule Error]', error);
-        await m.reply(novaWrap("startschedule", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(raraWrap("startschedule", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 

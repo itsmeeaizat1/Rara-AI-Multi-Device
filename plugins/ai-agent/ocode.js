@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 // ocode.js — OPENCODE 9ROUTER: AI CODING AGENT VIA WHATSAPP (OWNER ONLY)
 // ".ocode perbaiki bug di fitur cuaca" → agent 9router baca file repo,
@@ -15,13 +15,13 @@
 //   diedit → popup ✅ Ijinkan / ❌ Tolak ke owner; keputusan berlaku per file
 //   per tugas (gak ditanya ulang); 3 menit tanpa jawaban → otomatis DITOLAK.
 // ============================================================
-import { novaBox } from "../../src/lib/nova-menu-style.js";
+import { raraBox } from "../../src/lib/rara-menu-style.js";
 import { toSC } from "../../src/lib/styler.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
 import {
   runOcodeAgent, stopOcode, undoLast, listBackups, _ocodeState,
-} from "../../src/lib/nova-ocode-agent.js";
+} from "../../src/lib/rara-ocode-agent.js";
 import { router9v2Key } from "../../src/scraper/router9v2.js";
 import { ROUTER9V2_DEFAULT_MODEL } from "../../src/scraper/router9v2.js";
 
@@ -77,7 +77,7 @@ async function sendApprovalPopup(sock, chatJid, prefix, { path: rel, action, tas
     "\u23F0 3 menit tanpa jawaban \u2192 otomatis DITOLAK.",
     "Keputusan berlaku untuk file ini sampai tugas selesai.",
   );
-  const body = novaBox("OpenCode — Minta Izin", lines);
+  const body = raraBox("OpenCode — Minta Izin", lines);
   const rows = [
     { title: "\u2705 Ijinkan", description: "Boleh ubah file ini", id: prefix + "ocodeizin ya" },
     { title: "\u274C Tolak", description: "File ini tidak boleh disentuh", id: prefix + "ocodeizin tidak" },
@@ -96,7 +96,7 @@ async function sendApprovalPopup(sock, chatJid, prefix, { path: rel, action, tas
   await sock.sendMessage(chatJid, {
     interactiveMessage: {
       body: { text: body },
-      footer: { text: toSC("Nova AI — OCode") },
+      footer: { text: toSC("Rara AI — OCode") },
       header: { title: "", hasMediaAttachment: false },
       nativeFlowMessage: { buttons },
     },
@@ -111,7 +111,7 @@ function makeApprovalCallback(sock, chatJid, prefix) {
       const timer = setTimeout(() => {
         if (pendingApproval && pendingApproval.path === info.path) {
           pendingApproval = null;
-          sock.sendMessage(chatJid, { text: novaBox("OpenCode — Izin", ["\u23F0 Waktu habis (3 mnt) — otomatis DITOLAK: " + info.path]) }).catch(() => {});
+          sock.sendMessage(chatJid, { text: raraBox("OpenCode — Izin", ["\u23F0 Waktu habis (3 mnt) — otomatis DITOLAK: " + info.path]) }).catch(() => {});
           resolve({ allowed: false, reason: "timeout" });
         }
       }, APPROVAL_TIMEOUT_MS);
@@ -130,7 +130,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     // ⚠ GATE OWNER DI DALAM HANDLER (jangan cuma andalkat gate framework) —
     // agent bisa mengedit file server, non-owner TIDAK BOLEH sekali pun.
     if (!m.isOwner) {
-        return m.reply(novaBox("OpenCode", ["Fitur ini khusus owner — agent bisa mengedit file server."]));
+        return m.reply(raraBox("OpenCode", ["Fitur ini khusus owner — agent bisa mengedit file server."]));
     }
     const argList = (args || []).map(String);
     const sub = argList[0]?.toLowerCase();
@@ -140,14 +140,14 @@ async function handler(m, { sock, args, config: botConfig }) {
     // wajib SEBELUM lock-check biar bisa dijawab pas tugas lagi jalan
     if (sub === "izin") {
         if (!pendingApproval) {
-            return m.reply(novaBox("OpenCode — Izin", ["Gak ada permintaan izin yang nunggu jawaban."]));
+            return m.reply(raraBox("OpenCode — Izin", ["Gak ada permintaan izin yang nunggu jawaban."]));
         }
         const v = String(argList[1] || "").toLowerCase();
         const ya = /^(ya|yes|y|ok|oke|ijinkan|boleh|allow|b)$/.test(v);
         const p = pendingApproval;
         resolveApproval(ya);
         await m.react(ya ? "\u2705" : "\u274c");
-        return m.reply(novaBox("OpenCode — Izin", ya
+        return m.reply(raraBox("OpenCode — Izin", ya
             ? ["DIIJINKAN — agent lanjut nulis " + p.path]
             : ["DITOLAK — agent lanjut TANPA ngubah " + p.path]));
     }
@@ -158,7 +158,7 @@ async function handler(m, { sock, args, config: botConfig }) {
         resolveApproval(false, "stopped");
         const r = stopOcode();
         await m.react(r.ok || hadPending ? "\u26a1" : "\u274c");
-        return m.reply(novaBox("OpenCode", [
+        return m.reply(raraBox("OpenCode", [
             r.ok ? "Tugas dibatalkan — laporan menyusul." : (hadPending ? "Permintaan izin dibatalkan." : "Gak ada tugas yang jalan."),
         ]));
     }
@@ -167,7 +167,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     if (sub === "status") {
         const st = _ocodeState();
         const backups = listBackups(process.cwd());
-        return m.reply(novaBox("OpenCode — Status", [
+        return m.reply(raraBox("OpenCode — Status", [
             "Tugas   : " + (st.running ? "SEDANG JALAN — " + String(st.task || "").slice(0, 60) : "idle"),
             "Izin    : " + (pendingApproval ? "NUNGGU JAWABAN — " + pendingApproval.path + " (jawab: .ocodeizin ya|tidak)" : "-"),
             "Model   : " + ocodeModel(db),
@@ -183,7 +183,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     if (sub === "undo") {
         const r = undoLast(process.cwd());
         await m.react(r.ok ? "\u26a1" : "\u274c");
-        return m.reply(novaBox("OpenCode — Undo", r.ok
+        return m.reply(raraBox("OpenCode — Undo", r.ok
             ? ["Backup " + r.from + " di-restore:", ...r.restored.map((f) => "- " + f), "---", "Restart bot biar kode lama kebaca ulang: pm2 restart"]
             : ["GAGAL: " + r.error]));
     }
@@ -192,7 +192,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     if (sub === "model") {
         const val = argList[1];
         if (!val) {
-            return m.reply(novaBox("OpenCode — Model", [
+            return m.reply(raraBox("OpenCode — Model", [
                 "Aktif: " + ocodeModel(db),
                 "---",
                 "Ganti: .ocode model <id-9router>",
@@ -203,19 +203,19 @@ async function handler(m, { sock, args, config: botConfig }) {
         db.data.ocode.model = val;
         await db.save();
         await m.react("\u26a1");
-        return m.reply(novaBox("OpenCode — Model", ["Model coding agent diganti: " + val]));
+        return m.reply(raraBox("OpenCode — Model", ["Model coding agent diganti: " + val]));
     }
 
     // ── tugas baru ──
     const task = argList.join(" ").trim();
     if (!task) {
-        return m.reply(novaBox("OpenCode — AI Coding Agent", [
+        return m.reply(raraBox("OpenCode — AI Coding Agent", [
             "Suruh aku ngoding langsung dari chat.",
             "---",
             "Contoh:",
             ".ocode perbaiki bug di fitur cuaca",
             ".ocode buat fitur .halo di plugins/fun",
-            ".ocode jelaskan isi src/lib/nova-boot-doctor.js",
+            ".ocode jelaskan isi src/lib/rara-boot-doctor.js",
             "---",
             "Perintah:",
             ".ocode stop — batalkan tugas jalan",
@@ -231,11 +231,11 @@ async function handler(m, { sock, args, config: botConfig }) {
     }
 
     if (!router9v2Key()) {
-        return m.reply(novaBox("OpenCode", ["Key 9router belum di-set — isi di apikeys.json (providers.router9v2) atau env ROUTER_API_KEY."]));
+        return m.reply(raraBox("OpenCode", ["Key 9router belum di-set — isi di apikeys.json (providers.router9v2) atau env ROUTER_API_KEY."]));
     }
 
     if (_ocodeState().running) {
-        return m.reply(novaBox("OpenCode", ["Masih ada tugas yang jalan — tunggu selesai atau .ocode stop."]));
+        return m.reply(raraBox("OpenCode", ["Masih ada tugas yang jalan — tunggu selesai atau .ocode stop."]));
     }
 
     const model = ocodeModel(db);
@@ -252,7 +252,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
     if (result.error && !result.changed.length) {
         await m.react("\u274c");
-        return m.reply(novaBox("OpenCode — Gagal", [
+        return m.reply(raraBox("OpenCode — Gagal", [
             "Error: " + result.error,
             "---",
             "Coba lagi / tugas lebih spesifik / ganti model (.ocode model <id>).",
@@ -277,7 +277,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     if ((result.summary || "").length > MAX_OUTPUT_CHARS) {
         lines.push("---", "Ringkasan panjang dikirim sebagai file.");
     }
-    await m.reply(novaBox("OpenCode — Laporan", lines));
+    await m.reply(raraBox("OpenCode — Laporan", lines));
 
     // ringkasan agent — panjang → document, pendek → text biasa
     if (summary) {
@@ -286,7 +286,7 @@ async function handler(m, { sock, args, config: botConfig }) {
                 document: Buffer.from(result.summary, "utf8"),
                 fileName: "ocode-laporan.txt",
                 mimetype: "text/plain",
-                caption: novaBox("OpenCode", ["Ringkasan lengkap agent."]),
+                caption: raraBox("OpenCode", ["Ringkasan lengkap agent."]),
             });
         } else {
             await m.reply(summary);

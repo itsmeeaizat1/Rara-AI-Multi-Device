@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Combat Modifiers — Buff, Debuff, Bless, Curse, Ward, Trap
 
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "combatmod",
@@ -30,7 +30,7 @@ const DEBUFFS = ["burn", "slow", "poison", "weaken"];
 async function handler(m, { sock, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("combatmod", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("combatmod", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // .buff — self buff random
     if (command === "buff") {
@@ -46,13 +46,13 @@ async function handler(m, { sock, command }) {
 
     // .debuff — debuff target (reply)
     if (command === "debuff") {
-      if (!m.quoted) return m.reply(novaRpgBox("debuff", "Reply target untuk diberi debuff.", "guide"));
+      if (!m.quoted) return m.reply(raraRpgBox("debuff", "Reply target untuk diberi debuff.", "guide"));
       const target = m.quoted.sender || m.quoted.participant;
-      if (!target) return m.reply(novaRpgBox("debuff", "Target tidak ditemukan.", "error"));
+      if (!target) return m.reply(raraRpgBox("debuff", "Target tidak ditemukan.", "error"));
       const debuff = DEBUFFS[Math.floor(Math.random() * DEBUFFS.length)];
       await m.react("🕒");
       const targetRpg = ensureRpg({ sender: target }, "");
-      if (!targetRpg) return m.reply(novaRpgBox("debuff", "Target belum terdaftar RPG.", "error"));
+      if (!targetRpg) return m.reply(raraRpgBox("debuff", "Target belum terdaftar RPG.", "error"));
       targetRpg.debuffs = targetRpg.debuffs || [];
       targetRpg.debuffs.push({ name: debuff, expires: Date.now() + 1800000 });
       saveRpg({ sender: target }, targetRpg);
@@ -68,7 +68,7 @@ async function handler(m, { sock, command }) {
         const hours = Math.floor(remaining / 3600000);
         const mins = Math.floor((remaining % 3600000) / 60000);
   await animGeneric(m, sock, "⚔️", "Combat Mode");
-        return m.reply(novaRpgBox("bless", "Kamu sudah menerima blessing hari ini.\nCoba lagi dalam " + hours + "j " + mins + "m.", "info"));
+        return m.reply(raraRpgBox("bless", "Kamu sudah menerima blessing hari ini.\nCoba lagi dalam " + hours + "j " + mins + "m.", "info"));
       }
       await m.react("🕒");
       const blessing = BLESSINGS[Math.floor(Math.random() * BLESSINGS.length)];
@@ -99,12 +99,12 @@ async function handler(m, { sock, command }) {
 
     // .curse — curse target (reply)
     if (command === "curse") {
-      if (!m.quoted) return m.reply(novaRpgBox("curse", "Reply target untuk dikutuk.", "guide"));
+      if (!m.quoted) return m.reply(raraRpgBox("curse", "Reply target untuk dikutuk.", "guide"));
       const target = m.quoted.sender || m.quoted.participant;
-      if (!target) return m.reply(novaRpgBox("curse", "Target tidak ditemukan.", "error"));
+      if (!target) return m.reply(raraRpgBox("curse", "Target tidak ditemukan.", "error"));
       await m.react("🕒");
       const targetRpg = ensureRpg({ sender: target }, "");
-      if (!targetRpg) return m.reply(novaRpgBox("curse", "Target belum terdaftar RPG.", "error"));
+      if (!targetRpg) return m.reply(raraRpgBox("curse", "Target belum terdaftar RPG.", "error"));
       targetRpg.cursed = true;
       targetRpg.curseTime = Date.now() + 3600000;
       saveRpg({ sender: target }, targetRpg);
@@ -134,7 +134,7 @@ async function handler(m, { sock, command }) {
   } catch (e) {
     console.error("combatmod error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox(m.command || "combatmod", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox(m.command || "combatmod", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

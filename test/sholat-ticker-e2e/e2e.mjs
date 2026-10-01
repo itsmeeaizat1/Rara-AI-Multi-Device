@@ -8,11 +8,11 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { computeNextPrayer, buildSholatCountdownCard } = await import(R + "/src/lib/nova-sholat-api.js");
-const { runLiveTicker } = await import(R + "/src/lib/nova-countdown.js");
+const { computeNextPrayer, buildSholatCountdownCard } = await import(R + "/src/lib/rara-sholat-api.js");
+const { runLiveTicker } = await import(R + "/src/lib/rara-countdown.js");
 const moment = (await import("moment-timezone")).default;
 const { fromSC } = await import(R + "/src/lib/styler.js");
-// GOTCHA (ke-4x): novaWrap nge-render smallcaps → assert WAJIB norm fromSC + lowercase
+// GOTCHA (ke-4x): raraWrap nge-render smallcaps → assert WAJIB norm fromSC + lowercase
 const norm = (s) => fromSC(String(s)).toLowerCase();
 
 let pass = 0, fail = 0;
@@ -117,7 +117,7 @@ w("\n— ticker live end-to-end (mock sock) —");
 w("\n— plugin jadwalsholat: caption punya pelengkap (myquran live) —");
 {
   try {
-    const { searchKota, getTodaySchedule, extractPrayerTimes } = await import(R + "/src/lib/nova-sholat-api.js");
+    const { searchKota, getTodaySchedule, extractPrayerTimes } = await import(R + "/src/lib/rara-sholat-api.js");
     const kota = await searchKota("Jakarta");
     const jadwal = await getTodaySchedule(kota.id);
     const times = extractPrayerTimes(jadwal);

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Map — Tampilkan peta dunia
-import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "map", alias: ["map", "maprpg", "peta"],
@@ -14,12 +14,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("maprpg", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("maprpg", "RPG belum siap.", "error"));
     const loc = rpg.location || "desa";
     await animGeneric(m, sock, '🗺️', 'Opening map');
-    return m.reply(novaRpgBox("maprpg", `🗺️ *PETA DUNIA RPG*\n\n🌲 Hutan Kabut\n⛩️ Desa Hilang\n🏰 Kastil Tua\n🌋 Gunung Merapi\n🏯 Kuil Kuno\n\n📍 Lokasi kamu: *${loc}*\nGunakan .travelrpg <lokasi> untuk pindah.`, "info"));
+    return m.reply(raraRpgBox("maprpg", `🗺️ *PETA DUNIA RPG*\n\n🌲 Hutan Kabut\n⛩️ Desa Hilang\n🏰 Kastil Tua\n🌋 Gunung Merapi\n🏯 Kuil Kuno\n\n📍 Lokasi kamu: *${loc}*\nGunakan .travelrpg <lokasi> untuk pindah.`, "info"));
   } catch (e) {
-    return m.reply(novaRpgBox("maprpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("maprpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

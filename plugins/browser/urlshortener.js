@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "urlshortener",
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🛠️",
   name: "urlshortener",
   description: "Pendekkan URL panjang",
@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[urlshortener.js]:', e.message); }
 
     const text =
-      novaWrap("URL Shortener", [`Original: *${url}*`,
+      raraWrap("URL Shortener", [`Original: *${url}*`,
         `Short: *${short}*`,
         "Status: *berhasil*"].join("\n")) +
       "\n" +
@@ -62,7 +62,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Tools", "Gagal nih, coba lagi ya");
+      raraError("Tools", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "urlshortener");
   }

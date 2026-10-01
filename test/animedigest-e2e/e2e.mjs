@@ -6,7 +6,7 @@
 import {
   formatDigestCard, dispatchDigest, buildDigest,
   setKitsuHttp, resetKitsuHttp, setSock, getListMode, setListMode,
-} from "../../src/lib/nova-auto-anime-notifier.js";
+} from "../../src/lib/rara-auto-anime-notifier.js";
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");

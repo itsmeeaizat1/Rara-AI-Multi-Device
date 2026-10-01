@@ -1,14 +1,14 @@
 // E2E — zinfo suite (zelapi /info) + zhonesty + zmaths/zpresiden (factory v3)
 import fs from "node:fs";
 fs.rmSync(new URL("./e2e-db.json", import.meta.url), { recursive: true, force: true });
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(new URL("./e2e-db.json", import.meta.url).pathname);
 
 const info = await import("../../src/scraper/zelinfo.js");
 const games = await import("../../src/scraper/zelgames.js");
 const plugin = (await import("../../plugins/info/zinfo.js")).default;
 const hon = (await import("../../plugins/fun/zhonesty.js")).default;
-const factory = await import("../../src/lib/nova-game-factory.js");
+const factory = await import("../../src/lib/rara-game-factory.js");
 const { fromSC } = await import("../../src/lib/styler.js");
 const sc = (s) => fromSC(String(s || "")).toLowerCase();
 

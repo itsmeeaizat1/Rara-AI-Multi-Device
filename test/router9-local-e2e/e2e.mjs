@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT — E2E: 9ROUTER LOKAL NATIVE (owner 25 Sep 2026)
+// RARA AI WHATSAPP BOT — E2E: 9ROUTER LOKAL NATIVE (owner 25 Sep 2026)
 // "seakan-akan bot sudah menginstal & menjalankan 9router beneran di node js,
 // semua model lengkap" + rename cmd .9router (bukan .ai9).
-// Jalur: engine src/lib/nova-9router-local.js + plugin plugins/ai/9router.js.
+// Jalur: engine src/lib/rara-9router-local.js + plugin plugins/ai/9router.js.
 // 9Router DIMOCK penuh via server http lokal (health/models/keys/providers/
 // chat/images) — env ROUTER9_* di-set SEBELUM import engine.
 // TANPA FALLBACK: server mati / key ditolak / provider kosong → error jujur.
@@ -60,7 +60,7 @@ const srv = http.createServer((req, res) => {
     if (req.url === "/api/health") { calls.health++; return send(200, { ok: true }); }
     if (req.url === "/api/keys" && req.method === "GET") {
       if (!cli) return send(401, { error: "no cli token" });
-      return send(200, { keys: gwKeys.map((k) => ({ key: k, name: "nova-bot" })) });
+      return send(200, { keys: gwKeys.map((k) => ({ key: k, name: "rara-bot" })) });
     }
     if (req.url === "/api/keys" && req.method === "POST") {
       calls.keys.push(j);
@@ -114,12 +114,12 @@ process.env.ROUTER9_CLI_TOKEN = "token-cli-mock";
 process.env.ROUTER9_DEFAULT_MODEL = "alicode-intl/glm-4.7";
 
 // ═══ import modul SETELAH env terpasang ═══
-const { initDatabase } = await import(pathToFileURL(path.join(R, "src/lib/nova-database.js")).href);
+const { initDatabase } = await import(pathToFileURL(path.join(R, "src/lib/rara-database.js")).href);
 await initDatabase(path.join(TMP, "db.json"));
 const { fromSC } = await import(pathToFileURL(path.join(R, "src/lib/styler.js")).href);
 const norm = (s) => fromSC(String(s)).toLowerCase();
 
-const engine = await import(pathToFileURL(path.join(R, "src/lib/nova-9router-local.js")).href);
+const engine = await import(pathToFileURL(path.join(R, "src/lib/rara-9router-local.js")).href);
 const {
   router9IsUp, ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys,
   router9Models, router9FindModel, router9Chat, router9ImageGen, router9ImageModels,
@@ -242,7 +242,7 @@ section("5. plugin .9router");
 {
   const m = mkM({ args: ["setmodel", "poe/nano-banana"] });
   await run(m, mkSock());
-  const { getDatabase } = await import(pathToFileURL(path.join(R, "src/lib/nova-database.js")).href);
+  const { getDatabase } = await import(pathToFileURL(path.join(R, "src/lib/rara-database.js")).href);
   const pref = getDatabase().data.router9?.prefs?.["12345@g.us"];
   t("5f. setmodel: pref tersimpan db + konfirmasi", pref === "poe/nano-banana" && m._replies[0].includes("poe/nano-banana") && m._replies[0].includes("🎨"), `pref=${pref}`);
   // chat berikutnya pakai model baru
@@ -313,17 +313,17 @@ section("6. sumber: jalur lama dibuang, tanpa API eksternal");
   const importsOnly = src.split("\n").filter((l) => l.trim().startsWith("import")).join("\n");
   t("6a. gak ada import provider AI lama (zhipu/nexai/ikyy/groq direct)", !/zhipu|nexai|ikyy|bigmodel|groq\.com/i.test(importsOnly), importsOnly.slice(0, 120));
   t("6b. gak ada GeminiVision / callImageGen (fallback eksternal)", !src.includes("GeminiVision") && !src.includes("callImageGen"));
-  const eng = fs.readFileSync(path.join(R, "src/lib/nova-9router-local.js"), "utf8");
+  const eng = fs.readFileSync(path.join(R, "src/lib/rara-9router-local.js"), "utf8");
   t("6c. engine: tanpa fallback ke apikeys.json chain", !eng.includes("aiMultiprovider") && !eng.includes("routerChat"));
   t("6d. engine: heal sql-wasm + spawn cli.js + gateway auto", eng.includes("sql-wasm.wasm") && eng.includes("9router/cli.js") && eng.includes("/api/keys"));
-  t("6e. file lama .ai9/nova-ai-router udah gak ada", !fs.existsSync(path.join(R, "plugins/ai/ai9.js")) && !fs.existsSync(path.join(R, "src/lib/nova-ai-router.js")));
+  t("6e. file lama .ai9/rara-ai-router udah gak ada", !fs.existsSync(path.join(R, "plugins/ai/ai9.js")) && !fs.existsSync(path.join(R, "src/lib/rara-ai-router.js")));
 }
 
 // ═══ 7. ISOLASI DARI 9ROUTERV2 (aturan owner 25 Sep 2026: lokal JANGAN
 // nyentuh v2 — v2 = API endpoint punya orang, bukan lokal) ═══
 section("7. isolasi dari 9routerv2 (cloud milik orang)");
 {
-  const engSrc = fs.readFileSync(path.join(R, "src/lib/nova-9router-local.js"), "utf8");
+  const engSrc = fs.readFileSync(path.join(R, "src/lib/rara-9router-local.js"), "utf8");
   const plugSrc = fs.readFileSync(path.join(R, "plugins/ai/9router.js"), "utf8");
   const cfgSrc = fs.readFileSync(path.join(R, "src/lib/apikey/9routerapikey.json"), "utf8");
   const banned = /router9v2|ai9v2|cloudku|getTioBase|getTioEndpoint|env-loader|tio_|TIO_API|ROUTER_API_URL|ROUTER_API_KEY/;
@@ -397,7 +397,7 @@ section("8. self-heal proses basi + .9router restart");
   t("8j. .9router restart non-owner → khusus owner", mN._replies[0]?.includes("Khusus owner"), (mN._replies[0] || "").slice(0, 80));
 
   // 8j: source guard — self-heal cuma sekali retry (gak infinite loop)
-  const engSrc8 = fs.readFileSync(path.join(R, "src/lib/nova-9router-local.js"), "utf8");
+  const engSrc8 = fs.readFileSync(path.join(R, "src/lib/rara-9router-local.js"), "utf8");
   t("8k. engine: self-heal single-retry (_retried guard) + kill-by-port ada", engSrc8.includes("_retried") && engSrc8.includes("findPidOnPort") && engSrc8.includes("killStalePort9Router"));
 
   // ═══ 9. GATEWAY KEY BASI → SELF-HEAL (fix 1 Okt 2026 malam, report owner
@@ -434,7 +434,7 @@ section("8. self-heal proses basi + .9router restart");
     t("9h. apiKey param basi → tanpa heal, jujur 401", /gateway key 9router ditolak/i.test(e.message), e.message);
   }
   // 9i: source guard — pesan error gak nyuruh manual hapus JSON lagi
-  const engSrc9 = fs.readFileSync(path.join(R, "src/lib/nova-9router-local.js"), "utf8");
+  const engSrc9 = fs.readFileSync(path.join(R, "src/lib/rara-9router-local.js"), "utf8");
   t("9i. engine: pesan 401 gak suruh hapus manual + invalidate/validate ada", !engSrc9.includes("hapus gateway.apikey") && engSrc9.includes("invalidateRouter9GatewayKey") && engSrc9.includes("router9ValidateGatewayKey"));
 }
 

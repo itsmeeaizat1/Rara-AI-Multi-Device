@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Narrator — Pesan narator
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "narrator", alias: ["narrator", "narratorrpg"],
@@ -22,9 +22,9 @@ async function handler(m, { sock }) {
   try {
     const msg = NARRATIONS[Math.floor(Math.random() * NARRATIONS.length)];
   await animGeneric(m, sock, "🎙️", "Narrator");
-    return m.reply(novaRpgBox("narratorrpg", `🎙️ *Narator Berbisik...*\n\n"${msg}"`, "info"));
+    return m.reply(raraRpgBox("narratorrpg", `🎙️ *Narator Berbisik...*\n\n"${msg}"`, "info"));
   } catch (e) {
-    return m.reply(novaRpgBox("narratorrpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("narratorrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

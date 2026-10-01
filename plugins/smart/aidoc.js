@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaHeader, separator, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraHeader, separator, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "aidoc", alias: ["aidoc"], category: "smart",
@@ -15,14 +15,14 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text || text.length < 50) {
-      await m.reply( novaWrap("AI Doc", [`Reply teks panjang dengan *${prefix}aidoc*`,
+      await m.reply( raraWrap("AI Doc", [`Reply teks panjang dengan *${prefix}aidoc*`,
         "AI akan rangkum poin-poin penting",
         "Minimal 50 karakter"].join("\n")), "aidoc");
       return { handled: true };
     }
     const prompt = `Rangkum teks berikut dalam 5 poin utama, dalam Bahasa Indonesia:\n\n${text.substring(0, 3000)}`;
     const result = await callAI(prompt, { systemPrompt: "Kamu adalah asisten yang merangkum dokumen dengan jelas." });
-    await m.reply(novaWrap("AI Doc Summary", "📄") + "\n\n" + result );
+    await m.reply(raraWrap("AI Doc Summary", "📄") + "\n\n" + result );
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

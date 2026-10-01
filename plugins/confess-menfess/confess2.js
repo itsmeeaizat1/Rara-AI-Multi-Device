@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Confess V2 (channel terpusat, dulu "v3") — porting script confess bot standalone
 // (owner, 9 Sep 2026): confess anonim / non-anonim ke CHANNEL TERPUSAT,
 // reply per confess, like dedup, list, detail, mode anon reply, stats, hapus (owner).
@@ -8,10 +8,10 @@
 // confess channel terpusat ini pindah command ke .confess2 (v2). Data db
 // key "confessv3" TETAP (persisten, gak perlu migrasi).
 // Command: .confess2 <pesan> | .confess2 say <pesan> | reply/like/list/read/del/setchannel/mode/stats/help
-// Data tersimpan di db.setting("confessv3") — persisten via nova-database.
+// Data tersimpan di db.setting("confessv3") — persisten via rara-database.
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { fromSC } from "../../src/lib/styler.js";
 
 const pluginConfig = {
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
   // ─── HELP / no-arg ───
   if (!sub || sub === "help" || sub === "bantuan" || sub === "menu") {
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", [
+    return m.reply(raraWrap("confess v2", [
       `Confess ke channel terpusat — 2 versi: anonim & non-anonim.`,
       ``,
       `💌 KIRIM CONFESS`,
@@ -153,7 +153,7 @@ async function handler(m, { sock }) {
     const message = args.slice(1).join(" ").trim();
     if (!message || message.length < MIN_LEN) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", [
+      return m.reply(raraWrap("confess v2", [
         `Pesan kependekan! Minimal ${MIN_LEN} karakter.`,
         ``,
         `💡 Contoh: ${m.prefix}confess2 aku suka sama dia`,
@@ -161,7 +161,7 @@ async function handler(m, { sock }) {
     }
     if (message.length > MAX_LEN) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+      return m.reply(raraWrap("confess v2", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
     }
 
     await m.react("🕒");
@@ -187,14 +187,14 @@ async function handler(m, { sock }) {
         console.error("[confess] kirim ke channel gagal:", e.message);
       }
       await m.react("🐣");
-      return m.reply(novaWrap("confess v2", [
+      return m.reply(raraWrap("confess v2", [
         `✅ Confess anonim *#${post.number}* berhasil dikirim ke channel!`,
         ``,
         `🆔 ID: *${post.id}* (simpan buat di-reply)`,
       ].join("\n")));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", [
+    return m.reply(raraWrap("confess v2", [
       `✅ Confess anonim *#${post.number}* tersimpan!`,
       ``,
       `📌 Belum ada channel confess diatur.`,
@@ -207,7 +207,7 @@ async function handler(m, { sock }) {
     const message = args.slice(1).join(" ").trim();
     if (!message || message.length < MIN_LEN) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", [
+      return m.reply(raraWrap("confess v2", [
         `Pesan kependekan! Minimal ${MIN_LEN} karakter.`,
         ``,
         `💡 Contoh: ${m.prefix}confess2 say aku Budi, hai semua`,
@@ -215,7 +215,7 @@ async function handler(m, { sock }) {
     }
     if (message.length > MAX_LEN) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+      return m.reply(raraWrap("confess v2", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
     }
 
     await m.react("🕒");
@@ -241,14 +241,14 @@ async function handler(m, { sock }) {
         console.error("[confess] kirim ke channel gagal:", e.message);
       }
       await m.react("🐣");
-      return m.reply(novaWrap("confess v2", [
+      return m.reply(raraWrap("confess v2", [
         `✅ Confess non-anonim dari *${post.senderName}* (*#${post.number}*) terkirim!`,
         ``,
         `🆔 ID: *${post.id}* (simpan buat di-reply)`,
       ].join("\n")));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", [
+    return m.reply(raraWrap("confess v2", [
       `✅ Confess non-anonim *#${post.number}* tersimpan!`,
       ``,
       `📌 Belum ada channel confess diatur.`,
@@ -264,7 +264,7 @@ async function handler(m, { sock }) {
 
     if (!key || !replyMsg) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", [
+      return m.reply(raraWrap("confess v2", [
         `Format: ${m.prefix}confess2 reply <id/nomor> <pesan>`,
         ``,
         `💡 Contoh: ${m.prefix}confess2 reply ${ch.posts.at(-1)?.id || "abc12"} aku setuju!`,
@@ -272,11 +272,11 @@ async function handler(m, { sock }) {
     }
     if (!post) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", `Confess dengan id/nomor *${key}* gak ditemukan!`, "error"));
+      return m.reply(raraWrap("confess v2", `Confess dengan id/nomor *${key}* gak ditemukan!`, "error"));
     }
     if (replyMsg.length > MAX_LEN) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", `Balasan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+      return m.reply(raraWrap("confess v2", `Balasan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
     }
 
     await m.react("🕒");
@@ -300,7 +300,7 @@ async function handler(m, { sock }) {
       }
     }
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", [
+    return m.reply(raraWrap("confess v2", [
       `✅ Balasan untuk confess *#${post.number}* terkirim!`,
       `🔒 Identitas kamu: ${ch.anonymousMode ? "anonim" : "kelihatan (" + reply.senderName + ")"}`,
     ].join("\n")));
@@ -313,18 +313,18 @@ async function handler(m, { sock }) {
 
     if (!post) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", `Confess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
+      return m.reply(raraWrap("confess v2", `Confess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
     }
 
     post.likes = post.likes || [];
     if (post.likes.includes(m.sender)) {
       await m.react("🐣");
-      return m.reply(novaWrap("confess v2", `❤️ Kamu sudah menyukai confess *#${post.number}*!`));
+      return m.reply(raraWrap("confess v2", `❤️ Kamu sudah menyukai confess *#${post.number}*!`));
     }
     post.likes.push(m.sender);
     saveCh(db, ch);
     await m.react("❤️");
-    return m.reply(novaWrap("confess v2", [
+    return m.reply(raraWrap("confess v2", [
       `❤️ Kamu menyukai confess *#${post.number}*!`,
       `Total suka: *${post.likes.length}*`,
     ].join("\n")));
@@ -334,7 +334,7 @@ async function handler(m, { sock }) {
   if (sub === "list" || sub === "daftar") {
     if (ch.posts.length === 0) {
       await m.react("🐣");
-      return m.reply(novaWrap("confess v2", [
+      return m.reply(raraWrap("confess v2", [
         `📭 Belum ada confess.`,
         ``,
         `💡 Mulai: ${m.prefix}confess2 confess <pesan>`,
@@ -351,7 +351,7 @@ async function handler(m, { sock }) {
       msg += `❤️ ${p.likes?.length || 0} | 💬 ${(p.replies || []).length} | 🆔 ${p.id}\n\n`;
     });
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", msg));
+    return m.reply(raraWrap("confess v2", msg));
   }
 
   // ─── READ / DETAIL ───
@@ -361,7 +361,7 @@ async function handler(m, { sock }) {
 
     if (!post) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", `Confess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
+      return m.reply(raraWrap("confess v2", `Confess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
     }
 
     let msg = `📨 CONFESS #${post.number}\n\n`;
@@ -382,18 +382,18 @@ async function handler(m, { sock }) {
       msg += `📩 Belum ada balasan.\n`;
     }
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", msg));
+    return m.reply(raraWrap("confess v2", msg));
   }
 
   // ─── SETCHANNEL (owner, di grup target — ala !setconfesschannel) ───
   if (sub === "setchannel" || sub === "setgrup" || sub === "set") {
     if (!m.isOwner) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", "⛔ Cuma owner yang bisa atur channel confess!", "error"));
+      return m.reply(raraWrap("confess v2", "⛔ Cuma owner yang bisa atur channel confess!", "error"));
     }
     if (!m.isGroup) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", [
+      return m.reply(raraWrap("confess v2", [
         `Command ini harus dipakai DI GRUP yang mau dijadiin channel.`,
         ``,
         `💡 Join bot ke grupnya → ketik ${m.prefix}confess2 setchannel di sana.`,
@@ -404,7 +404,7 @@ async function handler(m, { sock }) {
     ch.channel = m.chat;
     saveCh(db, ch);
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", [
+    return m.reply(raraWrap("confess v2", [
       `✅ Channel confess diatur ke grup ini!`,
       ``,
       `📌 Semua confess baru bakal dikirim ke sini.`,
@@ -416,35 +416,35 @@ async function handler(m, { sock }) {
   if (sub === "delchannel" || sub === "resetchannel") {
     if (!m.isOwner) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", "⛔ Cuma owner yang bisa reset channel confess!", "error"));
+      return m.reply(raraWrap("confess v2", "⛔ Cuma owner yang bisa reset channel confess!", "error"));
     }
     ch.channel = null;
     saveCh(db, ch);
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", "✅ Channel confess direset. Confess baru cuma tersimpan di database."));
+    return m.reply(raraWrap("confess v2", "✅ Channel confess direset. Confess baru cuma tersimpan di database."));
   }
 
   // ─── MODE (owner) — reply anon atau non-anon ───
   if (sub === "mode") {
     if (!m.isOwner) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", "⛔ Cuma owner yang bisa atur mode confess!", "error"));
+      return m.reply(raraWrap("confess v2", "⛔ Cuma owner yang bisa atur mode confess!", "error"));
     }
     const mode = (args[1] || "").toLowerCase();
     if (mode === "anon" || mode === "anonymous" || mode === "anonim") {
       ch.anonymousMode = true;
       saveCh(db, ch);
       await m.react("🐣");
-      return m.reply(novaWrap("confess v2", "🔒 Mode reply: ANONIM — identitas yang balas gak kelihatan."));
+      return m.reply(raraWrap("confess v2", "🔒 Mode reply: ANONIM — identitas yang balas gak kelihatan."));
     }
     if (mode === "nonanon" || mode === "non-anon" || mode === "non" || mode === "nonanonim") {
       ch.anonymousMode = false;
       saveCh(db, ch);
       await m.react("🐣");
-      return m.reply(novaWrap("confess v2", "👤 Mode reply: NON-ANONIM — nama yang balas kelihatan."));
+      return m.reply(raraWrap("confess v2", "👤 Mode reply: NON-ANONIM — nama yang balas kelihatan."));
     }
     await m.react("❗");
-    return m.reply(novaWrap("confess v2", [
+    return m.reply(raraWrap("confess v2", [
       `Mode sekarang: ${ch.anonymousMode ? "🔒 ANONIM" : "👤 NON-ANONIM"} (khusus reply)`,
       ``,
       `💡 Pilihan: ${m.prefix}confess2 mode anon | nonanon`,
@@ -455,18 +455,18 @@ async function handler(m, { sock }) {
   if (sub === "del" || sub === "hapus" || sub === "delete") {
     if (!m.isOwner) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", "⛔ Cuma owner yang bisa hapus confess!", "error"));
+      return m.reply(raraWrap("confess v2", "⛔ Cuma owner yang bisa hapus confess!", "error"));
     }
     const key = fromSC(args[1] || "").trim();
     const idx = ch.posts.findIndex((p) => p.id === key || (key && p.number === parseInt(key, 10)));
     if (idx === -1) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", `Confess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
+      return m.reply(raraWrap("confess v2", `Confess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
     }
     const deleted = ch.posts.splice(idx, 1)[0];
     saveCh(db, ch);
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", `🗑️ Confess *#${deleted.number}* berhasil dihapus!`));
+    return m.reply(raraWrap("confess v2", `🗑️ Confess *#${deleted.number}* berhasil dihapus!`));
   }
 
   // ─── STATS ───
@@ -478,7 +478,7 @@ async function handler(m, { sock }) {
     const totalReplies = ch.posts.reduce((s, p) => s + (p.replies?.length || 0), 0);
 
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", [
+    return m.reply(raraWrap("confess v2", [
       `📊 STATISTIK CONFESS`,
       ``,
       `📨 Total confess: *${total}*`,
@@ -496,7 +496,7 @@ async function handler(m, { sock }) {
     const message = (m.fullArgs || m.text || "").trim();
     if (!message || message.length < MIN_LEN) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", [
+      return m.reply(raraWrap("confess v2", [
         `Pesan kependekan! Minimal ${MIN_LEN} karakter.`,
         ``,
         `💡 Contoh: ${m.prefix}confess2 aku suka sama dia`,
@@ -504,7 +504,7 @@ async function handler(m, { sock }) {
     }
     if (message.length > MAX_LEN) {
       await m.react("❗");
-      return m.reply(novaWrap("confess v2", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+      return m.reply(raraWrap("confess v2", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
     }
 
     await m.react("🕒");
@@ -530,14 +530,14 @@ async function handler(m, { sock }) {
         console.error("[confess] kirim ke channel gagal:", e.message);
       }
       await m.react("🐣");
-      return m.reply(novaWrap("confess v2", [
+      return m.reply(raraWrap("confess v2", [
         `✅ Confess anonim *#${post.number}* berhasil dikirim ke channel!`,
         ``,
         `🆔 ID: *${post.id}* (simpan buat di-reply)`,
       ].join("\n")));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("confess v2", [
+    return m.reply(raraWrap("confess v2", [
       `✅ Confess anonim *#${post.number}* tersimpan!`,
       ``,
       `📌 Belum ada channel confess diatur.`,
@@ -547,7 +547,7 @@ async function handler(m, { sock }) {
 
   // ─── sub SUBS tapi gak kepakai (safety) ───
   await m.react("❗");
-  return m.reply(novaWrap("confess v2", `💡 Ketik ${m.prefix}confess2 help buat lihat semua cara pakai`));
+  return m.reply(raraWrap("confess v2", `💡 Ketik ${m.prefix}confess2 help buat lihat semua cara pakai`));
 }
 
 export { pluginConfig as config, handler };

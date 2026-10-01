@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
-import { broadcastToSaluran, notifySewaRegister } from "../../src/lib/nova-saluran-broadcast.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
+import { broadcastToSaluran, notifySewaRegister } from "../../src/lib/rara-saluran-broadcast.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { calculateSewaPrice } from "../../src/lib/rara-sewa-price.js";
 
 const pluginConfig = {
   name: "daftarsewa2",
@@ -51,13 +51,13 @@ async function handler(m, { sock }) {
   // Cancel
   if (args === "batal" || args === "cancel") {
     regSessions.delete(sender);
-    return m.reply(novaWrap("Daftarsewa", "Pendaftaran sewa dibatalkan."));
+    return m.reply(raraWrap("Daftarsewa", "Pendaftaran sewa dibatalkan."));
   }
 
   // Check if already pending
   const existing = db.db.data.sewa.registrations[sender];
   if (existing && existing.status === "pending" && !args) {
-    return m.reply(novaWrap("Daftarsewa", `Pendaftaran sewa kamu masih menunggu approve owner.\n\nGrup: ${existing.groupName || "Unknown"}\nDurasi: ${formatDuration(existing.duration)}\n\nKetik .daftarsewa batal untuk batalkan.`, "info"));
+    return m.reply(raraWrap("Daftarsewa", `Pendaftaran sewa kamu masih menunggu approve owner.\n\nGrup: ${existing.groupName || "Unknown"}\nDurasi: ${formatDuration(existing.duration)}\n\nKetik .daftarsewa batal untuk batalkan.`, "info"));
   }
 
   // Start registration flow
@@ -78,13 +78,13 @@ async function handler(m, { sock }) {
     // No active session, start fresh
     regSessions.set(sender, { step: "nama", data: {}, startedAt: Date.now() });
     setTimeout(() => regSessions.delete(sender), SESSION_TIMEOUT);
-    return m.reply(novaWrap("Daftarsewa", `Step 1/4: Nama kamu?\n\nKetik nama kamu sekarang.\nKetik .daftarsewa batal untuk batal.`, "info"));
+    return m.reply(raraWrap("Daftarsewa", `Step 1/4: Nama kamu?\n\nKetik nama kamu sekarang.\nKetik .daftarsewa batal untuk batal.`, "info"));
   }
 
   // Check timeout
   if (Date.now() - session.startedAt > SESSION_TIMEOUT) {
     regSessions.delete(sender);
-    return m.reply(novaWrap("Daftarsewa", "Sesi pendaftaran kedaluwarsa. Ketik *.daftarsewa* untuk mulai lagi."));
+    return m.reply(raraWrap("Daftarsewa", "Sesi pendaftaran kedaluwarsa. Ketik *.daftarsewa* untuk mulai lagi."));
   }
 
   const text = args;
@@ -92,46 +92,46 @@ async function handler(m, { sock }) {
   switch (session.step) {
     case "nama":
       if (text.length < 2) {
-        return m.reply(novaWrap("Daftarsewa", "Nama terlalu pendek. Ketik nama kamu yang benar."));
+        return m.reply(raraWrap("Daftarsewa", "Nama terlalu pendek. Ketik nama kamu yang benar."));
       }
       session.data.name = text;
       session.step = "umur";
-      return m.reply(novaWrap("Daftarsewa", `Halo ${text}!\n\nStep 2/4: Umur kamu?\n\nKetik umur kamu (angka saja, contoh: 18).`, "info"));
+      return m.reply(raraWrap("Daftarsewa", `Halo ${text}!\n\nStep 2/4: Umur kamu?\n\nKetik umur kamu (angka saja, contoh: 18).`, "info"));
 
     case "umur":
       const umur = parseInt(text.replace(/\D/g, ""));
       if (!umur || umur < 10 || umur > 100) {
-        return m.reply(novaError("DaftarSewa", "Umur gak valid nih! Ketik angka 10-100, contoh: 18"));
+        return m.reply(raraError("DaftarSewa", "Umur gak valid nih! Ketik angka 10-100, contoh: 18"));
       }
       session.data.age = umur;
       session.step = "asal";
-      return m.reply(novaWrap("Daftarsewa", `Step 3/4: Asal daerah kamu?\n\nKetik kota/provinsi asal kamu, contoh: Jakarta, Bandung, Surabaya.`, "info"));
+      return m.reply(raraWrap("Daftarsewa", `Step 3/4: Asal daerah kamu?\n\nKetik kota/provinsi asal kamu, contoh: Jakarta, Bandung, Surabaya.`, "info"));
 
     case "asal":
       if (text.length < 2) {
-        return m.reply(novaWrap("Daftarsewa", "Asal terlalu pendek. Ketik kota/provinsi kamu."));
+        return m.reply(raraWrap("Daftarsewa", "Asal terlalu pendek. Ketik kota/provinsi kamu."));
       }
       session.data.origin = text;
       session.step = "link";
-      return m.reply(novaWrap("Daftarsewa", `Step 4/5: Link grup + durasi sewa\n\n📌 Ketik: <link grup> <durasi>\n\n💡 Contoh:\nhttps://chat.whatsapp.com/xxx 7d\nhttps://chat.whatsapp.com/xxx 1m\nhttps://chat.whatsapp.com/xxx lifetime\n\nHarga default otomatis. Owner bisa set manual saat approve.\n\nFormat durasi:\n30i = menit, 12h = jam, 7d = hari\n1m = bulan, 1y = tahun, lifetime = permanen`, "info"));
+      return m.reply(raraWrap("Daftarsewa", `Step 4/5: Link grup + durasi sewa\n\n📌 Ketik: <link grup> <durasi>\n\n💡 Contoh:\nhttps://chat.whatsapp.com/xxx 7d\nhttps://chat.whatsapp.com/xxx 1m\nhttps://chat.whatsapp.com/xxx lifetime\n\nHarga default otomatis. Owner bisa set manual saat approve.\n\nFormat durasi:\n30i = menit, 12h = jam, 7d = hari\n1m = bulan, 1y = tahun, lifetime = permanen`, "info"));
 
     case "link":
       const parts = text.split(/\s+/);
       if (parts.length < 2) {
-        return m.reply(novaWrap("Daftarsewa", `Format salah!\n\n📌 Ketik: <link grup> <durasi>\n\n💡 Contoh: https://chat.whatsapp.com/xxx 7d`, "error"));
+        return m.reply(raraWrap("Daftarsewa", `Format salah!\n\n📌 Ketik: <link grup> <durasi>\n\n💡 Contoh: https://chat.whatsapp.com/xxx 7d`, "error"));
       }
 
       const linkInput = parts[0];
       const durationStr = parts[1];
 
       if (!linkInput.includes("chat.whatsapp.com/")) {
-        return m.reply(novaWrap("Daftarsewa", `Link grup tidak valid!\n\nFormat: https://chat.whatsapp.com/xxxxx`, "error"));
+        return m.reply(raraWrap("Daftarsewa", `Link grup tidak valid!\n\nFormat: https://chat.whatsapp.com/xxxxx`, "error"));
       }
 
       const validDurations = ["lifetime", "permanent", "forever", "unlimited"];
       const durMatch = durationStr.match(/^(\d+)([iIdDmMyYhH])$/);
       if (!validDurations.includes(durationStr.toLowerCase()) && !durMatch) {
-        return m.reply(novaWrap("Daftarsewa", `Format durasi salah!\n\nPilihan: 30i, 12h, 7d, 1m, 1y, lifetime`, "error"));
+        return m.reply(raraWrap("Daftarsewa", `Format durasi salah!\n\nPilihan: 30i, 12h, 7d, 1m, 1y, lifetime`, "error"));
       }
       try {
         const inviteCode = linkInput.split("chat.whatsapp.com/")[1]?.split(/[\s?]/)[0];
@@ -145,14 +145,14 @@ async function handler(m, { sock }) {
             groupName = metadata.subject || "Unknown";
           }
         } catch {
-          return m.reply(novaWrap("Daftarsewa", `Link grup tidak valid atau bot tidak bisa akses.\nPastikan link invite masih aktif.`, "error"));
+          return m.reply(raraWrap("Daftarsewa", `Link grup tidak valid atau bot tidak bisa akses.\nPastikan link invite masih aktif.`, "error"));
         }
 
-        if (!groupId) return m.reply(novaWrap("daftarsewa2", "Tidak bisa mendapatkan info grup."));
+        if (!groupId) return m.reply(raraWrap("daftarsewa2", "Tidak bisa mendapatkan info grup."));
 
         if (db.db.data.sewa.groups[groupId]) {
           regSessions.delete(sender);
-          return m.reply(novaWrap("Daftarsewa", `Grup ini sudah terdaftar dalam sistem sewa!\n\nGrup: ${groupName}\n\nTidak perlu daftar lagi.`, "warn"));
+          return m.reply(raraWrap("Daftarsewa", `Grup ini sudah terdaftar dalam sistem sewa!\n\nGrup: ${groupName}\n\nTidak perlu daftar lagi.`, "warn"));
         }
 
         const existingReg = Object.values(db.db.data.sewa.registrations).find(
@@ -160,7 +160,7 @@ async function handler(m, { sock }) {
         );
         if (existingReg) {
           regSessions.delete(sender);
-          return m.reply(novaWrap("Daftarsewa", `Grup ini sudah ada yang daftar sewa!\n\nGrup: ${groupName}\nStatus: Menunggu approve owner`, "warn"));
+          return m.reply(raraWrap("Daftarsewa", `Grup ini sudah ada yang daftar sewa!\n\nGrup: ${groupName}\nStatus: Menunggu approve owner`, "warn"));
         }
 
         const phoneNumber = sender.split("@")[0];
@@ -245,7 +245,7 @@ async function handler(m, { sock }) {
 
     default:
       regSessions.delete(sender);
-      return m.reply(novaWrap("daftarsewa2", "Sesi error. Ketik *.daftarsewa* untuk mulai lagi."));
+      return m.reply(raraWrap("daftarsewa2", "Sesi error. Ketik *.daftarsewa* untuk mulai lagi."));
   }
 }
 

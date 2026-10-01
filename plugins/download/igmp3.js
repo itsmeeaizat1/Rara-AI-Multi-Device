@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // igmp3.js — Download audio dari Instagram (pakai scraper ig.js lokal)
 import { PinDL } from "../../src/scraper/pindl.js";
 import { igDownload } from "../../src/scraper/ig.js";
-import { novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
   try {
     const url = m.text?.trim();
     if (!url || !url.includes("instagram.com")) {
-      return m.reply(novaGuide("IG MP3", "Kirim URL Instagram yang valid!", ".igmp3 https://www.instagram.com/reel/xxx"));
+      return m.reply(raraGuide("IG MP3", "Kirim URL Instagram yang valid!", ".igmp3 https://www.instagram.com/reel/xxx"));
     }
 
     await m.react("🕒");
@@ -62,12 +62,12 @@ async function handler(m, { sock }) {
     } catch (e) {
       console.error("[igmp3.js] ig scraper:", e.message);
       await m.react("❌");
-      return m.reply(novaGagal("IG MP3"));
+      return m.reply(raraGagal("IG MP3"));
     }
 
     if (!result || (!result.url && !result.download)) {
       await m.react("❌");
-      return m.reply(novaError("IG MP3", "Media tidak ditemukan atau private!"));
+      return m.reply(raraError("IG MP3", "Media tidak ditemukan atau private!"));
     }
 
     const mediaUrl = result.url || result.download;
@@ -98,11 +98,11 @@ async function handler(m, { sock }) {
     }, { quoted: m });
     await m.reply(caption);
     await m.react("🐣");
-    await m.reply(novaBerhasil("igmp3"));
+    await m.reply(raraBerhasil("igmp3"));
   } catch (err) {
     console.error("[IG MP3]", err);
     await m.react("❌");
-    m.reply(novaGagal("IG MP3"));
+    m.reply(raraGagal("IG MP3"));
   }
 }
 

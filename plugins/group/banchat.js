@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from '../../src/lib/nova-error.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'banchat',
     alias: ["banchat"],
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         
         if (isUnban) {
             if (!groupData.isBanned) {
-                return m.reply(novaWrap("banchat", `⚠️ *grup tidak diban*\n\n` +
+                return m.reply(raraWrap("banchat", `⚠️ *grup tidak diban*\n\n` +
                     `Grup ini tidak dalam status banned.\n` +
                     `Semua user bisa menggunakan bot.`))            }
             
@@ -48,11 +48,11 @@ async function handler(m, { sock }) {
         }
         
         if (groupData.isBanned) {
-            return m.reply(novaWrap("Banchat", `Grup ini sudah dalam status banned.\nGunakan .unbanchat untuk membuka akses.`, "warn"))       }
+            return m.reply(raraWrap("Banchat", `Grup ini sudah dalam status banned.\nGunakan .unbanchat untuk membuka akses.`, "warn"))       }
         
         db.setGroup(m.chat, { ...groupData, isBanned: true })
         
-        await m.reply(novaWrap("banchat", `🚫 *grup diban*\n\n` +
+        await m.reply(raraWrap("banchat", `🚫 *grup diban*\n\n` +
                 `📛 Grup: *${groupName}*\n` +
                 `• Status: *BANNED*\n` +
                 `👤 Ban Oleh: @${m.sender.split('@')[0]}\n` +
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
                 `Hanya owner yang bisa menggunakan bot.`))
         
     } catch (error) {
-        m.reply(novaWrap("banchat", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("banchat", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -1,17 +1,17 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spybelanja — Shopping Spy AI (ide fitur no 6, 12 Sep 2026):
 //   * reply screenshot produk Shopee/Tokopedia/marketplace → AI baca
 //     nama produk + harga + toko + rating, terus nyari harga pasar di web
-//     (nova-websearch), bandingin + verdict WORTH IT atau gak
+//     (rara-websearch), bandingin + verdict WORTH IT atau gak
 //   * .spybelanja <nama produk> → mode teks: nyari harga pasar + verdict
 //   * degrade: search gagal → verdict dari pengetahuan AI + catatan;
 //     AI gagal → digest lokal (list hasil search)
 
-import { visionScan } from "../../src/lib/nova-vision-chain.js";
-import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
-import { novaWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
-import { searchWeb } from "../../src/lib/nova-websearch.js";
-import te from "../../src/lib/nova-error.js";
+import { visionScan } from "../../src/lib/rara-vision-chain.js";
+import { aiChainChat } from "../../src/lib/rara-ai-fallback.js";
+import { raraWrap, raraCaption, tipText, toSC } from "../../src/lib/rara-menu-style.js";
+import { searchWeb } from "../../src/lib/rara-websearch.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "spybelanja",
@@ -128,7 +128,7 @@ async function handler(m, { sock, config: botConfig }) {
     const isPhoto = (m.quoted && m.quoted.isImage) || m.isImage;
     const textInput = (m.text || "").trim();
     if (!isPhoto && !textInput) {
-      const guide = novaCaption({
+      const guide = raraCaption({
         emoji: "🛒",
         name: "spybelanja",
         description: "Shopping Spy AI — cek harga & verdict sebelum checkout",
@@ -146,18 +146,18 @@ async function handler(m, { sock, config: botConfig }) {
       const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
       if (!buffer || !buffer.length) {
         await m.react("❌");
-        return m.reply(novaWrap("spybelanja", "Gagal download gambar. Coba kirim ulang.", "error"));
+        return m.reply(raraWrap("spybelanja", "Gagal download gambar. Coba kirim ulang.", "error"));
       }
       const res = await depVision({ imageBuffer: buffer, question: productPrompt(), sessionKey: null })
         .catch((e) => ({ status: false, error: e.message }));
       if (!res?.status) {
         await m.react("❌");
-        return m.reply(novaWrap("spybelanja", res?.error || "Gagal membaca gambar", "error"));
+        return m.reply(raraWrap("spybelanja", res?.error || "Gagal membaca gambar", "error"));
       }
       const parsed = parseJson(res.text);
       if (!parsed || !parsed.isProduct) {
         await m.react("❌");
-        return m.reply(novaWrap("spybelanja", "Gak kedeteksi produk marketplace di gambarnya. Screenshot halaman produk Shopee/Tokopedia ya.", "error"));
+        return m.reply(raraWrap("spybelanja", "Gak kedeteksi produk marketplace di gambarnya. Screenshot halaman produk Shopee/Tokopedia ya.", "error"));
       }
       product = { ...parsed, fromPhoto: true };
     } else {
@@ -207,7 +207,7 @@ async function handler(m, { sock, config: botConfig }) {
       msg += `🌐 *Harga pasar dari pencarian:*\n` + hasil.slice(0, 5).map((h, i) => `${i + 1}. ${h.title}\n   ${(h.snippet || "").slice(0, 90)}`).join("\n") + `\n\n⚖ Belum bisa verdict final — data mentah di atas, cek sendiri ya.`;
     } else {
       await m.react("❌");
-      return m.reply(novaWrap("spybelanja", "Pencarian harga dan AI-nya lagi sibuk barengan. Coba lagi bentar ya.", "error"));
+      return m.reply(raraWrap("spybelanja", "Pencarian harga dan AI-nya lagi sibuk barengan. Coba lagi bentar ya.", "error"));
     }
     if (hasil.length) {
       msg += `\n📎 ${toSC("sumber")}: ${hasil.length} ${toSC("hasil pencarian")}${searchNote ? ` (${toSC("sebagian engine gagal")})` : ""}`;
@@ -216,7 +216,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (err) {
     console.error("spybelanja error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("spybelanja", te.novaError(err) || "Gagal memproses", "error"));
+    return m.reply(raraWrap("spybelanja", te.raraError(err) || "Gagal memproses", "error"));
   }
 }
 

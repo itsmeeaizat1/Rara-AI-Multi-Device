@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // textpro.js — Text effect maker via ephoto360 scraping (lokal, no API key)
 import axios from "axios";
-import { haidarTextpro } from "../../src/lib/nova-haidar.js";
+import { haidarTextpro } from "../../src/lib/rara-haidar.js";
 import * as cheerio from "cheerio";
 import FormData from "form-data";
-import { novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "textpro",
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
   const content = args.slice(1).join(" ");
 
   if (!style || style === "list") {
-    return m.reply(novaWrap("textpro", [
+    return m.reply(raraWrap("textpro", [
       "Daftar style tersedia:",
       "",
       ...Object.entries(STYLES).map(([k, v]) => `${v.emoji} ${k} — ${v.desc}`),
@@ -112,11 +112,11 @@ async function handler(m, { sock }) {
   }
 
   if (!STYLES[style]) {
-    return m.reply(novaWrap("textpro", `Style tidak ditemukan: ${style}\nKetik ${m.prefix}textpro list`));
+    return m.reply(raraWrap("textpro", `Style tidak ditemukan: ${style}\nKetik ${m.prefix}textpro list`));
   }
 
   if (!content) {
-    return m.reply(novaWrap("textpro", `Masukkan teks!\n💡 Contoh: ${m.prefix}textpro ${style} Halo Dunia`));
+    return m.reply(raraWrap("textpro", `Masukkan teks!\n💡 Contoh: ${m.prefix}textpro ${style} Halo Dunia`));
   }
 
   try {
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: buffer,
-      caption: novaBerhasil() + `\nStyle: ${style}\nTeks: ${content}`,
+      caption: raraBerhasil() + `\nStyle: ${style}\nTeks: ${content}`,
     }, { quoted: m });
   } catch (err) {
     console.error("[textpro] ephoto360 gagal:", err.message);
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         await sock.sendMessage(m.chat, {
           image: buffer,
-          caption: novaBerhasil() + `\nStyle: ${style}\nTeks: ${content}`,
+          caption: raraBerhasil() + `\nStyle: ${style}\nTeks: ${content}`,
         }, { quoted: m });
         return;
       }
@@ -152,7 +152,7 @@ async function handler(m, { sock }) {
       console.error("[textpro] Haidar fallback gagal:", fbErr.message);
     }
     await m.react("❌");
-    m.reply(novaWrap("textpro", "Gagal generate. Coba lagi.", "error"));
+    m.reply(raraWrap("textpro", "Gagal generate. Coba lagi.", "error"));
   }
 }
 

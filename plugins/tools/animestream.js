@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "animestream2",
@@ -218,7 +218,7 @@ async function handler(m, { sock, args }) {
 
     const cfg = SOURCES[source];
     if (!cfg) {
-      return m.reply(novaWrap("animestream2", `Sumber tidak ditemukan!\n\nTersedia: ${Object.keys(SOURCES).join(", ")}`));
+      return m.reply(raraWrap("animestream2", `Sumber tidak ditemukan!\n\nTersedia: ${Object.keys(SOURCES).join(", ")}`));
     }
 
     // === SEARCH ===
@@ -232,12 +232,12 @@ async function handler(m, { sock, args }) {
       const res = await rateLimitedGet(endpoint);
 
       if (res.status !== 200 || !res.data?.ok) {
-        return m.reply(novaWrap("animestream2", `Gagal mencari. API mungkin sedang maintenance.`));
+        return m.reply(raraWrap("animestream2", `Gagal mencari. API mungkin sedang maintenance.`));
       }
 
       const list = extractAnimeList(res.data.data, source);
       if (!list.length) {
-        return m.reply(novaWrap("animestream2", `Anime "${query}" tidak ditemukan di ${source}!`));
+        return m.reply(raraWrap("animestream2", `Anime "${query}" tidak ditemukan di ${source}!`));
       }
 
       let txt = `Hasil Pencarian: ${query}\n`;
@@ -259,21 +259,21 @@ async function handler(m, { sock, args }) {
       }
 
       if (list.length > 10) txt += `Dan ${list.length - 10} lainnya...`;
-      await m.reply(novaWrap("animestream2", txt));
+      await m.reply(raraWrap("animestream2", txt));
     }
 
     // === DETAIL ===
     else if (cmd === "detail" || cmd === "d" || cmd === "info") {
       const slug = cmdArgs.join(" ").trim();
       if (!slug) {
-        return m.reply(novaWrap("Animestream", `Masukkan slug anime!\n\nGunakan search dulu untuk mencari slug.`));
+        return m.reply(raraWrap("Animestream", `Masukkan slug anime!\n\nGunakan search dulu untuk mencari slug.`));
       }
 
       const endpoint = cfg.detail(slug);
       const res = await rateLimitedGet(endpoint);
 
       if (res.status !== 200 || !res.data?.data) {
-        return m.reply(novaWrap("animestream2", `Gagal mengambil detail. Periksa slug atau coba sumber lain.`));
+        return m.reply(raraWrap("animestream2", `Gagal mengambil detail. Periksa slug atau coba sumber lain.`));
       }
 
       const a = res.data.data;
@@ -317,21 +317,21 @@ async function handler(m, { sock, args }) {
         if (episodes.length > 10) txt += `\nDan ${episodes.length - 10} episode lainnya...`;
       }
 
-      await m.reply(novaWrap("animestream2", txt));
+      await m.reply(raraWrap("animestream2", txt));
     }
 
     // === EPISODE ===
     else if (cmd === "episode" || cmd === "e" || cmd === "nonton" || cmd === "watch") {
       const slug = cmdArgs.join(" ").trim();
       if (!slug) {
-        return m.reply(novaWrap("Animestream", `Masukkan slug episode!\n\nGunakan detail untuk melihat daftar episode.`));
+        return m.reply(raraWrap("Animestream", `Masukkan slug episode!\n\nGunakan detail untuk melihat daftar episode.`));
       }
 
       const endpoint = cfg.episode(slug);
       const res = await rateLimitedGet(endpoint);
 
       if (res.status !== 200 || !res.data?.data) {
-        return m.reply(novaWrap("animestream2", `Gagal mengambil link episode.`));
+        return m.reply(raraWrap("animestream2", `Gagal mengambil link episode.`));
       }
 
       const data = res.data.data;
@@ -373,7 +373,7 @@ async function handler(m, { sock, args }) {
         }
       }
 
-      await m.reply(novaWrap("animestream2", txt));
+      await m.reply(raraWrap("animestream2", txt));
     }
 
     // === HOME ===
@@ -382,7 +382,7 @@ async function handler(m, { sock, args }) {
       const res = await rateLimitedGet(endpoint);
 
       if (res.status !== 200 || !res.data?.data) {
-        return m.reply(novaWrap("animestream2", `Gagal mengambil data home.`));
+        return m.reply(raraWrap("animestream2", `Gagal mengambil data home.`));
       }
 
       const data = res.data.data;
@@ -412,7 +412,7 @@ async function handler(m, { sock, args }) {
         }
       }
 
-      await m.reply(novaWrap("animestream2", txt));
+      await m.reply(raraWrap("animestream2", txt));
     }
 
     // === ONGOING ===
@@ -420,12 +420,12 @@ async function handler(m, { sock, args }) {
       const page = parseInt(cmdArgs[0]) || 1;
       const endpoint = cfg.ongoing ? cfg.ongoing(page) : null;
       if (!endpoint) {
-        return m.reply(novaWrap("Animestream", `Sumber ${source} tidak punya endpoint ongoing.`));
+        return m.reply(raraWrap("Animestream", `Sumber ${source} tidak punya endpoint ongoing.`));
       }
 
       const res = await rateLimitedGet(endpoint);
       if (res.status !== 200 || !res.data?.data) {
-        return m.reply(novaWrap("animestream2", `Gagal mengambil data ongoing.`));
+        return m.reply(raraWrap("animestream2", `Gagal mengambil data ongoing.`));
       }
 
       const list = extractAnimeList(res.data.data, source);
@@ -442,7 +442,7 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
 
-      await m.reply(novaWrap("animestream2", txt));
+      await m.reply(raraWrap("animestream2", txt));
     }
 
     // === COMPLETED ===
@@ -450,12 +450,12 @@ async function handler(m, { sock, args }) {
       const page = parseInt(cmdArgs[0]) || 1;
       const endpoint = cfg.completed ? cfg.completed(page) : null;
       if (!endpoint) {
-        return m.reply(novaWrap("Animestream", `Sumber ${source} tidak punya endpoint completed.`));
+        return m.reply(raraWrap("Animestream", `Sumber ${source} tidak punya endpoint completed.`));
       }
 
       const res = await rateLimitedGet(endpoint);
       if (res.status !== 200 || !res.data?.data) {
-        return m.reply(novaWrap("animestream2", `Gagal mengambil data completed.`));
+        return m.reply(raraWrap("animestream2", `Gagal mengambil data completed.`));
       }
 
       const list = extractAnimeList(res.data.data, source);
@@ -470,19 +470,19 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
 
-      await m.reply(novaWrap("animestream2", txt));
+      await m.reply(raraWrap("animestream2", txt));
     }
 
     // === SCHEDULE ===
     else if (cmd === "schedule" || cmd === "jadwal") {
       const endpoint = cfg.schedule ? cfg.schedule() : null;
       if (!endpoint) {
-        return m.reply(novaWrap("Animestream", `Sumber ${source} tidak punya endpoint schedule.`));
+        return m.reply(raraWrap("Animestream", `Sumber ${source} tidak punya endpoint schedule.`));
       }
 
       const res = await rateLimitedGet(endpoint);
       if (res.status !== 200 || !res.data?.data) {
-        return m.reply(novaWrap("animestream2", `Gagal mengambil jadwal rilis.`));
+        return m.reply(raraWrap("animestream2", `Gagal mengambil jadwal rilis.`));
       }
 
       const data = res.data.data;
@@ -510,7 +510,7 @@ async function handler(m, { sock, args }) {
         }
       }
 
-      await m.reply(novaWrap("animestream2", txt));
+      await m.reply(raraWrap("animestream2", txt));
     }
 
     // === POPULAR (Samehadaku only) ===
@@ -523,7 +523,7 @@ async function handler(m, { sock, args }) {
       const endpoint = cfg.popular(page);
       const res = await rateLimitedGet(endpoint);
       if (res.status !== 200 || !res.data?.data) {
-        return m.reply(novaWrap("animestream2", `Gagal mengambil data popular.`));
+        return m.reply(raraWrap("animestream2", `Gagal mengambil data popular.`));
       }
 
       const list = extractAnimeList(res.data.data, source);
@@ -539,7 +539,7 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
 
-      await m.reply(novaWrap("animestream2", txt));
+      await m.reply(raraWrap("animestream2", txt));
     }
 
 
@@ -555,12 +555,12 @@ async function handler(m, { sock, args }) {
         const page = parseInt(cmdArgs[1]) || 1;
         const endpoint = cfg.genreAnime ? cfg.genreAnime(genreSlug, page) : null;
         if (!endpoint) {
-          return m.reply(novaWrap("Animestream", `Genre anime tidak tersedia di ${source}.`));
+          return m.reply(raraWrap("Animestream", `Genre anime tidak tersedia di ${source}.`));
         }
 
         const res = await rateLimitedGet(endpoint);
         if (res.status !== 200 || !res.data?.data) {
-          return m.reply(novaWrap("animestream2", `Gagal mengambil anime genre "${genreSlug}".`));
+          return m.reply(raraWrap("animestream2", `Gagal mengambil anime genre "${genreSlug}".`));
         }
 
         const list = extractAnimeList(res.data.data, source);
@@ -578,13 +578,13 @@ async function handler(m, { sock, args }) {
         txt += `Halaman ${page}. Ketik angka untuk ganti halaman.\n`;
         txt += `Contoh: \`${m.prefix}animestream genre ${genreSlug} ${page + 1}${source !== "otakudesu" ? " " + source : ""}\``;
 
-        await m.reply(novaWrap("animestream2", txt));
+        await m.reply(raraWrap("animestream2", txt));
       } else {
         // List all genres
         const endpoint = cfg.genre();
         const res = await rateLimitedGet(endpoint);
         if (res.status !== 200 || !res.data?.data) {
-          return m.reply(novaWrap("animestream2", `Gagal mengambil daftar genre.`));
+          return m.reply(raraWrap("animestream2", `Gagal mengambil daftar genre.`));
         }
 
         const genreData = res.data.data;
@@ -610,7 +610,7 @@ async function handler(m, { sock, args }) {
           txt += `\n... dan ${genres.length - 30} genre lainnya.\n`;
         }
 
-        await m.reply(novaWrap("animestream2", txt));
+        await m.reply(raraWrap("animestream2", txt));
       }
     }
 
@@ -623,7 +623,7 @@ async function handler(m, { sock, args }) {
     console.error("[ANIMESTREAM] Error:", e.message);
     let txt = `Gagal memproses!\n\n`;
     txt += `Error: ${e.message}`;
-    await m.reply(novaWrap("animestream2", txt));
+    await m.reply(raraWrap("animestream2", txt));
   }
 }
 

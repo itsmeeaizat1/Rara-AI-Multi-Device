@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ptv.js — Download video Pinterest (pakai scraper pindl.js lokal)
 import { PinDL } from "../../src/scraper/pindl.js";
-import { novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   try {
     const url = m.text?.trim();
     if (!url || (!url.includes("pinterest.") && !url.includes("pin.it"))) {
-      return m.reply(novaGuide("Pinterest Video", "Kirim URL Pinterest yang valid!", ".ptv https://pin.it/xxx"));
+      return m.reply(raraGuide("Pinterest Video", "Kirim URL Pinterest yang valid!", ".ptv https://pin.it/xxx"));
     }
 
     await m.react("🕒");
@@ -57,13 +57,13 @@ async function handler(m, { sock }) {
     const result = await PinDL(url);
     if (!result || result.error) {
       await m.react("❌");
-      return m.reply(novaError("Pinterest Video", result?.error || "Gagal download video Pinterest!"));
+      return m.reply(raraError("Pinterest Video", result?.error || "Gagal download video Pinterest!"));
     }
 
     const mediaUrl = result.url || result.download;
     if (!mediaUrl) {
       await m.react("❌");
-      return m.reply(novaError("Pinterest Video", "Media tidak ditemukan!"));
+      return m.reply(raraError("Pinterest Video", "Media tidak ditemukan!"));
     }
 
     const caption = mediaCaption({
@@ -79,11 +79,11 @@ async function handler(m, { sock }) {
       caption,
     }, { quoted: m });
     await m.react("🐣");
-    await m.reply(novaBerhasil("ptv"));
+    await m.reply(raraBerhasil("ptv"));
   } catch (err) {
     console.error("[PTV]", err);
     await m.react("❌");
-    m.reply(novaGagal("Pinterest Video"));
+    m.reply(raraGagal("Pinterest Video"));
   }
 }
 

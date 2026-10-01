@@ -2,7 +2,7 @@
 // dari zelapi.eu.cc. Semua http di-mock via seam _setZelJktHttpForTest.
 // STRICT SATUAN: key kosong/401/429/status false → error asli (gak fallback).
 import fs from "node:fs";
-import { initDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase } from "../../src/lib/rara-database.js";
 import jktai, { _setZelJktHttpForTest as setHttp1, _setZelJktKeyForTest as setKey1 } from "../../plugins/jkt48/jktai.js";
 import jkt48, { _setZelJktHttpForTest as setHttp2, _setZelJktKeyForTest as setKey2 } from "../../plugins/jkt48/jkt48.js";
 import { findJktaiMember, ZEL_JKTAI_MEMBERS, ZEL_JKT48_KINDS } from "../../src/scraper/zeljkt.js";

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import * as levelHelper from '../../src/lib/nova-level.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import * as levelHelper from '../../src/lib/rara-level.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'addexp',
     alias: ["addexp"],
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     }
     
     if (amount <= 0) {
-        return m.reply(novaWrap("Addexp", `❌ *Gagal*\n\nJumlah exp harus lebih dari 0`))
+        return m.reply(raraWrap("Addexp", `❌ *Gagal*\n\nJumlah exp harus lebih dari 0`))
     }
     
     if (amount > MAX_EXP) {
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     const user = db.getUser(targetJid) || db.setUser(targetJid)
  
     await levelHelper.addExpWithLevelCheck(sock, m, db, user, amount)
-    await m.reply(novaWrap("Addexp", `✅ Berhasil menambahkan exp *${formatNumber(amount)}* ke *@${targetJid.split('@')[0]}*`))
+    await m.reply(raraWrap("Addexp", `✅ Berhasil menambahkan exp *${formatNumber(amount)}* ke *@${targetJid.split('@')[0]}*`))
 }
 
 export { pluginConfig as config, handler }

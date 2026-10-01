@@ -3,7 +3,7 @@
 //
 // AKAR BUG: 7 plugin AI pake template lama `m.msg?.imageMessage` /
 // `m.quoted?.msg?.imageMessage` + `sock.downloadMediaMessage()` —
-// di serializer nova-serialize.js gak ada property m.msg / quoted.msg,
+// di serializer rara-serialize.js gak ada property m.msg / quoted.msg,
 // dan download bener = .download() method → deteksi media SELALU gagal
 // (attach + reply) → selalu muncul guide padahal user reply foto.
 //
@@ -13,9 +13,9 @@
 
 import assert from "node:assert";
 
-// DB eksplisit (gotcha: novaWrap lookup contacts butuh DB aktif, tanpa path → TypeError senyap)
-const { initDatabase } = await import("../../src/lib/nova-database.js");
-await initDatabase("/tmp/vision-media-e2e-db/nova.json");
+// DB eksplisit (gotcha: raraWrap lookup contacts butuh DB aktif, tanpa path → TypeError senyap)
+const { initDatabase } = await import("../../src/lib/rara-database.js");
+await initDatabase("/tmp/vision-media-e2e-db/rara.json");
 
 // ocrsolve/automeme doOcrAnalysis import config.js ASLI (dynamic) — set apiKey
 // in-memory biar lewat guard apiKey dan sampai ke media detection.

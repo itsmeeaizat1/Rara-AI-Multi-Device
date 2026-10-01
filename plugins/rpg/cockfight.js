@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Sabungayam — Cockfight betting (player vs AI rooster)
 
 import {
   ensureRpg, addExp, addGold, removeGold,
   checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animSabung } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animSabung } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "cockfight",
@@ -50,28 +50,28 @@ function makeRooster(name, level) {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("sabungayam", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("sabungayam", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const bet = parseInt(args[0]);
 
     if (!bet || bet < MIN_BET) {
-      return m.reply(novaRpgBox("sabungayam", `Minimal bet *${MIN_BET} gold*. Contoh: .sabungayam 500`, "warn"));
+      return m.reply(raraRpgBox("sabungayam", `Minimal bet *${MIN_BET} gold*. Contoh: .sabungayam 500`, "warn"));
     }
 
     if (bet > MAX_BET) {
-      return m.reply(novaRpgBox("sabungayam", `Maksimal bet *${MAX_BET} gold*.`, "warn"));
+      return m.reply(raraRpgBox("sabungayam", `Maksimal bet *${MAX_BET} gold*.`, "warn"));
     }
 
     if (rpg.gold < bet) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("sabungayam", `Gold tidak cukup! Kamu punya *${rpg.gold}*, butuh *${bet}*.`, "warn"));
+      return m.reply(raraRpgBox("sabungayam", `Gold tidak cukup! Kamu punya *${rpg.gold}*, butuh *${bet}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastSabung");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("sabungayam", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("sabungayam", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     await m.react("🕒");
@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastSabung", SABUNG_COOLDOWN);
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "sabungayam", icon: "🐓",
       flavor: won ? "🏆 *AYAMMU MENANG!*" : draw ? "🤝 *SERI!*" : "💀 *KALAH!*",
       body: [
@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("sabungayam error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("sabungayam", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("sabungayam", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

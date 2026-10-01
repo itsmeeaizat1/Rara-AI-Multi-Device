@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // videy.js — Download video dari Videy.co (direct CDN, no API)
 import axios from "axios";
-import { novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
 
     const url = m.text?.trim();
     if (!url) {
-      return m.reply(novaGuide("Videy", "Kirim URL video Videy yang mau kamu download!", ".videy https://videy.co/v?id=xxx"));
+      return m.reply(raraGuide("Videy", "Kirim URL video Videy yang mau kamu download!", ".videy https://videy.co/v?id=xxx"));
     }
 
     await m.react("🕒");
@@ -120,11 +120,11 @@ async function handler(m, { sock }) {
       caption,
     }, { quoted: m });
     await m.react("🐣");
-    await m.reply(novaBerhasil("videy"));
+    await m.reply(raraBerhasil("videy"));
   } catch (err) {
     console.error("[Videy]", err);
     await m.react("❌");
-    m.reply(novaError("Videy", err.message || "Gagal download video Videy. Pastikan URL valid!"));
+    m.reply(raraError("Videy", err.message || "Gagal download video Videy. Pastikan URL valid!"));
   }
 }
 

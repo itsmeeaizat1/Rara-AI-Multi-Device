@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "antipromote",
@@ -36,38 +36,38 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "on") {
       data.enabled = true;
       await db.save();
-      return m.reply(novaWrap("Anti Promote", "Anti promote/demote diaktifkan! Perubahan admin tanpa izin akan auto-revert."));
+      return m.reply(raraWrap("Anti Promote", "Anti promote/demote diaktifkan! Perubahan admin tanpa izin akan auto-revert."));
     }
 
     if (sub === "off") {
       data.enabled = false;
       await db.save();
-      return m.reply(novaWrap("Anti Promote", "Anti promote/demote dimatikan."));
+      return m.reply(raraWrap("Anti Promote", "Anti promote/demote dimatikan."));
     }
 
     if (sub === "whitelist" || sub === "wl") {
       const target = m.mentionedJid?.[0];
-      if (!target) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}antipromote whitelist @user`, "info"));
+      if (!target) return m.reply(raraWrap("Usage", `Cara: ${usedPrefix}antipromote whitelist @user`, "info"));
       if (data.whitelist.includes(target)) {
         data.whitelist = data.whitelist.filter(j => j !== target);
         await db.save();
-        return m.reply(novaWrap("Anti Promote", `@${target.split("@")[0]} dihapus dari whitelist.`, "info"));
+        return m.reply(raraWrap("Anti Promote", `@${target.split("@")[0]} dihapus dari whitelist.`, "info"));
       } else {
         data.whitelist.push(target);
         await db.save();
-        return m.reply(novaWrap("Anti Promote", `@${target.split("@")[0]} ditambahkan ke whitelist (bebas promote/demote).`, "info"));
+        return m.reply(raraWrap("Anti Promote", `@${target.split("@")[0]} ditambahkan ke whitelist (bebas promote/demote).`, "info"));
       }
     }
 
     if (sub === "promote" || sub === "demote") {
       const toggle = (args[1] || "").toLowerCase();
       if (!["on", "off"].includes(toggle)) {
-        return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}antipromote ${sub} on|off`, "info"));
+        return m.reply(raraWrap("Usage", `Cara: ${usedPrefix}antipromote ${sub} on|off`, "info"));
       }
       if (sub === "promote") data.blockPromote = toggle === "on";
       if (sub === "demote") data.blockDemote = toggle === "on";
       await db.save();
-      return m.reply(novaWrap("Anti Promote", `Block ${sub}: ${toggle === "on" ? "AKTIF" : "MATI"}`, "info"));
+      return m.reply(raraWrap("Anti Promote", `Block ${sub}: ${toggle === "on" ? "AKTIF" : "MATI"}`, "info"));
     }
 
     if (sub === "status") {
@@ -76,7 +76,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         ? data.whitelist.map(j => "@" + j.split("@")[0]).join(", ")
         : "Belum ada";
       const logs = data.log.slice(-3).map(l => `${l.action} @${l.target.split("@")[0]} by @${l.by.split("@")[0]} (${l.reverted ? "reverted" : "allowed"})`).join("\n") || "Belum ada log.";
-      return m.reply(novaWrap("Anti Promote", [
+      return m.reply(raraWrap("Anti Promote", [
         `Status: ${status}`,
         `Block Promote: ${data.blockPromote ? "YA" : "TIDAK"}`,
         `Block Demote: ${data.blockDemote ? "YA" : "TIDAK"}`,
@@ -88,21 +88,21 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "log") {
-      if (data.log.length === 0) return m.reply(novaWrap("Anti Promote", "Belum ada log."));
+      if (data.log.length === 0) return m.reply(raraWrap("Anti Promote", "Belum ada log."));
       const logs = data.log.slice(-10).map((l, i) => {
         const time = new Date(l.time).toLocaleString("id-ID");
         return `${i + 1}. ${l.action} @${l.target.split("@")[0]} by @${l.by.split("@")[0]} | ${l.reverted ? "REVERTED" : "ALLOWED"} | ${time}`;
       }).join("\n");
-      return m.reply(novaWrap("Anti Promote", `Log (${data.log.length}):\n\n${logs}`, "info"));
+      return m.reply(raraWrap("Anti Promote", `Log (${data.log.length}):\n\n${logs}`, "info"));
     }
 
     if (sub === "clearlog") {
       data.log = [];
       await db.save();
-      return m.reply(novaWrap("Anti Promote", "Log dibersihkan."));
+      return m.reply(raraWrap("Anti Promote", "Log dibersihkan."));
     }
 
-    return m.reply(novaWrap("Anti Promote", [
+    return m.reply(raraWrap("Anti Promote", [
       `Anti Promote - Auto revert perubahan admin tanpa izin`,
       "",
       `Command:`,
@@ -116,7 +116,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("antipromote error:", e);
-    return m.reply(novaError("Anti promote", e.message));
+    return m.reply(raraError("Anti promote", e.message));
   }
 }
 

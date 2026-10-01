@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autofact",
@@ -94,7 +94,7 @@ export function startAutoFact(groupId, sock, db) {
       await db2.save();
 
       await sock.sendMessage(groupId, {
-        text: novaWrap("Auto Fact", "Fakta Unik:\n\n" + fact + "\n\nMode: Otomatis tiap " + g.interval + " menit", "info"),
+        text: raraWrap("Auto Fact", "Fakta Unik:\n\n" + fact + "\n\nMode: Otomatis tiap " + g.interval + " menit", "info"),
       });
     } catch (e) {
       console.error("[AutoFact interval]", e);
@@ -136,7 +136,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       startAutoFact(groupId, conn, db);
 
-      return m.reply(novaWrap("Auto Fact", [
+      return m.reply(raraWrap("Auto Fact", [
         "Fakta otomatis DIAKTIFKAN!",
         "",
         "Interval: " + interval + " menit",
@@ -153,14 +153,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await db.save();
       stopAutoFact(groupId);
 
-      return m.reply(novaWrap("Auto Fact", "Fakta otomatis DIMATIKAN.\nKetik .autofact on untuk aktifkan lagi."));
+      return m.reply(raraWrap("Auto Fact", "Fakta otomatis DIMATIKAN.\nKetik .autofact on untuk aktifkan lagi."));
     }
 
     // STATUS
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
 
-      return m.reply(novaWrap("Auto Fact", [
+      return m.reply(raraWrap("Auto Fact", [
         "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit",
         "Total terkirim: " + (cfg.totalSent || 0),
@@ -177,7 +177,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       cfg.totalSent = (cfg.totalSent || 0) + 1;
       await db.save();
 
-      return m.reply(novaWrap("Auto Fact", [
+      return m.reply(raraWrap("Auto Fact", [
         "Fakta Unik:",
         "",
         fact,
@@ -187,7 +187,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // HELP
-    return m.reply(novaWrap("Auto Fact", [
+    return m.reply(raraWrap("Auto Fact", [
       "Kirim fakta unik random otomatis tiap interval",
       "",
       "CARA PAKAI:",
@@ -203,7 +203,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]));
   } catch (e) {
     console.error("[Auto Fact]", e);
-    m.reply(novaWrap("Auto Fact", "Error: " + e.message));
+    m.reply(raraWrap("Auto Fact", "Error: " + e.message));
   }
 }
 

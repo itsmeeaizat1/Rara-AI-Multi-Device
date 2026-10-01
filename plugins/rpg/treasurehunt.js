@@ -1,7 +1,7 @@
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { shapeTreasure } from "../../src/lib/nova-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getCash, spendCash, formatRp } from "../../src/lib/rara-rpg-service.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { shapeTreasure } from "../../src/lib/rara-rpg-shapes.js";
 
 const pluginConfig = {
   name: "treasurehunt",
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
 
     // ── subcommand khas treasurehunt: kompas status & upgrade ──
     if (input === "kompas" || input === "status") {
-      return m.reply(novaRpgBox("treasurehunt",
+      return m.reply(raraRpgBox("treasurehunt",
         `🧭 KOMPAS DETECTOR KAMU
 
 ` +
@@ -72,7 +72,7 @@ Ketik: .treasurehunt upgrade`));
       const needArt = TOOL.artifactCost(lv);
       const needRp = TOOL.rpCost(lv);
       if ((tool.artifacts || 0) < needArt) {
-        return m.reply(novaRpgBox("treasurehunt",
+        return m.reply(raraRpgBox("treasurehunt",
           `🗝️ Upgrade Kompas ke Lv.${lv + 1} butuh:
 
 • Artefak Kuno : ${needArt}x (punya ${tool.artifacts || 0}x)
@@ -81,7 +81,7 @@ Ketik: .treasurehunt upgrade`));
 💡 Artefak didapat dari .treasurehunt sendiri — 30% tiap harta ketemu, peti legendaris dijamin +2!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
-        return m.reply(novaRpgBox("treasurehunt", `💵 Upgrade butuh *${formatRp(needRp)}*.
+        return m.reply(raraRpgBox("treasurehunt", `💵 Upgrade butuh *${formatRp(needRp)}*.
 Uang kamu: ${formatRp(getCash(m))}
 💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
@@ -91,7 +91,7 @@ Uang kamu: ${formatRp(getCash(m))}
       fresh.spent = (fresh.spent || 0) + needRp;
       getDatabase().setPlayerData(sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("treasurehunt",
+      return m.reply(raraRpgBox("treasurehunt",
         `🧭 KOMPAS UPGRADED!
 
 Level : Lv.${lv} → Lv.${lv + 1}
@@ -114,13 +114,13 @@ Level : Lv.${lv} → Lv.${lv + 1}
       listMsg += `💡 *Penggunaan:* ${m.prefix}treasurehunt <nama_lokasi>\n`;
       listMsg += `📝 *Contoh:* ${m.prefix}treasurehunt pantai\n`;
             await m.react("🐣");
-      return m.reply(novaRpgBox("treasurehunt", listMsg));
+      return m.reply(raraRpgBox("treasurehunt", listMsg));
     }
 
     const loc = LOCATIONS.find(l => l.id === input || l.aliases.includes(input));
     if (!loc) {
       await m.react("❌");
-      return m.reply(novaRpgBox("treasurehunt", `Lokasi "*${input}*" tidak ditemukan.\n\nKetik *${m.prefix}treasurehunt list* untuk melihat daftar lokasi.`, "error"));
+      return m.reply(raraRpgBox("treasurehunt", `Lokasi "*${input}*" tidak ditemukan.\n\nKetik *${m.prefix}treasurehunt list* untuk melihat daftar lokasi.`, "error"));
     }
 
     const profile = await db.getPlayerData?.(sender, "profile") || { gold: 1000, energi: 100 };
@@ -128,7 +128,7 @@ Level : Lv.${lv} → Lv.${lv + 1}
 
     if (currentEnergi < loc.cost && !m.isOwner) {
       await m.react("❌");
-      return m.reply(novaRpgBox("treasurehunt", `Energi kamu tidak cukup! Membutuhkan *${loc.cost} Energi*, kamu hanya memiliki *${currentEnergi} Energi*.`, "error"));
+      return m.reply(raraRpgBox("treasurehunt", `Energi kamu tidak cukup! Membutuhkan *${loc.cost} Energi*, kamu hanya memiliki *${currentEnergi} Energi*.`, "error"));
     }
 
     if (!m.isOwner) {
@@ -194,7 +194,7 @@ Level : Lv.${lv} → Lv.${lv + 1}
     await db.setPlayerData?.(sender, "inventory", inventory);
 
     await m.react("🐣");
-    return m.reply(novaRpgBox("treasurehunt",
+    return m.reply(raraRpgBox("treasurehunt",
       `${resultFlavor}\n\n` +
       `📍 ${loc.name} — ${loc.digText}\n\n` +
       `${resultLines.join("\n")}\n\n` +
@@ -203,7 +203,7 @@ Level : Lv.${lv} → Lv.${lv + 1}
   } catch (err) {
     console.error("treasurehunt error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("treasurehunt", err.message || "Terjadi kesalahan sistem.", "error"));
+    return m.reply(raraRpgBox("treasurehunt", err.message || "Terjadi kesalahan sistem.", "error"));
   }
 }
 

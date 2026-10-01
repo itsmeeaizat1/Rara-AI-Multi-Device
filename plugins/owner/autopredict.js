@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autopredict — Auto-Predictive Insights
  *
@@ -33,10 +33,10 @@
  */
 
 import { CronJob } from "cron";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
-import { getWeeklyStats, getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
+import { getWeeklyStats, getLeaderboard } from "../../src/lib/rara-activity-tracker.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -295,7 +295,7 @@ async function buildInsightReport(sock, gid) {
   if (settings.history.length > 50) settings.history = settings.history.slice(-50);
   getDatabase().db.write();
 
-  const report = novaBox("PREDICTIVE INSIGHTS", [
+  const report = raraBox("PREDICTIVE INSIGHTS", [
     `Grup: ${groupName}`,
     `Health: ${healthScore}/100 (${healthLabel(healthScore)})`,
     "---",
@@ -316,7 +316,7 @@ async function buildInsightReport(sock, gid) {
   ]);
 
   if (prediction) {
-    return report + "\n\n" + novaBox("AI PREDICTION — MINGGU DEPAN", [prediction]);
+    return report + "\n\n" + raraBox("AI PREDICTION — MINGGU DEPAN", [prediction]);
   }
   return report;
 }
@@ -341,7 +341,7 @@ function startCronJob(sock) {
         if (!ownerJid || !sock?.sendMessage) return;
 
         await sock.sendMessage(ownerJid, {
-          text: novaBox("PREDICTIVE INSIGHTS", [
+          text: raraBox("PREDICTIVE INSIGHTS", [
             "Weekly auto-report mulai...",
             `Grup: ${s.groups.length}`,
           ]),
@@ -364,7 +364,7 @@ function startCronJob(sock) {
         getDatabase().db.write();
 
         await sock.sendMessage(ownerJid, {
-          text: novaBox("PREDICTIVE INSIGHTS", ["Weekly report selesai."]),
+          text: raraBox("PREDICTIVE INSIGHTS", ["Weekly report selesai."]),
         });
       } catch (e) {
         console.error("[autopredict] cron error:", e.message);
@@ -401,7 +401,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ─── DASHBOARD ───
     if (!sub) {
       const status = settings.enabled ? "ON" : "OFF";
-      const msg = novaBox("AUTO-PREDICTIVE INSIGHTS", [
+      const msg = raraBox("AUTO-PREDICTIVE INSIGHTS", [
         `Status: ${status}`,
         `Report: Senin ${settings.reportTime} WIB`,
         `Grup monitored: ${settings.groups.length}`,
@@ -409,7 +409,7 @@ async function handler(m, { sock, config: botConfig }) {
         `Total reports: ${settings.stats.totalReports}`,
       ]);
 
-      await m.reply(msg + "\n\n" + novaBox("COMMANDS", [
+      await m.reply(msg + "\n\n" + raraBox("COMMANDS", [
         `${prefix}autopredict on/off`,
         `${prefix}autopredict now [gid]`,
         `${prefix}autopredict addgc/delgc <gid>`,
@@ -431,7 +431,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.db.write();
       if (cronJob) cronJob.stop();
       startCronJob(sock);
-      await m.reply(novaBox("AUTO-PREDICT", [
+      await m.reply(raraBox("AUTO-PREDICT", [
         "Status: ON",
         "Auto-predictive insights aktif",
         `Report: Senin ${settings.reportTime} WIB`,
@@ -445,7 +445,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.enabled = false;
       db.db.write();
       if (cronJob) cronJob.stop();
-      await m.reply(novaBox("AUTO-PREDICT", ["Status: OFF", "Auto-predictive insights dimatikan"]));
+      await m.reply(raraBox("AUTO-PREDICT", ["Status: OFF", "Auto-predictive insights dimatikan"]));
       return { handled: true };
     }
 
@@ -453,7 +453,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "now") {
       const targetGid = args[1] || gid;
       if (!targetGid.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict now <gid>"]));
+        await m.reply(raraBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict now <gid>"]));
         return { handled: true };
       }
       await m.react("🕒");
@@ -469,7 +469,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "addgc") {
       const targetGid = args[1];
       if (!targetGid?.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-PREDICT", ["Format: .autopredict addgc <groupId>"]));
+        await m.reply(raraBox("AUTO-PREDICT", ["Format: .autopredict addgc <groupId>"]));
         return { handled: true };
       }
       if (!settings.groups.includes(targetGid)) {
@@ -481,7 +481,7 @@ async function handler(m, { sock, config: botConfig }) {
         const meta = await sock.groupMetadata(targetGid);
         gName = meta?.subject || "unknown";
       } catch {}
-      await m.reply(novaBox("AUTO-PREDICT", [
+      await m.reply(raraBox("AUTO-PREDICT", [
         `Grup ditambah: ${gName}`,
         `Total monitored: ${settings.groups.length}`,
       ]));
@@ -493,7 +493,7 @@ async function handler(m, { sock, config: botConfig }) {
       const targetGid = args[1];
       settings.groups = settings.groups.filter((g) => g !== targetGid);
       db.db.write();
-      await m.reply(novaBox("AUTO-PREDICT", [
+      await m.reply(raraBox("AUTO-PREDICT", [
         `Grup dihapus: ${targetGid?.slice(0, 20)}...`,
         `Total monitored: ${settings.groups.length}`,
       ]));
@@ -503,7 +503,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ─── LIST GROUPS ───
     if (sub === "listgc") {
       if (settings.groups.length === 0) {
-        await m.reply(novaBox("AUTO-PREDICT", ["Belum ada grup terdaftar", `Ketik: ${prefix}autopredict addgc <gid>`]));
+        await m.reply(raraBox("AUTO-PREDICT", ["Belum ada grup terdaftar", `Ketik: ${prefix}autopredict addgc <gid>`]));
         return { handled: true };
       }
       const list = await Promise.all(settings.groups.map(async (g, i) => {
@@ -514,7 +514,7 @@ async function handler(m, { sock, config: botConfig }) {
         } catch {}
         return `${i + 1}. ${name}`;
       }));
-      await m.reply(novaBox("AUTO-PREDICT — GRUP MONITORED", [
+      await m.reply(raraBox("AUTO-PREDICT — GRUP MONITORED", [
         `Total: ${settings.groups.length}`,
         "---",
         list.join("\n"),
@@ -526,12 +526,12 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "health") {
       const targetGid = args[1] || gid;
       if (!targetGid.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict health <gid>"]));
+        await m.reply(raraBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict health <gid>"]));
         return { handled: true };
       }
       const stats = getWeeklyStats(targetGid);
       const score = calculateHealthScore(stats);
-      await m.reply(novaBox("PREDICT — HEALTH SCORE", [
+      await m.reply(raraBox("PREDICT — HEALTH SCORE", [
         `Grup: ${targetGid.slice(0, 20)}...`,
         `Score: ${score}/100 (${healthLabel(score)})`,
         "---",
@@ -549,7 +549,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "churn") {
       const targetGid = args[1] || gid;
       if (!targetGid.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict churn <gid>"]));
+        await m.reply(raraBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict churn <gid>"]));
         return { handled: true };
       }
       const leaderboard = getLeaderboard(targetGid, 20);
@@ -564,7 +564,7 @@ async function handler(m, { sock, config: botConfig }) {
         `${r.name} (${r.riskScore}%)`
       ).join("\n| ") || "Tidak ada";
 
-      await m.reply(novaBox("PREDICT — CHURN RISK", [
+      await m.reply(raraBox("PREDICT — CHURN RISK", [
         `Grup: ${targetGid.slice(0, 20)}...`,
         `High: ${high.length} | Medium: ${med.length} | Low: ${risks.length - high.length - med.length}`,
         "---",
@@ -581,7 +581,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "trend") {
       const targetGid = args[1] || gid;
       if (!targetGid.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict trend <gid>"]));
+        await m.reply(raraBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict trend <gid>"]));
         return { handled: true };
       }
       const stats = getWeeklyStats(targetGid);
@@ -593,7 +593,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const trendIcon = trend === null ? "?" : trend > 5 ? "NAIK" : trend < -5 ? "TURUN" : "STABIL";
 
-      await m.reply(novaBox("PREDICT — ENGAGEMENT TREND", [
+      await m.reply(raraBox("PREDICT — ENGAGEMENT TREND", [
         `Grup: ${targetGid.slice(0, 20)}...`,
         `Minggu ini: ${stats.totalMessages} pesan`,
         `Minggu lalu: ${prevMsgs} pesan`,
@@ -610,7 +610,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "peak") {
       const targetGid = args[1] || gid;
       if (!targetGid.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict peak <gid>"]));
+        await m.reply(raraBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict peak <gid>"]));
         return { handled: true };
       }
       // Use activity tracker data if available
@@ -636,7 +636,7 @@ async function handler(m, { sock, config: botConfig }) {
         ? top3.map((t) => `${String(t.hour).padStart(2, "0")}:00 (${t.count} members active)`).join("\n| ")
         : "Belum cukup data";
 
-      await m.reply(novaBox("PREDICT — PEAK HOURS", [
+      await m.reply(raraBox("PREDICT — PEAK HOURS", [
         `Grup: ${targetGid.slice(0, 20)}...`,
         `Active members: ${stats.activeMembers}`,
         "---",
@@ -650,20 +650,20 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "forecast") {
       const targetGid = args[1] || gid;
       if (!targetGid.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict forecast <gid>"]));
+        await m.reply(raraBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict forecast <gid>"]));
         return { handled: true };
       }
-      await m.reply(novaBox("AUTO-PREDICT", ["Generating AI forecast..."]));
+      await m.reply(raraBox("AUTO-PREDICT", ["Generating AI forecast..."]));
       const data = await getGroupInsights(sock, targetGid);
       const prediction = await generatePrediction(data);
 
       if (!prediction) {
-        await m.reply(novaBox("AUTO-PREDICT", ["Gagal generate forecast. Coba lagi."]));
+        await m.reply(raraBox("AUTO-PREDICT", ["Gagal generate forecast. Coba lagi."]));
         return { handled: true };
       }
 
       const score = calculateHealthScore(data.stats);
-      await m.reply(novaBox("PREDICT — AI FORECAST", [
+      await m.reply(raraBox("PREDICT — AI FORECAST", [
         `Grup: ${data.groupName}`,
         `Health: ${score}/100 (${healthLabel(score)})`,
         `Active: ${data.stats.activeMembers}/${data.stats.totalMembersTracked}`,
@@ -678,7 +678,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "settime") {
       const time = args[1];
       if (!time || !/^\d{2}:\d{2}$/.test(time)) {
-        await m.reply(novaBox("AUTO-PREDICT", [
+        await m.reply(raraBox("AUTO-PREDICT", [
           `Report time: Senin ${settings.reportTime} WIB`,
           `Ketik: ${prefix}autopredict settime HH:MM`,
         ]));
@@ -690,7 +690,7 @@ async function handler(m, { sock, config: botConfig }) {
         if (cronJob) cronJob.stop();
         startCronJob(sock);
       }
-      await m.reply(novaBox("AUTO-PREDICT", [`Report time: Senin ${time} WIB`]));
+      await m.reply(raraBox("AUTO-PREDICT", [`Report time: Senin ${time} WIB`]));
       return { handled: true };
     }
 
@@ -700,12 +700,12 @@ async function handler(m, { sock, config: botConfig }) {
       settings.stats = { totalReports: 0, totalPredictions: 0, accuracyScore: null };
       settings.lastReport = null;
       db.db.write();
-      await m.reply(novaBox("AUTO-PREDICT", ["History & stats direset"]));
+      await m.reply(raraBox("AUTO-PREDICT", ["History & stats direset"]));
       return { handled: true };
     }
 
     // ─── UNKNOWN ───
-    await m.reply(novaBox("AUTO-PREDICT", [
+    await m.reply(raraBox("AUTO-PREDICT", [
       `Command tidak dikenal: ${sub}`,
       `Ketik ${prefix}autopredict untuk dashboard`,
     ]));
@@ -713,7 +713,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   } catch (error) {
     console.error("[autopredict] handler error:", error.message);
-    await m.reply(novaError("AutoPredict", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("AutoPredict", "Gagal nih, coba lagi ya"));
     return { handled: true };
   }
 }

@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // AI Compliment — AI generates creative compliments
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "pujianai",
@@ -40,7 +40,7 @@ Gunakan bahasa Indonesia santai. Pujian harus bikin senyum, bukan cringe.`;
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("pujianai", "AI-nya lagi malu nih 😳", "error"));
+      return m.reply(raraWrap("pujianai", "AI-nya lagi malu nih 😳", "error"));
     }
 
     await m.react("🐣");
@@ -49,7 +49,7 @@ Gunakan bahasa Indonesia santai. Pujian harus bikin senyum, bukan cringe.`;
   } catch (err) {
     console.error("pujianai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("pujianai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("pujianai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

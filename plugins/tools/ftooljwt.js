@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooljwt — decoder JSON Web Token native offline (port altftool.com/tools/all/jwt-decoder)
 // Decode header + payload base64url + status kadaluarsa. Signature TIDAK diverifikasi (cuma decode).
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooljwt", alias: ["jwt", "jwtdecode", "decodejwt"], category: "tools",
@@ -30,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const token = (m.text || "").trim();
     if (!token) {
-      return m.reply(novaGuideV2("ftooljwt", {
+      return m.reply(raraGuideV2("ftooljwt", {
         kaomoji: "(・_・;)",
         sapaan: "token JWT mau didecode? tempel tokennya ya~",
         cara: "ketik .jwt diikuti token JWT lengkap (3 bagian dipisah titik)",
@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
     const parts = token.split(".");
     if (parts.length !== 3 || !parts[0] || !parts[1]) {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftooljwt", {
+      return m.reply(raraSalahV2("ftooljwt", {
         kaomoji: "(・_・;)",
         pesan: "format token JWT gak valid — harus 3 bagian dipisah titik: header.payload.signature",
         contoh: `${prefix}ftooljwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.abc`,
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
       payload = b64urlToJson(parts[1]);
     } catch (e) {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftooljwt", {
+      return m.reply(raraSalahV2("ftooljwt", {
         kaomoji: "(・_・;)",
         pesan: "bagian header/payload bukan base64 JSON yang valid",
         contoh: `${prefix}ftooljwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.abc`,
@@ -81,10 +81,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (pj.length > 900) pj = pj.substring(0, 900) + "\n…(dipotong)";
     lines.push("", "Payload lengkap:", "```" + pj + "```");
     await m.react("🐣");
-    await m.reply(novaWrap("JWT Decoder", lines.join("\n")));
+    await m.reply(raraWrap("JWT Decoder", lines.join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("JWT Decoder", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("JWT Decoder", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

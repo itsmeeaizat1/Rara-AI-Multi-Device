@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // googlesearch.js — Google search via DuckDuckGo (scrape, no API key)
 import axios from "axios";
-import { novaBox, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraBox, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "googlesearch",
@@ -49,13 +49,13 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const query = m.args?.join(" ").trim();
     if (!query) {
-      return m.reply(novaGuide("Google Search", "Masukkan kata kunci pencarian!", ".googlesearch cara membuat nasi goreng"));
+      return m.reply(raraGuide("Google Search", "Masukkan kata kunci pencarian!", ".googlesearch cara membuat nasi goreng"));
     }
 
     const results = await ddgSearch(query);
     if (!results.length) {
       await m.react("❌");
-      return m.reply(novaError("Google Search", `Tidak ada hasil untuk: *${query}*`));
+      return m.reply(raraError("Google Search", `Tidak ada hasil untuk: *${query}*`));
     }
 
     const lines = [`Query: ${query}`, ""];
@@ -66,12 +66,12 @@ async function handler(m, { sock }) {
       lines.push("");
     });
 
-    await m.reply(novaBox("Google Search", lines));
+    await m.reply(raraBox("Google Search", lines));
     await m.react("🐣");
   } catch (err) {
     console.error("[GoogleSearch]", err);
     await m.react("❌");
-    m.reply(novaGagal("Google Search"));
+    m.reply(raraGagal("Google Search"));
   }
 }
 

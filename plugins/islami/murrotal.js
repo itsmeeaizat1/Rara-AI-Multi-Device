@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { load } from 'cheerio'
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "murrotal",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply(novaWrap("murrotal", [
+    return m.reply(raraWrap("murrotal", [
       "Murottal Al-Quran audio per surah.",
       "",
       `📌 Format: ${m.prefix}murrotal <nama surah>`,
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
 
     if (!find || !find.audio) {
       await m.react("❌");
-      return m.reply(novaWrap("murrotal", `❌ Surah *${query}* tidak ditemukan`));
+      return m.reply(raraWrap("murrotal", `❌ Surah *${query}* tidak ditemukan`));
     }
     await m.react("🐣");
     await sock.sendMedia(m.chat, find.audio, null, m, {
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     });
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("murrotal", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("murrotal", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

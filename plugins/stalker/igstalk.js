@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 import axios from 'axios'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 import config from '../../config.js'
 
 const pluginConfig = {
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
         
         const d = res.data?.data
         if (!res.data?.status || !d?.username) {
-            return m.reply(novaWrap("igstalk", `❌ Akun *@${username}* tidak ditemukan`))
+            return m.reply(raraWrap("igstalk", `❌ Akun *@${username}* tidak ditemukan`))
         }
         
         const caption = `📸 *instagram stalk*\n\n` +
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
         }
         
     } catch (error) {
-        m.reply(novaWrap("igstalk", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("igstalk", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

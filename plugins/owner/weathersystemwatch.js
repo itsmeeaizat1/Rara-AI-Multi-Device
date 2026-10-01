@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 // .weathersystemwatch — Unified Weather Control (owner only) (rename file owner 15 Sep 2026, wasal .autoweatherrealtime)
 //
@@ -27,16 +27,16 @@
 // ============================================================
 
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { toSC, novaError } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { toSC, raraError } from "../../src/lib/rara-menu-style.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "" manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
-import { clearWeatherCache, getWeatherFooter, getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
-import { fetchWeatherForSettings, fetchBmkgNow, formatWeatherUpdate, formatActivationMessage } from "../../src/lib/nova-weather-notify.js";
-import { resetIntervalState, resetAlertState, resetAutoState, checkWeatherAlert, setAutoGroupForTest, getSchedulerStatus } from "../../src/lib/nova-weather-realtime-scheduler.js";
-import { evaluateWeatherAlert, formatAlertMessage, buildThresholds, THRESHOLD_BASE } from "../../src/lib/nova-weather-alert.js";
-import { weatherGroupOf } from "../../src/lib/nova-weather-notify.js";
+import { clearWeatherCache, getWeatherFooter, getWeatherAddress } from "../../src/lib/rara-weather-footer.js";
+import { fetchWeatherForSettings, fetchBmkgNow, formatWeatherUpdate, formatActivationMessage } from "../../src/lib/rara-weather-notify.js";
+import { resetIntervalState, resetAlertState, resetAutoState, checkWeatherAlert, setAutoGroupForTest, getSchedulerStatus } from "../../src/lib/rara-weather-realtime-scheduler.js";
+import { evaluateWeatherAlert, formatAlertMessage, buildThresholds, THRESHOLD_BASE } from "../../src/lib/rara-weather-alert.js";
+import { weatherGroupOf } from "../../src/lib/rara-weather-notify.js";
 
 const pluginConfig = {
   name: "weathersystemwatch",
@@ -319,7 +319,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         );
       } catch (e) {
         try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-        return m.reply(novaError("Weather Realtime", "Gagal mencari kota: " + e.message));
+        return m.reply(raraError("Weather Realtime", "Gagal mencari kota: " + e.message));
       }
     }
 
@@ -525,7 +525,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           return m.reply(formatAlertMessage(alert, data, settings.location?.name || "Lokasi"), { raw: true });
         } catch (e) {
           try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-          return m.reply(novaError("Weather Realtime", "Alert test gagal: " + e.message));
+          return m.reply(raraError("Weather Realtime", "Alert test gagal: " + e.message));
         }
       }
       try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
@@ -707,7 +707,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         );
       } catch (e) {
         try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-        return m.reply(novaError("Weather Realtime", "Kode wilayah BMKG tidak valid / tidak terdaftar: " + e.message));
+        return m.reply(raraError("Weather Realtime", "Kode wilayah BMKG tidak valid / tidak terdaftar: " + e.message));
       }
     }
 
@@ -729,7 +729,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         const t = parseTime(times[i]);
         if (!t) {
           try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-          return m.reply(novaError("Weather Realtime", "Format waktu salah: " + times[i] + " (gunakan HH:MM)"));
+          return m.reply(raraError("Weather Realtime", "Format waktu salah: " + times[i] + " (gunakan HH:MM)"));
         }
         schedules.push({ ...t, key: keys[i] || "t" + i, label: labels[i] || "Waktu " + (i + 1) });
       }
@@ -848,7 +848,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(msg, { raw: true });
       } catch (e) {
         try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-        return m.reply(novaError("Weather Realtime", "Test gagal: " + e.message));
+        return m.reply(raraError("Weather Realtime", "Test gagal: " + e.message));
       }
     }
 
@@ -898,7 +898,7 @@ async function handler(m, { sock, config: botConfig, db }) {
   } catch (e) {
     console.error("[weathersystemwatch]", e.message);
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-    return m.reply(novaError("Weather Realtime", e.message));
+    return m.reply(raraError("Weather Realtime", e.message));
   }
 }
 

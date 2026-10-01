@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ecocalendar",
@@ -82,7 +82,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (!sub || sub === "today" || sub === "hariini" || sub === "challenge") {
     const today = todayDate();
     const doneToday = cfg.users[m.sender]?.lastDone === today;
-    await m.reply(novaWrap("Eco Challenge", [
+    await m.reply(raraWrap("Eco Challenge", [
       "Challenge hari ini (" + today + "):",
       "",
       challenge,
@@ -99,7 +99,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const today = todayDate();
     if (!cfg.users[m.sender]) cfg.users[m.sender] = { totalDone: 0, lastDone: "", streak: 0 };
     if (cfg.users[m.sender].lastDone === today) {
-      await m.reply(novaWrap("Eco Challenge", "Kamu sudah menyelesaikan challenge hari ini! Besok lagi."));
+      await m.reply(raraWrap("Eco Challenge", "Kamu sudah menyelesaikan challenge hari ini! Besok lagi."));
       return { handled: true };
     }
     const yesterday = new Date(Date.now() - 86400000).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" });
@@ -113,7 +113,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     cfg.totalCompleted++;
     cfg.history.push({ user: m.sender, challenge, date: today, ts: Date.now() });
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Eco Challenge", [
+    await m.reply(raraWrap("Eco Challenge", [
       "Challenge selesai! +1 eco point",
       "Streak: " + cfg.users[m.sender].streak + " hari",
       "Total selesai: " + cfg.users[m.sender].totalDone,
@@ -126,7 +126,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "leaderboard" || sub === "top") {
     const sorted = Object.entries(cfg.users).sort((a, b) => (b[1].totalDone || 0) - (a[1].totalDone || 0)).slice(0, 5);
     const list = sorted.map(([jid, data], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + (data.totalDone || 0) + " done, " + (data.streak || 0) + " streak").join("\n") || "(kosong)";
-    await m.reply(novaWrap("Eco Leaderboard", [
+    await m.reply(raraWrap("Eco Leaderboard", [
       "Eco Warrior Top 5:",
       list,
     ].join("\n")), { mentions: sorted.map(([jid]) => jid) });
@@ -134,7 +134,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (sub === "stats" || sub === "statistik") {
-    await m.reply(novaWrap("Eco Stats", [
+    await m.reply(raraWrap("Eco Stats", [
       "Total completed (grup): " + cfg.totalCompleted,
       "Total eco warriors: " + Object.keys(cfg.users).length,
       "Challenge hari ini: " + challenge,
@@ -145,11 +145,11 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "history") {
     const recent = cfg.history.slice(-5).reverse();
     const list = recent.map(h => h.date + " - @" + h.user.split("@")[0] + ": " + h.challenge).join("\n") || "(kosong)";
-    await m.reply(novaWrap("Eco History", "Aktivitas terakhir:\n" + list), { mentions: recent.map(h => h.user) });
+    await m.reply(raraWrap("Eco History", "Aktivitas terakhir:\n" + list), { mentions: recent.map(h => h.user) });
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Eco Challenge", [
+  await m.reply(raraWrap("Eco Challenge", [
     "ECO CHALLENGE HARIAN",
     "",
     prefix + "ecocalendar - lihat challenge hari ini",

@@ -53,7 +53,7 @@ func (s *AICallSession) Stop() {
 }
 
 // tryVoiceCommand — kirim transkrip ke voice-command bridge bot utama
-// (nova-aicall-bridge.js, POST /voice). Balikin teks yang harus DIUCAPKAN di
+// (rara-aicall-bridge.js, POST /voice). Balikin teks yang harus DIUCAPKAN di
 // telepon, atau "" kalau bukan perintah / bridge gak sempat jawab (timeout
 // pendek biar percakapan gak nyendat).
 func (s *AICallSession) tryVoiceCommand(text string) string {

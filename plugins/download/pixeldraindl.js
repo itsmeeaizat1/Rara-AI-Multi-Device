@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import config from '../../config.js'
-import * as timeHelper from '../../src/lib/nova-time.js'
+import * as timeHelper from '../../src/lib/rara-time.js'
 import path from 'path'
 import fs from 'fs'
-import { f } from '../../src/lib/nova-http.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { f } from '../../src/lib/rara-http.js'
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -39,7 +39,7 @@ function mediaCaption({
   return lines.join("\n");
 }
 
-const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
+const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 const pluginConfig = {
   name: "pixeldraindl",
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
 
     if (!data?.status || !data?.data) {
       return m.reply(
-        novaError("PixelDrain", "File gak nemu nih — cek linknya ya"),
+        raraError("PixelDrain", "File gak nemu nih — cek linknya ya"),
       );
     }
 
@@ -98,11 +98,11 @@ async function handler(m, { sock }) {
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m })
     } else if (sizeInMB > 100) {
-      await m.reply(novaWrap("Pixeldraindl", `⚠️ *file terlalu besar*\n\nFile ${file.size} terlalu besar untuk dikirim\nGunakan link download di atas`));
+      await m.reply(raraWrap("Pixeldraindl", `⚠️ *file terlalu besar*\n\nFile ${file.size} terlalu besar untuk dikirim\nGunakan link download di atas`));
     }
-      await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("pixeldraindl"));
+      await m.react("🐣"); await m.react("🐣"); m.reply(raraBerhasil("pixeldraindl"));
   } catch (error) {
-    m.reply(novaGangguan("PixelDrain"));
+    m.reply(raraGangguan("PixelDrain"));
   }
 }
 

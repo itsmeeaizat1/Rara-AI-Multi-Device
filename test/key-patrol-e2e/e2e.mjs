@@ -1,4 +1,4 @@
-// NOVA — E2E: AUTO KEY PATROL .keypatrol (27 Sep 2026)
+// RARA — E2E: AUTO KEY PATROL .keypatrol (27 Sep 2026)
 // Semua HTTP di-mock via seam _setKeyPatrolHttpForTest — TANPA panggilan API beneran.
 import path from "node:path";
 import crypto from "node:crypto";
@@ -7,12 +7,12 @@ import { fileURLToPath } from "node:url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-keypatrol-db-" + Date.now();
+const DB_DIR = "/tmp/rara-keypatrol-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
-const lib = await import(R + "/src/lib/nova-key-patrol.js");
+const lib = await import(R + "/src/lib/rara-key-patrol.js");
 const {
   ensureKeyPatrolState, runKeyPatrol, buildReportCard, buildStatusCard,
   initKeyPatrolScheduler, stopKeyPatrolScheduler, KEY_PROBES,
@@ -20,7 +20,7 @@ const {
   _setKeyPatrolOwnerJidForTest, _clearKeyPatrolOwnerJidForTest,
   _setKeyPatrolHttpForTest, _clearKeyPatrolHttpForTest,
 } = lib;
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
 const { handler } = await import(R + "/plugins/owner/keypatrol.js");
 
 let pass = 0, fail = 0;

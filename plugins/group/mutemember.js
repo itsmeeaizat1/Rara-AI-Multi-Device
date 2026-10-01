@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { isLid, lidToJid, resolveAnyLidToJid } from '../../src/lib/nova-lid.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { isLid, lidToJid, resolveAnyLidToJid } from '../../src/lib/rara-lid.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'mutemember',
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
             return pJid === targetNumber && (p.admin === 'admin' || p.admin === 'superadmin')
         })
         if (isTargetAdmin) {
-            return m.reply(novaWrap("Mutemember", `gagal\n\nTidak dapat mute admin grup`, "error"))
+            return m.reply(raraWrap("Mutemember", `gagal\n\nTidak dapat mute admin grup`, "error"))
         }
     }
 
@@ -75,13 +75,13 @@ async function handler(m, { sock }) {
     })
 
     if (alreadyMuted) {
-        return m.reply(novaWrap("Mutemember", `gagal\n\nMember @${targetNumber} sudah dimute`, "error"))
+        return m.reply(raraWrap("Mutemember", `gagal\n\nMember @${targetNumber} sudah dimute`, "error"))
     }
 
     mutedMembers.push(targetJid)
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
-    await m.reply(novaWrap("Mutemember", `Member: @${targetNumber}\nStatus: Muted\nTotal mute: ${mutedMembers.length} member\nSemua pesan dari member ini akan dihapus otomatis\nGunakan \`${m.prefix}unmutemember\` untuk unmute`, "success"))
+    await m.reply(raraWrap("Mutemember", `Member: @${targetNumber}\nStatus: Muted\nTotal mute: ${mutedMembers.length} member\nSemua pesan dari member ini akan dihapus otomatis\nGunakan \`${m.prefix}unmutemember\` untuk unmute`, "success"))
 }
 
 function isMutedMember(groupJid, senderJid, db) {

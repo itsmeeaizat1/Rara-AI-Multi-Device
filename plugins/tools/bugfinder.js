@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "caribug",
@@ -20,7 +20,7 @@ async function handler(m, { sock,  args }) {
   let code = m.quoted?.text || args.join(" ");
 
   if (!code) {
-    return m.reply(novaWrap("caribug", [
+    return m.reply(raraWrap("caribug", [
       "Cari bug di kode program lewat AI.",
       "",
       `📌 Format: ${m.prefix}caribug <kode> (atau reply pesan kode)`,
@@ -73,7 +73,7 @@ async function handler(m, { sock,  args }) {
   } catch (err) {
     await m.react("❌");
     console.error("[CariBug]", err.message);
-    m.reply(novaWrap("caribug", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("caribug", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

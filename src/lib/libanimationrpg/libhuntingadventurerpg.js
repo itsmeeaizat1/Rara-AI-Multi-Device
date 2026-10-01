@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libhuntingadventurerpg.js — LIB ANIMASI EMOJI-GRID khusus Hunting Adventure / berburu
 // (upgrade owner 28 Sep 2026 #2: cutscene 2 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
 // Grid per frame: HUD (BURU <sasaran> · terkunci di frame akhir) · baris crosshair (🎯 merayap ke jejak 🐾,
@@ -9,7 +9,7 @@
 // KHUSUS berburu (aturan "beda game beda animasi"). Isi MURNI KODE ANIMASI (pure dari ctx, gak import plugin).
 // Dipanggil plugin saat user main game — animasi dimuat dari lib ini. Fallback channel gak dukung edit → senyap.
 
-import { editFramesAnim } from "../nova-anim-runner.js";
+import { editFramesAnim } from "../rara-anim-runner.js";
 
 // tempo rayap per situasi (ms per frame) — rare = pelan & hati-hati
 export const scopeTempoMs = (rare) => rare ? 840 : 630;

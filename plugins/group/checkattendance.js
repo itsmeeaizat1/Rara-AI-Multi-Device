@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import moment from "moment-timezone";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
-import { buildAbsenMeter, countGroupMembers } from "../../src/lib/nova-absen-meter.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { persistLoad, persistSave } from "../../src/lib/rara-ram-persist.js";
+import { buildAbsenMeter, countGroupMembers } from "../../src/lib/rara-absen-meter.js";
 const pluginConfig = {
   name: "cekabsen",
   alias: ["cekabsen"],
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   persistLoad("absensi"); // restore sesi absen dari db (anti hilang pas restart)
   const chatId = m.chat;
   if (!global.absensi[chatId]) {
-    return m.reply(novaWrap("Tidak Ada Absen", ["Belum ada sesi absen di grup ini!",
+    return m.reply(raraWrap("Tidak Ada Absen", ["Belum ada sesi absen di grup ini!",
         "",
         "Admin dapat memulai dengan",
         "*.mulaiabsen [keterangan]*",].join("\n")));
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   // 📊 METER KEHADIRAN (13 Sep 2026): progress bar peserta/anggota grup
   const totalMembers = await countGroupMembers(sock, chatId);
   const meter = totalMembers ? buildAbsenMeter(absen.peserta.length, totalMembers) : null;
-  await m.reply(novaWrap("DAFTAR YANG UDAH ABSEN", `` +
+  await m.reply(raraWrap("DAFTAR YANG UDAH ABSEN", `` +
       "" +
       `📝 ${absen.keterangan}\n` +
       `📅 ${dateStr}\n` +

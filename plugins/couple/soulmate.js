@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 
 /**
  * Soul Match / Belahan Jiwa - Fun compatibility checker
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     
     if (!text || !text.includes('|')) {
         return m.reply(
-            novaWrap("soulmate", [
+            raraWrap("soulmate", [
               `Cek kecocokan jiwa 2 orang.`,
               ``,
               `📌 Format: ${m.prefix}soulmatch <nama1>|<nama2>`,
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     const [nama1, nama2] = text.split('|').map(n => n.trim())
     
     if (!nama1 || !nama2) {
-        return m.reply(novaWrap("soulmate", [
+        return m.reply(raraWrap("soulmate", [
             `Masukkan 2 nama dengan format yang benar.`,
             ``,
             `💡 Contoh: ${m.prefix}soulmatch Raiden|Mei`,
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
         `│ • 🎭 Status : ${getMatchDescription(compatibility)}`,
         `│ • 🔮 Reading : ${getReading(compatibility)}`,
     ]
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
         title: "soulmate", icon: "💞",
         flavor: `💞 *KECOCOKAN JIWA ${nama1} & ${nama2}!*`,
         body: rows.join("\n"),

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "angkanaas",
@@ -91,7 +91,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = (args[0] || "").toLowerCase().trim()
 
     if (!input) {
-      return m.reply(novaWrap("Angka Naas & Hoki", [
+      return m.reply(raraWrap("Angka Naas & Hoki", [
         "Pilih jenis untuk cek angka:",
         "",
         "1. kedutan - Angka berdasarkan kedutan",
@@ -112,7 +112,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("   Arti: " + k.arti)
         lines.push("   Angka: " + k.angka)
       })
-      return m.reply(novaWrap("Angka Kedutan", lines.join("\n")))
+      return m.reply(raraWrap("Angka Kedutan", lines.join("\n")))
     }
 
     if (input === "mimpi") {
@@ -124,7 +124,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("   Arti: " + mm.arti)
         lines.push("   Angka: " + mm.angka)
       })
-      return m.reply(novaWrap("Angka Mimpi", lines.join("\n")))
+      return m.reply(raraWrap("Angka Mimpi", lines.join("\n")))
     }
 
     if (input === "weton") {
@@ -137,12 +137,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       })
       lines.push("")
       lines.push("Cari wetonmu: " + usedPrefix + "weton <hari> <pasaran>")
-      return m.reply(novaWrap("Angka Weton", lines.join("\n")))
+      return m.reply(raraWrap("Angka Weton", lines.join("\n")))
     }
 
-    return m.reply(novaError("AngkaNaas", "Jenis gak valid nih! Gunakan: kedutan, mimpi, atau weton"))
+    return m.reply(raraError("AngkaNaas", "Jenis gak valid nih! Gunakan: kedutan, mimpi, atau weton"))
   } catch (e) {
-    return m.reply(novaWrap("Angka Naas", "Error: " + e.message))
+    return m.reply(raraWrap("Angka Naas", "Error: " + e.message))
   }
 }
 

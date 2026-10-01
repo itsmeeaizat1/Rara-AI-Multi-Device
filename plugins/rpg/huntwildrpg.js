@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Huntwild — Berburu hewan liar
 // Rombak khas (batch #12): animasi Hewan dalam Semak +
 // item khas Taring Liar + tool Anjing Pemburu.
 
-import { ensureRpg, addItem, useEnergy, addExp, getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { shapeHuntwild } from "../../src/lib/nova-rpg-shapes.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import te from "../../src/lib/nova-error.js";
+import { ensureRpg, addItem, useEnergy, addExp, getCash, spendCash, formatRp } from "../../src/lib/rara-rpg-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { shapeHuntwild } from "../../src/lib/rara-rpg-shapes.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "huntwild", alias: ["huntwild", "huntwildrpg"],
@@ -39,7 +39,7 @@ const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { leve
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("huntwild", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("huntwild", "RPG belum siap.", "error"));
     const prefix = m.prefix || ".";
     const sub = (m.args?.[0] || "").toLowerCase();
 
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     if (sub === "anjing" || sub === "status") {
       const tool = getTool(m.sender);
       const lv = tool.level || 0;
-      return m.reply(novaRpgBox("huntwild",
+      return m.reply(raraRpgBox("huntwild",
         `🐕 ANJING PEMBURU KAMU\n\n` +
         `Level : *Lv.${lv}*\n⭐ Bonus EXP : +${10 * lv}%\n🦴 Taring Liar : ${tool.fangs || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
         `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.fangCost(lv)}x Taring + ${formatRp(TOOL.rpCost(lv))}\nKetik: ${prefix}huntwild upgrade`));
@@ -61,12 +61,12 @@ async function handler(m, { sock }) {
       const needRp = TOOL.rpCost(lv);
       if ((tool.fangs || 0) < needFang) {
         await m.react("❌");
-        return m.reply(novaRpgBox("huntwild",
+        return m.reply(raraRpgBox("huntwild",
           `🦴 Upgrade Anjing ke Lv.${lv + 1} butuh:\n\n• Taring Liar : ${needFang}x (punya ${tool.fangs || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Taring didapat dari berburu sendiri — 30% per buru, nemu beruang dijamin +2!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
         await m.react("❌");
-        return m.reply(novaRpgBox("huntwild", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("huntwild", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = getTool(m.sender);
       fresh.fangs = (fresh.fangs || 0) - needFang;
@@ -74,12 +74,12 @@ async function handler(m, { sock }) {
       fresh.spent = (fresh.spent || 0) + needRp;
       await getDatabase().setPlayerData?.(m.sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("huntwild",
+      return m.reply(raraRpgBox("huntwild",
         `🐕 ANJING UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n⭐ Bonus EXP : +${10 * (lv + 1)}%\n\n🦴 Material : −${needFang} Taring Liar\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
     // ── main buru ──
-    if (rpg.energy < 10) return m.reply(novaRpgBox("huntwild", "Energy tidak cukup.", "error"));
+    if (rpg.energy < 10) return m.reply(raraRpgBox("huntwild", "Energy tidak cukup.", "error"));
     await m.react("🕒");
     const tool = getTool(m.sender);
     const lv = tool.level || 0;
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
     // lagi di sini (stale-ref: rpg lama gak bawa mutasi service → overwrite hilang)
     const fresh = ensureRpg(m, m.pushName);
     await m.react("🐣");
-    return m.reply(novaRpgBox("huntwild",
+    return m.reply(raraRpgBox("huntwild",
       `🏹 BURUAN DIDAPAT!\n\n` +
       `🎯 Tangkapan : *${animal.name}* ${animal.emoji}\n` +
       `📦 Drop : Daging Mentah x1${bonusDrops.length ? ` + ${bonusDrops.map((b) => b === "bearClaw" ? "Cakar Beruang x1" : "Bulu Serigala x1").join(", ")}` : ""}\n` +
@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("huntwild error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("huntwild", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("huntwild", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

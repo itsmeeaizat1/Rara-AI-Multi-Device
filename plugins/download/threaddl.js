@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import axios from "axios";
 import he from "he";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
     const result = normalizeResult(info);
 
     if (res.status >= 300 || data.success !== true || result.length === 0) {
-      return m.reply(novaGagal("Threads"));
+      return m.reply(raraGagal("Threads"));
     }
 
     const captionText = mediaCaption({
@@ -160,10 +160,10 @@ async function handler(m, { sock }) {
       media.contextInfo = thCard;
       await sock.sendMessage(m.chat, media, { quoted: m });
     }
-    await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("Threads"));
+    await m.react("🐣"); await m.react("🐣"); m.reply(raraBerhasil("Threads"));
   } catch (err) {
     console.error("[ThreadsDL]", err.message);
-    m.reply(novaGangguan("Threads"));
+    m.reply(raraGangguan("Threads"));
   }
 }
 

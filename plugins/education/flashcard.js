@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "flashcard",
@@ -82,7 +82,7 @@ async function handler(m, { sock, args }) {
       const input = cmdArgs.join(" ");
       const parts = input.split("|").map(s => s.trim());
       if (parts.length < 3) {
-        return m.reply(novaWrap("flashcard", "Format salah!\n\n💡 *Contoh:* `.flashcard add Biologi | Apa fungsi jantung? | Memompa darah`\n\nFormat: <nama deck> | <pertanyaan> | <jawaban>"));
+        return m.reply(raraWrap("flashcard", "Format salah!\n\n💡 *Contoh:* `.flashcard add Biologi | Apa fungsi jantung? | Memompa darah`\n\nFormat: <nama deck> | <pertanyaan> | <jawaban>"));
       }
       const deckName = parts[0].toLowerCase();
       const q = parts[1];
@@ -93,14 +93,14 @@ async function handler(m, { sock, args }) {
       user.activeDeck = deckName;
       saveStore(db);
 
-      await m.reply(novaWrap("Flashcard", `Kartu ditambahkan ke deck "${deckName}"!\n\nQ: ${q}\nA: ${a}\n\nTotal kartu: ${user.decks[deckName].length}`));
+      await m.reply(raraWrap("Flashcard", `Kartu ditambahkan ke deck "${deckName}"!\n\nQ: ${q}\nA: ${a}\n\nTotal kartu: ${user.decks[deckName].length}`));
     }
 
     // === LIST DECKS ===
     else if (cmd === "list" || cmd === "decks" || cmd === "daftar") {
       const deckNames = Object.keys(user.decks);
       if (deckNames.length === 0) {
-        return m.reply(novaWrap("flashcard", "Belum ada deck. Ketik `.flashcard create <nama>` untuk buat."));
+        return m.reply(raraWrap("flashcard", "Belum ada deck. Ketik `.flashcard create <nama>` untuk buat."));
       }
       let txt = `Daftar Deck Flashcard\n\n`;
       for (let i = 0; i < deckNames.length; i++) {
@@ -152,7 +152,7 @@ async function handler(m, { sock, args }) {
       const deckName = cmdArgs.join(" ").trim().toLowerCase();
       delete user.decks[deckName];
       saveStore(db);
-      await m.reply(novaWrap("Flashcard", `Deck "${deckName}" dihapus!`));
+      await m.reply(raraWrap("Flashcard", `Deck "${deckName}" dihapus!`));
     }
 
     // === DELETE CARD ===
@@ -162,7 +162,7 @@ async function handler(m, { sock, args }) {
       const deck = user.decks[deckName];
       const removed = deck.splice(cardNum - 1, 1)[0];
       saveStore(db);
-      await m.reply(novaWrap("Flashcard", `Kartu dihapus!\n\nQ: ${removed.q}`));
+      await m.reply(raraWrap("Flashcard", `Kartu dihapus!\n\nQ: ${removed.q}`));
     }
 
     // === CLEAR ALL ===
@@ -170,7 +170,7 @@ async function handler(m, { sock, args }) {
       const store = getStore(db);
       store[sender] = { decks: {}, activeDeck: null, quiz: null, createSession: null };
       saveStore(db);
-      await m.reply(novaWrap("Flashcard", "Semua deck flashcard dihapus!"));
+      await m.reply(raraWrap("Flashcard", "Semua deck flashcard dihapus!"));
     }
 
     else {
@@ -178,7 +178,7 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[FLASHCARD] Error:", e.message);
-    await m.reply(novaWrap("flashcard", `Error: ${e.message}`));
+    await m.reply(raraWrap("flashcard", `Error: ${e.message}`));
   }
 }
 

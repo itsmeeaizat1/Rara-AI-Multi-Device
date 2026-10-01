@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .swsave — AUTO DOWNLOAD STATUS: status/story kontak otomatis
 // diteruskan ke DM owner seketika (fitur langka bot MD luar sana).
 //   .swsave on/off/status — toggle + status
 // Dilengkapi dedupe: satu status cuma diteruskan sekali.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "statussave",
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   if (action === "on" || action === "aktif" || action === "aktifkan") {
     db.setting("autoStatusDownload", { ...cur, enabled: true });
     return m.reply(
-      novaWrap("Auto Download Status", [
+      raraWrap("Auto Download Status", [
         "AKTIF — semua status kontak otomatis diteruskan ke DM kamu.",
         "Status media (gambar/video/audio) dan teks dua-duanya.",
         "Satu status cuma sekali (dedupe), jadi gak nge-spam.",
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   if (action === "off" || action === "mati" || action === "matikan") {
     db.setting("autoStatusDownload", { ...cur, enabled: false });
     return m.reply(
-      novaWrap("Auto Download Status", [
+      raraWrap("Auto Download Status", [
         "MATI — status kontak gak diteruskan lagi.",
         "Aktifin lagi kapan aja: .swsave on",
       ])
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   if (action === "clear" || action === "reset") {
     db.setting("statusDownloadSeen", []);
     return m.reply(
-      novaWrap("Auto Download Status", [
+      raraWrap("Auto Download Status", [
         "Riwayat dedupe dibersihin — semua status berikutnya diteruskan lagi walau pernah muncul.",
       ])
     );
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
 
   const total = (db.setting("statusDownloadSeen") || []).length;
   return m.reply(
-    novaWrap("Auto Download Status", [
+    raraWrap("Auto Download Status", [
       `Mode: ${cur.enabled ? "AKTIF" : "MATI"}`,
       `Riwayat dedupe tersimpan: ${total} status`,
       "",

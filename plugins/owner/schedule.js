@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 /**
  * @file plugins/owner/schedule.js
  * @description Command untuk mengelola scheduled messages
@@ -15,8 +15,8 @@ import {
   getSchedulerStatus,
   formatTimeRemaining,
   getMsUntilTime,
-} from "../../src/lib/nova-scheduler.js";
-import { runLiveTicker } from "../../src/lib/nova-countdown.js";
+} from "../../src/lib/rara-scheduler.js";
+import { runLiveTicker } from "../../src/lib/rara-countdown.js";
 /**
  * Konfigurasi plugin
  */
@@ -797,7 +797,7 @@ ${truncateText(parsed.customText, 180)}`);
       const taskId = args[1];
 
       if (!taskId) {
-        await m.reply(novaWrap("Schedule", "❌ Format: `.schedule edit <id> ...`"));
+        await m.reply(raraWrap("Schedule", "❌ Format: `.schedule edit <id> ...`"));
         return;
       }
 
@@ -902,7 +902,7 @@ ${truncateText(parsed.customText, 180)}`);
       const taskId = args[1];
 
       if (!taskId) {
-        await m.reply(novaWrap("Schedule", "❌ Format: `.schedule detail <id>`"));
+        await m.reply(raraWrap("Schedule", "❌ Format: `.schedule detail <id>`"));
         return;
       }
 
@@ -924,7 +924,7 @@ ${truncateText(parsed.customText, 180)}`);
       const taskId = args[1];
 
       if (!taskId) {
-        await m.reply(novaWrap("Schedule", "❌ Format: `.schedule del <id>`"));
+        await m.reply(raraWrap("Schedule", "❌ Format: `.schedule del <id>`"));
         return;
       }
 
@@ -958,7 +958,7 @@ ${truncateText(parsed.customText, 180)}`);
 
 Gunakan \`.schedule list\` untuk lihat semua jadwal aktif.`;
 
-      await m.reply(novaWrap("schedule", text));
+      await m.reply(raraWrap("schedule", text));
       break;
     }
 

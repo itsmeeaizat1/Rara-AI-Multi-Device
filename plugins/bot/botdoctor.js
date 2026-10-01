@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .botdoctor — DOKTER BOT PRIBADI (26 Sep 2026)
 // Diagnosa kesehatan bot dari sampel denyut 24 jam (RAM/ping/CPU/error/
 // restart) dengan format dokter: gejala → dugaan akar → saran tindakan.
 // Bisa otomatis ke DM owner tiap malam.
-// Engine: src/lib/nova-botdoctor.js (jangan duplikasi logika di sini).
+// Engine: src/lib/rara-botdoctor.js (jangan duplikasi logika di sini).
 //
 // Commands:
 //   .botdoctor                 — Diagnosa sekarang (kartu langsung)
@@ -12,9 +12,9 @@
 //   .botdoctor jam/status      — Lihat jadwal sekarang
 //   .botdoctor riwayat         — Ringkasan diagnosa terakhir (maks 14)
 
-import { novaGuide } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { runBotDoctorNow, ensureBotDoctorState } from "../../src/lib/nova-botdoctor.js";
+import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { runBotDoctorNow, ensureBotDoctorState } from "../../src/lib/rara-botdoctor.js";
 
 const pluginConfig = {
   name: "botdoctor",
@@ -54,7 +54,7 @@ async function handler(m, { config: botConfig }) {
       const { card } = await runBotDoctorNow({ save: true });
       await m.reply(card);
       if (!sub) {
-        await m.reply(novaGuide(
+        await m.reply(raraGuide(
           "botdoctor",
           "Kartu di atas hasil analisis sampel 24 jam terakhir (denyut tiap 20 detik).\nMau laporannya otomatis ke DM tiap malam?\n.botdoctor on [HH:mm] — nyalakan (default jam 23:00)\n.botdoctor riwayat — lihat diagnosa sebelumnya\n.botdoctor off — matikan kapan saja",
           ".botdoctor on 23:00\n.botdoctor riwayat",

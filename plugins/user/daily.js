@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
-import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getTimeGreeting } from "../../src/lib/rara-formatter.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/rara-countdown.js";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

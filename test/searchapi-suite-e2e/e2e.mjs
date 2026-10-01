@@ -14,12 +14,12 @@ const TMP = "/tmp/sapi-suite-e2e";
 fs.rmSync(TMP, { recursive: true, force: true });
 fs.mkdirSync(TMP, { recursive: true });
 process.env.NOVA_DB_DIR = TMP;
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(TMP + "/db.json");
 
 const { fromSC } = await import("../../src/lib/styler.js");
 const scr = await import("../../src/scraper/searchapi.js");
-const lib = await import("../../src/lib/nova-sapi-render.js");
+const lib = await import("../../src/lib/rara-sapi-render.js");
 const norm = (s) => fromSC(String(s)).toLowerCase();
 
 const plugins = {

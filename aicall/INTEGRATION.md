@@ -1,4 +1,4 @@
-# INTEGRATION — AI Call Service + NOVA Bot
+# INTEGRATION — AI Call Service + RARA Bot
 
 Service Go ini (fork krsna081/assisten-ai-call, MIT) menangani **panggilan suara
 WhatsApp AI** — sesuatu yang TIDAK BISA dilakukan bot utama (Baileys/Node.js gak
@@ -36,7 +36,7 @@ Panggilan MASUK ke nomor bot juga dijawab AI otomatis (hanya nomor di OWNER).
 ### Voice Command Bridge (26 Sep 2026 — owner: "lg telepon ai call 'halo
 tolong matikan bot' otomatis respon ke cmd bot off atau fitur lain")
 Transkrip STT tiap giliran bicara dikirim dulu ke bot utama
-(nova-aicall-bridge.js, POST /voice di 127.0.0.1:8790, key AICALL_HTTP_KEY):
+(rara-aicall-bridge.js, POST /voice di 127.0.0.1:8790, key AICALL_HTTP_KEY):
 - "matikan bot" → .bot off · "nyalakan bot" → .bot on · "bisukan bot" →
   .bot mute · "restart bot" → .index restart · "sambungkan ulang koneksi"
   → .index reconnect · "simpan database" → .index db save
@@ -85,7 +85,7 @@ pm2 restart <nama bot>
 
 ## Auto-run (18 Sep 2026)
 
-Bot utama sekarang **otomatis menyalakan service ini saat boot** (src/lib/nova-aicall-autostart.js):
+Bot utama sekarang **otomatis menyalakan service ini saat boot** (src/lib/rara-aicall-autostart.js):
 kalau `127.0.0.1:8788/health` tidak merespons dan binary `aicall/ai-call` + `aicall/.env` ada:
 - proses pm2 lama ada → `pm2 restart nova-aicall`
 - belum teregistrasi → `pm2 start <aicall>/ai-call --name nova-aicall --cwd <aicall>` + `pm2 save`

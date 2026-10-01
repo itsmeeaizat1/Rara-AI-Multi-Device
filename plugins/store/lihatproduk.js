@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .lihatproduk — Lihat gambar produk toko biasa
  * User: .lihatproduk <nomor> — tampilkan gambar produk
  */
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, toSC, raraBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "lihatproduk",
@@ -34,12 +34,12 @@ async function handler(m, { sock }) {
   const idx = parseInt(input) - 1;
 
   if (isNaN(idx) || idx < 0 || idx >= products.length) {
-    return m.reply(novaWrap("lihatproduk", "Format: .lihatproduk <nomor>"));
+    return m.reply(raraWrap("lihatproduk", "Format: .lihatproduk <nomor>"));
   }
 
   const product = products[idx];
   if (!product.image) {
-    return m.reply(novaWrap("lihatproduk", "Produk ini tidak punya gambar."));
+    return m.reply(raraWrap("lihatproduk", "Produk ini tidak punya gambar."));
   }
 
   const lines = [""];
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   lines.push("");
   lines.push(toSC("Beli: .beli " + (idx + 1)));
 
-  const caption = novaBox("GAMBAR PRODUK", lines);
+  const caption = raraBox("GAMBAR PRODUK", lines);
 
   try {
     await sock.sendMessage(m.chat, {
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       caption: caption,
     }, { quoted: m });
   } catch (e) {
-    return m.reply(novaWrap("lihatproduk", "Gagal load gambar. URL: " + product.image));
+    return m.reply(raraWrap("lihatproduk", "Gagal load gambar. URL: " + product.image));
   }
 }
 

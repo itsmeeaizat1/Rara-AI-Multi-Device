@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // salatreading.js — Bacaan sholat
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const BACAAN = [
   { id: 1, name: "Bacaan Iftitah", arabic: "اللَّهُ أَكْبَرُ كَبِيرًا وَالْحَمْدُ لِلَّهِ كَثِيرًا", latin: "Alloohu akbar kabiirow wal hamdu lillaahi katsiiroo", terjemahan: "Allah Maha Besar dengan sebesar-besarnya, segala puji bagi Allah dengan pujian yang banyak" },
@@ -35,13 +35,13 @@ async function handler(m, { sock }) {
       _lines.push(`Arti: ${b.terjemahan}`);
       _lines.push(``);
     });
-    let msg = novaBox("BACAAN SHOLAT", _lines);
+    let msg = raraBox("BACAAN SHOLAT", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
     console.error("bacaansholat error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("bacaansholat", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("bacaansholat", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

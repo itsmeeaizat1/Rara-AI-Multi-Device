@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // mediafiredl — Download file dari MediaFire
 // Primary: IkyyXD /download/mediafire | Fallback: builtin mediafire.js
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { novaGuideV2, novaWrap, novaLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -52,7 +52,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuideV2("mediafire", {
+    return m.reply(raraGuideV2("mediafire", {
  kaomoji: "(¬‿¬)✧",
  sapaan: "file di mediafire pengen diunduh? tempel linknya! (๑˃̵ᴗ˂̵)و",
       cara: "tempel link file mediafirenya sesudah command",
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     }));
   }
   if (!url.match(/mediafire\.com/i)) {
-    return m.reply(novaGuide("MediaFire DL", "URL-nya gak valid nih! Pakai link MediaFire ya.", `${m.prefix}mfdl https://www.mediafire.com/file/xxx`));
+    return m.reply(raraGuide("MediaFire DL", "URL-nya gak valid nih! Pakai link MediaFire ya.", `${m.prefix}mfdl https://www.mediafire.com/file/xxx`));
   }
 
   try {
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
           document: { url: data.download_url || data.link }, caption: _cap2,
           contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m });
-        await m.reply(novaBerhasil("mediafiredl"));
+        await m.reply(raraBerhasil("mediafiredl"));
         return;
       }
     } catch (e) {
@@ -100,11 +100,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("❌");
-    return m.reply(novaGagal("MediaFire DL"));
+    return m.reply(raraGagal("MediaFire DL"));
   } catch (error) {
     console.error("[mediafiredl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaError("MediaFire DL", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraError("MediaFire DL", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

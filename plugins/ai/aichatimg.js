@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aichatimg — Chat AI yang bisa terima gambar + kirim gambar balik
 // Gabungan Gemini Vision (baca gambar) + UnlimitedAI (jawab) + Image gen (kirim gambar)
-import { visionScan } from "../../src/lib/nova-vision-chain.js";
+import { visionScan } from "../../src/lib/rara-vision-chain.js";
 // UnlimitedAI replaced with callIkyy (ikyyxd API)
-import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
-import { startAiStatus } from "../../src/lib/nova-ai-status.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
+import { startAiStatus } from "../../src/lib/rara-ai-status.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "aichatimg",
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
       const prompt = text.replace(/^(gambar|generate|buat gambar)\s+/i, "").trim();
       if (!prompt) {
         await m.react("❌");
-        return m.reply(novaWrap("aichatimg", `Mau gambar apa?\nContoh: ${prefix}aichatimg gambar kucing lucu warna pink`, "guide"));
+        return m.reply(raraWrap("aichatimg", `Mau gambar apa?\nContoh: ${prefix}aichatimg gambar kucing lucu warna pink`, "guide"));
       }
 
       // 🔹 status ala agent (owner 29 Sep) — media gak bisa di-edit, tapi pesan
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     if (isImage) {
       if (!text) {
         await m.react("❌");
-        return m.reply(novaWrap("aichatimg", `Kasih pertanyaan tentang gambarnya!\n\nContoh: ${prefix}aichatimg apa di foto ini? (reply foto)\n${prefix}aichatimg jelaskan isi diagram (reply foto)`, "guide"));
+        return m.reply(raraWrap("aichatimg", `Kasih pertanyaan tentang gambarnya!\n\nContoh: ${prefix}aichatimg apa di foto ini? (reply foto)\n${prefix}aichatimg jelaskan isi diagram (reply foto)`, "guide"));
       }
 
       // 🔹 status ala agent: 👀 scanning → jawaban final di-edit ke pesan status
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     // Mode: chat teks biasa
     if (!text) {
       return m.reply(
-        novaGuide(
+        raraGuide(
           "aichatimg",
           "Chat AI yang bisa lihat gambar & bikin gambar\n" +
           "Kirim foto + caption pertanyaan → AI analisis\n" +
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("aichatimg error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("aichatimg", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("aichatimg", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

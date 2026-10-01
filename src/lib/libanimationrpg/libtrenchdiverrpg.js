@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libtrenchdiverrpg.js — LIB ANIMASI EMOJI-GRID khusus Trenchdiver / palung
 // (upgrade owner 28 Sep 2026: cutscene teks → GRID EMOJI FRAME-BY-FRAME ala "scene situasional")
 // Tiap frame = grid 4 baris: HUD (sonar · zona · kedalaman) · kolom selam vertikal (gelembung 🫧 di atas
@@ -10,7 +10,7 @@
 // palung = SELAM VERTIKAL (kolom kedalaman, jejak gelembung 🫧, sonar ◎◉○), gunung = side-scrolling daki.
 // Fallback gak dukung edit → editSceneAnim return false → pemanggil senyap lanjut.
 
-import { editSceneAnim } from "../nova-anim-runner.js";
+import { editSceneAnim } from "../rara-anim-runner.js";
 
 const ANIM_BASE = process.env.PALUNG_CINEMATIC_MS !== undefined ? Number(process.env.PALUNG_CINEMATIC_MS) : 700;
 let _animBaseMs = ANIM_BASE;

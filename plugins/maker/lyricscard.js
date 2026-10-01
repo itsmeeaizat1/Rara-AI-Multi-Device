@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraBerhasil } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -34,7 +34,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
   try {
     const input = text.trim();
     if (!input || !input.includes("|")) {
-      return m.reply(novaWrap("lyricscard", [
+      return m.reply(raraWrap("lyricscard", [
         "Buat card lirik lagu estetik.",
         "",
         "📌 Format: " + usedPrefix + "lyricscard <lirik>|<judul>|<artis>",
@@ -54,7 +54,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     const themeName = (parts[3] || "dark").toLowerCase();
     const theme = THEMES[themeName] || THEMES.dark;
 
-    if (lyrics.length > 300) return m.reply(novaWrap("lyricscard", "Lirik maksimal 300 karakter."));
+    if (lyrics.length > 300) return m.reply(raraWrap("lyricscard", "Lirik maksimal 300 karakter."));
 
     const canvas = await getCanvas();
     const W = 800, H = 600;
@@ -128,17 +128,17 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     ctx.font = '12px sans-serif';
     ctx.fillStyle = theme.sub + '80';
     ctx.textAlign = 'right';
-    ctx.fillText('Nova AI', W - 30, H - 25);
+    ctx.fillText('Rara AI', W - 30, H - 25);
 
     const outBuf = cv.toBuffer('image/png');
     await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: outBuf,
-      caption: novaBerhasil(),
+      caption: raraBerhasil(),
     });
   } catch (e) {
     console.error("lyricscard error:", e);
-    return m.reply(novaWrap("lyricscard", "Gagal buat lyrics card. Coba lagi.", "error"));
+    return m.reply(raraWrap("lyricscard", "Gagal buat lyrics card. Coba lagi.", "error"));
   }
 }
 

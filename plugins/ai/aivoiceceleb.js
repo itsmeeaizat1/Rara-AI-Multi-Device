@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aivoiceceleb — TTS suara SELEBRITAS & KARAKTER (KuroNeko)
 // 12 voice: nahida, nami, ana, taylor_swift, elon_musk, angela_adkinsh,
 // eminem, miku, optimus_prime, goku, mickey_mouse, kendrick_lamar
 // Key: apikeys.json kuroneko.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 import { celebTTS, celebVoiceList } from "../../src/scraper/kuroneko.js";
 
 const pluginConfig = {
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
       } catch {
         voices = ["• gagal ambil daftar — coba lagi nanti"];
       }
-      return m.reply(novaWrap("aivoiceceleb",
+      return m.reply(raraWrap("aivoiceceleb",
         `Suara AI selebritas & karakter!\n\nCARA PAKAI:\n${m.prefix}aivoiceceleb <voice> <teks>\n\nDAFTAR VOICE (${voices.length}):\n${voices.join("\n")}\n\nContoh: ${m.prefix}aivoiceceleb taylor_swift halo apa kabar semua?`, "guide"));
     }
 
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     const text = args.slice(1).join(" ").trim();
     if (!text) {
       await m.react("❌");
-      return m.reply(novaWrap("aivoiceceleb", `Kasih teksnya!\n\nContoh: ${m.prefix}aivoiceceleb ${voice} halo semuanya apa kabar\n\nKetik ${m.prefix}aivoiceceleb list buat daftar voice`, "guide"));
+      return m.reply(raraWrap("aivoiceceleb", `Kasih teksnya!\n\nContoh: ${m.prefix}aivoiceceleb ${voice} halo semuanya apa kabar\n\nKetik ${m.prefix}aivoiceceleb list buat daftar voice`, "guide"));
     }
 
     const audioUrl = await celebTTS(text, voice);
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("aivoiceceleb error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("aivoiceceleb", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("aivoiceceleb", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

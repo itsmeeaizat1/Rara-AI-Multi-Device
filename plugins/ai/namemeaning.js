@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // artinama — AI arti nama dengan analisis kepribadian
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "artinama",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("artinama", `Mau cari tahu arti nama siapa?\n\nContoh: ${m.prefix}artinama Aizat\n${m.prefix}artinama Putri Maharani`, "guide"));
+      return m.reply(raraWrap("artinama", `Mau cari tahu arti nama siapa?\n\nContoh: ${m.prefix}artinama Aizat\n${m.prefix}artinama Putri Maharani`, "guide"));
     }
 
     await m.react("🕒");
@@ -39,11 +39,11 @@ KESAN: [kesan pertama orang melihat nama ini]
 
 Gunakan bahasa Indonesia. Jika nama tidak dikenal, buat analisis berdasarkan bunyi dan struktur nama.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("artinama", "AI-nya bingung sama nama itu 😅", "error"));
+      return m.reply(raraWrap("artinama", "AI-nya bingung sama nama itu 😅", "error"));
     }
 
     await m.react("🐣");
@@ -52,7 +52,7 @@ Gunakan bahasa Indonesia. Jika nama tidak dikenal, buat analisis berdasarkan bun
   } catch (err) {
     console.error("artinama error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("artinama", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("artinama", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

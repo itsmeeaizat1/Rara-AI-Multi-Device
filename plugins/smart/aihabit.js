@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaHeader, separator, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraHeader, separator, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "aihabit", alias: ["aihabit"], category: "smart",
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!habit) throw new Error("Nama habit kosong nih");
       db.habits[sender].push({ name: habit, streak: 0, lastCheck: 0, created: Date.now() });
       db.write();
-      await m.reply(novaWrap("AI Habit", [`Habit: *${habit}*`, `Ketik *${prefix}aihabit done* untuk check-in`].join("\n")));
+      await m.reply(raraWrap("AI Habit", [`Habit: *${habit}*`, `Ketik *${prefix}aihabit done* untuk check-in`].join("\n")));
     } else if (action === "done") {
       const idx = parseInt(args[1] || "1") - 1;
       const habit = db.habits[sender][idx];
@@ -35,13 +35,13 @@ async function handler(m, { sock, config: botConfig }) {
       const yesterday = new Date(Date.now() - 86400000).toDateString();
       habit.streak = new Date(habit.lastCheck).toDateString() === yesterday ? habit.streak + 1 : 1;
       habit.lastCheck = Date.now(); db.write();
-      await m.reply(novaWrap("AI Habit", [`Habit: *${habit.name}*`, `Streak: *${habit.streak} hari* 🔥`].join("\n")));
+      await m.reply(raraWrap("AI Habit", [`Habit: *${habit.name}*`, `Streak: *${habit.streak} hari* 🔥`].join("\n")));
     } else {
       if (!db.habits[sender].length) {
-        await m.reply(novaWrap("AI Habit", ["Belum ada habit", `Ketik: *${prefix}aihabit add <nama>*`].join("\n")));
+        await m.reply(raraWrap("AI Habit", ["Belum ada habit", `Ketik: *${prefix}aihabit add <nama>*`].join("\n")));
         return { handled: true };
       }
-      let text = novaWrap("Habit Tracker", "🎯") + "\n\n";
+      let text = raraWrap("Habit Tracker", "🎯") + "\n\n";
       db.habits[sender].forEach((h, i) => {
         text += `${i+1}. ${h.name} - 🔥 ${h.streak} hari\n`;
       });

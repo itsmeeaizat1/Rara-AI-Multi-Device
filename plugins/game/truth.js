@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Truth or Dare — Truth command
 
 import fs from "fs";
-import { novaBox, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
+import { raraBox, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -43,11 +43,11 @@ export async function handler(m, { sock }) {
   try {
     const truth = getRandomTruth();
     if (!truth) {
-      await m.reply(novaGameBox({ title: "truth", icon: "🎤", flavor: "🫠 *KOSONG!*", body: "Truth-nya lagi kosong nih, coba lagi yuk!" }));
+      await m.reply(raraGameBox({ title: "truth", icon: "🎤", flavor: "🫠 *KOSONG!*", body: "Truth-nya lagi kosong nih, coba lagi yuk!" }));
       return;
     }
 
-    const text = novaBox("Truth", [
+    const text = raraBox("Truth", [
       truth,
       "",
       "💡 Jawab jujur ya!",
@@ -59,7 +59,7 @@ export async function handler(m, { sock }) {
   } catch (e) {
     console.error("[truth] Error:", e.message);
     try {
-      await m.reply(novaGameBox({ title: "truth", icon: "🎤", flavor: "😵 *ERROR!*", body: "Yah ada error nih, coba lagi bentar ya!" }));
+      await m.reply(raraGameBox({ title: "truth", icon: "🎤", flavor: "😵 *ERROR!*", body: "Yah ada error nih, coba lagi bentar ya!" }));
     } catch {}
   }
 }

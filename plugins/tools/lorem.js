@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "lorem",
@@ -147,10 +147,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (parts.length >= 2) {
       const num = parseInt(parts[0]);
       if (isNaN(num) || num < 1) {
-        return m.reply(novaWrap("Lorem", "Jumlah harus angka positif!"));
+        return m.reply(raraWrap("Lorem", "Jumlah harus angka positif!"));
       }
       if (num > 100) {
-        return m.reply(novaWrap("Lorem", "Maksimal 100! Terlalu banyak akan dipotong."));
+        return m.reply(raraWrap("Lorem", "Maksimal 100! Terlalu banyak akan dipotong."));
       }
       count = num;
 
@@ -195,11 +195,11 @@ async function handler(m, { sock, config: botConfig }) {
       result = result.substring(0, 2000) + "\n... (dipotong)";
     }
     await m.react("🐣");
-    return m.reply(novaWrap("Lorem Ipsum (" + label + ")", result));
+    return m.reply(raraWrap("Lorem Ipsum (" + label + ")", result));
   } catch (e) {
     await m.react("❌");
     console.error("lorem error:", e);
-    return m.reply(novaWrap("Lorem", "Error: " + e.message));
+    return m.reply(raraWrap("Lorem", "Error: " + e.message));
   }
 }
 

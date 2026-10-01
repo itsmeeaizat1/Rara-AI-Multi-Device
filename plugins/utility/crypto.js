@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // === HELP ===
     if (!sub || sub === "help" || sub === "bantuan") {
-      return m.reply( novaWrap("Crypto Tracker", [
+      return m.reply( raraWrap("Crypto Tracker", [
         "Track harga crypto real-time dari CoinGecko",
         "",
         "Perintah:",
@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const coins = res.data || [];
       if (!coins.length) {
-        return m.reply(novaWrap("Crypto Tracker", "Gagal nih ambil data top coins", "error"));
+        return m.reply(raraWrap("Crypto Tracker", "Gagal nih ambil data top coins", "error"));
       }
 
       const lines = coins.map((c, i) => {
@@ -96,7 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       lines.push("");
       lines.push(`Market cap total: ${fmtNum(coins.reduce((s, c) => s + (c.market_cap || 0), 0))}`);
-      return m.reply(novaWrap("Top 10 Crypto", lines));
+      return m.reply(raraWrap("Top 10 Crypto", lines));
     }
 
     // === TRENDING ===
@@ -107,7 +107,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const coins = (res.data?.coins || []).slice(0, 7);
       if (!coins.length) {
-        return m.reply(novaWrap("Crypto Tracker", "Gagal nih ambil trending coins", "error"));
+        return m.reply(raraWrap("Crypto Tracker", "Gagal nih ambil trending coins", "error"));
       }
 
       const lines = coins.map((c, i) => {
@@ -117,7 +117,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       lines.push("");
       lines.push("Trending berdasarkan pencarian CoinGecko");
-      return m.reply(novaWrap("Trending Crypto", lines));
+      return m.reply(raraWrap("Trending Crypto", lines));
     }
 
     // === LIST / SEARCH ===
@@ -137,7 +137,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       if (!filtered.length) {
-        return m.reply(novaWrap("Crypto Tracker", `Coin "${query}" tidak ditemukan`, "warn"));
+        return m.reply(raraWrap("Crypto Tracker", `Coin "${query}" tidak ditemukan`, "warn"));
       }
 
       const show = filtered.slice(0, 20);
@@ -148,7 +148,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(`Total: ${filtered.length} coins (tampilkan 20)`);
         lines.push(`Cari lebih spesifik: .crypto list ${query} btc`);
       }
-      return m.reply(novaWrap("Crypto List", lines));
+      return m.reply(raraWrap("Crypto List", lines));
     }
 
     // === PRICE / DETAIL ===
@@ -200,7 +200,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const coin = res.data;
     if (!coin || !coin.market_data) {
-      return m.reply(novaWrap("Crypto Tracker", `Coin "${coinId}" tidak ditemukan. Coba .crypto list ${coinId}`, "warn"));
+      return m.reply(raraWrap("Crypto Tracker", `Coin "${coinId}" tidak ditemukan. Coba .crypto list ${coinId}`, "warn"));
     }
 
     const md = coin.market_data;
@@ -243,7 +243,7 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         `Diputar: ${coin.description?.en ? coin.description.en.replace(/<[^>]+>/g, "").substring(0, 200) + "..." : "Tidak ada"}`,
       ];
-      return m.reply(novaWrap(`Crypto Detail - ${symbol}`, lines));
+      return m.reply(raraWrap(`Crypto Detail - ${symbol}`, lines));
     }
 
     // Simple price view
@@ -259,12 +259,12 @@ async function handler(m, { sock, config: botConfig }) {
       `High 24h: ${fmtPrice(high24h)}`,
       `Low 24h: ${fmtPrice(low24h)}`,
     ];
-    return m.reply(novaWrap(`Crypto - ${symbol}`, lines));
+    return m.reply(raraWrap(`Crypto - ${symbol}`, lines));
   } catch (error) {
     if (error.response?.status === 404) {
-      return m.reply(novaWrap("Crypto Tracker", "Coin tidak ditemukan. Coba .crypto list untuk cari nama yang benar.", "warn"));
+      return m.reply(raraWrap("Crypto Tracker", "Coin tidak ditemukan. Coba .crypto list untuk cari nama yang benar.", "warn"));
     }
-    return m.reply(novaWrap("Crypto Tracker", `Gagal: ${error.message}`, "error"));
+    return m.reply(raraWrap("Crypto Tracker", `Gagal: ${error.message}`, "error"));
   }
 }
 

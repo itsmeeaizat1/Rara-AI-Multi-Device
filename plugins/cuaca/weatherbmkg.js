@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 /**
  * .cuacav2 — cek cuaca rinci BMKG-style untuk kota apapun.
@@ -12,7 +12,7 @@ import {
   fetchDetailedWeather,
   formatDetailedWeather,
   DEFAULT_LOCATIONS,
-} from "../../src/lib/nova-bmkg-cuaca-scheduler.js";
+} from "../../src/lib/rara-bmkg-cuaca-scheduler.js";
 
 const pluginConfig = {
   name: "cuacav2",
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
 
     const data = await fetchDetailedWeather(location);
     const txt = formatDetailedWeather(data, location, "Sekarang");
-    return await m.reply(novaWrap("cuacav2", txt));
+    return await m.reply(raraWrap("cuacav2", txt));
   } catch (error) {
     return m.reply(
       "Gagal ambil data cuaca nih\n" + error.message + "\n\n" +

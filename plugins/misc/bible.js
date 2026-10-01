@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // bible.js — Ayat Alkitab
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "alkitab",
@@ -26,13 +26,13 @@ async function handler(m, { sock }) {
     let _lines = [];
       _lines.push(`📖 ${d.book || "Unknown"} ${d.chapter || ""}:${d.verse || ""}`);
       _lines.push(`"${d.text || d.content || "Tidak ditemukan"}"`);
-    let msg = novaBox("ALKITAB", _lines);
+    let msg = raraBox("ALKITAB", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
     console.error("alkitab error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("alkitab", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("alkitab", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

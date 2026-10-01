@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .crm — message recipe inspector (port engine lama crm.js): reply pesan apapun →
 // keluar kode JS buat re-create pesan itu via relayMessage. Engine toCode verbatim engine asal.
-import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "crm",
@@ -151,7 +151,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🧠");
     if (!m.quoted) {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "crm",
         "Reply pesan yang mau diambil kodenya — keluar kode JS buat re-create pesan itu (port engine lama).",
         prefix + "crm (reply pesan button/kartu/sticker)",
@@ -172,7 +172,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (!message) {
       await m.react("❌");
-      await m.reply(novaError("CRM", "Isi pesan gak ketemu — pesan ini dikirim sebelum crm aktif, kirim ulang pesannya lalu coba lagi"));
+      await m.reply(raraError("CRM", "Isi pesan gak ketemu — pesan ini dikirim sebelum crm aktif, kirim ulang pesannya lalu coba lagi"));
       return { handled: true };
     }
     const bigBuffers = new Map();
@@ -200,7 +200,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[crm]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("CRM", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("CRM", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }

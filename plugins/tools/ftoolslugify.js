@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolslugify — teks jadi URL slug (port altftool.com/tools/all/slug-generator)
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolslugify", alias: ["slugify", "slug", "slugteks"], category: "tools",
@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(novaGuideV2("ftoolslugify", {
+      return m.reply(raraGuideV2("ftoolslugify", {
         kaomoji: "(◕‿◕)",
         sapaan: "teks mau dijadiin slug URL? ketik aja teksnya~",
         cara: "ketik teks apa pun, nanti otomatis jadi slug kecil terpisah tanda minus",
@@ -35,20 +35,20 @@ async function handler(m, { sock, config: botConfig }) {
     const slug = slugify(text);
     if (!slug) {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftoolslugify", {
+      return m.reply(raraSalahV2("ftoolslugify", {
         kaomoji: "(・_・;)",
         pesan: "teksnya gak ada huruf/angka yang bisa dipakai buat slug",
         contoh: `${prefix}ftoolslugify Halo Dunia`,
       }), "ftoolslugify");
     }
     await m.react("🐣");
-    await m.reply(novaWrap("Slugify", ["SLUGIFY BERHASIL",
+    await m.reply(raraWrap("Slugify", ["SLUGIFY BERHASIL",
       "",
       `Input: ${text.substring(0, 120)}`,
       "Slug: ```" + slug + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("Slugify", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("Slugify", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .anticall — atur panggilan telepon masuk ke nomor bot (OWNER)
 // UPGRADE 18 Sep 2026 (request owner: "lbh baik klo ada org yg nlpon tnpa
 // ditolak mksdnya tkutnya keluarga saya yg nlpon jd mngkin hrs ada opsi
@@ -8,9 +8,9 @@
 //   .anticall info  → TIDAK ditolak, tapi bot kirim pesan teks ke
 //                     penelepon: "saya bot, gak bisa angkat — kirim VN!"
 //   .anticall on    → DITOLAK otomatis + pesan penjelasan
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const MODES = {
   on: { key: true, label: "TOLAK otomatis + kirim pesan penjelasan" },
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
 
   if (!option || option === "status") {
     const cur = currentMode();
-    return m.reply(novaWrap("Anti Call", [
+    return m.reply(raraWrap("Anti Call", [
       "Mode saat ini: " + (cur === "on" ? "TOLAK (panggilan ditolak otomatis)" : cur === "info" ? "INFO (gak ditolak, bot kirim pesan info)" : "OFF (panggilan dibiarkan bunyi normal)"),
       "Default bot: OFF — panggilan tidak ditolak",
       "",
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
 
   const mode = MODES[option];
   if (!mode) {
-    return m.reply(novaWrap("Anti Call", [
+    return m.reply(raraWrap("Anti Call", [
       "Mode tidak valid!",
       "Pilihan: on (tolak) / info (pesan info saja) / off (biarkan)",
       "Contoh: " + prefix + "anticall info",
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
   }
 
   db.setting("antiCall", mode.key);
-  return m.reply(novaWrap("Anti Call", [
+  return m.reply(raraWrap("Anti Call", [
     "Mode diubah: " + option.toUpperCase(),
     mode.label,
   ]));

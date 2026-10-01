@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
-import { novaError, novaEmpty, novaNoInput, novaGuide } from '../../src/lib/nova-menu-style.js'
+import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
     name: "animev2",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
         const query = m.text?.trim() || m.args?.join(" ")?.trim() || ""
 
         if (!query) {
-            return m.reply(novaGuide('Anime Search', 'Mau nyari anime apa nih? Ketik nama animenya ya!', pluginConfig.example))
+            return m.reply(raraGuide('Anime Search', 'Mau nyari anime apa nih? Ketik nama animenya ya!', pluginConfig.example))
         }
 
         const url = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=5`
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
         const animeList = response.data?.data || []
 
         if (!animeList || animeList.length === 0) {
-            return m.reply(novaEmpty('Anime Search', `Gak nemu anime "${query}" 🧐`))
+            return m.reply(raraEmpty('Anime Search', `Gak nemu anime "${query}" 🧐`))
         }
 
         const top5 = animeList.slice(0, 5)
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     } catch (error) {
         console.error("[animev2] error:", error?.message || error)
         const errorMsg = error.response?.data?.message || error.message || 'Unknown error'
-        return m.reply(novaError('Anime Search', errorMsg))
+        return m.reply(raraError('Anime Search', errorMsg))
     }
 }
 

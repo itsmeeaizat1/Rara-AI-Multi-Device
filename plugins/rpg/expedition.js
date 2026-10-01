@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // expedition.js — Expedition System (send party on timed missions)
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { shapeEkspedisi } from "../../src/lib/nova-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getCash, spendCash, formatRp } from "../../src/lib/rara-rpg-service.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { shapeEkspedisi } from "../../src/lib/rara-rpg-shapes.js";
 
 const pluginConfig = {
   name: "expedition",
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
       const tool = getTool(sender);
       const lv = tool.level || 0;
       await m.react("🐣");
-      return m.reply(novaRpgBox("expedition",
+      return m.reply(raraRpgBox("expedition",
         `🎒 RANSEL EKSPEDISI KAMU\n\n` +
         `Level : *Lv.${lv}*\n💰 Bonus reward : +${10 * lv}%\n🎁 Suvenir Langka : ${tool.souvenirs || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
         `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.souvenirCost(lv)}x Suvenir + ${formatRp(TOOL.rpCost(lv))}\nKetik: ${prefix}expedition upgrade`));
@@ -85,12 +85,12 @@ async function handler(m, { sock }) {
       const needRp = TOOL.rpCost(lv);
       if ((tool.souvenirs || 0) < needSv) {
         await m.react("❌");
-        return m.reply(novaRpgBox("expedition",
+        return m.reply(raraRpgBox("expedition",
           `🎁 Upgrade Ransel ke Lv.${lv + 1} butuh:\n\n• Suvenir Langka : ${needSv}x (punya ${tool.souvenirs || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Suvenir didapat dari klaim ekspedisi sendiri — 30% per klaim, ekspedisi jauh (Padang Pasir/Tanah Es) dijamin +1!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
         await m.react("❌");
-        return m.reply(novaRpgBox("expedition", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("expedition", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = getTool(sender);
       fresh.souvenirs = (fresh.souvenirs || 0) - needSv;
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
       fresh.spent = (fresh.spent || 0) + needRp;
       await db.setPlayerData?.(sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("expedition",
+      return m.reply(raraRpgBox("expedition",
         `🎒 RANSEL UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n💰 Bonus reward : +${10 * (lv + 1)}%\n\n🎁 Material : −${needSv} Suvenir Langka\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       if (!data.active) {
         await m.react("❌");
         return m.reply(
-          novaRpgBox("expedition", `Kamu sedang tidak menjalankan ekspedisi apapun.\n\nGunakan *${prefix}expedition* untuk memilih lokasi ekspedisi.`, "error")
+          raraRpgBox("expedition", `Kamu sedang tidak menjalankan ekspedisi apapun.\n\nGunakan *${prefix}expedition* untuk memilih lokasi ekspedisi.`, "error")
         );
       }
 
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
         const remaining = data.active.duration - elapsed;
         await m.react("❌");
         return m.reply(
-          novaRpgBox("expedition", `Ekspedisi di *${data.active.name}* belum selesai!\n\n🕒 Sisa Waktu (ETA): *${formatTime(remaining)}*`, "error")
+          raraRpgBox("expedition", `Ekspedisi di *${data.active.name}* belum selesai!\n\n🕒 Sisa Waktu (ETA): *${formatTime(remaining)}*`, "error")
         );
       }
 
@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
       await shapeEkspedisi(m, sock, "kembali");
 
       await m.react("🐣");
-      return m.reply(novaRpgBox("expedition",
+      return m.reply(raraRpgBox("expedition",
         `🎉 Party kamu telah kembali dari *${completedLoc}*!\n\n` +
         `💰 Reward Gold : +${rewardGold.toLocaleString()} Gold${lv ? ` (ransel! aslinya ${baseGold.toLocaleString()})` : ""}\n` +
         `💵 Uang : Rp ${getCash(m).toLocaleString("id-ID")}\n` +
@@ -161,12 +161,12 @@ async function handler(m, { sock }) {
     if (subCmd === "cancel" || subCmd === "batal") {
       if (!data.active) {
         await m.react("❌");
-        return m.reply(novaRpgBox("expedition", "Tidak ada ekspedisi aktif yang bisa dibatalkan.", "error"));
+        return m.reply(raraRpgBox("expedition", "Tidak ada ekspedisi aktif yang bisa dibatalkan.", "error"));
       }
       data.active = null;
       await db.setPlayerData?.(sender, "expedition", data);
       await m.react("🐣");
-      return m.reply(novaRpgBox("expedition", "Ekspedisi berhasil dibatalkan.", "guide"));
+      return m.reply(raraRpgBox("expedition", "Ekspedisi berhasil dibatalkan.", "guide"));
     }
 
     // Subcommand: START
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
         const remaining = Math.max(0, data.active.duration - elapsed);
         await m.react("❌");
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "expedition",
             `Kamu hanya bisa menjalankan 1 ekspedisi dalam satu waktu!\n\n📌 *Ekspedisi Aktif*: ${data.active.name}\n🕒 *Sisa Waktu*: ${formatTime(remaining)}\n\nKlaim hasil dengan *${prefix}expedition claim* jika sudah selesai.`,
             "error"
@@ -201,7 +201,7 @@ async function handler(m, { sock }) {
         });
         errText += `\nContoh: *${prefix}expedition start 1*`;
         await m.react("❌");
-        return m.reply(novaRpgBox("expedition", errText, "error"));
+        return m.reply(raraRpgBox("expedition", errText, "error"));
       }
 
       data.active = {
@@ -275,7 +275,7 @@ async function handler(m, { sock }) {
     return m.reply(menu);
   } catch (err) {
     await m.react("❌");
-    return m.reply(novaRpgBox("expedition", `Terjadi kesalahan: ${err.message}`, "error"));
+    return m.reply(raraRpgBox("expedition", `Terjadi kesalahan: ${err.message}`, "error"));
   }
 }
 

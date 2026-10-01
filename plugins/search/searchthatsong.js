@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import http from "http";
 import https from "https";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "searchthatsong",
@@ -117,13 +117,13 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ") || m.text?.trim();
 
   if (!query) {
-    return m.reply(novaGuide("SearchThatSong", "Masukin potongan lirik atau nama lagu nih!", ".sts ku menangis membayangkan"));
+    return m.reply(raraGuide("SearchThatSong", "Masukin potongan lirik atau nama lagu nih!", ".sts ku menangis membayangkan"));
   }
   try {
     const result = await search(query);
 
     if (!result.song) {
-      return m.reply(novaWrap("searchthatsong", "⚠️ Lagu tidak ditemukan. Coba gunakan lirik yang lebih spesifik."));
+      return m.reply(raraWrap("searchthatsong", "⚠️ Lagu tidak ditemukan. Coba gunakan lirik yang lebih spesifik."));
     }
 
     let caption = `🎵 *search that song* 🎵\n\n`;
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[SearchThatSong]", error.message);
-    m.reply(novaError("SearchThatSong", "Ada error nih, coba lagi ya"));
+    m.reply(raraError("SearchThatSong", "Ada error nih, coba lagi ya"));
   }
 }
 

@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Confess Wall — confession wall grup, post anonim dengan thread & react
 // Disimpan di db.setting("confesswall") per-grup
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "confesswall",
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     if (sub === "post" || sub === "tulis" || sub === "curhat") {
       const text = args.slice(1).join(" ").trim();
       if (!text || text.length < 5) {
-        await m.reply(novaWrap("confesswall", [
+        await m.reply(raraWrap("confesswall", [
           `Pesan kependekan nih! Minimal 5 karakter.`,
           ``,
           `💡 Contoh: ${m.prefix}confesswall post <confess kamu>`,
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
         return;
       }
       if (text.length > 500) {
-        await m.reply(novaWrap("confesswall", "Pesan kepanjangan nih! Maksimal 500 karakter.", "error"));
+        await m.reply(raraWrap("confesswall", "Pesan kepanjangan nih! Maksimal 500 karakter.", "error"));
         return;
       }
 
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
       saveWall(db, gid, wall);
 
       const preview = text.length > 80 ? text.slice(0, 80) + "..." : text;
-      await m.reply(novaGameBox({
+      await m.reply(raraGameBox({
         title: "confess terposting", icon: "💌",
         flavor: "💌 *CONFESS TERPOSTING!*",
         body: [
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
     if (sub === "list" || sub === "daftar" || sub === "wall" || !sub) {
       const recent = (wall.posts || []).slice(-5).reverse();
       if (recent.length === 0) {
-        await m.reply(novaWrap("confesswall", [
+        await m.reply(raraWrap("confesswall", [
           `Wall masih kosong nih!`,
           ``,
           `💡 Mulai dengan ${m.prefix}confesswall post <confess>`,

@@ -1,6 +1,6 @@
-# 📡 NOVA AI — Daftar API Website
+# 📡 RARA AI — Daftar API Website
 
-> Dokumentasi semua API endpoint yang digunakan di Nova AI WhatsApp Bot
+> Dokumentasi semua API endpoint yang digunakan di Rara AI WhatsApp Bot
 > Total: 400+ API endpoint dari 100+ provider (termasuk KuroNeko 221 endpoint)
 > Last updated: 14 September 2026
 
@@ -10,10 +10,10 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
-| KuroNeko API | `sylvatica.my.id/api/ai/*` | ⚠️ RATE LIMIT 60 REQUEST (limit ketat — cuma fitur unik/fallback). TERPAKAI: .aivideo fallback (text2vid), .aivoiceceleb (tts 12 voice seleb), .img2style gaya bebas (toonmix), .animetoreal (animetoreal — UNIK), .editimg engine terakhir (nanobanana), rantai AI step 5 (kuroneko). Hidup utk key owner: text2vid, tts, toonmix, animetoreal, nanobanana, kuroneko, gpt5, claude, qwen3, mistral, perplexity, bypassai, aiseek. Mati: chatgpt (debug leak), gptanon (403), imagenai (auth), txt2img (session), aisong (backend), nova, deepsek | ⚠️ Rate limit 60 req |
-| OpenAI | `api.openai.com` | .gpt4o, .ai-set, nova-ai-service | ⚠️ Key required |
+| KuroNeko API | `sylvatica.my.id/api/ai/*` | ⚠️ RATE LIMIT 60 REQUEST (limit ketat — cuma fitur unik/fallback). TERPAKAI: .aivideo fallback (text2vid), .aivoiceceleb (tts 12 voice seleb), .img2style gaya bebas (toonmix), .animetoreal (animetoreal — UNIK), .editimg engine terakhir (nanobanana), rantai AI step 5 (kuroneko). Hidup utk key owner: text2vid, tts, toonmix, animetoreal, nanobanana, kuroneko, gpt5, claude, qwen3, mistral, perplexity, bypassai, aiseek. Mati: chatgpt (debug leak), gptanon (403), imagenai (auth), txt2img (session), aisong (backend), rara, deepsek | ⚠️ Rate limit 60 req |
+| OpenAI | `api.openai.com` | .gpt4o, .ai-set, rara-ai-service | ⚠️ Key required |
 | Anthropic Claude | `api.anthropic.com` | .cegpt, claudehaiku scraper | ⚠️ Key required |
-| Google Gemini | `generativelanguage.googleapis.com` | Gemini Vision, .nova-ai, .ai-set | ⚠️ Key required |
+| Google Gemini | `generativelanguage.googleapis.com` | Gemini Vision, .rara-ai, .ai-set | ⚠️ Key required |
 | Google AI Studio | `aistudio.google.com/apikey` | Gemini API key (gratis) | ✅ Free key |
 | DeepSeek | `api.deepseek.com` | .dolphin, deepseek scraper | ⚠️ Key required |
 | Groq | `api.groq.com` | AI helper, mixtral, STT whisper fallback | ❌ Key invalid 401 (12 Sep) — dikosongin biar auto-skip |
@@ -21,7 +21,7 @@
 | HaidarApis | `api.haidarxd.my.id` | backbone AI satuan (gemini/claude/deepsek/mateai/chatgpt/googleai), TTS, txt2vid, img2style, nano-banana | ⚠️ ROMBAK 12 Sep: gpt-4o/gpt-5-mini/claude-sonnet-4/gpt55/gpt54 DIHAPUS (404); endpoint AI baru: chatgpt ✅, claude-sonnet-5 ✅, aimodel, aiseek, bing, felo, deepai, overchat, quillbot, mimo-models. Hidup: gemini ✅ claude ✅ chatgpt ✅ googleai ✅ mateai (flaky "busy") — deepsek 502 upstream | ⚠️ Endpoint bergeser |
 | Blackbox AI | `api.blackbox.ai` | blackbox-api scraper | ✅ Free |
 | Chat Everywhere | `chateverywhere.app` | chateverywhere scraper | ✅ Free |
-| UnlimitedAI | `app.unlimitedai.chat` | unlimitedai scraper (nova-ai, .cegpt) | ✅ Free |
+| UnlimitedAI | `app.unlimitedai.chat` | unlimitedai scraper (rara-ai, .cegpt) | ✅ Free |
 | Tio API | `ai.tioo.eu.org` → MATI 404; diganti `gorouter.app` (key valid, 0 model + CF block POST) | .ai-tio (kini auto-fallback Haidar→Ikyy→Xemoz), tanyaai system | ⚠️ Gateway down — pakai fallback |
 | OverChat AI | `api.overchat.ai` | AI chat fallback | ✅ Free |
 | Parallel AI | `api.parallel.ai` | parallelai scraper | ✅ Free |
@@ -52,7 +52,7 @@
 | API | Hasil | Catatan |
 |---|---|---|
 | Haidar gemini/claude/chatgpt/googleai | ✅ 200 | backbone AI satuan HIDUP (param `message`, googleai `text`) |
-| Haidar gpt55 / gpt54 | ❌ 404 | DIHAPUS upstream — rute .gpt5/.gpt4 sudah di-REMAP ke `chatgpt` (fix nova-ai-fallback.js, verified live) |
+| Haidar gpt55 / gpt54 | ❌ 404 | DIHAPUS upstream — rute .gpt5/.gpt4 sudah di-REMAP ke `chatgpt` (fix rara-ai-fallback.js, verified live) |
 | Haidar deepsek | ❌ 502 | upstream_error — rute .deepseek mati sementara (satuan strict, gak nyamber) |
 | Haidar mateai | ⚠️ flaky | kadang 200 (gpt-4o) kadang "service busy" — rute .gpt4o |
 | min1ai (qwen3-8b free) | ✅ 200 | backbone rantai 1 — format `UNIFY_CHAT_WITH_AI` + `API-KEY` header |
@@ -84,8 +84,8 @@
 | Wilz maker/imggen23 + tools/remove-watermark | ⚠️ TIMEOUT 12dtk | lambat/bisa mati — hindari jadi primary |
 
 **Jalan keluar provider resmi (gratis, stabil):** owner bikin key baru → taruh di apikeys.json tanpa ubah kode:
-1. **Google AI Studio** (aistudio.google.com/apikey) — gratis, tier generous, tanpa CF block → isi `novaai.google`
-2. **Groq** (console.groq.com) — gratis, llama-3.3-70b cepat, OpenAI-compat → isi `novaai.groqkey`
+1. **Google AI Studio** (aistudio.google.com/apikey) — gratis, tier generous, tanpa CF block → isi `raraai.google`
+2. **Groq** (console.groq.com) — gratis, llama-3.3-70b cepat, OpenAI-compat → isi `raraai.groqkey`
 3. **OpenRouter** (openrouter.ai) — model `:free` tersedia, perlu akun → bisa dijadikan TIO_API_URL + tioApiKey
 | No-API | `api.no-api.com` | AI chat | ✅ Free |
 | Proactor AI | `api.proactor.ai` | AI fallback | ✅ Free |
@@ -120,7 +120,7 @@
 | EmiliaBot | `api.emiliabot.my.id` | stalker, search | ✅ Free |
 | Yuulabs | `api.yuulabs.web.id` | stalker, search | ✅ Free |
 | Zeks | `api.zeks.xyz` | stalker | ⚠️ Key required |
-| Nova API | `api.nova.my.id` | stalker, search | ✅ Free |
+| Rara API | `api.rara.my.id` | stalker, search | ✅ Free |
 | Roblox API | `roblox.com`, `users.roblox.com`, `friends.roblox.com`, `groups.roblox.com`, `inventory.roblox.com`, `badges.roblox.com`, `thumbnails.roblox.com`, `presence.roblox.com`, `games.roblox.com` | robloxstalk, robloxplayer | ✅ Free |
 | Binderbyte | `api.binderbyte.com` / `binderbyte.com` | ytstalk, gsmarena | ⚠️ Key required |
 | FGSI | `fgsi.dpdns.org` | wastalk | ❌ Key BANNED (shared in SC) |
@@ -158,7 +158,7 @@
 | SFile | `sfile.mobi` / `sfile.co` | sfiledl | ✅ Free |
 | GitHub DL | `github.com` / `raw.githubusercontent.com` | githubdl | ✅ Free |
 | SF Converter | `du.sf-converter.com` | audio convert | ✅ Free |
-| IkyyXD AI | `api.ikyyxd.my.id/ai/gemini?text=<prompt>` | Ucapan AI menu/allmenu (nova-greeting) | ✅ Free no-key |
+| IkyyXD AI | `api.ikyyxd.my.id/ai/gemini?text=<prompt>` | Ucapan AI menu/allmenu (rara-greeting) | ✅ Free no-key |
 | IkyyXD | `api.ikyyxd.my.id` | ytstalk, tiktokstalk, ffstalk, mlstalk, nikparser, gsmarena, lirik, ssweb, buatserti, qrcode, base64, tiktok, ytmp3, ytmp4, instagram, facebook, twitter, spotify, soundcloud, mediafire, pinterest, gdrive, telegraph, snackvideo, likee, zippyshare, threads, capcut, dailymotion, yt | ⚠️ IP block (test di VPS) |
 | AliceE APIs | `aliceeapis.my.id` | API multi-fitur (download, stalker, tools, AI) | ✅ Free |
 
@@ -517,7 +517,7 @@
 | Anabot | `anabot.my.id` | tools (izenLOL) | ✅ Free |
 | Meme Pedia | `fmpedia.id` | meme | ✅ Free |
 | OpenJung | `openjung.org` | open graph | ✅ Free |
-| Nova Site | `nova.site` | bot website | ✅ Free |
+| Rara Site | `rara.site` | bot website | ✅ Free |
 
 ---
 
@@ -535,7 +535,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 **Kategori (8 Sep 2026):** ai 28 · anime 21 · download 22 · search 24 · tools 26 · game 20 · maker 7 · nsfw 19 · pterodactyl 18 · re 12 · stalk 7 · random 5 · bypass 5 · admin 5 · info 2
 
-**Highlight buat Nova:**
+**Highlight buat Rara:**
 - Downloader all-in-one (aio/anydl + 22 platform — cadangan rantai alldl)
 - Image HD 4 varian + upscale V5 (cadangan .remini)
 - TTS + text2vid + nanobanana (image editor AI)
@@ -555,43 +555,43 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 4. **Rate Limit** — beberapa API punya batas request per hari/menit
 5. **Primary vs Fallback** — banyak plugin punya API utama + fallback
 6. Untuk update API key: `.setkey <provider> <key>` atau edit `src/lib/apikey/apikeys.json`
-7. Untuk cek status API: gunakan `.apihealth` atau `src/lib/nova-auto-api-health.js`
+7. Untuk cek status API: gunakan `.apihealth` atau `src/lib/rara-auto-api-health.js`
 
 ---
 
-*Generated by Nova AI • 30 Agustus 2026*
+*Generated by Rara AI • 30 Agustus 2026*
 
 ---
 
 ## 📚 REST API dari Alya Bot (Reference untuk Pembuatan Fitur Selanjutnya)
 
-> Daftar API endpoint dari repo Alya yang bisa dipakai untuk pengembangan fitur Nova selanjutnya
-> Beberapa endpoint sudah ada di Nova, beberapa belum — yang belum ditandai dengan 🆕
+> Daftar API endpoint dari repo Alya yang bisa dipakai untuk pengembangan fitur Rara selanjutnya
+> Beberapa endpoint sudah ada di Rara, beberapa belum — yang belum ditandai dengan 🆕
 
 ### 🤖 AI / Character AI
 
 | API | Endpoint | Fitur di Alya | Status | Baru? |
 |-----|----------|---------------|--------|-------|
-| Nexray AI | `api.nexray.web.id/ai/ai4chat` | AI chat v2 | ✅ Free | Sudah di Nova |
-| Nexray AI | `api.nexray.web.id/ai/aimath` | AI math solver | ✅ Free | Sudah di Nova |
-| Nexray AI | `api.nexray.web.id/ai/alyamind-logic` | AI logic/reasoning | ✅ Free | Sudah di Nova |
-| Nexray AI | `api.nexray.web.id/ai/aoyo` | AI chat aoyo | ✅ Free | Sudah di Nova |
-| Nexray AI | `api.nexray.web.id/ai/character-ai` | Character AI | ✅ Free | Sudah di Nova |
-| Nexray AI | `api.nexray.web.id/ai/powerbrain` | PowerBrain AI | ✅ Free | Sudah di Nova |
-| Nexray AI | `api.nexray.web.id/ai/simi` | SimSimi chat | ✅ Free | Sudah di Nova |
-| Nexray AI | `api.nexray.web.id/ai/text2img` | Text to image | ✅ Free | Sudah di Nova |
+| Nexray AI | `api.nexray.web.id/ai/ai4chat` | AI chat v2 | ✅ Free | Sudah di Rara |
+| Nexray AI | `api.nexray.web.id/ai/aimath` | AI math solver | ✅ Free | Sudah di Rara |
+| Nexray AI | `api.nexray.web.id/ai/alyamind-logic` | AI logic/reasoning | ✅ Free | Sudah di Rara |
+| Nexray AI | `api.nexray.web.id/ai/aoyo` | AI chat aoyo | ✅ Free | Sudah di Rara |
+| Nexray AI | `api.nexray.web.id/ai/character-ai` | Character AI | ✅ Free | Sudah di Rara |
+| Nexray AI | `api.nexray.web.id/ai/powerbrain` | PowerBrain AI | ✅ Free | Sudah di Rara |
+| Nexray AI | `api.nexray.web.id/ai/simi` | SimSimi chat | ✅ Free | Sudah di Rara |
+| Nexray AI | `api.nexray.web.id/ai/text2img` | Text to image | ✅ Free | Sudah di Rara |
 | Nexray Character AI | `api.nexray.web.id/character-ai/hitori-gotoh` | Character: Hitori Gotoh | ✅ Free | 🆕 |
 | Nexray Character AI | `api.nexray.web.id/character-ai/hiura-mihate` | Character: Hiura Mihate | ✅ Free | 🆕 |
 | Nexray Character AI | `api.nexray.web.id/character-ai/hoshino-takanashi` | Character: Hoshino Takanashi | ✅ Free | 🆕 |
-| Termai | `c.termai.cc` | AI chat + image CDN | ✅ Free | Sudah di Nova |
+| Termai | `c.termai.cc` | AI chat + image CDN | ✅ Free | Sudah di Rara |
 | DeepSeek Chat | `chat.deepseek.com/api/v0` | DeepSeek web chat | ✅ Free | 🆕 |
 | BTCH OpenAI | `btch.us.kg/openai` | OpenAI proxy free | ✅ Free | 🆕 |
 | ChatbotChatApp | `chatbotchatapp.com` | AI chat | ✅ Free | 🆕 |
-| Chat Everywhere | `chateverywhere.app/api/chat/` | AI chat free | ✅ Free | Sudah di Nova |
-| Cuki API | `api.cuki.biz.id/api/ai/naya` | Naya AI | ✅ Free | Sudah di Nova |
+| Chat Everywhere | `chateverywhere.app/api/chat/` | AI chat free | ✅ Free | Sudah di Rara |
+| Cuki API | `api.cuki.biz.id/api/ai/naya` | Naya AI | ✅ Free | Sudah di Rara |
 | Deline | `api.deline.web.id/ai/toprompt` | AI to prompt | ✅ Free | 🆕 |
 | Stability AI | `api.stability.ai/v2beta/stable-image-to-image` | Stable image gen | ⚠️ Key | 🆕 |
-| Puter | `api.puter.com` | GPT-4o, DALL-E free | ✅ Free | Sudah di Nova |
+| Puter | `api.puter.com` | GPT-4o, DALL-E free | ✅ Free | Sudah di Rara |
 | MDSay | `mdsay.xyz/api/v1` | AI medical chat | ✅ Free | 🆕 |
 | Mosyne AI | `mosyne.ai/api/remove_background` | AI remove bg | ✅ Free | 🆕 |
 | Mosyne AI | `mosyne.ai/api/status` | AI status check | ✅ Free | 🆕 |
@@ -601,7 +601,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 | API | Endpoint | Fitur di Alya | Status | Baru? |
 |-----|----------|---------------|--------|-------|
-| Nexray DL | `api.nexray.web.id/downloader/tiktok` | TikTok download | ✅ Free | Sudah di Nova |
+| Nexray DL | `api.nexray.web.id/downloader/tiktok` | TikTok download | ✅ Free | Sudah di Rara |
 | Nexray DL | `api.nexray.web.id/downloader/v1/spotify` | Spotify download | ✅ Free | 🆕 |
 | Siputzx DL | `api.siputzx.my.id/api/d/snackvideo` | SnackVideo download | ✅ Free | 🆕 |
 | Siputzx DL | `api.siputzx.my.id/api/s/tiktok` | TikTok search | ✅ Free | 🆕 |
@@ -647,7 +647,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 | Siputzx Canvas | `api.siputzx.my.id/api/canvas/welcomev5` | Welcome image v5 | ✅ Free | 🆕 |
 | Siputzx Canvas | `api.siputzx.my.id/api/canvas/goodbyev2` | Goodbye image v2 | ✅ Free | 🆕 |
 | Siputzx Canvas | `api.siputzx.my.id/api/canvas/fake-xnxx` | Fake xnxx canvas | ✅ Free | 🆕 |
-| Siputzx Brat | `brat.siputzx.my.id/image` | Brat image | ✅ Free | Sudah di Nova |
+| Siputzx Brat | `brat.siputzx.my.id/image` | Brat image | ✅ Free | Sudah di Rara |
 | Siputzx Brat | `brat.siputzx.my.id/mp4` | Brat video | ✅ Free | 🆕 |
 | Siputzx Brat | `brat.siputzx.my.id/quoted` | Brat quoted | ✅ Free | 🆕 |
 | Nexray Maker | `api.nexray.web.id/maker/brat` | Brat maker | ✅ Free | 🆕 |
@@ -677,7 +677,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 | API | Endpoint | Fitur di Alya | Status | Baru? |
 |-----|----------|---------------|--------|-------|
-| Siputzx Search | `api.siputzx.my.id/api/s/gsmarena` | GSMArena search | ✅ Free | Sudah di Nova |
+| Siputzx Search | `api.siputzx.my.id/api/s/gsmarena` | GSMArena search | ✅ Free | Sudah di Rara |
 | Siputzx Search | `api.siputzx.my.id/api/s/tiktok` | TikTok search | ✅ Free | 🆕 |
 | Siputzx Search | `api.siputzx.my.id/api/s/matches` | Jadwal pertandingan | ✅ Free | 🆕 |
 | Siputzx Search | `api.siputzx.my.id/api/s/standings` | Klasemen liga | ✅ Free | 🆕 |
@@ -685,7 +685,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 | Nexray Search | `api.nexray.web.id/search/spotify` | Spotify search | ✅ Free | 🆕 |
 | Anabot | `anabot.my.id/api/search/pinterest` | Pinterest search | ✅ Free | 🆕 |
 | Anabot | `anabot.my.id/api/maker/twitter` | Twitter maker | ✅ Free | 🆕 |
-| Apocalypse | `api.apocalypse.web.id/search/buildml` | Build MLBB | ✅ Free | Sudah di Nova |
+| Apocalypse | `api.apocalypse.web.id/search/buildml` | Build MLBB | ✅ Free | Sudah di Rara |
 | Nekolabs | `api.nekolabs.web.id/discovery/jobstreet/search` | JobStreet search | ✅ Free | 🆕 |
 | MiftahGanzz | `api.miftahganzz.my.id/api/download/twitter` | Twitter download | ✅ Free | 🆕 |
 | OMDB | `www.omdbapi.com` | Movie/IMDB database | ⚠️ Key (free tier) | 🆕 |
@@ -701,11 +701,11 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 | API | Endpoint | Fitur di Alya | Status | Baru? |
 |-----|----------|---------------|--------|-------|
-| Nexray Stalker | `api.nexray.web.id/stalker/free-fire` | FF stalker | ✅ Free | Sudah di Nova |
+| Nexray Stalker | `api.nexray.web.id/stalker/free-fire` | FF stalker | ✅ Free | Sudah di Rara |
 | Nexray Stalker | `api.nexray.web.id/stalker/tiktok` | TikTok stalker | ✅ Free | 🆕 |
 | Nexray Stalker | `api.nexray.web.id/stalker/youtube` | YouTube stalker | ✅ Free | 🆕 |
-| Siputzx Tools | `api.siputzx.my.id/api/tools/nik-checker` | NIK checker | ✅ Free | Sudah di Nova |
-| Velyn | `velyn.mom/api/stalker/roblox` | Roblox stalker | ✅ Free | Sudah di Nova |
+| Siputzx Tools | `api.siputzx.my.id/api/tools/nik-checker` | NIK checker | ✅ Free | Sudah di Rara |
+| Velyn | `velyn.mom/api/stalker/roblox` | Roblox stalker | ✅ Free | Sudah di Rara |
 | MobStatus | `mobstatus.com` | Mobile Legends status | ✅ Free | 🆕 |
 | Duniagames | `api.duniagames.co.id/api/transaction/v1/top-up/inquiry/store` | Topup game | ⚠️ Key | 🆕 |
 | Mobapay | `api.mobapay.com/api/app_shop` | Mobile Legends shop | ✅ Free | 🆕 |
@@ -715,13 +715,13 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 | API | Endpoint | Fitur di Alya | Status | Baru? |
 |-----|----------|---------------|--------|-------|
-| AlQuran Cloud | `api.alquran.cloud/v1/surah/` | Quran surah | ✅ Free | Sudah di Nova |
-| AlQuran Cloud | `api.alquran.cloud/v1/ayah/` | Quran ayah | ✅ Free | Sudah di Nova |
-| Aladhan | `api.aladhan.com/v1/timingsByCity` | Jadwal sholat | ✅ Free | Sudah di Nova |
+| AlQuran Cloud | `api.alquran.cloud/v1/surah/` | Quran surah | ✅ Free | Sudah di Rara |
+| AlQuran Cloud | `api.alquran.cloud/v1/ayah/` | Quran ayah | ✅ Free | Sudah di Rara |
+| Aladhan | `api.aladhan.com/v1/timingsByCity` | Jadwal sholat | ✅ Free | Sudah di Rara |
 | LiteQuran | `litequran.net/` | Quran terjemah | ✅ Free | 🆕 |
 | Alkitab | `alkitab.me/search` | Alkitab search (Kristen) | ✅ Free | 🆕 |
 | Taka | `api.taka.my.id/pak-ustadv2` | Pak Ustadz AI | ✅ Free | 🆕 |
-| Islamic CDN | `cdn.islamic.network/quran/audio/128/ar.alafasy/` | Murrotal audio | ✅ Free | Sudah di Nova |
+| Islamic CDN | `cdn.islamic.network/quran/audio/128/ar.alafasy/` | Murrotal audio | ✅ Free | Sudah di Rara |
 
 ### 🛠️ Tools (Alya)
 
@@ -729,7 +729,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 |-----|----------|---------------|--------|-------|
 | Nexray Tools | `api.nexray.web.id/tools/converter` | Audio converter | ✅ Free | 🆕 |
 | Nexray Tools | `api.nexray.web.id/tools/upscale` | Image upscale | ✅ Free | 🆕 |
-| Nexray Tools | `api.nexray.web.id/tools/spamngl` | Spam NGL | ✅ Free | Sudah di Nova |
+| Nexray Tools | `api.nexray.web.id/tools/spamngl` | Spam NGL | ✅ Free | Sudah di Rara |
 | Nexray Fun | `api.nexray.web.id/fun/livefunfact` | Live fun fact | ✅ Free | 🆕 |
 | Cloudflare API | `api.cloudflare.com/client/v4/zones/` | CF DNS/zone | ⚠️ Key | 🆕 |
 | ScreenshotMachine | `www.screenshotmachine.com` | Web screenshot | ⚠️ Key | 🆕 |
@@ -792,8 +792,8 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 | SpotifyDown | `api.spotidownloader.com` | Spotify download | 🆕 |
 | LRCLib | `lrclib.net/api/search` | Lirik synced | 🆕 |
 | Meloboom | `meloboom.com` | Melody maker | 🆕 |
-| Deezer | `deezer.com` | Music search | Sudah di Nova |
-| SoundCloud | `api-mobi.soundcloud.com` | SoundCloud | Sudah di Nova |
+| Deezer | `deezer.com` | Music search | Sudah di Rara |
+| SoundCloud | `api-mobi.soundcloud.com` | SoundCloud | Sudah di Rara |
 
 ### 📧 Email / OTP (Alya)
 
@@ -806,7 +806,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 ---
 
-## 📝 Ringkasan API Alya yang Belum Ada di Nova
+## 📝 Ringkasan API Alya yang Belum Ada di Rara
 
 ### Priority tinggi untuk migrasi:
 1. **TikWM** (`www.tikwm.com/api/`) — TikTok downloader alternatif (no watermark)
@@ -841,13 +841,13 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 ---
 
-*Generated by Nova AI • 30 Agustus 2026*
+*Generated by Rara AI • 30 Agustus 2026*
 
 ---
 
 ## 🖼️ Wallpaper / Image / Random Photo (Bahan Fitur Baru)
 
-> URL website & API yang bisa dibuat jadi fitur Nova — dari Alya + sumber lain
+> URL website & API yang bisa dibuat jadi fitur Rara — dari Alya + sumber lain
 
 ### Wallpaper Search
 
@@ -870,13 +870,13 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 | Website/API | Endpoint | Bisa Buat Fitur | Baru? |
 |-------------|----------|----------------|-------|
-| Nekos.life | `nekos.life/api/v2/img/waifu` | Random waifu image | Sudah di Nova |
-| Nekos.life | `nekos.life/api/v2/img/neko` | Random neko image | Sudah di Nova |
+| Nekos.life | `nekos.life/api/v2/img/waifu` | Random waifu image | Sudah di Rara |
+| Nekos.life | `nekos.life/api/v2/img/neko` | Random neko image | Sudah di Rara |
 | Nekos.life | `nekos.life/api/v2/img/wallpaper` | Anime wallpaper | 🆕 |
 | Nekos.life | `nekos.life/api/v2/img/avatar` | Anime avatar | 🆕 |
 | Nekos.life | `nekos.life/api/v2/img/fox_girl` | Fox girl image | 🆕 |
 | Nekos.life | `nekos.life/api/v2/img/gecg` | Random gecg | 🆕 |
-| Waifu.pics | `api.waifu.pics/sfw/waifu` | Random waifu | Sudah di Nova |
+| Waifu.pics | `api.waifu.pics/sfw/waifu` | Random waifu | Sudah di Rara |
 | Waifu.pics | `api.waifu.pics/sfw/neko` | Random neko | 🆕 |
 | Waifu.pics | `api.waifu.pics/sfw/shinobu` | Shinobu image | 🆕 |
 | Waifu.pics | `api.waifu.pics/sfw/megumin` | Megumin image | 🆕 |
@@ -1002,7 +1002,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 |-------------|----------|----------------|-------|
 | YGOPRODeck | `db.ygoprodeck.com/api/v7/cardinfo.php` | Yu-Gi-Oh card info + image | 🆕 |
 | Steam Art | `steamcommunity.com` | Steam game art | 🆕 |
-| RAWG | `api.rawg.io/games/<game>/screenshots` | Game screenshot | Sudah di Nova |
+| RAWG | `api.rawg.io/games/<game>/screenshots` | Game screenshot | Sudah di Rara |
 | Enka Network | `enka.network/u/<uid>` | Genshin Impact profile + build | 🆕 |
 
 ### NSFW Image (Owner/Private Only)
@@ -1029,7 +1029,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 | Unsplash API | `api.unsplash.com/search/photos?query=<query>` | Unsplash photo API | 🆕 |
 | Giphy API | `api.giphy.com/v1/gifs/search?api_key=<key>&q=<query>` | GIF search API | 🆕 |
 | Tenor API | `g.tenor.com/v1/search?q=<query>&key=<key>` | Tenor GIF search API | 🆕 |
-| Imgflip API | `api.imgflip.com/get_memes` | Meme template list | Sudah di Nova |
+| Imgflip API | `api.imgflip.com/get_memes` | Meme template list | Sudah di Rara |
 | FavQs | `favqs.com/api/qotd` | Quote of the day | 🆕 |
 
 ---
@@ -1074,7 +1074,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 ---
 
-*Updated by Nova AI • 5 September 2026*
+*Updated by Rara AI • 5 September 2026*
 
 ---
 
@@ -1162,7 +1162,7 @@ REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — d
 
 ---
 
-*Updated by Nova AI • 8 September 2026*
+*Updated by Rara AI • 8 September 2026*
 
 
 ---
@@ -1260,7 +1260,7 @@ API publik Indonesia dengan playground interaktif.
 
 ---
 
-*Updated by Nova AI • 12 September 2026*
+*Updated by Rara AI • 12 September 2026*
 
 ---
 
@@ -1297,7 +1297,7 @@ https://upscayl.org
 
 ---
 
-*Updated by Nova AI • 12 September 2026*
+*Updated by Rara AI • 12 September 2026*
 
 ---
 
@@ -1512,7 +1512,7 @@ https://upscayl.org
 
 ---
 
-*Updated by Nova AI • 12 September 2026*
+*Updated by Rara AI • 12 September 2026*
 
 ---
 
@@ -1520,7 +1520,7 @@ https://upscayl.org
 
 > Provider: `api.haidarxd.my.id` (HaidarMahiru) • Docs: https://api.haidarxd.my.id/docs
 > Akses: DAFTAR GRATIS → API Key (`?apikey=haidarapis-xxxx`) WAJIB di semua endpoint data
-> TERPAKAI: fallback alldl (TRY 4) + textpro via `src/lib/nova-haidar.js` — key di `src/lib/apikey/apikeys.json` field `haidar`
+> TERPAKAI: fallback alldl (TRY 4) + textpro via `src/lib/rara-haidar.js` — key di `src/lib/apikey/apikeys.json` field `haidar`
 > Status: ✅ ALIVE (diverifikasi 5 Sep 2026 — 200 OK, latency ~25ms, region sgp/fra/iad)
 > Catatan: meta endpoint TANPA key: `/api/v1/health` (status/uptime), `/api/v1/endpoints` (daftar kategori+count)
 
@@ -1548,9 +1548,9 @@ https://upscayl.org
 | 🔞 Adult (18+) | 26 | (18+ — cek kebijakan grup sebelum pakai) |
 | Lainnya | — | alight-motion (4), canvas (1), random: lahelu/pixiv (2), orderkuota (11), wekios (9), berita (1) |
 
-### 💡 Potensi untuk Nova (yang belum ada / bisa jadi fallback)
+### 💡 Potensi untuk Rara (yang belum ada / bisa jadi fallback)
 
-- **remove-wm** — hapus watermark video (Nova belum punya!)
+- **remove-wm** — hapus watermark video (Rara belum punya!)
 - **web2apk** — website → APK (fitur unik)
 - **youtube-transcript** — transkrip video YT (bahan auto-summary)
 - **nano-banana / gemini-vision** — AI image editing gratis-ish (cukup daftar)
@@ -1610,14 +1610,14 @@ https://upscayl.org
 | | `tools/react-chv2` | ⚠️ param `action=qr/parse` | |
 | | `tools/alightmotion` s/d `alightmotionv7` (7 endpoint) | ⚠️ param `action=send/...` | preset/project AM |
 
-### 💡 Potensi untuk Nova (yang belum ada / bisa jadi fallback)
+### 💡 Potensi untuk Rara (yang belum ada / bisa jadi fallback)
 
 - **download/spotify** — fallback ke-2 `.playspotify` (setelah spotidown, sebelum/atau pengganti jalur mati)
 - **search/yts** — fallback `.play`/yts search tanpa key
 - **search/tiktokv2** — kandidat fallback `.playtiktok` ke-3 (setelah wilz search v1 → tikwm)
 - **search/pinterest** — fallback `.pinterest`/image search
 - **download/instagram + capcut** — tambahan chain `.ig`/alldl downloader
-- **tools/remove-watermark** — hapus watermark video (Nova belum punya fitur khusus)
+- **tools/remove-watermark** — hapus watermark video (Rara belum punya fitur khusus)
 - **maker/editimg** — alternatif engine `.editimg` (cek param di docs)
 - **tools/react-ch/v2** — reaction video (tren TikTok Cina), fitur baru unik
 - **random/temp-mail** — email sementara (butuh param — cek docs)
@@ -1871,7 +1871,7 @@ https://upscayl.org
 | Isi | 13.947 tool · 22 kategori: converter 10.102, productivity 8.261, developer 458, calculators 503, image 76, pdf 39, security 358, education 396, **62 game browser**, 14 Labs experiment |
 | Cara pakai | Riset toolnya di web → port logikanya native ke plugin (pola sama kayak .ftool*/game hasil port) |
 
-### Sudah di-port ke Nova (selesai — jangan dobel)
+### Sudah di-port ke Rara (selesai — jangan dobel)
 - **22 tool** prefix `.ftool*` (plugins/tools/ftool*.js): jwt, textrepeat, slugify, textcount, textfreq, textreverse, roman, rot13, timestamp, uuid, texthex, urlcode, base32, asciitext, numberwords, durasi, striptags, deduplines, sortlines, nato, emojiremove, replace. Nama lama tetap alias. E2E altftools 86/86.
 - **6 game WA teks** (plugins/game/): .dailywordgame (wordle harian deterministik), .game2048, .fourinarow, .slidingpuzzle, .minesweeper (klik pertama aman), .emojiquiz. E2E altfgames 35/35.
 - **4 game HTML** (plugins/html/ + src/htmlgames/): .htmlsnake, .htmltetris, .htmldino, .htmlpong — kategori menu "html". E2E htmlgames 17/17.
@@ -1885,10 +1885,10 @@ hangman, tictactoe, truthordare, neverhaveiever, guessnumber, suit/RPS, chess, t
 - **Game HTML** (dokumen .html): Brick Breaker, Maze Muncher, Space Rocks, Tap Glider, Block Stacker, Merge Blocks, Candy Match 3, Whack-a-Mole, Insect Tracker.
 
 ### Pola porting konsisten
-- Tool: prefix `ftool<nama>` sejak awal, novaGuideV2/novaSalahV2, cd 3 dtk, e2e ke test/altftools-e2e.
+- Tool: prefix `ftool<nama>` sejak awal, raraGuideV2/raraSalahV2, cd 3 dtk, e2e ke test/altftools-e2e.
 - Game teks: cmd utama Inggris, animasi khas beda-beda per game, sesi in-memory + timeout, answerHandler return false kalau input gak valid.
 - Game HTML: category "html", file self-contained di src/htmlgames/, kirim document text/html.
 
 ---
 
-*Updated by Nova AI • 26 September 2026*
+*Updated by Rara AI • 26 September 2026*

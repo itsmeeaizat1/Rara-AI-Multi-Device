@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Berburu — Hunt monsters for EXP, Gold, and item drops (animated combat)
 
 import {
@@ -6,13 +6,13 @@ import {
   addItem, getEquipStats, rollDrop, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
-  getCash} from "../../src/lib/nova-rpg-service.js";
-import { getRpgWeather, rpgWeatherTag } from "../../src/lib/nova-rpg-weather.js";
-import { animBattle, rpgSleep, animHuntTrack, animHuntShoot, animHuntResult } from "../../src/lib/nova-rpg-anim.js";
+  getCash} from "../../src/lib/rara-rpg-service.js";
+import { getRpgWeather, rpgWeatherTag } from "../../src/lib/rara-rpg-weather.js";
+import { animBattle, rpgSleep, animHuntTrack, animHuntShoot, animHuntResult } from "../../src/lib/rara-rpg-anim.js";
 import { playScopeAnim } from "../../src/lib/libanimationrpg/libhuntingadventurerpg.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import te from "../../src/lib/nova-error.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "huntingadventure",
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("berburu", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("berburu", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const sub = (m.args?.[0] || "").toLowerCase();
 
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
           const here = z === (rpg.huntZone || "hutan_pemula") ? " ← kamu di sini" : (rpg.level >= zn.levelReq ? " ✅ terbuka" : " 🔒 butuh LV " + zn.levelReq);
           return `${i + 1}. ${z} — ${zn.name} (LV ${zn.levelReq})${here}`;
         }).join("\n");
-        return m.reply(novaRpgBox("berburu", `🗺️ *ZONE BERBURU*
+        return m.reply(raraRpgBox("berburu", `🗺️ *ZONE BERBURU*
 
 ${list}
 
@@ -105,22 +105,22 @@ ${list}
 💡 Pindah: .petualangberburu zone <nama>`, "info"));
       }
       const zn = HUNT_ZONES[target] || Object.values(HUNT_ZONES).find(z => z.name.toLowerCase().includes(target));
-      if (!zn || !HUNT_ZONES[target]) return m.reply(novaRpgBox("berburu", `Zone *${target}* gak ada. Lihat daftar zone: .petualangberburu zone`, "error"));
-      if (rpg.level < zn.levelReq) return m.reply(novaRpgBox("berburu", `⚠️ Butuh Level *${zn.levelReq}* untuk masuk ${zn.name}. Level kamu: ${rpg.level}`, "warn"));
+      if (!zn || !HUNT_ZONES[target]) return m.reply(raraRpgBox("berburu", `Zone *${target}* gak ada. Lihat daftar zone: .petualangberburu zone`, "error"));
+      if (rpg.level < zn.levelReq) return m.reply(raraRpgBox("berburu", `⚠️ Butuh Level *${zn.levelReq}* untuk masuk ${zn.name}. Level kamu: ${rpg.level}`, "warn"));
       const zoneId = Object.keys(HUNT_ZONES).find(k => HUNT_ZONES[k] === zn);
       rpg.huntZone = zoneId;
       rpg.lastZoneNotify = null;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply(novaRpgBox("berburu", `🗺️ Pindah ke ${zn.name}\n📍 Siap berburu! Hewan di sini: ${zn.animals.map(a => a.name).join(", ")}`, "success"));
+      return m.reply(raraRpgBox("berburu", `🗺️ Pindah ke ${zn.name}\n📍 Siap berburu! Hewan di sini: ${zn.animals.map(a => a.name).join(", ")}`, "success"));
     }
 
     // ═══ SUBCOMMAND: trophy — koleksi buruan langka (ala script) ═══
     if (sub === "trophy" || sub === "trophies") {
       const trophies = rpg.trophies || [];
-      if (!trophies.length) return m.reply(novaRpgBox("berburu", `🏆 Belum ada trophy. Buru hewan langka! (Beruang, Elang, Harimau Loreng, Phoenix, dll)`, "info"));
+      if (!trophies.length) return m.reply(raraRpgBox("berburu", `🏆 Belum ada trophy. Buru hewan langka! (Beruang, Elang, Harimau Loreng, Phoenix, dll)`, "info"));
       const list = trophies.map((t, i) => `${i + 1}. 🏅 ${t.name} (${t.item}) — ${new Date(t.date).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}`).join("\n");
-      return m.reply(novaRpgBox("berburu", `🏆 *TROPHY COLLECTION*
+      return m.reply(raraRpgBox("berburu", `🏆 *TROPHY COLLECTION*
 
 ${list}
 
@@ -130,12 +130,12 @@ ${list}
     const cd = checkCooldown(m, "lastHunt");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("berburu", `Sabar, cooldown berburu tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("berburu", `Sabar, cooldown berburu tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < HUNT_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("berburu", `Energi kurang! Butuh *${HUNT_ENERGY} energy* untuk berburu. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
+      return m.reply(raraRpgBox("berburu", `Energi kurang! Butuh *${HUNT_ENERGY} energy* untuk berburu. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
     }
 
     // Pool hewan dari zone berburu (ala script owner)
@@ -244,7 +244,7 @@ ${list}
       await animHuntResult(m, sock, { animalName: monster.name, success: true, loot: lootText });
 
       await m.react("🐣");
-      await m.reply(novaGameBox({
+      await m.reply(raraGameBox({
         title: "berburu", icon: "🎯",
         flavor: "🏆 *HUNT BERHASIL!*",
         body: [
@@ -262,7 +262,7 @@ ${list}
         ].join("\n"),
         cta: gameCTA("berburu"),
       }));
-      if (zoneNotice) await m.reply(novaRpgBox("berburu", zoneNotice, "success"));
+      if (zoneNotice) await m.reply(raraRpgBox("berburu", zoneNotice, "success"));
       return;
     } else {
       const newHp = Math.max(1, rpg.hp - playerDmgTaken);
@@ -273,7 +273,7 @@ ${list}
       await animHuntResult(m, sock, { animalName: monster.name, success: false });
 
       await m.react("❌");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "berburu", icon: "🎯",
         flavor: "💀 *HUNT GAGAL!*",
         body: [
@@ -289,7 +289,7 @@ ${list}
   } catch (err) {
     console.error("berburu error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("berburu", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("berburu", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

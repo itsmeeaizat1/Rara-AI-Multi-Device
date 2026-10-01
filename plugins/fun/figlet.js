@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .figlet — ASCII art banner via package figlet (16 Sep 2026, request owner:
 // figlet ternyata sudah terpasang sejak lama tapi BELUM PERNAH dipakai —
 // fitur gratis tanpa dep baru). Font kurasi + list font.
 
 import figlet from "figlet";
-import { novaError, novaCaption, tipText } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraCaption, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "figlet",
@@ -12,7 +12,7 @@ const pluginConfig = {
   category: "fun",
   description: "Ubah teks jadi ASCII art banner",
   usage: ".figlet <teks> [font]",
-  example: ".figlet NOVA",
+  example: ".figlet RARA",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -49,12 +49,12 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
 
     if (!raw || raw.toLowerCase() === "list") {
       const text =
-        novaCaption({
+        raraCaption({
           emoji: "🔠",
           name: "figlet",
           description: "Ubah teks jadi ASCII art banner keren — pilih fontnya juga",
           usage: `${prefix}figlet <teks> [font] — atau ${prefix}figlet list`,
-          example: `${prefix}figlet NOVA\n${prefix}figlet NOVA Doom\n\nFont pilihan: ${FONTS.join(", ")}`,
+          example: `${prefix}figlet RARA\n${prefix}figlet RARA Doom\n\nFont pilihan: ${FONTS.join(", ")}`,
         }) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
@@ -63,7 +63,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
     }
 
     if (raw.length > 20) {
-      await m.reply(novaError("Figlet", "Teks kepanjangan — maksimal 20 karakter biar art-nya gak berantakan"), "figlet");
+      await m.reply(raraError("Figlet", "Teks kepanjangan — maksimal 20 karakter biar art-nya gak berantakan"), "figlet");
       await m.react("❌");
       return { handled: true };
     }
@@ -86,7 +86,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
     );
   } catch (error) {
     await m.react("❌");
-    await m.reply(novaError("Figlet", `Gagal bikin ASCII art — font mungkin tidak ada: ${String(error?.message || error).slice(0, 100)}`), "figlet");
+    await m.reply(raraError("Figlet", `Gagal bikin ASCII art — font mungkin tidak ada: ${String(error?.message || error).slice(0, 100)}`), "figlet");
   }
   return { handled: true };
 }

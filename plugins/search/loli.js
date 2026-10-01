@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!buffer) {
       const text =
-        novaError("Loli", "Gagal nih, coba lagi ya");
+        raraError("Loli", "Gagal nih, coba lagi ya");
 
       await m.reply( text, "loli");
       return { handled: true };
@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      novaWrap("Foto", ["Status: *berhasil*"].join("\n")) +
+      raraWrap("Foto", ["Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}loli untuk hasil lain`) +
       "\n" +
@@ -96,7 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Loli", "Gagal nih, coba lagi ya");
+      raraError("Loli", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "loli");
   }

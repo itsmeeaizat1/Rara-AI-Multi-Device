@@ -4,7 +4,7 @@
 browsing web, baca/tulis database, pasang pengingat, dll. Engine utuh
 `src/lib/hiai/`, owner-only.
 
-Sengaja cmd-nya BEDA dari `.ai`/`.novaagent`/`.mcp` biar gak bentrok.
+Sengaja cmd-nya BEDA dari `.ai`/`.raraagent`/`.mcp` biar gak bentrok.
 
 ## 1. Instalasi
 

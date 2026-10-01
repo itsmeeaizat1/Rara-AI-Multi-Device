@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nexray-maker.js — Scraper untuk nexray maker & tools endpoints
 // Domain fix: nexray.web.id (301 redirect) → nexray.eu.cc (200 OK)
 import axios from "axios";

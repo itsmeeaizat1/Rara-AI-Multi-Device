@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autoplugin — Auto Plugin Health Monitor
  *
@@ -27,11 +27,11 @@
  *   .autoplugin notify on/off      — Toggle notifikasi owner
  */
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { pluginStore, disablePlugin, enablePlugin, isPluginEnabled, getAllPlugins, getPluginCount } from "../../src/lib/nova-plugins.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, toSC, raraBox } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { pluginStore, disablePlugin, enablePlugin, isPluginEnabled, getAllPlugins, getPluginCount } from "../../src/lib/rara-plugins.js";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "autoplugin",
@@ -160,7 +160,7 @@ async function notifyOwnerPluginDisabled(name, crashRate, stats, sock) {
   const ownerNums = (config.owner?.number || []).map((n) => `${n}@s.whatsapp.net`);
   if (ownerNums.length === 0) return;
 
-  const msg = novaBox(toSC("Plugin Auto-Disabled"), [
+  const msg = raraBox(toSC("Plugin Auto-Disabled"), [
     `${toSC("Plugin")}: ${name}`,
     `Crash Rate: ${crashRate}%`,
     `Errors: ${stats.errors} / ${stats.executions} ${toSC("executions")}`,
@@ -297,7 +297,7 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push(``);
     lines.push(`${toSC("Ketik")} .autoplugin report ${toSC("untuk detail")}`);
 
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), lines));
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), lines));
     return;
   }
 
@@ -307,7 +307,7 @@ async function handler(m, { sock, config: botConfig }) {
     db.setting("autoplugin_enabled", true);
     monitorActive = true;
     startCooldownChecker(sock);
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), [
       toSC("Monitoring AKTIF"),
       `Threshold: ${settings.threshold}% | Window: ${settings.windowSize}`,
       `Cooldown: ${settings.cooldownMin} ${toSC("menit")}`,
@@ -323,7 +323,7 @@ async function handler(m, { sock, config: botConfig }) {
     const db = getDatabase();
     db.setting("autoplugin_enabled", false);
     stopPluginMonitor();
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), [
       toSC("Monitoring DIMATIKAN"),
       toSC("Plugin tidak akan di-auto-disable"),
     ]));
@@ -400,7 +400,7 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push(`${toSC("Threshold")}: ${settings.threshold}% | ${toSC("Window")}: ${settings.windowSize}`);
 
     await m.react("🐣");
-    await m.reply(novaBox(toSC("Plugin Health Report"), lines));
+    await m.reply(raraBox(toSC("Plugin Health Report"), lines));
     return;
   }
 
@@ -408,11 +408,11 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "threshold") {
     const val = parseInt(args[1]);
     if (!val || val < 10 || val > 100) {
-      return m.reply(novaError("autoplugin", "Threshold 10-100%", `.autoplugin threshold 50`));
+      return m.reply(raraError("autoplugin", "Threshold 10-100%", `.autoplugin threshold 50`));
     }
     const db = getDatabase();
     db.setting("autoplugin_threshold", val);
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), [
       `Threshold: ${val}%`,
       toSC("Plugin dengan crash rate di atas ini akan di-auto-disable"),
     ]));
@@ -423,11 +423,11 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "window") {
     const val = parseInt(args[1]);
     if (!val || val < 5 || val > 100) {
-      return m.reply(novaError("autoplugin", "Window 5-100 executions", `.autoplugin window 20`));
+      return m.reply(raraError("autoplugin", "Window 5-100 executions", `.autoplugin window 20`));
     }
     const db = getDatabase();
     db.setting("autoplugin_window", val);
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), [
       `Window: ${val} ${toSC("executions")}`,
       toSC("Crash rate dihitung dari") + ` ${val} ${toSC("eksekusi terakhir")}`,
     ]));
@@ -438,7 +438,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "cooldown") {
     const val = parseInt(args[1]);
     if (!val || val < 1 || val > 1440) {
-      return m.reply(novaError("autoplugin", "Cooldown 1-1440 menit", `.autoplugin cooldown 30`));
+      return m.reply(raraError("autoplugin", "Cooldown 1-1440 menit", `.autoplugin cooldown 30`));
     }
     const db = getDatabase();
     db.setting("autoplugin_cooldown", val);
@@ -446,7 +446,7 @@ async function handler(m, { sock, config: botConfig }) {
       stopCooldownChecker();
       startCooldownChecker(sock);
     }
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), [
       `Cooldown: ${val} ${toSC("menit")}`,
       toSC("Plugin auto-disabled akan di-re-enable setelah") + ` ${val} ${toSC("menit")}`,
     ]));
@@ -466,12 +466,12 @@ async function handler(m, { sock, config: botConfig }) {
       }
       lines.push(``);
       lines.push(`${toSC("Whitelist = plugin critical, tidak akan di-auto-disable")}`);
-      await m.reply(novaBox(toSC("Plugin Whitelist"), lines));
+      await m.reply(raraBox(toSC("Plugin Whitelist"), lines));
       return;
     }
 
     if (!pluginName) {
-      return m.reply(novaError("autoplugin", "Format: .autoplugin whitelist add/del <plugin>", `.autoplugin whitelist add menu`));
+      return m.reply(raraError("autoplugin", "Format: .autoplugin whitelist add/del <plugin>", `.autoplugin whitelist add menu`));
     }
 
     const db = getDatabase();
@@ -479,11 +479,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (action === "add") {
       if (whitelist.includes(pluginName)) {
-        return m.reply(novaError("autoplugin", `"${pluginName}" sudah di whitelist`, `.autoplugin whitelist`));
+        return m.reply(raraError("autoplugin", `"${pluginName}" sudah di whitelist`, `.autoplugin whitelist`));
       }
       whitelist.push(pluginName);
       db.setting("autoplugin_whitelist", whitelist);
-      await m.reply(novaBox(toSC("Plugin Whitelist"), [
+      await m.reply(raraBox(toSC("Plugin Whitelist"), [
         `${toSC("Ditambahkan")}: ${pluginName}`,
       ]));
       return;
@@ -492,38 +492,38 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "del" || action === "remove") {
       // Jangan biarkan hapus default whitelist
       if (DEFAULT_WHITELIST.includes(pluginName)) {
-        return m.reply(novaError("autoplugin", `"${pluginName}" adalah default whitelist, tidak bisa dihapus`, `Hanya custom whitelist yang bisa dihapus`));
+        return m.reply(raraError("autoplugin", `"${pluginName}" adalah default whitelist, tidak bisa dihapus`, `Hanya custom whitelist yang bisa dihapus`));
       }
       const filtered = whitelist.filter((n) => n !== pluginName);
       if (filtered.length === whitelist.length) {
-        return m.reply(novaError("autoplugin", `"${pluginName}" tidak ada di whitelist`, `.autoplugin whitelist`));
+        return m.reply(raraError("autoplugin", `"${pluginName}" tidak ada di whitelist`, `.autoplugin whitelist`));
       }
       db.setting("autoplugin_whitelist", filtered);
-      await m.reply(novaBox(toSC("Plugin Whitelist"), [
+      await m.reply(raraBox(toSC("Plugin Whitelist"), [
         `${toSC("Dihapus")}: ${pluginName}`,
       ]));
       return;
     }
 
-    return m.reply(novaError("autoplugin", "Format: .autoplugin whitelist add/del <plugin>", `.autoplugin whitelist add menu`));
+    return m.reply(raraError("autoplugin", "Format: .autoplugin whitelist add/del <plugin>", `.autoplugin whitelist add menu`));
   }
 
   // .autoplugin enable <plugin>
   if (subCmd === "enable") {
     const name = args[1]?.toLowerCase();
     if (!name) {
-      return m.reply(novaError("autoplugin", "Format: .autoplugin enable <plugin>", `.autoplugin enable ytstalk`));
+      return m.reply(raraError("autoplugin", "Format: .autoplugin enable <plugin>", `.autoplugin enable ytstalk`));
     }
     const result = enablePlugin(name);
     if (!result) {
-      return m.reply(novaError("autoplugin", `Plugin "${name}" tidak ditemukan`, `.autoplugin report`));
+      return m.reply(raraError("autoplugin", `Plugin "${name}" tidak ditemukan`, `.autoplugin report`));
     }
     // Reset auto-disabled flag
     const stats = getStats(name);
     stats.autoDisabled = false;
     stats.disabledAt = null;
     stats.recentResults = [];
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), [
       `${toSC("Plugin di-enable")}: ${name}`,
       toSC("Error counter direset"),
     ]));
@@ -534,13 +534,13 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "disable") {
     const name = args[1]?.toLowerCase();
     if (!name) {
-      return m.reply(novaError("autoplugin", "Format: .autoplugin disable <plugin>", `.autoplugin disable ytstalk`));
+      return m.reply(raraError("autoplugin", "Format: .autoplugin disable <plugin>", `.autoplugin disable ytstalk`));
     }
     const result = disablePlugin(name);
     if (!result) {
-      return m.reply(novaError("autoplugin", `Plugin "${name}" tidak ditemukan`, `.autoplugin report`));
+      return m.reply(raraError("autoplugin", `Plugin "${name}" tidak ditemukan`, `.autoplugin report`));
     }
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), [
       `${toSC("Plugin di-disable")}: ${name}`,
     ]));
     return;
@@ -552,14 +552,14 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!target || target === "all") {
       pluginStats.clear();
-      await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+      await m.reply(raraBox(toSC("Plugin Health Monitor"), [
         toSC("Semua error counter direset"),
       ]));
       return;
     }
 
     if (!pluginStats.has(target)) {
-      return m.reply(novaError("autoplugin", `Plugin "${target}" belum ada data`, `.autoplugin reset all`));
+      return m.reply(raraError("autoplugin", `Plugin "${target}" belum ada data`, `.autoplugin reset all`));
     }
 
     const stats = getStats(target);
@@ -569,7 +569,7 @@ async function handler(m, { sock, config: botConfig }) {
     stats.lastErrorTime = null;
     stats.recentResults = [];
 
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), [
       `${toSC("Counter direset")}: ${target}`,
     ]));
     return;
@@ -579,18 +579,18 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "notify") {
     const action = args[1]?.toLowerCase();
     if (action !== "on" && action !== "off") {
-      return m.reply(novaError("autoplugin", "Format: .autoplugin notify on/off", `.autoplugin notify on`));
+      return m.reply(raraError("autoplugin", "Format: .autoplugin notify on/off", `.autoplugin notify on`));
     }
     const db = getDatabase();
     db.setting("autoplugin_notify", action === "on");
-    await m.reply(novaBox(toSC("Plugin Health Monitor"), [
+    await m.reply(raraBox(toSC("Plugin Health Monitor"), [
       `Notify Owner: ${action === "on" ? "ON" : "OFF"}`,
     ]));
     return;
   }
 
   // Unknown
-  return m.reply(novaError("autoplugin", te(m.prefix, m.command, m.pushName), ".autoplugin report"));
+  return m.reply(raraError("autoplugin", te(m.prefix, m.command, m.pushName), ".autoplugin report"));
 }
 
 export { pluginConfig, handler, pluginConfig as config };

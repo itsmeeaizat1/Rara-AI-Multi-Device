@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // haidar-ai.js — fitur AI HaidarApis (api.haidarxd.my.id/api/v1/ai/*)
 // Key: apikeys.json field `haidar` (via getHaidarKey).
 //

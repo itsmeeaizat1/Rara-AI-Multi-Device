@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: tqto.js (revisi owner 20 Sep 2026)
+// RARA AI WHATSAPP BOT — E2E: tqto.js (revisi owner 20 Sep 2026)
 import assert from "node:assert/strict";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -59,7 +59,7 @@ t("5c. Link Grup Dan Saluran Official section + link grup config", /link grup da
 t("5d. link saluran official config (whatsapp.com/channel)", /whatsapp\.com\/channel/.test(plain));
 t("5e. Akun Sosial Media TikTok itsmee_aizat", /akun sosial media/i.test(plain) && /itsmee_aizat/i.test(plain));
 t("5f. Runtime — 'menyala tanpa mati selama' + durasi (1d)", /menyala tanpa mati selama 1d/i.test(plain));
-t("5g. Nama Script & Base: Nova AI Multi Device + Baileys Multi-Device", /base: nova ai multi device/i.test(plain) && /baileys: multi-device/i.test(plain));
+t("5g. Nama Script & Base: Rara AI Multi Device + Baileys Multi-Device", /base: rara ai multi device/i.test(plain) && /baileys: multi-device/i.test(plain));
 t("5h. Keterangan Lisensi — Copyright © 2024-2026 Aizat", /keterangan lisensi/i.test(plain) && /copyright © 2024-2026 aizat/i.test(plain));
 t("5i. larangan menyebarkan tanpa izin", /dilarang menyalin/i.test(plain));
 

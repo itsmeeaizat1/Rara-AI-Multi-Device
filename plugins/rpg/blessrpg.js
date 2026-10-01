@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Bless — Blessing harian random buff
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "bless", alias: ["bless", "blessrpg", "berkat"],
@@ -22,17 +22,17 @@ const BUFFS = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("blessrpg", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("blessrpg", "RPG belum siap.", "error"));
   await animGeneric(m, sock, "🙏", "Blessing");
-    if (rpg.lastBless && Date.now() - rpg.lastBless < 86400000) return m.reply(novaRpgBox("blessrpg", "Kamu sudah menerima bless hari ini.", "info"));
+    if (rpg.lastBless && Date.now() - rpg.lastBless < 86400000) return m.reply(raraRpgBox("blessrpg", "Kamu sudah menerima bless hari ini.", "info"));
     const buff = BUFFS[Math.floor(Math.random() * BUFFS.length)];
     buff.apply(rpg);
     rpg.lastBless = Date.now();
     saveRpg(m, rpg);
     await m.react("🐣");
-    return m.reply(novaRpgBox("blessrpg", `💠 Kamu diberkati hari ini!\nEffect: *${buff.name}*`, "success"));
+    return m.reply(raraRpgBox("blessrpg", `💠 Kamu diberkati hari ini!\nEffect: *${buff.name}*`, "success"));
   } catch (e) {
-    return m.reply(novaRpgBox("blessrpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("blessrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

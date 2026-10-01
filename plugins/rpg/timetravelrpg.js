@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG TimeTravel — Perjalanan waktu harian
 // Rombak khas (batch #13): animasi Lorong Waktu + 4 era tujuan
 // dengan artefak masing-masing + item khas Kristal Waktu +
 // tool Jam Pasir Kronos (+10% gold per level).
 
-import { ensureRpg, saveRpg, addGold, addItem, getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { shapeTimetravel } from "../../src/lib/nova-rpg-shapes.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import te from "../../src/lib/nova-error.js";
+import { ensureRpg, saveRpg, addGold, addItem, getCash, spendCash, formatRp } from "../../src/lib/rara-rpg-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { shapeTimetravel } from "../../src/lib/rara-rpg-shapes.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "timetravel", alias: ["timetravel", "timetravelrpg"],
@@ -39,7 +39,7 @@ const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { leve
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("timetravel", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("timetravel", "RPG belum siap.", "error"));
     const prefix = m.prefix || ".";
     const sub = (m.args?.[0] || "").toLowerCase();
 
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     if (sub === "jam" || sub === "status") {
       const tool = getTool(m.sender);
       const lv = tool.level || 0;
-      return m.reply(novaRpgBox("timetravel",
+      return m.reply(raraRpgBox("timetravel",
         `🕒 JAM PASIR KRONOS KAMU\n\n` +
         `Level : *Lv.${lv}*\n💰 Bonus Gold : +${10 * lv}%\n🌀 Kristal Waktu : ${tool.crystals || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
         `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.crystalCost(lv)}x Kristal + ${formatRp(TOOL.rpCost(lv))}\nKetik: ${prefix}timetravel upgrade`));
@@ -61,12 +61,12 @@ async function handler(m, { sock }) {
       const needRp = TOOL.rpCost(lv);
       if ((tool.crystals || 0) < needCrys) {
         await m.react("❌");
-        return m.reply(novaRpgBox("timetravel",
+        return m.reply(raraRpgBox("timetravel",
           `🌀 Upgrade Jam Pasir ke Lv.${lv + 1} butuh:\n\n• Kristal Waktu : ${needCrys}x (punya ${tool.crystals || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Kristal didapat dari perjalanan sendiri — 30% per jelajah, sampai Masa Depan dijamin +2!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
         await m.react("❌");
-        return m.reply(novaRpgBox("timetravel", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("timetravel", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = getTool(m.sender);
       fresh.crystals = (fresh.crystals || 0) - needCrys;
@@ -74,14 +74,14 @@ async function handler(m, { sock }) {
       fresh.spent = (fresh.spent || 0) + needRp;
       await getDatabase().setPlayerData?.(m.sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("timetravel",
+      return m.reply(raraRpgBox("timetravel",
         `🕒 JAM PASIR UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n💰 Bonus Gold : +${10 * (lv + 1)}%\n\n🌀 Material : −${needCrys} Kristal Waktu\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
     // ── main travel (cek cooldown DULU — bug lama: animasi jalan walau tolak) ──
     if (rpg.lastTimetravel && Date.now() - rpg.lastTimetravel < 86400000) {
       const sisa = Math.ceil((86400000 - (Date.now() - rpg.lastTimetravel)) / 3600000);
-      return m.reply(novaRpgBox("timetravel", `🕒 Mesin waktu masih mengisi daya.\nCoba lagi dalam ±${sisa} jam.`, "info"));
+      return m.reply(raraRpgBox("timetravel", `🕒 Mesin waktu masih mengisi daya.\nCoba lagi dalam ±${sisa} jam.`, "info"));
     }
     // CATATAN: energi game dicek & dipotong dispatcher (config energi: 20)
     await m.react("🕒");
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    return m.reply(novaRpgBox("timetravel",
+    return m.reply(raraRpgBox("timetravel",
       `${era.emoji} KAMU MENDARAT DI ${era.name.toUpperCase()}!\n\n` +
       `📍 Tahun : ${era.year}\n` +
       `💰 Gold : +${goldGain}\n` +
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("timetravel error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("timetravel", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("timetravel", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

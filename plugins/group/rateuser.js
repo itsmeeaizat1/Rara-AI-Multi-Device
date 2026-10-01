@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "rateuser",
@@ -60,7 +60,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }).sort((a, b) => b.avg - a.avg);
 
       if (users.length === 0) {
-        return m.reply(novaWrap("Rate User", "Belum ada rating. Ketik .rateuser @user <bintang> <komentar>"));
+        return m.reply(raraWrap("Rate User", "Belum ada rating. Ketik .rateuser @user <bintang> <komentar>"));
       }
 
       let result = "Leaderboard Rating Member:\n\n";
@@ -70,7 +70,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         result += "   " + stars + " (" + u.avg.toFixed(1) + "/5) — " + u.count + " review\n\n";
       });
 
-      return m.reply(novaWrap("Rate User", result));
+      return m.reply(raraWrap("Rate User", result));
     }
 
     // PROFILE
@@ -79,7 +79,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const data = groupData.ratings[target];
 
       if (!data) {
-        return m.reply(novaWrap("Rate User", "Belum ada rating untuk @" + target.split("@")[0] + ".\nKetik .rateuser @" + target.split("@")[0].replace("@s.whatsapp.net", "") + " <bintang> <komentar>"));
+        return m.reply(raraWrap("Rate User", "Belum ada rating untuk @" + target.split("@")[0] + ".\nKetik .rateuser @" + target.split("@")[0].replace("@s.whatsapp.net", "") + " <bintang> <komentar>"));
       }
 
       const avg = data.total / data.count;
@@ -92,13 +92,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         result += "- " + c + "\n";
       });
 
-      return m.reply(novaWrap("Rate User", result));
+      return m.reply(raraWrap("Rate User", result));
     }
 
     // RATE
     const target = m.mentionedJid?.[0];
     if (!target) {
-      return m.reply(novaWrap("Rate User", [
+      return m.reply(raraWrap("Rate User", [
         "Rate member grup — kasih bintang + review jujur",
         "",
         "CARA PAKAI:",
@@ -113,7 +113,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (target === sender) {
-      return m.reply(novaWrap("Rate User", "Gak bisa rate diri sendiri!"));
+      return m.reply(raraWrap("Rate User", "Gak bisa rate diri sendiri!"));
     }
 
     // Parse bintang (1-5)
@@ -123,7 +123,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const comment = parts.slice(1).join(" ") || FUNNY_COMMENTS[Math.floor(Math.random() * FUNNY_COMMENTS.length)];
 
     if (!bintang || bintang < 1 || bintang > 5) {
-      return m.reply(novaWrap("Rate User", "Kasih bintang 1-5!\n💡 *Contoh:* .rateuser @Budi 5 Boss gede"));
+      return m.reply(raraWrap("Rate User", "Kasih bintang 1-5!\n💡 *Contoh:* .rateuser @Budi 5 Boss gede"));
     }
 
     if (!groupData.ratings[target]) {
@@ -144,10 +144,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     result += "Komentar: " + comment + "\n";
     result += "Rata-rata: " + avg.toFixed(1) + "/5 (" + data.count + " review)";
 
-    return m.reply(novaWrap("Rate User", result, "success"));
+    return m.reply(raraWrap("Rate User", result, "success"));
   } catch (e) {
     console.error("[Rate User]", e);
-    m.reply(novaWrap("Rate User", "Error: " + e.message));
+    m.reply(raraWrap("Rate User", "Error: " + e.message));
   }
 }
 

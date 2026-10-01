@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import moment from "moment-timezone";
 import axios from "axios";
 import { createRequire } from "module";
-import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "iqc",
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
   // .iqc tanpa argumen → usage 2 varian
   if (!args.length) {
     return m.reply(
-      novaGuide(
+      raraGuide(
         "iqc",
         "Bikin gambar chat mockup, ada 2 varian",
         `${m.prefix}iqc android <text> — mockup chat android\n${m.prefix}iqc iphone <text> — mockup chat iphone (reply pesan = jadi block reply)`
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
 
   if (!text.trim()) {
     return m.reply(
-      novaGuide(
+      raraGuide(
         "iqc",
         `Mode ${mode} dipilih tapi teksnya kosong`,
         `${m.prefix}iqc ${mode} Hai cantik`
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     console.error("[IQC]", error.message);
     await m.react("❌");
-    m.reply(novaError("IQC", "Gagal bikin gambar chat nih, coba lagi ya"));
+    m.reply(raraError("IQC", "Gagal bikin gambar chat nih, coba lagi ya"));
   }
 }
 

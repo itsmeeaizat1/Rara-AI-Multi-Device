@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: .AIO2 + .AIO2DL — AIO downloader v2 dengan pemilih kualitas
+// RARA AI WHATSAPP BOT — E2E: .AIO2 + .AIO2DL — AIO downloader v2 dengan pemilih kualitas
 // Porting fitur .aio script JPM APENBOTZ (non-grup: AI/downloader/tools).
 import fs from "node:fs";
 import os from "node:os";
@@ -19,11 +19,11 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "aio2-e2e-"));
 // asersi reply WAJIB smallcaps-aware (guard auto toSC semua reply)
 const fromSC = (s) => String(s || "").toLowerCase();
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
 const scraper = await import(R + "/src/scraper/nexray-dl.js");
-const session = await import(R + "/src/lib/nova-aio2-session.js");
+const session = await import(R + "/src/lib/rara-aio2-session.js");
 const aio2 = await import(R + "/plugins/download/aio2.js");
 const aio2dl = await import(R + "/plugins/download/aio2dl.js");
 const cfg = { command: { prefix: "." } };

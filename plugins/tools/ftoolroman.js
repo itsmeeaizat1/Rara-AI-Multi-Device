@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolroman — konversi angka Arab ↔ angka Romawi (port altftool.com/tools/all/roman-numeral-converter)
 // Auto-detect: angka → Romawi, huruf romawi → angka. Range standar 1-3999.
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolroman", alias: ["roman", "romannumeral", "romawi"], category: "tools",
@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const raw = (m.text || "").trim().toUpperCase();
     if (!raw) {
-      return m.reply(novaGuideV2("ftoolroman", {
+      return m.reply(raraGuideV2("ftoolroman", {
         kaomoji: "(๑•̀ㅂ•́)و",
         sapaan: "angka mau diubah ke romawi atau sebaliknya? tinggal ketik~",
         cara: "masukkan angka biasa ATAU angka romawi, bot otomatis mendeteksi arahnya",
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
       const n = parseInt(raw, 10);
       if (n < 1 || n > 3999) {
         await m.react("❌");
-        return m.reply(novaSalahV2("ftoolroman", {
+        return m.reply(raraSalahV2("ftoolroman", {
           kaomoji: "(・_・;)",
           pesan: "angkanya di luar rentang 1-3999",
           contoh: `${prefix}ftoolroman 2026`,
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
       const n = fromRoman(raw);
       if (n === null || n < 1 || n > 3999) {
         await m.react("❌");
-        return m.reply(novaSalahV2("ftoolroman", {
+        return m.reply(raraSalahV2("ftoolroman", {
           kaomoji: "(・_・;)",
           pesan: "kombinasi huruf romawinya gak valid",
           contoh: `${prefix}ftoolroman MMXXVI`,
@@ -65,19 +65,19 @@ async function handler(m, { sock, config: botConfig }) {
       result = String(n); label = `${raw} (Romawi) → ${n} (Arab)`;
     } else {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftoolroman", {
+      return m.reply(raraSalahV2("ftoolroman", {
         kaomoji: "(・_・;)",
         pesan: "input harus angka biasa atau huruf romawi (I V X L C D M)",
         contoh: `${prefix}ftoolroman 2026`,
       }), "ftoolroman");
     }
     await m.react("🐣");
-    await m.reply(novaWrap("Roman Numeral", ["KONVERSI BERHASIL",
+    await m.reply(raraWrap("Roman Numeral", ["KONVERSI BERHASIL",
       "",
       "```" + label + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("Roman Numeral", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("Roman Numeral", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

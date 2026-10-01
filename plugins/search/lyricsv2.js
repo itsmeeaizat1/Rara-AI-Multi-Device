@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // lyricsv2.js — Cari lirik lagu via Genius (genius-lyrics) + nexray fallback
 import { Client as GeniusClient } from 'genius-lyrics'
 import axios from 'axios'
 import config from '../../config.js'
-import { novaError, novaEmpty, novaNoInput, novaGuide } from '../../src/lib/nova-menu-style.js'
+import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
     name: "lirikv2",
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
         const query = (m.text || "").trim()
 
         if (!query) {
-            return m.reply(novaGuide('Lirik v2', 'Mau nyari lirik lagu? Ketik judulnya ya!', pluginConfig.example))
+            return m.reply(raraGuide('Lirik v2', 'Mau nyari lirik lagu? Ketik judulnya ya!', pluginConfig.example))
         }
         let result = null
         let source = ""
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
         }
 
         if (!result) {
-            return m.reply(novaEmpty('Lirik v2', `Gak nemu lagu "${query}" 🧐`))
+            return m.reply(raraEmpty('Lirik v2', `Gak nemu lagu "${query}" 🧐`))
         }
 
         // Format lyrics
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
         return m.reply(text)
     } catch (e) {
         console.error("[lirikv2] error:", e.message)
-        return m.reply(novaError('Lirik v2', e.message))
+        return m.reply(raraError('Lirik v2', e.message))
     }
 }
 

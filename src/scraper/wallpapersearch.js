@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as cheerio from 'cheerio'
 import axios from 'axios'
 async function wallpaperScraper(query) {

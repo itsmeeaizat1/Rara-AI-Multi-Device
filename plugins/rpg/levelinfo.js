@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // levelinfo.js — Lihat info level RPG
-import { ensureRpg, getPlayerInfo } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox, psStat } from "../../src/lib/nova-games.js";
-import { generateLevelInfoCard, levelPreviewThumb } from "../../src/lib/nova-level.js";
+import { ensureRpg, getPlayerInfo } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox, psStat } from "../../src/lib/rara-games.js";
+import { generateLevelInfoCard, levelPreviewThumb } from "../../src/lib/rara-level.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕒");
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("levelinfo", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("levelinfo", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     let msg = "";
     msg += `👤 ${m.pushName || "Player"}\n`;
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         return await m.reply(msg, {
           contextInfo: {
             externalAdReply: {
-              title: config.bot?.name || "Nova AI Whatsapp Bot",
+              title: config.bot?.name || "Rara AI Whatsapp Bot",
               body: `Level ${rpg.level || 1} • ${rpg.job || "novice"}`,
               thumbnail: thumb,
               previewType: "PHOTO",
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("levelinfo error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("levelinfo", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("levelinfo", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 import axios from 'axios'
 import crypto from 'crypto'
 import config from '../../config.js'
-import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
-import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
-import * as timeHelper from '../../src/lib/nova-time.js'
-import te from '../../src/lib/nova-error.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { isLid, lidToJid } from '../../src/lib/rara-lid.js'
+import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
+import * as timeHelper from '../../src/lib/rara-time.js'
+import te from '../../src/lib/rara-error.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 const allCommands = VALID_SERVERS.slice(0, 5).map((v) => `cadmin${v}`);
 const allAliases = VALID_SERVERS.slice(0, 5).map((v) => `createadmin${v}`);
 
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     } else {
       txt += `Isi di \`config.js\` bagian \`pterodactyl.server1\``;
     }
-    return await m.reply(novaWrap("Admin", txt));
+    return await m.reply(raraWrap("Admin", txt));
   }
 
   let targetUser = null;
@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetUser) {
-    return m.reply(novaWrap("Admin", `❌ Tidak dapat menentukan nomor target.`));
+    return m.reply(raraWrap("Admin", `❌ Tidak dapat menentukan nomor target.`));
   }
 
   try {
@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
       if (targetUser !== m.sender) {
         await sock.sendMessage(targetUser, { text: detailTxt })
       }
-      await m.reply(novaWrap("Admin", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
+      await m.reply(raraWrap("Admin", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
     }
     // Mode 2: Grup Only
     else if (deliveryMode === 2) {
@@ -234,7 +234,7 @@ async function handler(m, { sock }) {
       }
     }
   } catch (err) {
-    return m.reply(novaWrap("Admin", te(m.prefix, m.command, m.pushName), "error"))
+    return m.reply(raraWrap("Admin", te(m.prefix, m.command, m.pushName), "error"))
   }
 }
 

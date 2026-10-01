@@ -1,19 +1,19 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 //
 // .keypatrol — AUTO KEY PATROL (27 Sep 2026, fitur automation no.1).
 // Tiap 6 jam bot tes semua api key ke endpoint ringan provider. Key mati
 // gak nunggu fitur error: DM owner SEGERA saat key mati / balik idup,
 // laporan lengkap mingguan Minggu 08:00 WIB. Engine:
-// src/lib/nova-key-patrol.js (jangan duplikasi logika di sini).
+// src/lib/rara-key-patrol.js (jangan duplikasi logika di sini).
 
-import { novaGuide } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import {
   ensureKeyPatrolState,
   buildStatusCard,
   buildReportCard,
   runKeyPatrol,
-} from "../../src/lib/nova-key-patrol.js";
+} from "../../src/lib/rara-key-patrol.js";
 
 const pluginConfig = {
   name: "keypatrol",
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     m.react?.(sub ? "🛠️" : "🧠");
     await m.reply(buildStatusCard(st));
     if (!sub) {
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "keypatrol",
         "Patrol otomatis semua api key tiap 6 jam.\n.keypatrol tes — tes semua key SEKARANG (live, hasil ditampilkan)\n.keypatrol lapor — laporan lengkap dari patrol terakhir\n.keypatrol on/off — nyalakan atau matikan patrol",
         ".keypatrol tes\n.keypatrol lapor",
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     m.react?.("🛠️");
     const { skipped, results } = await runKeyPatrol(sock);
     if (skipped) {
-      return m.reply(novaGuide(
+      return m.reply(raraGuide(
         "keypatrol",
         "Patrolnya lagi OFF — nyalakan dulu dengan .keypatrol on kalau mau tes.",
         ".keypatrol on",
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     m.react?.("🛠️");
     const last = Object.values(st.lastResults || {});
     if (!last.length) {
-      return m.reply(novaGuide(
+      return m.reply(raraGuide(
         "keypatrol",
         "Belum ada hasil patrol yang tercatat.\nKetik .keypatrol tes untuk menjalankan patrol pertama sekarang.",
         ".keypatrol tes",
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     st.on = true;
     db.db.write();
     m.react?.("⚡");
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "keypatrol",
       "Patrol key saya nyalakan kembali.\nTiap 6 jam semua key yang terisi saya tes otomatis — kalau ada yang mati, saya DM kamu segera.",
       ".keypatrol tes",
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
   if (sub === "off" || sub === "mati" || sub === "stop") {
     st.on = false;
     db.db.write();
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "keypatrol",
       "Oke, patrol key saya matikan.\nKey tetap terpakai seperti biasa — yang berhenti cuma pengecekan otomatis dan laporannya.",
       ".keypatrol on",
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
     ));
   }
 
-  return m.reply(novaGuide(
+  return m.reply(raraGuide(
     "keypatrol",
     "Sub perintahnya belum saya kenali. Yang tersedia: tes · lapor · status · on · off",
     ".keypatrol tes",

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "konversinilai",
@@ -70,7 +70,7 @@ async function handler(m, { sock, args }) {
         txt += `${range.padEnd(9)} ${g.letter.padEnd(7)} ${String(g.gpa).padEnd(5)} ${g.predicate}\n`;
       }
       txt += `\n_Sistem 8-tier (A, AB, B, BC, C, CD, D, E)_`;
-      await m.reply(novaWrap("Konversi Nilai", txt.split("\n")));
+      await m.reply(raraWrap("Konversi Nilai", txt.split("\n")));
       return;
     }
 
@@ -83,7 +83,7 @@ async function handler(m, { sock, args }) {
         txt += `${range.padEnd(10)} ${g.letter.padEnd(7)} ${String(g.gpa).padEnd(5)} ${g.predicate}\n`;
       }
       txt += `\n_Sistem 4-tier (A, B, C, D, E) - beberapa kampus_`;
-      await m.reply(novaWrap("Konversi Nilai", txt.split("\n")));
+      await m.reply(raraWrap("Konversi Nilai", txt.split("\n")));
       return;
     }
 
@@ -94,7 +94,7 @@ async function handler(m, { sock, args }) {
     }
 
     if (score < 0 || score > 100) {
-      return m.reply(novaWrap("Konversinilai", "Nilai harus 0-100!"));
+      return m.reply(raraWrap("Konversinilai", "Nilai harus 0-100!"));
     }
 
     const grade8 = findGrade(score, false);
@@ -111,10 +111,10 @@ async function handler(m, { sock, args }) {
     txt += `  Predikat: *${grade4.predicate}*\n\n`;
     txt += `_8-tier: A/AB/B/BC/C/CD/D/E\n4-tier: A/B/C/D/E_`;
 
-    await m.reply(novaWrap("Konversi Nilai", txt.split("\n")));
+    await m.reply(raraWrap("Konversi Nilai", txt.split("\n")));
   } catch (e) {
     console.error("[KONVERSINILAI] Error:", e.message);
-    await m.reply(novaWrap("konversinilai", `Error: ${e.message}`));
+    await m.reply(raraWrap("konversinilai", `Error: ${e.message}`));
   }
 }
 

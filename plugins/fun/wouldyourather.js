@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // wouldyourather.js — Would You Rather questions (API + local fallback)
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "wouldyourather",
@@ -70,7 +70,7 @@ async function handler(m, { sock, config, db }) {
     const text = `Mau pilih yang mana?\n\n🅰️ ${wyr.a}\n\n🅱️ ${wyr.b}\n\nBalas A atau B untuk jawab!`;
 
     await m.react("🐣");
-    return m.reply(novaWrap("Would You Rather", text));
+    return m.reply(raraWrap("Would You Rather", text));
   } catch (e) {
     await m.react("❌");
     console.error("[wouldyourather] error:", e.message);

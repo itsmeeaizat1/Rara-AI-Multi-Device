@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aio2.js — AIO Downloader v2 dengan PEMILIH KUALITAS (porting fitur .aio
 // script JPM APENBOTZ, 21 Sep 2026: "fitur yg work aja diporting jd v2").
-// Beda dari downloader lain di Nova (one-shot kirim 1 hasil terbaik):
+// Beda dari downloader lain di Rara (one-shot kirim 1 hasil terbaik):
 // .aio2 ngasih POPUP pilih resolusi/format — video (ditandain 🔊 punya
 // audio / no-audio), audio per bitrate, foto slides TikTok satu-satu,
 // file TeraBox per item — dipilih → dikirim sebagai DOCUMENT (anti
 // kompres WA). Engine: api.nexray.web.id /downloader/aio + /downloader/terabox.
 import { aioDl, teraboxDl } from "../../src/scraper/nexray-dl.js";
-import { registerChoice } from "../../src/lib/nova-aio2-session.js";
+import { registerChoice } from "../../src/lib/rara-aio2-session.js";
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
-import { toSC, novaWrap, novaGuide, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
+import { toSC, raraWrap, raraGuide, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -110,7 +110,7 @@ export function buildPickerSections(medias, { source, statistics } = {}) {
 
 /** Popup single_select — pola proven grading.js (placeholder Elaina V3). */
 async function sendPicker(m, sock, { source, title, author, bodyText, sections, statsText }) {
-  const botName = config?.bot?.name || "Nova AI";
+  const botName = config?.bot?.name || "Rara AI";
   const icon = PLATFORM_ICON[source] || "📥";
   const lines = [
     `*${icon} ${toSC("AIO Downloader v2")}*`,
@@ -157,7 +157,7 @@ async function sendSingle(m, sock, media, meta) {
     }, { quoted: m });
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("AIO v2", `Gagal unduh file: ${e?.message || e}`, "error"));
+    await m.reply(raraWrap("AIO v2", `Gagal unduh file: ${e?.message || e}`, "error"));
   }
   return true;
 }
@@ -167,7 +167,7 @@ async function handler(m, { sock, config: botConfig }) {
   const url = String(m.text || "").trim();
 
   if (!url) {
-    return m.reply(novaGuideV2("aio2", {
+    return m.reply(raraGuideV2("aio2", {
  kaomoji: "(๑˃ᴗ˂)ﻭ",
  sapaan: "pengen pilih kualitas sendiri? pakai yang ini! (⌒‿⌒)♡",
       cara: "tempel linknya sesudah command",
@@ -177,7 +177,7 @@ async function handler(m, { sock, config: botConfig }) {
     }));
   }
   if (!/^https?:\/\//i.test(url)) {
-    return m.reply(novaSalahV2("aio2", {
+    return m.reply(raraSalahV2("aio2", {
  kaomoji: "(;∀;)",
       pesan: "linknya gak valid kak, harus diawali http atau https~ ulangi ya",
       contoh: `${prefix}aio2 link`,
@@ -220,7 +220,7 @@ async function handler(m, { sock, config: botConfig }) {
     const { sections, statsText } = buildPickerSections(res.medias, { source: res.source, statistics: res.statistics });
     if (!sections.length) {
       await m.react("❌");
-      return m.reply(novaWrap("AIO v2", `Link-nya gak punya media yang bisa diunduh (sumber: ${res.source}).`, "error"));
+      return m.reply(raraWrap("AIO v2", `Link-nya gak punya media yang bisa diunduh (sumber: ${res.source}).`, "error"));
     }
     registerChoice(m.chat, res.medias.map((x) => x.url));
 
@@ -243,7 +243,7 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("AIO v2", `${e?.message || e} — coba link lain, atau pakai downloader spesifik platform (.tiktok/.ytmp4/.teraboxv2).`, "error"));
+    return m.reply(raraWrap("AIO v2", `${e?.message || e} — coba link lain, atau pakai downloader spesifik platform (.tiktok/.ytmp4/.teraboxv2).`, "error"));
   }
 }
 

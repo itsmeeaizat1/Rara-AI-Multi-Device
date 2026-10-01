@@ -9,13 +9,13 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-act-db-" + Date.now();
+const DB_DIR = "/tmp/rara-act-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 const db = await initDatabase(DB_DIR + "/db.json");
 
-const { _setLevelCardLoadImageForTest, checkAndNotifyLevelUp } = await import(R + "/src/lib/nova-level.js");
-const { grantActivityExp, BASE_CMD_EXP, GAME_CMD_EXP } = await import(R + "/src/lib/nova-activity-progress.js");
+const { _setLevelCardLoadImageForTest, checkAndNotifyLevelUp } = await import(R + "/src/lib/rara-level.js");
+const { grantActivityExp, BASE_CMD_EXP, GAME_CMD_EXP } = await import(R + "/src/lib/rara-activity-progress.js");
 
 // fake image biar kartu level-up gak nyamber jaringan — sekalian CATAT
 // argumen tiap pemanggilan (assert sumber background/avatar perbaikan 1 Okt)
@@ -131,7 +131,7 @@ w("\n— grantActivityExp: EXP per aktivitas (db beneran, isolated) —");
 // ═══════════════════════════════════════════════════════════════
 w("\n— perbaikan 1 Okt 2026: thumbnail level up deterministik —");
 {
-  // background HARUS dari asset lokal nova-levelup (Buffer), bukan fetch remote
+  // background HARUS dari asset lokal rara-levelup (Buffer), bukan fetch remote
   const jid = "6281112223334@s.whatsapp.net";
   const u = db.setUser(jid);
   u.exp = 9985;
@@ -141,7 +141,7 @@ w("\n— perbaikan 1 Okt 2026: thumbnail level up deterministik —");
   const callsBefore = loadImageCalls.length;
   await checkAndNotifyLevelUp(sock, m, db, u, 9985, 10000);
   const bg = loadImageCalls[callsBefore];
-  check("background dari ASSET LOKAL (Buffer, .ganti-nova-levelup.jpg nyambung)", Buffer.isBuffer(bg), typeof bg);
+  check("background dari ASSET LOKAL (Buffer, .ganti-rara-levelup.jpg nyambung)", Buffer.isBuffer(bg), typeof bg);
   check("background BUKAN string URL remote (gak fetch wallpapersden)", typeof bg !== "string", String(bg).slice(0, 50));
   check("avatar pakai sock.profileBuffer (Buffer)", loadImageCalls[callsBefore + 1]?.toString() === "PP-BUFFER-FAKE", typeof loadImageCalls[callsBefore + 1]);
   check("cuma 2 loadImage (bg + avatar), tanpa fetch ekstra", loadImageCalls.length - callsBefore === 2, loadImageCalls.length - callsBefore);

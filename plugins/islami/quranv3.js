@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "quranv3",
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
 
     // ===== HELP / MENU =====
     if (!subCmd || subCmd === "help" || subCmd === "menu" || subCmd === "how") {
-      let txt = novaWrap("Al-Quran V3", [
+      let txt = raraWrap("Al-Quran V3", [
         "Al-Quran lengkap dengan teks Arab dan terjemahan Indonesia, plus audio murottal.",
         "Data real-time dari alquran.cloud API",
         "",
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
       }
 
       if (!data) {
-        return m.reply(novaWrap("Quran V3 Error", "Gagal mengambil random ayat. Coba lagi nanti."));
+        return m.reply(raraWrap("Quran V3 Error", "Gagal mengambil random ayat. Coba lagi nanti."));
       }
 
       const arabic = data.data[0];
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
       const audio = data.data[2];
       const surahInfo = arabic.surah;
 
-      let txt = novaWrap("Random Ayat", [
+      let txt = raraWrap("Random Ayat", [
         "Surat: *" + surahInfo.englishName + "* (" + surahInfo.name + ")",
         "Arti: " + surahInfo.englishNameTranslation,
         "Ayat: " + arabic.numberInSurah + " dari " + surahInfo.numberOfAyahs,
@@ -132,20 +132,20 @@ async function handler(m, { sock }) {
       const ayatNum = args[2] ? parseInt(args[2]) : null;
 
       if (!suratNum || suratNum < 1 || suratNum > 114) {
-        return m.reply(novaWrap("Quran V3", "Format: .quranv3 audio <surat> [ayat]\n💡 *Contoh:* .quranv3 audio 1\n.quranv3 audio 36 1"));
+        return m.reply(raraWrap("Quran V3", "Format: .quranv3 audio <surat> [ayat]\n💡 *Contoh:* .quranv3 audio 1\n.quranv3 audio 36 1"));
       }
       const surahRes = await fetchJson(API_BASE + "/surah/" + suratNum);
       const surah = surahRes.data;
 
       if (ayatNum) {
         if (ayatNum < 1 || ayatNum > surah.numberOfAyahs) {
-          return m.reply(novaWrap("Quran V3", "Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
+          return m.reply(raraWrap("Quran V3", "Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
         }
 
         const audioRes = await fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/ar.alafasy");
         const indoRes = await fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/id.indonesian");
 
-        let txt = novaWrap("Audio Al-Quran", [
+        let txt = raraWrap("Audio Al-Quran", [
           "Surat: *" + surah.englishName + "* (" + surah.name + ")",
           "Ayat: " + ayatNum + " dari " + surah.numberOfAyahs,
           "Qari: Mishary Rashid Alafasy",
@@ -160,7 +160,7 @@ async function handler(m, { sock }) {
         await sendAudio(sock, m, audioRes.data.audio);
       } else {
         // Full surah audio via CDN
-        let txt = novaWrap("Audio Al-Quran", [
+        let txt = raraWrap("Audio Al-Quran", [
           "Surat: *" + surah.englishName + "* (" + surah.name + ")",
           "Total Ayat: " + surah.numberOfAyahs,
           "Qari: Mishary Rashid Alafasy",
@@ -182,7 +182,7 @@ async function handler(m, { sock }) {
             await new Promise((r) => setTimeout(r, 500));
           }
           if (surah.numberOfAyahs > 5) {
-            await m.reply(novaWrap("Quran V3", "CDN gagal, hanya 5 ayat pertama dikirim.\nAyat spesifik: .quranv3 audio " + suratNum + " <ayat>"));
+            await m.reply(raraWrap("Quran V3", "CDN gagal, hanya 5 ayat pertama dikirim.\nAyat spesifik: .quranv3 audio " + suratNum + " <ayat>"));
           }
         }
       }
@@ -193,7 +193,7 @@ async function handler(m, { sock }) {
     if (subCmd === "surah") {
       const suratNum = parseInt(args[1]);
       if (!suratNum || suratNum < 1 || suratNum > 114) {
-        return m.reply(novaWrap("Quran V3", "Format: .quranv3 surah <nomor>\n💡 *Contoh:* .quranv3 surah 1"));
+        return m.reply(raraWrap("Quran V3", "Format: .quranv3 surah <nomor>\n💡 *Contoh:* .quranv3 surah 1"));
       }
       const json = await fetchJson(API_BASE + "/surah/" + suratNum + "/editions/quran-uthmani,id.indonesian");
       const surahData = json.data[0];
@@ -224,7 +224,7 @@ async function handler(m, { sock }) {
       lines.push("");
       lines.push("Audio: .quranv3 audio " + suratNum);
       lines.push("Sumber: alquran.cloud API");
-      return await m.reply(novaWrap("Al-Quran V3", lines));
+      return await m.reply(raraWrap("Al-Quran V3", lines));
     }
 
     // ===== AYAH MODE (Arab + Indo + audio) =====
@@ -234,16 +234,16 @@ async function handler(m, { sock }) {
       const ayatNum = parseInt(parts[1]);
 
       if (!suratNum || !ayatNum) {
-        return m.reply(novaWrap("Quran V3", "Format: .quranv3 ayah <surat>:<ayat>\n💡 *Contoh:* .quranv3 ayah 1:1\n.quranv3 ayah 2:255"));
+        return m.reply(raraWrap("Quran V3", "Format: .quranv3 ayah <surat>:<ayat>\n💡 *Contoh:* .quranv3 ayah 1:1\n.quranv3 ayah 2:255"));
       }
 
       if (suratNum < 1 || suratNum > 114) {
-        return m.reply(novaWrap("Quran V3", "Nomor surat harus 1-114."));
+        return m.reply(raraWrap("Quran V3", "Nomor surat harus 1-114."));
       }
       const json = await fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/editions/quran-uthmani,id.indonesian,ar.alafasy");
 
       if (json.code !== 200) {
-        return m.reply(novaWrap("Quran V3", "Ayat tidak ditemukan. Cek nomor surat dan ayat."));
+        return m.reply(raraWrap("Quran V3", "Ayat tidak ditemukan. Cek nomor surat dan ayat."));
       }
 
       const arabic = json.data[0];
@@ -251,7 +251,7 @@ async function handler(m, { sock }) {
       const audio = json.data[2];
       const surahInfo = arabic.surah;
 
-      let txt = novaWrap("Al-Quran V3", [
+      let txt = raraWrap("Al-Quran V3", [
         "Surat: *" + surahInfo.englishName + "* (" + surahInfo.name + ")",
         "Ayat: " + arabic.numberInSurah + " dari " + surahInfo.numberOfAyahs,
         "Arti: " + surahInfo.englishNameTranslation,
@@ -278,14 +278,14 @@ async function handler(m, { sock }) {
     const ayatNum = args[1] ? parseInt(args[1]) : null;
 
     if (!suratNum || suratNum < 1 || suratNum > 114) {
-      return m.reply(novaWrap("Quran V3", "Format tidak valid!\n\nKetik .quranv3 help buat lihat cara pakai."));
+      return m.reply(raraWrap("Quran V3", "Format tidak valid!\n\nKetik .quranv3 help buat lihat cara pakai."));
     }
     const surahRes = await fetchJson(API_BASE + "/surah/" + suratNum);
     const surah = surahRes.data;
 
     if (ayatNum) {
       if (ayatNum < 1 || ayatNum > surah.numberOfAyahs) {
-        return m.reply(novaWrap("Quran V3", "Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
+        return m.reply(raraWrap("Quran V3", "Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
       }
 
       const [arabRes, indoRes, audioRes] = await Promise.all([
@@ -298,7 +298,7 @@ async function handler(m, { sock }) {
       const indoAyah = indoRes.data;
       const audioUrl = audioRes.data.audio;
 
-      let txt = novaWrap("Al-Quran V3", [
+      let txt = raraWrap("Al-Quran V3", [
         "Surat: *" + surah.englishName + "* (" + surah.name + ")",
         "Arti: " + surah.englishNameTranslation,
         "Ayat: " + ayatNum + " dari " + surah.numberOfAyahs,
@@ -352,12 +352,12 @@ async function handler(m, { sock }) {
       lines.push("");
       lines.push("Audio: .quranv3 audio " + suratNum);
       lines.push("Sumber: alquran.cloud API");
-      return await m.reply(novaWrap("Al-Quran V3", lines));
+      return await m.reply(raraWrap("Al-Quran V3", lines));
     }
   } catch (error) {
     console.error("[Quran V3]", error);
     await m.react("❌");
-    return m.reply(novaWrap("quranv3", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("quranv3", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

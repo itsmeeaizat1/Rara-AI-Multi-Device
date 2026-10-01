@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // conciseaiv2 — ConciseAI v2 (toki heroku, HMAC)
 import crypto from "crypto";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "conciseaiv2", alias: ["conciseaiv2"], aliases: ["conciseaiv2", "cisaiv2"],
@@ -15,7 +15,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = (m.args || []).join(" ").trim();
   try {
-    if (!text) return m.reply(novaWrap("conciseaiv2", `Mau nanya apa?\nContoh: ${m.prefix}conciseaiv2 apa itu fotosintesis`, "guide"));
+    if (!text) return m.reply(raraWrap("conciseaiv2", `Mau nanya apa?\nContoh: ${m.prefix}conciseaiv2 apa itu fotosintesis`, "guide"));
     await m.react("🕒");
     const user_id = crypto.randomUUID().replace(/-/g, "");
     const lastMsg = `USER: ${text}`;
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
 
     console.error("conciseaiv2 error:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("conciseaiv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("conciseaiv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

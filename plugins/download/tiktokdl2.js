@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import * as cheerio from 'cheerio'
 import crypto from 'crypto'
 import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'nova'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -157,11 +157,11 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return m.reply(novaNoInput("TikTok DL 2", "Masukkan link TikTok yang mau kamu download!", `${m.prefix}tiktok2 https://vt.tiktok.com/xxx`));
+        return m.reply(raraNoInput("TikTok DL 2", "Masukkan link TikTok yang mau kamu download!", `${m.prefix}tiktok2 https://vt.tiktok.com/xxx`));
     }
 
     if (!url.match(/tiktok\.com|vt\.tiktok/i)) {
-        return m.reply(novaGuide("TikTok DL 2", "URL tidak valid! Kirim link TikTok ya.", `${m.prefix}tiktok2 https://vt.tiktok.com/xxx`));
+        return m.reply(raraGuide("TikTok DL 2", "URL tidak valid! Kirim link TikTok ya.", `${m.prefix}tiktok2 https://vt.tiktok.com/xxx`));
     }
     try {
         const result = await savett(url)
@@ -201,7 +201,7 @@ async function handler(m, { sock }) {
         }
 
         if (result.type === 'photo' && result.slides.length > 0) {
-            await m.reply(novaWrap("Tiktokdl2", `📸 *Mengirim ${result.slides.length} slide...*`))
+            await m.reply(raraWrap("Tiktokdl2", `📸 *Mengirim ${result.slides.length} slide...*`))
 
             const mediaList = []
             for (let i = 0; i < result.slides.length; i++) {
@@ -280,7 +280,7 @@ async function handler(m, { sock }) {
         }
 
         if (result.mp3.length > 0) {
-            m.reply(novaWrap("Tiktokdl2", `🍀 *note*\nKonten ini tidak memiliki video/slide, mengirim audio saja...`))
+            m.reply(raraWrap("Tiktokdl2", `🍀 *note*\nKonten ini tidak memiliki video/slide, mengirim audio saja...`))
             await sock.sendMessage(
                 m.chat,
                 {
@@ -295,10 +295,10 @@ async function handler(m, { sock }) {
         throw new Error('Tidak ada media yang dapat diunduh')
 
         await m.react("🐣");
-        await m.reply(novaBerhasil("Tiktokdl2"));
+        await m.reply(raraBerhasil("Tiktokdl2"));
     } catch (err) {
         console.error('[TikTokDL2] Error:', err)
-        m.reply(novaError("TikTok DL 2", err.message || "Gagal mengunduh video TikTok"));
+        m.reply(raraError("TikTok DL 2", err.message || "Gagal mengunduh video TikTok"));
     }
 }
 

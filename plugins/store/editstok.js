@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 
 const pluginConfig = {
     name: 'editstok',
@@ -20,7 +20,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.isGroup) {
-        return m.reply(novaWrap("editstok", `🚫 *akses ditolak*\n\n` +
+        return m.reply(raraWrap("editstok", `🚫 *akses ditolak*\n\n` +
             `Untuk menjaga privasi 🛡️, pengeditan stok hanya dapat dilakukan di *private chat*.\n\n` +
             `Silakan chat bot secara langsung 📱`))
     }
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     const itemNo = parseInt(parts[1]) - 1
 
     if (isNaN(productNo) || productNo < 0 || productNo >= products.length) {
-        return m.reply(novaWrap("editstok", `❌ *nomor produk tidak valid.*\n\nRentang: 1-${products.length} 📋`))
+        return m.reply(raraWrap("editstok", `❌ *nomor produk tidak valid.*\n\nRentang: 1-${products.length} 📋`))
     }
 
     const product = products[productNo]
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     }
 
     if (!newDetail || newDetail.length < 3) {
-        return m.reply(novaWrap("Detail terlalu pendek.", `Minimal 3 karakter diperlukan 🔑`))
+        return m.reply(raraWrap("Detail terlalu pendek.", `Minimal 3 karakter diperlukan 🔑`))
     }
 
     const oldDetail = stockItems[itemNo].detail

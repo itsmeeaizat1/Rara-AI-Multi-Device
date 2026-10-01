@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: AI Sticker Generator
  * Fitur: .aisticker <prompt> — AI (nano-banana) bikin gambar dari teks
@@ -6,9 +6,9 @@
  *        generator AI di bot. Opsi: hd / 2k / 4k (upscale sebelum
  *        dijadiin sticker).
  */
-import { callImageGenChain } from "../../src/lib/nova-ai-service.js";
-import { upscaleImage, polishImage } from "../../src/lib/nova-remini-ffmpeg.js";
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { callImageGenChain } from "../../src/lib/rara-ai-service.js";
+import { upscaleImage, polishImage } from "../../src/lib/rara-remini-ffmpeg.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aisticker",
@@ -62,7 +62,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   if (!rawPrompt) {
     return m.reply(
-      novaWrap("AI Sticker", [
+      raraWrap("AI Sticker", [
         "Bikin sticker dari teks pakai AI — langsung jadi sticker, gak perlu foto!",
         "",
         "Cara pakai:",
@@ -100,13 +100,13 @@ async function handler(m, { sock, args, config: botConfig }) {
       } catch (e) { console.error("[aisticker] upscale:", e.message); }
     }
 
-    const packname = botConfig?.sticker?.packname || botConfig?.bot?.name || "Nova-AI";
+    const packname = botConfig?.sticker?.packname || botConfig?.bot?.name || "Rara-AI";
     const author = botConfig?.sticker?.author || botConfig?.owner?.name || "Bot";
 
     await sock.sendImageAsSticker(m.chat, buf, m, { packname, author });
     await m.react("🐣");
     await m.reply(
-      novaWrap("AI Sticker", [
+      raraWrap("AI Sticker", [
         "✅ Sticker AI jadi!",
         `🎨 Prompt: ${cleanPrompt}`,
         `⚡ Engine: ${img.via || "nano-banana"}${hdNote}`,
@@ -116,7 +116,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     console.error("[aisticker]", e.message || e);
     await m.react("❌");
     await m.reply(
-      novaWrap("AI Sticker", [
+      raraWrap("AI Sticker", [
         "❌ Gagal bikin sticker AI.",
         "",
         "Engine AI lagi sibuk/down — coba lagi bentar lagi ya.",

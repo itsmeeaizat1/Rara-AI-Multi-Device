@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "anticustom",
@@ -128,7 +128,7 @@ async function startWizard(m, sock, mode, isFirstSetup = false) {
   const existing = global.anticustomSessions.get(sessionKey);
 
   if (existing) {
-    await m.reply(novaError("Anticustom", `Kamu masih punya sesi AntiCustom yang belum selesai!\n\nBalas pertanyaan terakhir bot untuk lanjut atau ketik \`${m.prefix || "."}anticustom cancel\``));
+    await m.reply(raraError("Anticustom", `Kamu masih punya sesi AntiCustom yang belum selesai!\n\nBalas pertanyaan terakhir bot untuk lanjut atau ketik \`${m.prefix || "."}anticustom cancel\``));
     return;
   }
 
@@ -216,30 +216,30 @@ async function handler(m, { sock }) {
 
   if (sub === "cancel" || sub === "batal") {
     if (!global.anticustomSessions.has(sessionKey)) {
-      await m.reply(novaEmpty("Anticustom", "Tidak ada sesi AntiCustom yang sedang berjalan."));
+      await m.reply(raraEmpty("Anticustom", "Tidak ada sesi AntiCustom yang sedang berjalan."));
       return;
     }
     clearSession(sessionKey);
-    await m.reply(novaWrap("Anticustom", "✅ Sesi AntiCustom dibatalkan."));
+    await m.reply(raraWrap("Anticustom", "✅ Sesi AntiCustom dibatalkan."));
     return;
   }
 
   if (sub === "on") {
     db.setGroup(m.chat, { anticustom: "on" });
-    await m.reply(novaWrap("Anticustom", "✅ *anticustom diaktifkan*"));
+    await m.reply(raraWrap("Anticustom", "✅ *anticustom diaktifkan*"));
     return;
   }
 
   if (sub === "off") {
     db.setGroup(m.chat, { anticustom: "off" });
-    await m.reply(novaWrap("Anticustom", "❌ *anticustom dinonaktifkan*"));
+    await m.reply(raraWrap("Anticustom", "❌ *anticustom dinonaktifkan*"));
     return;
   }
 
   if (sub === "metode") {
     const action = normalizeAction(args[1], "");
     if (!action) {
-      await m.reply(novaNoInput("Anticustom Metode", "Pilih metode yang mau dipakai!", `${m.prefix || "."}anticustom metode kick`));
+      await m.reply(raraNoInput("Anticustom Metode", "Pilih metode yang mau dipakai!", `${m.prefix || "."}anticustom metode kick`));
       return;
     }
     db.setGroup(m.chat, { anticustom: "on", anticustomMode: action });
@@ -251,17 +251,17 @@ async function handler(m, { sock }) {
 
   if (sub === "list") {
     if (rules.length === 0) {
-      await m.reply(novaEmpty("Anticustom List", "Belum ada rule AntiCustom di grup ini."));
+      await m.reply(raraEmpty("Anticustom List", "Belum ada rule AntiCustom di grup ini."));
       return;
     }
-    await m.reply(novaWrap("Anticustom", `📋 list anticustom\n\n${rules.map(formatRule).join("\n\n")}`, "info"));
+    await m.reply(raraWrap("Anticustom", `📋 list anticustom\n\n${rules.map(formatRule).join("\n\n")}`, "info"));
     return;
   }
 
   if (sub === "del" || sub === "delete" || sub === "remove") {
     const name = args.slice(1).join(" ").trim().toLowerCase();
     if (!name) {
-      await m.reply(novaNoInput("Anticustom Del", "Masukkan judul rule yang mau dihapus", `${m.prefix || "."}anticustom del Kata Kotor`));
+      await m.reply(raraNoInput("Anticustom Del", "Masukkan judul rule yang mau dihapus", `${m.prefix || "."}anticustom del Kata Kotor`));
       return;
     }
 
@@ -276,16 +276,16 @@ async function handler(m, { sock }) {
     });
 
     if (nextRules.length === rules.length) {
-      await m.reply(novaEmpty("Anticustom Del", `Rule dengan judul \`${name}\` tidak ditemukan.`));
+      await m.reply(raraEmpty("Anticustom Del", `Rule dengan judul \`${name}\` tidak ditemukan.`));
       return;
     }
 
     db.setGroup(m.chat, { anticustomRules: nextRules });
-    await m.reply(novaWrap("Anti custom", `Rule dengan judul \`${name}\` berhasil dihapus.`, "success"));
+    await m.reply(raraWrap("Anti custom", `Rule dengan judul \`${name}\` berhasil dihapus.`, "success"));
     return;
   }
 
-  await m.reply(novaError("Anticustom", "Subcommand tidak valid. Gunakan: on, off, list, add, del, metode, cancel"));
+  await m.reply(raraError("Anticustom", "Subcommand tidak valid. Gunakan: on, off, list, add, del, metode, cancel"));
 }
 
 async function replyHandler(m, { sock }) {
@@ -307,7 +307,7 @@ async function replyHandler(m, { sock }) {
 
   if (session.step === "title") {
     if (text.length < 2 || text.length > 40) {
-      m.reply(novaError("Anticustom", "Judul harus 2-40 karakter ya."));
+      m.reply(raraError("Anticustom", "Judul harus 2-40 karakter ya."));
       return true;
     }
 
@@ -334,7 +334,7 @@ async function replyHandler(m, { sock }) {
   if (session.step === "patterns") {
     const parsed = parsePatternAnswer(text);
     if (parsed.error) {
-      await m.reply(novaError("Anticustom Pattern", parsed.error));
+      await m.reply(raraError("Anticustom Pattern", parsed.error));
       return true;
     }
 
@@ -357,7 +357,7 @@ async function replyHandler(m, { sock }) {
   if (session.step === "action") {
     const action = normalizeAction(text, "");
     if (!action) {
-      await m.reply(novaError("Anticustom Action", "Balas dengan `hapus` atau `kick` ya."));
+      await m.reply(raraError("Anticustom Action", "Balas dengan `hapus` atau `kick` ya."));
       return true;
     }
 
@@ -378,12 +378,12 @@ async function replyHandler(m, { sock }) {
   if (session.step === "confirm") {
     if (/^(batal|cancel|tidak|nggak|ga|gak|no)$/i.test(text)) {
       clearSession(sessionKey);
-      await m.reply(novaWrap("Anticustom", `Oke, sesi AntiCustom dibatalkan. Kalau mau mulai lagi, ketik \`${m.prefix || "."}anticustom add\`.`, "success"));
+      await m.reply(raraWrap("Anticustom", `Oke, sesi AntiCustom dibatalkan. Kalau mau mulai lagi, ketik \`${m.prefix || "."}anticustom add\`.`, "success"));
       return true;
     }
 
     if (!/^(ya|iya|y|yes|oke|ok|setuju|gas|lanjut|sip|siap)$/i.test(text)) {
-      await m.reply(novaError("Anticustom Confirm", "Balas dengan `ya` untuk simpan atau `batal` untuk membatalkan."));
+      await m.reply(raraError("Anticustom Confirm", "Balas dengan `ya` untuk simpan atau `batal` untuk membatalkan."));
       return true;
     }
 

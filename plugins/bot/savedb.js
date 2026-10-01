@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import moment from 'moment-timezone'
 import fs from 'fs'
 import path from 'path'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "savedb",
     alias: ["savedb"],
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     }
     const dbPath = path.join(process.cwd(), "src", "database", 'main', 'db.json')
     if (!fs.existsSync(dbPath)) {
-        return m.reply(novaWrap("savedb", `❌ File database tidak ditemukan!`))
+        return m.reply(raraWrap("savedb", `❌ File database tidak ditemukan!`))
     }
     try {
         const stats = fs.statSync(dbPath)
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
                 `---`
         }, { quoted: m })
     } catch (error) {
-        await m.reply(novaWrap("savedb", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(raraWrap("savedb", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 export { pluginConfig as config, handler }

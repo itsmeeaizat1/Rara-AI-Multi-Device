@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // slander.js — Fake chat untuk fitnah (prank)
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "fitnah",
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("fitnah error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("fitnah", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("fitnah", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

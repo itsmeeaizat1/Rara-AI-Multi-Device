@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import { exec } from "child_process";
 import { promisify } from "util";
-import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
+import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
 const execAsync = promisify(exec);
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -51,7 +51,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        novaCaption({
+        raraCaption({
   emoji: "🤖",
   name: "aivoice",
   description: "Ubah teks menjadi suara dengan AI/TTS",
@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const out =
-      novaWrap("AI Voice", [`Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
+      raraWrap("AI Voice", [`Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
         "Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aivoice <teks> untuk suara lain`) +
@@ -120,7 +120,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AIVoice", "Gagal nih, coba lagi ya");
+      raraError("AIVoice", "Gagal nih, coba lagi ya");
 
     await m.reply(text);
   }

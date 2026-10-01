@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 import fs from "fs";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
-import { grantSewaPremium } from "../../src/lib/nova-sewa-premium.js";
-import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { notifySewaBot } from "../../src/lib/rara-saluran-broadcast.js";
+import { grantSewaPremium } from "../../src/lib/rara-sewa-premium.js";
+import { calculateSewaPrice } from "../../src/lib/rara-sewa-price.js";
 const pluginConfig = {
   name: "addsewa",
   alias: ["addsewa"],
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
   try {
     const result = await resolveGroupId(sock, input);
     if (!result) {
-      return m.reply(novaWrap("addsewa", `❌ Grup tidak ditemukan atau link tidak valid`));
+      return m.reply(raraWrap("addsewa", `❌ Grup tidak ditemukan atau link tidak valid`));
     }
 
     const { id: groupId, name: groupName, inviteCode } = result;
@@ -226,7 +226,7 @@ async function handler(m, { sock }) {
     }
     return await m.reply( text, "addsewa");
   } catch (error) {
-    await m.reply(novaWrap("addsewa", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(raraWrap("addsewa", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

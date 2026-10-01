@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
-import { f } from '../../src/lib/nova-http.js'
-import te from '../../src/lib/nova-error.js'
-const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
+import { f } from '../../src/lib/rara-http.js'
+import te from '../../src/lib/rara-error.js'
+const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-RaraMD'
 
 const pluginConfig = {
     name: 'puisi',
@@ -28,15 +28,15 @@ async function handler(m, { sock }) {
         const res = await f(`https://api.neoxr.eu/api/puisi?apikey=${NEOXR_APIKEY}`)
         
         if (!res.status || !res.data?.text) {
-            return m.reply(novaError("Puisi", "Gagal ambil puisi nih"))
+            return m.reply(raraError("Puisi", "Gagal ambil puisi nih"))
         }
         
         const text = res.data.text
         await m.react("🐣");
-        await m.reply(novaWrap("Puisi", text.split("\n")))
+        await m.reply(raraWrap("Puisi", text.split("\n")))
     } catch (err) {
     await m.react("❌");
-        return m.reply(novaWrap("puisi", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("puisi", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

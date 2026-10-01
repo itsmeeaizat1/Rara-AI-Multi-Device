@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // milf.js — Random MILF (NSFW)
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "milf",
@@ -23,14 +23,14 @@ async function handler(m, { sock }) {
     const url = res.data?.url || res.data?.image;
     if (!url) {
       await m.react("❌");
-      return m.reply(novaWrap("milf", "Gagal mengambil gambar!", "error"));
+      return m.reply(raraWrap("milf", "Gagal mengambil gambar!", "error"));
     }
     await sock.sendMessage(from, { image: { url }, caption: "milf ~" }, { quoted: m });
     await m.react("🐣");
   } catch (err) {
     console.error("milf error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("milf", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("milf", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

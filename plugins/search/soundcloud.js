@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { load } from "cheerio";
 import fetch from "node-fetch";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "soundcloud",
@@ -59,7 +59,7 @@ async function scSearch(q) {
 
 async function handler(m, { args, sock }) {
   if (!args[0]) {
-    return await m.reply(novaWrap("soundcloud", [
+    return await m.reply(raraWrap("soundcloud", [
       "Cari lagu di SoundCloud.",
       "",
       `📌 Format: ${m.prefix}soundcloud <judul lagu>`,
@@ -72,7 +72,7 @@ async function handler(m, { args, sock }) {
     const data = await scSearch(args.join(" "));
     if (!data.length) {
       await m.react("❌");
-      return m.reply(novaWrap("soundcloud", `Aduh kak, lagunya nggak ketemu nih! Coba cari dengan judul yang beda ya 😭`, "error"));
+      return m.reply(raraWrap("soundcloud", `Aduh kak, lagunya nggak ketemu nih! Coba cari dengan judul yang beda ya 😭`, "error"));
     }
     let thumb = data.find((v) => v.artwork)?.artwork || null;
     let txt = `Hasil Pencarian Soundcloud\n\n`;
@@ -98,7 +98,7 @@ async function handler(m, { args, sock }) {
     }
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("soundcloud", `Maaf kak, terjadi kesalahan sistem! Coba lagi nanti ya 😥`, "error"));
+    m.reply(raraWrap("soundcloud", `Maaf kak, terjadi kesalahan sistem! Coba lagi nanti ya 😥`, "error"));
   }
 }
 

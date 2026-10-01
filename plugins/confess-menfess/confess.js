@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Confess (DM — versi LAMA yang DIMINTA BALIK owner 20 Sep 2026:
 // "bisa ga fitur confes yg dulu dikembalikan soalnya confess ini beda
 // bukan buat crush tp pesan ke orang tp kekirim statusnya di grupnya
@@ -20,10 +20,10 @@
 // .confess nomor|pesan|nama     → non-anonim (identitas terungkap)
 
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 function trackConfess(senderJid, targetJid, isAnonim) {
   try {
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
   // Orang di grup langsung tahu fiturnya dipakai di DM (gak senyap-senyap
   // bingung lagi), tapi isi confess-nya sendiri gak pernah lewat grup.
   if (m.isGroup) {
-    await m.reply(novaWrap("confess", [
+    await m.reply(raraWrap("confess", [
       `Fitur ini dipakai di *dm* ya! 🤫`,
       ``,
       `Silakan ketik ${m.prefix}confess <nomor>|<pesan> di chat pribadi bot.`,
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
   const input = m.fullArgs?.trim() || m.text?.trim();
 
   if (!input || !input.includes("|")) {
-    return await dmReply(m, sock, novaWrap("confess", [
+    return await dmReply(m, sock, raraWrap("confess", [
       `Kirim pesan rahasia ke seseorang, 2 mode: anonim & non-anonim.`,
       ``,
       `📌 Mode anonim (rahasia): ${m.prefix}confess <nomor>|<pesan>`,
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
   const isAnonim = !senderName;
 
   if (!rawNumber || !message) {
-    return dmReply(m, sock, novaWrap("confess", [
+    return dmReply(m, sock, raraWrap("confess", [
       `Format salah nih!`,
       ``,
       `📌 Anonim: ${m.prefix}confess <nomor>|<pesan>`,
@@ -128,31 +128,31 @@ async function handler(m, { sock }) {
   }
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
-    return dmReply(m, sock, novaWrap("confess", "Nomor tujuan gak valid nih!", "error"));
+    return dmReply(m, sock, raraWrap("confess", "Nomor tujuan gak valid nih!", "error"));
   }
 
   const targetJid = targetNumber + "@s.whatsapp.net";
   const senderNumber = m.sender.split("@")[0];
 
   if (targetNumber === senderNumber) {
-    return dmReply(m, sock, novaWrap("confess", "Nggak bisa confess ke diri sendiri! 😂", "error"));
+    return dmReply(m, sock, raraWrap("confess", "Nggak bisa confess ke diri sendiri! 😂", "error"));
   }
 
   try {
     const [onWa] = await sock.onWhatsApp(targetNumber);
     if (!onWa?.exists) {
-      return dmReply(m, sock, novaWrap("confess", `Nomor ${targetNumber} nggak terdaftar di WhatsApp!`, "error"));
+      return dmReply(m, sock, raraWrap("confess", `Nomor ${targetNumber} nggak terdaftar di WhatsApp!`, "error"));
     }
   } catch (e) {
     console.error("[confess.js] onWhatsApp check:", e.message);
   }
 
   if (message.length < 5) {
-    return dmReply(m, sock, novaWrap("confess", "Pesan kependekan nih! Minimal 5 karakter.", "error"));
+    return dmReply(m, sock, raraWrap("confess", "Pesan kependekan nih! Minimal 5 karakter.", "error"));
   }
 
   if (message.length > 1000) {
-    return dmReply(m, sock, novaWrap("confess", "Pesan kepanjangan! Maksimal 1000 karakter.", "error"));
+    return dmReply(m, sock, raraWrap("confess", "Pesan kepanjangan! Maksimal 1000 karakter.", "error"));
   }
 
   // Build message based on mode
@@ -207,7 +207,7 @@ async function handler(m, { sock }) {
     const modeLine = isAnonim
       ? "│ • 🔒 Mode : Anonim (identitas aman)"
       : `│ • 📝 Mode : Non-Anonim (${senderName})`;
-    await dmReply(m, sock, novaGameBox({
+    await dmReply(m, sock, raraGameBox({
       title: "pesan terkirim", icon: "💘",
       flavor: "💘 *PESAN TERKIRIM!*",
       body: [
@@ -222,7 +222,7 @@ async function handler(m, { sock }) {
     if (!m.isGroup) await m.react("💌");
   } catch (error) {
     console.error("[confess.js] Send error:", error.message);
-    await dmReply(m, sock, novaWrap("confess", `Gagal kirim pesan! ${error.message}`, "error"));
+    await dmReply(m, sock, raraWrap("confess", `Gagal kirim pesan! ${error.message}`, "error"));
   }
 }
 

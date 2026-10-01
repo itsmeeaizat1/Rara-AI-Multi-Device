@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Prestige — Reset level for permanent stat boost (different from rebirth)
 
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { replyWithCardPreview } from "../../src/lib/nova-level.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { replyWithCardPreview } from "../../src/lib/rara-level.js";
 
 /** Bar progress level ke syarat standar ▰▱ (14 Sep — bar untuk semua progress level) */
 function reqBar(cur, target) {
@@ -28,12 +28,12 @@ const pluginConfig = {
 async function handler(m, { sock, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("prestige", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("prestige", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (command === "prestige") {
   await animGeneric(m, sock, "⭐", "Prestige");
       if (rpg.level < 50) {
-        const txt = novaRpgBox("prestige",
+        const txt = raraRpgBox("prestige",
           `Minimal level 50 untuk prestige.\n\n📊 Progress kamu:\n${reqBar(rpg.level || 1, 50)}\n\nTerus berpetualang naik level!`, "info");
         const sent = await replyWithCardPreview(m, txt, {
           title: "PRESTIGE",
@@ -72,7 +72,7 @@ async function handler(m, { sock, command }) {
 
     if (command === "reincarnate" || command === "reinkarnasi") {
       if (rpg.level < 30) {
-        const txt = novaRpgBox("reincarnate",
+        const txt = raraRpgBox("reincarnate",
           `Minimal level 30 untuk reinkarnasi.\n\n📊 Progress kamu:\n${reqBar(rpg.level || 1, 30)}\n\nTerus berpetualang naik level!`, "info");
         const sent = await replyWithCardPreview(m, txt, {
           title: "REINKARNASI",
@@ -109,7 +109,7 @@ async function handler(m, { sock, command }) {
   } catch (e) {
     console.error("prestige error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox(m.command || "prestige", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox(m.command || "prestige", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

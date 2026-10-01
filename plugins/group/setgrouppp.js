@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText, novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, raraWrap, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const media = extractImage(m);
     if (!media) {
-      await m.reply(novaGuide('SetGroupPP', 'Kirim gambar dengan caption atau reply gambar yang ingin dijadikan foto profil grup!', `${prefix}setgrouppp`));
+      await m.reply(raraGuide('SetGroupPP', 'Kirim gambar dengan caption atau reply gambar yang ingin dijadikan foto profil grup!', `${prefix}setgrouppp`));
       return { handled: true };
     }
 
@@ -45,14 +45,14 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.updateGroupPicture(m.chat, buffer);
 
     const text =
-      novaWrap("Set Group PP", [`Group: *${m.chat}*`,
+      raraWrap("Set Group PP", [`Group: *${m.chat}*`,
         "Status: *success*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await m.reply(text);
   } catch (error) {
-    await m.reply(novaError('SetGroupPP', `Gagal mengganti foto profil grup: ${error.message}`));
+    await m.reply(raraError('SetGroupPP', `Gagal mengganti foto profil grup: ${error.message}`));
   }
 
   return { handled: true };

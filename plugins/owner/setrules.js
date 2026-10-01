@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 const pluginConfig = {
     name: 'setrules',
     alias: ["setrules"],
@@ -22,7 +22,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim() || (m.quoted?.body || m.quoted?.text || '')
     
     if (!text) {
-        return m.reply( novaWrap("sEt Bot Rules", 
+        return m.reply( raraWrap("sEt Bot Rules", 
             `Masukkan teks rules yang baru\n\n` +
             `\`Contoh:\`\n` +
             `\`${m.prefix}setrules 1. Jangan spam\\n2. Hormati sesama\``), "setrules")
@@ -30,7 +30,7 @@ function handler(m, { sock }) {
     
     db.setting('botRules', text)
     
-    m.reply(novaWrap("Bot Rules Diupdate", 
+    m.reply(raraWrap("Bot Rules Diupdate", 
         `Rules bot berhasil diubah!\n` +
         `Ketik \`${m.prefix}rules\` untuk melihat.`))
 }

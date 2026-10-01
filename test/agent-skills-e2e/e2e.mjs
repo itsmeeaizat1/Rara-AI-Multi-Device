@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT — E2E: AGENT SKILLS LAYER (25 Sep 2026, owner
+// RARA AI WHATSAPP BOT — E2E: AGENT SKILLS LAYER (25 Sep 2026, owner
 // "183 skill sekaligus" dari wshobson/agents, spec Anthropic Agent Skills).
 // Dicover: index 183, tokenizer hyphen, progressive disclosure (skillsBlock
 // kosong kalau gak ada match), cap isi, plugin .skill (list/detail/match).
 import {
   matchSkills, getSkillBody, skillsBlock, findSkill, listSkills,
   skillCount, _setSkillsIndexForTest, _resetSkillsForTest,
-} from "../../src/lib/nova-askills.js";
+} from "../../src/lib/rara-askills.js";
 import { config as skillCfg, handler as skillH } from "../../plugins/ai-agent/skill.js";
 
 let pass = 0, fail = 0;
-// output menu/reply Nova = smallcaps — asersi wajib lewat fromSC
+// output menu/reply Rara = smallcaps — asersi wajib lewat fromSC
 const SC_MAP = { 'ᴀ':'a','ʙ':'b','ᴄ':'c','ᴅ':'d','ᴇ':'e','ꜰ':'f','ɢ':'g','ʜ':'h','ɪ':'i','ᴊ':'j','ᴋ':'k','ʟ':'l','ᴍ':'m','ɴ':'n','ᴏ':'o','ᴘ':'p','ʀ':'r','ꜱ':'s','ᴛ':'t','ᴜ':'u','ᴠ':'v','ᴡ':'w','ʏ':'y','ᴢ':'z' };
 const fromSC = (s) => String(s || "").split("").map((c) => SC_MAP[c] || c).join("");
 const w = (s) => process.stdout.write(s + "\n");
@@ -135,9 +135,9 @@ w("\n— 6. plugin .skill —");
 // ─── 7. HOOK PINTU AI — import gak meledak + param nyambung ───
 w("\n— 7. hook pintu AI —");
 {
-  const agentMod = await import("../../src/lib/nova-agent.js");
+  const agentMod = await import("../../src/lib/rara-agent.js");
   check("7a. runAgent masih ekspor fungsi", typeof agentMod.runAgent === "function");
-  const src = (await import("node:fs")).readFileSync(new URL("../../src/lib/nova-agent.js", import.meta.url), "utf-8");
+  const src = (await import("node:fs")).readFileSync(new URL("../../src/lib/rara-agent.js", import.meta.url), "utf-8");
   check("7b. runAgent nerima skillBlock", /skillBlock \} = \{\}\)/.test(src) || /skillBlock/.test(src), "");
   check("7c. skillBlock di-inject ke prompt (≥3 titik)", (src.match(/\$\{skl\}/g) || []).length >= 3, (src.match(/\$\{skl\}/g) || []).length);
   const loopSrc = (await import("node:fs")).readFileSync(new URL("../../plugins/ai-agent/agentloop.js", import.meta.url), "utf-8");
@@ -145,7 +145,7 @@ w("\n— 7. hook pintu AI —");
   const taskSrc = (await import("node:fs")).readFileSync(new URL("../../plugins/ai-agent/autotask.js", import.meta.url), "utf-8");
   check("7e. autotask panggil skillsBlock(task)", /skillsBlock\(task\.task\)/.test(taskSrc), "");
   const aiSrc = (await import("node:fs")).readFileSync(new URL("../../plugins/ai-agent/agent.js", import.meta.url), "utf-8");
-  check("7f. novaagent/aisuperagent pass skillBlock(task)", /skillBlock: skillsBlock\(task\)/.test(aiSrc), "");
+  check("7f. raraagent/aisuperagent pass skillBlock(task)", /skillBlock: skillsBlock\(task\)/.test(aiSrc), "");
 }
 
 setTimeout(() => { try { w(`\n===== ${pass} PASS, ${fail} FAIL =====`); process.exit(fail ? 1 : 0); } catch {} }, 300);

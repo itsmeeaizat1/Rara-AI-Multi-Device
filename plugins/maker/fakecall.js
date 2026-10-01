@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // fakecall — WhatsApp fake call screen (local canvas, no API)
-import { novaReply } from "../../src/lib/nova-menu-style.js";
+import { raraReply } from "../../src/lib/rara-menu-style.js";
 import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
 import path from "path";
 
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
   const text = m.text;
 
   if (!text || !text.includes("|")) {
-    const msg = novaReply({
+    const msg = raraReply({
       title: "Fake Call",
       status: "Format: nama | durasi",
       content: "|\n| Contoh: " + m.prefix + "fakecall Marin | 19.00",
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
   var durasi = parts[1] || "00:00";
 
   if (!nama) {
-    const msg = novaReply({ title: "Fake Call", status: "Nama tidak boleh kosong" });
+    const msg = raraReply({ title: "Fake Call", status: "Nama tidak boleh kosong" });
     return await m.reply(msg);
   }
 
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[fakecall] Error:", err.message);
     await m.react("\u274C");
-    const msg = novaReply({
+    const msg = raraReply({
       title: "Fake Call",
       status: "Gagal generate: " + err.message,
     });

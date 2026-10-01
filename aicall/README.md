@@ -15,7 +15,7 @@ Aplikasi bot panggilan suara WhatsApp otomatis berbasis Go (Golang) yang ditenag
    - **Gemini Audio TTS (`TTS_ENGINE=geminitts`)**: Suara asli bawaan Google Gemini Audio dengan jeda napas alami (`Puck`, `Kore`, `Aoede`, dll.), dilengkapi dengan **NexRay Gemini TTS API Fallback** jika kuota Gemini resmi terlampaui.
    - **Microsoft Edge Neural TTS (`TTS_ENGINE=edgetts`)**: **100% GRATIS SELAMANYA** tanpa API Key (`ms-MY-YasminNeural`, `id-ID-ArdiNeural`, dll.).
    - **ElevenLabs Human Voice (`TTS_ENGINE=elevenlabs`)**: Suara manusia paling realistis di dunia dengan emosi tinggi (Gratis 10.000 karakter/bulan).
-   - **OpenAI Human Voice (`TTS_ENGINE=openai`)**: Suara OpenAI Audio berintonasi ramah (`nova`, `shimmer`, `alloy`, dll.).
+   - **OpenAI Human Voice (`TTS_ENGINE=openai`)**: Suara OpenAI Audio berintonasi ramah (`rara`, `shimmer`, `alloy`, dll.).
    - **Anime VITS TTS (`TTS_ENGINE=animetts`)**: Suara karakter anime Jepang (VITS).
 3. 🎛️ **Kustomisasi Pitch & Speed Suara**: Mengubah tinggi/rendah nada suara (`TTS_PITCH=-2Hz`) dan kecepatan bicara (`TTS_SPEED=1.0`) via `.env` agar pembawaan percakapan terasa rileks dan santai.
 4. 🔐 **Fitur Pengaman Owner (`OWNER`)**: Membatasi akses bot telepon dan perintah chat hanya untuk nomor HP yang terdaftar di `.env` (mendukung multiple owner dipisahkan koma).
@@ -119,7 +119,7 @@ go build -o ai-call .
 | `GEMINI_MODEL` | Model AI percakapan Gemini | `gemini-3.1-flash-lite` |
 | `GROQ_API` | API Key Groq Whisper STT (Wajib) | String API Key |
 | `TTS_ENGINE` | Pilihan Engine TTS | `edgetts` / `geminitts` / `elevenlabs` / `openai` / `animetts` / `google` |
-| `TTS_VOICE` | Karakter Suara yang digunakan | `ms-MY-YasminNeural` / `id-ID-ArdiNeural` / `Puck` / `nova` |
+| `TTS_VOICE` | Karakter Suara yang digunakan | `ms-MY-YasminNeural` / `id-ID-ArdiNeural` / `Puck` / `rara` |
 | `TTS_PITCH` | Pengatur pitch nada suara Edge TTS | `-2Hz`, `-1Hz`, `+0Hz`, `+2Hz` |
 | `TTS_SPEED` | Kecepatan pengucapan audio | `1.0` (contoh: `1.2` lebih cepat, `0.8` lebih lambat) |
 | `ELEVENLABS_API` | API Key ElevenLabs (Opsional) | String API Key |

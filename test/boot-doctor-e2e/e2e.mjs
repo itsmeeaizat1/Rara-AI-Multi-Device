@@ -1,5 +1,5 @@
 // E2E BOOT DOCTOR (17 Sep 2026) — cek kesehatan fitur pas bot nyala/restart.
-// Fitur: nova-boot-doctor.js (probe apikey + endpoint gratis, klasifikasi,
+// Fitur: rara-boot-doctor.js (probe apikey + endpoint gratis, klasifikasi,
 // laporan DM owner + throttle) + plugins/bot/bootdoctor.js (.bootdoctor).
 // Jalankan dari repo root: node test/boot-doctor-e2e/e2e.mjs
 import fs from "fs";
@@ -14,7 +14,7 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const t = (name, ok, extra = "") => { w((ok ? "  ✅ " : "  ❌ ") + name + (ok ? "" : " — " + String(extra).slice(0, 200))); ok ? pass++ : fail++; };
 
-const libUrl = pathToFileURL(path.join(REPO, "src/lib/nova-boot-doctor.js")).href;
+const libUrl = pathToFileURL(path.join(REPO, "src/lib/rara-boot-doctor.js")).href;
 const { fromSC } = await import(pathToFileURL(path.join(REPO, "src/lib/styler.js")).href);
 const norm = (s) => fromSC(String(s)).toLowerCase();
 const mod = await import(libUrl);
@@ -53,7 +53,7 @@ cuki = res.find(r => r.label === "Cuki API");
 t("HTTP 200 tapi body 'apikey kadaluarsa' → key_invalid", cuki?.status === "key_invalid", JSON.stringify(cuki));
 
 // termai dibuang dari registry 1 Okt 2026 (free-tier limit, fitur dimigrasi ke
-// nova-uploader) — klasifikasi 429/402 sekarang diuji lewat Cuki API
+// rara-uploader) — klasifikasi 429/402 sekarang diuji lewat Cuki API
 respond("api.cuki.biz.id", 429, "rate limit");
 res = await mod.runBootDoctor();
 let cuki429 = res.find(r => r.label === "Cuki API");
@@ -176,7 +176,7 @@ t("alias .doctor .healthcheck ada", plug.config.alias.includes("doctor") && plug
 
 w("\n— 7. hook terpasang di connection.js —");
 const connSrc = fs.readFileSync(path.join(REPO, "src/connection.js"), "utf8");
-t("connection.js manggil initBootDoctor pas open", connSrc.includes("nova-boot-doctor.js") && connSrc.includes("initBootDoctor(sock)"), "hook gak ketemu");
+t("connection.js manggil initBootDoctor pas open", connSrc.includes("rara-boot-doctor.js") && connSrc.includes("initBootDoctor(sock)"), "hook gak ketemu");
 
 w("\n— 8. seksi SALURAN WA (finalisasi 25 Sep) —");
 // 8a: backward compat — buildBootReport TANPA extraLines → gak ada seksi saluran
@@ -192,10 +192,10 @@ const outSal1 = await mod.runAndReport({ send: false });
 const R1 = norm(outSal1.report);
 t("8c. runAndReport tanpa db → seksi saluran fallback jujur 'gak bisa dicek'", R1.includes("saluran wa") && R1.includes("gak bisa dicek"), R1.slice(-200));
 // 8d: db init + state hub → modul kebaca di laporan
-const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-database.js")).href);
+const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-database.js")).href);
 await initDatabase(path.join(os.tmpdir(), "bootdoctor-saluran-db-" + Date.now() + ".json"));
 const dbr = getDatabase();
-const { ensureHubState } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-saluran-hub.js")).href);
+const { ensureHubState } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-saluran-hub.js")).href);
 const hub = ensureHubState(dbr);
 hub.autopost.on = true; hub.autopost.jam = "09:30"; hub.autopost.topic = "tips bot";
 hub.react.on = true;

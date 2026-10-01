@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const quotes = [
   "Aku bukan orang yang perfect, tapi aku berusaha jadi yang terbaik untukmu.",
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     const from = m.key.remoteJid;
     await sock.sendMessage(from, { react: { text: "❌", key: m.key } });
-    return m.reply(novaWrap("quotesbucin", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("quotesbucin", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -16,7 +16,7 @@ const voip = new mod.default({ user: { id: "b@s.whatsapp.net" } });
 ok("instance Voip jalan", typeof voip.call === "function" && typeof voip.end === "function");
 
 const resolver = await import("../../src/lib/hivoip/shim/baileys-resolve.js");
-ok("resolver: kandidat utama 'nova'", (await resolver.resolveBaileysModule()).jidDecode != null);
+ok("resolver: kandidat utama 'rara'", (await resolver.resolveBaileysModule()).jidDecode != null);
 
 const plugin = await import("../../plugins/owner/voipcall.js");
 ok("plugin config & handler ter-ekspor", !!plugin.config?.name && typeof plugin.handler === "function");
@@ -28,7 +28,7 @@ let replied = null;
 const fakeM = { text: ".voipcall", chat: "x@s.whatsapp.net", sender: "x@s.whatsapp.net", isOwner: true,
   react: async () => {}, reply: async (t) => { replied = t; return { key: { id: "K" } }; }, quoted: null };
 const res = await plugin.handler(fakeM, { sock: { user: { id: "b@s.whatsapp.net" }, sendMessage: async () => ({}) }, config: { command: { prefix: "." } } });
-ok("handler: usage → novaGuide (gak nelpon)", res?.handled === true && /voipcall|Cara Pakai|cara pakai/i.test(String(replied)));
+ok("handler: usage → raraGuide (gak nelpon)", res?.handled === true && /voipcall|Cara Pakai|cara pakai/i.test(String(replied)));
 
 // ═══ BUG REPORT OWNER 1 Okt 2026: .voipcall gagal "No device sessions to
 // encrypt the call offer for <nomor>@s.whatsapp.net" — dump teknis mentah ke

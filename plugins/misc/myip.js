@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // myip.js — Cek IP address
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "myip",
@@ -32,13 +32,13 @@ async function handler(m, { sock }) {
       _lines.push(`🏢 ISP: ${d.org || "Unknown"}`);
       _lines.push(`📍 Lat: ${d.latitude || "?"} Lon: ${d.longitude || "?"}`);
       _lines.push(`🕐 Timezone: ${d.timezone || "Unknown"}`);
-    let msg = novaBox("IP INFO", _lines);
+    let msg = raraBox("IP INFO", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
     console.error("myip error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("myip", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("myip", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

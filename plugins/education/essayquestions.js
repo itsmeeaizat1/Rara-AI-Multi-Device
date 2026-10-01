@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "soalessay",
@@ -182,7 +182,7 @@ async function handler(m, { sock, args }) {
     // User is answering current question
     const userAnswer = args.join(" ");
     if (userAnswer.length < 5) {
-      return m.reply(novaWrap("Soalessay", "Jawaban terlalu pendek! Tulis jawabanmu minimal 5 karakter.\n\nKetik *skip* untuk lewati soal ini."));
+      return m.reply(raraWrap("Soalessay", "Jawaban terlalu pendek! Tulis jawabanmu minimal 5 karakter.\n\nKetik *skip* untuk lewati soal ini."));
     }
 
     const q = session.questions[session.current];
@@ -191,7 +191,7 @@ async function handler(m, { sock, args }) {
     const _regDb = getDatabase();
     if (!_regDb.db.data.eduRegistered || !_regDb.db.data.eduRegistered[sender]) {
       essaySessions.delete(sender);
-      return m.reply(novaWrap('Info', '\u2705 Pendaftaran kamu telah dihapus! Essay dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>'));
+      return m.reply(raraWrap('Info', '\u2705 Pendaftaran kamu telah dihapus! Essay dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>'));
     }
     const _rateChk = _essayCheckRate(sender);
     if (!_rateChk.allowed) {
@@ -199,9 +199,9 @@ async function handler(m, { sock, args }) {
       if (_w >= 3) {
         essaySessions.delete(sender);
         _essaySpamWarn.delete(sender);
-        return m.reply(novaWrap("Soalessay", "Essay quiz dibatalkan karena spam!\n\nBaca soal dulu, jangan asal jawab.\n\nKetik .essay untuk mulai lagi."));
+        return m.reply(raraWrap("Soalessay", "Essay quiz dibatalkan karena spam!\n\nBaca soal dulu, jangan asal jawab.\n\nKetik .essay untuk mulai lagi."));
       }
-      return m.reply(novaWrap("Info", "\u23f3 Terlalu cepat! Tunggu " + Math.ceil(_rateChk.waitMs / 1000) + " detik.\n\nPeringatan " + _w + "/3 - jangan spam!"));
+      return m.reply(raraWrap("Info", "\u23f3 Terlalu cepat! Tunggu " + Math.ceil(_rateChk.waitMs / 1000) + " detik.\n\nPeringatan " + _w + "/3 - jangan spam!"));
     }
     _essaySpamWarn.delete(sender);
     const check = checkKeywords(userAnswer, q.keywords);
@@ -288,9 +288,9 @@ async function handler(m, { sock, args }) {
   if (jenjang === "stop" || jenjang === "batal" || jenjang === "cancel") {
     if (session) {
       essaySessions.delete(sender);
-      return m.reply(novaWrap("Soalessay", "Quiz essay dibatalkan."));
+      return m.reply(raraWrap("Soalessay", "Quiz essay dibatalkan."));
     }
-    return m.reply(novaWrap("Soalessay", "Tidak ada quiz essay yang sedang berjalan."));
+    return m.reply(raraWrap("Soalessay", "Tidak ada quiz essay yang sedang berjalan."));
   }
 
   // Help / Menu
@@ -324,11 +324,11 @@ async function handler(m, { sock, args }) {
 
   // Validate jenjang
   if (!JENJANG_NAMES[jenjang]) {
-    return m.reply(novaError("SoalEssay", "Jenjang gak valid nih! Pilih: sd, smp, sma, smk"));
+    return m.reply(raraError("SoalEssay", "Jenjang gak valid nih! Pilih: sd, smp, sma, smk"));
   }
 
   if (jumlah < 1 || jumlah > 10) {
-    return m.reply(novaWrap("Soalessay", "Jumlah soal essay 1-10."));
+    return m.reply(raraWrap("Soalessay", "Jumlah soal essay 1-10."));
   }
   // Check registration
   const _eduDb = getDatabase();
@@ -340,7 +340,7 @@ async function handler(m, { sock, args }) {
     const bank = ESSAY_BANK[jenjang]?.[mapel];
     if (!bank || bank.length === 0) {
       const available = getAvailableSubjects(jenjang);
-      return m.reply(novaWrap("soalessay", `Mapel "${mapel}" tidak ditemukan untuk ${JENJANG_NAMES[jenjang]}!\n\nTersedia: ${available.join(", ")}`));
+      return m.reply(raraWrap("soalessay", `Mapel "${mapel}" tidak ditemukan untuk ${JENJANG_NAMES[jenjang]}!\n\nTersedia: ${available.join(", ")}`));
     }
 
     const shuffled = shuffle(bank);
@@ -366,7 +366,7 @@ async function handler(m, { sock, args }) {
     await m.reply(txt);
   } catch (e) {
     console.error("[SOALESSAY] Error:", e.message);
-    await m.reply(novaError("SoalEssay", `Gagal bikin soal nih: ${e.message}`));
+    await m.reply(raraError("SoalEssay", `Gagal bikin soal nih: ${e.message}`));
   }
 }
 

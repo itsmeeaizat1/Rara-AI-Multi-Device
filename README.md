@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🌟 Nova-Ai WhatsApp Bot MD 🌟</h1>
+  <h1>🌟 Rara-Ai WhatsApp Bot MD 🌟</h1>
   <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 6.700+ Command, 1.900+ Plugin & 51 Kategori!</b></p>
 </div>
 
@@ -46,7 +46,7 @@ Automation:
 
 ## ✨ Fitur Unggulan v24.2.8
 
-Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buatan, otomasi realtime, sistem RPG yang dalam, dan ratusan utilitas produktivitas dalam satu bot — semuanya bisa dipakai langsung dari chat.
+Rara AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buatan, otomasi realtime, sistem RPG yang dalam, dan ratusan utilitas produktivitas dalam satu bot — semuanya bisa dipakai langsung dari chat.
 
 ### 🆕 Fitur Terbaru
 
@@ -131,7 +131,7 @@ Command yang paling sering dipakai sehari-hari:
 |---------|--------|
 | `.menu` / `.allmenu` | Navigasi: menu ringkas & daftar lengkap 51 kategori |
 | `.switch` | On/off semua fitur terpusat (per fitur / bulk / master, grup & saluran) |
-| `.aisuperagent` / `.novaagent` | AI agent: tugas multi-langkah, 4.727 skill, ingat pengguna |
+| `.aisuperagent` / `.raraagent` | AI agent: tugas multi-langkah, 4.727 skill, ingat pengguna |
 | `.aihelp` | Tanya AI cara pakai command mana pun |
 | `.sticker` | Buat stiker dari foto/video/gambar |
 | `.ytmp3` / `.ytmp4` / `.aio` | Download YouTube & auto-detect platform apa pun |
@@ -145,7 +145,7 @@ Command yang paling sering dipakai sehari-hari:
 | `.gachaitem` | Gacha item dengan pity system |
 | `.jadibot` | Jadikan nomor lain jadi bot (multi-session) |
 | `.daftarsewa` | Daftar sewa bot per grup |
-| `.aboutnova` | Info bot & creator |
+| `.aboutrara` | Info bot & creator |
 | `.owner` / `.donasi` | Kontak owner & dukungan developer |
 
 ## 💻 Spesifikasi Server
@@ -180,7 +180,7 @@ Command yang paling sering dipakai sehari-hari:
 
 ```bash
 git clone https://github.com/itsmeeaizat1/Nova-AI-Multi-Device.git
-cd Nova-AI-Multi-Device
+cd Rara-AI-Multi-Device
 npm install
 npm start
 ```

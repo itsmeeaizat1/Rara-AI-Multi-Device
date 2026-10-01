@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "tinyurl",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   try {
     let url = m.args?.join(" ").trim() || (m.quoted && (m.quoted.text || m.quoted.caption));
     if (!url) {
-      return m.reply(novaWrap("tinyurl", `Masukkan URL yang ingin dipersingkat!\n\nContoh: ${m.prefix}tinyurl https://google.com`, "guide"));
+      return m.reply(raraWrap("tinyurl", `Masukkan URL yang ingin dipersingkat!\n\nContoh: ${m.prefix}tinyurl https://google.com`, "guide"));
     }
 
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
 
     if (!shortUrl || typeof shortUrl !== "string" || !shortUrl.startsWith("http")) {
       await m.react("❌");
-      return m.reply(novaWrap("tinyurl", "Gagal memperpendek URL. Pastikan URL valid."));
+      return m.reply(raraWrap("tinyurl", "Gagal memperpendek URL. Pastikan URL valid."));
     }
 
     await m.react("🐣");
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("tinyurl error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("tinyurl", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("tinyurl", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

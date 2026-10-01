@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, broadcastFormat, novaCaption, tipText } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, broadcastFormat, raraCaption, tipText } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
     const message = m.text?.trim();
 
     if (!message) {
-      const text = novaCaption({
+      const text = raraCaption({
         emoji: "👑",
         name: "broadcast",
         description: "Broadcast pesan ke semua grup (owner only)",
@@ -42,11 +42,11 @@ async function handler(m, { sock, config: botConfig }) {
     const groupJids = Object.keys(groups);
 
     if (!groupJids.length) {
-      await m.reply(novaBox("Broadcast", ["❌ Tidak ada grup terdaftar", "Status: Dibatalkan"]));
+      await m.reply(raraBox("Broadcast", ["❌ Tidak ada grup terdaftar", "Status: Dibatalkan"]));
       return { handled: true };
     }
 
-    const botName = config.bot?.name || "Nova AI";
+    const botName = config.bot?.name || "Rara AI";
     const senderName = m.pushName || "Owner";
     const broadcastText = broadcastFormat({
       botName,
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    const result = novaBox("Broadcast Selesai", [
+    const result = raraBox("Broadcast Selesai", [
       "Pesan: " + message.slice(0, 50) + (message.length > 50 ? "..." : ""),
       "---",
       "Target: " + groupJids.length + " Grup",
@@ -78,7 +78,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(result);
   } catch (error) {
-    await m.reply(novaBox("Broadcast", ["❌ Gagal mengirim broadcast", "Alasan: " + error.message]), "broadcast");
+    await m.reply(raraBox("Broadcast", ["❌ Gagal mengirim broadcast", "Alasan: " + error.message]), "broadcast");
   }
 
   return { handled: true };

@@ -1,7 +1,7 @@
-// E2E — Desain notif sistem: banner preview card branding Nova (ala .play)
+// E2E — Desain notif sistem: banner preview card branding Rara (ala .play)
 // Request owner 19 Sep 2026: "rapihkan menu yg blm ke desain kyk desain skrg,
 // cntoh notif bot doctor / notif fitur baru g pakai desain skrg kyk desain .play".
-// SATU PINTU nova-notif-card.js → dipakai boot doctor DM, Bot Online, broadcast
+// SATU PINTU rara-notif-card.js → dipakai boot doctor DM, Bot Online, broadcast
 // .bot off/on, notif saluran (broadcastToSaluran).
 import { strict as assert } from "assert";
 import fs from "fs";
@@ -21,7 +21,7 @@ process.on("unhandledRejection", (e) => { w("REJECTION: " + (e?.stack || e)); pr
 const {
   notifBanner, sendNotif, getBrandThumb,
   _setNotifSendForTest,
-} = await import(R + "/src/lib/nova-notif-card.js");
+} = await import(R + "/src/lib/rara-notif-card.js");
 
 // ═══ SECTION 1: notifBanner — contextInfo banner ala .play ═══
 w("\n— section 1: notifBanner —");
@@ -29,10 +29,10 @@ w("\n— section 1: notifBanner —");
 // REVISI 20 Sep (owner, screenshot: "link whatsapp.com ini ubah jd waktu,
 // gayanya kayak gaya bot dimatikan tadi") — notifBanner gak nerima `body`
 // lagi, body SELALU waktu+tanggal, sourceUrl DIBUANG TOTAL (sama pola statusBanner).
-const bn = await notifBanner({ title: "Boot Doctor — Nova AI" });
+const bn = await notifBanner({ title: "Boot Doctor — Rara AI" });
 t("1a. balik contextInfo.externalAdReply", !!bn?.externalAdReply);
 const ext = bn.externalAdReply || {};
-t("1b. title masuk card + body = waktu/tanggal (bukan teks custom)", ext.title === "Boot Doctor — Nova AI" && /\d{4}/.test(ext.body), JSON.stringify(ext).slice(0, 80));
+t("1b. title masuk card + body = waktu/tanggal (bukan teks custom)", ext.title === "Boot Doctor — Rara AI" && /\d{4}/.test(ext.body), JSON.stringify(ext).slice(0, 80));
 t("1c. renderLargerThumbnail (banner gede kayak .play)", ext.renderLargerThumbnail === true);
 t("1d. mediaType 1 + bukan iklan", ext.mediaType === 1 && ext.showAdAttribution === false);
 t("1e. GAK ADA sourceUrl (link whatsapp.com dihilangkan, sama kayak statusBanner)", !("sourceUrl" in ext), JSON.stringify(ext));
@@ -78,7 +78,7 @@ w("\n— section 3: boot doctor DM —");
 const {
   _setDoctorHttpForTest, _setBootDoctorSockForTest, _setBootDoctorSentHookForTest,
   _setBootDoctorStateFileForTest, runAndReport,
-} = await import(R + "/src/lib/nova-boot-doctor.js");
+} = await import(R + "/src/lib/rara-boot-doctor.js");
 
 // http mock: semua probe OK (biar laporan "semua sehat" + payload kecil)
 _setDoctorHttpForTest(async (url) => ({ ok: true, status: 200 }));
@@ -115,14 +115,14 @@ try { fs.rmSync(tmpState, { recursive: true, force: true }) } catch {}
 // ═══ SECTION 4: broadcast .bot off/on pakai banner ═══
 w("\n— section 4: broadcast status bot —");
 
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/notifcard-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/notifcard-e2e-db/rara.json");
 const db = getDatabase();
 const config = (await import(R + "/config.js")).default;
 
 const INVITE_CODE = "BANNERtestCODE12345";
 const NUM_JID = "123456789012345@newsletter";
-config.saluran = { id: "@newsletter", link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Nova AI Official" };
+config.saluran = { id: "@newsletter", link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Rara AI Official" };
 db.db.data.groups = db.db.data.groups || {};
 db.db.data.groups["999888777-1@g.us"] = { id: "999888777-1@g.us", subject: "Grup Tes" };
 await db.save();
@@ -131,7 +131,7 @@ await db.save();
 // seam canvas: kartu status revisi owner 20 Sep — background HITAM POLOS +
 // teks PUTIH tanpa nama bot, gak ada network load lagi (loadImage dibuang),
 // createCanvas asli cukup deterministik.
-const { _setStatusCardCanvasForTest } = await import(R + "/src/lib/nova-notif-card.js");
+const { _setStatusCardCanvasForTest } = await import(R + "/src/lib/rara-notif-card.js");
 const _kit = await import("@napi-rs/canvas");
 _setStatusCardCanvasForTest({
   createCanvas: _kit.createCanvas,
@@ -141,7 +141,7 @@ const botPlugin = await import(R + "/plugins/bot/bot.js");
 const bcSent = [];
 const bSock = {
   newsletterMetadata: async (type, key) => {
-    if (type === "invite" && key === INVITE_CODE) return { id: NUM_JID, name: "Nova AI Official" };
+    if (type === "invite" && key === INVITE_CODE) return { id: NUM_JID, name: "Rara AI Official" };
     if (type === "jid" && key === NUM_JID) return { id: NUM_JID, viewer_role: "ADMIN" };
     return null;
   },
@@ -169,8 +169,8 @@ t("4d2. kartu status GAK ADA sourceUrl (baris link whatsapp.com dihilangkan)", !
 t("4d3. body kartu status nunjukin tanggal (bukan link/nama bot)", /\d{4}/.test(toGroup?.payload?.contextInfo?.externalAdReply?.body || ""), toGroup?.payload?.contextInfo?.externalAdReply?.body);
 // revisi owner 20 Sep: "bagian ini ubah jadi teks status misal klo bot
 // dihidupkan jadi teks statusnya: BOT DIHIDUPKAN" — title PERSIS label status,
-// gak ada lagi embel-embel "Nova AI —" di depannya.
-t("4d4. judul kartu status PERSIS teks status (tanpa embel Nova AI —)", toGroup?.payload?.contextInfo?.externalAdReply?.title === "BOT DIMATIKAN", toGroup?.payload?.contextInfo?.externalAdReply?.title);
+// gak ada lagi embel-embel "Rara AI —" di depannya.
+t("4d4. judul kartu status PERSIS teks status (tanpa embel Rara AI —)", toGroup?.payload?.contextInfo?.externalAdReply?.title === "BOT DIMATIKAN", toGroup?.payload?.contextInfo?.externalAdReply?.title);
 t("4e. thumbnail banner .bot off = canvas JPEG valid (bukan asset branding statis)", (() => {
   const th = toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
   return Buffer.isBuffer(th) && th.length > 100 && th[0] === 0xff && th[1] === 0xd8;
@@ -222,13 +222,13 @@ t("4h. thumbnail .bot on BEDA dari thumbnail .bot off (canvas regenerate per sta
 w("\n— section 5: notif saluran sewa/premium/ban —");
 
 const { broadcastToSaluran, setNotifyEnabled, notifyPremiumAdd } =
-  await import(R + "/src/lib/nova-saluran-broadcast.js");
+  await import(R + "/src/lib/rara-saluran-broadcast.js");
 setNotifyEnabled("premiumAdd", true);
 bcSent.length = 0;
 await notifyPremiumAdd(bSock, { name: "Budi", phoneNumber: "628123", days: 30 });
 const saluranPayload = bcSent.find((d) => d.jid === NUM_JID)?.payload;
 t("5a. payload notif saluran bawa banner", !!saluranPayload?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(saluranPayload || {})));
-t("5b. banner judul Nova AI Official", (saluranPayload?.contextInfo?.externalAdReply?.title || "") === "Nova AI Official", saluranPayload?.contextInfo?.externalAdReply?.title);
+t("5b. banner judul Rara AI Official", (saluranPayload?.contextInfo?.externalAdReply?.title || "") === "Rara AI Official", saluranPayload?.contextInfo?.externalAdReply?.title);
 t("5c. isi notif tetap plain text (aturan 5 Sep — tanpa box/smallcaps)", /USER BARU PREMIUM/.test(saluranPayload?.text || "") && !/[│╭╰]/.test(saluranPayload?.text || ""), (saluranPayload?.text || "").slice(0, 60));
 setNotifyEnabled("premiumAdd", false);
 

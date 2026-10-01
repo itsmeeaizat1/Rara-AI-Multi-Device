@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // dailyreward.js — Daily Login Reward (streak system)
-import { animDaily } from "../../src/lib/nova-rpg-anim.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { animDaily } from "../../src/lib/rara-rpg-anim.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "dailyreward",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
       const remaining = cooldown - timeSinceClaim;
       const hours = Math.floor(remaining / 3600000);
       const minutes = Math.floor((remaining % 3600000) / 60000);
-      return m.reply(novaRpgBox("dailyreward", `Sudah claim hari ini!\n\nTunggu *${hours}j ${minutes}m* lagi untuk claim besok.`, "error"));
+      return m.reply(raraRpgBox("dailyreward", `Sudah claim hari ini!\n\nTunggu *${hours}j ${minutes}m* lagi untuk claim besok.`, "error"));
     }
 
     // Check streak reset (lebih dari 48 jam = reset)
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("dailyreward error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("dailyreward", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("dailyreward", err.message || "Error", "error"));
   }
 }
 

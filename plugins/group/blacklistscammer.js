@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "blacklistscammer",
@@ -77,7 +77,7 @@ async function handler(m, { sock, config: botConfig }) {
       const number = normalizeNumber(numberInput);
 
       if (number.length < 8 || !/^\d+$/.test(number)) {
-        return m.reply(novaWrap("Blacklist", "Nomor tidak valid!"));
+        return m.reply(raraWrap("Blacklist", "Nomor tidak valid!"));
       }
 
       const blacklist = getBlacklist(db);
@@ -98,7 +98,7 @@ async function handler(m, { sock, config: botConfig }) {
         (r) => r.reporter === m.sender
       );
       if (existingReport) {
-        return m.reply(novaWrap("Blacklist", "Kamu sudah pernah report nomor ini!\nTotal report: " + blacklist[number].reports.length));
+        return m.reply(raraWrap("Blacklist", "Kamu sudah pernah report nomor ini!\nTotal report: " + blacklist[number].reports.length));
       }
 
       // Add report
@@ -121,7 +121,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const reportCount = blacklist[number].reports.length;
       const verifiedTag = blacklist[number].verified ? " [VERIFIED]" : "";
-      return m.reply(novaWrap("Blacklist" + verifiedTag,
+      return m.reply(raraWrap("Blacklist" + verifiedTag,
         "Report tercatat!\n" +
         "Nomor: " + formatPhone(number) + "\n" +
         "Alasan: *" + reason + "*\n" +
@@ -135,7 +135,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "cek") {
       const numberInput = args[1];
       if (!numberInput) {
-        return m.reply(novaWrap("Blacklist", "Format: " + prefix + "blacklistscammer cek <nomor>\n💡 *Contoh:* " + prefix + "blacklistscammer cek 08123456789"));
+        return m.reply(raraWrap("Blacklist", "Format: " + prefix + "blacklistscammer cek <nomor>\n💡 *Contoh:* " + prefix + "blacklistscammer cek 08123456789"));
       }
 
       const number = normalizeNumber(numberInput);
@@ -143,7 +143,7 @@ async function handler(m, { sock, config: botConfig }) {
       const entry = blacklist[number];
 
       if (!entry) {
-        return m.reply(novaWrap("Aman", "Nomor " + formatPhone(number) + " tidak ada di blacklist.\nBelum ada laporan penipuan."));
+        return m.reply(raraWrap("Aman", "Nomor " + formatPhone(number) + " tidak ada di blacklist.\nBelum ada laporan penipuan."));
       }
 
       const verifiedTag = entry.verified ? " [VERIFIED]" : "";
@@ -167,7 +167,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("PERINGATAN: Nomor ini sudah diverifikasi (3+ laporan). Hati-hati transaksi!");
       }
 
-      return m.reply(novaWrap("Blacklist" + verifiedTag, lines.join("\n")));
+      return m.reply(raraWrap("Blacklist" + verifiedTag, lines.join("\n")));
     }
 
     // --- LIST ---
@@ -176,7 +176,7 @@ async function handler(m, { sock, config: botConfig }) {
       const entries = Object.values(blacklist);
 
       if (entries.length === 0) {
-        return m.reply(novaWrap("Blacklist", "Belum ada nomor di blacklist.\nTambah: " + prefix + "blacklistscammer add <nomor> | <alasan>"));
+        return m.reply(raraWrap("Blacklist", "Belum ada nomor di blacklist.\nTambah: " + prefix + "blacklistscammer add <nomor> | <alasan>"));
       }
 
       // Sort by report count (most reported first)
@@ -196,14 +196,14 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       lines.push("Total: " + entries.length + " nomor (" + totalVerified + " verified)");
 
-      return m.reply(novaWrap("Daftar Blacklist", lines.join("\n")));
+      return m.reply(raraWrap("Daftar Blacklist", lines.join("\n")));
     }
 
     // --- INFO ---
     if (action === "info") {
       const numberInput = args[1];
       if (!numberInput) {
-        return m.reply(novaWrap("Blacklist", "Format: " + prefix + "blacklistscammer info <nomor>"));
+        return m.reply(raraWrap("Blacklist", "Format: " + prefix + "blacklistscammer info <nomor>"));
       }
 
       const number = normalizeNumber(numberInput);
@@ -211,7 +211,7 @@ async function handler(m, { sock, config: botConfig }) {
       const entry = blacklist[number];
 
       if (!entry) {
-        return m.reply(novaWrap("Blacklist", "Nomor " + formatPhone(number) + " tidak ada di blacklist"));
+        return m.reply(raraWrap("Blacklist", "Nomor " + formatPhone(number) + " tidak ada di blacklist"));
       }
 
       let lines = [
@@ -231,7 +231,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("   Tanggal: " + formatDate(r.date));
       });
 
-      return m.reply(novaWrap("Info Blacklist", lines.join("\n")));
+      return m.reply(raraWrap("Info Blacklist", lines.join("\n")));
     }
 
     // --- REMOVE (owner/admin only) ---
@@ -246,28 +246,28 @@ async function handler(m, { sock, config: botConfig }) {
             (p) => p.id === m.sender && (p.admin === "admin" || p.admin === "superadmin")
           );
           if (!isGroupAdmin) {
-            return m.reply(novaWrap("Blacklist", "Hanya owner atau admin grup yg bisa hapus blacklist"));
+            return m.reply(raraWrap("Blacklist", "Hanya owner atau admin grup yg bisa hapus blacklist"));
           }
         } else {
-          return m.reply(novaWrap("Blacklist", "Hanya owner yg bisa hapus blacklist via private chat"));
+          return m.reply(raraWrap("Blacklist", "Hanya owner yg bisa hapus blacklist via private chat"));
         }
       }
 
       const numberInput = args[1];
       if (!numberInput) {
-        return m.reply(novaWrap("Blacklist", "Format: " + prefix + "blacklistscammer remove <nomor>"));
+        return m.reply(raraWrap("Blacklist", "Format: " + prefix + "blacklistscammer remove <nomor>"));
       }
 
       const number = normalizeNumber(numberInput);
       const blacklist = getBlacklist(db);
 
       if (!blacklist[number]) {
-        return m.reply(novaWrap("Blacklist", "Nomor " + formatPhone(number) + " tidak ada di blacklist"));
+        return m.reply(raraWrap("Blacklist", "Nomor " + formatPhone(number) + " tidak ada di blacklist"));
       }
 
       delete blacklist[number];
       saveBlacklist(db, blacklist);
-      return m.reply(novaWrap("Blacklist", "Nomor " + formatPhone(number) + " dihapus dari blacklist"));
+      return m.reply(raraWrap("Blacklist", "Nomor " + formatPhone(number) + " dihapus dari blacklist"));
     }
 
     // --- STATS ---
@@ -276,7 +276,7 @@ async function handler(m, { sock, config: botConfig }) {
       const entries = Object.values(blacklist);
 
       if (entries.length === 0) {
-        return m.reply(novaWrap("Blacklist", "Belum ada data blacklist."));
+        return m.reply(raraWrap("Blacklist", "Belum ada data blacklist."));
       }
 
       const totalReports = entries.reduce((sum, e) => sum + e.reports.length, 0);
@@ -308,7 +308,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push((i + 1) + ". " + reason + " (" + count + "x)");
       });
 
-      return m.reply(novaWrap("Statistik Blacklist", lines.join("\n")));
+      return m.reply(raraWrap("Statistik Blacklist", lines.join("\n")));
     }
 
     // --- HELP / default ---
@@ -324,7 +324,7 @@ async function handler(m, { sock, config: botConfig }) {
     );
   } catch (e) {
     console.error("blacklist error:", e);
-    return m.reply(novaWrap("Blacklist", "Error: " + e.message));
+    return m.reply(raraWrap("Blacklist", "Error: " + e.message));
   }
 }
 

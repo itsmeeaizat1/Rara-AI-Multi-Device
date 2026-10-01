@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { stopSchedulerByName, getFullSchedulerStatus } from '../../src/lib/nova-scheduler.js'
-import { stopSholatScheduler } from '../../src/lib/nova-sholat-scheduler.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { stopSchedulerByName, getFullSchedulerStatus } from '../../src/lib/rara-scheduler.js'
+import { stopSholatScheduler } from '../../src/lib/rara-sholat-scheduler.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'stopschedule',
     alias: ["stopschedule"],
@@ -51,7 +51,7 @@ async function handler(m, { sock, args }) {
             const wasEnabled = db.setting('autoSholat');
             
             if (!wasEnabled) {
-                m.reply(novaWrap("Stopschedule", `ℹ️ Sholat Scheduler sudah dalam keadaan nonaktif`));
+                m.reply(raraWrap("Stopschedule", `ℹ️ Sholat Scheduler sudah dalam keadaan nonaktif`));
                 return;
             }
             
@@ -89,7 +89,7 @@ Gunakan \`.stopschedule\` untuk melihat daftar scheduler`);
         }
     } catch (error) {
         console.error('[StopSchedule Error]', error);
-        await m.reply(novaWrap("stopschedule", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(raraWrap("stopschedule", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 

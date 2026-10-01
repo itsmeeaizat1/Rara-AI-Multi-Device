@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // oneimage.js — Onepunya API: IMAGE_GENERATION.
 // .oneimg <prompt> — generate gambar AI dari teks
 // Sumber: onepunya.qzz.io (key .setkey onepunya) — beda engine dari .img2/.flux
 // yang udah ada; upstream-nya kadang lambat (504) → pesan gagal jujur.
 import axios from "axios";
-import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { imageGeneration } from "../../src/lib/nova-onepunya.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { imageGeneration } from "../../src/lib/rara-onepunya.js";
 
 const pluginConfig = {
   name: "oneimg",
@@ -27,7 +27,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = (m.args || []).join(" ").trim();
   if (!prompt) {
-    return m.reply(novaWrap("Onepunya Image", `Masukkan deskripsi gambar!\n\nContoh: .oneimg kucing oren tidur di kasur awan`));
+    return m.reply(raraWrap("Onepunya Image", `Masukkan deskripsi gambar!\n\nContoh: .oneimg kucing oren tidur di kasur awan`));
   }
   const apiKey = getApiKey("onepunya");
   try {
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     const msg = String(e.message || e);
     const hint = /504|timeout|ETIMEDOUT/i.test(msg) ? "\n\nServer imagenya lagi lambat — coba lagi sebentar lagi." : "";
-    return m.reply(novaWrap("Onepunya Image", `Gagal: ${msg.slice(0, 180)}${hint}`));
+    return m.reply(raraWrap("Onepunya Image", `Gagal: ${msg.slice(0, 180)}${hint}`));
   }
 }
 

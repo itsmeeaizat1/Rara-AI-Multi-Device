@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // douyin — Download video/audio/STORY dari Douyin (TikTok China)
 // Primary: SnapTik (snaptik.fi — request owner 2026-09-06, "Support
 // Download Story Juga", port dari script owner) → Fallback: IkyyXD → azbry
@@ -11,19 +11,19 @@
 //     (douyin murni — link/keyword TikTok DITOLAK, arah .playtiktok/.tiktok)
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { snaptikDouyin } from "../../src/scraper/snaptik-douyin.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import {
   isDouyinLink,
   isTikTokLink,
   searchPlayDouyin,
   pickRandom,
   pickBestVideoUrl,
-} from "../../src/lib/nova-playdouyin.js";
-import { haidarDouyin, sylvaticaDouyin } from "../../src/lib/nova-douyin-dl.js";
+} from "../../src/lib/rara-playdouyin.js";
+import { haidarDouyin, sylvaticaDouyin } from "../../src/lib/rara-douyin-dl.js";
 import axios from "axios";
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -86,7 +86,7 @@ async function handleKeywordSearch(m, sock, keyword) {
   const r = await searchPlayDouyin(keyword);
   if (r.error || !r.items.length) {
     await m.react("❌");
-    return m.reply(novaWrap("Douyin", [
+    return m.reply(raraWrap("Douyin", [
       `❌ ${r.error}`,
       ``,
       `💡 Douyin = TikTok China, sering ngeblok pencarian beberapa menit.`,
@@ -96,7 +96,7 @@ async function handleKeywordSearch(m, sock, keyword) {
   const item = pickRandom(r.items);
   if (!item) {
     await m.react("❌");
-    return m.reply(novaGagal("Douyin"));
+    return m.reply(raraGagal("Douyin"));
   }
 
   const title = (item.title || "").slice(0, 120).replace(/\n+/g, " ").trim() || "Douyin";
@@ -124,7 +124,7 @@ async function handleKeywordSearch(m, sock, keyword) {
   const videoUrl = pickBestVideoUrl(item);
   if (!videoUrl) {
     await m.react("❌");
-    return m.reply(novaWrap("Douyin", [`❌ Link media gak ketemu.`]));
+    return m.reply(raraWrap("Douyin", [`❌ Link media gak ketemu.`]));
   }
   const cap =
     `🎬 Video Douyin\n\n` +
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
   const text = args.join(" ").trim() || (m.text || "").trim();
 
   if (!text) {
-    return m.reply(novaGuideV2("douyin", {
+    return m.reply(raraGuideV2("douyin", {
  kaomoji: "(・∀・)",
  sapaan: "video douyin mau disimpen? kasih link atau judulnya! (๑>ᴗ<)و",
       cara: "tempel linknya atau ketik keyword pencariannya",
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
   // link TikTok → DITOLAK (douyin murni, gak nyampur tiktok)
   if (isTikTokLink(text)) {
     await m.react("❌");
-    return m.reply(novaWrap("Douyin", [
+    return m.reply(raraWrap("Douyin", [
       `❗ Ini link TikTok — douyin hanya untuk Douyin (TikTok China).`,
       ``,
       `TikTok → pakai ${m.prefix}playtiktok atau ${m.prefix}tiktok`,
@@ -178,14 +178,14 @@ async function handler(m, { sock }) {
   if (!/https?:\/\//i.test(text)) {
     if (text.length < 2) {
       await m.react("❌");
-      return m.reply(novaWrap("Douyin", [`Keyword minimal 2 huruf.`]));
+      return m.reply(raraWrap("Douyin", [`Keyword minimal 2 huruf.`]));
     }
     try {
       return await handleKeywordSearch(m, sock, text);
     } catch (err) {
       console.error("[douyin] keyword search error:", err.message || err);
       await m.react("❌");
-      return m.reply(novaGangguan("Douyin"));
+      return m.reply(raraGangguan("Douyin"));
     }
   }
 
@@ -327,8 +327,8 @@ async function handler(m, { sock }) {
         }, { quoted: m });
       } else {
         await m.react("❌");
-        await m.reply(novaGagal("Douyin DL"));
-        await m.reply(novaBerhasil("douyindl"));
+        await m.reply(raraGagal("Douyin DL"));
+        await m.reply(raraBerhasil("douyindl"));
       }
       return;
     } catch (e) {
@@ -337,7 +337,7 @@ async function handler(m, { sock }) {
 
     // Step 2.5: Last-mile fallback — snapvideotools (video + FOTO SLIDE douyin)
     try {
-      const { resolvePlayDouyin } = await import("../../src/lib/nova-playdouyin.js");
+      const { resolvePlayDouyin } = await import("../../src/lib/rara-playdouyin.js");
       const r = await resolvePlayDouyin(text);
       if (r?.item) {
         const item = r.item;
@@ -367,11 +367,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("❌");
-    return m.reply(novaGagal("Douyin DL"));
+    return m.reply(raraGagal("Douyin DL"));
   } catch (error) {
     console.error("[douyindl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaGangguan("Douyin DL"));
+    return m.reply(raraGangguan("Douyin DL"));
   }
 }
 

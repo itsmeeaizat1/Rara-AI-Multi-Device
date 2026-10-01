@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════
 // 🔹 Tio AI Unified — .aitio <model> <prompt>
 // 🔹 Semua model Tio dalam satu command, langsung pilih model
@@ -8,7 +8,7 @@
 //            .aitio qwen jelaskan kuantum
 // ═══════════════════════════════════════════════
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 import { getTioKey, getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -120,7 +120,7 @@ function resolveModel(input) {
 // API CALL — Tio API via OpenAI format
 // ═══════════════════════════════════════════════
 
-// brand Tio → brand Haidar (rantai fallback nova-ai-fallback.js)
+// brand Tio → brand Haidar (rantai fallback rara-ai-fallback.js)
 // haidar menerima: gemini/claude/gpt5/gpt4/gpt4o/deepseek/googleai
 const HAIDAR_BRAND = {
   DeepSeek: "deepseek",
@@ -208,7 +208,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ═══ No args → show help ═══
     if (!body) {
       await m.react("🐣");
-      return m.reply(novaGuideV2("aitio", {
+      return m.reply(raraGuideV2("aitio", {
  kaomoji: "(๑>ᴗ<)و",
  sapaan: "pilih model langsung, semua dalam satu command! (≧∇≦)ﾉ",
         cara: "ketik nama model + promptnya sesudah command",
@@ -258,7 +258,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       text += `\nPakai: *${prefix}aitio <alias> <prompt>*`;
 
-      return m.reply(novaWrap("Daftar Model Tio AI" + (filterFree ? " (Free)" : ""), text), "ai-tio");
+      return m.reply(raraWrap("Daftar Model Tio AI" + (filterFree ? " (Free)" : ""), text), "ai-tio");
     }
 
     // ═══ Resolve model from first word ═══
@@ -268,7 +268,7 @@ async function handler(m, { sock, config: botConfig }) {
     // treat as error — user probably mistyped
     if (model.brand === "Unknown" && parts.length <= 1) {
       return m.reply(
-        novaWrap("Tio AI", [
+        raraWrap("Tio AI", [
           `Model *${firstWord}* tidak dikenal`,
           `Ketik *${prefix}aitio list* untuk lihat semua model`,
           `Atau: *${prefix}aitio deepseek <pesan>*`,
@@ -282,7 +282,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       return m.reply(
-        novaWrap("Tio AI", [
+        raraWrap("Tio AI", [
           `Model: *${model.label}*`,
           `Pesan kosong!`,
           `Contoh: *${prefix}aitio ${model.aliases[0] || model.id} halo*`,
@@ -294,7 +294,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Check API key
     if (!apiKey) {
       return m.reply(
-        novaError("Tio AI", "API Key Tio belum di-set. Isi di src/lib/apikey/apikeys.json: tioApiKey"),
+        raraError("Tio AI", "API Key Tio belum di-set. Isi di src/lib/apikey/apikeys.json: tioApiKey"),
         "ai-tio"
       );
     }
@@ -310,7 +310,7 @@ async function handler(m, { sock, config: botConfig }) {
     messages.push({ role: "user", content: prompt });
 
     const systemPrompt = botConfig.aiHelp?.systemPrompt
-      || "Kamu adalah Nova AI, asisten yang ramah dan cerdas. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.";
+      || "Kamu adalah Rara AI, asisten yang ramah dan cerdas. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.";
 
     // Call Tio API — AI satuan STRICT (owner 14 Sep): gateway down / key ditolak
     // → tampilkan pesan error aslinya, JANGAN fallback ke AI lain (dulu lewat
@@ -327,7 +327,7 @@ async function handler(m, { sock, config: botConfig }) {
       : reply) + engineNote;
 
     const freeTag = model.free ? " (Free)" : "";
-    const response = novaWrap(
+    const response = raraWrap(
       `Tio AI — ${model.label}${freeTag}`,
       replyText
     );
@@ -337,7 +337,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
     return m.reply(
-      novaWrap("Tio AI Error", [
+      raraWrap("Tio AI Error", [
         `Status: *Gagal*`,
         `Error: *${error.message || "Unknown error"}*`,
       ].join("\n")),

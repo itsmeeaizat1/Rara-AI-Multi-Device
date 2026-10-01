@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
     const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
 
     const text =
-      novaWrap("Happy Emoji", [`Emoji: *${emoji}*`,
+      raraWrap("Happy Emoji", [`Emoji: *${emoji}*`,
         "Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}happyemoji untuk emoji lain`) +
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const reply =
-      novaError("HappyEmoji", "Gagal nih, coba lagi ya");
+      raraError("HappyEmoji", "Gagal nih, coba lagi ya");
 
     await m.reply(reply, "happyemoji");
   }

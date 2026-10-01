@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // SoundCloud Downloader — Scrape client_id dari soundcloud.com, resolve via API v2
 // No API key needed, free, self-hosted
 

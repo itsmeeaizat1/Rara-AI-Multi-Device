@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { GPT5 } from "../../src/scraper/gpt5.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "gpt5",
@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(novaGuideV2("gpt5", {
+    return m.reply(raraGuideV2("gpt5", {
  kaomoji: "(๑˃ᴗ˂)ﻭ",
  sapaan: "tanya apa aja ke AI, dijawab pakai model GPT-4.1 Nano! (≧∇≦)ﾉ",
       cara: "ketik pertanyaannya sesudah command",
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const result = await GPT5(text);
 
     if (!result.status) {
-      return m.reply(novaWrap("GPT-5 Gagal", `${result.error || "Gagal dapet respons nih"}`));
+      return m.reply(raraWrap("GPT-5 Gagal", `${result.error || "Gagal dapet respons nih"}`));
     }
     const reply = `${result.answer}`;
 
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(novaWrap("gpt5", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("gpt5", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

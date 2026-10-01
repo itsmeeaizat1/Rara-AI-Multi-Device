@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // kuroai — KuroNeko AI (wilz.web.id/api/ai/evernight)
 // Request owner 12 Sep 2026: "buat fitur ai baru .kuroai".
 // Persona KuroNeko, SESSION PERSIST per user (token session API disimpan di
 // db.setting kuroaiSession) — AI inget percakapan sebelumnya per orang.
 // STRICT SATU RUTE (pola satuan owner): API down → error jelas, gak nyamber.
-import { novaWrap, novaGuideV2, novaInfoSections } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraGuideV2, raraInfoSections } from "../../src/lib/rara-menu-style.js";
 import { kuroaiChat } from "../../src/scraper/evernight.js";
 
 const pluginConfig = {
@@ -58,14 +58,14 @@ async function handler(m, { sock, db } = {}) {
   if (first === "reset" || first === "hapus" || first === "clear") {
     clearSession(db, m.sender);
     await m.react("🐣");
-    return m.reply(novaInfoSections(["KuroAI", { label: "Sesi", value: "baru dimulai" }]) + "\nBerhasil kak 🥳");
+    return m.reply(raraInfoSections(["KuroAI", { label: "Sesi", value: "baru dimulai" }]) + "\nBerhasil kak 🥳");
   }
 
   // ── .kuroai doang — usage ──
   if (!prompt) {
     const hasSession = !!getSession(db, m.sender);
     return m.reply(
-      novaGuideV2("KuroAI", {
+      raraGuideV2("KuroAI", {
  kaomoji: "(^◡^)",
  sapaan: `pengen ngobrol santai? sapa aja! (=^･ω･^=) ${hasSession ? " sesi obrolanmu masih kuinget lho~" : ""}`,
         cara: "ketik pesannya sesudah command, bot jawab santai dan inget obrolanmu",
@@ -93,7 +93,7 @@ async function handler(m, { sock, db } = {}) {
   } catch (err) {
     console.error("[KuroAI]", err.message || err);
     await m.react("❌");
-    return m.reply(novaWrap("kuroai", err.message || "KuroNeko AI lagi gangguan, coba lagi ya", "error"));
+    return m.reply(raraWrap("kuroai", err.message || "KuroNeko AI lagi gangguan, coba lagi ya", "error"));
   }
 }
 

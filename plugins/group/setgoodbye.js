@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "setgoodbye",
   alias: ["setgoodbye"],
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const text = m.text || m.args.join(" ");
 
   if (!text) {
-    return m.reply(novaWrap("setgoodbye", [
+    return m.reply(raraWrap("setgoodbye", [
       "Set pesan goodbye custom buat grup ini.",
       "",
       `📌 Format: ${m.prefix}setgoodbye <pesan>`,
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
 
   db.setGroup(m.chat, { goodbyeMsg: text, goodbye: true, leave: true });
   db.save();
-  await m.reply(novaWrap("setgoodbye", [
+  await m.reply(raraWrap("setgoodbye", [
     "Pesan goodbye berhasil di set!",
     "",
     `📌 Isi : ${text}`,

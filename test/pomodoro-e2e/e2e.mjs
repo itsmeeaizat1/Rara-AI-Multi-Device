@@ -7,17 +7,17 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-pomo-db-" + Date.now();
+const DB_DIR = "/tmp/rara-pomo-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const {
   createSession, getSession, endSession, advancePhase, recomputeIfMissed,
   buildPhaseCard, buildTickCard, buildTransitionCard, phaseEndTs,
   firePhaseTicker, ensurePomodoroScheduler, restorePomodoro, _resetPomodoroForTest,
-} = await import(R + "/src/lib/nova-pomodoro.js");
-const { runLiveTicker } = await import(R + "/src/lib/nova-countdown.js");
+} = await import(R + "/src/lib/rara-pomodoro.js");
+const { runLiveTicker } = await import(R + "/src/lib/rara-countdown.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s)).toLowerCase();
 

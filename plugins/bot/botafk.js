@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import moment from 'moment-timezone'
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 const pluginConfig = {
     name: 'botafk',
     alias: ["botafk"],
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
         const afkDuration = Date.now() - currentAfk.since
         const duration = formatDuration(afkDuration)
         
-        return m.reply(novaWrap("Bot Kembali Online", 
+        return m.reply(raraWrap("Bot Kembali Online", 
             `⏱️ Durasi: \`${duration}\`\n` +
             `📝 Alasan: \`${currentAfk.reason || '-'}\`\n` +
             `\n` +
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
             since: Date.now()
         })
         
-        return m.reply( novaWrap("Bot Afk Aktif", 
+        return m.reply( raraWrap("Bot Afk Aktif", 
             `📝 Alasan: \`${reason}\`\n` +
             `⏰ sEjak: \`${moment().tz('Asia/Jakarta').format('HH:mm:ss')}\`\n` +
             `\n` +

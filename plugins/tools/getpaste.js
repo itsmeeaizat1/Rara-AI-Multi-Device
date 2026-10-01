@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
-import * as timeHelper from '../../src/lib/nova-time.js'
-import te from '../../src/lib/nova-error.js'
+import * as timeHelper from '../../src/lib/rara-time.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
   name: "getpaste",
   alias: ["getpaste"],
@@ -55,10 +55,10 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const data = await new GetPastebin().fetch(text);
     await m.react("🐣");
-    await m.reply(novaWrap("Get Paste", data.split("\n")));
+    await m.reply(raraWrap("Get Paste", data.split("\n")));
   } catch (err) {
     await m.react("❌");
-    m.reply(novaWrap("getpaste", te(m.prefix, m.command, m.pushName), "error"))
+    m.reply(raraWrap("getpaste", te(m.prefix, m.command, m.pushName), "error"))
   }
 }
 

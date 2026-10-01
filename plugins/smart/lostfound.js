@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "lostfound",
@@ -42,7 +42,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "lost" || sub === "hilang") {
     const desc = args.slice(2).join(" ").trim();
     if (!desc) {
-      await m.reply(novaWrap("Lost & Found", "Format: " + prefix + "lostfound lost <deskripsi>\n💡 *Contoh:* " + prefix + "lostfound lost Dompet coklat, isi KTP dan ATM BCA"));
+      await m.reply(raraWrap("Lost & Found", "Format: " + prefix + "lostfound lost <deskripsi>\n💡 *Contoh:* " + prefix + "lostfound lost Dompet coklat, isi KTP dan ATM BCA"));
       return { handled: true };
     }
     cfg.counter++;
@@ -72,7 +72,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       matchMsg = "\n\nMATCH DITEMUKAN!\nBarang ketemu oleh @" + best.reporter.split("@")[0] + "\nDeskripsi: " + best.desc;
     }
 
-    await m.reply(novaWrap("Lost & Found", [
+    await m.reply(raraWrap("Lost & Found", [
       "BARANG HILANG DILAPORKAN",
       "ID: #" + item.id,
       "Deskripsi: " + desc,
@@ -85,7 +85,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "found" || sub === "ketemu") {
     const desc = args.slice(2).join(" ").trim();
     if (!desc) {
-      await m.reply(novaWrap("Lost & Found", "Format: " + prefix + "lostfound found <deskripsi>\n💡 *Contoh:* " + prefix + "lostfound found Dompet coklat di kantin lantai 2"));
+      await m.reply(raraWrap("Lost & Found", "Format: " + prefix + "lostfound found <deskripsi>\n💡 *Contoh:* " + prefix + "lostfound found Dompet coklat di kantin lantai 2"));
       return { handled: true };
     }
     cfg.counter++;
@@ -115,7 +115,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       matchMsg = "\n\nMATCH DITEMUKAN!\nPemilik: @" + best.reporter.split("@")[0] + "\nDeskripsi: " + best.desc;
     }
 
-    await m.reply(novaWrap("Lost & Found", [
+    await m.reply(raraWrap("Lost & Found", [
       "BARANG KETEMU DILAPORKAN",
       "ID: #" + item.id,
       "Deskripsi: " + desc,
@@ -128,11 +128,11 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "list" || sub === "daftar" || !sub) {
     const active = cfg.items.filter(i => i.status === "active");
     if (active.length === 0) {
-      await m.reply(novaWrap("Lost & Found", "Tidak ada laporan aktif.\n\n" + prefix + "lostfound lost <desc> - lapor hilang\n" + prefix + "lostfound found <desc> - lapor ketemu"));
+      await m.reply(raraWrap("Lost & Found", "Tidak ada laporan aktif.\n\n" + prefix + "lostfound lost <desc> - lapor hilang\n" + prefix + "lostfound found <desc> - lapor ketemu"));
       return { handled: true };
     }
     const list = active.slice(-10).map(i => "#" + i.id + " [" + (i.type === "lost" ? "HILANG" : "KETEMU") + "] " + i.desc + "\n   Oleh: @" + i.reporter.split("@")[0]).join("\n\n");
-    await m.reply(novaWrap("Lost & Found", "Laporan aktif (" + active.length + "):\n\n" + list), { mentions: active.map(i => i.reporter) });
+    await m.reply(raraWrap("Lost & Found", "Laporan aktif (" + active.length + "):\n\n" + list), { mentions: active.map(i => i.reporter) });
     return { handled: true };
   }
 
@@ -140,35 +140,35 @@ async function handler(m, { sock, db, config: botConfig }) {
     const id = parseInt(args[2] || "0", 10);
     const item = cfg.items.find(i => i.id === id && i.type === "found" && i.status === "matched");
     if (!item) {
-      await m.reply(novaWrap("Lost & Found", "Item tidak ditemukan atau belum matched."));
+      await m.reply(raraWrap("Lost & Found", "Item tidak ditemukan atau belum matched."));
       return { handled: true };
     }
     const lost = cfg.items.find(i => i.id === item.matched);
     if (lost && lost.reporter !== m.sender && !m.isOwner) {
-      await m.reply(novaWrap("Lost & Found", "Hanya pemilik yang bisa claim."));
+      await m.reply(raraWrap("Lost & Found", "Hanya pemilik yang bisa claim."));
       return { handled: true };
     }
     item.status = "resolved";
     if (lost) lost.status = "resolved";
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Lost & Found", "Item #" + id + " resolved! Barang sudah kembali ke pemilik."));
+    await m.reply(raraWrap("Lost & Found", "Item #" + id + " resolved! Barang sudah kembali ke pemilik."));
     return { handled: true };
   }
 
   if (sub === "resolve" || sub === "selesai") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Lost & Found", "Khusus admin/owner."));
+      await m.reply(raraWrap("Lost & Found", "Khusus admin/owner."));
       return { handled: true };
     }
     const id = parseInt(args[2] || "0", 10);
     const item = cfg.items.find(i => i.id === id);
     if (!item) {
-      await m.reply(novaWrap("Lost & Found", "Item tidak ditemukan."));
+      await m.reply(raraWrap("Lost & Found", "Item tidak ditemukan."));
       return { handled: true };
     }
     item.status = "resolved";
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Lost & Found", "Item #" + id + " ditandai resolved."));
+    await m.reply(raraWrap("Lost & Found", "Item #" + id + " ditandai resolved."));
     return { handled: true };
   }
 
@@ -177,7 +177,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const found = cfg.items.filter(i => i.type === "found").length;
     const matched = cfg.items.filter(i => i.status === "matched" || i.status === "resolved").length;
     const resolved = cfg.items.filter(i => i.status === "resolved").length;
-    await m.reply(novaWrap("Lost & Found", [
+    await m.reply(raraWrap("Lost & Found", [
       "Total laporan: " + cfg.items.length,
       "Hilang: " + lost,
       "Ketemu: " + found,
@@ -187,7 +187,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Lost & Found", [
+  await m.reply(raraWrap("Lost & Found", [
     "LOST & FOUND GRUP",
     "",
     prefix + "lostfound lost <deskripsi> - lapor hilang",

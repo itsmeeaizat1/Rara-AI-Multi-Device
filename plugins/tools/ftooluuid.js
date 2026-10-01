@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooluuid — generator UUID v4 (port altftool.com/tools/all/uuid-generator) pakai crypto.randomUUID().
 import { randomUUID } from "node:crypto";
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooluuid", alias: ["uuid", "uuidgen", "guid"], category: "tools",
@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
       n = parseInt(raw, 10);
       if (!Number.isFinite(n) || n < 1) {
         await m.react("❌");
-        return m.reply(novaSalahV2("ftooluuid", {
+        return m.reply(raraSalahV2("ftooluuid", {
           kaomoji: "(・_・;)",
           pesan: "jumlahnya harus angka lebih dari 0",
           contoh: `${prefix}ftooluuid 5`,
@@ -32,12 +32,12 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const ids = Array.from({ length: n }, () => randomUUID());
     await m.react("🐣");
-    await m.reply(novaWrap("UUID Generator", [`UUID V4 ×${n} BERHASIL`,
+    await m.reply(raraWrap("UUID Generator", [`UUID V4 ×${n} BERHASIL`,
       "",
       "```" + ids.join("\n") + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("UUID Generator", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("UUID Generator", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: AUTO ORDER NOKOS 5SIM (nova-nokos.js + ordernokos.js)
+// RARA AI WHATSAPP BOT — E2E: AUTO ORDER NOKOS 5SIM (rara-nokos.js + ordernokos.js)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -12,11 +12,11 @@ const t = (name, cond, extra = "") => {
 process.on("unhandledRejection", (e) => { console.log("UNHANDLED:", e?.stack || e); process.exit(1); });
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "nokos-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const lib = await import(R + "/src/lib/nova-auto-order.js");
-const nk = await import(R + "/src/lib/nova-nokos.js");
+const lib = await import(R + "/src/lib/rara-auto-order.js");
+const nk = await import(R + "/src/lib/rara-nokos.js");
 const plug = await import(R + "/plugins/panel/ordernokos.js");
 const cfgPlug = await import(R + "/plugins/owner/autoorder.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
@@ -92,7 +92,7 @@ plug._setNokosHttpForTest(fakeHttp);
 const db = getDatabase();
 const cfg = lib.ensureOrderCfg(db);
 
-console.log("─── 1. LIB nova-nokos ───");
+console.log("─── 1. LIB rara-nokos ───");
 t("1a. cfg default: nokos.apiKey kosong + markup 20%", cfg.nokos.apiKey === "" && cfg.nokos.markupPct === 20 && typeof cfg.nokos.orders === "object", JSON.stringify(cfg.nokos));
 t("1b. findProduct('wa') → whatsapp", nk.findProduct("wa")?.slug === "whatsapp", JSON.stringify(nk.findProduct("wa")));
 t("1c. findProduct('ig') → instagram", nk.findProduct("ig")?.slug === "instagram");

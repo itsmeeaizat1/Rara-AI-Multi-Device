@@ -58,8 +58,8 @@ pm2 start node_modules/.bin/9router --name 9router -- start --port 20128 --host 
 pm2 save
 ```
 
-Catatan: beda sama fitur `.ai9` (Nova Router) — itu implementasi sendiri
-(`src/lib/nova-ai-router.js`), gak butuh package 9router.
+Catatan: beda sama fitur `.ai9` (Rara Router) — itu implementasi sendiri
+(`src/lib/rara-ai-router.js`), gak butuh package 9router.
 
 ## 5. Dapetin API key gateway
 

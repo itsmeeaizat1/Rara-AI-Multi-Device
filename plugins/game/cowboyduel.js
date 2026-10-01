@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // cowboyduel.js — Game tembak koboy (tebak posisi musuh)
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
-import { formatRp } from "../../src/lib/nova-rpg-service.js";
-import { rollBonus } from "../../src/lib/nova-game-rewards.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { formatRp } from "../../src/lib/rara-rpg-service.js";
+import { rollBonus } from "../../src/lib/rara-game-rewards.js";
 
 const pluginConfig = {
   name: "cowboyduel",
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     const direction = args[0]?.toLowerCase();
 
     if (!direction || !positions.includes(direction)) {
-      return m.reply(novaWrap("koboy", `Pilih arah: kiri, tengah, atau kanan!\n\nContoh: .cowboyduel kiri`, "guide"));
+      return m.reply(raraWrap("koboy", `Pilih arah: kiri, tengah, atau kanan!\n\nContoh: .cowboyduel kiri`, "guide"));
     }
 
     await m.react("🕒");
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("koboy error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("koboy", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("koboy", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

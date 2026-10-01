@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import AdmZip from "adm-zip";
 import archiver from "archiver";
 import * as tar from "tar";
@@ -9,7 +9,7 @@ import axios from "axios";
 import { createWriteStream, createReadStream } from "node:fs";
 import { createGzip, createGunzip } from "node:zlib";
 import { pipeline } from "node:stream/promises";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "arsipfile",
@@ -34,7 +34,7 @@ async function downloadFile(url) {
 }
 
 function getTmpDir() {
-  const dir = path.join(os.tmpdir(), "nova_arsip_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8));
+  const dir = path.join(os.tmpdir(), "rara_arsip_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8));
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 }
@@ -126,14 +126,14 @@ async function handler(m, { sock }) {
   // === INFO ===
   if (subCmd === "info" || subCmd === "detail") return archiveInfo(m, sock);
 
-  return m.reply(novaWrap("Arsipfile", "Subcommand tidak dikenal. Ketik .arsipfile buat lihat daftar."));
+  return m.reply(raraWrap("Arsipfile", "Subcommand tidak dikenal. Ketik .arsipfile buat lihat daftar."));
 }
 
 // === CREATE ZIP ===
 async function createZip(m, sock) {
   const files = await getFilesFromMessage(m);
   if (files.length === 0) {
-    return m.reply(novaWrap("Arsipfile", "Reply 1 atau lebih file dengan caption .arsipfile zip"));
+    return m.reply(raraWrap("Arsipfile", "Reply 1 atau lebih file dengan caption .arsipfile zip"));
   }
 
   try {
@@ -169,14 +169,14 @@ async function createZip(m, sock) {
 async function extractZip(m, sock) {
   const files = await getFilesFromMessage(m);
   if (files.length === 0) {
-    return m.reply(novaWrap("Arsipfile", "Reply file ZIP dengan caption .arsipfile unzip"));
+    return m.reply(raraWrap("Arsipfile", "Reply file ZIP dengan caption .arsipfile unzip"));
   }
 
   const file = files[0];
   const isZip = (file.name.endsWith(".zip") || file.buffer[0] === 0x50 && file.buffer[1] === 0x4B);
 
   if (!isZip) {
-    return m.reply(novaWrap("Arsipfile", "File bukan arsip ZIP yang valid."));
+    return m.reply(raraWrap("Arsipfile", "File bukan arsip ZIP yang valid."));
   }
 
   try {
@@ -189,7 +189,7 @@ async function extractZip(m, sock) {
 
     if (entries.length > 30) {
       cleanup(tmpDir);
-      return m.reply(novaWrap("Info", "\u26a0\ufe0f Arsip terlalu banyak file (" + entries.length + "). Maksimal 30 file."));
+      return m.reply(raraWrap("Info", "\u26a0\ufe0f Arsip terlalu banyak file (" + entries.length + "). Maksimal 30 file."));
     }
 
     zip.extractAllTo(tmpDir, true);
@@ -211,10 +211,10 @@ async function extractZip(m, sock) {
 
     if (allFiles.length === 0) {
       cleanup(tmpDir);
-      return m.reply(novaWrap("Arsipfile", "Arsip kosong, tidak ada file untuk diextract."));
+      return m.reply(raraWrap("Arsipfile", "Arsip kosong, tidak ada file untuk diextract."));
     }
 
-    await m.reply(novaWrap("Info", "\u23f3 Extracting " + allFiles.length + " file dari ZIP..."));
+    await m.reply(raraWrap("Info", "\u23f3 Extracting " + allFiles.length + " file dari ZIP..."));
 
     for (const fp of allFiles.slice(0, 30)) {
       const relName = path.relative(tmpDir, fp);
@@ -229,7 +229,7 @@ async function extractZip(m, sock) {
       } catch (e) { console.error('[archivefile.js]:', e.message); }
     }
 
-    await m.reply(novaWrap("Info", "\u2705 Extract ZIP selesai. " + sent + " file terkirim."));
+    await m.reply(raraWrap("Info", "\u2705 Extract ZIP selesai. " + sent + " file terkirim."));
     cleanup(tmpDir);
   } catch (e) {
     return m.reply("Gagal extract ZIP: " + e.message);
@@ -240,7 +240,7 @@ async function extractZip(m, sock) {
 async function createTar(m, sock) {
   const files = await getFilesFromMessage(m);
   if (files.length === 0) {
-    return m.reply(novaWrap("Arsipfile", "Reply 1 atau lebih file dengan caption .arsipfile tar"));
+    return m.reply(raraWrap("Arsipfile", "Reply 1 atau lebih file dengan caption .arsipfile tar"));
   }
 
   try {
@@ -284,7 +284,7 @@ async function createTar(m, sock) {
 async function extractTar(m, sock) {
   const files = await getFilesFromMessage(m);
   if (files.length === 0) {
-    return m.reply(novaWrap("Arsipfile", "Reply file TAR.GZ dengan caption .arsipfile untar"));
+    return m.reply(raraWrap("Arsipfile", "Reply file TAR.GZ dengan caption .arsipfile untar"));
   }
 
   const file = files[0];
@@ -313,15 +313,15 @@ async function extractTar(m, sock) {
 
     if (allFiles.length === 0) {
       cleanup(tmpDir);
-      return m.reply(novaWrap("Arsipfile", "Arsip kosong, tidak ada file untuk diextract."));
+      return m.reply(raraWrap("Arsipfile", "Arsip kosong, tidak ada file untuk diextract."));
     }
 
     if (allFiles.length > 30) {
       cleanup(tmpDir);
-      return m.reply(novaWrap("Info", "\u26a0\ufe0f Arsip terlalu banyak file (" + allFiles.length + "). Maksimal 30 file."));
+      return m.reply(raraWrap("Info", "\u26a0\ufe0f Arsip terlalu banyak file (" + allFiles.length + "). Maksimal 30 file."));
     }
 
-    await m.reply(novaWrap("Info", "\u23f3 Extracting " + allFiles.length + " file dari TAR.GZ..."));
+    await m.reply(raraWrap("Info", "\u23f3 Extracting " + allFiles.length + " file dari TAR.GZ..."));
 
     let sent = 0;
     for (const fp of allFiles.slice(0, 30)) {
@@ -337,7 +337,7 @@ async function extractTar(m, sock) {
       } catch (e) { console.error('[archivefile.js]:', e.message); }
     }
 
-    await m.reply(novaWrap("Info", "\u2705 Extract TAR.GZ selesai. " + sent + " file terkirim."));
+    await m.reply(raraWrap("Info", "\u2705 Extract TAR.GZ selesai. " + sent + " file terkirim."));
     cleanup(tmpDir);
   } catch (e) {
     return m.reply("Gagal extract TAR.GZ: " + e.message);
@@ -348,11 +348,11 @@ async function extractTar(m, sock) {
 async function createGz(m, sock) {
   const files = await getFilesFromMessage(m);
   if (files.length === 0) {
-    return m.reply(novaWrap("Arsipfile", "Reply 1 file dengan caption .arsipfile gz"));
+    return m.reply(raraWrap("Arsipfile", "Reply 1 file dengan caption .arsipfile gz"));
   }
 
   if (files.length > 1) {
-    return m.reply(novaWrap("Arsipfile", "GZIP hanya bisa kompres 1 file. Untuk multiple file, gunakan .arsipfile zip atau .arsipfile tar"));
+    return m.reply(raraWrap("Arsipfile", "GZIP hanya bisa kompres 1 file. Untuk multiple file, gunakan .arsipfile zip atau .arsipfile tar"));
   }
 
   const file = files[0];
@@ -388,12 +388,12 @@ async function createGz(m, sock) {
 async function extractGz(m, sock) {
   const files = await getFilesFromMessage(m);
   if (files.length === 0) {
-    return m.reply(novaWrap("Arsipfile", "Reply file .gz dengan caption .arsipfile ungz"));
+    return m.reply(raraWrap("Arsipfile", "Reply file .gz dengan caption .arsipfile ungz"));
   }
 
   const file = files[0];
   if (!file.name.endsWith(".gz") && !(file.buffer[0] === 0x1f && file.buffer[1] === 0x8b)) {
-    return m.reply(novaWrap("Arsipfile", "File bukan GZIP yang valid."));
+    return m.reply(raraWrap("Arsipfile", "File bukan GZIP yang valid."));
   }
 
   try {
@@ -428,7 +428,7 @@ async function extractGz(m, sock) {
 async function listArchive(m, sock) {
   const files = await getFilesFromMessage(m);
   if (files.length === 0) {
-    return m.reply(novaWrap("Arsipfile", "Reply file arsip dengan caption .arsipfile list"));
+    return m.reply(raraWrap("Arsipfile", "Reply file arsip dengan caption .arsipfile list"));
   }
 
   const file = files[0];
@@ -497,7 +497,7 @@ async function listArchive(m, sock) {
       txt += "Total: 1 file\n";
       txt += "GZIP hanya berisi 1 file";
     } else {
-      return m.reply(novaWrap("Arsipfile", "Format tidak dikenali. Didukung: .zip, .tar.gz, .tgz, .gz"));
+      return m.reply(raraWrap("Arsipfile", "Format tidak dikenali. Didukung: .zip, .tar.gz, .tgz, .gz"));
     }
 
     if (count > 50) {
@@ -514,7 +514,7 @@ async function listArchive(m, sock) {
 async function archiveInfo(m, sock) {
   const files = await getFilesFromMessage(m);
   if (files.length === 0) {
-    return m.reply(novaWrap("Arsipfile", "Reply file arsip dengan caption .arsipfile info"));
+    return m.reply(raraWrap("Arsipfile", "Reply file arsip dengan caption .arsipfile info"));
   }
 
   const file = files[0];
@@ -567,7 +567,7 @@ async function archiveInfo(m, sock) {
       fileCount = 1;
       totalUncompressed = file.buffer.length * 3; // rough estimate
     } else {
-      return m.reply(novaWrap("Arsipfile", "Format tidak dikenali. Didukung: .zip, .tar.gz, .tgz, .gz"));
+      return m.reply(raraWrap("Arsipfile", "Format tidak dikenali. Didukung: .zip, .tar.gz, .tgz, .gz"));
     }
 
     txt += "Jumlah file: " + fileCount + "\n";

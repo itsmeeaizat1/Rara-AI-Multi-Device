@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import config from '../../config.js'
 import fs from 'fs'
 import path from 'path'
-import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { isLid, lidToJid } from '../../src/lib/rara-lid.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import { getGroupMode } from '../group/botmode.js'
 const pluginConfig = {
     name: "seller",
@@ -72,11 +72,11 @@ function handler(m, { sock }) {
     const pteroConfig = config.pterodactyl
     
     if (!hasAccess(m.sender, m.isOwner, pteroConfig)) {
-        return m.reply(novaWrap("seller", novaError("Panel", "Akses ditolak nih! Khusus Owner")))
+        return m.reply(raraWrap("seller", raraError("Panel", "Akses ditolak nih! Khusus Owner")))
     }
     
     if (!pteroConfig) {
-        return m.reply(novaWrap("seller", novaError("Panel", "Config pterodactyl gak ada nih!")))
+        return m.reply(raraWrap("seller", raraError("Panel", "Config pterodactyl gak ada nih!")))
     }
     
     if (!pteroConfig.sellers) {
@@ -89,7 +89,7 @@ function handler(m, { sock }) {
     
     if (isList) {
         if (pteroConfig.sellers.length === 0) {
-            return m.reply(novaWrap("seller", `📋 *Daftar sEller/Reseller*\n\nBelum ada seller terdaftar.`))
+            return m.reply(raraWrap("seller", `📋 *Daftar sEller/Reseller*\n\nBelum ada seller terdaftar.`))
         }
         
         let txt = `📋 *Daftar sEller/Reseller*\n\n`
@@ -98,7 +98,7 @@ function handler(m, { sock }) {
             txt += `${i + 1}. \`${s}\`\n`
         })
         txt += `\n_Seller bisa create server (1gb-10gb v1/v2/v3)_`
-        return m.reply(novaWrap("seller", txt))
+        return m.reply(raraWrap("seller", txt))
     }
     
     let targetUser = null
@@ -142,7 +142,7 @@ function handler(m, { sock }) {
                 `${roleChanged}`)
         } else {
             pteroConfig.sellers = pteroConfig.sellers.filter(s => s !== targetUser)
-            return m.reply(novaWrap("seller", `Gagal menyimpan ke config.js`))
+            return m.reply(raraWrap("seller", `Gagal menyimpan ke config.js`))
         }
     }
     
@@ -158,7 +158,7 @@ function handler(m, { sock }) {
                 `Nomor: \`${targetUser}\`\n` +
                 `Total: *${pteroConfig.sellers.length}* seller`)
         } else {
-            return m.reply(novaWrap("seller", `Gagal menyimpan ke config.js`))
+            return m.reply(raraWrap("seller", `Gagal menyimpan ke config.js`))
         }
     }
 }

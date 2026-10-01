@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'delkoin',
     alias: ["delkoin"],
@@ -52,17 +52,17 @@ async function handler(m, { sock }) {
     }
     
     if (amount <= 0) {
-        return m.reply(novaWrap("Delkoin", `❌ *Gagal*\n\nJumlah harus lebih dari 0`))
+        return m.reply(raraWrap("Delkoin", `❌ *Gagal*\n\nJumlah harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid)
     
     if (!user) {
-        return m.reply(novaWrap("Delkoin", `❌ *Gagal*\n\nUser tidak ditemukan di database`))
+        return m.reply(raraWrap("Delkoin", `❌ *Gagal*\n\nUser tidak ditemukan di database`))
     }
     
     const newKoin = db.updateKoin(targetJid, -amount)
-    await m.reply(novaWrap("delkoin", `✅ *Koin Dikurangi*\n\n` +
+    await m.reply(raraWrap("delkoin", `✅ *Koin Dikurangi*\n\n` +
         "" +
         `👤 User: @${targetJid.split('@')[0]}\n` +
         `➖ Kurang: *-${formatKoin(amount)}*\n` +

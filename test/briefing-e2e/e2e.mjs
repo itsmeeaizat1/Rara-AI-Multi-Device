@@ -1,4 +1,4 @@
-// NOVA — E2E: DAILY BRIEFING (25 Sep 2026). Fitur "beneran hidup": semua
+// RARA — E2E: DAILY BRIEFING (25 Sep 2026). Fitur "beneran hidup": semua
 // section dari API live (BMKG/open-meteo/ESPN); e2e pakai seam http dengan
 // FIXTURE yang bentuknya sama persis dengan respon live yang udah di-probe.
 // Skill 5.6: probe live dulu — fixture di bawah = hasil probe 25 Sep 2026.
@@ -8,19 +8,19 @@ import { fileURLToPath } from "node:url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-briefing-db-" + Date.now();
+const DB_DIR = "/tmp/rara-briefing-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const {
   _setBriefingHttpForTest, _setBriefingNowForTest, _resetBriefingSeamsForTest,
   buildBriefingCard, parseJam, ensureBriefingUser, processBriefingTick,
   initBriefingScheduler, stopBriefingScheduler,
-} = await import(R + "/src/lib/nova-briefing.js");
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
+} = await import(R + "/src/lib/rara-briefing.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
 const { handler, config } = await import(R + "/plugins/user/briefing.js");
-const { loadPlugins } = await import(R + "/src/lib/nova-plugins.js");
+const { loadPlugins } = await import(R + "/src/lib/rara-plugins.js");
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
@@ -73,7 +73,7 @@ w("\n— 2. kartu utuh (fixture bentuk live) —");
   setLiveFixtures();
   const u = ensureBriefingUser(db, SENDER);
   u.lokasi = "Jakarta"; u.tim = ["Arsenal"];
-  global.novaReminders = [{ id: "R1", sender: SENDER, message: "kirim laporan", fireAt: Date.now() + 3600_000, fired: false }];
+  global.raraReminders = [{ id: "R1", sender: SENDER, message: "kirim laporan", fireAt: Date.now() + 3600_000, fired: false }];
   db.setUser(SENDER, { name: "Faris", rpg: { level: 12, gold: 8450, cash: 12300, dailyStreak: 5 } });
   const card = await buildBriefingCard(SENDER, "Faris");
   check("2a. header boxLeft 「 Briefing Pagi 」", card.startsWith("「 Briefing Pagi 」"), card.slice(0, 60));
@@ -130,7 +130,7 @@ w("\n— 5. skip senyap —");
   setLiveFixtures();
   const u2 = ensureBriefingUser(db, SENDER2);
   u2.tim = []; u2.lokasi = "Jakarta";
-  global.novaReminders = [];
+  global.raraReminders = [];
   const card = await buildBriefingCard(SENDER2, "Budi");
   check("5a. tanpa tim → gak ada baris bola", !card.includes("Arsenal") && !card.includes("⚽"), card);
   check("5b. tanpa reminder → gak ada baris agenda", !card.includes("agenda kamu"), "");

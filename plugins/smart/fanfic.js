@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -55,7 +55,7 @@ async function generateFanfic(names, genre) {
       "- Gunakan nama panggilan/first name\n" +
       "- Jangan pakai kata-kata kasar\n" +
       "- Format: paragraf pendek, tiap karakter dialog pakai tanda kutip";
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
     return result?.success ? result.response : null;
   } catch {
     return null;
@@ -72,7 +72,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "gen" || sub === "generate" || sub === "buat") {
     const mentioned = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid : null;
     if (!mentioned || mentioned.length < 2) {
-      await m.reply(novaWrap("Fanfic", "Tag minimal 2 orang.\n💡 *Contoh:* " + prefix + "fanfic gen @user1 @user2 komedi"));
+      await m.reply(raraWrap("Fanfic", "Tag minimal 2 orang.\n💡 *Contoh:* " + prefix + "fanfic gen @user1 @user2 komedi"));
       return { handled: true };
     }
     let genre = (args[args.indexOf("@" + mentioned[0].split("@")[0]) + 1] || "").toLowerCase();
@@ -84,7 +84,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     });
     const story = await generateFanfic(names, genre);
     if (!story) {
-      await m.reply(novaError("Fanfic", "Gagal generate nih, coba lagi ya"));
+      await m.reply(raraError("Fanfic", "Gagal generate nih, coba lagi ya"));
       return { handled: true };
     }
 
@@ -100,7 +100,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     });
     saveConfig(db, gid, cfg);
 
-    await m.reply(novaWrap("Fanfic " + genre, [
+    await m.reply(raraWrap("Fanfic " + genre, [
       "Karakter: " + names.join(", "),
       "",
       story,
@@ -110,12 +110,12 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "list" || sub === "daftar") {
     if (!cfg.stories || cfg.stories.length === 0) {
-      await m.reply(novaWrap("Fanfic", "Belum ada cerita. Ketik " + prefix + "fanfic gen @user1 @user2"));
+      await m.reply(raraWrap("Fanfic", "Belum ada cerita. Ketik " + prefix + "fanfic gen @user1 @user2"));
       return { handled: true };
     }
     const recent = cfg.stories.slice(-5).reverse();
     const list = recent.map(s => "#" + s.id + " [" + s.genre + "] " + s.names + " - " + new Date(s.createdAt).toLocaleDateString("id-ID")).join("\n");
-    await m.reply(novaWrap("Fanfic List", "Cerita terakhir:\n" + list));
+    await m.reply(raraWrap("Fanfic List", "Cerita terakhir:\n" + list));
     return { handled: true };
   }
 
@@ -123,10 +123,10 @@ async function handler(m, { sock, db, config: botConfig }) {
     const id = parseInt(args[2] || "0", 10);
     const story = cfg.stories?.find(s => s.id === id) || cfg.stories?.[cfg.stories.length - 1];
     if (!story) {
-      await m.reply(novaWrap("Fanfic", "Cerita tidak ditemukan."));
+      await m.reply(raraWrap("Fanfic", "Cerita tidak ditemukan."));
       return { handled: true };
     }
-    await m.reply(novaWrap("Fanfic #" + story.id + " [" + story.genre + "]", [
+    await m.reply(raraWrap("Fanfic #" + story.id + " [" + story.genre + "]", [
       "Karakter: " + story.names,
       "",
       story.story,
@@ -136,12 +136,12 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "genres") {
     const list = GENRES.map((g, i) => (i + 1) + ". " + g.name).join("\n");
-    await m.reply(novaWrap("Fanfic Genres", "Genre tersedia:\n" + list + "\n\nDefault: random"));
+    await m.reply(raraWrap("Fanfic Genres", "Genre tersedia:\n" + list + "\n\nDefault: random"));
     return { handled: true };
   }
 
   if (sub === "stats" || sub === "cek" || !sub) {
-    await m.reply(novaWrap("Fanfic", [
+    await m.reply(raraWrap("Fanfic", [
       "Total cerita: " + (cfg.stories?.length || 0),
       "",
       prefix + "fanfic gen @user1 @user2 [genre] - generate cerita",
@@ -154,7 +154,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Fanfic", [
+  await m.reply(raraWrap("Fanfic", [
     "AI FAN FICTION GENERATOR",
     "",
     prefix + "fanfic gen @user1 @user2 [genre] - bikin cerita",

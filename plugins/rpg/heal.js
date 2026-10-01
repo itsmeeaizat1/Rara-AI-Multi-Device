@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Heal — Recover HP and Energy using potions or resting
 
-import { animHeal } from "../../src/lib/nova-rpg-anim.js";
+import { animHeal } from "../../src/lib/rara-rpg-anim.js";
 import {
   ensureRpg, saveRpg, regenHP, regenEnergy, regenMana,
   removeItem, getItemCount, ITEM_DB
-} from "../../src/lib/nova-rpg-service.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-rpg-service.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "heal",
@@ -30,14 +30,14 @@ const REST_COOLDOWN = 30 * 1000;
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("heal", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("heal", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const hpFull = rpg.hp >= rpg.maxHp;
     const energyFull = rpg.energy >= rpg.maxEnergy;
     const manaFull = rpg.mana >= rpg.maxMana;
 
     if (hpFull && energyFull && manaFull) {
-      return m.reply(novaRpgBox("heal", `HP, Energy, dan Mana sudah penuh!\n❤️ HP: *${rpg.hp}/${rpg.maxHp}*\n⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n💧 Mana: *${rpg.mana}/${rpg.maxMana}*`, "info"));
+      return m.reply(raraRpgBox("heal", `HP, Energy, dan Mana sudah penuh!\n❤️ HP: *${rpg.hp}/${rpg.maxHp}*\n⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n💧 Mana: *${rpg.mana}/${rpg.maxMana}*`, "info"));
     }
 
     // Cek apakah punya potion
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("heal error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("heal", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("heal", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

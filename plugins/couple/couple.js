@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Sistem Pacaran — Dashboard couple
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "couple",
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "couple", icon: "💑",
       flavor: `💑 *DASHBOARD HUBUNGAN KAK ${name.toUpperCase()}!*`,
       body: rows.join("\n"),

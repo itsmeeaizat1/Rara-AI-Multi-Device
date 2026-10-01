@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 //  GetDL TikTok Search (ESM scraper)
 //  Target  : https://getdl.space (session + search TikTok)

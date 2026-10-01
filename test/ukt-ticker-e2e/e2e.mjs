@@ -8,15 +8,15 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-ukt-db-" + Date.now();
+const DB_DIR = "/tmp/rara-ukt-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const {
   getRecord, setRecord, deleteRecord, remainingMs, daysUntil,
   fireUktTicker, checkUktOnce, restoreUkt, startUktChecker, _resetUktForTest,
-} = await import(R + "/src/lib/nova-ukt-reminder.js");
+} = await import(R + "/src/lib/rara-ukt-reminder.js");
 const { handler } = await import(R + "/plugins/education/tuitionreminder.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s)).toLowerCase();

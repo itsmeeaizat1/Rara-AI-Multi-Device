@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Watermark — Tambah watermark text ke gambar (local via sharp, no API)
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "photowatermark",
@@ -9,7 +9,7 @@ const pluginConfig = {
   category: "tools",
   description: "Photo Watermark — Tambah text watermark ke gambar (local, no API)",
   usage: ".photowatermark <text> (reply gambar)\n.photowatermark <pos> | <text> (reply gambar)",
-  example: ".photowatermark Nova AI (reply gambar)\n.photowatermark bottom-right | @NovaAI (reply gambar)",
+  example: ".photowatermark Rara AI (reply gambar)\n.photowatermark bottom-right | @RaraAI (reply gambar)",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -93,10 +93,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         usedPrefix + "photowatermark <posisi> | <text> (reply gambar)",
         "",
         "Contoh:",
-        usedPrefix + "photowatermark Nova AI",
-        usedPrefix + "photowatermark top-right | Nova AI",
+        usedPrefix + "photowatermark Rara AI",
+        usedPrefix + "photowatermark top-right | Rara AI",
       ];
-      return m.reply(novaWrap("Photo Watermark", lines, "info"));
+      return m.reply(raraWrap("Photo Watermark", lines, "info"));
     }
 
     // Parse: position | text  OR  just text
@@ -113,33 +113,33 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!wmText) {
-      return m.reply(novaWrap("Photo Watermark", [
+      return m.reply(raraWrap("Photo Watermark", [
         "Text watermark tidak boleh kosong",
         "",
         "Format: " + usedPrefix + "photowatermark <text>",
-        "Contoh: " + usedPrefix + 'photowatermark Nova AI',
+        "Contoh: " + usedPrefix + 'photowatermark Rara AI',
       ], "warn"));
     }
 
     if (wmText.length > 100) {
-      return m.reply(novaWrap("Photo Watermark", "Text terlalu panjang (max 100 karakter)", "warn"));
+      return m.reply(raraWrap("Photo Watermark", "Text terlalu panjang (max 100 karakter)", "warn"));
     }
 
     // Get image from reply
     const q = m.quoted || m;
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(novaWrap("Photo Watermark", [
+      return m.reply(raraWrap("Photo Watermark", [
         "Reply gambar dulu, lalu ketik:",
         usedPrefix + "photowatermark " + input,
       ], "warn"));
     }
 
-    m.reply(novaWrap("Photo Watermark", "Menambahkan watermark..."));
+    m.reply(raraWrap("Photo Watermark", "Menambahkan watermark..."));
 
     const imgBuffer = await q.download();
     if (!imgBuffer || imgBuffer.length === 0) {
-      return m.reply(novaWrap("Photo Watermark", "Gagal download gambar.", "warn"));
+      return m.reply(raraWrap("Photo Watermark", "Gagal download gambar.", "warn"));
     }
 
     const meta = await sharp(imgBuffer).metadata();
@@ -155,14 +155,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (!result || result.length === 0) {
       await m.react("🐣");
-      return m.reply(novaWrap("Photo Watermark", "Gagal processing watermark.", "warn"));
+      return m.reply(raraWrap("Photo Watermark", "Gagal processing watermark.", "warn"));
     }
 
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: novaWrap("Photo Watermark", [
+        caption: raraWrap("Photo Watermark", [
           "Text: " + wmText,
           "Posisi: " + position,
           "Powered by sharp (local)",
@@ -173,7 +173,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[PhotoWatermark]", e);
-    m.reply(novaWrap("Photo Watermark", [
+    m.reply(raraWrap("Photo Watermark", [
       "Error: " + e.message,
       "",
       "Ketik " + usedPrefix + "photowatermark list untuk bantuan",

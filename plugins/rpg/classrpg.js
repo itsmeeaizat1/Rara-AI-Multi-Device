@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Class — Pilih kelas karakter (knight/mage/archer)
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "class", alias: ["class", "classrpg", "kelas"],
@@ -20,10 +20,10 @@ const CLASSES = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("classrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("classrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
     const text = m.args.join(" ").trim().toLowerCase();
-    if (rpg.job && rpg.job !== "novice") return m.reply(novaRpgBox("classrpg", `Kamu sudah memilih kelas: *${rpg.job}*\nGunakan .scrollclass untuk reset.`, "info"));
-    if (!text || !CLASSES[text]) return m.reply(novaRpgBox("classrpg", `Kelas tersedia:\n⚔️ knight — ${CLASSES.knight.desc}\n🔮 mage — ${CLASSES.mage.desc}\n🏹 archer — ${CLASSES.archer.desc}\n\nContoh: ${m.prefix}classrpg mage`, "guide"));
+    if (rpg.job && rpg.job !== "novice") return m.reply(raraRpgBox("classrpg", `Kamu sudah memilih kelas: *${rpg.job}*\nGunakan .scrollclass untuk reset.`, "info"));
+    if (!text || !CLASSES[text]) return m.reply(raraRpgBox("classrpg", `Kelas tersedia:\n⚔️ knight — ${CLASSES.knight.desc}\n🔮 mage — ${CLASSES.mage.desc}\n🏹 archer — ${CLASSES.archer.desc}\n\nContoh: ${m.prefix}classrpg mage`, "guide"));
     const c = CLASSES[text];
     rpg.job = text; rpg.atk = c.atk; rpg.def = c.def; rpg.spd = c.spd; rpg.maxHp = c.hp; rpg.hp = c.hp;
     if (c.mana) { rpg.maxMana = c.mana; rpg.mana = c.mana; }
@@ -31,11 +31,11 @@ async function handler(m, { sock }) {
     saveRpg(m, rpg);
     await m.react("🐣");
     await animGeneric(m, sock, '⚔️', 'Changing class');
-    return m.reply(novaRpgBox("classrpg", `✅ Kamu kini seorang *${text}*!\n⚔️ ATK: ${c.atk} | 🛡️ DEF: ${c.def} | ⚡ SPD: ${c.spd} | ❤️ HP: ${c.hp}`, "success"));
+    return m.reply(raraRpgBox("classrpg", `✅ Kamu kini seorang *${text}*!\n⚔️ ATK: ${c.atk} | 🛡️ DEF: ${c.def} | ⚡ SPD: ${c.spd} | ❤️ HP: ${c.hp}`, "success"));
   } catch (e) {
     console.error("classrpg error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("classrpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("classrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

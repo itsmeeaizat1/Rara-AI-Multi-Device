@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ChatEverywhere Scraper — Puppeteer-based untuk bypass Vercel Security Checkpoint
 // Free GPT-4o-mini tanpa API key
 //
@@ -14,7 +14,7 @@
 //
 // 3. Docker (Pterodactyl/Koyeb):
 //    Dockerfile sudah di-update dengan chromium + puppeteer-core
-//    Build ulang image: docker build -t nova-bot .
+//    Build ulang image: docker build -t rara-bot .
 
 let browserInstance = null;
 let pageInstance = null;

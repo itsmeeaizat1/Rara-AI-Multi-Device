@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // webwatch.js — Web Watcher: pantau URL, notif otomatis pas isinya berubah
 // Fitur baru 9 Sep 2026 (request owner "fitur yg blm prnh ada di bot")
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   addWatch, removeWatch, listWatches, getStatus, checkNow, setSock,
   MIN_INTERVAL, MAX_INTERVAL,
-} from "../../src/lib/nova-webwatch.js";
+} from "../../src/lib/rara-webwatch.js";
 
 const pluginConfig = {
   name: "webwatch",
@@ -24,7 +24,7 @@ const pluginConfig = {
 };
 
 function helpText(m) {
-  return novaWrap("webwatch", [
+  return raraWrap("webwatch", [
     "🌐 *web watcher*",
     "",
     "pantau url 24 jam — notif otomatis pas isinya berubah",
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     if (["list", "daftar"].includes(sub)) {
       const list = listWatches(m.chat);
       if (!list.length) {
-        return m.reply(novaWrap("webwatch", "Belum ada URL yang dipantau di chat ini.\n\n" + `Ketik ${m.prefix}webwatch <url> buat mulai.`, "guide"));
+        return m.reply(raraWrap("webwatch", "Belum ada URL yang dipantau di chat ini.\n\n" + `Ketik ${m.prefix}webwatch <url> buat mulai.`, "guide"));
       }
       const lines = ["🌐 *url dipantau di chat ini*", ""];
       list.forEach((w, i) => {
@@ -69,35 +69,35 @@ async function handler(m, { sock }) {
         lines.push("");
       });
       lines.push(`▸ Stop: ${m.prefix}webwatch stop <no>`);
-      return m.reply(novaWrap("webwatch", lines.join("\n")));
+      return m.reply(raraWrap("webwatch", lines.join("\n")));
     }
 
     if (["stop", "del", "hapus", "off"].includes(sub)) {
       const key = m.args.slice(1).join(" ").trim();
       if (!key) {
         await m.react("❌");
-        return m.reply(novaWrap("webwatch", `Mau stop yang mana?\n\nKetik ${m.prefix}webwatch list buat lihat nomornya.`, "error"));
+        return m.reply(raraWrap("webwatch", `Mau stop yang mana?\n\nKetik ${m.prefix}webwatch list buat lihat nomornya.`, "error"));
       }
       const res = removeWatch(m.chat, key);
       if (!res.ok) {
         await m.react("❌");
-        return m.reply(novaWrap("webwatch", `URL/nomor itu gak ketemu di daftar pantau chat ini. Cek ${m.prefix}webwatch list.`, "error"));
+        return m.reply(raraWrap("webwatch", `URL/nomor itu gak ketemu di daftar pantau chat ini. Cek ${m.prefix}webwatch list.`, "error"));
       }
       await m.react("🐣");
-      return m.reply(novaWrap("webwatch", `✅ Stop pantau:\n${res.watch.url}`));
+      return m.reply(raraWrap("webwatch", `✅ Stop pantau:\n${res.watch.url}`));
     }
 
     if (["now", "cek"].includes(sub)) {
       const list = listWatches(m.chat);
       if (!list.length) {
         await m.react("❌");
-        return m.reply(novaWrap("webwatch", "Belum ada URL yang dipantau di chat ini.", "error"));
+        return m.reply(raraWrap("webwatch", "Belum ada URL yang dipantau di chat ini.", "error"));
       }
       await m.react("🕒");
       const res = await checkNow(m.chat);
       await m.react("🐣");
       if (res.changed === 0) {
-        return m.reply(novaWrap("webwatch", `✅ ${res.checked} URL dicek — semuanya masih sama, belum ada perubahan.`));
+        return m.reply(raraWrap("webwatch", `✅ ${res.checked} URL dicek — semuanya masih sama, belum ada perubahan.`));
       }
       return;
     }
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     if (["info", "status"].includes(sub)) {
       const st = getStatus();
       const mine = listWatches(m.chat);
-      return m.reply(novaWrap("webwatch", [
+      return m.reply(raraWrap("webwatch", [
         "🌐 *status web watcher*",
         "",
         `aktif: ${st.enabled ? "ya" : "tidak"} (switch auto)`,
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
     const interval = m.args[1] ? Number(m.args[1]) : undefined;
     if (m.args[1] && (!Number.isFinite(interval) || interval < MIN_INTERVAL || interval > MAX_INTERVAL)) {
       await m.react("❌");
-      return m.reply(novaWrap("webwatch", `❌ Interval harus angka ${MIN_INTERVAL}-${MAX_INTERVAL} menit.\n\nContoh: ${m.prefix}webwatch https://example.com 30`, "error"));
+      return m.reply(raraWrap("webwatch", `❌ Interval harus angka ${MIN_INTERVAL}-${MAX_INTERVAL} menit.\n\nContoh: ${m.prefix}webwatch https://example.com 30`, "error"));
     }
 
     await m.react("🕒");
@@ -135,10 +135,10 @@ async function handler(m, { sock }) {
         duplicate: `URL itu udah dipantau di chat ini:\n${res.watch?.url}\n\nCek ${m.prefix}webwatch list`,
         unreachable: "Situsnya gak bisa dijangkau sekarang. Coba lagi nanti.",
       };
-      return m.reply(novaWrap("webwatch", msgs[res.error] || "Gagal nambah pantauan.", "error"));
+      return m.reply(raraWrap("webwatch", msgs[res.error] || "Gagal nambah pantauan.", "error"));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("webwatch", [
+    return m.reply(raraWrap("webwatch", [
       "✅ *mulai dipantau!*",
       "",
       `📰 *${res.watch.title}*`,
@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
     ].join("\n")));
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("webwatch", "Gagal: " + (e?.message || e), "error"));
+    m.reply(raraWrap("webwatch", "Gagal: " + (e?.message || e), "error"));
   }
 }
 

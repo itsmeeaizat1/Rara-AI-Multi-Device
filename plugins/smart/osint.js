@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -67,7 +67,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const username = (args[1] || "").replace(/[@]/g, "").trim();
 
   if (!username) {
-    await m.reply(novaWrap("OSINT", [
+    await m.reply(raraWrap("OSINT", [
       "USERNAME CHECKER",
       "",
       "Cari username di " + PLATFORMS.length + "+ platform sekaligus.",
@@ -79,10 +79,10 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (username.length < 2) {
-    await m.reply(novaWrap("OSINT", "Username minimal 2 karakter."));
+    await m.reply(raraWrap("OSINT", "Username minimal 2 karakter."));
     return { handled: true };
   }
-  await m.reply(novaWrap("OSINT", "Cek @" + username + " di " + PLATFORMS.length + " platform...\nMungkin perlu 10-20 detik."));
+  await m.reply(raraWrap("OSINT", "Cek @" + username + " di " + PLATFORMS.length + " platform...\nMungkin perlu 10-20 detik."));
 
   const results = await checkUsername(username);
   const found = results.filter(r => r.found);
@@ -93,7 +93,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     : "(tidak ditemukan)";
   const notFoundList = notFound.map(r => r.name).join(", ") || "-";
 
-  await m.reply(novaWrap("OSINT Result: @" + username, [
+  await m.reply(raraWrap("OSINT Result: @" + username, [
     "DITEMUKAN (" + found.length + "):",
     foundList,
     "",

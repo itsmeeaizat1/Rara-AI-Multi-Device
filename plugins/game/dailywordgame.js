@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .dailywordgame — tebak kata 5 huruf 6 kesempatan (port altftool.com "Daily Word Game")
 // Mode harian: kata sama untuk semua pemain per tanggal WIB. .dailywordgame acak = latihan.
 // ANIMASI KHAS: kotak tile kosong terungkap jadi hijau satu per satu (beda dari game lain).
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { editFramesAnim } from "../../src/lib/rara-anim-runner.js";
 
 const pluginConfig = {
   name: "dailywordgame", alias: ["wordle", "tebakkatalima"], category: "game",
@@ -67,9 +67,9 @@ async function handler(m, { sock, config }) {
   if (prev) {
     if ((m.text || "").trim().toLowerCase() === "stop") {
       sessions.delete(k);
-      return m.reply(novaWrap("Daily Word", ["Sesi diakhiri. Sampai jumpa besok~"].join("\n")));
+      return m.reply(raraWrap("Daily Word", ["Sesi diakhiri. Sampai jumpa besok~"].join("\n")));
     }
-    return m.reply(novaWrap("Daily Word", ["MASIH ADA SESI AKTIF",
+    return m.reply(raraWrap("Daily Word", ["MASIH ADA SESI AKTIF",
       "",
       "```" + renderGrid(prev) + "```",
       "",
@@ -79,7 +79,7 @@ async function handler(m, { sock, config }) {
   const s = { word, mode, rows: [], startedAt: startedAt(), timer: setTimeout(() => sessions.delete(k), 600000) };
   sessions.set(k, s);
   await animasiMulai(sock, m.chat); // fallback senyap kalau channel gak dukung edit
-  return m.reply(novaWrap("Daily Word", [`${mode === "harian" ? "KATA HARI INI" : "MODE LATIHAN"} — 6 KESEMPATAN`,
+  return m.reply(raraWrap("Daily Word", [`${mode === "harian" ? "KATA HARI INI" : "MODE LATIHAN"} — 6 KESEMPATAN`,
     "",
     "```" + renderGrid(s) + "```",
     "",
@@ -99,7 +99,7 @@ export async function answerHandler(m, sock) {
   s.rows.push({ word: guess, tiles });
   if (guess === s.word) {
     sessions.delete(k);
-    await m.reply(novaWrap("Daily Word", ["🎉 BENAR!",
+    await m.reply(raraWrap("Daily Word", ["🎉 BENAR!",
       "",
       "```" + renderGrid({ ...s }) + "```",
       "",
@@ -110,7 +110,7 @@ export async function answerHandler(m, sock) {
   if (s.rows.length >= 6) {
     const word = s.word;
     sessions.delete(k);
-    await m.reply(novaWrap("Daily Word", ["😢 KESEMPATAN HABIS",
+    await m.reply(raraWrap("Daily Word", ["😢 KESEMPATAN HABIS",
       "",
       "```" + renderGrid({ ...s }) + "```",
       "",
@@ -119,7 +119,7 @@ export async function answerHandler(m, sock) {
     return true;
   }
   s.timer = setTimeout(() => sessions.delete(k), 600000);
-  await m.reply(novaWrap("Daily Word", [`Percobaan ${s.rows.length}/6`,
+  await m.reply(raraWrap("Daily Word", [`Percobaan ${s.rows.length}/6`,
     "",
     "```" + renderGrid(s) + "```",
     "",

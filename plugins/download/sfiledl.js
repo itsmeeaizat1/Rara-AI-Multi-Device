@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { tipText, raraWrap, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     const url = m.text?.trim();
 
     if (!url) {
-      await m.reply(novaNoInput("SFile DL", "Kirim link SFile yang mau didownload!", `${prefix}sfiledl https://sfile.mobi/xxxx`));
+      await m.reply(raraNoInput("SFile DL", "Kirim link SFile yang mau didownload!", `${prefix}sfiledl https://sfile.mobi/xxxx`));
       return { handled: true };
     }
 
@@ -79,9 +79,9 @@ async function handler(m, { sock, config: botConfig }) {
       fileName,
       caption: _cap,
     }, { quoted: m });
-    await m.reply(novaBerhasil("sfiledl2"));
+    await m.reply(raraBerhasil("sfiledl2"));
   } catch (error) {
-    await m.reply(novaGagal("SFile DL"));
+    await m.reply(raraGagal("SFile DL"));
   }
 
   return { handled: true };

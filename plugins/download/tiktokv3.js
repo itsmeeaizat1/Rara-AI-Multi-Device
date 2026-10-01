@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tiktokv3.js — TikTok Downloader v3 (Sanka API + tikwm fallback)
 import axios from "axios";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
 
     const url = text;
     if (!url || !url.match(/tiktok\.com|vt\.tiktok/i)) {
-      return m.reply(novaWrap("tiktokv3", `Kirim URL TikTok yang valid.\n\nContoh: ${m.prefix}tiktokv3 https://www.tiktok.com/@user/video/123`, "guide"));
+      return m.reply(raraWrap("tiktokv3", `Kirim URL TikTok yang valid.\n\nContoh: ${m.prefix}tiktokv3 https://www.tiktok.com/@user/video/123`, "guide"));
     }
 
     await m.react("🕒");
@@ -118,8 +118,8 @@ async function handler(m, { sock }) {
     const videoUrl = r.video?.noWatermark || r.video?.url || r.video?.watermark || r.video;
     if (!videoUrl && !r.images) {
       await m.react("❌");
-      await m.reply(novaGagal("TikTok V3"));
-      await m.reply(novaBerhasil("TikTok V3"));
+      await m.reply(raraGagal("TikTok V3"));
+      await m.reply(raraBerhasil("TikTok V3"));
     }
     if (videoUrl && !r.images) {
       const vidRes = await axios.get(videoUrl, {
@@ -165,7 +165,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[tiktokv3]", err);
     await m.react("❌");
-    m.reply(novaGangguan("TikTok V3"));
+    m.reply(raraGangguan("TikTok V3"));
   }
 }
 

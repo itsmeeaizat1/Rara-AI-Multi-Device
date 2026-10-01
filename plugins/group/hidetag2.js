@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import config from '../../config.js'
-import { getParticipantJids } from '../../src/lib/nova-lid.js'
-import te from '../../src/lib/nova-error.js'
+import { getParticipantJids } from '../../src/lib/rara-lid.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'hidetag2',
     alias: ["hidetag2", "h2"],
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
                 remoteJid: 'status@broadcast'
             },
             message: {
-                conversation: config.bot?.name || 'Nova MD'
+                conversation: config.bot?.name || 'Rara MD'
             }
         }
         if (m.quoted) {
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
             { quoted: fakeQuoted }
         )
     } catch (err) {
-        m.reply(novaWrap("hidetag2", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("hidetag2", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

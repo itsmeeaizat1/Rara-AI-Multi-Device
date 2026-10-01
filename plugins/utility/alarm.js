@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaHeader, separator, tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { loadAlarms, saveAlarms } from "../../src/lib/nova-alarm.js";
-import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraHeader, separator, tipText, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { loadAlarms, saveAlarms } from "../../src/lib/rara-alarm.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/rara-countdown.js";
 
 const pluginConfig = {
   name: "alarm", alias: ["alarm"], category: "utility",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     global.alarms = loadAlarms(); // store persist db — alarm gak ilang pas restart
     const input = (m.text || "").trim();
     if (!input) {
-      await m.reply(novaCaption({
+      await m.reply(raraCaption({
   emoji: "🔧",
   name: "alarm",
   description: "Alarm pengingat pribadi",
@@ -30,10 +30,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (args[0] === "list") {
       const myAlarms = global.alarms[m.sender] || [];
       if (!myAlarms.length) {
-        await m.reply(novaError("Alarm", ["Tidak ada alarm aktif"].join("\n")));
+        await m.reply(raraError("Alarm", ["Tidak ada alarm aktif"].join("\n")));
         return { handled: true };
       }
-      let text = novaHeader("Alarm Aktif", "⏰") + "\n\n";
+      let text = raraHeader("Alarm Aktif", "⏰") + "\n\n";
       myAlarms.forEach((a, i) => { text += `${i+1}. *${a.time}* - ${a.message}\n`; });
       text += "\n" + tipText("Alarm bunyi tiap hari di jam WIB — tersimpan walau bot restart");
       await m.reply(text);
@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!global.alarms[m.sender]) global.alarms[m.sender] = [];
       global.alarms[m.sender].splice(idx, 1);
       saveAlarms();
-      await m.reply(novaError("Alarm", [`Alarm #${idx+1} dihapus`].join("\n")));
+      await m.reply(raraError("Alarm", [`Alarm #${idx+1} dihapus`].join("\n")));
       return { handled: true };
     }
     const time = args[0];
@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (diffSec <= 59) diffSec += 86400; // udah lewat / mepet banget → besok
     const targetTs = Date.now() + diffSec * 1000;
     const total = global.alarms[m.sender].length;
-    const card = (remainingMs, live = true) => novaWrap("Alarm Disetel", [
+    const card = (remainingMs, live = true) => raraWrap("Alarm Disetel", [
       `⏰ Waktu : *${time}* WIB`,
       `📝 Pesan : ${message}`,
       live
@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
     return { handled: true };
   } catch (e) {
-    await m.reply(novaWrap("Gagal nih", [`${e.message}`].join("\n")));
+    await m.reply(raraWrap("Gagal nih", [`${e.message}`].join("\n")));
   }
   return { handled: true };
 }

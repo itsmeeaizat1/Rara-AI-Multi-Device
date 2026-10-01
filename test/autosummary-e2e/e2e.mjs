@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: AUTOSUMMARY UPGRADE HISTORI PERSISTEN
+// RARA AI WHATSAPP BOT — E2E: AUTOSUMMARY UPGRADE HISTORI PERSISTEN
 // Fitur #1 owner 21 Sep: ringkasan grup terjadwal kini baca chathistory.json
 // (persisten, tetap ada walau restart) — buffer in-memory jadi fallback.
 import fs from "node:fs";
@@ -14,10 +14,10 @@ const t = (name, cond, extra = "") => {
 
 // ── setup: database tmp ──
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "autosum-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const chatlog = await import(R + "/src/lib/nova-chat-log.js");
+const chatlog = await import(R + "/src/lib/rara-chat-log.js");
 const as = await import(R + "/plugins/owner/autosummary.js");
 const { collectMessages, groupJidsWithMessages, messageBuffers, generateFallbackSummary, DEFAULT_AUTOSUMMARY, getSettings } = as._autosummaryInternalsForTest();
 

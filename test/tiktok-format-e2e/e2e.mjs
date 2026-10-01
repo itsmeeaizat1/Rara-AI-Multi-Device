@@ -1,6 +1,6 @@
 // E2E: format TikTok Downloader seragam (request owner 19 Sep — judul/uploader/
 // username/durasi/view/like/komentar/share/download SD-HD sesuai kemampuan
-// fitur) — nova-tiktok-format.js satu pintu + 5 plugin TikTok.
+// fitur) — rara-tiktok-format.js satu pintu + 5 plugin TikTok.
 // Jalankan dari repo root: node test/tiktok-format-e2e/e2e.mjs
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -15,7 +15,7 @@ function t(label, cond, extra) {
 
 const REPO = path.resolve(".");
 const { fmtNum, fmtTiktokDuration, tiktokCaption } =
-  await import(pathToFileURL(path.join(REPO, "src/lib/nova-tiktok-format.js")).href);
+  await import(pathToFileURL(path.join(REPO, "src/lib/rara-tiktok-format.js")).href);
 
 // ── fmtNum: separator koma ala contoh owner ──
 t("fmtNum: 720329 → '720,329'", fmtNum(720329) === "720,329");
@@ -72,8 +72,8 @@ t("fmtTiktokDuration: 0/kosong → ''", fmtTiktokDuration(0) === "" && fmtTiktok
 
 // ── header dinamis per platform (request lanjutan owner: fitur lain disamakan) ──
 {
-  const cap = tiktokCaption({ header: "YouTube Downloader", title: "Nova Video", uploader: "Nova Channel", duration: "2:40", views: 1234567, download: "720p" });
-  t("caption: header dinamis — 'YouTube Downloader' bukan TikTok", cap.startsWith("*YouTube Downloader*\n\n📝 *Judul:* Nova Video"));
+  const cap = tiktokCaption({ header: "YouTube Downloader", title: "Rara Video", uploader: "Rara Channel", duration: "2:40", views: 1234567, download: "720p" });
+  t("caption: header dinamis — 'YouTube Downloader' bukan TikTok", cap.startsWith("*YouTube Downloader*\n\n📝 *Judul:* Rara Video"));
   t("caption: durasi '2:40' → dipadding '02:40'", cap.includes("⏱️ *Durasi:* 02:40"));
   t("caption: views 1234567 → '1,234,567'", cap.includes("👁️ *Views:* 1,234,567"));
   t("caption: download 720p (kualitas jujur per fitur)", cap.includes("⬇️ *Download:* 720p"));

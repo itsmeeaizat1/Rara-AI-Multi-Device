@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 const pluginConfig = {
   name: "emojitoanimasi",
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
   const emoji = m.text?.trim();
 
   if (!emoji) {
-    return m.reply(novaWrap("emojitoanimasi", [
+    return m.reply(raraWrap("emojitoanimasi", [
       `Konversi emoji ke sticker animasi.`,
       ``,
       `📌 Format: ${m.prefix}emojitoanimasi <emoji>`,
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const { data } = await axios.get(apiUrl, { timeout: 15000 });
 
     if (!data?.status || !data?.data?.url) {
-      return m.reply(novaWrap("emojitoanimasi", "❌ *gagal*\n\nEmoji tidak ditemukan atau API error"));
+      return m.reply(raraWrap("emojitoanimasi", "❌ *gagal*\n\nEmoji tidak ditemukan atau API error"));
     }
 
     const webpUrl = data.data.url;
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     await m.react("❌");
-    m.reply(novaWrap("emojitoanimasi", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("emojitoanimasi", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

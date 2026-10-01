@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import config from '../../config.js'
-import { f } from '../../src/lib/nova-http.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
+import { f } from '../../src/lib/rara-http.js'
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-RaraMD'
 
 const pluginConfig = {
     name: 'fuckmylife',
@@ -28,13 +28,13 @@ async function handler(m, { sock }) {
         const data = await f(`https://api.neoxr.eu/api/fml?apikey=${NEOXR_APIKEY}`)
         
         if (!data?.status || !data?.data?.text) {
-            return m.reply(novaError("FML", "Gagal ambil FML story nih"))
+            return m.reply(raraError("FML", "Gagal ambil FML story nih"))
         }    
         await m.react("🐣");
         await m.reply(data.data.text)
     } catch (err) {
     await m.react("❌");
-        return m.reply(novaWrap("fuckmylife", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("fuckmylife", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

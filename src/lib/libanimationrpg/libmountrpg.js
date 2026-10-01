@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libmountrpg.js — LIB ANIMASI EMOJI-GRID khusus Mount / tunggangan
 // (upgrade owner 28 Sep 2026: cutscene 3 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
 // Grid per frame: HUD (MENJINAKKAN/MBERI MAKAN + nama tunggangan) · baris padang (🤠/🥕 jangkar + hewan
@@ -7,7 +7,7 @@
 // (kontrak e2e posisi hewan bergerak). KHUSUS tunggangan (aturan "beda game beda animasi"). Isi MURNI KODE
 // ANIMASI (pure dari ctx, gak import plugin). Dipanggil plugin saat user main game. Fallback → senyap.
 
-import { editFramesAnim } from "../nova-anim-runner.js";
+import { editFramesAnim } from "../rara-anim-runner.js";
 
 // ctx: { mode: jinak|feed, mountName, emoji }
 export function stableFrames({ mode, mountName, emoji }) {

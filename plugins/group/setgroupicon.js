@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, raraWrap, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupicon",
@@ -24,14 +24,14 @@ async function handler(m, { sock, config: botConfig }) {
     const icon = m.text?.trim();
 
     if (!icon) {
-      await m.reply(novaNoInput("SetGroupIcon", "Masukkan emoji/icon baru untuk grup ini", `${prefix}setgroupicon 🎮`));
+      await m.reply(raraNoInput("SetGroupIcon", "Masukkan emoji/icon baru untuk grup ini", `${prefix}setgroupicon 🎮`));
       return { handled: true };
     }
 
     await sock.groupMetadataUpdate(m.chat, { subject: icon });
 
     const text =
-      novaWrap("Set Group Icon", [`Icon Baru: *${icon}*`,
+      raraWrap("Set Group Icon", [`Icon Baru: *${icon}*`,
         `Group: *${m.chat}*`,
         "Status: *success*"].join("\n")) +
       "\n" +
@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(text, "setgroupicon");
   } catch (error) {
-    await m.reply(novaError("SetGroupIcon", `Gagal ganti icon grup: ${error.message}`));
+    await m.reply(raraError("SetGroupIcon", `Gagal ganti icon grup: ${error.message}`));
   }
 
   return { handled: true };

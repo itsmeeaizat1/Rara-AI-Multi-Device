@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // test/daftar-api-e2e/e2e.mjs — E2E 2 plugin baru dari daftar farizdotid (tanpa API key):
 // .kuncijawabantts (kunci-tts-api.vercel.app) + .caridoa (doa-doa-api-ahmadramadhan.fly.dev).
 // Semua akses HTTP lewat seam _setHttpForTest — gak ada network di e2e.
@@ -13,12 +13,12 @@ const t = (name, ok, extra = "") => {
   if (ok) { pass++; console.log(`  ✅ ${name}`); }
   else { fail++; console.log(`  ❌ ${name} → ${typeof extra === "string" ? extra.slice(0, 200) : JSON.stringify(extra)?.slice(0, 200)}`); }
 };
-const { toSC } = await import(R + "/src/lib/nova-menu-style.js");
+const { toSC } = await import(R + "/src/lib/rara-menu-style.js");
 const hasSC = (reply, expected) => String(reply).toLowerCase().includes(toSC(expected));
 
 // ── init db ringan ──
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "daftarapi-e2e-"));
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
 function mkM(over = {}) {

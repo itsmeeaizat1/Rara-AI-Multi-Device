@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const SURAT_PROMPT = `Kamu adalah asisten pembuat surat resmi Indonesia. Buatkan surat resmi yang profesional dan sesuai format standar Indonesia berdasarkan informasi user.
 
@@ -118,7 +118,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   const prefix = botConfig?.command?.prefix || ".";
 
   if (!args || args.trim().length < 10) {
-    const help = novaWrap("Surat", [
+    const help = raraWrap("Surat", [
       `Generator Surat Resmi → PDF`,
       ``,
       `📌 Format:`,
@@ -135,17 +135,17 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "surat");
   }
-  m.reply(novaWrap("Surat", "AI lagi nyusun surat resmi..."));
+  m.reply(raraWrap("Surat", "AI lagi nyusun surat resmi..."));
 
   try {
     await m.react("🕒");
-    const aiResult = await UnlimitedAI(SURAT_PROMPT.replace("__INPUT__", args), "nova-ai");
+    const aiResult = await UnlimitedAI(SURAT_PROMPT.replace("__INPUT__", args), "rara-ai");
 
     if (!aiResult || aiResult.trim().length < 20) {
-      return m.reply(novaWrap("Surat", "❌ Gagal generate surat. Coba dengan detail yang lebih lengkap."));
+      return m.reply(raraWrap("Surat", "❌ Gagal generate surat. Coba dengan detail yang lebih lengkap."));
     }
 
-    m.reply(novaWrap("Surat", "Surat selesai, lagi render ke PDF..."));
+    m.reply(raraWrap("Surat", "Surat selesai, lagi render ke PDF..."));
 
     const pdfBuffer = await renderSuratPDF(aiResult.trim());
     const filename = `surat_${Date.now()}.pdf`;
@@ -160,11 +160,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     let preview = aiResult.trim();
     if (preview.length > 2000) preview = preview.substring(0, 2000) + "\n\n... (lihat PDF untuk versi lengkap)";
     await m.react("🐣");
-    await m.reply(novaWrap("Surat — Preview", preview));
+    await m.reply(raraWrap("Surat — Preview", preview));
   } catch (error) {
     await m.react("❌");
     console.error("surat error:", error);
-    m.reply(novaWrap("Surat", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
+    m.reply(raraWrap("Surat", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }
 
   return { handled: true };

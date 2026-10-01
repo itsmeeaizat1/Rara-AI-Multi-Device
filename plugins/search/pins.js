@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import {
   generateWAMessage,
   generateWAMessageFromContent,
@@ -6,10 +6,10 @@ import {
 } from "nova";
 import axios from "axios";
 import crypto from "crypto";
-import te from "../../src/lib/nova-error.js";
-import { f } from "../../src/lib/nova-http.js";
-import { AIRich } from "../../src/lib/nova-builder.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { f } from "../../src/lib/rara-http.js";
+import { AIRich } from "../../src/lib/rara-builder.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "pins",
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
 
     const results = data?.data?.slice(0, 10);
     if (!results || results.length === 0) {
-      return m.reply(novaError("Pins", `Gak nemu hasil untuk: ${query} nih`));
+      return m.reply(raraError("Pins", `Gak nemu hasil untuk: ${query} nih`));
     }
 
     const mediaList = [];
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     }
 
     if (mediaList.length === 0) {
-      return m.reply(novaError("Pins", "Gagal load gambar nih"));
+      return m.reply(raraError("Pins", "Gagal load gambar nih"));
     }
 
     try {
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
 
       const saluranId = config.saluran?.id || "@newsletter";
       const saluranName =
-        config.saluran?.name || config.bot?.name || "Nova-AI";
+        config.saluran?.name || config.bot?.name || "Rara-AI";
 
       for (const content of mediaList) {
         await sock.sendMessage(
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
     }
   } catch (err) {
     console.error("[Pins] Error:", err.message);
-    m.reply(novaWrap("pins", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("pins", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

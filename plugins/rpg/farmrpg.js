@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // farmrpg.js — Farming system (plant, grow, harvest, sell)
-import { animFarm } from "../../src/lib/nova-rpg-anim.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { animFarm } from "../../src/lib/rara-rpg-anim.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "farm",
@@ -55,17 +55,17 @@ async function handler(m, { sock }) {
       const cropName = m.args.slice(1).join(" ").trim().toLowerCase();
       const crop = CROPS.find(c => c.name.toLowerCase() === cropName);
       if (!crop) {
-        return m.reply(novaRpgBox("farmrpg", `Tanaman tidak ditemukan. Lihat: ${m.prefix}farmrpg shop`, "error"));
+        return m.reply(raraRpgBox("farmrpg", `Tanaman tidak ditemukan. Lihat: ${m.prefix}farmrpg shop`, "error"));
       }
 
       const emptyPlots = MAX_PLOTS - (data.plots?.length || 0);
       if (emptyPlots <= 0) {
-        return m.reply(novaRpgBox("farmrpg", "Kebun penuh! Panen dulu.", "error"));
+        return m.reply(raraRpgBox("farmrpg", "Kebun penuh! Panen dulu.", "error"));
       }
 
       try {
         const gold = await db.getGold?.(m.sender) || 0;
-        if (gold < crop.seedCost) return m.reply(novaRpgBox("farmrpg", `Gold kurang! Butuh ${crop.seedCost}g.`, "error"));
+        if (gold < crop.seedCost) return m.reply(raraRpgBox("farmrpg", `Gold kurang! Butuh ${crop.seedCost}g.`, "error"));
         await db.minGold?.(m.sender, crop.seedCost);
       } catch {}
 
@@ -76,12 +76,12 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       const mins = crop.growTime / 60000;
       await animFarm(m, sock, 'Planting');
-      return m.reply(novaRpgBox("farmrpg", `${crop.emoji} Berhasil tanam *${crop.name}*!\nSiap panen dalam ${mins >= 60 ? Math.floor(mins/60)+'j ' : ''}${mins % 60}m`));
+      return m.reply(raraRpgBox("farmrpg", `${crop.emoji} Berhasil tanam *${crop.name}*!\nSiap panen dalam ${mins >= 60 ? Math.floor(mins/60)+'j ' : ''}${mins % 60}m`));
     }
 
     if (subCmd === "harvest" || subCmd === "panen") {
       if (!data.plots || data.plots.length === 0) {
-        return m.reply(novaRpgBox("farmrpg", "Tidak ada tanaman untuk dipanen.", "error"));
+        return m.reply(raraRpgBox("farmrpg", "Tidak ada tanaman untuk dipanen.", "error"));
       }
 
       const now = Date.now();
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
       if (ready.length === 0) {
         const next = stillGrowing[0];
         const remaining = Math.ceil((next.growTime - (now - next.planted)) / 60000);
-        return m.reply(novaRpgBox("farmrpg", `Belum ada yang siap panen. Terdekat: *${next.emoji} ${next.crop}* dalam ${remaining}m.`));
+        return m.reply(raraRpgBox("farmrpg", `Belum ada yang siap panen. Terdekat: *${next.emoji} ${next.crop}* dalam ${remaining}m.`));
       }
 
       if (!data.harvested) data.harvested = [];
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "sell" || subCmd === "jual") {
       if (!data.harvested || data.harvested.length === 0) {
-        return m.reply(novaRpgBox("farmrpg", "Tidak ada hasil panen untuk dijual.", "error"));
+        return m.reply(raraRpgBox("farmrpg", "Tidak ada hasil panen untuk dijual.", "error"));
       }
       const totalGold = data.harvested.reduce((s, h) => s + (h.sellPrice || 0), 0);
       try { await db.addGold?.(m.sender, totalGold); } catch {}
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
       data.harvested = [];
       await saveData(db, m.sender, data);
       await m.react("🐣");
-      return m.reply(novaRpgBox("farmrpg", `💰 Jual ${count} hasil panen = *+${totalGold} gold*!`));
+      return m.reply(raraRpgBox("farmrpg", `💰 Jual ${count} hasil panen = *+${totalGold} gold*!`));
     }
 
     // VIEW FARM (default)
@@ -164,7 +164,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("farmrpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("farmrpg", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("farmrpg", err.message || "Error", "error"));
   }
 }
 

@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Couple War (Duel pasangan vs pasangan lain)
 
-import { ensureRpg, getRpgData, addExp, addGold } from "../../src/lib/nova-rpg-service.js";
+import { ensureRpg, getRpgData, addExp, addGold } from "../../src/lib/rara-rpg-service.js";
 import {
   getCintaData, getCouplePower, getLovePower, addAffection,
   WAR_COOLDOWN_HOURS, formatDurasi
-} from "../../src/lib/nova-rpg-cinta.js";
-import { checkCooldown } from "../../src/lib/nova-rpg-service.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox, gameCTA, novaRpgBox, novaRpgGuide } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-rpg-cinta.js";
+import { checkCooldown } from "../../src/lib/rara-rpg-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox, gameCTA, raraRpgBox, raraRpgGuide } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "couplewar",
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const myCinta = getCintaData(m);
 
     if (!myCinta.spouse) {
-      return m.reply(novaRpgBox("Couple War", [
+      return m.reply(raraRpgBox("Couple War", [
         "Kamu belum punya pasangan!",
         "Jomblo mau war sama siapa?",
       ], "warn"));
@@ -41,22 +41,22 @@ async function handler(m, { sock }) {
 
     let targetJid = m.mentionedJid?.[0] || (m.quoted ? m.quoted.sender : null);
     if (!targetJid) {
-      return m.reply(novaRpgGuide("couplewar", "Duel pasangan kamu vs pasangan orang lain!", `${m.prefix}couplewar @target`, "Tag salah satu pasangan lawan"));
+      return m.reply(raraRpgGuide("couplewar", "Duel pasangan kamu vs pasangan orang lain!", `${m.prefix}couplewar @target`, "Tag salah satu pasangan lawan"));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(novaRpgBox("Couple War", "War sama diri sendiri? Itu skizofrenia", "error"));
+      return m.reply(raraRpgBox("Couple War", "War sama diri sendiri? Itu skizofrenia", "error"));
     }
 
     if (targetJid === myCinta.spouse) {
-      return m.reply(novaRpgBox("Couple War", "Nggak bisa war sama pasangan sendiri!", "error"));
+      return m.reply(raraRpgBox("Couple War", "Nggak bisa war sama pasangan sendiri!", "error"));
     }
 
     ensureRpg({ sender: targetJid, pushName: targetJid.split("@")[0] }, targetJid.split("@")[0]);
     const targetCinta = getCintaData({ sender: targetJid, pushName: targetJid.split("@")[0] });
 
     if (!targetCinta.spouse) {
-      return m.reply(novaRpgBox("Couple War", [
+      return m.reply(raraRpgBox("Couple War", [
         `@${targetJid.split("@")[0]} belum punya pasangan!`,
         "Jomblo vs jomblo namanya duel bukan couple war",
       ], "warn"));
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     // Cooldown check
     const cd = checkCooldown(m, "couplewar");
     if (cd) {
-      return m.reply(novaRpgBox("Couple War", `Cooldown: ${formatDurasi(cd)} lagi`, "warn"));
+      return m.reply(raraRpgBox("Couple War", `Cooldown: ${formatDurasi(cd)} lagi`, "warn"));
     }
 
     // Get couple powers
@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
     const winnerTeam = iWin ? `${myName} & ${myPartnerName}` : `${targetName} & ${targetPartnerName}`;
     const loserTeam = iWin ? `${targetName} & ${targetPartnerName}` : `${myName} & ${myPartnerName}`;
 
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "rpg cinta", icon: "⚔️",
       flavor: iWin ? "🏆 *PASANGANMU MENANG!*" : "💥 *PASANGANMU KALAH!*",
       body: [

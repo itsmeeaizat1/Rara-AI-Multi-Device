@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { startAiStatus } from "../../src/lib/nova-ai-status.js";
-import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { startAiStatus } from "../../src/lib/rara-ai-status.js";
+import { callAI, callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "ai-email",
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🤖",
   name: "ai-email",
   description: "Tulis email/resmi surat dengan AI",
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      novaWrap("AI Email", [`Tujuan: *${prompt}*`,
+      raraWrap("AI Email", [`Tujuan: *${prompt}*`,
         `Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-email <tujuan> untuk tulis lagi`) +
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AIEmail", "Gagal nih, coba lagi ya");
+      raraError("AIEmail", "Gagal nih, coba lagi ya");
 
     if (aiStatus) await aiStatus.fail("AI gagal merespons — coba lagi ya");
     else { await m.react("❌"); await m.reply(text, "ai-email"); }

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'notifpromote',
     alias: ["notifpromote"],
@@ -18,7 +18,7 @@ const pluginConfig = {
 
 function handler(m, { sock, db }) {
     if (!m.isAdmin && !m.isOwner) {
-        return m.reply(novaWrap("Notifpromote", `Hanya admin grup yang bisa menggunakan fitur ini`, "error"))
+        return m.reply(raraWrap("Notifpromote", `Hanya admin grup yang bisa menggunakan fitur ini`, "error"))
     }
     
     const args = m.args[0]?.toLowerCase()
@@ -26,19 +26,19 @@ function handler(m, { sock, db }) {
     
     if (!['on', 'off'].includes(args)) {
         const status = group.notifPromote === true ? '✅ Aktif' : '❌ Nonaktif'
-        return m.reply(novaWrap("Notif promote", `Notif Promote\n\nStatus: ${status}\n\nPenggunaan:\n\`${m.prefix}notifpromote on\` - Aktifkan\n\`${m.prefix}notifpromote off\` - Nonaktifkan`, "info"))
+        return m.reply(raraWrap("Notif promote", `Notif Promote\n\nStatus: ${status}\n\nPenggunaan:\n\`${m.prefix}notifpromote on\` - Aktifkan\n\`${m.prefix}notifpromote off\` - Nonaktifkan`, "info"))
     }
     
     if (args === 'on') {
         group.notifPromote = true
         db.setGroup(m.chat, group)
-        return m.reply(novaWrap("Notifpromote", `notif promote diaktifkan`, "success"))
+        return m.reply(raraWrap("Notifpromote", `notif promote diaktifkan`, "success"))
     }
     
     if (args === 'off') {
         group.notifPromote = false
         db.setGroup(m.chat, group)
-        return m.reply(novaWrap("Notifpromote", `notif promote dinonaktifkan`, "error"))
+        return m.reply(raraWrap("Notifpromote", `notif promote dinonaktifkan`, "error"))
     }
 }
 

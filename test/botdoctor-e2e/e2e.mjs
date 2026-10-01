@@ -1,23 +1,23 @@
-// NOVA — E2E: DOKTER BOT PRIBADI (26 Sep 2026). Lib murni + plugin handler.
+// RARA — E2E: DOKTER BOT PRIBADI (26 Sep 2026). Lib murni + plugin handler.
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-botdoctor-db-" + Date.now();
+const DB_DIR = "/tmp/rara-botdoctor-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const {
   noteBotDoctorTick, diagnoseBotHealth, buildDoctorCard, runBotDoctorNow,
   evaluateDailyCheck, processBotDoctorTick, initBotDoctorScheduler,
   stopBotDoctorScheduler, ensureBotDoctorState, _setDoctorOwnerJidForTest,
-} = await import(R + "/src/lib/nova-botdoctor.js");
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
+} = await import(R + "/src/lib/rara-botdoctor.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
 const { handler } = await import(R + "/plugins/bot/botdoctor.js");
-const { loadPlugins } = await import(R + "/src/lib/nova-plugins.js");
+const { loadPlugins } = await import(R + "/src/lib/rara-plugins.js");
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
@@ -159,7 +159,7 @@ w("\n===== 4. sampler noteBotDoctorTick (dipanggil pinglog tiap 20 dtk) =====");
 
 w("\n===== 5. plugin .botdoctor (handler + registry) =====");
 {
-  const np = await import(R + "/src/lib/nova-plugins.js");
+  const np = await import(R + "/src/lib/rara-plugins.js");
   await np.loadPlugins(path.resolve("plugins"));
   const found = np.getPlugin("botdoctor");
   check("botdoctor kebaca registry via loadPlugins", !!found && found?.config?.name === "botdoctor", JSON.stringify(found?.config?.name));

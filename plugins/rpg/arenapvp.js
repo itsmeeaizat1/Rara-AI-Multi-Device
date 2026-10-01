@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // rpg-arena.js — Arena PvP (auto-matchmaking, rank system)
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { rpgSleep } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "arena",
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("arena error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("arena", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("arena", err.message || "Error", "error"));
   }
 }
 

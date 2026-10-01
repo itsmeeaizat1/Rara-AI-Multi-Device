@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaWarning } from "../../src/lib/nova-group-protection.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraWarning } from "../../src/lib/rara-group-protection.js";
 
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 
 const pluginConfig = {
     name: 'anti18plus',
@@ -358,7 +358,7 @@ async function handleAntiNSFW(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: novaWarning("ANTI NSFW — TINDAKAN", [
+                        text: raraWarning("ANTI NSFW — TINDAKAN", [
                             ["Pengirim", `@${senderTag}`],
                             ["Pelanggaran", typeLabel],
                             ["Terdeteksi", matchesStr],
@@ -369,7 +369,7 @@ async function handleAntiNSFW(m, sock, db) {
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: novaWarning("ANTI NSFW — INFO", [
+                        text: raraWarning("ANTI NSFW — INFO", [
                             ["Pengirim", `@${senderTag}`],
                             ["Pelanggaran", typeLabel],
                             ["Terdeteksi", matchesStr],
@@ -381,7 +381,7 @@ async function handleAntiNSFW(m, sock, db) {
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: novaWarning("ANTI NSFW — PERINGATAN MAKSIMAL", [
+                    text: raraWarning("ANTI NSFW — PERINGATAN MAKSIMAL", [
                         ["Pengirim", `@${senderTag}`],
                         ["Pelanggaran", typeLabel],
                         ["Terdeteksi", matchesStr],
@@ -393,7 +393,7 @@ async function handleAntiNSFW(m, sock, db) {
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: novaWarning("ANTI NSFW — PERINGATAN", [
+                text: raraWarning("ANTI NSFW — PERINGATAN", [
                     ["Pengirim", `@${senderTag}`],
                     ["Pelanggaran", typeLabel],
                     ["Terdeteksi", matchesStr],
@@ -460,7 +460,7 @@ async function handler(m, { sock }) {
         txt += '`' + m.prefix + 'anti18plus resetall`\n'
         txt += ''
 
-        return await m.reply(novaWrap("anti18plus", txt))
+        return await m.reply(raraWrap("anti18plus", txt))
     }
 
     if (sub === 'on') {

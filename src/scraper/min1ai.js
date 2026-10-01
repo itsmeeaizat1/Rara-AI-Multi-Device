@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // min1ai — scraper 1min.ai (app.1min.ai) multi provider AI
 // Endpoint: POST https://api.1min.ai/api/chat-with-ai (non-streaming, UNIFY_CHAT_WITH_AI)
 // Auth: header "API-KEY: <key>" (BUKAN Bearer). Key: apikeys.json aiSatuan.min1ai

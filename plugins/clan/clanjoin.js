@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'clanjoin',
     alias: ["clanjoin"],
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     }
 
     if (user.clanId) {
-        return m.reply(novaWrap("Clanjoin", `❌ Kamu sudah punya clan\nKeluar dulu: *.clanleave*`))
+        return m.reply(raraWrap("Clanjoin", `❌ Kamu sudah punya clan\nKeluar dulu: *.clanleave*`))
     }
 
     if (!db.db.data.clans) db.db.data.clans = {}
@@ -40,9 +40,9 @@ async function handler(m, { sock }) {
     const clan = db.db.data.clans[clanId]
         || Object.values(db.db.data.clans).find(c => c.name.toLowerCase() === clanId.toLowerCase())
         || Object.values(db.db.data.clans).find(c => c.id.toLowerCase() === clanId.toLowerCase())
-    if (!clan) return m.reply(novaWrap("Clanjoin", `❌ Clan tidak ditemukan`))
-    if (!clan.isOpen) return m.reply(novaWrap("Clanjoin", `❌ *${clan.name}* sedang tertutup`))
-    if (clan.members.length >= MAX_MEMBERS) return m.reply(novaWrap("Clanjoin", `❌ *${clan.name}* sudah penuh (${MAX_MEMBERS}/${MAX_MEMBERS})`))
+    if (!clan) return m.reply(raraWrap("Clanjoin", `❌ Clan tidak ditemukan`))
+    if (!clan.isOpen) return m.reply(raraWrap("Clanjoin", `❌ *${clan.name}* sedang tertutup`))
+    if (clan.members.length >= MAX_MEMBERS) return m.reply(raraWrap("Clanjoin", `❌ *${clan.name}* sudah penuh (${MAX_MEMBERS}/${MAX_MEMBERS})`))
 
     clan.members.push(m.sender)
     db.setUser(m.sender, { clanId })

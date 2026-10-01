@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // movienotify.js — Auto Movie Notifier (request owner 9 Sep 2026, ala script
 // standalone "movie notifier free" IMDbOT). Rantai: IMDbOT → Cinemeta (no key).
 //   • .movienotify on/off    — langganan / berhenti di chat ini
@@ -15,8 +15,8 @@ import {
   setSock, syncMonitor, getContentTypes, setContentType,
   MOVIE_TYPES, searchMovies, fetchTrending, fetchUpcoming, fetchNowPlaying,
   setIntervalMenit, sendMovieCardTo, enrichMovie,
-} from "../../src/lib/nova-movie-notifier.js";
-import { novaError, novaSuccess, novaGuide, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-movie-notifier.js";
+import { raraError, raraSuccess, raraGuide, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "movienotify",
@@ -42,25 +42,25 @@ async function handler(m, { sock, args }) {
   if (sub === "on") {
     await m.react("🕒");
     const chatId = m.chat;
-    if (isTarget(chatId)) return m.reply(novaSuccess(pluginConfig.name, "chat ini udah langganan movie notifier"));
+    if (isTarget(chatId)) return m.reply(raraSuccess(pluginConfig.name, "chat ini udah langganan movie notifier"));
     addTarget(chatId);
     if (!isEnabled()) {
-      return m.reply(novaSuccess(pluginConfig.name, "chat ini terdaftar — tapi fitur auto masih OFF global, owner bisa nyalain via .switch auto automovienotifier on"));
+      return m.reply(raraSuccess(pluginConfig.name, "chat ini terdaftar — tapi fitur auto masih OFF global, owner bisa nyalain via .switch auto automovienotifier on"));
     }
     const stBefore = getStatus();
     const sr = syncMonitor();
     const firstRunFlow = sr?.started && !stBefore.initDone;
     if (!firstRunFlow) {
       const res = await runCheck({ force: true, chatId }).catch((e) => ({ err: e }));
-      if (res?.err) return m.reply(novaError(pluginConfig.name, "gagal ambil data: " + res.err.message));
+      if (res?.err) return m.reply(raraError(pluginConfig.name, "gagal ambil data: " + res.err.message));
     }
     await m.react("🐣");
-    return m.reply(novaSuccess(pluginConfig.name, "aktif di chat ini — film trending/terbaru/rating tinggi otomatis masuk ke sini"));
+    return m.reply(raraSuccess(pluginConfig.name, "aktif di chat ini — film trending/terbaru/rating tinggi otomatis masuk ke sini"));
   }
 
   if (sub === "off") {
     removeTarget(m.chat);
-    return m.reply(novaSuccess(pluginConfig.name, "chat ini berhenti langganan movie notifier"));
+    return m.reply(raraSuccess(pluginConfig.name, "chat ini berhenti langganan movie notifier"));
   }
 
   if (sub === "status") {
@@ -101,16 +101,16 @@ async function handler(m, { sock, args }) {
     const action = (onOff === "on" || onOff === "aktif");
     const res = setContentType(tipe, action);
     if (!res) {
-      return m.reply(novaError(pluginConfig.name, `tipe gak dikenal: ${tipe} — ketik .movienotify info buat daftar tipe`));
+      return m.reply(raraError(pluginConfig.name, `tipe gak dikenal: ${tipe} — ketik .movienotify info buat daftar tipe`));
     }
-    return m.reply(novaSuccess(pluginConfig.name, `tipe *${tipe}* sekarang ${action ? "AKTIF" : "MATI"} — notifikasi terkait ${action ? "bakal masuk" : "gak bakal dikirim"}`));
+    return m.reply(raraSuccess(pluginConfig.name, `tipe *${tipe}* sekarang ${action ? "AKTIF" : "MATI"} — notifikasi terkait ${action ? "bakal masuk" : "gak bakal dikirim"}`));
   }
 
   if (sub === "interval" || sub === "jadwal") {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(novaGuideV2(pluginConfig.name, {
+      return m.reply(raraGuideV2(pluginConfig.name, {
         kaomoji: "(ノ◕ヮ◕)ノ",
         sapaan: `interval cek sekarang tiap ${st.intervalMenit} menit — mau diatur?`,
         cara: "ketik .movienotify interval <menit> (5–720)",
@@ -120,30 +120,30 @@ async function handler(m, { sock, args }) {
     }
     const res = setIntervalMenit(val);
     if (!res) {
-      return m.reply(novaError(pluginConfig.name, "interval harus 5–720 menit (contoh: .movienotify interval 60)"));
+      return m.reply(raraError(pluginConfig.name, "interval harus 5–720 menit (contoh: .movienotify interval 60)"));
     }
-    return m.reply(novaSuccess(pluginConfig.name, `interval cek sekarang *tiap ${res} menit* — monitor di-restart, film baru langsung dikirim begitu terdeteksi`));
+    return m.reply(raraSuccess(pluginConfig.name, `interval cek sekarang *tiap ${res} menit* — monitor di-restart, film baru langsung dikirim begitu terdeteksi`));
   }
 
   if (sub === "now") {
     await m.react("⏲️");
     const res = await runCheck({ force: true, chatId: m.chat }).catch((e) => ({ err: e }));
-    if (res?.err) return m.reply(novaError(pluginConfig.name, "gagal ambil data: " + res.err.message));
+    if (res?.err) return m.reply(raraError(pluginConfig.name, "gagal ambil data: " + res.err.message));
     await m.react("🐣");
-    return m.reply(novaSuccess(pluginConfig.name, "sample semua tipe aktif lagi dikirim di atas"));
+    return m.reply(raraSuccess(pluginConfig.name, "sample semua tipe aktif lagi dikirim di atas"));
   }
 
   // ── manual ala script (!movie / !trending / !upcoming / !nowplaying) ──
   if (sub === "cari" || sub === "search" || sub === "s") {
     const query = (args || []).slice(1).join(" ").trim();
     if (query.length < 2) {
-      return m.reply(novaGuide(pluginConfig.name, "masukkan judul film minimal 2 huruf\nContoh: .movienotify cari avengers"));
+      return m.reply(raraGuide(pluginConfig.name, "masukkan judul film minimal 2 huruf\nContoh: .movienotify cari avengers"));
     }
     await m.react("⏲️");
     const { list, source } = await searchMovies(query, 3).catch(() => ({ list: [], source: null }));
     if (!list.length) {
       await m.react("🐣");
-      return m.reply(novaError(pluginConfig.name, `film "${query}" gak ditemukan`));
+      return m.reply(raraError(pluginConfig.name, `film "${query}" gak ditemukan`));
     }
     for (let i = 0; i < list.length; i++) {
       const mv = await enrichMovie(list[i]);
@@ -161,7 +161,7 @@ async function handler(m, { sock, args }) {
     const { list } = await fetcher(3).catch(() => ({ list: [] }));
     if (!list.length) {
       await m.react("🐣");
-      return m.reply(novaError(pluginConfig.name, "gak ada film ditemukan — sumber lagi down, coba lagi bentar"));
+      return m.reply(raraError(pluginConfig.name, "gak ada film ditemukan — sumber lagi down, coba lagi bentar"));
     }
     for (let i = 0; i < list.length; i++) {
       const mv = await enrichMovie(list[i]);
@@ -171,7 +171,7 @@ async function handler(m, { sock, args }) {
     return null;
   }
 
-  return m.reply(novaGuideV2(pluginConfig.name, {
+  return m.reply(raraGuideV2(pluginConfig.name, {
     kaomoji: "(ノ◕ヮ◕)ノ",
     sapaan: `pengin update film terbaru otomatis? langganan aja! (auto ${isEnabled() ? "ON" : "OFF"} global, gratis tanpa apikey)`,
     cara: "on buat langganan · off berhenti · status cek kondisi · info atur tipe · interval atur jeda · now kirim sekarang · cari <judul> buat manual",

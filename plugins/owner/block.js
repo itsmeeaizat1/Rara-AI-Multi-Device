@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { notifyUserBlocked } from "../../src/lib/nova-saluran-broadcast.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { notifyUserBlocked } from "../../src/lib/rara-saluran-broadcast.js";
 
 const pluginConfig = {
   name: "blockuser",
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        novaWrap("Block User", [
+        raraWrap("Block User", [
           `Penggunaan: ${prefix}block <@target / nomor>`,
           `Contoh: ${prefix}block @username`,
           `Contoh: ${prefix}block 6281234567890`,
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!targetJid) {
-      return m.reply( novaWrap("Block User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "block");
+      return m.reply( raraWrap("Block User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "block");
     }
 
     // Eksekusi block via Baileys
@@ -70,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
     }).catch((e) => { console.error('[block.js]:', e.message); });
 
     const text =
-      novaWrap("Block User", [
+      raraWrap("Block User", [
         `Target: ${targetDisplay}`,
         "Status: Berhasil diblokir",
       ].join("\n")) +
@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Owner", "Gagal nih, coba lagi ya");
+      raraError("Owner", "Gagal nih, coba lagi ya");
 
     return m.reply( text, "block");
   }

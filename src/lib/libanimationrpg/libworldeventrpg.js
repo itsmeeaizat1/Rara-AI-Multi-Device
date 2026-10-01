@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libworldeventrpg.js — LIB ANIMASI khusus World Event /
 // Time Capsule (26 Sep 2026). Tiap JENIS event punya animasi sendiri
 // (aturan "beda game beda animasi"): komet = jatuh melintas langit malam,
 // boss dunia = sosok raksasa muncul dari bayangan + HP bar, festival =
 // lentera naik ke langit. Pure dari ctx, gak import plugin. Fallback senyap.
 
-import { editFramesAnim } from "../nova-anim-runner.js";
+import { editFramesAnim } from "../rara-anim-runner.js";
 
 // ctx: { name } — ☄️ melintas langit 🌌 dengan jejak ✨, meledak tertangkap 💥
 export function kometFrames({ name }) {

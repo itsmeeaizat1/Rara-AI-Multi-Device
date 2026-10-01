@@ -1,6 +1,6 @@
-import { animShop } from "../../src/lib/nova-rpg-anim.js";
-import { ensureRpg, saveRpg, removeGold, addItem } from "../../src/lib/nova-rpg-service.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { animShop } from "../../src/lib/rara-rpg-anim.js";
+import { ensureRpg, saveRpg, removeGold, addItem } from "../../src/lib/rara-rpg-service.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 const pluginConfig = {
   name: "buy", alias: ["buy", "buyrpg", "beli"],
   category: "rpg", description: "Beli item dari toko RPG",
@@ -14,11 +14,11 @@ const SHOP = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("buyrpg", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("buyrpg", "RPG belum siap.", "error"));
     const text = m.args.join(" ").trim().toLowerCase();
-    if (!text) return m.reply(novaRpgBox("buyrpg", `Item tersedia:\n${Object.entries(SHOP).map(([k,v]) => `${k} — ${v} gold`).join("\n")}\n\nContoh: ${m.prefix}buyrpg ramuan`, "guide"));
-    if (!SHOP[text]) return m.reply(novaRpgBox("buyrpg", "Item tidak ditemukan di toko.", "error"));
-    if (rpg.gold < SHOP[text]) return m.reply(novaRpgBox("buyrpg", `💰 Uang tidak cukup. Butuh ${SHOP[text]} gold.`, "error"));
+    if (!text) return m.reply(raraRpgBox("buyrpg", `Item tersedia:\n${Object.entries(SHOP).map(([k,v]) => `${k} — ${v} gold`).join("\n")}\n\nContoh: ${m.prefix}buyrpg ramuan`, "guide"));
+    if (!SHOP[text]) return m.reply(raraRpgBox("buyrpg", "Item tidak ditemukan di toko.", "error"));
+    if (rpg.gold < SHOP[text]) return m.reply(raraRpgBox("buyrpg", `💰 Uang tidak cukup. Butuh ${SHOP[text]} gold.`, "error"));
     removeGold(m, SHOP[text], sock);
     addItem(m, text, 1);
     if (text === "scrollclass") rpg.job = "novice";
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     saveRpg(m, rpg);
     await m.react("🐣");
     await animShop(m, sock, "buy");
-    return m.reply(novaRpgBox("buyrpg", `✅ Kamu membeli *${text}* seharga ${SHOP[text]} gold.`, "success"));
-  } catch (e) { return m.reply(novaRpgBox("buyrpg", "Error.", "error")); }
+    return m.reply(raraRpgBox("buyrpg", `✅ Kamu membeli *${text}* seharga ${SHOP[text]} gold.`, "success"));
+  } catch (e) { return m.reply(raraRpgBox("buyrpg", "Error.", "error")); }
 }
 export { pluginConfig as config, handler };

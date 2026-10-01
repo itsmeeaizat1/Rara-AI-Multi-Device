@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .convert — konversi satuan via mathjs (16 Sep 2026, request owner: audit
 // dependencies → mathjs unit conversion fitur baru). Panjang/berat/suhu/
 // data/waktu/kecepatan — alias Indonesia di-map otomatis. Tanpa API.
 
 import { evaluate, format } from "mathjs";
 import {
-  novaError, novaCaption, novaWrap, tipText,
-} from "../../src/lib/nova-menu-style.js";
+  raraError, raraCaption, raraWrap, tipText,
+} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "convert",
@@ -70,7 +70,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
 
     if (!raw) {
       const text =
-        novaCaption({
+        raraCaption({
           emoji: "📐",
           name: "convert",
           description: "Konversi satuan apa pun — panjang, berat, suhu, data, waktu, kecepatan",
@@ -85,7 +85,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
 
     if (!/to|ke|->|→|=/i.test(raw) || !/\d/.test(raw)) {
       const text =
-        novaWrap("Convert", [
+        raraWrap("Convert", [
           `Input: *${raw}*`,
           "Status: *format salah*",
           "",
@@ -106,7 +106,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
     );
 
     const text =
-      novaWrap("Convert", [
+      raraWrap("Convert", [
         `📐 *${raw}*`,
         `Hasil : *${pretty}*`,
       ].join("\n")) +
@@ -121,11 +121,11 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
     const msg = String(error?.message || error || "");
     let teks;
     if (/undefined unit|undefined symbol|unit.*not found|unit .* not/i.test(msg)) {
-      teks = novaError("Convert", `Satuan tidak dikenal — contoh yang didukung: km, mil, m, kg, pon, liter, celsius, fahrenheit, gb, mb, jam, menit, kmh`);
+      teks = raraError("Convert", `Satuan tidak dikenal — contoh yang didukung: km, mil, m, kg, pon, liter, celsius, fahrenheit, gb, mb, jam, menit, kmh`);
     } else if (/dimension mismatch|quantit.*dimension|units do not match/i.test(msg)) {
-      teks = novaError("Convert", "Jenis satuan tidak cocok — panjang ke panjang, berat ke berat (misal km ke mil, bukan km ke kg)");
+      teks = raraError("Convert", "Jenis satuan tidak cocok — panjang ke panjang, berat ke berat (misal km ke mil, bukan km ke kg)");
     } else {
-      teks = novaError("Convert", `Gagal konversi: ${msg.slice(0, 120)}`);
+      teks = raraError("Convert", `Gagal konversi: ${msg.slice(0, 120)}`);
     }
     await m.reply(teks, "convert");
   }

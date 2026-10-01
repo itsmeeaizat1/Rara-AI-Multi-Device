@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { bratGen } from "brat-canvas";
 import fs from "fs";
 import path from "path";
 import os from "os";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaReply, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraReply, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "bratgreen",
@@ -26,7 +26,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
   if (!text) {
-    const msg = novaReply({
+    const msg = raraReply({
       title: "bratgreen",
       status: "⚠ Masukkan teks untuk generate brat sticker",
       content: `Contoh: ${m.prefix}bratgreen Hai semua`,
@@ -44,11 +44,11 @@ async function handler(m, { sock }) {
     });
     await fs.promises.unlink(tempFile).catch(() => {});
       await m.react("🐣");
-      await m.reply(novaBerhasil("bratgreen"));
+      await m.reply(raraBerhasil("bratgreen"));
   } catch (error) {
     await fs.promises.unlink(tempFile).catch(() => {});
     console.error("[bratgreen] Error:", error.message);
-    const msg = novaGangguan("bratgreen");
+    const msg = raraGangguan("bratgreen");
     await m.reply(msg);
   }
 }

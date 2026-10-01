@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // instagramdl — Download video/foto Instagram
 // Primary: IkyyXD /download/instagram (apikey + query) → all-in-one | Fallback: builtin ig.js
-import { offerConvert } from "../../src/lib/nova-convert.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
 import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { novaGuideV2, novaSalahV2, novaWrap, novaLine, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap, raraLine, toSC, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -51,7 +51,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuideV2("instagram", {
+    return m.reply(raraGuideV2("instagram", {
  kaomoji: "(•̀ᴗ•́)و",
  sapaan: "mau simpen reel atau post IG? tempel linknya! (⌒‿⌒)",
       cara: "tempel link instagramnya sesudah command",
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     }));
   }
   if (!url.match(/instagram\.com|instagr\.am/i)) {
-    return m.reply(novaSalahV2("instagram", {
+    return m.reply(raraSalahV2("instagram", {
  kaomoji: "(´･_･`)",
       pesan: "linknya bukan link instagram nih, cek lagi ya~",
       contoh: `${m.prefix}${m.command || "instagramdl"} link instagram`,
@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
 
     if (!result || !result.medias?.length) {
       await m.react("❌");
-      return m.reply(novaGagal("Instagram DL"));
+      return m.reply(raraGagal("Instagram DL"));
     }
 
     const ctxInfo = { forwardingScore: 0, isForwarded: false };
@@ -161,14 +161,14 @@ async function handler(m, { sock }) {
         await sock.sendMessage(m.chat, { audio: { url: item.url }, mimetype: "audio/mpeg", contextInfo: ctxInfo }, { quoted: m });
       } else {
         await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "image", contextInfo: ctxInfo });
-        await m.reply(novaBerhasil("Instagram DL"));
+        await m.reply(raraBerhasil("Instagram DL"));
       }
       break;
     }
   } catch (error) {
     console.error("[instagramdl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaGangguan("Instagram DL"));
+    return m.reply(raraGangguan("Instagram DL"));
   }
 }
 

@@ -1,4 +1,4 @@
-// E2E NOVA AFK v2 — status AFK interaktif (13 Sep 2026)
+// E2E RARA AFK v2 — status AFK interaktif (13 Sep 2026)
 // Lib + plugin + hook pakai db ASLI di path tmp (pola beritanotify-e2e).
 import { mkdtempSync } from "fs";
 import { tmpdir } from "os";
@@ -8,12 +8,12 @@ import fs from "fs";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
-await initDatabase(mkdtempSync(path.join(tmpdir(), "afk-e2e-db-")) + "/nova.json");
+await initDatabase(mkdtempSync(path.join(tmpdir(), "afk-e2e-db-")) + "/rara.json");
 const db = getDatabase();
 
-const afk = await import(R + "/src/lib/nova-afk.js");
+const afk = await import(R + "/src/lib/rara-afk.js");
 const {
   getAfkUser, setAfkUser, removeAfkUser, isUserAfk, loadAfkMap,
   formatWib, formatDuration, handleAfkHooks, resetAfkThrottle,
@@ -57,7 +57,7 @@ check("2a. setAfkUser nyatet reason", res1.entry.reason === "lagi makan");
 check("2b. setAfkUser nyatet since (timestamp)", typeof res1.entry.since === "number" && res1.entry.since > 0);
 check("2c. setAfkUser prev null (belum pernah AFK)", res1.prev === null);
 check("2d. isUserAfk true", isUserAfk(JID) === true);
-check("2e. persist di db.setting novaAfkUsers", !!db.setting("novaAfkUsers")[JID]);
+check("2e. persist di db.setting raraAfkUsers", !!db.setting("raraAfkUsers")[JID]);
 const upd = setAfkUser(JID, { reason: "kerja", name: "Budi" });
 check("2f. update AFK → prev bawa alasan lama", upd.prev && upd.prev.reason === "lagi makan");
 removeAfkUser(JID);
@@ -166,7 +166,7 @@ w("\n— thumbnail serialize-thumb & m.reply fault-tolerant (fix 1 Okt) —");
   fs.writeFileSync(thumbPath, thumbBackup.subarray(0, 12));
   let replyOk = false;
   try {
-    const { serialize } = await import(R + "/src/lib/nova-serialize.js");
+    const { serialize } = await import(R + "/src/lib/rara-serialize.js");
     const msg = { key: { remoteJid: "6281234567890@s.whatsapp.net", fromMe: false, id: "T1" }, message: { conversation: "tes" }, pushName: "Rizky" };
     const m = await serialize(fakeSock, msg, {});
     await m.reply("halo dunia"); // V1 default (db tmp fresh → replyVariant 1)
@@ -194,7 +194,7 @@ w("\n— thumbnail serialize-thumb & m.reply fault-tolerant (fix 1 Okt) —");
   };
   let ok7d = false;
   try {
-    const { serialize } = await import(R + "/src/lib/nova-serialize.js");
+    const { serialize } = await import(R + "/src/lib/rara-serialize.js");
     const msg = { key: { remoteJid: "6281234567890@s.whatsapp.net", fromMe: false, id: "T2" }, message: { conversation: "tes" }, pushName: "Rizky" };
     const m = await serialize(fakeSock2, msg, {});
     const r = await m.reply("pesan penting"); // gak boleh throw

@@ -1,4 +1,4 @@
-// NOVA AI — index-panel e2e: .index panel kontrol bot + optimizer RAM
+// RARA AI — index-panel e2e: .index panel kontrol bot + optimizer RAM
 // Fitur 26 Sep 2026 (owner: "buat fitur optimizer, ketika on otomatis
 // turunin RAM > 500MB, default off + plugin index .index di kategori
 // owner — usage & list fitur kontrol bot saat run, kontrol bagian
@@ -11,9 +11,9 @@ const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.on("uncaughtException", (e) => { console.log("UNCAUGHT:", e.stack); process.exit(1); });
 process.on("unhandledRejection", (e) => { console.log("UNHANDLED:", e && e.stack || e); process.exit(1); });
 
-const DB_DIR = "/tmp/nova-idx-db-" + Date.now();
+const DB_DIR = "/tmp/rara-idx-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 let pass = 0, fail = 0;
@@ -26,9 +26,9 @@ const sc = (s) => fromSC(String(s || "")).toLowerCase();
 const {
   getOptimizerState, setOptimizer, optimizeNow,
   initOptimizerMonitor, stopOptimizerMonitor, _optimizerInternalsForTest,
-} = await import(R + "/src/lib/nova-optimizer.js");
+} = await import(R + "/src/lib/rara-optimizer.js");
 const plugin = await import(R + "/plugins/bot/index.js");
-const procCtl = await import(R + "/src/lib/nova-process-control.js");
+const procCtl = await import(R + "/src/lib/rara-process-control.js");
 
 // ─── 1. optimizer state ───
 t("1a plugin config name=index kategori bot", plugin.config.name === "index" && plugin.config.category === "bot" && plugin.config.isOwner === true);
@@ -120,7 +120,7 @@ replies.length = 0;
 await plugin.handler(fakeM(["pinglog", "on"], ".index pinglog on"), { sock: fakeSockCtl, config: { command: { prefix: "." } } });
 const plOn = replies[0] || "";
 t("5k .index pinglog on", plOn.includes("ping") && plOn.includes("nyalakan"), plOn.slice(0, 80));
-const pitl = (await import(R + "/src/lib/nova-pinglog.js"))._pingLogInternalsForTest();
+const pitl = (await import(R + "/src/lib/rara-pinglog.js"))._pingLogInternalsForTest();
 t("5l pinglog beneran jalan", pitl.isRunning() === true && pitl.isClockRunning() === true);
 const jamOn = await run(["jam", "on"]);
 t("5m .index jam on (idempotent jalan)", pitl.isClockRunning() === true);
@@ -187,7 +187,7 @@ conn9.stopWatchdog();
 t("9j cleanup: watchdog dimatiin lagi", conn9.getWatchdogStatus().active === false);
 
 // ─── 10. RAM ALERT (owner 26 Sep: "ya mau defaultnya off") ───
-const pl = await import(R + "/src/lib/nova-pinglog.js");
+const pl = await import(R + "/src/lib/rara-pinglog.js");
 const { evaluateRamAlert, setRamAlert, getRamAlertStatus, _setRamMemForTest, _clearRamMemForTest, _setRamAlertOwnerJidForTest, _clearRamAlertOwnerJidForTest, _pingLogInternalsForTest } = pl;
 
 // 10a. unit: logika keputusan

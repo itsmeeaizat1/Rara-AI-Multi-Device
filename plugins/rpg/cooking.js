@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/rpg/cooking.js — COOKING RPG (porting script owner 10 Sep 2026:
-// cooking.js + cookingData.js standalone → sistem plugin Nova).
+// cooking.js + cookingData.js standalone → sistem plugin Rara).
 // Game self-contained: gold/energy/level/inventory/alat/resep sendiri.
 //
 // Command:
@@ -18,10 +18,10 @@ import {
   INGREDIENTS, RECIPES, TOOLS,
   getCookingPlayer, saveCooking, cookDish, buyIngredient, buyTool, restCook,
   hasIngredients, setCookingStatePath, beliScenes, restScenes,
-} from "../../src/lib/nova-cooking.js";
-import { formatRp } from "../../src/lib/nova-rpg-service.js";
-import { rpgScene } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-cooking.js";
+import { formatRp } from "../../src/lib/rara-rpg-service.js";
+import { rpgScene } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "cooking",
@@ -39,7 +39,7 @@ const animDelay = () => Number(process.env.COOKING_ANIM_MS) || 400;
 
 function statusMenu(p, prefix) {
   const best = p.bestDish ? `${p.bestDish.price >= 0 ? "" : ""}${p.bestDish.name} (${formatRp(p.bestDish.price)})` : "-";
-  return novaRpgBox("cooking",
+  return raraRpgBox("cooking",
     `🍳 COOKING RPG\n\n` +
     `👤 Chef : ${p.name}\n⭐ Level : ${p.level} (${p.exp}/${p.maxExp} EXP)\n` +
     `⚡ Energy : ${p.energy}/${p.maxEnergy}\n💵 Gold : ${formatRp(p.gold)}\n` +
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
 
     // ══════ HELP ══════
     if (sub === "help") {
-      return m.reply(novaRpgBox("cooking",
+      return m.reply(raraRpgBox("cooking",
         `📖 BANTUAN COOKING RPG\n\n` +
         `🍳 ${P}cooking masak [resep]\n   Masak hidangan — bahan dikonsumsi,\n   hidangan auto-jual (harga × bonus alat).\n   Butuh 20 energy per masak.\n\n` +
         `📖 ${P}cooking resep\n   Daftar resep terbuka + terkunci.\n   Resep baru kebuka tiap naik level.\n\n` +
@@ -88,17 +88,17 @@ async function handler(m, { sock }) {
       const recipeName = args.slice(1).join(" ").trim();
       if (!recipeName) {
         await m.react("❌");
-        return m.reply(novaRpgBox("cooking", `Masak apa? Ketik resepnya!\n\n📌 ${P}cooking resep — lihat daftar resep\nContoh: ${P}cooking masak telur dadar`, "warn"));
+        return m.reply(raraRpgBox("cooking", `Masak apa? Ketik resepnya!\n\n📌 ${P}cooking resep — lihat daftar resep\nContoh: ${P}cooking masak telur dadar`, "warn"));
       }
       const r = cookDish(m.sender, recipeName, m.pushName || "Chef");
       if (!r.ok) {
         await m.react("❌");
         if (r.code === "ingredients" && r.missing) {
           const list = r.missing.map((x) => `• ${INGREDIENTS[x.ing]?.emoji || "📦"} ${x.ing} (butuh ${x.qty}, punya ${x.have})`).join("\n");
-          return m.reply(novaRpgBox("cooking", `Bahan tidak cukup!\n\n📋 Bahan yang kurang:\n${list}\n\n💡 Beli bahan: ${P}cooking beli [bahan]`, "warn"));
+          return m.reply(raraRpgBox("cooking", `Bahan tidak cukup!\n\n📋 Bahan yang kurang:\n${list}\n\n💡 Beli bahan: ${P}cooking beli [bahan]`, "warn"));
         }
         const t = r.code === "energy" ? "warn" : "warn";
-        return m.reply(novaRpgBox("cooking", r.error, t));
+        return m.reply(raraRpgBox("cooking", r.error, t));
       }
 
       // ANIMASI EDIT BERULANG: 7 fase, tiap fase 1 pesan morphing
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
         }
       }
       await m.react("🐣");
-      return m.reply(novaRpgBox("cooking", body, "success"));
+      return m.reply(raraRpgBox("cooking", body, "success"));
     }
 
     // ══════ RESEP ══════
@@ -144,14 +144,14 @@ async function handler(m, { sock }) {
         body += `\n\n🔒 RESEP TERKUNCI:\n` + locked.slice(0, 6).map((r) => `   ${r.emoji} ${r.name} (Level ${r.level})`).join("\n");
       }
       body += `\n\n💡 Masak: ${P}cooking masak [nama resep]\n✅ = bahan lengkap, ❌ = bahan kurang`;
-      return m.reply(novaRpgBox("cooking", body));
+      return m.reply(raraRpgBox("cooking", body));
     }
 
     // ══════ INVENTORY ══════
     if (sub === "inventory" || sub === "inv") {
       const items = Object.entries(player.inventory);
       if (!items.length) {
-        return m.reply(novaRpgBox("cooking", `Inventory kosong!\n\nBeli bahan dulu: ${P}cooking toko\nLalu: ${P}cooking beli [bahan]`, "warn"));
+        return m.reply(raraRpgBox("cooking", `Inventory kosong!\n\nBeli bahan dulu: ${P}cooking toko\nLalu: ${P}cooking beli [bahan]`, "warn"));
       }
       let body = `📦 INVENTORY ${player.name}\n`;
       for (const [name, qty] of items) {
@@ -159,7 +159,7 @@ async function handler(m, { sock }) {
         body += `\n${ing?.emoji || "📦"} ${name} : ${qty}`;
       }
       body += `\n\n💵 Gold : ${formatRp(player.gold)}`;
-      return m.reply(novaRpgBox("cooking", body));
+      return m.reply(raraRpgBox("cooking", body));
     }
 
     // ══════ TOKO ══════
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
         body += `\n🧺 ${cat}\n` + ings.map((ing) => `   ${ing.emoji} ${ing.name} — ${formatRp(ing.price)}`).join("\n");
       }
       body += `\n\n💡 Beli: ${P}cooking beli [nama bahan] [jumlah]`;
-      return m.reply(novaRpgBox("cooking", body));
+      return m.reply(raraRpgBox("cooking", body));
     }
 
     // ══════ BELI BAHAN (qty opsional) ══════
@@ -187,24 +187,24 @@ async function handler(m, { sock }) {
       const qty = Number(args.find((a) => /^\d+$/.test(a))) || 1;
       if (!name) {
         await m.react("❌");
-        return m.reply(novaRpgBox("cooking", `Beli apa? Ketik nama bahannya!\n\nContoh: ${P}cooking beli telur 5\nDaftar: ${P}cooking toko`, "warn"));
+        return m.reply(raraRpgBox("cooking", `Beli apa? Ketik nama bahannya!\n\nContoh: ${P}cooking beli telur 5\nDaftar: ${P}cooking toko`, "warn"));
       }
       const r = buyIngredient(m.sender, name, qty);
       if (!r.ok) {
         await m.react("❌");
-        return m.reply(novaRpgBox("cooking", r.error, "warn"));
+        return m.reply(raraRpgBox("cooking", r.error, "warn"));
       }
       // animasi beli morphing (🛒 → 💰💨 → ✅)
       try { await rpgScene(m, sock, beliScenes(r.ing), animDelay(), "belanja"); } catch {}
       await m.react("🐣");
-      return m.reply(novaRpgBox("cooking",
+      return m.reply(raraRpgBox("cooking",
         `🛒 BELI BERHASIL!\n\n${r.ing.emoji} ${r.ing.name} x${r.qty}\n💰 Harga : ${formatRp(r.total)}\n💵 Sisa Gold : ${formatRp(r.gold)}`, "success"));
     }
 
     // ══════ ALAT ══════
     if (sub === "alat" || sub === "tools") {
       if (!player.tools.length) {
-        return m.reply(novaRpgBox("cooking",
+        return m.reply(raraRpgBox("cooking",
           `🛠️ Belum punya alat masak!\n\nBelanja alat: ${P}cooking belialat [nama]\n\nDaftar alat & bonus:\n` +
           Object.values(TOOLS).map((t) => `   ${t.emoji} ${t.name} — ${formatRp(t.price)} (${t.bonus})`).join("\n"), "warn"));
       }
@@ -214,7 +214,7 @@ async function handler(m, { sock }) {
         body += `\n${tool.emoji} ${t} — ${tool.bonus}`;
       }
       body += `\n\n💡 Alat Kualitas menaikkan harga jual semua hidangan`;
-      return m.reply(novaRpgBox("cooking", body));
+      return m.reply(raraRpgBox("cooking", body));
     }
 
     // ══════ BELI ALAT ══════
@@ -227,28 +227,28 @@ async function handler(m, { sock }) {
       const r = restCook(m.sender);
       if (!r.ok) {
         await m.react("❌");
-        return m.reply(novaRpgBox("cooking", r.error, "warn"));
+        return m.reply(raraRpgBox("cooking", r.error, "warn"));
       }
       try { await rpgScene(m, sock, restScenes(player, r.gained), animDelay(), "istirahat"); } catch {}
       await m.react("🐣");
-      return m.reply(novaRpgBox("cooking",
+      return m.reply(raraRpgBox("cooking",
         `😊 ISTIRAHAT SELESAI\n\n⚡ Energy : +${r.gained} → ${r.energy}/${r.maxEnergy}\n💤 Istirahat lagi bisa 3 menit lagi`, "success"));
     }
 
     // ══════ SUB GAK DIKENAL ══════
     await m.react("❌");
-    return m.reply(novaRpgBox("cooking",
+    return m.reply(raraRpgBox("cooking",
       `Sub-perintah "${sub}" gak dikenal.\n\nKetik ${P}cooking buat lihat menu, atau ${P}cooking help buat bantuan lengkap.`, "warn"));
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaRpgBox("cooking", `Game error: ${e?.message || "unknown"}`, "error"));
+    return m.reply(raraRpgBox("cooking", `Game error: ${e?.message || "unknown"}`, "error"));
   }
 }
 
 async function handleBuyTool(m, toolName, P) {
   if (!toolName) {
     await m.react("❌");
-    return m.reply(novaRpgBox("cooking",
+    return m.reply(raraRpgBox("cooking",
       `Beli alat apa?\n\nDaftar alat:\n` +
       Object.values(TOOLS).map((t) => `   ${t.emoji} ${t.name} — ${formatRp(t.price)} (${t.bonus})`).join("\n") +
       `\n\nContoh: ${P}cooking belialat oven`, "warn"));
@@ -256,10 +256,10 @@ async function handleBuyTool(m, toolName, P) {
   const r = buyTool(m.sender, toolName);
   if (!r.ok) {
     await m.react("❌");
-    return m.reply(novaRpgBox("cooking", r.error, "warn"));
+    return m.reply(raraRpgBox("cooking", r.error, "warn"));
   }
   await m.react("🐣");
-  return m.reply(novaRpgBox("cooking",
+  return m.reply(raraRpgBox("cooking",
     `🛠️ ALAT BARU!\n\n${r.tool.emoji} ${r.tool.name}\n✨ Bonus : ${r.tool.bonus}\n💰 Harga : ${formatRp(r.tool.price)}\n💵 Sisa Gold : ${formatRp(r.gold)}`, "success"));
 }
 

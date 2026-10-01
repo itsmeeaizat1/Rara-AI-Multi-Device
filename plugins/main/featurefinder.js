@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { getCaseCommands } from "../../case/nova.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
+import { getCaseCommands } from "../../case/rara.js";
 import fs from "fs";
 import path from "path";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const pluginConfig = {
@@ -202,7 +202,7 @@ async function handler(m, { sock }) {
       );
     }
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
     let text = `🔍 *Hasil Pencarian: "${keyword}"*\n`;
     text += `Ditemukan *${matches.length}* fitur\n`;
     text += `Pilih salah satu command di bawah:\n\n`;
@@ -250,7 +250,7 @@ async function handler(m, { sock }) {
       },
     );
   } catch (error) {
-    m.reply(novaWrap("carifitur", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("carifitur", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

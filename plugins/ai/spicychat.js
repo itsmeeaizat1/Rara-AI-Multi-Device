@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/ai/spicychat.js — SpicyChat AI: chat karakter "Wormgpt"
 // (asistan tanpa sensor) via prod.nd-api.com, guest tanpa API key.
 // Multi-turn per-user (session persist db), auto-reset pas expired.
@@ -9,8 +9,8 @@
 // .spicychat status       — info session
 
 import { spicyChat, spicyGetMessages, extractReply, getEngine, resetSession, getSession } from "../../src/scraper/spicychat.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "spicychat",
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     // .spicychat status
     if (sub === "status" && !text.slice(7).trim()) {
       const s = getSession(m.sender);
-      return m.reply(novaWrap("spicychat",
+      return m.reply(raraWrap("spicychat",
         `🤖 SpicyChat AI (Wormgpt) — asisten tanpa sensor\n\n` +
         `⏱️ Session : ${s.conversationId ? "aktif (multi-turn)" : "baru (belum chat)"}\n` +
         `💬 Percakapan : ${s.conversationId ? "tersambung" : "belum ada"}\n\n` +
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     if (sub === "reset" && text.toLowerCase().replace(/\s+/g, " ").split(" ").length === 1) {
       resetSession(m.sender);
       await m.react("🐣");
-      return m.reply(novaWrap("spicychat",
+      return m.reply(raraWrap("spicychat",
         `✅ Session baru dibuat!\n\nWormgpt sudah lupa semua konteks sebelumnya.\nMulai chat lagi: .spicychat <pesan>`, "success"));
     }
 
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         const data = await spicyGetMessages(m.sender, 20);
         const msgs = Array.isArray(data?.messages) ? data.messages : [];
         if (!msgs.length) {
-          return m.reply(novaWrap("spicychat", "Belum ada riwayat percakapan. Chat dulu: .spicychat <pesan>", "guide"));
+          return m.reply(raraWrap("spicychat", "Belum ada riwayat percakapan. Chat dulu: .spicychat <pesan>", "guide"));
         }
         let out = "";
         out += `📜 Riwayat chat Wormgpt (${msgs.length} pesan terakhir)\n`;
@@ -69,16 +69,16 @@ async function handler(m, { sock }) {
           out += `${who}: ${content}\n\n`;
         }
         await m.react("🐣");
-        return m.reply(novaWrap("spicychat", out.trim(), "guide"));
+        return m.reply(raraWrap("spicychat", out.trim(), "guide"));
       } catch (err) {
-        return m.reply(novaWrap("spicychat", err.message, "warn"));
+        return m.reply(raraWrap("spicychat", err.message, "warn"));
       }
     }
 
     // chat
     const message = text;
     if (!message) {
-      return m.reply(novaWrap("spicychat",
+      return m.reply(raraWrap("spicychat",
         `Mau chat apa?\n\n` +
         `.spicychat <pesan> — chat dengan Wormgpt (tanpa sensor)\n` +
         `.spicychat reset — session baru\n` +
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("spicychat error:", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("spicychat",
+    return m.reply(raraWrap("spicychat",
       err?.message?.includes("balasan AI kosong")
         ? te(m.prefix, m.command, m.pushName)
         : `API SpicyChat lagi bermasalah: ${err.message}\n\nCoba lagi sebentar, atau .spicychat reset kalau masih error.`,

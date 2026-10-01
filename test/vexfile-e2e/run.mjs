@@ -12,15 +12,15 @@ async function main() {
   const ok = (name, cond, extra) => { total++; if (cond) { pass++; console.log("  ✓ " + name); } else { fail++; console.log("  ❌ " + name + (extra ? " → " + String(extra).slice(0, 200) : "")); } };
 
   console.log("─── 1. source & registry ───");
-  const libPath = path.join(R, "src/lib/nova-vexfile.js");
+  const libPath = path.join(R, "src/lib/rara-vexfile.js");
   const plugPath = path.join(R, "plugins/convert/vexfile.js");
   const libSrc = fs.readFileSync(libPath, "utf8");
   const plugSrc = fs.readFileSync(plugPath, "utf8");
-  ok("lib engine src/lib/nova-vexfile.js + plugin plugins/convert/vexfile.js ada", libSrc.includes("vexfileRemoteUpload") && plugSrc.includes('name: "vexfile"'));
+  ok("lib engine src/lib/rara-vexfile.js + plugin plugins/convert/vexfile.js ada", libSrc.includes("vexfileRemoteUpload") && plugSrc.includes('name: "vexfile"'));
   ok("plugin owner-only (file masuk akun PPD owner)", plugSrc.includes("isOwner: true"));
   ok("cmd .vexfile + alias vexfiles/vex/vexupload", plugSrc.includes('"vexfiles"') && plugSrc.includes('"vex"') && plugSrc.includes('"vexupload"'));
   ok("bukan tmpfiles alias (punya tmpfilesorg/fileio)", !/"tmpfiles"/.test(plugSrc));
-  const keysSrc = fs.readFileSync(path.join(R, "src/lib/nova-api-keys.js"), "utf8");
+  const keysSrc = fs.readFileSync(path.join(R, "src/lib/rara-api-keys.js"), "utf8");
   ok("registry .setkey vexfile (env VEXFILES_API_KEY)", keysSrc.includes('vexfile: {') && keysSrc.includes("process.env.VEXFILES_API_KEY"));
 
   console.log("─── 2. unit: format & zip-wrap ───");
@@ -103,7 +103,7 @@ async function main() {
     lib._setVexfileHttpForTest(null);
     lib._setVexfileTokenForTest(undefined);
     const zipBuf = await lib.vexZipWrap(Buffer.from("live e2e vexfile " + new Date().toISOString()), "e2e.txt");
-    const st = await lib.stageToTmpfiles(zipBuf, "nova-e2e-live.zip", "application/zip");
+    const st = await lib.stageToTmpfiles(zipBuf, "rara-e2e-live.zip", "application/zip");
     const live = await lib.vexfileRemoteUpload(process.env.VEXFILES_API_KEY, st.directUrl);
     ok("LIVE: remote upload nyata balik link vexfile.com/download/", /^https:\/\/vexfile\.com\/download\/[A-Za-z0-9]+$/.test(live.url), live.url);
   } else {

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaHeader,  separator, tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraHeader,  separator, tipText, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -15,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const query = m.text?.trim();
     if (!query) {
-      await m.reply(novaCaption({
+      await m.reply(raraCaption({
   emoji: "☪️",
   name: "hadith",
   description: "Cari hadis Bukhari & Muslim",
@@ -28,12 +28,12 @@ async function handler(m, { sock, config: botConfig }) {
       params: { q: query, limit: 5 }, timeout: 10000,
     });
     if (!data?.data?.items?.length) {
-      await m.reply(novaWrap("Hadis", [`Kata kunci: *${query}*`, "Coba kata kunci lain"].join("\n")));
+      await m.reply(raraWrap("Hadis", [`Kata kunci: *${query}*`, "Coba kata kunci lain"].join("\n")));
       return { handled: true };
     }
-    let text = novaWrap("Hasil Cari Hadis", "📖") + "\n\n";
+    let text = raraWrap("Hasil Cari Hadis", "📖") + "\n\n";
     for (const item of data.data.items.slice(0, 5)) {
-      text += novaWrap(item.book || "Hadis", [
+      text += raraWrap(item.book || "Hadis", [
         `Nomor: *${item.number || item.hadithNumber || "-"}*`,
         `Isi: ${item.arabic || item.text || "-"}`,
       ]) + "\n\n";
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     text +=  tipText(`Ketik ${prefix}menu untuk kembali`);
     await m.reply(text, "hadith");
   } catch (e) {
-    await m.reply(novaError("Religi", [`Alasan: *${e.message}*`].join("\n")));
+    await m.reply(raraError("Religi", [`Alasan: *${e.message}*`].join("\n")));
   }
   return { handled: true };
 }

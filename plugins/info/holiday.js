@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // holiday.js — daftar hari libur nasional mendatang.
 // ROMBAK (owner 16 Sep 2026): GAK PAKAI API EKSTERNAL lagi — data dari
-// PACKAGE date-holidays via lib nova-haribesar (satu sumber lokal, tahan lama).
+// PACKAGE date-holidays via lib rara-haribesar (satu sumber lokal, tahan lama).
 // Fitur lama dipertahankan: header "hari ini libur" / libur terdekat +
 // ticker live < 24 jam menuju libur.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { runLiveTicker } from "../../src/lib/nova-countdown.js";
-import { computeNextMidnightWib, buildLiburHeader, buildLiburCard } from "../../src/lib/nova-libur-card.js";
-import { getHariBesar, getLiburOn, nextLibur, listLiburMendatang } from "../../src/lib/nova-haribesar.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { runLiveTicker } from "../../src/lib/rara-countdown.js";
+import { computeNextMidnightWib, buildLiburHeader, buildLiburCard } from "../../src/lib/rara-libur-card.js";
+import { getHariBesar, getLiburOn, nextLibur, listLiburMendatang } from "../../src/lib/rara-haribesar.js";
 
 const pluginConfig = {
   name: "harilibur",
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
       caption += `Tidak ada hari libur nasional dalam 120 hari ke depan.`;
     }
 
-    const __navText = novaWrap(caption.trim().split("\n"));
+    const __navText = raraWrap(caption.trim().split("\n"));
     await m.reply(__navText);
 
     // libur besok (diff <= 1) → ticker live sampai tengah malam D-day
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[HariLibur]", error.message);
-    m.reply(novaWrap("HariLibur", `Ada error nih, coba lagi ya`));
+    m.reply(raraWrap("HariLibur", `Ada error nih, coba lagi ya`));
   }
 }
 

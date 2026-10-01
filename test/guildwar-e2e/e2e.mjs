@@ -1,17 +1,17 @@
-// NOVA — E2E: GUILD WAR ANTAR GRUP (26 Sep 2026). Engine murni + plugin.
+// RARA — E2E: GUILD WAR ANTAR GRUP (26 Sep 2026). Engine murni + plugin.
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-guildwar-db-" + Date.now();
+const DB_DIR = "/tmp/rara-guildwar-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
 
-const eng = await import(R + "/src/lib/nova-guildwar.js");
+const eng = await import(R + "/src/lib/rara-guildwar.js");
 const {
   ensureGuildWarState, validName, createGuild, joinGuild, leaveGuild,
   disbandGuild, donateTreasury, findGuildByName, getGuild, memberPower,
@@ -22,7 +22,7 @@ const {
 } = eng;
 const anim = await import(R + "/src/lib/libanimationrpg/libguildwarrpg.js");
 const { handler } = await import(R + "/plugins/rpg/guildwar.js");
-const np = await import(R + "/src/lib/nova-plugins.js");
+const np = await import(R + "/src/lib/rara-plugins.js");
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");

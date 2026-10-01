@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // chatiblobby.js — CHATIB LOBBY: ruang obrol anonim multi-user (inspirasi chatib.chat).
 // Beda dari vibychat (1-on-1 random): semua member lobby saling ngobrol
 // pakai NICKNAME — nomor WA gak pernah dibocorin.
@@ -9,10 +9,10 @@
 // - .chatibleave           keluar lobby
 // ATURAN (revisi owner 24 Sep 2026): link BOLEH & di-broadcast normal.
 // Member di-keluarkan otomatis kalau gak ada aktivitas selama 1 JAM.
-// Media ditolak, flood guard. Engine: src/lib/nova-chatib-lobby.js.
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { joinLobby, setNick, listMembers, leaveLobby, relayLobbyMessage } from "../../src/lib/nova-chatib-lobby.js";
+// Media ditolak, flood guard. Engine: src/lib/rara-chatib-lobby.js.
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { joinLobby, setNick, listMembers, leaveLobby, relayLobbyMessage } from "../../src/lib/rara-chatib-lobby.js";
 
 const pluginConfig = {
   name: "chatiblobby",
@@ -43,7 +43,7 @@ async function handler(m, { sock, db: _db }) {
 
   // layanan anonim cuma jalan di DM bot (privasi)
   if (m.isGroup || (m.chat || "").endsWith("@g.us")) {
-    return m.reply(novaWrap("Chatib Lobby", "Chatib Lobby cuma bisa dipakai di DM bot ya — biar privat."));
+    return m.reply(raraWrap("Chatib Lobby", "Chatib Lobby cuma bisa dipakai di DM bot ya — biar privat."));
   }
 
   if (cmd === "chatibnick") return setNick(m, sock, db);

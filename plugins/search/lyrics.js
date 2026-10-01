@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // lyrics.js — .lirik: primary nexray → FALLBACK Genius no-key (engine .lirik2,
 // request owner 2026-09-06: "klo .lirik g bsa fallback ke .lirik2")
 import axios from 'axios'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 import { searchSongLyrics } from '../../src/scraper/genius-lyrics.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { lyricsCaption, enrichLyricsMeta } from "../../src/lib/nova-lyrics-format.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { lyricsCaption, enrichLyricsMeta } from "../../src/lib/rara-lyrics-format.js";
 
 async function fetchLyrics(judul) {
   try {
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
             } catch (fbErr) {
                 console.log("[lirik] fallback Genius juga gagal:", fbErr.message)
             }
-            return m.reply(novaWrap("Lirik", `Waduh, maaf banget kak 🥺 lirik lagu *${query}* nggak ketemu nih di database. Coba pakai kata kunci atau judul yang lebih spesifik ya! 💔`))
+            return m.reply(raraWrap("Lirik", `Waduh, maaf banget kak 🥺 lirik lagu *${query}* nggak ketemu nih di database. Coba pakai kata kunci atau judul yang lebih spesifik ya! 💔`))
         }
         
         const title = data.title || query
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
             { const __navText = (texts); await m.reply(__navText); }
         }
     } catch (error) {
-        m.reply(novaError("Lyrics", "Server lirik lagi ngambek nih, coba lagi ya"))
+        m.reply(raraError("Lyrics", "Server lirik lagi ngambek nih, coba lagi ya"))
     }
 }
 

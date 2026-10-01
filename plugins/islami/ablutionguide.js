@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "panduanwudhu",
@@ -94,7 +94,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("");
       lines.push("Cara: " + usedPrefix + "panduanwudhu <nomor>");
       lines.push("Contoh: " + usedPrefix + "panduanwudhu 4");
-      return m.reply(novaWrap("Panduan Wudhu", lines.join("\n")));
+      return m.reply(raraWrap("Panduan Wudhu", lines.join("\n")));
     }
 
     const t = LANGKAH[input - 1];
@@ -117,9 +117,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       t.no < LANGKAH.length ? "Ketik " + usedPrefix + "panduanwudhu " + (t.no + 1) + " untuk langkah berikutnya" : "Wudhu selesai. Semoga ibadah kita diterima Allah SWT.",
     ];
 
-    return m.reply(novaWrap("Panduan Wudhu - Langkah " + t.no, lines.join("\n")));
+    return m.reply(raraWrap("Panduan Wudhu - Langkah " + t.no, lines.join("\n")));
   } catch (e) {
-    return m.reply(novaWrap("Panduan Wudhu", "Error: " + e.message));
+    return m.reply(raraWrap("Panduan Wudhu", "Error: " + e.message));
   }
 }
 

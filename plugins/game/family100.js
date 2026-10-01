@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Family 100 Game — versi modern ala Family Feud TV (request owner 8 Sep 2026)
 // 1 jawaban per pemain per ronde • poin survei 35/25/20/12/8 • reveal medali
 // ronde otomatis lanjut • scoreboard kumulatif • .family100 stop buat berhenti
@@ -7,14 +7,14 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { smallcapsText } from "../../src/lib/styler.js";
-import { toSC } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, pickFlavor } from "../../src/lib/nova-games.js";
-import { normalizeAnswer, getSimilarity } from "../../src/lib/nova-game-engine.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
-import { addGameCash, formatRp } from "../../src/lib/nova-rpg-service.js";
-import { rollGameReward, JACKPOT_MULT } from "../../src/lib/nova-game-rewards.js";
-import { harvestFamily100, getRefreshState, onBankUpdated } from "../../src/lib/nova-family100-harvest.js";
+import { toSC } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, pickFlavor } from "../../src/lib/rara-games.js";
+import { normalizeAnswer, getSimilarity } from "../../src/lib/rara-game-engine.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { addExpWithLevelCheck } from "../../src/lib/rara-level.js";
+import { addGameCash, formatRp } from "../../src/lib/rara-rpg-service.js";
+import { rollGameReward, JACKPOT_MULT } from "../../src/lib/rara-game-rewards.js";
+import { harvestFamily100, getRefreshState, onBankUpdated } from "../../src/lib/rara-family100-harvest.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -316,7 +316,7 @@ async function handler(m, { sock, config }) {
     // ─── STOP GAME ───
     if (sub === "stop") {
       const session = getSession(chatId);
-      if (!session) return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🤔 *GAK ADA GAME!*", body: "Belum ada game family100 yang jalan di grup ini kak!" }));
+      if (!session) return m.reply(raraGameBox({ title: "family100", icon: "💯", flavor: "🤔 *GAK ADA GAME!*", body: "Belum ada game family100 yang jalan di grup ini kak!" }));
       await revealChampion(sock, session, { stopped: true });
       return;
     }
@@ -324,7 +324,7 @@ async function handler(m, { sock, config }) {
     // ─── REFRESH: harvest soal baru dari internet (owner only) ───
     if (sub === "refresh" || sub === "update") {
       if (!m.isOwner) {
-        return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🔒 *KHUSUS OWNER!*", body: "Command ini cuma buat owner bot!" }));
+        return m.reply(raraGameBox({ title: "family100", icon: "💯", flavor: "🔒 *KHUSUS OWNER!*", body: "Command ini cuma buat owner bot!" }));
       }
       await m.react("🕒");
       try {
@@ -341,10 +341,10 @@ async function handler(m, { sock, config }) {
           `📚 ${toSC("Total bank soal")} : ${report.total}`,
         ].join("\n");
         await m.react("🐣");
-        return m.reply(novaGameBox({ title: "family100", icon: "🌐", flavor: "🔄 *BANK SOAL DIREFRESH!*", body }));
+        return m.reply(raraGameBox({ title: "family100", icon: "🌐", flavor: "🔄 *BANK SOAL DIREFRESH!*", body }));
       } catch (e) {
         console.error("[family100] refresh error:", e.message);
-        return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "❌ *REFRESH GAGAL!*", body: "Gagal ambil soal dari internet: " + e.message }));
+        return m.reply(raraGameBox({ title: "family100", icon: "💯", flavor: "❌ *REFRESH GAGAL!*", body: "Gagal ambil soal dari internet: " + e.message }));
       }
     }
 
@@ -355,7 +355,7 @@ async function handler(m, { sock, config }) {
       const lastRefresh = st.lastAt
         ? new Date(st.lastAt).toLocaleString("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
         : "belum pernah";
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "family100", icon: "📊",
         flavor: "📚 *BANK SOAL FAMILY 100*",
         body: [
@@ -388,13 +388,13 @@ async function handler(m, { sock, config }) {
     // ─── MULAI GAME BARU ───
     const data = loadData();
     if (!data || !data.length) {
-      return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🫠 *BANK SOAL KOSONG!*", body: "Soalnya lagi kosong nih kak, coba lagi nanti ya!" }));
+      return m.reply(raraGameBox({ title: "family100", icon: "💯", flavor: "🫠 *BANK SOAL KOSONG!*", body: "Soalnya lagi kosong nih kak, coba lagi nanti ya!" }));
     }
     await m.react("🕒");
 
     const newSession = {
       chatId,
-      hostName: config?.bot?.name || "Nova AI",
+      hostName: config?.bot?.name || "Rara AI",
       startTime: Date.now(),
       round: 0,
       usedIds: [],
@@ -420,7 +420,7 @@ async function handler(m, { sock, config }) {
     await m.react("🐣");
   } catch (e) {
     console.error("[family100] Handler error:", e.message);
-    try { await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "❌ *ERROR SAAT MULAI!*", body: "Ada gangguan saat memulai game, coba lagi ya kak!" })); } catch {}
+    try { await m.reply(raraGameBox({ title: "family100", icon: "💯", flavor: "❌ *ERROR SAAT MULAI!*", body: "Ada gangguan saat memulai game, coba lagi ya kak!" })); } catch {}
   }
 }
 
@@ -436,7 +436,7 @@ async function answerHandler(m, sock) {
 
     const sender = m.sender;
     // GUARD 2026-09-08: m.sender bisa null (gagal resolve JID @lid, kasus
-    // tepi nova-serialize/nova-lid). Tanpa identitas jelas gak bisa attribute
+    // tepi rara-serialize/rara-lid). Tanpa identitas jelas gak bisa attribute
     // jawaban/poin — dan kalau lolos, mentions:[null] bikin sock.sendMessage
     // crash "string argument ... Received null" (spam di log). Skip aman.
     if (!sender) return false;

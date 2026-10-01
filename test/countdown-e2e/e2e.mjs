@@ -2,12 +2,12 @@
 // Request owner: "cba cek fitur lain yg masih biasa aja kyk td fitur .afk
 // g ada counddown" — kartu .afk/.remind/.alarm dulu polos statis (durasi
 // angka beku), sekarang durasi/sisa waktu nge-tick HIDUP tiap detik.
-// BARU src/lib/nova-countdown.js — runLiveTicker edit-in-place adaptif
+// BARU src/lib/rara-countdown.js — runLiveTicker edit-in-place adaptif
 // (detik-detik akhir tick per detik, sisanya adaptif 30s/60s, kuota edit
 // dibatasi biar gak spam WhatsApp).
 // Tes dipercepat via env: NOVAFK_TICKER_MS (AFK tick window) +
 // NOVA_TICK_MAXEDITS (kuota edit reminder/alarm).
-// E2E NOVA COUNTDOWN — pola db asli path tmp (ala afk-e2e).
+// E2E RARA COUNTDOWN — pola db asli path tmp (ala afk-e2e).
 process.env.NOVAFK_TICKER_MS = "1500";
 process.env.NOVA_TICK_MAXEDITS = "2";
 
@@ -18,11 +18,11 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
-await initDatabase(mkdtempSync(path.join(tmpdir(), "cd-e2e-db-")) + "/nova.json");
+await initDatabase(mkdtempSync(path.join(tmpdir(), "cd-e2e-db-")) + "/rara.json");
 
-const { formatRemaining, runLiveTicker } = await import(R + "/src/lib/nova-countdown.js");
+const { formatRemaining, runLiveTicker } = await import(R + "/src/lib/rara-countdown.js");
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");

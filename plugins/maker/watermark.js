@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraBerhasil } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -17,7 +17,7 @@ const pluginConfig = {
   category: "maker",
   description: "Tambah watermark teks ke gambar - posisi, opacity, ukuran, warna custom",
   usage: ".watermark <teks> (reply gambar) | .watermark <teks>|<posisi>|<opacity>",
-  example: ".watermark Nova AI|bottom-right|0.5",
+  example: ".watermark Rara AI|bottom-right|0.5",
   isGroupOnly: false,
 };
 
@@ -38,12 +38,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
     const imageMsg = quoted?.imageMessage;
     if (!imageMsg) {
-      return m.reply(novaWrap("watermark", "Reply gambar yang mau di-watermark."));
+      return m.reply(raraWrap("watermark", "Reply gambar yang mau di-watermark."));
     }
 
     const input = text.trim();
     if (!input) {
-      return m.reply(novaWrap("watermark", [
+      return m.reply(raraWrap("watermark", [
         "Tambah watermark teks ke gambar.",
         "",
         "📌 Format: " + usedPrefix + "watermark <teks>|<posisi>|<opacity>",
@@ -52,7 +52,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "Posisi: " + Object.keys(POSITIONS).join(", "),
         "Opacity: 0.1 - 1.0 (default 0.7)",
         "",
-        "💡 Contoh: " + usedPrefix + "watermark Nova AI|bottom-right|0.5",
+        "💡 Contoh: " + usedPrefix + "watermark Rara AI|bottom-right|0.5",
       ].join("\n")));
     }
 
@@ -62,10 +62,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const opacity = parseFloat(parts[2]) || 0.7;
 
     if (!POSITIONS[posName]) {
-      return m.reply(novaWrap("watermark", "Posisi: " + Object.keys(POSITIONS).join(", ")));
+      return m.reply(raraWrap("watermark", "Posisi: " + Object.keys(POSITIONS).join(", ")));
     }
-    if (opacity < 0.1 || opacity > 1.0) return m.reply(novaWrap("watermark", "Opacity 0.1 - 1.0"));
-    if (wmText.length > 50) return m.reply(novaWrap("watermark", "Teks maksimal 50 karakter."));
+    if (opacity < 0.1 || opacity > 1.0) return m.reply(raraWrap("watermark", "Opacity 0.1 - 1.0"));
+    if (wmText.length > 50) return m.reply(raraWrap("watermark", "Teks maksimal 50 karakter."));
 
     const pos = POSITIONS[posName];
     const buffer = await conn.downloadMediaMessage({ key: { remoteJid: m.key.remoteJid, id: m.quoted && m.quoted.id }, message: quoted });
@@ -113,11 +113,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: outBuf,
-      caption: novaBerhasil() + "\nPosisi: " + posName + " | Opacity: " + opacity,
+      caption: raraBerhasil() + "\nPosisi: " + posName + " | Opacity: " + opacity,
     });
   } catch (e) {
     console.error("watermark error:", e);
-    return m.reply(novaWrap("watermark", "Gagal pasang watermark. Coba lagi.", "error"));
+    return m.reply(raraWrap("watermark", "Gagal pasang watermark. Coba lagi.", "error"));
   }
 }
 

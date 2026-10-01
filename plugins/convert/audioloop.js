@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,13 +19,13 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(novaWrap("Audio Loop", "Reply audio yang mau di-loop."));
+    if (!quoted) return m.reply(raraWrap("Audio Loop", "Reply audio yang mau di-loop."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(novaWrap("Audio Loop", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(raraWrap("Audio Loop", "Reply harus audio/voice note!"));
 
     const loopCount = parseInt(args[0]);
     if (!loopCount || loopCount < 2 || loopCount > 20) {
-      return m.reply(novaWrap("Audio Loop", [
+      return m.reply(raraWrap("Audio Loop", [
         "Jumlah loop 2-20x.",
         "Contoh: " + usedPrefix + "audioloop 3",
         "Dengan fade: " + usedPrefix + "audioloop 3 fade 1",
@@ -33,10 +33,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     const fadeSec = args[1] === "fade" ? (parseFloat(args[2]) || 0) : 0;
-    if (fadeSec > 5) return m.reply(novaWrap("Info", "Fade maksimal 5 detik."));
+    if (fadeSec > 5) return m.reply(raraWrap("Info", "Fade maksimal 5 detik."));
 
     const isPtt = !!quoted.pttMessage;
-    const tmpDir = path.join(os.tmpdir(), 'nova-loop');
+    const tmpDir = path.join(os.tmpdir(), 'rara-loop');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, "input_" + Date.now() + ".ogg");
@@ -73,7 +73,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await queueFFmpeg(cmd);
 
     if (!fs.existsSync(outputPath)) {
-      return m.reply(novaGagal("AudioLoop"));
+      return m.reply(raraGagal("AudioLoop"));
     }
 
     const buf = fs.readFileSync(outputPath);
@@ -81,7 +81,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: novaWrap("Audio Loop", [
+      caption: raraWrap("Audio Loop", [
         "Berhasil loop!",
         "Jumlah: " + loopCount + "x",
         fadeSec > 0 ? "Fade: " + fadeSec + " detik" : "Tanpa fade",
@@ -90,10 +90,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
-      await m.reply(novaBerhasil("audioloop"));
+      await m.reply(raraBerhasil("audioloop"));
   } catch (e) {
     console.error("audioloop error:", e);
-    return m.reply(novaGangguan("audioloop"));
+    return m.reply(raraGangguan("audioloop"));
   }
 }
 

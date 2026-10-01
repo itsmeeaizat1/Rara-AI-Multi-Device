@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaWrap, novaLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraLine, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const pluginConfig = {
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
   await m.react("🕒");
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaNoInput("TikTok V2", "Masukkan link video TikTok yang mau kamu download!", `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`));
+    return m.reply(raraNoInput("TikTok V2", "Masukkan link video TikTok yang mau kamu download!", `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`));
   }
   try {
     // Try IkyyXD tiktokkv2 first
@@ -117,10 +117,10 @@ async function handler(m, { sock }) {
         video: { url: r.play },
         caption,
     }, { quoted: m });
-      await m.reply(novaBerhasil("tiktokv2"));
+      await m.reply(raraBerhasil("tiktokv2"));
   } catch (e) {
     console.error("[TIKTOKV2]", e.message);
-    m.reply(novaError("TikTok V2", e.message || "Gagal mengambil video TikTok"));
+    m.reply(raraError("TikTok V2", e.message || "Gagal mengambil video TikTok"));
   }
 }
 export { pluginConfig as config, handler };

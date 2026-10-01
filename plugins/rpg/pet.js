@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // pet.js — Pet System v2 (adopsi, feed, level up, battle)
 // Upgrade 9 Sep 2026: ekonomi Rp (rpg.cash) + 3 bentuk animasi BARU —
 // telur menetas (adopt), makanan menghilang (feed), arena hati HP (battle).
 // Semua morph edit-in-place, fallback kirim frame terbaru sebagai pesan baru.
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { spendCash, addCash, getCash, formatRp } from "../../src/lib/nova-rpg-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { spendCash, addCash, getCash, formatRp } from "../../src/lib/rara-rpg-service.js";
 
 const pluginConfig = {
   name: "pet",
@@ -162,21 +162,21 @@ async function handler(m, { sock }) {
           list += `• ${p.emoji} ${p.type} — ${formatRp(p.cost)}\n  ⚔️ ATK ${p.baseAtk} | 🛡️ DEF ${p.baseDef}\n`;
         });
         list += `\n💵 Uang kamu: ${formatRp(getCash(m))}\n💡 .pet adopt <type>`;
-        return m.reply(novaRpgBox("pet", list));
+        return m.reply(raraRpgBox("pet", list));
       }
       const tpl = PET_TYPES.find((p) => p.type === petType);
       if (!tpl) {
         await m.react("❌");
-        return m.reply(novaRpgBox("pet", `Pet "*${petType}*" tidak tersedia. Lihat daftar: .pet adopt`, "error"));
+        return m.reply(raraRpgBox("pet", `Pet "*${petType}*" tidak tersedia. Lihat daftar: .pet adopt`, "error"));
       }
       const existing = getPet();
       if (existing && existing.type) {
-        return m.reply(novaRpgBox("pet",
+        return m.reply(raraRpgBox("pet",
           `Kamu sudah punya pet: ${existing.emoji} *${existing.type}* (Lv.${existing.level}).\n💡 Evolusi: .petevolve do`, "warn"));
       }
       if (!spendCash(m, tpl.cost)) {
         await m.react("❌");
-        return m.reply(novaRpgBox("pet",
+        return m.reply(raraRpgBox("pet",
           `💵 Uang tidak cukup! Butuh *${formatRp(tpl.cost)}*\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       await m.react("🕒");
@@ -188,13 +188,13 @@ async function handler(m, { sock }) {
       };
       savePet(pet);
       await m.react("🐣");
-      return m.reply(novaRpgBox("pet",
+      return m.reply(raraRpgBox("pet",
         `🐣 PET BARU DIADOPSI!\n\n${tpl.emoji} Pet : ${tpl.type}\n⚔️ ATK : ${pet.atk} | 🛡️ DEF : ${pet.def}\n❤️ HP : ${pet.hp}/${pet.maxHp}\n🍖 Hunger : 100%\n\n💡 Jangan lupa feed: .pet feed`, "success"));
     }
 
     const pet = getPet();
     if (!pet || !pet.type) {
-      return m.reply(novaRpgBox("pet",
+      return m.reply(raraRpgBox("pet",
         `Kamu belum punya pet 🥲\n💡 Adopsi sekarang: .pet adopt <type> — daftar: .pet adopt`, "guide"));
     }
 
@@ -202,14 +202,14 @@ async function handler(m, { sock }) {
     if (sub === "feed" || sub === "makan") {
       const now = Date.now();
       if (pet.hunger >= 100) {
-        return m.reply(novaRpgBox("pet", `🍖 ${pet.emoji} masih kenyang banget! (Hunger 100%)`, "warn"));
+        return m.reply(raraRpgBox("pet", `🍖 ${pet.emoji} masih kenyang banget! (Hunger 100%)`, "warn"));
       }
       if (now - (pet.lastFed || 0) < FEED_COOLDOWN) {
         const remaining = Math.ceil((FEED_COOLDOWN - (now - (pet.lastFed || 0))) / 60000);
-        return m.reply(novaRpgBox("pet", `🕒 ${pet.emoji} masih kenyang! Tunggu *${remaining} menit* lagi.`, "warn"));
+        return m.reply(raraRpgBox("pet", `🕒 ${pet.emoji} masih kenyang! Tunggu *${remaining} menit* lagi.`, "warn"));
       }
       if (!spendCash(m, FEED_COST)) {
-        return m.reply(novaRpgBox("pet", `💵 Butuh *${formatRp(FEED_COST)}* buat makanan.\nUang kamu: ${formatRp(getCash(m))}`, "warn"));
+        return m.reply(raraRpgBox("pet", `💵 Butuh *${formatRp(FEED_COST)}* buat makanan.\nUang kamu: ${formatRp(getCash(m))}`, "warn"));
       }
       await m.react("🕒");
       await morph(m, sock, munchFrames(pet.emoji));
@@ -219,7 +219,7 @@ async function handler(m, { sock }) {
       const ups = petLevelUp(pet);
       savePet(pet);
       await m.react("🐣");
-      return m.reply(novaRpgBox("pet",
+      return m.reply(raraRpgBox("pet",
         `🍖 PET DIBERI MAKAN!\n\n${pet.emoji} Pet : ${pet.type}\n🍖 Hunger : ${pet.hunger}%\n✨ EXP : +20 (${pet.exp}/${pet.level * 100})` +
         (ups ? `\n\n⬆️ LEVEL UP! Lv.${pet.level} — ATK+${5 * ups} DEF+${3 * ups} HP+${10 * ups}` : ""), "success"));
     }
@@ -227,7 +227,7 @@ async function handler(m, { sock }) {
     // ══════════ BATTLE / DUEL ══════════
     if (sub === "battle" || sub === "fight" || sub === "duel") {
       if (pet.hunger < 20) {
-        return m.reply(novaRpgBox("pet", `🍖 ${pet.emoji} kelaparan! Feed dulu: .pet feed`, "warn"));
+        return m.reply(raraRpgBox("pet", `🍖 ${pet.emoji} kelaparan! Feed dulu: .pet feed`, "warn"));
       }
       const targetJid = m.mentionedJid?.[0] || m.quoted?.participant || null;
 
@@ -235,7 +235,7 @@ async function handler(m, { sock }) {
       if (targetJid) {
         defenderPet = normalizePet(db.getPlayerData(targetJid, "pet"));
         if (!defenderPet || !defenderPet.type) {
-          return m.reply(novaRpgBox("pet", `🙁 Dia belum punya pet. Cari lawan lain atau lawan pet liar: .pet battle`, "warn"));
+          return m.reply(raraRpgBox("pet", `🙁 Dia belum punya pet. Cari lawan lain atau lawan pet liar: .pet battle`, "warn"));
         }
         enemy = { ...defenderPet };
         isDuel = true;
@@ -304,7 +304,7 @@ async function handler(m, { sock }) {
       const ups = petLevelUp(pet);
       savePet(pet);
       await m.react("🐣");
-      return m.reply(novaRpgBox("pet",
+      return m.reply(raraRpgBox("pet",
         `${won ? "🏆 PET KAMU MENANG!" : draw ? "🤝 SERI!" : "💀 PET KAMU KALAH!"}\n\n` +
         `${pet.emoji} ${pet.type} Lv.${pet.level} vs ${enemy.emoji} ${enemy.type} Lv.${enemy.level}${isDuel ? " (duel pemain)" : " (liar)"}\n\n` +
         rewardMsg +
@@ -328,18 +328,18 @@ async function handler(m, { sock }) {
           .sort((a, b) => b.score - a.score)
           .slice(0, 10);
       } catch {}
-      if (!list.length) return m.reply(novaRpgBox("pet", "📊 Belum ada pet terdaftar! Adopsi pertama: .pet adopt", "warn"));
+      if (!list.length) return m.reply(raraRpgBox("pet", "📊 Belum ada pet terdaftar! Adopsi pertama: .pet adopt", "warn"));
       let msg = "🏆 LEADERBOARD PET TERKUAT\n\n";
       list.forEach((p, i) => {
         const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`;
         msg += `${medal} ${p.pet.emoji} ${p.name} — Lv.${p.pet.level} (${p.pet.wins}W/${p.pet.battles - p.pet.wins}L)\n`;
       });
-      return m.reply(novaRpgBox("pet", msg));
+      return m.reply(raraRpgBox("pet", msg));
     }
 
     // ══════════ HELP ══════════
     if (sub === "help" || sub === "bantuan") {
-      return m.reply(novaRpgBox("pet",
+      return m.reply(raraRpgBox("pet",
         `🐾 BANTUAN PET\n\n` +
         `.pet — info pet kamu\n` +
         `.pet adopt <type> — adopsi pet (Rp)\n` +
@@ -357,7 +357,7 @@ async function handler(m, { sock }) {
     // ══════════ INFO (default) ══════════
     const filled = Math.ceil(pet.hunger / 10);
     const hungerRow = "🍖".repeat(filled) + "▫️".repeat(10 - filled);
-    return m.reply(novaRpgBox("pet",
+    return m.reply(raraRpgBox("pet",
       `${pet.emoji} ${pet.type.toUpperCase()} Lv.${pet.level}\n\n` +
       `❤️ HP : ${pet.hp}/${pet.maxHp}\n` +
       `⚔️ ATK : ${pet.atk} | 🛡️ DEF : ${pet.def}\n` +
@@ -368,7 +368,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("pet error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("pet", err?.message || "Ada yang error, coba lagi.", "error"));
+    return m.reply(raraRpgBox("pet", err?.message || "Ada yang error, coba lagi.", "error"));
   }
 }
 

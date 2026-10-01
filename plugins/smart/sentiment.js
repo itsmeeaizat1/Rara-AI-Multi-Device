@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaHeader, separator, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraHeader, separator, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "sentiment", alias: ["sentiment"], category: "smart",
@@ -14,14 +14,14 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text) {
-      await m.reply( novaWrap("Sentiment", ["Reply pesan untuk analisis mood",
+      await m.reply( raraWrap("Sentiment", ["Reply pesan untuk analisis mood",
         "Bot akan tentukan positif/negatif/netral"].join("\n")), "sentiment");
       return { handled: true };
     }
     const result = await callAI(`Analisis sentiment dari teks berikut. Jawab HANYA dengan: POSITIF, NEGATIF, atau NETRAL, lalu berikan alasan singkat dalam Bahasa Indonesia.\n\n${text.substring(0, 500)}`, {
       systemPrompt: "Kamu adalah sentiment analyzer. Berikan jawaban singkat.",
     });
-    await m.reply(novaWrap("Sentiment Analysis", "📊") + "\n\n" + result );
+    await m.reply(raraWrap("Sentiment Analysis", "📊") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

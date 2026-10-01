@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // scanvirus.js — Toggle auto-scan virus file di grup via VirusTotal
 // Saat ON: setiap file (document) dari member di-scan otomatis ke VirusTotal
 // (60+ engine) — ada notif "sedang di-scan" + hasil verdict lengkap.
 // Owner & admin grup di-exempt. Default OFF saat pairing (aturan owner).
-import { novaWrap, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraWrap, raraError, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: 'scanvirus',
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     if (!m.isAdmin && !m.isOwner) {
       await m.react("🚫");
-      await m.reply(novaWrap("scanvirus", `Hanya admin grup yang bisa menggunakan fitur ini`, "error"));
+      await m.reply(raraWrap("scanvirus", `Hanya admin grup yang bisa menggunakan fitur ini`, "error"));
       return { handled: true };
     }
 
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     if (!['on', 'off'].includes(args)) {
       const status = group.scanVirus === true ? '✅ Aktif' : '❌ Nonaktif';
       await m.react("🐣");
-      await m.reply(novaWrap("scanvirus", [
+      await m.reply(raraWrap("scanvirus", [
         `Fitur : Auto-scan virus file`,
         `Status : ${status}`,
         "",
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
 
     if (args === 'on') {
       await m.react("🐣");
-      await m.reply(novaWrap("scanvirus", [
+      await m.reply(raraWrap("scanvirus", [
         `Auto-scan virus diaktifkan`,
         "",
         `Setiap file dari member bakal di-scan otomatis ke VirusTotal.`,
@@ -63,12 +63,12 @@ async function handler(m, { sock }) {
       ].join("\n"), "success"));
     } else {
       await m.react("🐣");
-      await m.reply(novaWrap("scanvirus", `Auto-scan virus dinonaktifkan`, "error"));
+      await m.reply(raraWrap("scanvirus", `Auto-scan virus dinonaktifkan`, "error"));
     }
     return { handled: true };
   } catch (error) {
     await m.react("❌");
-    await m.reply(novaError("Scanvirus", `Gagal: ${error.message}`));
+    await m.reply(raraError("Scanvirus", `Gagal: ${error.message}`));
     return { handled: true };
   }
 }

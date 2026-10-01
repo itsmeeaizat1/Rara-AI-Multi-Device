@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Stamp — Tambah timestamp/date stamp ke foto (local via sharp + SVG, no API)
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "photostamp",
@@ -9,7 +9,7 @@ const pluginConfig = {
   category: "tools",
   description: "Photo Stamp — Tambah timestamp/tanggal ke foto (local, no API)",
   usage: ".photostamp (reply gambar)\n.photostamp <posisi> (reply gambar)\n.photostamp custom <text> (reply gambar)",
-  example: ".photostamp (reply gambar)\n.photostamp top-right (reply gambar)\n.photostamp custom Nova AI 2026 (reply gambar)",
+  example: ".photostamp (reply gambar)\n.photostamp top-right (reply gambar)\n.photostamp custom Rara AI 2026 (reply gambar)",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -134,9 +134,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "Contoh:",
         usedPrefix + "photostamp top-right",
         usedPrefix + "photostamp bottom-left | neon | full",
-        usedPrefix + "photostamp custom Nova AI - 20 Agu 2026",
+        usedPrefix + "photostamp custom Rara AI - 20 Agu 2026",
       ];
-      return m.reply(novaWrap("Photo Stamp", lines, "info"));
+      return m.reply(raraWrap("Photo Stamp", lines, "info"));
     }
 
     // Parse input
@@ -148,7 +148,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (input.toLowerCase().startsWith("custom ")) {
       customText = input.substring(7).trim();
       if (!customText) {
-        return m.reply(novaWrap("Photo Stamp", "Text custom tidak boleh kosong", "warn"));
+        return m.reply(raraWrap("Photo Stamp", "Text custom tidak boleh kosong", "warn"));
       }
     } else if (input) {
       const parts = input.split("|").map((s) => s.trim());
@@ -161,24 +161,24 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const stampText = customText || formatDate(new Date(), format);
 
     if (stampText.length > 80) {
-      return m.reply(novaWrap("Photo Stamp", "Text terlalu panjang (max 80 karakter)", "warn"));
+      return m.reply(raraWrap("Photo Stamp", "Text terlalu panjang (max 80 karakter)", "warn"));
     }
 
     // Get image
     const q = m.quoted || m;
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(novaWrap("Photo Stamp", [
+      return m.reply(raraWrap("Photo Stamp", [
         "Reply gambar dulu, lalu ketik:",
         usedPrefix + "photostamp",
       ], "warn"));
     }
 
-    m.reply(novaWrap("Photo Stamp", "Menambahkan timestamp..."));
+    m.reply(raraWrap("Photo Stamp", "Menambahkan timestamp..."));
 
     const imgBuffer = await q.download();
     if (!imgBuffer || imgBuffer.length === 0) {
-      return m.reply(novaWrap("Photo Stamp", "Gagal download gambar.", "warn"));
+      return m.reply(raraWrap("Photo Stamp", "Gagal download gambar.", "warn"));
     }
 
     const meta = await sharp(imgBuffer).metadata();
@@ -194,14 +194,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (!result || result.length === 0) {
       await m.react("🐣");
-      return m.reply(novaWrap("Photo Stamp", "Gagal processing stamp.", "warn"));
+      return m.reply(raraWrap("Photo Stamp", "Gagal processing stamp.", "warn"));
     }
 
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: novaWrap("Photo Stamp", [
+        caption: raraWrap("Photo Stamp", [
           "Stamp: " + stampText,
           "Posisi: " + position,
           "Style: " + style,
@@ -213,7 +213,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[PhotoStamp]", e);
-    m.reply(novaWrap("Photo Stamp", [
+    m.reply(raraWrap("Photo Stamp", [
       "Error: " + e.message,
       "",
       "Ketik " + usedPrefix + "photostamp list untuk bantuan",

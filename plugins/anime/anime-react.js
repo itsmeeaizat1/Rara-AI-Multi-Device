@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const REACTION_MAP = {
   animereact: "waifu", animehug: "hug", animekiss: "kiss", animecry: "cry",
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
 
     if (!data || !data.url) {
       await m.react("❌");
-      return m.reply(novaWrap("animereact", "Gagal ambil anime reaction. Coba lagi.", "error"));
+      return m.reply(raraWrap("animereact", "Gagal ambil anime reaction. Coba lagi.", "error"));
     }
 
     const imgRes = await axios.get(data.url, {
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("animereact error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("animereact", err.message || "Error", "error"));
+    return m.reply(raraWrap("animereact", err.message || "Error", "error"));
   }
 }
 

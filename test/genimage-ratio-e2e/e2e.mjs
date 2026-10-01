@@ -4,7 +4,7 @@
 // Implementasi: extractImageRatio (deteksi "9:16"/keyword dari prompt) →
 // canvas nano-banana dibikin makeGrayCanvas SESUAI RASIO → semua engine
 // (provider key hint / pollinations dims) ikut rasio → caption nampil rasio.
-import { extractImageRatio, makeGrayCanvas, callImageGenChain, nanoBananaText2Img, _setNanoBananaT2IForTest } from "../../src/lib/nova-ai-service.js";
+import { extractImageRatio, makeGrayCanvas, callImageGenChain, nanoBananaText2Img, _setNanoBananaT2IForTest } from "../../src/lib/rara-ai-service.js";
 import { localParse, TOOLS } from "../../src/lib/aiagent.js";
 
 let pass = 0, fail = 0;
@@ -99,10 +99,10 @@ w("\n— nanoBananaText2Img: canvas sesuai rasio —");
 }
 
 // ═══════════════════════════════════════════════════════════════
-w("\n— localParse + TOOLS.genimage: jalur .novaagent —");
+w("\n— localParse + TOOLS.genimage: jalur .raraagent —");
 {
   const d = localParse("buatkan gambar kucing 9:16");
-  check("'.novaagent buatkan gambar kucing 9:16' → genimage", d?.tool === "genimage", d?.tool);
+  check("'.raraagent buatkan gambar kucing 9:16' → genimage", d?.tool === "genimage", d?.tool);
   check("rasio tetap kebawa di prompt (diekstrak di chain/run)", /9:16/.test(d?.args?.prompt || ""), d?.args?.prompt);
 }
 {

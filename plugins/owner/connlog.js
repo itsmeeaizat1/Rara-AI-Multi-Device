@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .connlog — Jurnal koneksi WhatsApp (OWNER ONLY)
 // Fix 18 Sep 2026 (report owner: "bot bntar reconnect stiap 10 menit atau
 // brapa menit, apakah ada fitur yg membuat bot reconnect apa dr baileysnya
 // sendiri?").
 //
 // Setiap disconnect otomatis dicatat ke storage/connlog.json oleh
-// src/lib/nova-conn-journal.js (dipasang di connection.js):
+// src/lib/rara-conn-journal.js (dipasang di connection.js):
 // - kode disconnect (401/440/515/timedOut/dll) + alasan
 // - lama koneksi nyambung sebelum putus
 // - sumber internal: watchdog (30 menit tanpa pesan = disengaja),
@@ -23,8 +23,8 @@ import {
   getJournal,
   clearJournal,
   analyzeJournal,
-} from "../../src/lib/nova-conn-journal.js";
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-conn-journal.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "connlog",
@@ -78,7 +78,7 @@ async function handler(m, { config: botConfig }) {
 
     if (sub === "clear" || sub === "hapus") {
       clearJournal();
-      return m.reply(novaWrap("Conn Log", [
+      return m.reply(raraWrap("Conn Log", [
         "Jurnal koneksi dihapus.",
         "",
         tipText("Riwayat baru mulai tercatat dari sekarang"),
@@ -89,14 +89,14 @@ async function handler(m, { config: botConfig }) {
     const a = analyzeJournal();
 
     if (!entries.length) {
-      return m.reply(novaWrap("Conn Log", [
+      return m.reply(raraWrap("Conn Log", [
         "Jurnal masih kosong — belum ada catatan disconnect/connect.",
         "",
         tipText("Jurnal otomatis tercatat tiap bot putus/nyambung. Coba lagi setelah reconnect berikutnya"),
       ]));
     }
 
-    // NOTE: novaWrap guard .trim() elemen pertama — subHeader object gak
+    // NOTE: raraWrap guard .trim() elemen pertama — subHeader object gak
     // boleh di posisi 0, jadi baris pertama wajib string.
     const lines = ["Riwayat koneksi — tercatat otomatis tiap bot putus/nyambung."];
 
@@ -139,9 +139,9 @@ async function handler(m, { config: botConfig }) {
     lines.push("");
     lines.push(tipText("Hapus jurnal: `" + prefix + "connlog clear`"));
 
-    return m.reply(novaWrap("Conn Log", lines));
+    return m.reply(raraWrap("Conn Log", lines));
   } catch (err) {
-    return m.reply(novaWrap("Conn Log", [
+    return m.reply(raraWrap("Conn Log", [
       "Gagal baca jurnal koneksi: " + (err?.message || String(err)),
     ], "error"));
   }

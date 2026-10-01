@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .minesweeper — cari ranjau 6x6 (port altftool.com "Minesweeper")
 // Reply koordinat (a1..f6) buat buka sel. Klik pertama DIJAMIN aman (bom digeser).
 // ANIMASI KHAS: radar ◎ menyapu ladang lalu kunci sasaran.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { editFramesAnim } from "../../src/lib/rara-anim-runner.js";
 
 const pluginConfig = {
   name: "minesweeper", alias: ["minesweeper", "cariangka"], category: "game",
@@ -73,10 +73,10 @@ async function handler(m, { sock, config }) {
   if (sessions.has(k)) {
     if ((m.text || "").trim().toLowerCase() === "stop") {
       sessions.delete(k);
-      return m.reply(novaWrap("Minesweeper", ["Sesi diakhiri."].join("\n")));
+      return m.reply(raraWrap("Minesweeper", ["Sesi diakhiri."].join("\n")));
     }
     const s = sessions.get(k);
-    return m.reply(novaWrap("Minesweeper", ["MASIH ADA SESI AKTIF",
+    return m.reply(raraWrap("Minesweeper", ["MASIH ADA SESI AKTIF",
       "",
       "```" + render(s) + "```",
       "",
@@ -86,7 +86,7 @@ async function handler(m, { sock, config }) {
   resetT(s);
   sessions.set(k, s);
   await animasiMulai(sock, m.chat);
-  return m.reply(novaWrap("Minesweeper", ["MINESWEEPER 6×6 — 6 BOM TERSEMBUNYI",
+  return m.reply(raraWrap("Minesweeper", ["MINESWEEPER 6×6 — 6 BOM TERSEMBUNYI",
     "",
     "```" + render(s) + "```",
     "",
@@ -107,7 +107,7 @@ export async function answerHandler(m, sock) {
   const i = (Number(raw[1]) - 1) * N + "abcdef".indexOf(raw[0]);
   if (s.open.has(i)) {
     resetT(s);
-    await m.reply(novaWrap("Minesweeper", ["Sel " + raw + " udah kebuka",
+    await m.reply(raraWrap("Minesweeper", ["Sel " + raw + " udah kebuka",
       "",
       "```" + render(s) + "```"].join("\n")));
     return true;
@@ -116,7 +116,7 @@ export async function answerHandler(m, sock) {
   if (s.mines.has(i)) {
     const board = render(s, true), opened = s.open.size;
     sessions.delete(k);
-    await m.reply(novaWrap("Minesweeper", ["💥 BOOM! Kena bom di " + raw,
+    await m.reply(raraWrap("Minesweeper", ["💥 BOOM! Kena bom di " + raw,
       "",
       "```" + board + "```",
       "",
@@ -126,7 +126,7 @@ export async function answerHandler(m, sock) {
   s.open.add(i);
   if (s.open.size >= SAFE) {
     sessions.delete(k);
-    await m.reply(novaWrap("Minesweeper", ["🎉 LADANG BERSIH! KAMU MENANG",
+    await m.reply(raraWrap("Minesweeper", ["🎉 LADANG BERSIH! KAMU MENANG",
       "",
       "```" + render(s, true) + "```",
       "",
@@ -136,7 +136,7 @@ export async function answerHandler(m, sock) {
   }
   resetT(s);
   const n = countAround(i, s.mines);
-  await m.reply(novaWrap("Minesweeper", [n === 0 ? "Sel " + raw + " aman — bebas bom di sekitar" : "Sel " + raw + " aman — " + n + " bom di sekitarnya",
+  await m.reply(raraWrap("Minesweeper", [n === 0 ? "Sel " + raw + " aman — bebas bom di sekitar" : "Sel " + raw + " aman — " + n + " bom di sekitarnya",
     "",
     "```" + render(s) + "```",
     "",

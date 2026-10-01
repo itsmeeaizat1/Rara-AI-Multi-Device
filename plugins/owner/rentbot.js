@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import fs from "fs";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "sewabot",
   alias: ["sewabot"],
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   if (args === "off") {
     db.db.data.sewa.enabled = false;
     db.db.write();
-    return m.reply(novaWrap("Sewabot", `✅ Sistem sewa dinonaktifkan\n\nBot tidak akan meninggalkan grup manapun.`));
+    return m.reply(raraWrap("Sewabot", `✅ Sistem sewa dinonaktifkan\n\nBot tidak akan meninggalkan grup manapun.`));
   }
   if (args === "on") {
     const pending = pendingConfirmations.get(m.sender);
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
       pending.type === "sewabot_on" &&
       Date.now() - pending.timestamp < 60000
     ) {
-      return m.reply(novaWrap("Sewabot", `🕕 Sudah ada permintaan pending\n\nKetik *${m.prefix}sewabot confirm* untuk lanjut\nKetik *${m.prefix}sewabot cancel* untuk batal`));
+      return m.reply(raraWrap("Sewabot", `🕕 Sudah ada permintaan pending\n\nKetik *${m.prefix}sewabot confirm* untuk lanjut\nKetik *${m.prefix}sewabot cancel* untuk batal`));
     }
     pendingConfirmations.set(m.sender, {
       type: "sewabot_on",
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
       if (pendingConfirmations.get(m.sender)?.type === "sewabot_on")
         pendingConfirmations.delete(m.sender);
     }, 60000);
-    return m.reply(novaWrap("sewabot", `⚠️ *KONFIRMASI AKTIVASI SEWA*\n\n` +
+    return m.reply(raraWrap("sewabot", `⚠️ *KONFIRMASI AKTIVASI SEWA*\n\n` +
         `Jika diaktifkan:\n` +
         `✅ ${sewaGroups.length} grup ter-whitelist tetap aman\n` +
         `❌ Semua grup lain akan ditinggalkan!\n\n` +
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
   if (args === "confirm" || args === "yes" || args === "y") {
     const pending = pendingConfirmations.get(m.sender);
     if (!pending || pending.type !== "sewabot_on") {
-      return m.reply(novaWrap("Sewabot", `❌ Tidak ada permintaan pending\nKetik *${m.prefix}sewabot on* dulu`));
+      return m.reply(raraWrap("Sewabot", `❌ Tidak ada permintaan pending\nKetik *${m.prefix}sewabot on* dulu`));
     }
     pendingConfirmations.delete(m.sender);
     db.db.data.sewa.enabled = true;
@@ -127,13 +127,13 @@ async function handler(m, { sock }) {
           `Gagal: *${failedCount}* grup`,
       );
     } catch (e) {
-      return m.reply(novaWrap("sewabot", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("sewabot", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
   if (args === "leave") {
     if (!currentStatus)
-      return m.reply(novaWrap("Sewabot", `❌ Aktifkan sewabot dulu dengan *${m.prefix}sewabot on*`));
-    await m.reply(novaWrap("Sewabot", `🕕 Mengambil daftar grup...`));
+      return m.reply(raraWrap("Sewabot", `❌ Aktifkan sewabot dulu dengan *${m.prefix}sewabot on*`));
+    await m.reply(raraWrap("Sewabot", `🕕 Mengambil daftar grup...`));
     global.sewaLeaving = true;
     try {
       global.isFetchingGroups = true;
@@ -145,9 +145,9 @@ async function handler(m, { sock }) {
       );
       if (unlistedGroups.length === 0) {
         delete global.sewaLeaving;
-        return m.reply(novaWrap("Sewabot", `✅ Tidak ada grup yang perlu ditinggalkan`));
+        return m.reply(raraWrap("Sewabot", `✅ Tidak ada grup yang perlu ditinggalkan`));
       }
-      await m.reply(novaWrap("Sewabot", `📊 Total: ${allGroupIds.length} grup\nWhitelist: ${sewaGroups.length}\nAkan keluar dari: ${unlistedGroups.length} grup`));
+      await m.reply(raraWrap("Sewabot", `📊 Total: ${allGroupIds.length} grup\nWhitelist: ${sewaGroups.length}\nAkan keluar dari: ${unlistedGroups.length} grup`));
       let leftCount = 0;
       let failedCount = 0;
       for (const groupId of unlistedGroups) {
@@ -174,13 +174,13 @@ async function handler(m, { sock }) {
       );
     } catch (e) {
       delete global.sewaLeaving;
-      await m.reply(novaWrap("sewabot", te(m.prefix, m.command, m.pushName), "error"));
+      await m.reply(raraWrap("sewabot", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
   if (args === "cancel" || args === "no" || args === "n") {
     const pending = pendingConfirmations.get(m.sender);
     if (!pending || pending.type !== "sewabot_on")
-      return m.reply(novaWrap("Sewabot", `❌ Tidak ada permintaan pending`));
+      return m.reply(raraWrap("Sewabot", `❌ Tidak ada permintaan pending`));
     pendingConfirmations.delete(m.sender);
     return m.reply(
       `❌ Aktivasi dibatalkan\nWhitelist grup dulu dengan *${m.prefix}addsewa*`,

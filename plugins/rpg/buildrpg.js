@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Build — Bangun markas pemain
-import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg, removeGold } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "build", alias: ["build", "buildrpg", "markas"],
@@ -14,20 +14,20 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("buildrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("buildrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
   await animGeneric(m, sock, "🏗️", "Building");
-    if (rpg.build) return m.reply(novaRpgBox("buildrpg", `🏠 Kamu sudah punya markas: *${rpg.build}*`, "info"));
-    if (rpg.gold < 500) return m.reply(novaRpgBox("buildrpg", `💰 Butuh 500 gold. Kamu punya ${rpg.gold}.`, "error"));
+    if (rpg.build) return m.reply(raraRpgBox("buildrpg", `🏠 Kamu sudah punya markas: *${rpg.build}*`, "info"));
+    if (rpg.gold < 500) return m.reply(raraRpgBox("buildrpg", `💰 Butuh 500 gold. Kamu punya ${rpg.gold}.`, "error"));
     removeGold(m, 500, sock);
     rpg.build = "markas kayu";
     rpg.def += 10;
     saveRpg(m, rpg);
     await m.react("🐣");
-    return m.reply(novaRpgBox("buildrpg", `🧱 Kamu membangun *markas kayu*.\nDEF +10. Markas adalah safezone aman dari serangan.`, "success"));
+    return m.reply(raraRpgBox("buildrpg", `🧱 Kamu membangun *markas kayu*.\nDEF +10. Markas adalah safezone aman dari serangan.`, "success"));
   } catch (e) {
     console.error("buildrpg error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("buildrpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("buildrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

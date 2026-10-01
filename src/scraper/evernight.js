@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/scraper/evernight.js — KuroNeko AI via wilz.web.id/api/ai/evernight
 // Request owner 12 Sep 2026: "buat fitur ai baru .kuroai" — API punya sistem
 // SESSION sendiri (token opaque dibalas tiap request) — kirim session lama →

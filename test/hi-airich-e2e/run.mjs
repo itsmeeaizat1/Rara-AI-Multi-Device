@@ -1,4 +1,4 @@
-// E2E hi-airich-e2e — engine AIRich (nova-airich-hi.js) + render .hiaiagent
+// E2E hi-airich-e2e — engine AIRich (rara-airich-hi.js) + render .hiaiagent
 // (dibangun ulang 29 Sep: fitur airich HTML bubble dihapus total, diganti port engine asli)
 import { pathToFileURL } from "node:url";
 import path from "node:path";
@@ -6,7 +6,7 @@ const R = path.resolve(process.cwd());
 let pass = 0, fail = 0, total = 0;
 const ok = (name, cond, extra) => { total++; if (cond) { pass++; console.log("  ✓ " + name); } else { fail++; console.log("  ❌ " + name + (extra ? " → " + String(extra).slice(0, 170) : "")); } };
 
-const { AIRich, generateVerificationMetadata } = await import(pathToFileURL(R + "/src/lib/nova-airich-hi.js").href);
+const { AIRich, generateVerificationMetadata } = await import(pathToFileURL(R + "/src/lib/rara-airich-hi.js").href);
 const hiaiagent = await import(pathToFileURL(R + "/plugins/ai-agent/hiaiagent.js").href);
 
 console.log("─── 1. engine AIRich (port simple.js engine asal) ───");
@@ -63,11 +63,11 @@ const mkM = () => { const rep = []; return { m: { chat: "c1@s.whatsapp.net", rep
   let sm = null;
   const sock4 = { sendMessage: async (jid, msg, o) => { sm = { jid, msg, o }; return { key: { id: "k" } }; } };
   const { m, rep } = mkM();
-  const r4 = await hiaiagent.renderRichResult(sock4, m, { type: "message", messageType: "buttons", messageData: { body: "Pilih salah satu:", footer: "Nova AI", buttons: [{ type: "url", label: "Buka", value: "https://x.com" }, { type: "copy", label: "Copy", value: "abc123" }, { type: "reply", label: "Lagi", value: ".hiaiagent lagi" }] } });
+  const r4 = await hiaiagent.renderRichResult(sock4, m, { type: "message", messageType: "buttons", messageData: { body: "Pilih salah satu:", footer: "Rara AI", buttons: [{ type: "url", label: "Buka", value: "https://x.com" }, { type: "copy", label: "Copy", value: "abc123" }, { type: "reply", label: "Lagi", value: ".hiaiagent lagi" }] } });
   const btns = sm?.msg?.nativeFlow;
   ok("buttons: nativeFlow terkirim — url→useWebview, copy→copy, reply→id", r4 === true && sm?.jid === "c1@s.whatsapp.net" && btns?.length === 3
     && btns[0].url === "https://x.com" && btns[0].useWebview === true && btns[1].copy === "abc123" && btns[2].id === ".hiaiagent lagi"
-    && sm.msg.text.includes("Pilih salah satu:") && sm.msg.footer === "Nova AI", JSON.stringify(btns));
+    && sm.msg.text.includes("Pilih salah satu:") && sm.msg.footer === "Rara AI", JSON.stringify(btns));
 }
 { // buttons gagal → fallback list teks
   const sock5 = { sendMessage: async () => { throw new Error("gak dukung"); } };

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .payment — Katalog Layanan Bot (WhatsApp native carousel, geser
  * kiri/kanan ala katalog toko). 4 kartu:
@@ -20,7 +20,7 @@ import fs from "fs";
 import path from "path";
 import config from "../../config.js";
 import { sewaPrice, PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "payment",
@@ -149,7 +149,7 @@ function buildCard({ image, body, footer, button }) {
 
 async function handler(m, { sock }) {
   try {
-    const botName = config.bot?.name || "Nova AI";
+    const botName = config.bot?.name || "Rara AI";
     const ownerNumber = (config.owner?.number || [])[0] || "";
     const ownerName = config.owner?.name || "Owner";
 
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
       buildCard({
         image: readCardImage("payment-topup-card.jpg"),
         body: buildTopupBody(),
-        footer: `Topup Nova ${botName}`,
+        footer: `Topup Rara ${botName}`,
         button: orderButton(ownerNumber, `Halo ${ownerName}, saya mau topup limit fitur ${botName} 🙏`),
       }),
       buildCard({
@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[PAYMENT] carousel gagal, fallback teks:", e.message);
     const fallback =
-      buildSewaBody(config.bot?.name || "Nova AI") +
+      buildSewaBody(config.bot?.name || "Rara AI") +
       "\n\n" +
       buildPremiumBody() +
       "\n\n" +
@@ -208,7 +208,7 @@ async function handler(m, { sock }) {
       buildDonasiBody() +
       "\n\nHubungi owner: wa.me/" +
       String((config.owner?.number || [])[0] || "").replace(/[^0-9]/g, "");
-    await m.reply(novaWrap("payment", fallback));
+    await m.reply(raraWrap("payment", fallback));
   }
 }
 

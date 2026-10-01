@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nexray-api.js — Scraper untuk api.nexray.web.id (multiple AI endpoints)
 import axios from "axios";
 

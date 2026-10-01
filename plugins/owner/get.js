@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "get",
   alias: ["get"],
@@ -97,7 +97,7 @@ function parseHeaders(headerArgs) {
 
 async function handler(m, { sock }) {
   if (!config.isOwner(m.sender)) {
-    return m.reply(novaWrap("Get", "❌ *Owner Only!*"));
+    return m.reply(raraWrap("Get", "❌ *Owner Only!*"));
   }
 
   let input = m.fullArgs?.trim() || m.text?.trim();
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
     "OPTIONS",
   ];
   if (!validMethods.includes(method)) {
-    return m.reply(novaWrap("get", `❌ Invalid method: ${method}. Valid: ${validMethods.join(", ")}`));
+    return m.reply(raraWrap("get", `❌ Invalid method: ${method}. Valid: ${validMethods.join(", ")}`));
   }
 
   let jsonBody = null;
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
       jsonBody = JSON.parse(jsonMatch[1]);
       input = input.replace(/--json\s+\{[\s\S]*?\}/i, "").trim();
     } catch (e) {
-      return m.reply(novaWrap("get", `❌ Invalid JSON body: ${e.message}`));
+      return m.reply(raraWrap("get", `❌ Invalid JSON body: ${e.message}`));
     }
   }
 
@@ -182,16 +182,16 @@ async function handler(m, { sock }) {
   }
 
   if (isBlockedUrl(url)) {
-    return m.reply(novaWrap("Get", "❌ Localhost / internal / metadata address blocked"));
+    return m.reply(raraWrap("Get", "❌ Localhost / internal / metadata address blocked"));
   }
 
   try {
     new URL(url);
   } catch {
-    return m.reply(novaWrap("get", "❌ Invalid URL"));
+    return m.reply(raraWrap("get", "❌ Invalid URL"));
   }
 
-  await m.reply(novaWrap("Get", `🕕 ${method} ${url} ...`));
+  await m.reply(raraWrap("Get", `🕕 ${method} ${url} ...`));
 
   try {
     const startTime = Date.now();
@@ -202,7 +202,7 @@ async function handler(m, { sock }) {
       validateStatus: () => true,
       responseType: "arraybuffer",
       headers: {
-        "User-Agent": "Nova-Bot/2.0",
+        "User-Agent": "Rara-Bot/2.0",
         Accept: "*/*",
         ...(jsonBody ? { "Content-Type": "application/json" } : {}),
         ...customHeaders,
@@ -367,7 +367,7 @@ Type: ${mimeType || "unknown"}
       );
     }
   } catch (e) {
-    await m.reply(novaWrap("get", `❌ *REQUEST FAILED*\n\n${e.message}`));
+    await m.reply(raraWrap("get", `❌ *REQUEST FAILED*\n\n${e.message}`));
   }
 }
 

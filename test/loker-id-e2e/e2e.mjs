@@ -13,10 +13,10 @@ let pass = 0, fail = 0;
 const t = (label, ok, extra) => { if (ok) { pass++; out("✅ " + label); } else { fail++; out("❌ " + label + (extra ? " — " + extra : "")); } };
 
 const R = process.cwd();
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/loker-id-e2e/nova.json");
-const L = await import(R + "/src/lib/nova-loker-id-sources.js");
-const S = await import(R + "/src/lib/nova-loker-scheduler.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/loker-id-e2e/rara.json");
+const L = await import(R + "/src/lib/rara-loker-id-sources.js");
+const S = await import(R + "/src/lib/rara-loker-scheduler.js");
 
 out("\n— 1. LinkedIn guest API (sumber utama) —");
 const li = await L.fetchLinkedinID({ limit: 8 });

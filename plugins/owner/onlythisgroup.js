@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'onlythisgrup',
@@ -27,27 +27,27 @@ async function handler(m, { sock }) {
         if (current && (current === m.chat || current.jid === m.chat)) {
             db.setting('onlyThisGroup', null)
             db.save()
-            return m.reply(novaWrap("Onlythisgrup", `🔓 *UNLOCKED*\n\nBot kembali aktif di semua grup secara publik.`))
+            return m.reply(raraWrap("Onlythisgrup", `🔓 *UNLOCKED*\n\nBot kembali aktif di semua grup secara publik.`))
         }
 
         const botNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net'
         const groupMetadata = await sock.groupMetadata(m.chat).catch(() => null)
         
         if (!groupMetadata) {
-            return m.reply(novaWrap("onlythisgrup", `❌ Gagal mendapatkan metadata grup.`))
+            return m.reply(raraWrap("onlythisgrup", `❌ Gagal mendapatkan metadata grup.`))
         }
 
         const participants = groupMetadata.participants
         const isBotAdmin = participants.find(p => p.id === botNumber)?.admin !== null
 
         if (!isBotAdmin) {
-            return m.reply(novaWrap("Onlythisgrup", `❌ *AKSES DITOLAK*\n\nBot harus menjadi admin di grup ini terlebih dahulu agar bisa mengambil tautan undangan (link grup).`))
+            return m.reply(raraWrap("Onlythisgrup", `❌ *AKSES DITOLAK*\n\nBot harus menjadi admin di grup ini terlebih dahulu agar bisa mengambil tautan undangan (link grup).`))
         }
 
         const inviteCode = await sock.groupInviteCode(m.chat).catch(() => null)
         
         if (!inviteCode) {
-            return m.reply(novaWrap("onlythisgrup", `❌ Gagal mengambil tautan undangan grup. Pastikan bot adalah admin yang sah.`))
+            return m.reply(raraWrap("onlythisgrup", `❌ Gagal mengambil tautan undangan grup. Pastikan bot adalah admin yang sah.`))
         }
 
         const inviteLink = `https://chat.whatsapp.com/${inviteCode}`
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
             `Ketik \`.onlythisgrup\` lagi untuk membuka kunci.`)
     } catch (error) {
         console.error(error)
-        m.reply(novaWrap("onlythisgrup", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("onlythisgrup", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

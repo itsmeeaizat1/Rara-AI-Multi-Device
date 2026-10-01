@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aibookclub",
@@ -47,12 +47,12 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== START
   if (sub === "start" || sub === "mulai") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Book Club", "Khusus admin/owner."));
+      await m.reply(raraWrap("Book Club", "Khusus admin/owner."));
       return { handled: true };
     }
     const title = args.slice(2).join(" ").trim();
     if (!title) {
-      await m.reply(novaWrap("Book Club", "Format: " + prefix + "bookclub start <judul buku>\n💡 *Contoh:* " + prefix + "bookclub start Atomic Habits"));
+      await m.reply(raraWrap("Book Club", "Format: " + prefix + "bookclub start <judul buku>\n💡 *Contoh:* " + prefix + "bookclub start Atomic Habits"));
       return { handled: true };
     }
     const deadline = parseInt(args[args.length - 1] || "7", 10);
@@ -67,7 +67,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       status: "reading",
     };
     saveClub(db, gid, data);
-    await m.reply(novaWrap("Book Club", [
+    await m.reply(raraWrap("Book Club", [
       "Buku: " + title,
       "Durasi: " + data.deadlineDays + " hari",
       "Status: Reading",
@@ -83,16 +83,16 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "join" || sub === "ikut") {
     const club = getClub(db, gid);
     if (!club) {
-      await m.reply(novaWrap("Book Club", "Belum ada book club. Ketik " + prefix + "bookclub start <judul>."));
+      await m.reply(raraWrap("Book Club", "Belum ada book club. Ketik " + prefix + "bookclub start <judul>."));
       return { handled: true };
     }
     if (club.members.includes(m.sender)) {
-      await m.reply(novaWrap("Book Club", "Sudah join."));
+      await m.reply(raraWrap("Book Club", "Sudah join."));
       return { handled: true };
     }
     club.members.push(m.sender);
     saveClub(db, gid, club);
-    await m.reply(novaWrap("Book Club", "Join " + club.title + "!\nMember: " + club.members.length));
+    await m.reply(raraWrap("Book Club", "Join " + club.title + "!\nMember: " + club.members.length));
     return { handled: true };
   }
 
@@ -100,19 +100,19 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "discuss" || sub === "diskusi") {
     const club = getClub(db, gid);
     if (!club) {
-      await m.reply(novaWrap("Book Club", "Belum ada book club."));
+      await m.reply(raraWrap("Book Club", "Belum ada book club."));
       return { handled: true };
     }
     const bab = args.slice(2).join(" ").trim() || "Bab 1";
     try {
       const prompt = "Buku: " + club.title + "\nBuat 3 pertanyaan diskusi menarik untuk " + bab + ". Singkat, provoking, dalam bahasa Indonesia. Hanya 3 pertanyaan dengan nomor.";
-      const result = await UnlimitedAI(prompt, "nova-ai");
+      const result = await UnlimitedAI(prompt, "rara-ai");
       const questions = result?.success ? result.response : "Gagal generate pertanyaan nih, coba lagi ya";
       club.discussions.push({ bab, questions, ts: Date.now(), by: m.sender });
       saveClub(db, gid, club);
-      await m.reply(novaWrap("Book Club Discussion", "Buku: " + club.title + "\n" + bab + "\n\n" + questions));
+      await m.reply(raraWrap("Book Club Discussion", "Buku: " + club.title + "\n" + bab + "\n\n" + questions));
     } catch {
-      await m.reply(novaError("AIBookClub", "Gagal generate pertanyaan nih"));
+      await m.reply(raraError("AIBookClub", "Gagal generate pertanyaan nih"));
     }
     return { handled: true };
   }
@@ -121,17 +121,17 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "summary" || sub === "ringkas") {
     const club = getClub(db, gid);
     if (!club) {
-      await m.reply(novaWrap("Book Club", "Belum ada book club."));
+      await m.reply(raraWrap("Book Club", "Belum ada book club."));
       return { handled: true };
     }
     const text = args.slice(2).join(" ").trim();
     if (!text) {
-      await m.reply(novaWrap("Book Club", "Format: " + prefix + "bookclub summary <ringkasan bab kamu>"));
+      await m.reply(raraWrap("Book Club", "Format: " + prefix + "bookclub summary <ringkasan bab kamu>"));
       return { handled: true };
     }
     club.summaries[m.sender] = { text, ts: Date.now() };
     saveClub(db, gid, club);
-    await m.reply(novaWrap("Book Club", "Ringkasan tersimpan untuk " + club.title + "!\nTotal submit: " + Object.keys(club.summaries).length + "/" + club.members.length));
+    await m.reply(raraWrap("Book Club", "Ringkasan tersimpan untuk " + club.title + "!\nTotal submit: " + Object.keys(club.summaries).length + "/" + club.members.length));
     return { handled: true };
   }
 
@@ -139,7 +139,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "info" || sub === "cek" || !sub) {
     const club = getClub(db, gid);
     if (!club) {
-      await m.reply(novaWrap("Book Club", [
+      await m.reply(raraWrap("Book Club", [
         "Belum ada book club aktif.",
         "",
         "Cara pakai:",
@@ -153,7 +153,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     const daysLeft = Math.ceil((club.startedAt + club.deadlineDays * 86400000 - Date.now()) / 86400000);
-    await m.reply(novaWrap("Book Club Info", [
+    await m.reply(raraWrap("Book Club Info", [
       "Buku: " + club.title,
       "Member: " + club.members.length,
       "Diskusi: " + club.discussions.length,
@@ -167,15 +167,15 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== END
   if (sub === "end" || sub === "selesai") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Book Club", "Khusus admin/owner."));
+      await m.reply(raraWrap("Book Club", "Khusus admin/owner."));
       return { handled: true };
     }
     delClub(db, gid);
-    await m.reply(novaWrap("Book Club", "Book club diakhiri."));
+    await m.reply(raraWrap("Book Club", "Book club diakhiri."));
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Book Club", "Ketik " + prefix + "bookclub info."));
+  await m.reply(raraWrap("Book Club", "Ketik " + prefix + "bookclub info."));
   return { handled: true };
 }
 

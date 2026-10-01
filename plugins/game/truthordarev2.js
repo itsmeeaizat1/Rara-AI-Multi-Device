@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // truthordarev2.js — Truth or Dare v2 via API + local fallback
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "truthordarev2",
@@ -93,7 +93,7 @@ async function handler(m, { sock, config, db }) {
     let rating = (m.args?.[1] || "pg").toLowerCase();
 
     if (!type || type === "help") {
-      return m.reply(novaWrap("Truth or Dare v2", [
+      return m.reply(raraWrap("Truth or Dare v2", [
         "Truth or Dare via API + local fallback",
         "",
         "📌 *Cara Pakai:*",
@@ -107,7 +107,7 @@ async function handler(m, { sock, config, db }) {
     }
 
     if (type !== "truth" && type !== "dare") {
-      return m.reply(novaWrap("Truth or Dare v2", [
+      return m.reply(raraWrap("Truth or Dare v2", [
         "Tipe tidak valid!",
         `Pilih: ${m.prefix}truthordarev2 truth atau ${m.prefix}truthordarev2 dare`,
       ]));
@@ -126,7 +126,7 @@ async function handler(m, { sock, config, db }) {
     const typeLabel = type === "truth" ? "🤔 Truth" : "😈 Dare";
     const ratingLabel = rating === "pg" ? "Safe" : rating === "pg13" ? "Remaja" : "18+";
     await m.react("🐣");
-    return m.reply(novaWrap("Truth or Dare v2", [
+    return m.reply(raraWrap("Truth or Dare v2", [
       `${typeLabel} (${ratingLabel})`,
       "",
       question,

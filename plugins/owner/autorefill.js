@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, bracketBox, tipText } from "../../src/lib/rara-menu-style.js";
 import {
   enableRefill,
   disableRefill,
   getRefillStatus,
   triggerManualRefill,
-} from "../../src/lib/nova-auto-refill.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+} from "../../src/lib/rara-auto-refill.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "autorefill",
@@ -64,19 +64,19 @@ async function handler(m, { sock }) {
       const timeArg = args[1] || "00:00";
 
       if (!timeArg.match(/^\d{1,2}:\d{2}$/)) {
-        return m.reply(novaWrap("autorefill", toSC("Format jam tidak valid! Gunakan HH:MM")));
+        return m.reply(raraWrap("autorefill", toSC("Format jam tidak valid! Gunakan HH:MM")));
       }
 
       const [hour, minute] = timeArg.split(":").map(Number);
 
       if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        return m.reply(novaWrap("autorefill", toSC("Jam tidak valid!")));
+        return m.reply(raraWrap("autorefill", toSC("Jam tidak valid!")));
       }
 
       const result = enableRefill(hour, minute, sock);
 
       if (!result.success) {
-        return m.reply(novaWrap("autorefill", `❌ ${toSC(result.error)}`));
+        return m.reply(raraWrap("autorefill", `❌ ${toSC(result.error)}`));
       }
       return m.reply(
         bracketBox("✅", toSC("Auto Refill Diaktifkan"), [
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableRefill();
-      return m.reply(novaWrap("autorefill", toSC("Auto Refill dinonaktifkan")));
+      return m.reply(raraWrap("autorefill", toSC("Auto Refill dinonaktifkan")));
     }
 
     case "status":
@@ -114,9 +114,9 @@ async function handler(m, { sock }) {
     case "trigger": {
       try {
         await triggerManualRefill(sock);
-        return m.reply(novaWrap("autorefill", toSC("Refill dijalankan! Energi semua user sudah di-reset + notif dikirim.")));
+        return m.reply(raraWrap("autorefill", toSC("Refill dijalankan! Energi semua user sudah di-reset + notif dikirim.")));
       } catch (error) {
-        return m.reply(novaWrap("autorefill", te(m.prefix, m.command, m.pushName), "error"));
+        return m.reply(raraWrap("autorefill", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 

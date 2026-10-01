@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // twitterdl.js — Download video dari Twitter/X (Sanka API + scrape fallback)
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const url = m.args?.[0]?.trim();
     if (!url || (!url.includes("twitter") && !url.includes("x.com"))) {
-      return m.reply(novaWrap("twitterdl", `Masukkan URL Twitter/X!\n\nContoh: .twitterdl https://twitter.com/user/status/xxx`, "guide"));
+      return m.reply(raraWrap("twitterdl", `Masukkan URL Twitter/X!\n\nContoh: .twitterdl https://twitter.com/user/status/xxx`, "guide"));
     }
 
     const result = await twitterDownload(url);
@@ -122,11 +122,11 @@ async function handler(m, { sock }) {
       caption,
     }, { quoted: m });
     await m.react("🐣");
-    await m.reply(novaBerhasil("twitterdl"));
+    await m.reply(raraBerhasil("twitterdl"));
   } catch (err) {
     console.error("twitterdl error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("twitterdl", "Gagal download video Twitter. Pastikan URL valid dan contain video!", "error"));
+    return m.reply(raraWrap("twitterdl", "Gagal download video Twitter. Pastikan URL valid dan contain video!", "error"));
   }
 }
 

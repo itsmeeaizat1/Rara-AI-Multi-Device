@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // gachaitem.js — GACHA ITEM BERBAYAR (request owner 21 Sep 2026): rolling item dengan ekonomi sungguhan.
 // Harga 2.000 uang/pull (atomic spendCash), limit 5x/hari reset 00:00 WIB (state {tanggal, jumlahHariIni}),
 // cooldown 3 dtk + lock in-flight anti spam, pity 5x tanpa Epic+ → garansi Epic+ lalu reset (.mypity),
@@ -6,12 +6,12 @@
 // Transaksi: cek kuota → cek saldo → potong atomic → rolling → kirim hasil → SUKSES baru catat kuota+reward;
 // kirim gagal → REFUND 2.000. EV/pull ±1.300 < harga 2.000 (deflasi, rumus di gachaExpectedValue()).
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
-import { getCash, spendCash, addCash, addGems, addItem, ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
+import { getCash, spendCash, addCash, addGems, addItem, ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { addExpWithLevelCheck } from "../../src/lib/rara-level.js";
 import { playSlotAnim } from "../../src/lib/libanimationrpg/libgachaitemrpg.js";
-import { getLocalDateObject } from "../../src/lib/nova-time.js";
+import { getLocalDateObject } from "../../src/lib/rara-time.js";
 
 // ── knob ──
 const PULL_PRICE = 2000;
@@ -235,7 +235,7 @@ async function handler(m, { sock, config }) {
 
   // ── .gachaiteminfo — transparansi loot table ──
   if (cmd === "gachaiteminfo") {
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "gacha", icon: "🎰",
       flavor: "🎰 *INFO GACHA ITEM — LOOT TABLE RESMI*",
       body: [
@@ -264,7 +264,7 @@ async function handler(m, { sock, config }) {
   if (cmd === "mypity") {
     const u = ensureGachaUser(m);
     const sisa = DAILY_LIMIT - u.jumlahHariIni;
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "gacha", icon: "🍀",
       flavor: "🍀 *STATISTIK GACHA KAMU*",
       body: [
@@ -282,7 +282,7 @@ async function handler(m, { sock, config }) {
   // ═══ .gachaitem — rolling utama ═══
   // 0. lock in-flight: spam saat rolling jalan = ditolak
   if (inflight.has(m.sender)) {
-    return m.reply(novaGameBox({ title: "gacha", icon: "⏳", flavor: "⏳ *SABAR, DETEKTIF GACHA!*", body: "Rolling kamu yang sebelumnya masih jalan! Tunggu hasilnya dulu ya 😊" }));
+    return m.reply(raraGameBox({ title: "gacha", icon: "⏳", flavor: "⏳ *SABAR, DETEKTIF GACHA!*", body: "Rolling kamu yang sebelumnya masih jalan! Tunggu hasilnya dulu ya 😊" }));
   }
   inflight.add(m.sender);
   try {
@@ -291,24 +291,24 @@ async function handler(m, { sock, config }) {
     const gu = ensureGachaUser(m);
     if (nowS - (gu.lastRollAt || 0) < COOLDOWN_MS) {
       const tunggu = Math.ceil((COOLDOWN_MS - (nowS - gu.lastRollAt)) / 1000);
-      return m.reply(novaGameBox({ title: "gacha", icon: "❄️", flavor: "❄️ *TERLALU CEPAT!*", body: `Tunggu ${tunggu} detik lagi antar pull ya — mesin gacha masih panas 🔥` }));
+      return m.reply(raraGameBox({ title: "gacha", icon: "❄️", flavor: "❄️ *TERLALU CEPAT!*", body: `Tunggu ${tunggu} detik lagi antar pull ya — mesin gacha masih panas 🔥` }));
     }
 
     // 1. CEK KUOTA HARIAN dulu
     if (gu.jumlahHariIni >= DAILY_LIMIT) {
-      return m.reply(novaGameBox({ title: "gacha", icon: "🚫", flavor: "🚫 *KUOTA HABIS!*", body: `Kuota gachamu hari ini sudah habis (${DAILY_LIMIT}/${DAILY_LIMIT})! Reset jam 00:00 ya ⏰` }));
+      return m.reply(raraGameBox({ title: "gacha", icon: "🚫", flavor: "🚫 *KUOTA HABIS!*", body: `Kuota gachamu hari ini sudah habis (${DAILY_LIMIT}/${DAILY_LIMIT})! Reset jam 00:00 ya ⏰` }));
     }
 
     // 2. CEK SALDO
     const saldo = getCash(m);
     if (saldo < PULL_PRICE) {
       const kurang = PULL_PRICE - saldo;
-      return m.reply(novaGameBox({ title: "gacha", icon: "💸", flavor: "💸 *SALDO BELUM CUKUP!*", body: `Saldomu ${fmt(saldo)}, kurang ${fmt(kurang)} lagi! Coba .daily atau kerjakan misi dulu ya 😊` }));
+      return m.reply(raraGameBox({ title: "gacha", icon: "💸", flavor: "💸 *SALDO BELUM CUKUP!*", body: `Saldomu ${fmt(saldo)}, kurang ${fmt(kurang)} lagi! Coba .daily atau kerjakan misi dulu ya 😊` }));
     }
 
     // 3+4. POTONG SALDO — ATOMIC (cek + potong satu langkah via spendCash)
     if (!spendCash(m, PULL_PRICE)) {
-      return m.reply(novaGameBox({ title: "gacha", icon: "💸", flavor: "💸 *TRANSAKSI GAGAL!*", body: "Saldo berubah di tengah jalan — pull dibatalkan, uangmu aman. Coba lagi ya!" }));
+      return m.reply(raraGameBox({ title: "gacha", icon: "💸", flavor: "💸 *TRANSAKSI GAGAL!*", body: "Saldo berubah di tengah jalan — pull dibatalkan, uangmu aman. Coba lagi ya!" }));
     }
 
     // 5+6. ROLLING
@@ -318,7 +318,7 @@ async function handler(m, { sock, config }) {
     const slotOk = await playSlotAnim(sock, m.chat, REEL_ICONS, SLOT_ANIM_MS);
     if (!slotOk) {
       try {
-        await m.reply(novaGameBox({ title: "gacha", icon: "🎲", flavor: "🎲 *GACHA BERPUTAR…*", body: pick(ROLLING_TEXTS) }));
+        await m.reply(raraGameBox({ title: "gacha", icon: "🎲", flavor: "🎲 *GACHA BERPUTAR…*", body: pick(ROLLING_TEXTS) }));
       } catch (e) {
         console.error("[gacha] animasi rolling gagal terkirim (lanjut ke hasil):", e);
       }
@@ -343,7 +343,7 @@ async function handler(m, { sock, config }) {
 
     let sentOk = true;
     try {
-      await m.reply(novaGameBox({ title: "gacha", icon: LOOT[rarity].icon, flavor: `${LOOT[rarity].icon} *HASIL GACHA: ${LOOT[rarity].name}!*`, body: hasilBody }));
+      await m.reply(raraGameBox({ title: "gacha", icon: LOOT[rarity].icon, flavor: `${LOOT[rarity].icon} *HASIL GACHA: ${LOOT[rarity].name}!*`, body: hasilBody }));
     } catch (e) {
       sentOk = false;
       console.error("[gacha] pengiriman hasil GAGAL — refund:", e);
@@ -351,7 +351,7 @@ async function handler(m, { sock, config }) {
     if (!sentOk) {
       addCash(m, PULL_PRICE);
       console.log(`[gacha] refund ${PULL_PRICE} ke ${m.sender} (pengiriman gagal)`);
-      return m.reply(novaGameBox({ title: "gacha", icon: "🛡️", flavor: "🛡️ *HASIL GAGAL TERKIRIM — UANG KEMBALI!*", body: `Pesan hasil gak terkirim, jadi ${fmt(PULL_PRICE)} uangmu dikembalikan penuh. Coba pull lagi ya!` })).catch((e) => console.error("[gacha] pesan refund juga gagal:", e));
+      return m.reply(raraGameBox({ title: "gacha", icon: "🛡️", flavor: "🛡️ *HASIL GAGAL TERKIRIM — UANG KEMBALI!*", body: `Pesan hasil gak terkirim, jadi ${fmt(PULL_PRICE)} uangmu dikembalikan penuh. Coba pull lagi ya!` })).catch((e) => console.error("[gacha] pesan refund juga gagal:", e));
     }
 
     // 8. SUKSES terkirim → BARU catat state + berikan reward
@@ -371,7 +371,7 @@ async function handler(m, { sock, config }) {
     if (rarity === "mitos") {
       const nama = m.pushName || "Seseorang";
       await sock.sendMessage(m.chat, {
-        text: novaGameBox({
+        text: raraGameBox({
           title: "gacha", icon: "🎊",
           flavor: "🎊 *PELANGGARAN SEJARAH GACHA!*",
           body: [

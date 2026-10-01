@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import axios from 'axios'
 import FormData from 'form-data'
 
@@ -78,19 +78,19 @@ async function handler(m, { sock }) {
     let value = match[3]?.trim() || ''
 
     if (idx < 0 || idx >= lists.length) {
-        return m.reply(novaWrap("editlist", `❌ *nomor tidak valid.*\n\nRentang: 1-${lists.length} 📋`))
+        return m.reply(raraWrap("editlist", `❌ *nomor tidak valid.*\n\nRentang: 1-${lists.length} 📋`))
     }
 
     const item = lists[idx]
 
     switch (field) {
         case 'nama': {
-            if (!value || value.length < 2) return m.reply(novaWrap("editlist", `❌ *nama terlalu pendek.* Minimal 2 karakter 🏷️`))
+            if (!value || value.length < 2) return m.reply(raraWrap("editlist", `❌ *nama terlalu pendek.* Minimal 2 karakter 🏷️`))
             item.name = value
             break
         }
         case 'isi': {
-            if (!value || value.length < 3) return m.reply(novaWrap("editlist", `❌ *isi terlalu pendek.* Minimal 3 karakter 📝`))
+            if (!value || value.length < 3) return m.reply(raraWrap("editlist", `❌ *isi terlalu pendek.* Minimal 3 karakter 📝`))
             item.content = value.replace(/;;/g, '\n')
             item.description = item.content.substring(0, 80).replace(/\n/g, ' ')
             break
@@ -102,37 +102,37 @@ async function handler(m, { sock }) {
         case 'gambar': {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isImage || m.quoted?.type === 'imageMessage')
             const isDirectImage = m.isImage
-            if (!hasMedia && !isDirectImage) return m.reply(novaWrap("editlist", `🖼️ *reply atau kirim gambar baru.*\n\nKirim gambar lalu reply dengan command ini.`))
+            if (!hasMedia && !isDirectImage) return m.reply(raraWrap("editlist", `🖼️ *reply atau kirim gambar baru.*\n\nKirim gambar lalu reply dengan command ini.`))
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
                     const url = await uploadToCatbox(buffer, 'image.jpg')
                     if (url) item.image = url
-                    else return m.reply(novaWrap("editlist", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
+                    else return m.reply(raraWrap("editlist", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
                 }
             } catch {
-                return m.reply(novaWrap("editlist", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
+                return m.reply(raraWrap("editlist", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
             }
             break
         }
         case 'video': {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isVideo || m.quoted?.type === 'videoMessage')
             const isDirectVideo = m.isVideo
-            if (!hasMedia && !isDirectVideo) return m.reply(novaWrap("editlist", `🎬 *reply atau kirim video baru.*\n\nKirim video lalu reply dengan command ini.`))
+            if (!hasMedia && !isDirectVideo) return m.reply(raraWrap("editlist", `🎬 *reply atau kirim video baru.*\n\nKirim video lalu reply dengan command ini.`))
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
                     const url = await uploadToCatbox(buffer, 'video.mp4')
                     if (url) item.video = url
-                    else return m.reply(novaWrap("editlist", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
+                    else return m.reply(raraWrap("editlist", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
                 }
             } catch {
-                return m.reply(novaWrap("editlist", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
+                return m.reply(raraWrap("editlist", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
             }
             break
         }
         default:
-            return m.reply(novaWrap("editlist", `❌ *field tidak dikenali.*\n\nGunakan: nama, isi, deskripsi, gambar, video 📋`))
+            return m.reply(raraWrap("editlist", `❌ *field tidak dikenali.*\n\nGunakan: nama, isi, deskripsi, gambar, video 📋`))
     }
 
     db.setting('storeLists', lists)
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     if (field === 'video') reply += `🎬 Video: ✅\n`
     reply += `\n👀 _Lihat perubahan: \`${m.prefix}list\`_`
 
-    return await m.reply(novaWrap("editlist", reply))
+    return await m.reply(raraWrap("editlist", reply))
 }
 
 export { pluginConfig as config, handler }

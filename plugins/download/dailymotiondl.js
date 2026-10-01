@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { execFile } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import os from "os";
 import path from "path";
 import { DailymotionDL } from "../../src/scraper/dailymotion.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     const result = await DailymotionDL(text);
 
     if (!result.status) {
-      return m.reply(novaGagal("Dailymotion"));
+      return m.reply(raraGagal("Dailymotion"));
     }
 
     const caption = mediaCaption({
@@ -124,12 +124,12 @@ async function handler(m, { sock }) {
         },
         { quoted: m },
       );
-      await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("Dailymotion"));
+      await m.react("🐣"); await m.react("🐣"); m.reply(raraBerhasil("Dailymotion"));
       await offerConvert(sock, m, { buffer, type: "video", platform: "Dailymotion", title: result.title, sourceUrl: text });
     }
   } catch (e) {
     console.error(e);
-    m.reply(novaGangguan("Dailymotion"));
+    m.reply(raraGangguan("Dailymotion"));
   }
 }
 

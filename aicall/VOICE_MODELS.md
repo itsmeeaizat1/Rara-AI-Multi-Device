@@ -86,7 +86,7 @@ Suara manusia realistis berintonasi alami dari OpenAI Audio TTS.
 
 | Voice Name (`TTS_VOICE`) | Gender | Karakteristik Suara |
 | :--- | :--- | :--- |
-| **`nova`** ⭐ | Wanita | Ramah, hangat, & energik (Default). |
+| **`rara`** ⭐ | Wanita | Ramah, hangat, & energik (Default). |
 | **`shimmer`** | Wanita | Jernih, lembut, & ekspresif. |
 | **`coral`** | Wanita | Bernada santai & natural. |
 | **`sage`** | Wanita | Berwibawa & profesional. |

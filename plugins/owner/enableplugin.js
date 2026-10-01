@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "enableplugin",
   alias: ["enableplugin"],
@@ -67,13 +67,13 @@ async function handler(m, { sock }) {
   const found = await findPluginFile(pluginName);
 
   if (!found) {
-    return m.reply(novaWrap("Enableplugin", `❌ Plugin *${pluginName}* tidak ditemukan!`));
+    return m.reply(raraWrap("Enableplugin", `❌ Plugin *${pluginName}* tidak ditemukan!`));
   }
 
   const { filePath, plugin, category, file } = found;
 
   if (plugin.config.isEnabled !== false) {
-    return m.reply(novaWrap("Enableplugin", `⚠️ Plugin *${pluginName}* sudah aktif!`));
+    return m.reply(raraWrap("Enableplugin", `⚠️ Plugin *${pluginName}* sudah aktif!`));
   }
 
   try {
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
 
     fs.writeFileSync(filePath, content);
 
-    await m.reply(novaWrap("enableplugin", `✅ *Plugin Enabled*\n\n` +
+    await m.reply(raraWrap("enableplugin", `✅ *Plugin Enabled*\n\n` +
         `📦 Plugin: *${plugin.config.name}*\n` +
         `🏷️ Category: *${category}*\n` +
         `📄 File: *${file}*\n` +
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
         `\n` +
         `Restart bot atau gunakan hot reload untuk apply.`));
   } catch (error) {
-    await m.reply(novaWrap("enableplugin", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(raraWrap("enableplugin", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

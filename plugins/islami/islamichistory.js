@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "sejarahislam",
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     if (action === "info") {
       const num = parseInt(args[1]);
       if (!num || num < 1 || num > 114) {
-        return m.reply(novaWrap("Sejarahislam", "Format: .sejarahislam info <1-114>"));
+        return m.reply(raraWrap("Sejarahislam", "Format: .sejarahislam info <1-114>"));
       }
       const data = await fetchJson(EQURAN_API + "/" + num);
       const s = data.data || data;
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     if (action === "turun") {
       const tempat = args[1];
       if (!tempat || (tempat !== "mekah" && tempat !== "madinah")) {
-        return m.reply(novaWrap("Sejarahislam", "Pilih: mekah atau madinah\n💡 *Contoh:* .sejarahislam turun mekah"));
+        return m.reply(raraWrap("Sejarahislam", "Pilih: mekah atau madinah\n💡 *Contoh:* .sejarahislam turun mekah"));
       }
 
       const res = await fetchJson(EQURAN_API);
@@ -97,10 +97,10 @@ async function handler(m, { sock }) {
       return await m.reply(txt);
     }
 
-    return m.reply(novaWrap("Sejarahislam", "Perintah tidak valid!\n\nKetik .sejarahislam buat lihat semua perintah."));
+    return m.reply(raraWrap("Sejarahislam", "Perintah tidak valid!\n\nKetik .sejarahislam buat lihat semua perintah."));
   } catch (error) {
     await m.react("❌");
-    return m.reply(novaWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));
+    return m.reply(raraWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));
   }
 }
 

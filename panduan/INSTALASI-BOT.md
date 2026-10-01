@@ -1,4 +1,4 @@
-# 🚀 Panduan INSTALASI BOT NOVA
+# 🚀 Panduan INSTALASI BOT RARA
 
 Urutan: **set config (nomor owner & nomor bot) → instalasi → penggunaan menu**.
 
@@ -22,7 +22,7 @@ Atur juga nama bot di `.env`:
 
 ```bash
 cp .env.example .env
-nano .env    # BOT_NAME=Nova AI
+nano .env    # BOT_NAME=Rara AI
 ```
 
 **Kenapa duluan?** Biar pas bot pertama kali nyala, langsung nyambung ke
@@ -32,7 +32,7 @@ nomor owner — gak perlu edit-edit lagi setelahnya.
 
 ```bash
 git clone https://github.com/itsmeeaizat1/Nova-AI-Multi-Device.git
-cd Nova-AI-Multi-Device
+cd Rara-AI-Multi-Device
 ```
 
 ## 3. Instalasi
@@ -76,8 +76,8 @@ Ini sekalian pasang 9router + semua library bot (termasuk Baileys
 ### 3c. Jalankan + pairing
 
 ```bash
-pm2 start index.js --name nova-bot
-pm2 logs nova-bot
+pm2 start index.js --name rara-bot
+pm2 logs rara-bot
 # → pairing code muncul di log → masukkan di nomor bot (WA → Perangkat Tertaut)
 pm2 save
 pm2 startup    # biar ikut nyala saat VPS reboot
@@ -99,15 +99,15 @@ Setelah bot nyala dan pairing sukses:
 ## 5. Update Bot
 
 ```bash
-cd Nova-AI-Multi-Device
+cd Rara-AI-Multi-Device
 git pull
-pm2 restart nova-bot
+pm2 restart rara-bot
 ```
 
 ## 6. Troubleshooting
 
 - **Gak muncul pairing code** → hapus folder sesi lama kalau perangkat
-  penuh (WA maks 4 perangkat tertaut), lalu `pm2 restart nova-bot`.
+  penuh (WA maks 4 perangkat tertaut), lalu `pm2 restart rara-bot`.
 - **Npm install error** → pastikan Node >= 22 (`node -v`), versi lama
   gak kompatibel.
 - **Fitur media error** → cek ffmpeg terpasang (`ffmpeg -version`).

@@ -1,5 +1,5 @@
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "block2",
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "👑",
   name: "block2",
   description: "Blokir user",
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
 
     const text =
-      novaWrap("Block", [`Target: *${targetName}*`,
+      raraWrap("Block", [`Target: *${targetName}*`,
         "Status: *berhasil diblokir*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -50,7 +50,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Block", "Gagal nih, coba lagi ya");
+      raraError("Block", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "block");
   }

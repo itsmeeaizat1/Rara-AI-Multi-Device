@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // jadianime — Ubah foto menjadi gaya anime via Gemini Flash (IkyyXD)
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "jadianime",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(novaWrap("JadiAnime", [
+      return m.reply(raraWrap("JadiAnime", [
         "Ubah foto menjadi gaya anime",
         "",
         "CARA PAKAI:",
@@ -59,16 +59,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: novaWrap("JadiAnime", "Berhasil mengubah foto ke gaya anime"),
+        caption: raraWrap("JadiAnime", "Berhasil mengubah foto ke gaya anime"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaWrap("JadiAnime", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
+      await m.reply(raraWrap("JadiAnime", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
     }
   } catch (e) {
     console.error("[becomeanime.js]:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("JadiAnime", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("JadiAnime", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

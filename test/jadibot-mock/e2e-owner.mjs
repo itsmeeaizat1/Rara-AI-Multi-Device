@@ -3,9 +3,9 @@
 // 2. .stopjadibot <nomor lain> dari user jadibot → DITOLAK (fromMe ≠ owner utama)
 // 3. .stopjadibot <nomor lain> dari session utama → BOLEH
 process.on("uncaughtException", (e) => { console.log("UNCAUGHT:", e.stack); process.exit(1); });
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
-import { loadPlugins } from "../../src/lib/nova-plugins.js";
-import { startJadibot, isJadibotActive, stopJadibot } from "../../src/lib/nova-jadibot-manager.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
+import { loadPlugins } from "../../src/lib/rara-plugins.js";
+import { startJadibot, isJadibotActive, stopJadibot } from "../../src/lib/rara-jadibot-manager.js";
 import fs from "fs";
 
 const DBP = "/tmp/jb/db-owner";
@@ -23,9 +23,9 @@ const TARGET = "628700000000@s.whatsapp.net";
 let pass = 0, fail = 0;
 const check = (name, ok, x) => { ok ? (pass++, console.log("PASS — " + name + (x ? " | " + String(x).slice(0, 60) : ""))) : (fail++, console.log("FAIL — " + name + " | " + String(x).slice(0, 120))); };
 
-const mock = await import("./nova-mock.mjs");
+const mock = await import("./rara-mock.mjs");
 const parent = new mock.MockSocket();
-parent.user = { id: MAIN, name: "NovaMain" };
+parent.user = { id: MAIN, name: "RaraMain" };
 
 const mStub = (chat) => ({ chat, sender: chat, prefix: ".", args: [], reply: async () => {}, react: async () => {} });
 

@@ -633,8 +633,8 @@ import db from './hi-db.js';
 import { matchParticipant } from './hi-shim.js';
 import { getApiKeys as getNovaApiKeys } from '../config/env-loader.js';
 
-// ── SHIM NOVA: global engine gak ada di Nova — sediakan default aman ──
-if (!global.settings) global.settings = { botname: 'Nova AI', owner: [], prefix: '.', ai: {}, timezone: 'Asia/Jakarta' };
+// ── SHIM RARA: global engine gak ada di Rara — sediakan default aman ──
+if (!global.settings) global.settings = { botname: 'Rara AI', owner: [], prefix: '.', ai: {}, timezone: 'Asia/Jakarta' };
 if (!global.prefix) global.prefix = '.';
 if (!global.timezone) global.timezone = 'Asia/Jakarta';
 if (!global.DATABASE) global.DATABASE = {};
@@ -840,8 +840,8 @@ async function withSenderLock(jid, fn) {
 export function getApiKeys() {
     let envRaw = process.env.AI_KEYS || '';
     try {
-        const novaKeys = getNovaApiKeys();
-        const val = novaKeys.hiai || '';
+        const raraKeys = getNovaApiKeys();
+        const val = raraKeys.hiai || '';
         if (val) {
             const joined = Array.isArray(val) ? val.join(',') : String(val);
             envRaw = envRaw ? `${envRaw},${joined}` : joined;

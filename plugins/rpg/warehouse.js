@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // warehouse.js — Warehouse/Storage system (store items, expand capacity)
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "warehouse",
@@ -35,12 +35,12 @@ async function handler(m, { sock }) {
     if (subCmd === "store" || subCmd === "simpan") {
       const itemName = m.args.slice(1).join(" ").trim();
       if (!itemName) {
-        return m.reply(novaRpgBox("warehouse", `Mau simpan apa?\n\nContoh: ${m.prefix}warehouse store Iron Sword`, "guide"));
+        return m.reply(raraRpgBox("warehouse", `Mau simpan apa?\n\nContoh: ${m.prefix}warehouse store Iron Sword`, "guide"));
       }
 
       if ((data.items?.length || 0) >= data.slots) {
         await m.react("❌");
-        return m.reply(novaRpgBox("warehouse", `Gudang penuh! (${data.items.length}/${data.slots}). Expand: ${m.prefix}warehouse expand`, "error"));
+        return m.reply(raraRpgBox("warehouse", `Gudang penuh! (${data.items.length}/${data.slots}). Expand: ${m.prefix}warehouse expand`, "error"));
       }
 
       // Ambil dari inventory
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
       const itemIdx = inv.items?.findIndex(i => i.name?.toLowerCase() === itemName.toLowerCase());
       if (itemIdx === -1 || itemIdx === undefined) {
         await m.react("❌");
-        return m.reply(novaRpgBox("warehouse", `Item "${itemName}" tidak ada di inventory.`, "error"));
+        return m.reply(raraRpgBox("warehouse", `Item "${itemName}" tidak ada di inventory.`, "error"));
       }
 
       const item = inv.items.splice(itemIdx, 1)[0];
@@ -60,19 +60,19 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
   await animGeneric(m, sock, "🏪", "Opening Warehouse");
-      return m.reply(novaRpgBox("warehouse", `📦 Disimpan: *${item.name || itemName}*\nGudang: ${data.items.length}/${data.slots}`));
+      return m.reply(raraRpgBox("warehouse", `📦 Disimpan: *${item.name || itemName}*\nGudang: ${data.items.length}/${data.slots}`));
     }
 
     if (subCmd === "take" || subCmd === "ambil") {
       const itemName = m.args.slice(1).join(" ").trim();
       if (!itemName) {
-        return m.reply(novaRpgBox("warehouse", `Mau ambil apa?\n\nContoh: ${m.prefix}warehouse take Iron Sword`, "guide"));
+        return m.reply(raraRpgBox("warehouse", `Mau ambil apa?\n\nContoh: ${m.prefix}warehouse take Iron Sword`, "guide"));
       }
 
       const itemIdx = data.items?.findIndex(i => i.name?.toLowerCase() === itemName.toLowerCase());
       if (itemIdx === -1 || itemIdx === undefined) {
         await m.react("❌");
-        return m.reply(novaRpgBox("warehouse", `Item "${itemName}" tidak ada di gudang.`, "error"));
+        return m.reply(raraRpgBox("warehouse", `Item "${itemName}" tidak ada di gudang.`, "error"));
       }
 
       const item = data.items.splice(itemIdx, 1)[0];
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "inventory", inv);
 
       await m.react("🐣");
-      return m.reply(novaRpgBox("warehouse", `📤 Diambil: *${item.name || itemName}*\nGudang: ${data.items.length}/${data.slots}`));
+      return m.reply(raraRpgBox("warehouse", `📤 Diambil: *${item.name || itemName}*\nGudang: ${data.items.length}/${data.slots}`));
     }
 
     if (subCmd === "expand" || subCmd === "perluas") {
@@ -92,14 +92,14 @@ async function handler(m, { sock }) {
         const gold = await db.getGold?.(m.sender) || 0;
         if (gold < EXPAND_COST) {
           await m.react("❌");
-          return m.reply(novaRpgBox("warehouse", `Gold kurang! Expand butuh ${EXPAND_COST}g.`, "error"));
+          return m.reply(raraRpgBox("warehouse", `Gold kurang! Expand butuh ${EXPAND_COST}g.`, "error"));
         }
         await db.minGold?.(m.sender, EXPAND_COST);
       } catch {}
       data.slots = (data.slots || DEFAULT_SLOTS) + EXPAND_AMOUNT;
       await saveData(db, m.sender, data);
       await m.react("🐣");
-      return m.reply(novaRpgBox("warehouse", `🏗️ Gudang diperluas! +${EXPAND_AMOUNT} slot\nKapasitas: ${data.slots} slot | Biaya: ${EXPAND_COST}g`));
+      return m.reply(raraRpgBox("warehouse", `🏗️ Gudang diperluas! +${EXPAND_AMOUNT} slot\nKapasitas: ${data.slots} slot | Biaya: ${EXPAND_COST}g`));
     }
 
     // LIST (default)
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("warehouse error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("warehouse", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("warehouse", err.message || "Error", "error"));
   }
 }
 

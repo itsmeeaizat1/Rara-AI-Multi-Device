@@ -1,6 +1,6 @@
 // E2E CODEGEN LENGKAP — request owner 12 Sep 2026: "knp agent suruh buat
 // kode (login web topup dll) isi kodenya gak lengkap cm singkat".
-// (1) lib nova-codegen: looksIncomplete heuristik + loop auto-lanjut +
+// (1) lib rara-codegen: looksIncomplete heuristik + loop auto-lanjut +
 // dedup overlap. (2) tool code + createfile .aisuperagent pakai generator
 // baru. (3) prompt planner gak ngajarin placeholder lagi.
 import path from "node:path";
@@ -13,7 +13,7 @@ function t(label, cond, extra) {
 }
 
 const R = path.resolve(".");
-const { looksIncomplete, generateCompleteCode, CODE_EXTS } = await import(R + "/src/lib/nova-codegen.js");
+const { looksIncomplete, generateCompleteCode, CODE_EXTS } = await import(R + "/src/lib/rara-codegen.js");
 
 // ═══ 1. looksIncomplete ═══
 out("— looksIncomplete —");
@@ -89,7 +89,7 @@ t("2m. lang javascript → ext js", gen.ext === "js");
 
 // ═══ 3. tool code .aisuperagent (executor asli + deps.aiChat) ═══
 out("\n— tool code .aisuperagent —");
-const { resetAgentDeps, setAgentDeps } = await import(R + "/src/lib/nova-agent.js");
+const { resetAgentDeps, setAgentDeps } = await import(R + "/src/lib/rara-agent.js");
 const ag = await import(R + "/plugins/ai-agent/agent.js");
 const agHandler = ag.handler;
 // deps.aiChat untuk PLAN + COMPOSE juga — planReply buat mastiin mode tools
@@ -162,12 +162,12 @@ out("\n— prompt planner —");
 const fs = await import("node:fs");
 const agentSrc = fs.readFileSync(R + "/plugins/ai-agent/agent.js", "utf-8");
 const aiagentSrc = fs.readFileSync(R + "/src/lib/aiagent.js", "utf-8");
-const novaAgentSrc = fs.readFileSync(R + "/src/lib/nova-agent.js", "utf-8");
+const raraAgentSrc = fs.readFileSync(R + "/src/lib/rara-agent.js", "utf-8");
 t("5a. aiagent: contoh placeholder KODE LENGKAP dihapus", !aiagentSrc.includes('content":"<!DOCTYPE html> ... KODE LENGKAP ..."'));
 t("5b. aiagent: createfile desc larang placeholder", /HARAM/.test(aiagentSrc) && /MELANJUTKAN kode yang kepotong/.test(aiagentSrc));
 t("5c. aiagent: contoh baru = kode utuh nyata", aiagentSrc.includes("Toko Kue</h1>") && aiagentSrc.includes("RULE kode di content"));
-t("5d. nova-agent: createfile arahin kode program ke tool code", /KALAU USER MINTA KODE PROGRAM\/aplikasi\/web\/script → WAJIB pakai tool code BUKAN createfile/.test(novaAgentSrc));
-t("5e. nova-agent: code spec diminta detail + dilengkapi otomatis", /dilengkapi otomatis kalau kepotong/.test(novaAgentSrc));
+t("5d. rara-agent: createfile arahin kode program ke tool code", /KALAU USER MINTA KODE PROGRAM\/aplikasi\/web\/script → WAJIB pakai tool code BUKAN createfile/.test(raraAgentSrc));
+t("5e. rara-agent: code spec diminta detail + dilengkapi otomatis", /dilengkapi otomatis kalau kepotong/.test(raraAgentSrc));
 t("5f. agent.js: code tool pakai generateCompleteCode", agentSrc.includes("generateCompleteCode") && agentSrc.includes("melengkapi kode"));
 t("5g. CODE_EXTS html ada", CODE_EXTS.has("html") && CODE_EXTS.has("py"));
 

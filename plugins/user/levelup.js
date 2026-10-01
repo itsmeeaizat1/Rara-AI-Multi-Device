@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 const pluginConfig = {
     name: 'levelup',
     alias: ["levelup"],
@@ -28,7 +28,7 @@ function handler(m, { sock }) {
     if (sub === 'on') {
         user.settings.levelupNotif = true
         db.save()
-        return m.reply(novaWrap("Level Up Notif", 
+        return m.reply(raraWrap("Level Up Notif", 
             `Status: *ON* ✅\n` +
             `Kamu akan menerima notifikasi saat naik level!`))
     }
@@ -36,13 +36,13 @@ function handler(m, { sock }) {
     if (sub === 'off') {
         user.settings.levelupNotif = false
         db.save()
-        return m.reply(novaWrap("Level Up Notif", 
+        return m.reply(raraWrap("Level Up Notif", 
             `Status: *off* ❌\n` +
             `Notifikasi level up dinonaktifkan.`))
     }
     
     const status = user.settings.levelupNotif !== false ? 'ON ✅' : 'OFF ❌'
-    return m.reply(novaWrap("Level Up Notif", 
+    return m.reply(raraWrap("Level Up Notif", 
         `Status saat ini: *${status}*\n\n` +
         "" +
         `> \`.levelup on\` - Aktifkan\n` +

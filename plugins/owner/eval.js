@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
 import axios from 'axios'
 import os from 'os'
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import config from '../../config.js'
 import util from 'util'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'eval',
     alias: ["eval"],
@@ -27,7 +27,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, store }) {
     if (!config.isOwner(m.sender)) {
-        return m.rem.reply(novaWrap("Eval", '❌ *Owner Only!*')) }
+        return m.rem.reply(raraWrap("Eval", '❌ *Owner Only!*')) }
 
     const code = m.fullArgs?.trim() || m.text?.trim()
 

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: [
         'bego', 'goblok', 'janda', 'perawan', 'babi', 'tolol', 'pekok', 
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
             .map(p => p.jid)
             .filter(id => id && id !== sock.user?.id?.split(':')[0] + '@s.whatsapp.net')
         if (members.length === 0) {
-            return m.reply(novaWrap("Siapa", `❌ Tidak ada member di grup!`))
+            return m.reply(raraWrap("Siapa", `❌ Tidak ada member di grup!`))
         }
         const randomMember = members[Math.floor(Math.random() * members.length)]
         const positiveWords = ['ganteng', 'cantik', 'keren', 'pro', 'sultan', 'kaya', 'pinter', 'pintar', 'mastah']
@@ -43,10 +43,10 @@ async function handler(m, { sock }) {
         const emoji = isPositive ? '' : '😏'
         const label = isPositive ? 'Yang paling' : 'Anak'
         await m.react("🐣");
-        await m.reply(novaWrap("Siapa", `*${label} ${command} di sini adalah* @${randomMember.split('@')[0]}`))
+        await m.reply(raraWrap("Siapa", `*${label} ${command} di sini adalah* @${randomMember.split('@')[0]}`))
     } catch (error) {
     await m.react("❌");
-        m.reply(novaWrap("siapa", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("siapa", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

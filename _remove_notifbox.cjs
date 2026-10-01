@@ -1,5 +1,5 @@
 const fs = require('fs');
-let code = fs.readFileSync('src/lib/nova-menu-style.js', 'utf8');
+let code = fs.readFileSync('src/lib/rara-menu-style.js', 'utf8');
 
 // Remove notifBox function
 code = code.replace(
@@ -10,5 +10,5 @@ code = code.replace(
 // Remove notifBox from exports
 code = code.replace(/\n  notifBox,/, '');
 
-fs.writeFileSync('src/lib/nova-menu-style.js', code);
+fs.writeFileSync('src/lib/rara-menu-style.js', code);
 console.log('notifBox removed');

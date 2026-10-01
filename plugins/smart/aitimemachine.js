@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aitimemachine",
@@ -49,18 +49,18 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== ADD
   if (sub === "add" || sub === "tambah") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Time Machine", "Khusus admin/owner."));
+      await m.reply(raraWrap("Time Machine", "Khusus admin/owner."));
       return { handled: true };
     }
     const event = args.slice(2).join(" ").trim();
     if (!event) {
-      await m.reply(novaWrap("Time Machine", "Format: " + prefix + "timemachine add <momen>\n💡 *Contoh:* " + prefix + "timemachine add Grup capai 100 member"));
+      await m.reply(raraWrap("Time Machine", "Format: " + prefix + "timemachine add <momen>\n💡 *Contoh:* " + prefix + "timemachine add Grup capai 100 member"));
       return { handled: true };
     }
     const events = getTimeline(db, gid);
     events.push({ text: event, ts: Date.now(), by: m.sender });
     saveTimeline(db, gid, events);
-    await m.reply(novaWrap("Time Machine", "Momen tersimpan: " + event + "\nTanggal: " + formatDate(Date.now())));
+    await m.reply(raraWrap("Time Machine", "Momen tersimpan: " + event + "\nTanggal: " + formatDate(Date.now())));
     return { handled: true };
   }
 
@@ -68,7 +68,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "list" || sub === "remember" || sub === "all") {
     const events = getTimeline(db, gid);
     if (events.length === 0) {
-      await m.reply(novaWrap("Time Machine", "Belum ada momen tersimpan. Ketik " + prefix + "timemachine add <momen>."));
+      await m.reply(raraWrap("Time Machine", "Belum ada momen tersimpan. Ketik " + prefix + "timemachine add <momen>."));
       return { handled: true };
     }
     const sorted = events.sort((a, b) => b.ts - a.ts);
@@ -76,7 +76,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const hari = daysSince(e.ts);
       return (i + 1) + ". " + formatDate(e.ts) + " (" + hari + " hari lalu)\n   " + e.text;
     }).join("\n\n");
-    await m.reply(novaWrap("Time Machine", "Timeline Grup:\n\n" + list));
+    await m.reply(raraWrap("Time Machine", "Timeline Grup:\n\n" + list));
     return { handled: true };
   }
 
@@ -84,7 +84,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "today" || sub === "hariini" || !sub) {
     const events = getTimeline(db, gid);
     if (events.length === 0) {
-      await m.reply(novaWrap("Time Machine", [
+      await m.reply(raraWrap("Time Machine", [
         "Belum ada momen tersimpan.",
         "",
         "Cara pakai:",
@@ -102,33 +102,33 @@ async function handler(m, { sock, db, config: botConfig }) {
     if (todayEvents.length === 0) {
       const recent = events.sort((a, b) => b.ts - a.ts).slice(0, 3);
       const list = recent.map(e => formatDate(e.ts) + " (" + daysSince(e.ts) + " hari lalu): " + e.text).join("\n");
-      await m.reply(novaWrap("Time Machine", "Tidak ada momen di tanggal ini tahun lalu.\n\nMomen terbaru:\n" + list));
+      await m.reply(raraWrap("Time Machine", "Tidak ada momen di tanggal ini tahun lalu.\n\nMomen terbaru:\n" + list));
       return { handled: true };
     }
     const list = todayEvents.map(e => formatDate(e.ts) + ": " + e.text).join("\n");
-    await m.reply(novaWrap("Time Machine - On This Day", "Pada hari ini tahun lalu:\n" + list));
+    await m.reply(raraWrap("Time Machine - On This Day", "Pada hari ini tahun lalu:\n" + list));
     return { handled: true };
   }
 
   // ==================== DELETE
   if (sub === "hapus" || sub === "delete") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Time Machine", "Khusus admin/owner."));
+      await m.reply(raraWrap("Time Machine", "Khusus admin/owner."));
       return { handled: true };
     }
     const idx = parseInt(args[2] || "0", 10) - 1;
     const events = getTimeline(db, gid);
     if (isNaN(idx) || idx < 0 || idx >= events.length) {
-      await m.reply(novaError("AITimeMachine", "Nomor gak valid nih! Ketik " + prefix + "timemachine list"));
+      await m.reply(raraError("AITimeMachine", "Nomor gak valid nih! Ketik " + prefix + "timemachine list"));
       return { handled: true };
     }
     const removed = events.splice(idx, 1)[0];
     saveTimeline(db, gid, events);
-    await m.reply(novaWrap("Time Machine", "Momen dihapus: " + removed.text));
+    await m.reply(raraWrap("Time Machine", "Momen dihapus: " + removed.text));
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Time Machine", "Ketik " + prefix + "timemachine list atau " + prefix + "timemachine today."));
+  await m.reply(raraWrap("Time Machine", "Ketik " + prefix + "timemachine list atau " + prefix + "timemachine today."));
   return { handled: true };
 }
 

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "bountyboard",
@@ -113,7 +113,7 @@ async function handler(m, { sock, db }) {
       "Koin untuk reward diambil dari saldo koin kamu.",
       "Pastikan saldo cukup sebelum post!",
     ].join("\n");
-    await safeReply(m, sock, novaWrap("Bounty Board", helpText));
+    await safeReply(m, sock, raraWrap("Bounty Board", helpText));
     return { handled: true };
   }
 
@@ -123,7 +123,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "post" || subCmd === "buat" || subCmd === "add" || subCmd === "tambah") {
     const rest = args.slice(2).join(" ");
     if (!rest || !rest.includes("|")) {
-      await safeReply(m, sock, novaNoInput("Bounty Board", `Format posting tugas kurang pas nih!\n\nGunakan: ${prefix}bounty post <deskripsi> | <reward>\n💡 Contoh: ${prefix}bounty post Buat logo grup | 500`));
+      await safeReply(m, sock, raraNoInput("Bounty Board", `Format posting tugas kurang pas nih!\n\nGunakan: ${prefix}bounty post <deskripsi> | <reward>\n💡 Contoh: ${prefix}bounty post Buat logo grup | 500`));
       return { handled: true };
     }
 
@@ -131,17 +131,17 @@ async function handler(m, { sock, db }) {
     const reward = parseInt(rewardStr);
 
     if (!desc || desc.length < 3) {
-      await safeReply(m, sock, novaError("Bounty Board", "Deskripsi tugas terlalu pendek nih! Minimal 3 karakter ya."));
+      await safeReply(m, sock, raraError("Bounty Board", "Deskripsi tugas terlalu pendek nih! Minimal 3 karakter ya."));
       return { handled: true };
     }
 
     if (isNaN(reward) || reward < 1) {
-      await safeReply(m, sock, novaError("Bounty Board", "Reward harus berupa angka lebih dari 0 ya!"));
+      await safeReply(m, sock, raraError("Bounty Board", "Reward harus berupa angka lebih dari 0 ya!"));
       return { handled: true };
     }
 
     if (reward > 100000) {
-      await safeReply(m, sock, novaError("Bounty Board", "Reward maksimal 100.000 koin aja ya!"));
+      await safeReply(m, sock, raraError("Bounty Board", "Reward maksimal 100.000 koin aja ya!"));
       return { handled: true };
     }
 
@@ -149,7 +149,7 @@ async function handler(m, { sock, db }) {
     const poster = db.getUser(m.sender);
     const balance = poster.koin || 0;
     if (balance < reward) {
-      await safeReply(m, sock, novaError("Bounty Board", `Saldo koin kamu gak cukup nih!\n\nSaldo: ${balance} koin\nReward: ${reward} koin`));
+      await safeReply(m, sock, raraError("Bounty Board", `Saldo koin kamu gak cukup nih!\n\nSaldo: ${balance} koin\nReward: ${reward} koin`));
       return { handled: true };
     }
 
@@ -188,7 +188,7 @@ async function handler(m, { sock, db }) {
       `Claim dengan: ${prefix}bounty claim ${bounty.id}`,
     ].join("\n");
 
-    await safeReply(m, sock, novaWrap("Bounty Board", postText, "success"),
+    await safeReply(m, sock, raraWrap("Bounty Board", postText, "success"),
       { mentions: [m.sender] });
 
     await safeReact(m, sock, "✅");
@@ -200,7 +200,7 @@ async function handler(m, { sock, db }) {
     const active = bounties.filter(b => b.status === "OPEN" || b.status === "CLAIMED");
 
     if (active.length === 0) {
-      await safeReply(m, sock, novaEmpty("Bounty Board", "Belum ada tugas aktif di grup ini nih."));
+      await safeReply(m, sock, raraEmpty("Bounty Board", "Belum ada tugas aktif di grup ini nih."));
       return { handled: true };
     }
 
@@ -215,7 +215,7 @@ async function handler(m, { sock, db }) {
       listText += `   ${timeAgo(b.createdAt)}\n\n`;
     });
 
-    await safeReply(m, sock, novaWrap("Bounty Board - List", listText.trim()));
+    await safeReply(m, sock, raraWrap("Bounty Board - List", listText.trim()));
     return { handled: true };
   }
 
@@ -223,30 +223,30 @@ async function handler(m, { sock, db }) {
   if (subCmd === "claim" || subCmd === "ambil") {
     const bountyId = (args[2] || "").toUpperCase().trim();
     if (!bountyId) {
-      await safeReply(m, sock, novaNoInput("Bounty Board", `Masukkan ID tugas yang mau kamu claim ya!\nContoh: ${prefix}bounty claim B5K2X1`));
+      await safeReply(m, sock, raraNoInput("Bounty Board", `Masukkan ID tugas yang mau kamu claim ya!\nContoh: ${prefix}bounty claim B5K2X1`));
       return { handled: true };
     }
 
     const bounty = bounties.find(b => b.id === bountyId);
     if (!bounty) {
-      await safeReply(m, sock, novaEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
+      await safeReply(m, sock, raraEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
       return { handled: true };
     }
 
     if (bounty.status !== "OPEN") {
-      await safeReply(m, sock, novaError("Bounty Board", `Tugas ${bountyId} udah ${STATUS[bounty.status]}, gak bisa di-claim lagi.`));
+      await safeReply(m, sock, raraError("Bounty Board", `Tugas ${bountyId} udah ${STATUS[bounty.status]}, gak bisa di-claim lagi.`));
       return { handled: true };
     }
 
     if (bounty.poster === m.sender) {
-      await safeReply(m, sock, novaError("Bounty Board", "Gak bisa claim tugas buatan sendiri dong!"));
+      await safeReply(m, sock, raraError("Bounty Board", "Gak bisa claim tugas buatan sendiri dong!"));
       return { handled: true };
     }
 
     // Check max active claims (prevent hoarding)
     const myClaims = bounties.filter(b => b.claimer === m.sender && b.status === "CLAIMED");
     if (myClaims.length >= 3) {
-      await safeReply(m, sock, novaError("Bounty Board", "Kamu udah claim 3 tugas aktif nih! Selesaikan dulu sebelum claim yang lain."));
+      await safeReply(m, sock, raraError("Bounty Board", "Kamu udah claim 3 tugas aktif nih! Selesaikan dulu sebelum claim yang lain."));
       return { handled: true };
     }
 
@@ -268,7 +268,7 @@ async function handler(m, { sock, db }) {
       `${prefix}bounty done ${bounty.id}`,
     ].join("\n");
 
-    await safeReply(m, sock, novaWrap("Bounty Board", claimText, "success"),
+    await safeReply(m, sock, raraWrap("Bounty Board", claimText, "success"),
       { mentions: [m.sender, bounty.poster] });
     return { handled: true };
   }
@@ -277,23 +277,23 @@ async function handler(m, { sock, db }) {
   if (subCmd === "done" || subCmd === "selesai" || subCmd === "confirm") {
     const bountyId = (args[2] || "").toUpperCase().trim();
     if (!bountyId) {
-      await safeReply(m, sock, novaNoInput("Bounty Board", `Masukkan ID tugas yang sudah selesai!\nContoh: ${prefix}bounty done B5K2X1`));
+      await safeReply(m, sock, raraNoInput("Bounty Board", `Masukkan ID tugas yang sudah selesai!\nContoh: ${prefix}bounty done B5K2X1`));
       return { handled: true };
     }
 
     const bounty = bounties.find(b => b.id === bountyId);
     if (!bounty) {
-      await safeReply(m, sock, novaEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
+      await safeReply(m, sock, raraEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
       return { handled: true };
     }
 
     if (bounty.poster !== m.sender && !m.isOwner) {
-      await safeReply(m, sock, novaError("Bounty Board", "Cuma pembuat tugas yang bisa konfirmasi selesai ya!"));
+      await safeReply(m, sock, raraError("Bounty Board", "Cuma pembuat tugas yang bisa konfirmasi selesai ya!"));
       return { handled: true };
     }
 
     if (bounty.status !== "CLAIMED") {
-      await safeReply(m, sock, novaError("Bounty Board", `Tugas ${bountyId} belum di-claim atau emang udah selesai.`));
+      await safeReply(m, sock, raraError("Bounty Board", `Tugas ${bountyId} belum di-claim atau emang udah selesai.`));
       return { handled: true };
     }
 
@@ -318,7 +318,7 @@ async function handler(m, { sock, db }) {
       `+${bounty.reward} koin ditransfer ke @${bounty.claimer.split("@")[0]}`,
     ].join("\n");
 
-    await safeReply(m, sock, novaWrap("Bounty Board", doneText, "success"),
+    await safeReply(m, sock, raraWrap("Bounty Board", doneText, "success"),
       { mentions: [bounty.poster, bounty.claimer] });
     return { handled: true };
   }
@@ -327,23 +327,23 @@ async function handler(m, { sock, db }) {
   if (subCmd === "unclaim" || subCmd === "lepas") {
     const bountyId = (args[2] || "").toUpperCase().trim();
     if (!bountyId) {
-      await safeReply(m, sock, novaWrap("Bounty Board", `Format: ${prefix}bounty unclaim <id>`, "warn"));
+      await safeReply(m, sock, raraWrap("Bounty Board", `Format: ${prefix}bounty unclaim <id>`, "warn"));
       return { handled: true };
     }
 
     const bounty = bounties.find(b => b.id === bountyId);
     if (!bounty) {
-      await safeReply(m, sock, novaEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
+      await safeReply(m, sock, raraEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
       return { handled: true };
     }
 
     if (bounty.status !== "CLAIMED") {
-      await safeReply(m, sock, novaWrap("Bounty Board", `Tugas ${bountyId} tidak sedang di-claim!`, "warn"));
+      await safeReply(m, sock, raraWrap("Bounty Board", `Tugas ${bountyId} tidak sedang di-claim!`, "warn"));
       return { handled: true };
     }
 
     if (bounty.claimer !== m.sender && !m.isOwner) {
-      await safeReply(m, sock, novaError("Bounty Board", "Cuma user yang nge-claim tugas ini yang bisa ngelepas!"));
+      await safeReply(m, sock, raraError("Bounty Board", "Cuma user yang nge-claim tugas ini yang bisa ngelepas!"));
       return { handled: true };
     }
 
@@ -362,7 +362,7 @@ async function handler(m, { sock, db }) {
       `Tugas tersedia lagi untuk di-claim!`,
     ].join("\n");
 
-    await safeReply(m, sock, novaWrap("Bounty Board", unclaimText, "success"));
+    await safeReply(m, sock, raraWrap("Bounty Board", unclaimText, "success"));
     return { handled: true };
   }
 
@@ -370,23 +370,23 @@ async function handler(m, { sock, db }) {
   if (subCmd === "cancel" || subCmd === "batalkan" || subCmd === "hapus") {
     const bountyId = (args[2] || "").toUpperCase().trim();
     if (!bountyId) {
-      await safeReply(m, sock, novaNoInput("Bounty Board", `Masukkan ID tugas yang ingin dibatalkan!\nContoh: ${prefix}bounty cancel B5K2X1`));
+      await safeReply(m, sock, raraNoInput("Bounty Board", `Masukkan ID tugas yang ingin dibatalkan!\nContoh: ${prefix}bounty cancel B5K2X1`));
       return { handled: true };
     }
 
     const bounty = bounties.find(b => b.id === bountyId);
     if (!bounty) {
-      await safeReply(m, sock, novaEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
+      await safeReply(m, sock, raraEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
       return { handled: true };
     }
 
     if (bounty.poster !== m.sender && !m.isOwner) {
-      await safeReply(m, sock, novaError("Bounty Board", "Cuma pembuat tugas yang bisa ngebatalin tugas ini!"));
+      await safeReply(m, sock, raraError("Bounty Board", "Cuma pembuat tugas yang bisa ngebatalin tugas ini!"));
       return { handled: true };
     }
 
     if (bounty.status === "DONE") {
-      await safeReply(m, sock, novaError("Bounty Board", "Tugas yang udah selesai gak bisa dibatalin lagi ya!"));
+      await safeReply(m, sock, raraError("Bounty Board", "Tugas yang udah selesai gak bisa dibatalin lagi ya!"));
       return { handled: true };
     }
 
@@ -406,7 +406,7 @@ async function handler(m, { sock, db }) {
       `Reward: ${bounty.reward} koin (dikembalikan ke poster)`,
     ].join("\n");
 
-    await safeReply(m, sock, novaWrap("Bounty Board", cancelText, "warn"),
+    await safeReply(m, sock, raraWrap("Bounty Board", cancelText, "warn"),
       { mentions: [bounty.poster] });
     return { handled: true };
   }
@@ -438,7 +438,7 @@ async function handler(m, { sock, db }) {
       });
     }
 
-    await safeReply(m, sock, novaWrap("Bounty Board", myText.trim()));
+    await safeReply(m, sock, raraWrap("Bounty Board", myText.trim()));
     return { handled: true };
   }
 
@@ -446,13 +446,13 @@ async function handler(m, { sock, db }) {
   if (subCmd === "info" || subCmd === "detail" || subCmd === "lihat") {
     const bountyId = (args[2] || "").toUpperCase().trim();
     if (!bountyId) {
-      await safeReply(m, sock, novaNoInput("Bounty Board", `Masukkan ID tugas yang mau dilihat infonya!\nContoh: ${prefix}bounty info B5K2X1`));
+      await safeReply(m, sock, raraNoInput("Bounty Board", `Masukkan ID tugas yang mau dilihat infonya!\nContoh: ${prefix}bounty info B5K2X1`));
       return { handled: true };
     }
 
     const bounty = bounties.find(b => b.id === bountyId);
     if (!bounty) {
-      await safeReply(m, sock, novaEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
+      await safeReply(m, sock, raraEmpty("Bounty Board", `Tugas dengan ID ${bountyId} gak ditemukan nih!`));
       return { handled: true };
     }
 
@@ -476,13 +476,13 @@ async function handler(m, { sock, db }) {
       infoText += `\nSelesai: ${timeAgo(bounty.completedAt)}`;
     }
 
-    await safeReply(m, sock, novaWrap("Bounty Board", infoText),
+    await safeReply(m, sock, raraWrap("Bounty Board", infoText),
       { mentions: bounty.claimer ? [bounty.poster, bounty.claimer] : [bounty.poster] });
     return { handled: true };
   }
 
   // Unknown subcommand
-  await safeReply(m, sock, novaError("Bounty Board", `Sub-command gak dikenal nih. Ketik ${prefix}bounty help untuk bantuan.`));
+  await safeReply(m, sock, raraError("Bounty Board", `Sub-command gak dikenal nih. Ketik ${prefix}bounty help untuk bantuan.`));
   return { handled: true };
 }
 

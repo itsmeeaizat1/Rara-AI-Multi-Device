@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // animefinder.js — Cari anime manual (request owner 8 Sep 2026, ala script owner
 // "!search"). Sumber: AniList search → Kitsu fallback (AniList outage-proof).
 // Bonus koneksi V1: kalau judul cocok dengan ongoing winbu.net (V1 auto anime
 // episode 720p ke grup), hasil diberi catatan "episode otomatis dikirim (V1)".
 //   • .carianime <judul>  — top 5 hasil
 
-import { searchAnime } from "../../src/lib/nova-auto-anime-notifier.js";
-import { getOngoingAnimeList } from "../../src/lib/nova-auto-anime.js";
-import { novaError, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { searchAnime } from "../../src/lib/rara-auto-anime-notifier.js";
+import { getOngoingAnimeList } from "../../src/lib/rara-auto-anime.js";
+import { raraError, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "carianime",
@@ -62,10 +62,10 @@ async function handler(m, { sock, args }) {
   const query = (m.args?.join(" ") || m.text || "").trim();
 
   if (!query || query.length < 2) {
-    return m.reply(novaNoInput(pluginConfig.name, "masukin judul anime minimal 2 huruf", ".carianime grand blue"));
+    return m.reply(raraNoInput(pluginConfig.name, "masukin judul anime minimal 2 huruf", ".carianime grand blue"));
   }
   if (query.toLowerCase() === "help" || query.toLowerCase() === "menu") {
-    return m.reply(novaGuide(pluginConfig.name, "cari info anime dari AniList (fallback Kitsu) — judul, skor, episode, genre, studio, sinopsis, plus cek ketersediaan episode otomatis winbu (V1)", ".carianime <judul>"));
+    return m.reply(raraGuide(pluginConfig.name, "cari info anime dari AniList (fallback Kitsu) — judul, skor, episode, genre, studio, sinopsis, plus cek ketersediaan episode otomatis winbu (V1)", ".carianime <judul>"));
   }
 
   await m.react("🕒");
@@ -79,12 +79,12 @@ async function handler(m, { sock, args }) {
     ]);
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaError(pluginConfig.name, "sumber anime lagi sibuk — coba lagi sebentar lagi"));
+    return m.reply(raraError(pluginConfig.name, "sumber anime lagi sibuk — coba lagi sebentar lagi"));
   }
 
   if (!results.length) {
     await m.react("❌");
-    return m.reply(novaError(pluginConfig.name, `gak ketemu anime dengan keyword "${query}"`));
+    return m.reply(raraError(pluginConfig.name, `gak ketemu anime dengan keyword "${query}"`));
   }
 
   await m.react("🐣");

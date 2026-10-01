@@ -8,9 +8,9 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-rpchat-db-" + Date.now();
+const DB_DIR = "/tmp/rara-rpchat-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 const db = getDatabase();
 
@@ -59,7 +59,7 @@ function mkMock(args) {
   return { m, sock: {}, sends };
 }
 const { fromSC } = await import(R + "/src/lib/styler.js");
-// GOTCHA (ke-6x): novaWrap = smallcaps — asersi WAJIB lewat fromSC
+// GOTCHA (ke-6x): raraWrap = smallcaps — asersi WAJIB lewat fromSC
 const out = (mk) => fromSC(mk.sends.join("\n──\n"));
 
 // ═══════════════════════════════════════════════════════════════

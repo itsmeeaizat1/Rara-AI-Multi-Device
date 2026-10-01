@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,12 +19,12 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(novaWrap("Audio Split", `Reply audio yang mau dipotong.`));
+    if (!quoted) return m.reply(raraWrap("Audio Split", `Reply audio yang mau dipotong.`));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(novaWrap("Audio Split", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(raraWrap("Audio Split", "Reply harus audio/voice note!"));
 
     const sub = (args[0] || "").toLowerCase();
-    const tmpDir = path.join(os.tmpdir(), 'nova-split');
+    const tmpDir = path.join(os.tmpdir(), 'rara-split');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, `input_${Date.now()}.mp3`);
@@ -35,7 +35,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const start = args[1];
       const end = args[2];
       if (!start || !end) {
-        return m.reply(novaWrap("Audio Split", [
+        return m.reply(raraWrap("Audio Split", [
           `Cara: ${usedPrefix}audiosplit trim <start> <end>`,
           `Format: HH:MM:SS atau detik`,
           `Contoh: ${usedPrefix}audiosplit trim 00:05 00:15`,
@@ -44,17 +44,17 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
       const startSec = parseTime(start);
       const endSec = parseTime(end);
-      if (startSec >= endSec) return m.reply(novaWrap("Info", "Start harus lebih kecil dari end!"));
+      if (startSec >= endSec) return m.reply(raraWrap("Info", "Start harus lebih kecil dari end!"));
 
       const duration = endSec - startSec;
       const outputPath = path.join(tmpDir, `trimmed_${Date.now()}.mp3`);
       await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${startSec} -t ${duration} -c:a libopus -b:a 64k "${outputPath}"`);
 
-      if (!fs.existsSync(outputPath)) return m.reply(novaGagal("AudioSplit"));
+      if (!fs.existsSync(outputPath)) return m.reply(raraGagal("AudioSplit"));
       const buf = fs.readFileSync(outputPath);
       await conn.sendMessage(m.key.remoteJid, {
         audio: buf, mimetype: "audio/ogg; codecs=opus", ptt: false,
-        caption: novaWrap("Audio Split", `Trimmed: ${start} - ${end} (${duration} detik)`),
+        caption: raraWrap("Audio Split", `Trimmed: ${start} - ${end} (${duration} detik)`),
       });
       fs.unlinkSync(inputPath);
       fs.unlinkSync(outputPath);
@@ -65,7 +65,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await queueFFmpeg(`ffmpeg -y -i "${inputPath}" 2>"${probePath}"`);
       const probe = fs.readFileSync(probePath, 'utf8');
       const durMatch = probe.match(/Duration:\s(\d{2}):(\d{2}):(\d{2})/);
-      if (!durMatch) return m.reply(novaGagal("AudioSplit"));
+      if (!durMatch) return m.reply(raraGagal("AudioSplit"));
       const totalSec = parseInt(durMatch[1]) * 3600 + parseInt(durMatch[2]) * 60 + parseInt(durMatch[3]);
       const halfSec = Math.floor(totalSec / 2);
 
@@ -78,16 +78,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (fs.existsSync(out1) && fs.existsSync(out2)) {
         await conn.sendMessage(m.key.remoteJid, {
           audio: fs.readFileSync(out1), mimetype: "audio/ogg; codecs=opus", ptt: false,
-          caption: novaWrap("Audio Split", `Bagian 1 (0 - ${halfSec} detik)`),
+          caption: raraWrap("Audio Split", `Bagian 1 (0 - ${halfSec} detik)`),
         });
         await conn.sendMessage(m.key.remoteJid, {
           audio: fs.readFileSync(out2), mimetype: "audio/ogg; codecs=opus", ptt: false,
-          caption: novaWrap("Audio Split", `Bagian 2 (${halfSec} - ${totalSec} detik)`),
+          caption: raraWrap("Audio Split", `Bagian 2 (${halfSec} - ${totalSec} detik)`),
         });
         fs.unlinkSync(out1);
         fs.unlinkSync(out2);
       } else {
-        return m.reply(novaGagal("AudioSplit"));
+        return m.reply(raraGagal("AudioSplit"));
       }
       fs.unlinkSync(inputPath);
       try { fs.unlinkSync(probePath); } catch (e) { console.error('[audiosplit.js]:', e.message); }
@@ -96,14 +96,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     else if (sub === "parts") {
       const parts = parseInt(args[1]);
       if (!parts || parts < 2 || parts > 10) {
-        return m.reply(novaWrap("Audio Split", [`Parts 2-10. Contoh: ${usedPrefix}audiosplit parts 3`].join("\n")));
+        return m.reply(raraWrap("Audio Split", [`Parts 2-10. Contoh: ${usedPrefix}audiosplit parts 3`].join("\n")));
       }
 
       const probePath = path.join(tmpDir, `probe_${Date.now()}.txt`);
       await queueFFmpeg(`ffmpeg -y -i "${inputPath}" 2>"${probePath}"`);
       const probe = fs.readFileSync(probePath, 'utf8');
       const durMatch = probe.match(/Duration:\s(\d{2}):(\d{2}):(\d{2})/);
-      if (!durMatch) return m.reply(novaGagal("AudioSplit"));
+      if (!durMatch) return m.reply(raraGagal("AudioSplit"));
       const totalSec = parseInt(durMatch[1]) * 3600 + parseInt(durMatch[2]) * 60 + parseInt(durMatch[3]);
       const partDur = Math.floor(totalSec / parts);
 
@@ -114,7 +114,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         if (fs.existsSync(outPath)) {
           await conn.sendMessage(m.key.remoteJid, {
             audio: fs.readFileSync(outPath), mimetype: "audio/ogg; codecs=opus", ptt: false,
-            caption: novaWrap("Audio Split", `Part ${i + 1}/${parts} (${start} - ${start + partDur} detik)`),
+            caption: raraWrap("Audio Split", `Part ${i + 1}/${parts} (${start} - ${start + partDur} detik)`),
           });
           fs.unlinkSync(outPath);
         }
@@ -125,7 +125,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     else {
       fs.unlinkSync(inputPath);
-      return m.reply(novaWrap("Audio Split", [
+      return m.reply(raraWrap("Audio Split", [
         `Audio Split - Potong/split audio`,
         "",
         `Command:`,
@@ -137,10 +137,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         `Contoh: ${usedPrefix}audiosplit trim 00:05 00:15`,
       ].join("\n")));
     }
-      await m.reply(novaBerhasil("audiosplit"));
+      await m.reply(raraBerhasil("audiosplit"));
   } catch (e) {
     console.error("audiosplit error:", e);
-    return m.reply(novaGangguan("audiosplit"));
+    return m.reply(raraGangguan("audiosplit"));
   }
 }
 

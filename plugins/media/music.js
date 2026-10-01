@@ -1,5 +1,5 @@
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const MUSIC_LIST = []
 for (let i = 1; i <= 52; i++) {
     MUSIC_LIST.push(`music${i}`)
@@ -37,7 +37,7 @@ async function handler(m, { sock, command }) {
             ptt: false
         })
     } catch (err) {
-        m.reply(novaWrap("music", `❌ *error*\n\nMusik tidak ditemukan atau gagal diambil.`))
+        m.reply(raraWrap("music", `❌ *error*\n\nMusik tidak ditemukan atau gagal diambil.`))
     }
 }
 

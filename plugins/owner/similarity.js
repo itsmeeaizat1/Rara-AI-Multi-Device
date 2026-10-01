@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'similarity',
     alias: ["similarity"],
@@ -29,10 +29,10 @@ async function handler(m, { sock }) {
     
     if (mode === 'on') {
         db.setting('similarity', true)
-        await m.reply(novaWrap("Similarity", `✅ *sUkses*\n\nFitur similarity command *DIAKTIFKAN*`))
+        await m.reply(raraWrap("Similarity", `✅ *sUkses*\n\nFitur similarity command *DIAKTIFKAN*`))
     } else if (mode === 'off') {
         db.setting('similarity', false)
-        await m.reply(novaWrap("Similarity", `✅ *sUkses*\n\nFitur similarity command *DIMATIKAN*`))
+        await m.reply(raraWrap("Similarity", `✅ *sUkses*\n\nFitur similarity command *DIMATIKAN*`))
     } else {
         { const __navText = `⚠️ *Cara Pakai*\n\n\`.similarity on\` - Aktifkan\n\`.similarity off\` - Matikan`; return await m.reply(__navText); }
     }

@@ -1,19 +1,19 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .convert <format> — convert media terakhir yang diunduh (session 10 menit)
 import fs from "fs";
 import path from "path";
 import os from "os";
 import axios from "axios";
-import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { novaBox, novaError, novaGuide, novaSalah, novaWrap, novaBerhasil, novaGagal, novaGangguan, toSC, scLine } from "../../src/lib/nova-menu-style.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
+import { raraBox, raraError, raraGuide, raraSalah, raraWrap, raraBerhasil, raraGagal, raraGangguan, toSC, scLine } from "../../src/lib/rara-menu-style.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import {
   AUDIO_FORMATS,
   VIDEO_FORMATS,
   IMAGE_FORMATS,
   getConvertSession,
   setConvertSession,
-} from "../../src/lib/nova-convert.js";
+} from "../../src/lib/rara-convert.js";
 
 const IMAGE_MIME = { jpg: "image/jpeg", png: "image/png", webp: "image/webp" };
 
@@ -45,7 +45,7 @@ function formatListText() {
   const audio = Object.entries(AUDIO_FORMATS).map(fmtItem);
   const video = Object.entries(VIDEO_FORMATS).map(fmtItem);
   const image = Object.entries(IMAGE_FORMATS).map(fmtItem);
-  return novaBox("Convert", [
+  return raraBox("Convert", [
     `📝 ${toSC("Cara Pakai")}:`,
     "Unggah atau reply media dengan caption .convert <format>",
     "",
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
     const buffer = await media.download();
     if (!buffer) {
       await m.react("❌");
-      return m.reply(novaError("Convert", "Gagal mengunduh media-nya. Coba ulangi lagi ya."));
+      return m.reply(raraError("Convert", "Gagal mengunduh media-nya. Coba ulangi lagi ya."));
     }
 
     // Deteksi jenis media
@@ -104,17 +104,17 @@ async function handler(m, { sock }) {
 
     if (!type) {
       await m.react("❗");
-      return m.reply(novaError("Convert", "File ini bukan media yang bisa di-convert. Kirim video, audio, gambar, atau sticker ya."));
+      return m.reply(raraError("Convert", "File ini bukan media yang bisa di-convert. Kirim video, audio, gambar, atau sticker ya."));
     }
 
     // Validasi format vs jenis media
     if (type === "audio" && (isVideo || isImage)) {
       await m.react("❗");
-      return m.reply(novaSalah("Convert", "media ini audio, cuma bisa convert ke format audio"));
+      return m.reply(raraSalah("Convert", "media ini audio, cuma bisa convert ke format audio"));
     }
     if (type === "image" && !isImage && format !== "gif") {
       await m.react("❗");
-      return m.reply(novaSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"));
+      return m.reply(raraSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"));
     }
 
     // Masukin ke session biar chaining .convert <format> laennya tetap bisa
@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
   if (!session || (!session.filePath && !session.mediaUrl)) {
     await m.react("❗");
     return m.reply(
-      novaGuide(
+      raraGuide(
         "Convert",
         "Belum ada media buat di-convert nih!\n\nUnggah atau reply media dengan caption .convert <format>",
         `${m.prefix}convert mp3`,
@@ -138,13 +138,13 @@ async function handler(m, { sock }) {
   // Session audio cuma bisa convert ke format audio
   if (session.type === "audio" && (isVideo || isImage)) {
     await m.react("❗");
-    return m.reply(novaSalah("Convert", "media ini audio, cuma bisa convert ke format audio"));
+    return m.reply(raraSalah("Convert", "media ini audio, cuma bisa convert ke format audio"));
   }
 
   // Session gambar cuma bisa convert ke format gambar / gif
   if (session.type === "image" && !isImage && format !== "gif") {
     await m.react("❗");
-    return m.reply(novaSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"));
+    return m.reply(raraSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"));
   }
 
   const fmt = isAudio ? AUDIO_FORMATS[format] : isImage ? IMAGE_FORMATS[format] : VIDEO_FORMATS[format];
@@ -152,7 +152,7 @@ async function handler(m, { sock }) {
 
   try {
     // ── Ambil source: dari temp file (buffer) atau download ulang URL ──
-    const tmpDir = path.join(os.tmpdir(), "nova-convert-out");
+    const tmpDir = path.join(os.tmpdir(), "rara-convert-out");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const id = `${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
     const inputPath = path.join(tmpDir, `in_${id}`);
@@ -175,7 +175,7 @@ async function handler(m, { sock }) {
     if (inSize > MAX_INPUT_MB * 1024 * 1024) {
       fs.unlinkSync(inputPath);
       await m.react("❌");
-      return m.reply(novaError("Convert", `Media kegedean (${(inSize / 1024 / 1024).toFixed(0)} MB). Maksimal ${MAX_INPUT_MB} MB.`));
+      return m.reply(raraError("Convert", `Media kegedean (${(inSize / 1024 / 1024).toFixed(0)} MB). Maksimal ${MAX_INPUT_MB} MB.`));
     }
 
     // ── Build perintah ffmpeg ──
@@ -205,14 +205,14 @@ async function handler(m, { sock }) {
       buf = null;
       fs.unlinkSync(inputPath); fs.unlinkSync(outputPath);
       await m.react("❌");
-      return m.reply(novaError("Convert", `Hasil convert kegedean (${(fs.statSync(outputPath).size / 1024 / 1024).toFixed(0)} MB) — gak bisa dikirim via WhatsApp (maks ~100 MB).`));
+      return m.reply(raraError("Convert", `Hasil convert kegedean (${(fs.statSync(outputPath).size / 1024 / 1024).toFixed(0)} MB) — gak bisa dikirim via WhatsApp (maks ~100 MB).`));
     }
 
     // ── Kirim hasil ──
     const title = session.title || session.platform || "Media";
     const card = mediaPreviewCard({
       title: `${title} → ${format.toUpperCase()}`,
-      body: `Nova Convert • ${fmt.desc}`,
+      body: `Rara Convert • ${fmt.desc}`,
       sourceUrl: session.sourceUrl || "",
       thumbnailUrl: "",
     });
@@ -230,7 +230,7 @@ async function handler(m, { sock }) {
         audio: buf,
         mimetype: fmt.mime,
         ptt: isPtt,
-        fileName: `${(title || "nova").replace(/[^\w\s-]/g, "").trim().slice(0, 40) || "nova"}.${fmt.ext}`,
+        fileName: `${(title || "rara").replace(/[^\w\s-]/g, "").trim().slice(0, 40) || "rara"}.${fmt.ext}`,
         contextInfo: card,
       }, { quoted: m });
     } else if (format === "mp4") {
@@ -242,14 +242,14 @@ async function handler(m, { sock }) {
     } else {
       await sock.sendMessage(m.chat, {
         document: buf,
-        fileName: `${(title || "nova").replace(/[^\w\s-]/g, "").trim().slice(0, 40) || "nova"}.${fmt.ext}`,
+        fileName: `${(title || "rara").replace(/[^\w\s-]/g, "").trim().slice(0, 40) || "rara"}.${fmt.ext}`,
         mimetype: fmt.mime,
         contextInfo: card,
       }, { quoted: m });
     }
 
     await m.reply(
-      novaBox("Convert", [
+      raraBox("Convert", [
         `✅ Berhasil convert ke ${format.toUpperCase()}`,
         `Format: ${fmt.desc}`,
         `Size: ${sizeMB} MB`,
@@ -263,11 +263,11 @@ async function handler(m, { sock }) {
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
     await m.react("🐣");
-    await m.reply(novaBerhasil("Convert"));
+    await m.reply(raraBerhasil("Convert"));
   } catch (e) {
     console.error("[convert.js]", e.message);
     await m.react("❌");
-    return m.reply(novaGangguan("Convert"));
+    return m.reply(raraGangguan("Convert"));
   }
 }
 

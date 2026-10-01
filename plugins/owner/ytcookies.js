@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/owner/ytcookies.js — LOGIN GOOGLE VIA WHATSAPP (1 Okt 2026)
 //
 // Fitur pendamping fix bot-check YouTube (.play lokal gagal terus):
 // owner gak perlu SSH ke VPS buat upload cookies.txt — cukup KIRIM
 // FILE cookies.txt langsung di chat, bot simpan ke data/yt-cookies.txt
-// dan yt-dlp otomatis pakai flag --cookies (lihat src/scraper/nova-ytdlp.js
+// dan yt-dlp otomatis pakai flag --cookies (lihat src/scraper/rara-ytdlp.js
 // getYtCookiesArgs). ENV NOVA_YTDLP_COOKIES tetap menang kalau diset.
 //
 // Cara pakai:
@@ -17,7 +17,7 @@
 // file lama GAK ditimpa sampai valid.
 import fs from "fs";
 import path from "path";
-import { novaError, novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const COOKIES_PATH = path.join(process.cwd(), "data", "yt-cookies.txt");
 
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     const st = cookiesStatus();
     if (!st) {
       return m.reply(
-        novaWrap("Yt Cookies", [
+        raraWrap("Yt Cookies", [
           "🔴 *tidak ada cookies terpasang*",
           "",
           "YouTube lagi ngeblokir IP server → .play/.playvideo gagal di konversi.",
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
     }
     const ageDays = ((Date.now() - st.modified.getTime()) / 86400000).toFixed(1);
     return m.reply(
-      novaWrap("Yt Cookies", [
+      raraWrap("Yt Cookies", [
         `${st.valid ? "🟢" : "🟡"} *cookies ${st.valid ? "valid" : "bermasalah"}*`,
         `• lokasi : data/yt-cookies.txt`,
         `• ukuran : ${(st.size / 1024).toFixed(1)} KB`,
@@ -119,16 +119,16 @@ async function handler(m, { sock }) {
   if (sub === "clear" || sub === "off" || sub === "logout") {
     if (fs.existsSync(COOKIES_PATH)) {
       fs.unlinkSync(COOKIES_PATH);
-      return m.reply(novaWrap("Yt Cookies", ["🟡 *cookies dihapus* — bot balik mode tanpa login YouTube.", "", "Kalau .play masih kebutuh login, kirim file cookies.txt baru."].join("\n")));
+      return m.reply(raraWrap("Yt Cookies", ["🟡 *cookies dihapus* — bot balik mode tanpa login YouTube.", "", "Kalau .play masih kebutuh login, kirim file cookies.txt baru."].join("\n")));
     }
-    return m.reply(novaWrap("Yt Cookies", ["Tidak ada cookies tersimpan — sudah bersih dari awal."].join("\n")));
+    return m.reply(raraWrap("Yt Cookies", ["Tidak ada cookies tersimpan — sudah bersih dari awal."].join("\n")));
   }
 
   // ── Jalur utama: file cookies.txt dikirim/reply ─────────────
   const media = m.quoted?.isMedia ? m.quoted : m.isMedia ? m : null;
   if (!media) {
     return m.reply(
-      novaGuideV2("ytcookies", {
+      raraGuideV2("ytcookies", {
         kaomoji: "(๑˃ᴗ˂)ﻭ",
         sapaan: "login Google/YouTube via chat — kirim file cookies.txt",
         cara: "kirim file cookies.txt di chat (atau reply file-nya) lalu ketik .ytcookies",
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
   // File harus cookies .txt (nama bebas tapi ekstensi .txt)
   if (!fileName.endsWith(".txt")) {
     return m.reply(
-      novaError("Yt Cookies", "File harus .txt (hasil export cookies). Kalau kamu kirim media lain, salah sasaran ya."),
+      raraError("Yt Cookies", "File harus .txt (hasil export cookies). Kalau kamu kirim media lain, salah sasaran ya."),
     );
   }
 
@@ -154,18 +154,18 @@ async function handler(m, { sock }) {
     buffer = await media.download();
   } catch {
     await m.react("❌");
-    return m.reply(novaError("Yt Cookies", "Gagal mengunduh file-nya. Coba kirim ulang."));
+    return m.reply(raraError("Yt Cookies", "Gagal mengunduh file-nya. Coba kirim ulang."));
   }
   if (!buffer || buffer.length < 50) {
     await m.react("❌");
-    return m.reply(novaError("Yt Cookies", "File kosong atau rusak."));
+    return m.reply(raraError("Yt Cookies", "File kosong atau rusak."));
   }
 
   // Validasi SEBELUM nulis — file lama gak boleh ketimpa file salah
   const res = validateCookies(buffer.toString("utf-8"));
   if (!res.ok) {
     await m.react("❌");
-    return m.reply(novaError("Yt Cookies", `File DITOLAK: ${res.reason}`));
+    return m.reply(raraError("Yt Cookies", `File DITOLAK: ${res.reason}`));
   }
 
   // Simpan (backup file lama sekali buat jaga-jaga)
@@ -178,12 +178,12 @@ async function handler(m, { sock }) {
     fs.writeFileSync(COOKIES_PATH, buffer);
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaError("Yt Cookies", `Gagal menyimpan: ${e.message}`));
+    return m.reply(raraError("Yt Cookies", `Gagal menyimpan: ${e.message}`));
   }
 
   await m.react("🐣");
   return m.reply(
-    novaWrap("Yt Cookies", [
+    raraWrap("Yt Cookies", [
       "🟢 *login youtube berhasil* 🎉",
       `• baris cookie : ${res.cookieLines} (yt: ${res.ytLines})`,
       "• tersimpan : data/yt-cookies.txt",

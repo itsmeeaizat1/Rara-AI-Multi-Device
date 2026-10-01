@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import mql from "@microlink/mql"
-import te from "../../src/lib/nova-error.js"
+import te from "../../src/lib/rara-error.js"
 
 const pluginConfig = {
     name: "carbon",
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     const text = m.text || m.quoted?.text
 
     if (!text) {
-        return m.reply(novaWrap("carbon", [
+        return m.reply(raraWrap("carbon", [
       `🖥️ *carbon code*`,
       `Fitur ini mengubah teks kode program kamu menjadi gambar cantik ala Carbon`,
       ``,
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
 
     } catch (err) {
     await m.react("❌");
-        return m.reply(novaWrap("carbon", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("carbon", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

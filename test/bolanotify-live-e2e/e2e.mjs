@@ -24,7 +24,7 @@ const mkMatch = (state, hs, as, statusDetail) => ({
   goalDetails: [],
 });
 
-import * as lib from "../../src/lib/nova-auto-bola-notifier.js";
+import * as lib from "../../src/lib/rara-auto-bola-notifier.js";
 import { fromSC } from "../../src/lib/styler.js";
 
 let summaryCalls = 0;

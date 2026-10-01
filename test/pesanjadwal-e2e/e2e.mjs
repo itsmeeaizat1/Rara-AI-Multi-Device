@@ -1,5 +1,5 @@
 // E2E — PESAN TERJADWAL .pesanjadwal (14 Sep 2026): waktu absolut (gap .remind
-// cuma durasi max 7 hari / .schedule owner-only). REUSE engine nova-reminder
+// cuma durasi max 7 hari / .schedule owner-only). REUSE engine rara-reminder
 // (persist + restore + missed). kind:"pesanjadwal" → kartu bunyi sendiri.
 import path from "path";
 import fs from "fs";
@@ -8,9 +8,9 @@ const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.env.NOVA_TICK_MAXEDITS = "2";
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-pjd-db-" + Date.now();
+const DB_DIR = "/tmp/rara-pjd-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const { parseWhen, formatWib } = await import(R + "/plugins/tools/messageschedule.js");
@@ -19,15 +19,15 @@ const { fromSC } = await import(R + "/src/lib/styler.js");
 const {
   cancelReminder, listActiveReminders, persistReminders,
   armReminder, fireReminder,
-} = await import(R + "/src/lib/nova-reminder-engine.js");
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
+} = await import(R + "/src/lib/rara-reminder-engine.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
 const moment = (await import("moment-timezone")).default;
 const TZ = "Asia/Jakarta";
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
-const norm = (s) => fromSC(String(s)).toLowerCase(); // GOTCHA: novaWrap = smallcaps
+const norm = (s) => fromSC(String(s)).toLowerCase(); // GOTCHA: raraWrap = smallcaps
 
 const SENDER = "62812@s.whatsapp.net";
 let sends = [];
@@ -35,7 +35,7 @@ const mkSock = () => ({
   sendMessage: async (jid, opt) => { sends.push({ jid, text: opt?.text || "", mentions: opt?.mentions || [] }); return { key: { id: "k" + sends.length } }; },
 });
 const mk = (text) => {
-  // mirror nova-serialize: m.text = body TANPA command, args = kata setelahnya
+  // mirror rara-serialize: m.text = body TANPA command, args = kata setelahnya
   const body = String(text).trim();
   const t2 = body.replace(/^\.\S+\s*/, "");
   const args = t2.split(/\s+/);
@@ -45,7 +45,7 @@ const mk = (text) => {
 // bersihin state antar blok
 function resetAll() {
   sends = [];
-  global.novaReminders = [];
+  global.raraReminders = [];
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -106,9 +106,9 @@ w("\n— plugin: guide + add + list + status —");
   const card = norm(sends.find((s) => norm(s.text).includes("pesan terjadwal dibuat"))?.text || "");
   check("add → kartu live countdown (🕒)", card.includes("pesan terjadwal dibuat") && card.includes("🕒") && card.includes("kirim dalam"), card.slice(0, 90));
   check("pesan kecatat di kartu", card.includes("tes pesan penting"), card.slice(0, 120));
-  const pjd = global.novaReminders.find((r) => r.kind === "pesanjadwal" && !r.fired);
+  const pjd = global.raraReminders.find((r) => r.kind === "pesanjadwal" && !r.fired);
   check("reminder ke-push + armed + kind", pjd && typeof pjd.timerId === "object" && pjd.fireAt > Date.now(), pjd && String(pjd.fireAt));
-  check("persist ke db", (getDatabase().setting("novaReminders") || []).length === 1);
+  check("persist ke db", (getDatabase().setting("raraReminders") || []).length === 1);
 
   // list
   await handler(mk(".pesanjadwal list"), { sock });
@@ -128,7 +128,7 @@ w("\n— del: cancel + closing adaptif —");
   const fireTs = Date.now() + 3600000;
   const mtStr = moment.tz(fireTs, TZ).format("HH:mm");
   await handler(mk(`.pesanjadwal ${mtStr} | Pesan buat dihapus`), { sock });
-  const pjd = global.novaReminders.find((r) => r.kind === "pesanjadwal" && !r.fired);
+  const pjd = global.raraReminders.find((r) => r.kind === "pesanjadwal" && !r.fired);
 
   // del salah id
   await handler(mk(".pesanjadwal del PJD-XXXX"), { sock });
@@ -165,7 +165,7 @@ w("\n— engine: fireReminder kind pesanjadwal + miss —");
   // arm → fire nyata (timer beneran jalan)
   resetAll();
   const r3 = { id: "PJD-T2", kind: "pesanjadwal", jid: "g@gnus", sender: SENDER, message: "Fire nyata", createdAt: Date.now(), fired: false, timerId: null, fireAt: Date.now() + 300 };
-  global.novaReminders.push(r3);
+  global.raraReminders.push(r3);
   armReminder(sock, r3);
   await new Promise((res) => setTimeout(res, 700));
   check("arm timer → fire otomatis + fired", r3.fired === true && sends.some((s) => norm(s.text).includes("fire nyata")), sends.map((s) => norm(s.text).slice(0, 30)).join(" / "));
@@ -179,14 +179,14 @@ w("\n— persist + restore (tahan restart) —");
   const fireTs = Date.now() + 7200000;
   const mtStr = moment.tz(fireTs, TZ).format("HH:mm");
   await handler(mk(`.pesanjadwal ${mtStr} | Persist tes`), { sock });
-  const saved = getDatabase().setting("novaReminders");
+  const saved = getDatabase().setting("raraReminders");
   check("persist: 1 tersimpan di db", (saved || []).length === 1);
 
   // simulasikan restart: RAM kosong → restore dari db
-  global.novaReminders = [];
-  const { restoreReminders } = await import(R + "/src/lib/nova-reminder-engine.js");
+  global.raraReminders = [];
+  const { restoreReminders } = await import(R + "/src/lib/rara-reminder-engine.js");
   const st = restoreReminders(sock);
-  const restored = global.novaReminders.find((r) => r.message === "Persist tes");
+  const restored = global.raraReminders.find((r) => r.message === "Persist tes");
   check("restore: pesan terjadwal ke-pasang ulang", st.rearmed >= 1 && restored && restored.kind === "pesanjadwal", JSON.stringify(st));
   check("restored punya timer", restored && typeof restored.timerId === "object");
   if (restored?.timerId) clearTimeout(restored.timerId);

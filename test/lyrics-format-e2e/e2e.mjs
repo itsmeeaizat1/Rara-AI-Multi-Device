@@ -1,5 +1,5 @@
 // E2E: format lirik seragam (request owner 19 Sep — judul/artis/album/durasi
-// dibawahnya lirik) — nova-lyrics-format.js satu pintu + 4 plugin lirik.
+// dibawahnya lirik) — rara-lyrics-format.js satu pintu + 4 plugin lirik.
 // Jalankan dari repo root: node test/lyrics-format-e2e/e2e.mjs
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -14,7 +14,7 @@ function t(label, cond, extra) {
 
 const REPO = path.resolve(".");
 const { fmtDuration, lyricsCaption, enrichLyricsMeta, _setLyricsMetaHttpForTest } =
-  await import(pathToFileURL(path.join(REPO, "src/lib/nova-lyrics-format.js")).href);
+  await import(pathToFileURL(path.join(REPO, "src/lib/rara-lyrics-format.js")).href);
 
 // ── fmtDuration ──
 t("fmtDuration: 160 dtk → '2:40'", fmtDuration(160) === "2:40");

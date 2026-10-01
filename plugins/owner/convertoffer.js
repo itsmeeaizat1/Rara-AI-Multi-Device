@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .convertoffer on/off — toggle tawaran convert otomatis setelah download/play
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "convertoffer",
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
   const current = db.setting("convertOffer") ?? false;
 
   if (!option) {
-    return m.reply(novaBox("Convertoffer", [
+    return m.reply(raraBox("Convertoffer", [
       "Toggle tawaran convert otomatis",
       "yang muncul setelah media terkirim.",
       "",
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   if (option === "on") {
     db.setting("convertOffer", true);
     await m.react("🐣");
-    return m.reply(novaBox("Convertoffer", [
+    return m.reply(raraBox("Convertoffer", [
       "Tawaran convert otomatis",
       "udah diaktifkan ✅",
     ]));
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   if (option === "off") {
     db.setting("convertOffer", false);
     await m.react("🐣");
-    return m.reply(novaBox("Convertoffer", [
+    return m.reply(raraBox("Convertoffer", [
       "Tawaran convert otomatis",
       "udah dimatikan ❌",
       "",
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     ]));
   }
 
-  return m.reply(novaBox("Convertoffer", [
+  return m.reply(raraBox("Convertoffer", [
     "Pilih on atau off ya!",
     "",
     "Contoh: .convertoffer off",

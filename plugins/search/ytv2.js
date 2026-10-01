@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ytv2.js — YouTube search via Innertube API (youtubei.js, no API key)
 import { Innertube } from 'youtubei.js'
-import { novaError, novaEmpty, novaNoInput, novaGuide } from '../../src/lib/nova-menu-style.js'
+import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
     name: "ytv2",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
         const query = (m.text || "").trim()
 
         if (!query) {
-            return m.reply(novaGuide('YouTube v2', 'Mau nyari video YouTube apa nih? Ketik judul atau kata kuncinya ya!', pluginConfig.example))
+            return m.reply(raraGuide('YouTube v2', 'Mau nyari video YouTube apa nih? Ketik judul atau kata kuncinya ya!', pluginConfig.example))
         }
         const yt = await Innertube.create()
         const search = await yt.search(query)
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
             .slice(0, 5)
 
         if (!videos.length) {
-            return m.reply(novaEmpty('YouTube v2', `Gak nemu hasil buat "${query}" 🧐`))
+            return m.reply(raraEmpty('YouTube v2', `Gak nemu hasil buat "${query}" 🧐`))
         }
 
         let text = `YouTube Search\nQuery: ${query}\n\n`
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
         return m.reply(text)
     } catch (e) {
         console.error("[ytv2] error:", e.message)
-        return m.reply(novaError('YouTube v2', e.message))
+        return m.reply(raraError('YouTube v2', e.message))
     }
 }
 

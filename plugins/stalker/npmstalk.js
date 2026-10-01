@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 import config from '../../config.js'
 
 const pluginConfig = {
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         })
         
         if (!res.data?.status || !res.data?.data) {
-            return m.reply(novaWrap("npmstalk", `❌ Username *${username}* tidak ditemukan`))
+            return m.reply(raraWrap("npmstalk", `❌ Username *${username}* tidak ditemukan`))
         }
         
         const d = res.data.data
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
         }, { quoted: m })
         
     } catch (error) {
-        m.reply(novaWrap("npmstalk", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("npmstalk", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

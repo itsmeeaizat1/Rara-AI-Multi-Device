@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // AI Dream — AI interprets dreams
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "mimpiai",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("mimpiai", `Ceritakan mimpimu!\n\nContoh: ${m.prefix}mimpiai saya bermimpi terbang di atas lautan biru\n${m.prefix}mimpiai mimpi ketemu almarhum nenek`, "guide"));
+      return m.reply(raraWrap("mimpiai", `Ceritakan mimpimu!\n\nContoh: ${m.prefix}mimpiai saya bermimpi terbang di atas lautan biru\n${m.prefix}mimpiai mimpi ketemu almarhum nenek`, "guide"));
     }
 
     await m.react("🕒");
@@ -40,11 +40,11 @@ SARAN: [apa yang harus saya lakukan]
 
 Gunakan bahasa Indonesia, tafsir dengan bijak dan positif. Jangan menakut-nakuti.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("mimpiai", "AI-nya lagi tidur nih 😴", "error"));
+      return m.reply(raraWrap("mimpiai", "AI-nya lagi tidur nih 😴", "error"));
     }
 
     const lines = result.answer.trim().split("\n");
@@ -99,7 +99,7 @@ Gunakan bahasa Indonesia, tafsir dengan bijak dan positif. Jangan menakut-nakuti
   } catch (err) {
     console.error("mimpiai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("mimpiai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("mimpiai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

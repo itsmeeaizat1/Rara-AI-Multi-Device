@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { DEFAULT_PROVIDERS } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "aiset",
@@ -53,13 +53,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!action || action === "list" || action === "daftar") {
       const text =
-        novaWrap("AI Settings", [`Status: *${enabled ? "ON" : "OFF"}*`,
+        raraWrap("AI Settings", [`Status: *${enabled ? "ON" : "OFF"}*`,
           `Mode: *${currentMode.toUpperCase()}*`,
           `Provider: *${aiHelpConfig.provider || "openai"}*`,
           `Model: *${aiHelpConfig.model || "gpt-4o-mini"}*`,
           `Endpoint: *${aiHelpConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions"}*`].join("\n")) +
-        novaWrap("Provider", buildProviderList(prefix)) +
-        novaWrap("Pakai", [`*${prefix}aiset list* — lihat pengaturan AI`, `*${prefix}aiset provider <nama>* — lihat provider`, `*${prefix}aiset on/off* — owner toggle AI Help`, `*${prefix}aiset mode offline/online* — owner ganti mode`].join("\n")) +
+        raraWrap("Provider", buildProviderList(prefix)) +
+        raraWrap("Pakai", [`*${prefix}aiset list* — lihat pengaturan AI`, `*${prefix}aiset provider <nama>* — lihat provider`, `*${prefix}aiset on/off* — owner toggle AI Help`, `*${prefix}aiset mode offline/online* — owner ganti mode`].join("\n")) +
         
         "\n" ;
 
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
       const provider = DEFAULT_PROVIDERS[key];
       if (!provider) {
         const text =
-          novaWrap("Tidak Dikenal", [`Provider *${value || ""}* tidak dikenali.`,
+          raraWrap("Tidak Dikenal", [`Provider *${value || ""}* tidak dikenali.`,
             `Ketik *${prefix}aiset list* untuk lihat daftar.`].join("\n")) +
           "\n" ;
 
@@ -83,8 +83,8 @@ async function handler(m, { sock, config: botConfig }) {
 
       const models = (provider.models || []).join(", ");
       const text =
-        novaWrap("Provider", "🤖") +
-        novaWrap(provider.name.toUpperCase(), [
+        raraWrap("Provider", "🤖") +
+        raraWrap(provider.name.toUpperCase(), [
           `Key: *${key}*`,
           `Default model: *${provider.defaultModel}*`,
           `Models: *${models}*`,
@@ -101,7 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "on" || action === "off") {
       if (!m.isOwner) {
         const text =
-          novaWrap("aiset", "Perintah ini khusus owner — Hanya owner yang bisa menyalakan/mematikan AI Help.", "error") +
+          raraWrap("aiset", "Perintah ini khusus owner — Hanya owner yang bisa menyalakan/mematikan AI Help.", "error") +
           "\n" ;
 
         await m.reply(text);
@@ -114,7 +114,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!botConfig.aiHelp.mode) botConfig.aiHelp.mode = "offline";
 
       const text =
-        novaWrap("AI Settings", [`Status: *${newState ? "ON" : "OFF"}*`,
+        raraWrap("AI Settings", [`Status: *${newState ? "ON" : "OFF"}*`,
           `Mode: *${String(botConfig.aiHelp.mode || "offline").toUpperCase()}*`,
           "Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
@@ -127,7 +127,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "mode") {
       if (!m.isOwner) {
         const text =
-          novaWrap("aiset", "Perintah ini khusus owner — hanya owner yang bisa mengganti mode ai help.", "error") +
+          raraWrap("aiset", "Perintah ini khusus owner — hanya owner yang bisa mengganti mode ai help.", "error") +
           "\n" ;
 
         await m.reply(text);
@@ -137,7 +137,7 @@ async function handler(m, { sock, config: botConfig }) {
       const newMode = String(value || "").toLowerCase();
       if (!["offline", "online"].includes(newMode)) {
         const text =
-          novaWrap("aiset", ["Mode yang tersedia: offline atau online.",
+          raraWrap("aiset", ["Mode yang tersedia: offline atau online.",
             "",
             `💡 Contoh: ${prefix}aiset mode online`]) +
           "\n" ;
@@ -150,7 +150,7 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp.mode = newMode;
 
       const text =
-        novaWrap("AI Settings", [`Mode: *${newMode.toUpperCase()}*`,
+        raraWrap("AI Settings", [`Mode: *${newMode.toUpperCase()}*`,
           "Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
@@ -160,7 +160,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      novaWrap("Tidak Dikenal", [`Aksi *${action}* tidak dikenali.`,
+      raraWrap("Tidak Dikenal", [`Aksi *${action}* tidak dikenali.`,
         `Ketik *${prefix}aiset list* untuk lihat opsi.`].join("\n")) +
       "\n" ;
 
@@ -168,7 +168,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AISet", "Gagal nih, coba lagi ya") +
+      raraError("AISet", "Gagal nih, coba lagi ya") +
       "\n" ;
 
     await m.reply(text, "aiset");

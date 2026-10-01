@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // independence.js — Berita Merdeka
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "merdeka",
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const data = res.data?.data || res.data || [];
     if (!Array.isArray(data) || data.length === 0) {
       await m.react("❌");
-      return m.reply(novaWrap("merdeka", "Gagal mengambil berita!", "error"));
+      return m.reply(raraWrap("merdeka", "Gagal mengambil berita!", "error"));
     }
 
     let _lines = [];
@@ -31,13 +31,13 @@ async function handler(m, { sock }) {
       if (item.url || item.link) _lines.push(`${item.url || item.link}`);
       _lines.push(``);
     });
-    let msg = novaBox("BERITA MERDEKA", _lines);
+    let msg = raraBox("BERITA MERDEKA", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
     console.error("merdeka error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("merdeka", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("merdeka", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

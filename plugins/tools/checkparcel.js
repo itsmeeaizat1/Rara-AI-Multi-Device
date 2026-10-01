@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // checkparcel.js — Cek resi pengiriman via Binderbyte API (needs API key)
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const input = m.args || [];
 
     if (!input.length || input[0] === "list") {
-      return m.reply(novaWrap("Cek Resi", [
+      return m.reply(raraWrap("Cek Resi", [
         "Cek resi pengiriman via Binderbyte",
         "",
         "📌 *Cara Pakai:*",
@@ -60,12 +60,12 @@ async function handler(m, { sock, config: botConfig, db }) {
     const courierCode = courier === "j&t" ? "jnt" : courier;
 
     if (!awb) {
-      return m.reply(novaWrap("Cek Resi", `Masukkan nomor resi. Contoh: ${m.prefix}cekresi ${courier} 123456789`));
+      return m.reply(raraWrap("Cek Resi", `Masukkan nomor resi. Contoh: ${m.prefix}cekresi ${courier} 123456789`));
     }
 
     const validCourier = COURIERS.find(c => c.code === courierCode);
     if (!validCourier) {
-      return m.reply(novaWrap("Cek Resi", [
+      return m.reply(raraWrap("Cek Resi", [
         `Kurir "${courier}" tidak dikenal.`,
         `Lihat daftar kurir: ${m.prefix}cekresi list`,
       ]));
@@ -74,7 +74,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const apiKey = config.binderbyteKey || config.APIkey?.binderbyte || "";
 
     if (!apiKey) {
-      return m.reply(novaWrap("Cek Resi", [
+      return m.reply(raraWrap("Cek Resi", [
         "API key Binderbyte belum diset.",
         "",
         "Dapatkan di: https://binderbyte.com",
@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const json = await res.json();
 
     if (json.code !== 200 || !json.data) {
-      return m.reply(novaWrap("Cek Resi", `Resi tidak ditemukan. Cek kembali kurir & nomor resi.\nKurir: ${validCourier.name}\nResi: ${awb}`));
+      return m.reply(raraWrap("Cek Resi", `Resi tidak ditemukan. Cek kembali kurir & nomor resi.\nKurir: ${validCourier.name}\nResi: ${awb}`));
     }
 
     const summary = json.data.summary || {};
@@ -110,7 +110,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       }
     }
     await m.react("🐣");
-    return m.reply(novaWrap("Cek Resi", text));
+    return m.reply(raraWrap("Cek Resi", text));
   } catch (e) {
     await m.react("❌");
     console.error("[cekresi] error:", e.message);

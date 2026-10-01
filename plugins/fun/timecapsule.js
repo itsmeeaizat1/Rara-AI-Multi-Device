@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,   separator,
-  tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,   separator,
+  tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "timecapsule",
@@ -29,13 +29,13 @@ const PRESETS = [
 
 function buildMenu(prefix) {
   return (
-    novaWrap("Time Capsule", ["Fitur: *time capsule*",
+    raraWrap("Time Capsule", ["Fitur: *time capsule*",
       "Konsep: *Pesan dikunci, terbuka nanti*",
       "Cooldown: *10 detik*"].join("\n")) +
     "\n" +
-    novaWrap("PresEt Idea", PRESETS) +
+    raraWrap("PresEt Idea", PRESETS) +
     "\n" +
-    novaWrap("Pakai", [`${prefix}timecapsule <hari>|<pesan>`, `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
+    raraWrap("Pakai", [`${prefix}timecapsule <hari>|<pesan>`, `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
     "\n" +
     tipText("Pesan tidak dikirim otomatis; ini simulasi konsep dulu") +
     "\n" +
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!Number.isInteger(days) || days <= 0 || !message) {
       const text =
-        novaWrap("Time Capsule", ["Alasan: *format salah*",
+        raraWrap("Time Capsule", ["Alasan: *format salah*",
           `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}timecapsule untuk melihat menu`);
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
     openDate.setDate(openDate.getDate() + days);
 
     const text =
-      novaWrap("Time Capsule", [`Durasi: *${days} hari*`,
+      raraWrap("Time Capsule", [`Durasi: *${days} hari*`,
         `Terbuka: *${openDate.toLocaleDateString("id-ID")}*`,
         `Pesan: *"${message}"*`].join("\n")) +
       "\n" +
@@ -88,7 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     await m.react("❌");
     const text =
-      novaError("TimeCapsule", "Gagal nih, coba lagi ya");
+      raraError("TimeCapsule", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "timecapsule");
   }

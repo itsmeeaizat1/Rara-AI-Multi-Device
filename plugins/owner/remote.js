@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "remote",
@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
 
     const text =
-      novaWrap("Remote", ["Fitur remote control aktif.",
+      raraWrap("Remote", ["Fitur remote control aktif.",
         "Gunakan perintah yang valid."].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Owner", "Gagal nih, coba lagi ya");
+      raraError("Owner", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "remote");
   }

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 AI Roleplay Chat — .airoleplaychat
 // 🔹 Roleplay AI bareng 17 karakter (Sakura, Gojo Satoru, Anya, Luffy,
@@ -14,11 +14,11 @@
 //   dan di-inject ringkas ke query biar karakter "inget" obrolan.
 // ═════════════════════════════════════════════
 
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import { listRoleplayCharacters, callRoleplay } from "../../src/scraper/fazzroleplay.js";
 import { getFazzcodeKey } from "../../src/lib/config/env-loader.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { startAiStatus } from "../../src/lib/nova-ai-status.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { startAiStatus } from "../../src/lib/rara-ai-status.js";
 
 const SESSION_KEY = "roleplaySession";
 
@@ -72,18 +72,18 @@ async function handler(m, { sock }) {
       await m.react("🧠");
       if (!getFazzcodeKey()) {
         await m.react("❌");
-        return m.reply(novaWrap("airoleplaychat", "⚠️ API key fazzcode belum di-set (src/lib/apikey/apikeys.json: aiSatuan → fazzcode)."));
+        return m.reply(raraWrap("airoleplaychat", "⚠️ API key fazzcode belum di-set (src/lib/apikey/apikeys.json: aiSatuan → fazzcode)."));
       }
       const r = await listRoleplayCharacters();
       if (!r.ok) {
         await m.react("❌");
-        return m.reply(novaWrap("airoleplaychat", `⚠️ Gagal ambil daftar karakter (${r.error === "API_KEY" ? "API key kosong" : r.error}). Coba lagi nanti ya.`));
+        return m.reply(raraWrap("airoleplaychat", `⚠️ Gagal ambil daftar karakter (${r.error === "API_KEY" ? "API key kosong" : r.error}). Coba lagi nanti ya.`));
       }
       await m.react("🐣");
       const lines = r.characters
         .map((c) => `🎭 *${c.name}*\n${String(c.preview || "").slice(0, 90)}...`)
         .join("\n\n");
-      return m.reply(novaWrap("airoleplaychat",
+      return m.reply(raraWrap("airoleplaychat",
         `🎭 *KARAKTER ROLEPLAY (${r.characters.length})*\n\n${lines}\n\n` +
         `💡 Mulai: *${m.prefix}airoleplaychat start <nama>*\n` +
         `✨ Persona bebas: *${m.prefix}airoleplaychat custom <nama> | <persona>*`));
@@ -91,18 +91,18 @@ async function handler(m, { sock }) {
 
     // ═══ .airoleplaychat stop — akhiri sesi
     if (sub === "stop" || sub === "end" || sub === "keluar" || sub === "selesai") {
-      if (!session) return m.reply(novaWrap("airoleplaychat", "Kamu gak punya sesi roleplay yang aktif. Mulai dulu: *.airoleplaychat start <karakter>*"));
+      if (!session) return m.reply(raraWrap("airoleplaychat", "Kamu gak punya sesi roleplay yang aktif. Mulai dulu: *.airoleplaychat start <karakter>*"));
       const who = session.character;
       clearSession(m);
       await m.react("🐣");
-      return m.reply(novaWrap("airoleplaychat", `👋 Sesi roleplay bareng *${who}* udah berakhir.\n\nKapan-kapan main lagi ya! Mulai baru: *.airoleplaychat start <karakter>*`));
+      return m.reply(raraWrap("airoleplaychat", `👋 Sesi roleplay bareng *${who}* udah berakhir.\n\nKapan-kapan main lagi ya! Mulai baru: *.airoleplaychat start <karakter>*`));
     }
 
     // ═══ .airoleplaychat status — info sesi
     if (sub === "status" || sub === "info") {
-      if (!session) return m.reply(novaWrap("airoleplaychat", "Belum ada sesi roleplay aktif.\n\n💡 Mulai: *.airoleplaychat start <karakter>*\n🎭 Daftar karakter: *.airoleplaychat list*"));
+      if (!session) return m.reply(raraWrap("airoleplaychat", "Belum ada sesi roleplay aktif.\n\n💡 Mulai: *.airoleplaychat start <karakter>*\n🎭 Daftar karakter: *.airoleplaychat list*"));
       const turns = (session.history || []).filter((h) => h.who === "user").length;
-      return m.reply(novaWrap("airoleplaychat",
+      return m.reply(raraWrap("airoleplaychat",
         `🎭 Sesi Roleplay Aktif\n\n` +
         `🪪 Karakter : *${session.character}*\n` +
         `👤 Nama kamu : ${session.userName || m.pushName || "Player"}\n` +
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
       const rest = text.replace(/^custom\s+/i, "").replace(/^buat\s+/i, "").trim();
       const parts = rest.split("|").map((p) => p.trim()).filter(Boolean);
       if (parts.length < 2) {
-        return m.reply(novaWrap("airoleplaychat",
+        return m.reply(raraWrap("airoleplaychat",
           `✨ *Persona Custom*\n\nFormat: *${m.prefix}airoleplaychat custom <nama> | <persona/scene>*\n\n` +
           `Contoh:\n${m.prefix}airoleplaychat custom Miko | tsundere sahabat masa kecil yang diam-diam suka sama kamu\n` +
           `${m.prefix}airoleplaychat custom Kapten Jack | bajak laut kasar tapi setia`));
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
       });
       if (!r.ok) {
         await m.react("❌");
-        return m.reply(novaWrap("airoleplaychat", `⚠️ Gagal mulai roleplay (${r.error === "API_KEY" ? "API key kosong" : r.error}). Coba lagi nanti ya.`));
+        return m.reply(raraWrap("airoleplaychat", `⚠️ Gagal mulai roleplay (${r.error === "API_KEY" ? "API key kosong" : r.error}). Coba lagi nanti ya.`));
       }
       saveSession(m, {
         character: nama, persona, userName,
@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
         createdAt: Date.now(),
       });
       await m.react("🐣");
-      return m.reply(novaWrap(nama,
+      return m.reply(raraWrap(nama,
         `🎭 *ROLEPLAY DIMULAI — ${nama.toUpperCase()}*\n\n` +
         `📖 Persona: ${persona}\n\n` +
         `${nama}: ${r.reply}\n\n` +
@@ -153,7 +153,7 @@ async function handler(m, { sock }) {
     if (sub === "start" || sub === "mulai") {
       const rest = text.replace(/^start\s+/i, "").replace(/^mulai\s+/i, "").trim();
       if (!rest) {
-        return m.reply(novaWrap("airoleplaychat",
+        return m.reply(raraWrap("airoleplaychat",
           `🎭 *Mau roleplay sama siapa?*\n\n` +
           `Daftar karakter: *${m.prefix}airoleplaychat list*\n\n` +
           `Contoh: *${m.prefix}airoleplaychat start sakura*\n` +
@@ -162,7 +162,7 @@ async function handler(m, { sock }) {
       const [nama, ...sceneParts] = rest.split("|").map((p) => p.trim());
       const scene = sceneParts.filter(Boolean).join(" | ") || undefined;
       const character = nama.replace(/\s+/g, " ").trim();
-      if (!character) return m.reply(novaWrap("airoleplaychat", "Nama karakternya kosong nih 😅 Ketik *.airoleplaychat list* buat liat daftar."));
+      if (!character) return m.reply(raraWrap("airoleplaychat", "Nama karakternya kosong nih 😅 Ketik *.airoleplaychat list* buat liat daftar."));
 
       await m.react("🧠");
       const userName = m.pushName || "Player";
@@ -174,7 +174,7 @@ async function handler(m, { sock }) {
       });
       if (!r.ok) {
         await m.react("❌");
-        return m.reply(novaWrap("airoleplaychat", `⚠️ Gagal mulai roleplay (${r.error === "API_KEY" ? "API key kosong" : r.error}). Coba lagi nanti ya.`));
+        return m.reply(raraWrap("airoleplaychat", `⚠️ Gagal mulai roleplay (${r.error === "API_KEY" ? "API key kosong" : r.error}). Coba lagi nanti ya.`));
       }
       saveSession(m, {
         character, persona: scene, userName,
@@ -182,7 +182,7 @@ async function handler(m, { sock }) {
         createdAt: Date.now(),
       });
       await m.react("🐣");
-      return m.reply(novaWrap(character,
+      return m.reply(raraWrap(character,
         `🎭 *ROLEPLAY DIMULAI — ${character.toUpperCase()}*\n` +
         `${scene ? `\n🎬 Scene: ${scene}\n` : ""}\n` +
         `${character}: ${r.reply}\n\n` +
@@ -193,12 +193,12 @@ async function handler(m, { sock }) {
     const pesan = text;
     if (!pesan) {
       if (session) {
-        return m.reply(novaWrap("airoleplaychat",
+        return m.reply(raraWrap("airoleplaychat",
           `🎭 Sesi bareng *${session.character}* masih aktif!\n\n` +
           `💡 Lanjut ngobrol: *${m.prefix}airoleplaychat <pesan>*\n` +
           `ℹ️ Info sesi: *${m.prefix}airoleplaychat status*`));
       }
-      return m.reply(novaWrap("airoleplaychat",
+      return m.reply(raraWrap("airoleplaychat",
         `🎭 *AI ROLEPLAY CHAT*\n\n` +
         `Roleplay bareng karakter AI — konteks obrolan diinget!\n\n` +
         `🎭 ${m.prefix}airoleplaychat list — daftar karakter\n` +
@@ -209,7 +209,7 @@ async function handler(m, { sock }) {
     }
 
     if (!session) {
-      return m.reply(novaWrap("airoleplaychat",
+      return m.reply(raraWrap("airoleplaychat",
         `Belum ada sesi roleplay aktif — mulai dulu ya!\n\n` +
         `▶️ *${m.prefix}airoleplaychat start <karakter>*\n` +
         `🎭 Daftar karakter: *${m.prefix}airoleplaychat list*`));
@@ -231,13 +231,13 @@ async function handler(m, { sock }) {
     const hist = [...(session.history || []), { who: "user", text: pesan }, { who: "char", text: r.reply }].slice(-6);
     saveSession(m, { ...session, history: hist });
 
-    return aiStatus.finish(novaWrap(session.character,
+    return aiStatus.finish(raraWrap(session.character,
       `🎭 *${session.character.toUpperCase()}*\n\n${r.reply}\n\n` +
       `─\n💡 Lanjut: *${m.prefix}airoleplaychat <pesan>* • Akhiri: *.airoleplaychat stop*`));
   } catch (err) {
     console.error("[airoleplaychat]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("airoleplaychat", "⚠️ Ada error pas roleplay. Coba lagi ya."));
+    return m.reply(raraWrap("airoleplaychat", "⚠️ Ada error pas roleplay. Coba lagi ya."));
   }
 }
 

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "track",
@@ -91,25 +91,25 @@ async function handler(m, { sock }) {
 
   // === .track list (owner only) ===
   if (subCmd === "list") {
-    if (!m.isOwner) return m.reply(novaWrap("track", "Perintah ini khusus owner."));
+    if (!m.isOwner) return m.reply(raraWrap("track", "Perintah ini khusus owner."));
     return showAllOrders(m, db);
   }
 
   // === .track pending (owner only) ===
   if (subCmd === "pending") {
-    if (!m.isOwner) return m.reply(novaWrap("track", "Perintah ini khusus owner."));
+    if (!m.isOwner) return m.reply(raraWrap("track", "Perintah ini khusus owner."));
     return showPendingOrders(m, db);
   }
 
   // === .track update <trx> <status> (owner only) ===
   if (subCmd === "update") {
-    if (!m.isOwner) return m.reply(novaWrap("track", "Perintah ini khusus owner."));
+    if (!m.isOwner) return m.reply(raraWrap("track", "Perintah ini khusus owner."));
     return updateOrderStatus(m, sock, db, args);
   }
 
   // === .track stats (owner only) ===
   if (subCmd === "stats") {
-    if (!m.isOwner) return m.reply(novaWrap("track", "Perintah ini khusus owner."));
+    if (!m.isOwner) return m.reply(raraWrap("track", "Perintah ini khusus owner."));
     return showOrderStats(m, db);
   }
 
@@ -161,7 +161,7 @@ async function trackOrder(m, sock, db, trxId) {
         txt += getTimeAgo(t.createdAt) + "\n\n";
       }
       txt += "Ketik .track <nomor_trx> buat lihat detail.";
-      return m.reply(novaWrap("track", txt));
+      return m.reply(raraWrap("track", txt));
     }
 
     return m.reply(
@@ -246,7 +246,7 @@ async function showAllOrders(m, db) {
   const allTrx = Object.entries(transactions);
 
   if (allTrx.length === 0) {
-    return m.reply(novaWrap("track", "Belum ada pesanan."));
+    return m.reply(raraWrap("track", "Belum ada pesanan."));
   }
 
   allTrx.sort((a, b) => new Date(b[1].createdAt) - new Date(a[1].createdAt));
@@ -268,7 +268,7 @@ async function showAllOrders(m, db) {
   txt += "Update status: .track update <trx> <status>\n";
   txt += "Status: pending, paid, processing, shipped, delivered, completed, cancelled";
 
-  return m.reply(novaWrap("track", txt));
+  return m.reply(raraWrap("track", txt));
 }
 
 // === Lihat pesanan pending (owner) ===
@@ -280,7 +280,7 @@ async function showPendingOrders(m, db) {
   );
 
   if (pending.length === 0) {
-    return m.reply(novaWrap("track", "Tidak ada pesanan pending. Semua sudah selesai atau dibatalkan."));
+    return m.reply(raraWrap("track", "Tidak ada pesanan pending. Semua sudah selesai atau dibatalkan."));
   }
 
   pending.sort((a, b) => new Date(b[1].createdAt) - new Date(a[1].createdAt));
@@ -298,7 +298,7 @@ async function showPendingOrders(m, db) {
 
   txt += "Update: .track update <trx> <status>";
 
-  return m.reply(novaWrap("track", txt));
+  return m.reply(raraWrap("track", txt));
 }
 
 // === Update status pesanan (owner) ===
@@ -328,14 +328,14 @@ async function updateOrderStatus(m, sock, db, args) {
   }
 
   if (!VALID_STATUSES.includes(newStatus)) {
-    return m.reply(novaWrap("Info", "\u274c Status tidak valid: " + newStatus + "\n\nStatus tersedia: " + VALID_STATUSES.join(", ")));
+    return m.reply(raraWrap("Info", "\u274c Status tidak valid: " + newStatus + "\n\nStatus tersedia: " + VALID_STATUSES.join(", ")));
   }
 
   const transactions = db.setting("storeTransactions") || {};
   const trx = transactions[trxId];
 
   if (!trx) {
-    return m.reply(novaWrap("Info", "\u274c Pesanan " + trxId + " tidak ditemukan."));
+    return m.reply(raraWrap("Info", "\u274c Pesanan " + trxId + " tidak ditemukan."));
   }
 
   // Update status dan timestamp
@@ -407,7 +407,7 @@ async function updateOrderStatus(m, sock, db, args) {
   if (trx.courier) txt += "Kurir: " + trx.courier + "\n";
   txt += "\nNotifikasi terkirim ke pembeli.";
 
-  return m.reply(novaWrap("track", txt));
+  return m.reply(raraWrap("track", txt));
 }
 
 // === Statistik pesanan (owner) ===
@@ -416,7 +416,7 @@ async function showOrderStats(m, db) {
   const allTrx = Object.values(transactions);
 
   if (allTrx.length === 0) {
-    return m.reply(novaWrap("track", "Belum ada pesanan."));
+    return m.reply(raraWrap("track", "Belum ada pesanan."));
   }
 
   const stats = {};
@@ -448,7 +448,7 @@ async function showOrderStats(m, db) {
   txt += "Total Revenue: " + formatPrice(totalRevenue) + "\n";
   txt += "Total Dibatalkan: " + formatPrice(totalCancelled) + "\n";
 
-  return m.reply(novaWrap("track", txt));
+  return m.reply(raraWrap("track", txt));
 }
 
 export { pluginConfig as config, handler };

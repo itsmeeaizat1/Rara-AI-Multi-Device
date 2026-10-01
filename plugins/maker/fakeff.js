@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import { uploadTo0x0 } from "../../src/lib/nova-tmpfiles.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { uploadTo0x0 } from "../../src/lib/rara-tmpfiles.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "fakeff",
   alias: ["fakeff"],
@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const nama = m.text;
   if (!nama) {
-    { const __navText = novaWrap("FAKE FF", `💡 *Contoh:* ${m.prefix}fakeff nama1`); return await m.reply(__navText, "fakeff"); };
+    { const __navText = raraWrap("FAKE FF", `💡 *Contoh:* ${m.prefix}fakeff nama1`); return await m.reply(__navText, "fakeff"); };
   }
   try {
     await m.react("🕒");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (error) {
     await m.react("❌");
-    m.reply(novaWrap("fakeff", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("fakeff", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

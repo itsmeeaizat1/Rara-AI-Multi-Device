@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import axios from 'axios'
 import FormData from 'form-data'
 
@@ -72,10 +72,10 @@ async function handler(m, { sock }) {
     const content = text.substring(pipeIdx + 1).trim().replace(/;;/g, '\n')
 
     if (!name || name.length < 2) {
-        return m.reply(novaWrap("addlist", `❌ *nama terlalu pendek.*\n\nMinimal 2 karakter diperlukan agar mudah dikenali 📝`))
+        return m.reply(raraWrap("addlist", `❌ *nama terlalu pendek.*\n\nMinimal 2 karakter diperlukan agar mudah dikenali 📝`))
     }
     if (!content || content.length < 3) {
-        return m.reply(novaWrap("addlist", `❌ *isi informasi terlalu pendek.*\n\nMinimal 3 karakter diperlukan ✍️`))
+        return m.reply(raraWrap("addlist", `❌ *isi informasi terlalu pendek.*\n\nMinimal 3 karakter diperlukan ✍️`))
     }
 
     let imageUrl = null
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
     reply += `📋 _Lihat daftar: \`${m.prefix}list\`_\n`
     reply += `✏️ _Edit: \`${m.prefix}editlist ${lists.length}\`_`
 
-    return await m.reply(novaWrap("addlist", reply))
+    return await m.reply(raraWrap("addlist", reply))
 }
 
 export { pluginConfig as config, handler }

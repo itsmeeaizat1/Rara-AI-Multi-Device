@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // stickerfilter.js — Apply filter ke sticker (local @napi-rs/canvas, no API)
 import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
-import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { novaWrap, novaError, novaGuide, novaNoQuoted, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { addExifToWebp } from "../../src/lib/rara-exif.js";
+import { raraWrap, raraError, raraGuide, raraNoQuoted, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "stickerfilter",
@@ -112,40 +112,40 @@ async function handler(m, { sock }) {
   const filter = m.args?.[0]?.toLowerCase();
 
   if (!filter) {
-    return m.reply(novaWrap("Sticker Filter", `Filter tersedia: ${FILTERS.join(", ")}\n\nReply sticker dulu lalu ketik .stickerfilter <filter>`, "guide"));
+    return m.reply(raraWrap("Sticker Filter", `Filter tersedia: ${FILTERS.join(", ")}\n\nReply sticker dulu lalu ketik .stickerfilter <filter>`, "guide"));
   }
 
   if (!FILTERS.includes(filter)) {
-    return m.reply(novaError("Sticker Filter", `Filter tidak valid! Pilih: ${FILTERS.join(", ")}`));
+    return m.reply(raraError("Sticker Filter", `Filter tidak valid! Pilih: ${FILTERS.join(", ")}`));
   }
 
   if (!m.quoted || !m.quoted.sticker) {
-    return m.reply(novaNoQuoted("Sticker Filter", "sticker"));
+    return m.reply(raraNoQuoted("Sticker Filter", "sticker"));
   }
 
   try {
     await m.react("🕒");
     const stickerBuffer = await m.quoted.download();
     if (!stickerBuffer || stickerBuffer.length < 100) {
-      return m.reply(novaGagal("Sticker Filter"));
+      return m.reply(raraGagal("Sticker Filter"));
     }
 
     const filteredBuffer = await applyFilter(stickerBuffer, filter);
 
     let exifBuf = filteredBuffer;
     try {
-      exifBuf = await addExifToWebp(filteredBuffer, "Nova AI", `Filter: ${filter}`);
+      exifBuf = await addExifToWebp(filteredBuffer, "Rara AI", `Filter: ${filter}`);
     } catch (e) {
       console.log("[stickerfilter] exif:", e.message);
     }
 
     await sock.sendMessage(m.chat, { sticker: exifBuf }, { quoted: m });
     await m.react("🐣");
-    await m.reply(novaBerhasil("stickerfilter"));
+    await m.reply(raraBerhasil("stickerfilter"));
   } catch (err) {
     console.error("[StickerFilter]", err);
     await m.react("❌");
-    m.reply(novaWrap("stickerfilter", "Gagal apply filter ke sticker. Coba lagi!", "error"));
+    m.reply(raraWrap("stickerfilter", "Gagal apply filter ke sticker. Coba lagi!", "error"));
   }
 }
 

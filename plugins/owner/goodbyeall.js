@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
-import te from '../../src/lib/nova-error.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'goodbyeall',
     alias: ["goodbyeall"],
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const action = args[0]?.toLowerCase()
     
     if (!action || !['on', 'off'].includes(action)) {
-        return m.reply(novaCaption({
+        return m.reply(raraCaption({
   emoji: "👑",
   name: "goodbyeall",
   description: "Aktifkan/nonaktifkan goodbye di semua grup",
@@ -43,13 +43,13 @@ async function handler(m, { sock }) {
             count++
         }
         if (status) {
-            return m.reply(novaWrap("goodbyeall", `✅ *Goodbye Global On*\n\n` +
+            return m.reply(raraWrap("goodbyeall", `✅ *Goodbye Global On*\n\n` +
                 "" +
                 `🌐 Total Grup: *${count}*\n` +
                 `✅ Goodbye: *AKTIF*\n` +
                 `---\n\n` +
                 `Member yang keluar akan dikirim pesan perpisahan!`))       } else {
-            return m.reply(novaWrap("goodbyeall", `❌ *Goodbye Global Off*\n\n` +
+            return m.reply(raraWrap("goodbyeall", `❌ *Goodbye Global Off*\n\n` +
                 "" +
                 `🌐 Total Grup: *${count}*\n` +
                 `❌ Goodbye: *NONAKTIF*\n` +
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         }
     } catch (error) {
         console.error('[GoodbyeAll] Error:', error.message)
-        await m.reply(novaWrap("goodbyeall", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(raraWrap("goodbyeall", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

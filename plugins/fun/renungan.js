@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Random renungan images
 
 import fs from "fs";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 let fetchBuffer;
 try {
-  fetchBuffer = (await import("../../src/lib/nova-utils.js")).fetchBuffer;
+  fetchBuffer = (await import("../../src/lib/rara-utils.js")).fetchBuffer;
 } catch {}
 
 function getRandomRenungan() {

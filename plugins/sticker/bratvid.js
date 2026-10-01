@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 import { bratVid } from 'brat-canvas/video'
 import fs from 'fs'
 import path from 'path'
@@ -49,9 +49,9 @@ async function handler(m, { sock }) {
             author: config.sticker.author
         })
         await fs.promises.unlink(tempFile)
-        await m.reply(novaBerhasil("Bratvid"));
+        await m.reply(raraBerhasil("Bratvid"));
     } catch (error) {
-        m.reply(novaGangguan("Bratvid"))
+        m.reply(raraGangguan("Bratvid"))
     }
 }
 

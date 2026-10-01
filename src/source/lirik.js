@@ -1,4 +1,4 @@
-// NOVA SKILL PACK — LIRIK LAGU (12 Sep 2026)
+// RARA SKILL PACK — LIRIK LAGU (12 Sep 2026)
 // Cari lirik lagu lewat scraper LRCLIB existing (spotify-lyrics.js) —
 // pola retry ladder-nya kepake (lagu cover/alternatif tetep ketemu).
 // Skill pack: ke-load otomatis registerSkillPacks.

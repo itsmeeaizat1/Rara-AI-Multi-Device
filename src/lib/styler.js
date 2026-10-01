@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // styler.js — GUARD format kotak rata kiri (request owner 2026-09-07)
 //
 // BUG yang difix: pesan berkotak menembus border kiri karena baris lebih
@@ -14,7 +14,7 @@
 // GUARD SMALLCAPS TOTAL (owner 2026-09-07: "aku mau semua teksnya jadi
 // smallcaps semuanya — tanpa smallcaps kayak bukan bot, dikira orang"):
 // SEMUA teks keluar bot otomatis smallcaps via satu titik kunci
-// (m.reply di nova-serialize). Yang DILINDUNGI (tetap persis):
+// (m.reply di rara-serialize). Yang DILINDUNGI (tetap persis):
 // - URL (https?://...) biar link tetap bisa diklik
 // - isi code block fence (fitur kode/ASCII: tocode, tocase, css, json,
 //   exec, photoascii, sudoku, mindmap, fakechat, webclone)
@@ -46,7 +46,7 @@ function scUrlSafe(text) {
  */
 export function smallcapsText(text) {
   // PASSTHROUGH (owner 1 Okt 2026): keluaran bot kini teks biasa standar.
-  // Fungsi tetap ada (dipakai nova-serialize/nova-socket) biar import gak putus.
+  // Fungsi tetap ada (dipakai rara-serialize/rara-socket) biar import gak putus.
   const str = String(text ?? "");
   return str;
   /* kode konversi lama dipertahankan di bawah untuk referensi

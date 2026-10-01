@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 import https from "node:https";
 import http from "node:http";
 
@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
-      await m.reply( novaCaption({
+      await m.reply( raraCaption({
   emoji: "🛠️",
   name: "expandurl",
   description: "Expand short URL ke URL asli",
@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const result = await expand(url);
     await m.react("🐣");
-    await m.reply(novaWrap("Expand URL", [`Input: ${url.substring(0,50)}`,
+    await m.reply(raraWrap("Expand URL", [`Input: ${url.substring(0,50)}`,
       `Final: ${result.final.substring(0,80)}`,
       `Redirect: *${result.redirects}x*`].join("\n")));
   } catch (e) {

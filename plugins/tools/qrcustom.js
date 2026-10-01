@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from '../../src/lib/nova-error.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from '../../src/lib/rara-error.js'
 import config from "../../config.js";
 const pluginConfig = {
     name: ['qrcustom', 'qrcode', 'qr'],
@@ -20,8 +20,8 @@ const pluginConfig = {
 
 const BASE_URL = 'https://api.denayrestapi.xyz'
 
-// Upload via engine nova-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
-import { uploadImage } from "../../src/lib/nova-uploader.js"
+// Upload via engine rara-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
+import { uploadImage } from "../../src/lib/rara-uploader.js"
 
 async function uploadTo0x0(buffer) {
     try {
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const data = m.text?.trim()
     
     if (!data) {
-        return m.reply(novaWrap("qrcustom", [
+        return m.reply(raraWrap("qrcustom", [
       `📌 Format: ${m.prefix}qrcustom <url/text>`,
       ``,
       `💡 Contoh:`,
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         }, { quoted: m })
     } catch (err) {
     await m.react("❌");
-        return m.reply(novaWrap("logo.png", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("logo.png", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

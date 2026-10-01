@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // resetlevel.js — Reset level RPG (owner only)
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "resetlevel",
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const target = m.mentionedJid?.[0] || m.quoted?.sender || m.sender;
     const rpg = ensureRpg({ sender: target, key: { remoteJid: target } }, target.split("@")[0]);
-    if (!rpg) return m.reply(novaRpgBox("resetlevel", "Target belum terdaftar RPG.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("resetlevel", "Target belum terdaftar RPG.", "error"));
 
     rpg.level = 1;
     rpg.exp = 0;
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("resetlevel error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("resetlevel", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("resetlevel", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

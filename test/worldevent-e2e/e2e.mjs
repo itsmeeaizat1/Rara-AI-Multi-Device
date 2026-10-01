@@ -1,17 +1,17 @@
-// NOVA — E2E: WORLD EVENT / TIME CAPSULE (26 Sep 2026). Engine murni + plugin.
+// RARA — E2E: WORLD EVENT / TIME CAPSULE (26 Sep 2026). Engine murni + plugin.
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-worldevent-db-" + Date.now();
+const DB_DIR = "/tmp/rara-worldevent-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
 
-const eng = await import(R + "/src/lib/nova-world-event.js");
+const eng = await import(R + "/src/lib/rara-world-event.js");
 const {
   ensureWorldEventState, KINDS, scheduleNextSpawn, getActiveEvent,
   maybeAutoSpawn, spawnEvent, grantTitle, hasTitle, listTitles,
@@ -23,7 +23,7 @@ const {
 } = eng;
 const anim = await import(R + "/src/lib/libanimationrpg/libworldeventrpg.js");
 const { handler } = await import(R + "/plugins/rpg/worldevent.js");
-const np = await import(R + "/src/lib/nova-plugins.js");
+const np = await import(R + "/src/lib/rara-plugins.js");
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");

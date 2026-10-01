@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as cheerio from 'cheerio'
 async function scrapeWutheringWavesCharacter(name) {
     if (!name) throw new Error("Nama karakter kosong");

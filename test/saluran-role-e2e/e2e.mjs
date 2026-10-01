@@ -1,6 +1,6 @@
 // E2E — FIX ADMIN GATE SALURAN + STATUS SALURAN DI REPLY OWNER
 // AKAR (19 Sep 2026, owner: ".bot off pesannya ga nyampe ke saluran"):
-// fork "nova" newsletterMetadata() balikin hasil MENTAH WMex
+// fork "rara" newsletterMetadata() balikin hasil MENTAH WMex
 // { id, thread_metadata, viewer_metadata:{role} } — cek lama baca
 // meta.viewer_role (gak pernah ada) → bot admin sekalipun dianggap "bukan-admin".
 // FIX: normalizeNewsletterMeta() + reason spesifik + hasil saluran keliatan
@@ -21,7 +21,7 @@ process.on("uncaughtException", (e) => { w("UNCAUGHT: " + (e?.stack || e)); proc
 process.on("unhandledRejection", (e) => { w("REJECTION: " + (e?.stack || e)); process.exit(1); });
 
 const { normalizeNewsletterMeta, getSaluranChannel, _resetSaluranCacheForTest } =
-  await import(R + "/src/lib/nova-saluran.js");
+  await import(R + "/src/lib/rara-saluran.js");
 const config = (await import(R + "/config.js")).default;
 
 // ═══ SECTION 1: normalizeNewsletterMeta — dua bentuk ═══
@@ -31,8 +31,8 @@ const RAW_ADMIN = {
   id: "120363012345678901@newsletter",
   state: { type: "ACTIVE" },
   thread_metadata: {
-    name: { text: "Nova AI Official" },
-    description: { text: "Saluran resmi Nova AI" },
+    name: { text: "Rara AI Official" },
+    description: { text: "Saluran resmi Rara AI" },
     subscribers_count: "1234",
     verification: "VERIFIED",
     invite: "0029Vb97Nir9RZAWiwelWi29",
@@ -41,13 +41,13 @@ const RAW_ADMIN = {
   viewer_metadata: { role: "ADMIN", mute: "OFF" },
 };
 const n1 = normalizeNewsletterMeta(RAW_ADMIN);
-t("1a. bentuk MENTAH (fork nova) → id kebaca", n1?.id === "120363012345678901@newsletter", JSON.stringify(n1));
-t("1b. name dari thread_metadata.name.text", n1?.name === "Nova AI Official");
+t("1a. bentuk MENTAH (fork rara) → id kebaca", n1?.id === "120363012345678901@newsletter", JSON.stringify(n1));
+t("1b. name dari thread_metadata.name.text", n1?.name === "Rara AI Official");
 t("1c. followers dari subscribers_count (angka)", n1?.followers === 1234);
 t("1d. role dari viewer_metadata.role", n1?.role === "ADMIN");
 t("1e. verification VERIFIED", n1?.verification === "VERIFIED");
 t("1f. state ACTIVE", n1?.state === "ACTIVE");
-t("1g. description dari thread_metadata.description.text", n1?.description === "Saluran resmi Nova AI");
+t("1g. description dari thread_metadata.description.text", n1?.description === "Saluran resmi Rara AI");
 
 const FLAT_SUBSCRIBER = {
   id: "120363098765432109@newsletter",
@@ -65,7 +65,7 @@ t("1i. null/garbage → null (gak crash)", normalizeNewsletterMeta(null) === nul
 w("\n— section 2: gate admin —");
 
 _resetSaluranCacheForTest();
-config.saluran = { id: "@newsletter", name: "Nova AI Official", link: "https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29" };
+config.saluran = { id: "@newsletter", name: "Rara AI Official", link: "https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29" };
 
 const { fromSC } = await import(R + "/src/lib/styler.js");
 
@@ -120,13 +120,13 @@ w("\n— section 3: saluranStatusLine (bot.js) —");
 
 const botPlugin = await import(R + "/plugins/bot/bot.js");
 // saluranStatusLine gak di-export (internal) — tes lewat reply .bot off/on
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/saluran-role-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/saluran-role-e2e-db/rara.json");
 const db = getDatabase();
 
 const INVITE_CODE = "0029Vb97Nir9RZAWiwelWi29";
 const NUM_JID = "120363012345678901@newsletter";
-config.saluran = { id: "@newsletter", link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Nova AI Official" };
+config.saluran = { id: "@newsletter", link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Rara AI Official" };
 db.db.data.groups = db.db.data.groups || {};
 db.db.data.groups["999888777-1@g.us"] = { id: "999888777-1@g.us", subject: "Grup Tes" };
 await db.save();

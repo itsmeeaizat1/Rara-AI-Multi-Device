@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // musicfinder.js — Cari musik (audio recognition)
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "carimusik",
@@ -18,12 +18,12 @@ async function handler(m, { sock }) {
   try {
     const quoted = m.quoted;
     if (!quoted || (quoted.mtype !== "audioMessage" && quoted.mtype !== "videoMessage")) {
-      return m.reply(novaWrap("carimusik", "Reply audio/voice note yang ingin dicari!\n\nContoh: reply audio lalu .carimusik", "guide"));
+      return m.reply(raraWrap("carimusik", "Reply audio/voice note yang ingin dicari!\n\nContoh: reply audio lalu .carimusik", "guide"));
     }
     await m.react("🕒");
     // Download quoted audio then upload to AUDD API
     const buffer = await quoted.download();
-    if (!buffer) return m.reply(novaWrap("carimusik", "Gagal mengunduh audio!", "error"));
+    if (!buffer) return m.reply(raraWrap("carimusik", "Gagal mengunduh audio!", "error"));
 
     const formData = new FormData();
     formData.append("file", new Blob([buffer]), "audio.mp3");
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
 
     if (data.status !== "success" || !data.result) {
       await m.react("❌");
-      return m.reply(novaWrap("carimusik", "Lagu tidak dikenali. Coba audio yang lebih jelas.", "error"));
+      return m.reply(raraWrap("carimusik", "Lagu tidak dikenali. Coba audio yang lebih jelas.", "error"));
     }
 
     const r = data.result;
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
       _lines.push(`🎵 Judul: ${r.title || "Unknown"}`);
       _lines.push(`🎤 Artis: ${r.artist || "Unknown"}`);
       _lines.push(`💿 Album: ${r.album || "Unknown"}`);
-    let msg = novaBox("MUSIC FOUND", _lines);
+    let msg = raraBox("MUSIC FOUND", _lines);
     if (r.release_date) _lines.push(`📅 Rilis: ${r.release_date}`);
     if (r.apple_music?.url) _lines.push(`🍎 Apple Music: ${r.apple_music.url}`);
     if (r.spotify?.external_urls?.spotify) _lines.push(`🟢 Spotify: ${r.spotify.external_urls.spotify}`);
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("carimusik error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("carimusik", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("carimusik", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

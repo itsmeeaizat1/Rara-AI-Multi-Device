@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // fun.js — List command kategori fun
-import { getCommandsByCategory } from "../../src/lib/nova-plugins.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { getCommandsByCategory } from "../../src/lib/rara-plugins.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "fun",
@@ -40,7 +40,7 @@ ${cmdLines}Total: ${funCmds.length} Fitur*
     await m.react("");
   } catch (e) {
     console.error("[fun] handler error:", e.message);
-    try { await m.reply(novaError("Fun", "Ada error nih, coba lagi ya")); } catch {}
+    try { await m.reply(raraError("Fun", "Ada error nih, coba lagi ya")); } catch {}
   }
 }
 

@@ -11,12 +11,12 @@ function t(label, cond, extra) {
 }
 
 const R = path.resolve(".");
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/kalori-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/kalori-e2e-db/rara.json");
 const db = getDatabase();
 
 const { config, handler, parseEstimate, _setKaloriEstimatorsForTest } = await import(R + "/plugins/ai/calories.js");
-const { toSC } = await import(R + "/src/lib/nova-menu-style.js");
+const { toSC } = await import(R + "/src/lib/rara-menu-style.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 // reply bot di-smallcaps guard global → normalize ke plain biar assert gampang
 const norm = (s) => fromSC(String(s || ""));

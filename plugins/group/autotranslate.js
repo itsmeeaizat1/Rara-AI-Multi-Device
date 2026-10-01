@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // autotranslate.js — Auto-translate foreign messages in groups
 
 import {
-  novaError,
+  raraError,
   toSC,
   bracketBox,
   tipText,
-} from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-menu-style.js";
 import {
   enableAutoTranslate,
   disableAutoTranslate,
@@ -14,7 +14,7 @@ import {
   setTargetLang,
   detectLanguage,
   translateMessage,
-} from "../../src/lib/nova-autotranslate.js";
+} from "../../src/lib/rara-autotranslate.js";
 
 const pluginConfig = {
   name: "autotranslate",
@@ -151,7 +151,7 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[AutoTranslate] Error:", e.message);
-    return m.reply(novaError("AutoTranslate", "Gagal jalankan perintah nih"));
+    return m.reply(raraError("AutoTranslate", "Gagal jalankan perintah nih"));
   }
 }
 

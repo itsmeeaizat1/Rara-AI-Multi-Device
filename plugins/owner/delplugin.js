@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import { unloadPlugin } from "../../src/lib/nova-plugins.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { unloadPlugin } from "../../src/lib/rara-plugins.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "delplugin",
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
         `Plugin sudah dihapus dan tidak aktif!`,
     );
   } catch (error) {
-    await m.reply(novaWrap("delplugin", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(raraWrap("delplugin", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

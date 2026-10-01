@@ -11,7 +11,7 @@ const sites = {
 };
 const unreachable = { "https://mati.com": false };
 
-import * as lib from "../../src/lib/nova-webwatch.js";
+import * as lib from "../../src/lib/rara-webwatch.js";
 lib.setFetcher(async (url) => {
   if (unreachable[url]) throw new Error("timeout");
   if (/^https:\/\/contoh\.com\//.test(url)) return { status: 200, body: "halaman " + url, contentType: "text/html" };

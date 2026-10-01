@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Jadwal Bola
  * Fitur: .jadwalbola — jadwal pertandingan sepak bola dari ESPN (free, no key):
@@ -6,9 +6,9 @@
  *        match berikutnya 🔜 + KICKOFF COUNTDOWN LIVE (ticker edit-in-place).
  */
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/rara-countdown.js";
 
 const pluginConfig = {
   name: "jadwalbola",
@@ -139,7 +139,7 @@ async function handler(m, { sock }) {
 
     if (!events.length) {
       await m.react("🐣");
-      return m.reply(novaWrap("Jadwal Bola", [
+      return m.reply(raraWrap("Jadwal Bola", [
         "⚽ Gak ada pertandingan ditemukan" + (leagueKey ? ` buat ${LEAGUES[leagueKey].name}` : " 2 hari ke depan") + ".",
         "",
         "Liga yang didukung: " + Object.values(LEAGUES).map((l, i, a) => (a.findIndex((x) => x.code === l.code) === i ? l.name : null)).filter(Boolean).join(", "),
@@ -181,12 +181,12 @@ async function handler(m, { sock }) {
     }
     lines.push("Sumber: ESPN ⚽");
 
-    await m.reply(novaWrap("Jadwal Bola", lines.join("\n")));
+    await m.reply(raraWrap("Jadwal Bola", lines.join("\n")));
     await m.react("🐣");
 
     // ── kickoff countdown live (≤24 jam) ──
     if (nextEv && nextIs24h) {
-      const tickCard = (st) => novaWrap("Jadwal Bola", [
+      const tickCard = (st) => raraWrap("Jadwal Bola", [
         "⚽ *KICKOFF*",
         "",
         `🏟 ${nextEv.home} vs ${nextEv.away}`,
@@ -194,7 +194,7 @@ async function handler(m, { sock }) {
         "",
         `🕒 Kickoff dalam: *${formatRemaining(st.remainingMs)}*`,
       ].join("\n"));
-      const finalCard = novaWrap("Jadwal Bola", [
+      const finalCard = raraWrap("Jadwal Bola", [
         "⚽ *KICKOFF!*",
         "",
         `🏟 ${nextEv.home} vs ${nextEv.away}`,
@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[jadwalbola]", err.message || err);
     await m.react("❌");
-    return m.reply(novaWrap("jadwalbola", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("jadwalbola", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

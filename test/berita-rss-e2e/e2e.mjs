@@ -2,7 +2,7 @@
 // di-rewire ke RSS langsung (situs asli + Google News). Live fetch semua feed + handler smoke.
 import path from "node:path";
 const R = path.resolve(".");
-const { fetchNewsList, gnews } = await import(R + "/src/lib/nova-rss-news.js");
+const { fetchNewsList, gnews } = await import(R + "/src/lib/rara-rss-news.js");
 
 let pass = 0, fail = 0;
 const out = (s) => process.stdout.write(s + "\n");
@@ -25,7 +25,7 @@ const FEEDS = {
   viral: gnews.query("viral"),
 };
 
-out("— lib nova-rss-news —");
+out("— lib rara-rss-news —");
 t("1. fetchNewsList export", typeof fetchNewsList === "function");
 t("2. gnews helper top/query/site", typeof gnews.top === "string" && gnews.query("x").includes("x") && gnews.site("a.com").includes("site%3Aa.com") || gnews.site("a.com").includes("site:a.com"));
 

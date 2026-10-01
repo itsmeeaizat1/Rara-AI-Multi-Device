@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Job Class — Change job, view skills, unlock/upgrade skills
 
 import {
   ensureRpg, changeJob, unlockSkill, upgradeSkill,
   getAvailableSkills, JOB_DB, SKILL_DB
-} from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "job",
@@ -30,7 +30,7 @@ const RARITY_EMOJI = { common: "⬜", uncommon: "🟩", rare: "🟦", epic: "�
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("jobrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("jobrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
       msg += `📌 .jobrpg change <job> — ganti job\n`;
       msg += `📌 .jobrpg skill list — lihat skill tersedia\n`;
       
-      return m.reply(novaRpgBox("jobrpg", msg));
+      return m.reply(raraRpgBox("jobrpg", msg));
     }
 
     // List all jobs
@@ -89,24 +89,24 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 .jobrpg change <nama_job> untuk ganti\n`;
       
-      return m.reply(novaRpgBox("jobrpg", msg));
+      return m.reply(raraRpgBox("jobrpg", msg));
     }
 
     // Change job
     if (action === "change" || action === "ganti") {
       const jobName = args[1]?.toLowerCase();
   await animGeneric(m, sock, "💼", "Job Search");
-      if (!jobName) return m.reply(novaRpgBox("jobrpg", "Job apa? Ketik .jobrpg list untuk lihat pilihan.", "warn"));
+      if (!jobName) return m.reply(raraRpgBox("jobrpg", "Job apa? Ketik .jobrpg list untuk lihat pilihan.", "warn"));
 
       if (!JOB_DB[jobName]) {
-        return m.reply(novaRpgBox("jobrpg", `Job *${jobName}* tidak dikenal. Ketik .jobrpg list.`, "warn"));
+        return m.reply(raraRpgBox("jobrpg", `Job *${jobName}* tidak dikenal. Ketik .jobrpg list.`, "warn"));
       }
 
       const result = changeJob(m, jobName);
 
       if (result.success) {
         await m.react("🐣");
-        return m.reply(novaGameBox({
+        return m.reply(raraGameBox({
           title: "jobrpg", icon: "💼",
           flavor: "✅ *JOB BERHASIL DIGANTI!*",
           body: [
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
           cta: gameCTA("jobrpg"),
         }));
       } else {
-        return m.reply(novaRpgBox("jobrpg", result.reason || "Gagal ganti job.", "warn"));
+        return m.reply(raraRpgBox("jobrpg", result.reason || "Gagal ganti job.", "warn"));
       }
     }
 
@@ -175,19 +175,19 @@ async function handler(m, { sock }) {
         }
 
         
-        return m.reply(novaRpgBox("jobrpg", msg));
+        return m.reply(raraRpgBox("jobrpg", msg));
       }
 
       // Unlock skill
       if (skillAction === "unlock" || skillAction === "buka") {
         const skillId = args[2]?.toLowerCase();
-        if (!skillId) return m.reply(novaRpgBox("jobrpg", "Skill apa? Ketik .jobrpg skill list", "warn"));
+        if (!skillId) return m.reply(raraRpgBox("jobrpg", "Skill apa? Ketik .jobrpg skill list", "warn"));
 
         const result = unlockSkill(m, skillId);
 
         if (result.success) {
           await m.react("🐣");
-          return m.reply(novaGameBox({
+          return m.reply(raraGameBox({
             title: "jobrpg", icon: "⚡",
             flavor: "⚡ *SKILL TERBUKA!*",
             body: [
@@ -199,20 +199,20 @@ async function handler(m, { sock }) {
             cta: gameCTA("jobrpg"),
           }));
         } else {
-          return m.reply(novaRpgBox("jobrpg", result.reason || "Gagal unlock skill.", "warn"));
+          return m.reply(raraRpgBox("jobrpg", result.reason || "Gagal unlock skill.", "warn"));
         }
       }
 
       // Upgrade skill
       if (skillAction === "upgrade" || skillAction === "naik") {
         const skillId = args[2]?.toLowerCase();
-        if (!skillId) return m.reply(novaRpgBox("jobrpg", "Skill apa? Ketik .jobrpg skill list", "warn"));
+        if (!skillId) return m.reply(raraRpgBox("jobrpg", "Skill apa? Ketik .jobrpg skill list", "warn"));
 
         const result = upgradeSkill(m, skillId);
 
         if (result.success) {
           await m.react("🐣");
-          return m.reply(novaGameBox({
+          return m.reply(raraGameBox({
             title: "jobrpg", icon: "⬆️",
             flavor: "⬆️ *SKILL DI-UPGRADE!*",
             body: [
@@ -224,16 +224,16 @@ async function handler(m, { sock }) {
             cta: gameCTA("jobrpg"),
           }));
         } else {
-          return m.reply(novaRpgBox("jobrpg", result.reason || "Gagal upgrade skill.", "warn"));
+          return m.reply(raraRpgBox("jobrpg", result.reason || "Gagal upgrade skill.", "warn"));
         }
       }
     }
 
-    return m.reply(novaRpgBox("jobrpg", "Aksi tidak dikenal. Ketik .jobrpg untuk info, .jobrpg list untuk lihat job.", "warn"));
+    return m.reply(raraRpgBox("jobrpg", "Aksi tidak dikenal. Ketik .jobrpg untuk info, .jobrpg list untuk lihat job.", "warn"));
   } catch (err) {
     console.error("jobrpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("jobrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("jobrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

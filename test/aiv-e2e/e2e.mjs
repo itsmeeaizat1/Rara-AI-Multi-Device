@@ -1,7 +1,7 @@
-// E2E AIV — bicara dengan AI (nova agent) via voice note / teks,
+// E2E AIV — bicara dengan AI (rara agent) via voice note / teks,
 // AI balas pakai suara (VN) atau teks (upgrade 18 Sep 2026).
-// Otak: runAgent nova-agent.js (seam _setAivBrainForTest).
-// STT: nova-stt.js (seam _setAivSttForTest). TTS: edge-tts (seam _setAivTtsForTest).
+// Otak: runAgent rara-agent.js (seam _setAivBrainForTest).
+// STT: rara-stt.js (seam _setAivSttForTest). TTS: edge-tts (seam _setAivTtsForTest).
 // Jalankan: node test/aiv-e2e/e2e.mjs
 import fs from "fs";
 import os from "os";
@@ -29,7 +29,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "aiv-e2e-"));
 process.chdir(tmp);
 
 // init db fresh di tmp cwd (getDatabase butuh initDatabase dulu)
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(path.join(tmp, "database", "main"));
 
 const mod = await import("../../plugins/owner/aiautointeractionvn.js");

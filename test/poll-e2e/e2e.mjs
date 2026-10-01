@@ -8,9 +8,9 @@ const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 process.env.NOVA_TICK_MAXEDITS = "2"; // ticker settle cepat di test
 
-const DB_DIR = "/tmp/nova-poll-db-" + Date.now();
+const DB_DIR = "/tmp/rara-poll-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const { config, handler } = await import(R + "/plugins/group/poll.js");
@@ -18,14 +18,14 @@ const { fromSC } = await import(R + "/src/lib/styler.js");
 const {
   pollPersist, buildPollResult, closePollNow, armPollTimer,
   restorePolls, pollBar,
-} = await import(R + "/src/lib/nova-poll-engine.js");
-const { _resetPersistForTest } = await import(R + "/src/lib/nova-ram-persist.js");
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
+} = await import(R + "/src/lib/rara-poll-engine.js");
+const { _resetPersistForTest } = await import(R + "/src/lib/rara-ram-persist.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
-const norm = (s) => fromSC(String(s)).toLowerCase(); // GOTCHA: novaWrap = smallcaps
+const norm = (s) => fromSC(String(s)).toLowerCase(); // GOTCHA: raraWrap = smallcaps
 
 const CHAT = "g1@g.us";
 let sends = [];
@@ -41,7 +41,7 @@ const mkSock = () => ({
     { id: "user3@g.us" },
   ] }),
 });
-// mirror nova-serialize: m.text = TANPA command; args = kata-kata
+// mirror rara-serialize: m.text = TANPA command; args = kata-kata
 const mk = (text, sender = "user1@g.us") => {
   const t = String(text).trim();
   return {
@@ -54,7 +54,7 @@ const mk = (text, sender = "user1@g.us") => {
 };
 function resetAll() {
   sends = [];
-  global.novaPolls = {};
+  global.raraPolls = {};
   global.__pollTimers = {};
   _resetPersistForTest();
 }
@@ -73,9 +73,9 @@ w("\n— create: native poll + ticker 🕒 + persist —");
   const card = norm(sends.find((s) => norm(s.text).includes("poll dibuat"))?.text || "");
   check("kartu live countdown (🕒 + sisa)", card.includes("🕒") && card.includes("mnt"), JSON.stringify(card.slice(0, 220)));
 
-  const poll = Object.values(global.novaPolls[CHAT] || {})[0];
+  const poll = Object.values(global.raraPolls[CHAT] || {})[0];
   check("poll aktif + timer armed", poll && !poll.closed && typeof global.__pollTimers[`${CHAT}:${poll.id}`] === "object", poll?.id);
-  check("persist ke db", Object.keys(getDatabase().setting("ramPersist:novaPolls")?.[CHAT] || {}).length === 1);
+  check("persist ke db", Object.keys(getDatabase().setting("ramPersist:raraPolls")?.[CHAT] || {}).length === 1);
 
   // multi → selectableCount = jumlah opsi
   resetAll();
@@ -96,7 +96,7 @@ w("\n— vote + hasil bar ▰▱ —");
   resetAll();
   const sock = mkSock();
   await handler(mk("create 1h Makan? | A, B, C"), { sock });
-  const poll = Object.values(global.novaPolls[CHAT])[0];
+  const poll = Object.values(global.raraPolls[CHAT])[0];
 
   await handler(mk(`vote ${poll.id} 2`, "user1@g.us"), { sock });
   check("vote tercatat", norm(sends.at(-1).text).includes("vote tercatat"));
@@ -122,7 +122,7 @@ w("\n— vote + hasil bar ▰▱ —");
   resetAll();
   const s2 = mkSock();
   await handler(mk("create multi Hobi | A, B, C"), { sock: s2 });
-  const p2 = Object.values(global.novaPolls[CHAT])[0];
+  const p2 = Object.values(global.raraPolls[CHAT])[0];
   await handler(mk(`vote ${p2.id} 1`, "user1@g.us"), { sock: s2 });
   await handler(mk(`vote ${p2.id} 2`, "user1@g.us"), { sock: s2 });
   check("multi: 2 pilihan tercatat", p2.votes["user1@g.us"].length === 2, JSON.stringify(p2.votes));
@@ -130,7 +130,7 @@ w("\n— vote + hasil bar ▰▱ —");
   check("multi: toggle batal 1 pilihan", p2.votes["user1@g.us"].length === 1 && p2.votes["user1@g.us"][0] === 1, JSON.stringify(p2.votes));
 
   // persist abis vote
-  const savedP = Object.values(getDatabase().setting("ramPersist:novaPolls")[CHAT])[0];
+  const savedP = Object.values(getDatabase().setting("ramPersist:raraPolls")[CHAT])[0];
   check("votes ke-persist di db", Object.keys(savedP.votes).length === 1);
 }
 
@@ -140,7 +140,7 @@ w("\n— close: admin/creator guard + hasil + closing adaptif —");
   resetAll();
   const sock = mkSock();
   await handler(mk("create 1h Q? | A, B"), { sock });
-  const poll = Object.values(global.novaPolls[CHAT])[0];
+  const poll = Object.values(global.raraPolls[CHAT])[0];
   await handler(mk(`vote ${poll.id} 1`, "user1@g.us"), { sock });
   await handler(mk(`vote ${poll.id} 2`, "user2@g.us"), { sock });
   await handler(mk(`vote ${poll.id} 1`, "user3@g.us"), { sock });
@@ -168,7 +168,7 @@ w("\n— auto-close timer beneran nembak —");
   resetAll();
   const sock = mkSock();
   await handler(mk("create 10s Auto? | A, B"), { sock });
-  const poll = Object.values(global.novaPolls[CHAT])[0];
+  const poll = Object.values(global.raraPolls[CHAT])[0];
   await handler(mk(`vote ${poll.id} 2`, "user1@g.us"), { sock });
 
   await new Promise((res) => setTimeout(res, 11000)); // timer min 10 dtk — tunggu lewat
@@ -185,11 +185,11 @@ w("\n— delete + list —");
   const sock = mkSock();
   await handler(mk("create 1h D1? | A, B"), { sock });
   await handler(mk("create 1h D2? | A, B"), { sock });
-  const polls = Object.keys(global.novaPolls[CHAT]);
+  const polls = Object.keys(global.raraPolls[CHAT]);
   check("2 poll aktif", polls.length === 2);
 
   await handler(mk(`delete ${polls[0]}`, "user1@g.us"), { sock });
-  check("delete → hilang + persist", Object.keys(global.novaPolls[CHAT]).length === 1 && Object.keys(getDatabase().setting("ramPersist:novaPolls")[CHAT]).length === 1);
+  check("delete → hilang + persist", Object.keys(global.raraPolls[CHAT]).length === 1 && Object.keys(getDatabase().setting("ramPersist:raraPolls")[CHAT]).length === 1);
   check("poll.deleted marker (ticker closing DIHAPUS)", true);
 
   await handler(mk("list"), { sock });
@@ -209,16 +209,16 @@ w("\n— restore: tahan restart —");
   resetAll();
   const sock = mkSock();
   await handler(mk("create 1h Persist? | A, B"), { sock });
-  const poll = Object.values(global.novaPolls[CHAT])[0];
+  const poll = Object.values(global.raraPolls[CHAT])[0];
   await handler(mk(`vote ${poll.id} 1`, "user2@g.us"), { sock });
 
   // simulasikan restart: RAM hilang, db tetep
-  global.novaPolls = {};
+  global.raraPolls = {};
   global.__pollTimers = {};
   _resetPersistForTest();
 
   const st = restorePolls(sock);
-  const restored = Object.values(global.novaPolls[CHAT] || {})[0];
+  const restored = Object.values(global.raraPolls[CHAT] || {})[0];
   check("restore: poll balik dari db", st.rearmed === 1 && restored && restored.id === poll.id, JSON.stringify(st));
   check("restore: votes ikut balik", restored && restored.votes["user2@g.us"] && restored.votes["user2@g.us"][0] === 0, JSON.stringify(restored?.votes));
   check("restore: timer re-armed", typeof global.__pollTimers[`${CHAT}:${poll.id}`] === "object");
@@ -228,7 +228,7 @@ w("\n— restore: tahan restart —");
   resetAll();
   const sock2 = mkSock();
   const p = { id: "POLD-MISS", question: "Missed?", options: ["A", "B"], votes: { x: [0] }, isMultiple: false, createdAt: Date.now() - 7200000, closedAt: Date.now() - 3600000, closed: false, creator: "x", creatorName: "x" };
-  global.novaPolls = { [CHAT]: { [p.id]: p } };
+  global.raraPolls = { [CHAT]: { [p.id]: p } };
   const st2 = restorePolls(sock2);
   check("restore missed: kelewat → ditutup + hasil dikirim", st2.missed === 1 && p.closed === true && norm(sends.at(-1).text).includes("poll berakhir"), JSON.stringify(st2));
 }

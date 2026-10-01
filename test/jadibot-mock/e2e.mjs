@@ -1,14 +1,14 @@
 process.on("uncaughtException", (e) => { console.log("UNCAUGHT:", e.stack); process.exit(1); });
 const R = process.cwd();
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase("/tmp/jb/db");
 
 const db = getDatabase();
 db.setting("jadibotAccess", { mode: "all", allowedUsers: [] });
 
-const mock = await import("./nova-mock.mjs");
+const mock = await import("./rara-mock.mjs");
 const stub = await import("./handler-stub.mjs");
-const mgr = await import(R + "/src/lib/nova-jadibot-manager.js");
+const mgr = await import(R + "/src/lib/rara-jadibot-manager.js");
 const jb = await import(R + "/plugins/main/becomebot.js");
 const sb = await import(R + "/plugins/main/stopjadibot.js");
 
@@ -18,7 +18,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
 // ── mock parent sock & message ──
 const parent = new mock.MockSocket();
-parent.user = { id: "628174887770:s.whatsapp.net", name: "NovaParent" };
+parent.user = { id: "628174887770:s.whatsapp.net", name: "RaraParent" };
 const mkM = (sender, args = [], isOwner = false) => ({
   chat: sender, sender, prefix: ".", args, isOwner,
   key: { id: "m" + Math.random().toString(16).slice(2), remoteJid: sender },

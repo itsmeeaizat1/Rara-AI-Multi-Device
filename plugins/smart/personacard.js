@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "personacard",
@@ -56,7 +56,7 @@ const PERSONALITY = [
 ];
 
 const SIGNATURE_MOVES = [
-  "Nova Strike", "Eclipse Slash", "Thunder Pierce", "Shadowstep", "Holy Smite",
+  "Rara Strike", "Eclipse Slash", "Thunder Pierce", "Shadowstep", "Holy Smite",
   "Dragon Fury", "Void Slash", "Frost Wall", "Soul Drain", "Star Burst",
   "Blade Storm", "Phantom Dash", "Inferno Blast", "Moonfall", "Ragnarok",
 ];
@@ -149,7 +149,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const stars = "★".repeat(Math.min(5, Math.ceil(level / 20)));
   const bar = (stat, max) => "▰".repeat(Math.min(10, Math.floor(stat / max * 10))) + "▱".repeat(10 - Math.min(10, Math.floor(stat / max * 10)));
 
-  await m.reply(novaWrap("Persona Card", [
+  await m.reply(raraWrap("Persona Card", [
     (target === m.sender ? "" : "@" + target.split("@")[0] + " - "),
     title,
     stars,

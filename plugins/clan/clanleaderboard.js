@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 const pluginConfig = {
     name: "clanleaderboard",
     alias: ["clanleaderboard"],
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
 
     const clans = Object.values(db.db.data.clans)
     if (clans.length === 0) {
-        return m.reply(novaWrap("clanleaderboard", `🏰 Belum ada clan terdaftar\n\nBuat: *.clancreate <nama>*`))
+        return m.reply(raraWrap("clanleaderboard", `🏰 Belum ada clan terdaftar\n\nBuat: *.clancreate <nama>*`))
     }
 
     clans.sort((a, b) => {

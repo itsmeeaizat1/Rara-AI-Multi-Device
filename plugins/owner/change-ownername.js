@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import { getOwnerName } from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "ganti-namaowner",
   alias: ["ganti-namaowner"],
@@ -62,9 +62,9 @@ async function handler(m, { sock, config }) {
       );
       fs.writeFileSync(configPath, configContent);
       config.owner.name = newName;
-      return m.reply(novaWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner utama diganti ke: *${newName}*`));
+      return m.reply(raraWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner utama diganti ke: *${newName}*`));
     } catch (error) {
-      return m.reply(novaWrap("ganti-namaowner", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("ganti-namaowner", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
@@ -84,7 +84,7 @@ async function handler(m, { sock, config }) {
   nameMap[targetNumber] = newName;
   db.setting("ownerNames", nameMap);
 
-  return m.reply(novaWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner *${targetNumber}* diganti ke: *${newName}*`));
+  return m.reply(raraWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner *${targetNumber}* diganti ke: *${newName}*`));
 }
 
 export { pluginConfig as config, handler };

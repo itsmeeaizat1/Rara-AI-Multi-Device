@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/scraper/mori-bridge.js — BRIDGE ESM → SCRAPERS MORI (CJS)
 //
 // Sumber: github.com/coflyn/scrapr (author Mori, MIT) — tersimpan utuh

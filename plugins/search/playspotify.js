@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // playspotify.js — Play versi Spotify: cari lagu Spotify → download mp3 → kirim
 // Request owner 11 Sep 2026: "buat fitur play tp versi spotify .playspotify"
 // Engine: spotidown.app (src/scraper/spotidown.js) — meta lengkap dari Spotify
@@ -18,9 +18,9 @@
 import axios from "axios";
 import { searchSpotiDown, downloadSpotiAudio } from "../../src/scraper/spotidown.js";
 import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
-import { novaGagal, novaGangguan, novaGuideV2, novaBerhasil } from "../../src/lib/nova-menu-style.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
+import { raraGagal, raraGangguan, raraGuideV2, raraBerhasil } from "../../src/lib/rara-menu-style.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
 
 const pluginConfig = {
   name: "playspotify",
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
 
   if (!query) {
     return m.reply(
-      novaGuideV2("playspotify", {
+      raraGuideV2("playspotify", {
  kaomoji: "(๑´ㅂ`๑)",
  sapaan: "mau dengerin lagu dari spotify? ketik judulnya! (˶ᵔ ᵕ ᵔ˶)",
         cara: "ketik judul lagunya sesudah command",
@@ -162,21 +162,21 @@ async function handler(m, { sock }) {
     // Step 5: Tawaran convert di bawahnya
     await offerConvert(sock, m, { buffer, type: "audio", platform: "Spotify", title, sourceUrl: "https://spotidown.app/" });
     await m.react("🐣");
-    await m.reply(novaBerhasil("Playspotify"));
+    await m.reply(raraBerhasil("Playspotify"));
   } catch (err) {
     console.error("[Playspotify]", err.message || err);
     await m.react("❌");
     if (/tidak ditemukan|gak ketemu/i.test(err.message || "")) {
       return m.reply(
-        novaGagal("Playspotify") + `\nLagu \`${query}\` gak ketemu — coba judul lengkapnya atau kata kunci lain.`
+        raraGagal("Playspotify") + `\nLagu \`${query}\` gak ketemu — coba judul lengkapnya atau kata kunci lain.`
       );
     }
     if (/Link download gak ketemu|kosong/i.test(err.message || "")) {
       return m.reply(
-        novaGagal("Playspotify") + "\nKetemu lagunya tapi file audionya gagal diambil — coba lagi sebentar ya."
+        raraGagal("Playspotify") + "\nKetemu lagunya tapi file audionya gagal diambil — coba lagi sebentar ya."
       );
     }
-    return m.reply(novaGangguan("Playspotify"));
+    return m.reply(raraGangguan("Playspotify"));
   }
 }
 

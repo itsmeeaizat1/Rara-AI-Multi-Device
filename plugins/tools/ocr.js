@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as _tesseract from "tesseract.js";
-import te from "../../src/lib/nova-error.js";
-import { sendToolsPreview } from "../../src/lib/nova-context.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { sendToolsPreview } from "../../src/lib/rara-context.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 function getTesseract() {
   return _tesseract;
@@ -25,7 +25,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
   if (!isImage) {
-    return m.reply(novaWrap("ocr", [
+    return m.reply(raraWrap("ocr", [
       `📌 Format: reply gambar dengan ${m.prefix}ocr`,,
       `Media yang didukung:`,
       `JPG, PNG, GIF, WEBP`
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
       buffer = await m.download();
     }
     if (!buffer || buffer.length === 0) {
-      return m.reply(novaWrap("Ocr", `❌ *gagal*\n\nTidak dapat download gambar`));
+      return m.reply(raraWrap("Ocr", `❌ *gagal*\n\nTidak dapat download gambar`));
     }
     const Tesseract = await getTesseract();
     const {
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     const extractedText = text ? text.trim() : "";
     if (!extractedText || extractedText.length === 0) {
       await m.react("🐣");
-      return m.reply(novaWrap("Ocr", `❌ *tidak ada teks*\n\nTidak ada teks yang terdeteksi di gambar`));
+      return m.reply(raraWrap("Ocr", `❌ *tidak ada teks*\n\nTidak ada teks yang terdeteksi di gambar`));
     }
     const responseText =
       `📖 *ocr result*\n\n` +
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     );
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("ocr", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("ocr", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

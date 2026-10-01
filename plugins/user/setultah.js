@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
-import { getBirthday, setBirthday } from "../../src/lib/nova-auto-birthday.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, bracketBox, tipText } from "../../src/lib/rara-menu-style.js";
+import { getBirthday, setBirthday } from "../../src/lib/rara-auto-birthday.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -65,14 +65,14 @@ async function handler(m, { sock }) {
   // Validate
   if (monthNum < 1 || monthNum > 12) {
     await m.react("❗");
-    return m.reply(novaWrap("setultah", "Bulan gak valid! (1-12)"));
+    return m.reply(raraWrap("setultah", "Bulan gak valid! (1-12)"));
   }
 
   // Simple day validation
   const maxDays = new Date(yearNum || 2000, monthNum, 0).getDate();
   if (dayNum < 1 || dayNum > maxDays) {
     await m.react("❗");
-    return m.reply(novaWrap("setultah", "Tanggal gak valid nih!"));
+    return m.reply(raraWrap("setultah", "Tanggal gak valid nih!"));
   }
 
   // Validate year if provided
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
     const currentYear = new Date().getFullYear();
     if (yearNum < 1900 || yearNum > currentYear) {
       await m.react("❗");
-      return m.reply(novaWrap("setultah", "Tahun gak valid nih!"));
+      return m.reply(raraWrap("setultah", "Tahun gak valid nih!"));
     }
   }
 
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
   const result = setBirthday(m.sender, birthdayStr);
 
   if (!result.success) {
-    return m.reply(novaWrap("setultah", "Gagal simpan tanggal lahir nih"));
+    return m.reply(raraWrap("setultah", "Gagal simpan tanggal lahir nih"));
   }
   const lines = [
     `${toSC("Tanggal lahir tersimpan!")}: ${birthdayStr}`,

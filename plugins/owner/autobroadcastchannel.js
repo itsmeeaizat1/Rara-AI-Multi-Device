@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaBox } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraBox } from "../../src/lib/rara-menu-style.js";
 import {
   NOTIFY_EVENTS,
   getAllNotifyStatus,
   setNotifyEnabled,
-} from "../../src/lib/nova-saluran-broadcast.js";
+} from "../../src/lib/rara-saluran-broadcast.js";
 
 const pluginConfig = {
   name: "autobroadcastchannel",
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "all") {
     const action = args[1]?.toLowerCase();
     if (action !== "on" && action !== "off") {
-      return m.reply(novaBox("Auto Broadcast Channel", ["❌ Gunakan: " + prefix + "autobroadcastchannel all on/off"]));
+      return m.reply(raraBox("Auto Broadcast Channel", ["❌ Gunakan: " + prefix + "autobroadcastchannel all on/off"]));
     }
 
     const enabled = action === "on";
@@ -66,7 +66,7 @@ async function handler(m, { sock, config: botConfig }) {
       count++;
     }
 
-    return m.reply(novaBox("Auto Broadcast Channel", ["✅ Status: " + (enabled ? "ALL ON" : "ALL OFF"), "Total: " + count + " event", "---", "Cek status: " + prefix + "autobroadcastchannel"]));
+    return m.reply(raraBox("Auto Broadcast Channel", ["✅ Status: " + (enabled ? "ALL ON" : "ALL OFF"), "Total: " + count + " event", "---", "Cek status: " + prefix + "autobroadcastchannel"]));
   }
 
   // Toggle specific event
@@ -87,7 +87,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     setNotifyEnabled(evKey, newVal);
 
-    return m.reply(novaBox("Auto Broadcast Channel", ["Event: " + NOTIFY_EVENTS[evKey], "Status: " + (newVal ? "✅ ON" : "❌ OFF"), "---", newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan", "Cek semua: " + prefix + "autobroadcastchannel"]));
+    return m.reply(raraBox("Auto Broadcast Channel", ["Event: " + NOTIFY_EVENTS[evKey], "Status: " + (newVal ? "✅ ON" : "❌ OFF"), "---", newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan", "Cek semua: " + prefix + "autobroadcastchannel"]));
   }
 
   // Unknown event
@@ -96,7 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
     availableList += key + " — " + label + "\n";
   }
 
-  return m.reply(novaBox("Auto Broadcast Channel", ["❌ Event: " + subCmd + " tidak ada", "---", "Event tersedia:", availableList.trim(), "---", "Contoh: " + prefix + "autobroadcastchannel userBanned on"]));
+  return m.reply(raraBox("Auto Broadcast Channel", ["❌ Event: " + subCmd + " tidak ada", "---", "Event tersedia:", availableList.trim(), "---", "Contoh: " + prefix + "autobroadcastchannel userBanned on"]));
 }
 
 export { pluginConfig as config, handler };

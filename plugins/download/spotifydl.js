@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spotifydl.js — Download lagu Spotify (spotifydown API)
 import path from "node:path";
 import axios from "axios";
-import { novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -78,10 +78,10 @@ async function downloadTrack(trackId) {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuide("Spotify DL", "Kirim URL lagu Spotify yang mau kamu download!", `${m.prefix}spotifydl https://open.spotify.com/track/xxx`));
+    return m.reply(raraGuide("Spotify DL", "Kirim URL lagu Spotify yang mau kamu download!", `${m.prefix}spotifydl https://open.spotify.com/track/xxx`));
   }
   if (!url.includes("spotify.com") && !url.includes("spoti.fi")) {
-    return m.reply(novaGuide("Spotify DL", "Link harus URL Spotify yang valid!", `${m.prefix}spotifydl https://open.spotify.com/track/xxx`));
+    return m.reply(raraGuide("Spotify DL", "Link harus URL Spotify yang valid!", `${m.prefix}spotifydl https://open.spotify.com/track/xxx`));
   }
 
   try {
@@ -143,11 +143,11 @@ async function handler(m, { sock }) {
     }, { quoted: m });
     await m.reply(caption);
     await m.react("🐣");
-    await m.reply(novaBerhasil("spotifydl"));
+    await m.reply(raraBerhasil("spotifydl"));
   } catch (err) {
     console.error("[SpotifyDL]", err);
     await m.react("❌");
-    m.reply(novaGagal("Spotify DL"));
+    m.reply(raraGagal("Spotify DL"));
   }
 }
 

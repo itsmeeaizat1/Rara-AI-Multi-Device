@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
-import { f } from '../../src/lib/nova-http.js';
-import te from '../../src/lib/nova-error.js';
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { f } from '../../src/lib/rara-http.js';
+import te from '../../src/lib/rara-error.js';
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
     name: "muslimai",
@@ -61,7 +61,7 @@ class MuslimAI {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        return m.reply(novaGuideV2("muslimai", {
+        return m.reply(raraGuideV2("muslimai", {
  kaomoji: "(⌒‿⌒)",
  sapaan: "nanya apa aja seputar Islam, dijawab dengan landasan yang benar! (ᵔ◡ᵔ)",
           cara: "ketik pertanyaannya tentang Islam sesudah command",
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
         } catch (ikyyErr) {
             console.error("[muslimai.js] IkyyXD fallback failed:", ikyyErr.message);
         }
-        m.reply(novaWrap("Muslim AI", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("Muslim AI", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

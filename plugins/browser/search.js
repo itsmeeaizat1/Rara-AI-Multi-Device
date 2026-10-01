@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // search — web search multi-engine + preview halaman (request owner 2026-09-10:
 // ".serach jd klo user ketik serach doang g ada google/bing/search engine lain
 //  muncul usage. .serach list nama search engine. contoh .serach bing daftar
@@ -12,9 +12,9 @@ import {
   listEngines,
   saveSearchSession,
   getSearchSession,
-} from "../../src/lib/nova-websearch.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-websearch.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "search",
@@ -39,7 +39,7 @@ function domainOf(url) {
 }
 
 function engineListText(prefix) {
-  return novaWrap("Google Search", [
+  return raraWrap("Google Search", [
     `🔍 *MESIN SEARCH TERSEDIA*`,
     ``,
     ...listEngines().map((e) => `• *${e.key}* — ${e.note}`),
@@ -57,7 +57,7 @@ async function handleSearch(m, sock, query, engine) {
   const r = await searchWeb(query, { engine });
   if (r.error || !r.items.length) {
     await m.react("❌");
-    return m.reply(novaWrap("Google Search", [
+    return m.reply(raraWrap("Google Search", [
       `❌ ${r.error || "hasil gak ketemu"}.`,
       ``,
       `💡 Coba kata kunci lain / mesin lain (${ENGINE_KEYS.join(", ")}).`,
@@ -72,7 +72,7 @@ async function handleSearch(m, sock, query, engine) {
     `${i + 1}. *${it.title.slice(0, 60)}*\n   🔗 ${domainOf(it.url)}` +
     (it.snippet ? `\n   💬 ${it.snippet.slice(0, 90)}` : "")
   );
-  const text = novaWrap("Google Search", [
+  const text = raraWrap("Google Search", [
     `🔎 *${query}*`,
     srcNote.trim(),
     ``,
@@ -112,7 +112,7 @@ async function handleOpen(m, sock, num) {
   const sess = getSearchSession(m.chat);
   if (!sess) {
     await m.react("❌");
-    return m.reply(novaWrap("Google Search", [
+    return m.reply(raraWrap("Google Search", [
       `❌ Belum ada hasil pencarian di chat ini (atau udah kedaluwarsa 15 menit).`,
       ``,
       `Cari dulu: *${m.prefix}search <engine> <query>*`,
@@ -122,7 +122,7 @@ async function handleOpen(m, sock, num) {
   const idx = num - 1;
   if (idx < 0 || idx >= sess.items.length) {
     await m.react("❌");
-    return m.reply(novaWrap("Google Search", [
+    return m.reply(raraWrap("Google Search", [
       `❌ Nomor ${num} gak ada — hasil cuma 1 s/d ${sess.items.length} buat pencarian "${sess.query}".`,
     ]));
   }
@@ -132,7 +132,7 @@ async function handleOpen(m, sock, num) {
   const p = await fetchPagePreview(item.url);
   if (p.error) {
     await m.react("❌");
-    return m.reply(novaWrap("Google Search", [
+    return m.reply(raraWrap("Google Search", [
       `❌ ${p.error}`,
       ``,
       `🔗 ${item.url}`,
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
 
   if (!text) {
     // user ketik .search doang → usage + daftar mesin
-    return m.reply(novaGuide("search",
+    return m.reply(raraGuide("search",
       "Nyari web — pilih mesin search dulu, hasil jadi list 1..N, ketik nomor buat lihat isi halaman.",
       `${prefix}search bing daftar hp terkenal`,
       `Mesin tersedia: ${ENGINE_KEYS.join(", ")}. Lihat ${prefix}search list buat detailnya.`));
@@ -183,7 +183,7 @@ async function handler(m, { sock }) {
   if (/^buka$/i.test(args[0])) {
     if (!args[1] || !/^\d+$/.test(args[1])) {
       await m.react("❌");
-      return m.reply(novaWrap("Google Search", [`Format: *${prefix}search buka <nomor>*`]));
+      return m.reply(raraWrap("Google Search", [`Format: *${prefix}search buka <nomor>*`]));
     }
     return handleOpen(m, sock, parseInt(args[1], 10));
   }

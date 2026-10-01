@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import te from "../../src/lib/nova-error.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import te from "../../src/lib/rara-error.js";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "selfthisgc",
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
   const isSelfGroup = selfGroups.includes(m.chat);
 
   if (isSelfGroup) {
-    return m.reply(novaWrap("Grup Ini sUdah Mode sElf", 
+    return m.reply(raraWrap("Grup Ini sUdah Mode sElf", 
         `Bot hanya merespon owner & bot sendiri\n\n` +
         `_Gunakan ${m.prefix}publicthisgc untuk membuka akses_`));
   }
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   const updatedPublic = publicGroups.filter((id) => id !== m.chat);
   db.setting("publicGroups", updatedPublic);
 
-  return m.reply(novaWrap("Mode sElf Aktif", 
+  return m.reply(raraWrap("Mode sElf Aktif", 
       `Bot di grup ini sekarang hanya merespon:\n` +
       `Owner bot\n` +
       `Bot sendiri (fromMe)\n\n` +

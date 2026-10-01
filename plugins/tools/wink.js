@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .wink — enhance/restorasi foto AI Meitu (port engine lama wink.js, tanpa key)
 import crypto from "crypto";
-import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "wink",
@@ -90,7 +90,7 @@ async function handler(m, { sock, config: botConfig }) {
     const mime = quoted?.mimetype || quoted?.mediaType || "";
     if (!mime && !urlInput) {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "wink",
         "Enhance/restorasi foto jadi HD pakai AI Meitu (tanpa key, gratis).",
         prefix + "wink (reply foto) — atau " + prefix + "wink <url foto>",
@@ -100,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (mime && !/image\/(jpeg|jpg|png|webp)/i.test(mime)) {
       await m.react("❌");
-      await m.reply(novaError("Wink", "Media harus gambar (JPG/PNG/WEBP)"));
+      await m.reply(raraError("Wink", "Media harus gambar (JPG/PNG/WEBP)"));
       return { handled: true };
     }
     const input = mime ? await quoted.download() : urlInput;
@@ -110,13 +110,13 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("⚡");
     await sock.sendMessage(m.chat, {
       image: buf,
-      caption: novaWrap("Wink", "Enhance selesai" + (result.width && result.height ? " (" + result.width + "x" + result.height + ")" : "")),
+      caption: raraWrap("Wink", "Enhance selesai" + (result.width && result.height ? " (" + result.width + "x" + result.height + ")" : "")),
       mimetype: "image/png",
     }, { quoted: m });
   } catch (error) {
     console.error("[wink]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("Wink", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("Wink", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }

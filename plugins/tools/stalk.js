@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .stalk — cek profil sosial media/game/dev via zelapi.eu.cc /stalk
 // 🔹 Owner 14 Sep: fitur baru dari audit zelapi v3.0.0 (448 endpoint).
@@ -8,9 +8,9 @@
 // ═════════════════════════════════════════════
 
 import { zelStalk, ZEL_STALK_REGISTRY, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { sendImage } from "../../src/lib/nova-message.js";
-import { fetchBuffer } from "../../src/lib/nova-utils.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendImage } from "../../src/lib/rara-message.js";
+import { fetchBuffer } from "../../src/lib/rara-utils.js";
 
 export { _setZelHttpForTest, _setZelKeyForTest };
 
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
       const items = Object.entries(ZEL_STALK_REGISTRY)
         .map(([k, s]) => `• *${k}* — ${s.label} (${s.hint})`)
         .join("\n");
-      return m.reply(novaWrap("stalk",
+      return m.reply(raraWrap("stalk",
         `🔎 *STALK — CEK PROFIL (ZELAPI)*\n\n${items}\n\n💡 Contoh: *.stalk github torvalds*\n💡 Contoh multi: *.stalk githubrepo torvalds/linux*`));
     }
 
@@ -126,10 +126,10 @@ async function handler(m, { sock }) {
     const query = args.slice(1).join(" ").trim();
 
     if (!ZEL_STALK_REGISTRY[platform]) {
-      return m.reply(novaWrap("stalk", `⚠️ Platform *${platform}* gak ada.\n\nKetik *.stalk list* buat daftar platform.`));
+      return m.reply(raraWrap("stalk", `⚠️ Platform *${platform}* gak ada.\n\nKetik *.stalk list* buat daftar platform.`));
     }
     if (!query) {
-      return m.reply(novaWrap("stalk", `⚠️ *.stalk ${platform}* — ${ZEL_STALK_REGISTRY[platform].hint}\n\nContoh: *.stalk ${platform} ${platform === "githubrepo" ? "torvalds/linux" : platform === "mlbb" ? "123456789 1234" : "namanya"}*`));
+      return m.reply(raraWrap("stalk", `⚠️ *.stalk ${platform}* — ${ZEL_STALK_REGISTRY[platform].hint}\n\nContoh: *.stalk ${platform} ${platform === "githubrepo" ? "torvalds/linux" : platform === "mlbb" ? "123456789 1234" : "namanya"}*`));
     }
 
     await m.react("🔍");
@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
         QUERY_KOSONG: `⚠️ ${ZEL_STALK_REGISTRY[platform].hint}`,
         PARAM_KURANG: `⚠️ Format kurang — ${ZEL_STALK_REGISTRY[platform].hint}`,
       };
-      return m.reply(novaWrap("stalk", map[r.error] || `❌ *${platform.toUpperCase()} GAGAL:* ${r.error}`));
+      return m.reply(raraWrap("stalk", map[r.error] || `❌ *${platform.toUpperCase()} GAGAL:* ${r.error}`));
     }
     await m.react("🐣");
 
@@ -149,16 +149,16 @@ async function handler(m, { sock }) {
     if (card.avatar) {
       try {
         const buf = await getBuf(card.avatar);
-        return await sendImage(sock, m.chat, buf, novaWrap("stalk", card.text), { quoted: m });
+        return await sendImage(sock, m.chat, buf, raraWrap("stalk", card.text), { quoted: m });
       } catch {
         // gagal download avatar → tetep kirim teks
       }
     }
-    return m.reply(novaWrap("stalk", card.text));
+    return m.reply(raraWrap("stalk", card.text));
   } catch (err) {
     console.error("[stalk]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("stalk", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(raraWrap("stalk", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

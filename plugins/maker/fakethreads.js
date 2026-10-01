@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { nexrayFakeThreads } from "../../src/scraper/nexray-maker.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "fakethreads",
@@ -17,13 +17,13 @@ async function handler(m, { sock }) {
   try {
     const input = m.args.join(" ").trim();
     if (!input || !input.includes("|")) {
-      return m.reply(novaWrap("fakethreads", `Format: ${m.prefix}fakethreads <username> | <text>\n\nContoh: ${m.prefix}fakethreads aizat | Halo semua!`, "guide"));
+      return m.reply(raraWrap("fakethreads", `Format: ${m.prefix}fakethreads <username> | <text>\n\nContoh: ${m.prefix}fakethreads aizat | Halo semua!`, "guide"));
     }
     const [username, ...textParts] = input.split("|");
     const text = textParts.join("|").trim();
     const usernameClean = username.trim().replace(/[@]/g, "");
     if (!usernameClean || !text) {
-      return m.reply(novaWrap("fakethreads", "Username dan text tidak boleh kosong!", "error"));
+      return m.reply(raraWrap("fakethreads", "Username dan text tidak boleh kosong!", "error"));
     }
 
     await m.react("🕒");
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.buffer) {
       await m.react("❌");
-      return m.reply(novaWrap("fakethreads", "Gagal generate fake threads. Coba lagi.", "error"));
+      return m.reply(raraWrap("fakethreads", "Gagal generate fake threads. Coba lagi.", "error"));
     }
 
     await m.react("🐣");
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("fakethreads error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("fakethreads", err.message || "Error", "error"));
+    return m.reply(raraWrap("fakethreads", err.message || "Error", "error"));
   }
 }
 

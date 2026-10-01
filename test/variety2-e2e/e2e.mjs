@@ -1,5 +1,5 @@
 // E2E — VARIASI FITUR POLOS BATCH 2 (13 Sep 2026)
-// (1) 38 fitur .cek* animasi "mengukur" via nova-cek-anim.js
+// (1) 38 fitur .cek* animasi "mengukur" via rara-cek-anim.js
 // (2) .countdown live (ironis: fitur countdown gak nge-tick)
 // (3) .daily: cooldown live countdown + reward reveal ala gacha
 process.env.NOVA_TICK_MAXEDITS = "2";
@@ -12,9 +12,9 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
-await initDatabase(mkdtempSync(path.join(tmpdir(), "var2-e2e-db-")) + "/nova.json");
+await initDatabase(mkdtempSync(path.join(tmpdir(), "var2-e2e-db-")) + "/rara.json");
 const db = getDatabase();
 
 let pass = 0, fail = 0;

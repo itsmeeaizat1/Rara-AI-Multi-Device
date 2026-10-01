@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "tutorku",
@@ -101,7 +101,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   // .tutorku list - show available subjects
   if ((args[0] || "").toLowerCase() === "list" || (args[0] || "").toLowerCase() === "daftar") {
     const subjectList = Object.values(SUBJECTS).map((s, i) => `${i + 1}. ${s.label}`).join("\n");
-    return m.reply( novaWrap("Tutorku - Mata Kuliah", [
+    return m.reply( raraWrap("Tutorku - Mata Kuliah", [
       `${Object.keys(SUBJECTS).length} mata kuliah tersedia:`,
       ``,
       subjectList,
@@ -113,7 +113,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   if (!fullInput) {
     const subjectList = Object.values(SUBJECTS).map((s, i) => `${i + 1}. ${s.label}`).join("\n");
-    return m.reply( novaWrap("Tutorku - AI Tutor", [
+    return m.reply( raraWrap("Tutorku - AI Tutor", [
       `AI tutor untuk bantu belajar mata kuliah.`,
       ``,
       `Cara pakai: ${prefix}tutorku <mata kuliah> <pertanyaan>`,
@@ -129,7 +129,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   const subject = findSubject(args[0]);
   if (!subject) {
     const subjectList = Object.values(SUBJECTS).map(s => s.label).join(", ");
-    return m.reply( novaWrap("Tutorku", [
+    return m.reply( raraWrap("Tutorku", [
       `Mata kuliah "${args[0]}" tidak ditemukan.`,
       ``,
       `Tersedia: ${subjectList}`,
@@ -140,7 +140,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   const question = args.slice(1).join(" ").trim();
   if (!question) {
-    return m.reply( novaWrap("Tutorku", [
+    return m.reply( raraWrap("Tutorku", [
       `Mata kuliah: ${subject.label}`,
       `Tulis pertanyaan kamu setelah nama mata kuliah.`,
       ``,
@@ -159,9 +159,9 @@ Jawab dengan format:
 Sesuaikan level dengan mahasiswa S1 Indonesia.`;
 
     const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: subject.prompt });
-    return m.reply( novaWrap(`Tutorku - ${subject.label}`, result), { commandName: "tutorku" });
+    return m.reply( raraWrap(`Tutorku - ${subject.label}`, result), { commandName: "tutorku" });
   } catch (e) {
-    return m.reply( novaError("Tutorku", `Gagal nih: ${e.message}`), { commandName: "tutorku" });
+    return m.reply( raraError("Tutorku", `Gagal nih: ${e.message}`), { commandName: "tutorku" });
   }
 }
 

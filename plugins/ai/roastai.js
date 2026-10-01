@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // AI Roast — AI roasts the user based on their name/message
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "roastai",
@@ -30,11 +30,11 @@ async function handler(m, { sock }) {
 
     const prompt = `Kamu adalah seorang komedian stand-up yang jago merosting orang dengan tajam tapi lucu. Buatkan roasting singkat (maksimal 5 kalimat) untuk seseorang bernama "${target}". Roasting harus tajam, kreatif, dengan unsur humor dan sarkasme, tapi tidak mengandung kata-kata kotor atau SARA. Gunakan bahasa Indonesia yang casual dan santai. Format: langsung tulis roasting-nya, tanpa pembuka atau penutup.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("roastai", "AI-nya lagi bad mood nih, coba lagi ya", "error"));
+      return m.reply(raraWrap("roastai", "AI-nya lagi bad mood nih, coba lagi ya", "error"));
     }
 
     await m.react("🐣");
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("roastai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("roastai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("roastai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

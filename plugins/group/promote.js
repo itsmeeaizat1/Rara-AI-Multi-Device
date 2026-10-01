@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getParticipantJid } from '../../src/lib/nova-lid.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getParticipantJid } from '../../src/lib/rara-lid.js'
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'promote',
     alias: ["promote"],
@@ -41,21 +41,21 @@ async function handler(m, { sock }) {
         const participant = groupMeta.participants.find(p => getParticipantJid(p) === target)
 
         if (!participant) {
-            m.reply(novaWrap("Promote", `gagal\n\nUser tidak ditemukan di grup!`, "error"))
+            m.reply(raraWrap("Promote", `gagal\n\nUser tidak ditemukan di grup!`, "error"))
             return
         }
 
         if (participant.admin) {
-            await m.reply(novaWrap("Promote", `gagal\n\nUser sudah menjadi admin!`, "error"))
+            await m.reply(raraWrap("Promote", `gagal\n\nUser sudah menjadi admin!`, "error"))
             return
         }
 
         await sock.groupParticipantsUpdate(m.chat, [target], 'promote')
 
-        await m.reply(novaWrap("Promote", `@${target.split('@')[0]} sekarang menjadi admin!`, "success"))
+        await m.reply(raraWrap("Promote", `@${target.split('@')[0]} sekarang menjadi admin!`, "success"))
 
     } catch (error) {
-        m.reply(novaWrap("promote", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("promote", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

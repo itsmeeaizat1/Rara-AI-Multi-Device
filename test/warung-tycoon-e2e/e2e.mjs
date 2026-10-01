@@ -1,8 +1,8 @@
 // E2E Warung Tycoon — masak/belanja/buka/rating/event/gacha pity/renovasi/franchise/daily/top
 import path from "node:path";
 import fs from "node:fs";
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
-import { ensureRpg, saveRpg, getCash } from "../../src/lib/nova-rpg-service.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
+import { ensureRpg, saveRpg, getCash } from "../../src/lib/rara-rpg-service.js";
 
 process.env.WARUNG_BUKA_CD_MS = "0"; // e2e anti-flaky
 process.env.WARUNG_MASAK_CD_MS = "0";
@@ -268,7 +268,7 @@ t("12b. gak ada sisa debug/konfigurasi ngawur", !/console\.log\(/.test(cekIsolas
 console.log("— section 13: cutscene cinematic (gaya cuplikan Nintendo) —");
 { const lib = await import(R + "/src/lib/libanimationrpg/libwarungtycoonrpg.js"); lib._setWarungAnimMsForTest(700); }
 const { bukaCinematic, masakCinematic } = await import(R + "/src/lib/libanimationrpg/libwarungtycoonrpg.js");
-const { sceneTotalMs } = await import(R + "/src/lib/nova-anim-runner.js");
+const { sceneTotalMs } = await import(R + "/src/lib/rara-anim-runner.js");
 const cek = { tile: "🛒", rating: 3 };
 const scFull = bukaCinematic({ ...cek, pelanggan: 8, terjual: 8, omzet: 960, kosong: false, eventTipe: null, eventSukses: false });
 const scKosong = bukaCinematic({ ...cek, pelanggan: 5, terjual: 0, omzet: 0, kosong: true, eventTipe: null, eventSukses: false });

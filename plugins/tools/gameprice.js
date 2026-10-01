@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: "gameprice",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
         const response = await axios.get("https://www.cheapshark.com/api/1.0/deals?storeID=1&pageSize=5", {
             timeout: 15000,
             headers: {
-                "User-Agent": "NovaBot/1.0 (contact@novabot.ai)"
+                "User-Agent": "RaraBot/1.0 (contact@rarabot.ai)"
             }
         });
 
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
                     responseType: "arraybuffer",
                     timeout: 10000,
                     headers: {
-                        "User-Agent": "NovaBot/1.0 (contact@novabot.ai)"
+                        "User-Agent": "RaraBot/1.0 (contact@rarabot.ai)"
                     }
                 });
                 if (imgRes.status === 200 && imgRes.data) {

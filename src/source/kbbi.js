@@ -1,11 +1,11 @@
-// NOVA SKILL PACK — KBBI / ARTI KATA (12 Sep 2026)
+// RARA SKILL PACK — KBBI / ARTI KATA (12 Sep 2026)
 // Arti kata Indonesia via Wiktionary id (w/api.php, gratis no-key).
 // Source pack: taruh di src/source/ → ke-load otomatis registerSkillPacks.
 // Seam: _setKbbiHttp buat e2e.
 
 // Wikimedia butuh User-Agent proper — tanpa itu balik HTML (bukan JSON)
-let kbbiHttp = async (url) => fetch(url, { headers: { "User-Agent": "NovaBot/1.0 (+https://id.wiktionary.org)" } })
-export function _setKbbiHttp(fn) { kbbiHttp = fn || (async (u) => fetch(u, { headers: { "User-Agent": "NovaBot/1.0 (+https://id.wiktionary.org)" } })) }
+let kbbiHttp = async (url) => fetch(url, { headers: { "User-Agent": "RaraBot/1.0 (+https://id.wiktionary.org)" } })
+export function _setKbbiHttp(fn) { kbbiHttp = fn || (async (u) => fetch(u, { headers: { "User-Agent": "RaraBot/1.0 (+https://id.wiktionary.org)" } })) }
 
 function parseDefs(extract) {
   // Ambil bagian "== Bahasa Indonesia ==" → baris definisi

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Confess Viral — ala TikTok, 6 mode confess anonymous
 // .confessviral nomor|mode|pesan
 
@@ -69,9 +69,9 @@ function buildMessage(mode, pesan, targetName) {
 
 if (!global.confessViralData) global.confessViralData = new Map();
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 
 function trackViral(senderJid, targetJid, mode) {
   try {
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
 
     if (!raw || !raw.includes("|")) {
       const modeLines = Object.entries(MODES).map(([k, v]) => `${v.emoji} ${k} — ${v.label}`);
-      await m.reply(novaWrap("confessviral", [
+      await m.reply(raraWrap("confessviral", [
         `Confess anonymous ala viral TikTok.`,
         ``,
         `📌 Format: ${m.prefix}confessviral <nomor>|<mode>|<pesan>`,
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
 
     const parts = raw.split("|").map((s) => s.trim()).filter(Boolean);
     if (parts.length < 3) {
-      await m.reply(novaWrap("confessviral", `Format salah! Butuh 3 bagian.\n\n💡 Format: ${m.prefix}confessviral <nomor>|<mode>|<pesan>`, "error"));
+      await m.reply(raraWrap("confessviral", `Format salah! Butuh 3 bagian.\n\n💡 Format: ${m.prefix}confessviral <nomor>|<mode>|<pesan>`, "error"));
       return;
       return;
     }
@@ -139,13 +139,13 @@ async function handler(m, { sock }) {
     const pesan = rest.join("|").trim();
 
     if (!number) {
-      await m.reply(novaWrap("confessviral", "Nomor tujuan kosong nih!", "error"));
+      await m.reply(raraWrap("confessviral", "Nomor tujuan kosong nih!", "error"));
       return;
     }
 
     if (!MODES[mode]) {
       const modeLines = Object.entries(MODES).map(([k, v]) => `${v.emoji} ${k}`);
-      await m.reply(novaWrap("confessviral", [
+      await m.reply(raraWrap("confessviral", [
         `Mode gak valid nih: ${mode}`,
         ``,
         `Mode tersedia:`,
@@ -155,12 +155,12 @@ async function handler(m, { sock }) {
     }
 
     if (!pesan || pesan.length < 5) {
-      await m.reply(novaWrap("confessviral", "Pesan kosong atau kependekan nih! Minimal 5 karakter.", "error"));
+      await m.reply(raraWrap("confessviral", "Pesan kosong atau kependekan nih! Minimal 5 karakter.", "error"));
       return;
     }
 
     if (pesan.length > 1000) {
-      await m.reply(novaWrap("confessviral", "Pesan kepanjangan! Maksimal 1000 karakter.", "error"));
+      await m.reply(raraWrap("confessviral", "Pesan kepanjangan! Maksimal 1000 karakter.", "error"));
       return;
     }
 
@@ -171,14 +171,14 @@ async function handler(m, { sock }) {
     }
 
     if (targetNumber.length < 10 || targetNumber.length > 15) {
-      await m.reply(novaWrap("confessviral", "Nomor tidak valid!", "error"));
+      await m.reply(raraWrap("confessviral", "Nomor tidak valid!", "error"));
       return;
     }
 
     const targetJid = targetNumber + "@s.whatsapp.net";
 
     if (targetJid === m.sender) {
-      await m.reply(novaWrap("confessviral", "Nggak bisa confess ke diri sendiri! 😂", "error"));
+      await m.reply(raraWrap("confessviral", "Nggak bisa confess ke diri sendiri! 😂", "error"));
       return;
     }
 
@@ -187,7 +187,7 @@ async function handler(m, { sock }) {
     try {
       const [onWa] = await sock.onWhatsApp(targetNumber);
       if (!onWa?.exists) {
-        await m.reply(novaWrap("confessviral", `Nomor ${targetNumber} nggak terdaftar di WhatsApp!`, "error"));
+        await m.reply(raraWrap("confessviral", `Nomor ${targetNumber} nggak terdaftar di WhatsApp!`, "error"));
         return;
       }
       targetName = onWa?.name || onWa?.notify || "";
@@ -228,7 +228,7 @@ async function handler(m, { sock }) {
         "│ • ✉️ Kalau dia balas, otomatis diterusin ke sini",
       ];
       if (targetName) lines.splice(2, 0, `│ • 👤 Nama : ${targetName}`);
-      await m.reply(novaGameBox({
+      await m.reply(raraGameBox({
         title: "confess terkirim", icon: md.emoji,
         flavor: `${md.emoji} *CONFESS TERKIRIM!*`,
         body: lines.join("\n"),
@@ -237,7 +237,7 @@ async function handler(m, { sock }) {
       await m.react(md.emoji);
     } catch (sendErr) {
       console.error("[confessviral] Send error:", sendErr.message);
-      await m.reply(novaWrap("confessviral", `Gagal kirim: ${sendErr.message}`, "error"));
+      await m.reply(raraWrap("confessviral", `Gagal kirim: ${sendErr.message}`, "error"));
     }
   } catch (e) {
     console.error("[confessviral] Handler error:", e.message);
@@ -272,7 +272,7 @@ async function replyHandler(m, { sock }) {
       contextInfo: { forwardingScore: 0, isForwarded: false },
     });
 
-    await m.reply(novaWrap("confessviral", "Balasan terkirim ke pengirim!"));
+    await m.reply(raraWrap("confessviral", "Balasan terkirim ke pengirim!"));
 
     global.confessViralData.delete(quotedId);
     return true;

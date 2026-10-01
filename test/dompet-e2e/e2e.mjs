@@ -14,8 +14,8 @@ function t(label, cond, extra) {
 const R = path.resolve(".");
 // db path fresh tiap run
 fs.rmSync("/tmp/dompet-e2e-db", { recursive: true, force: true });
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/dompet-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/dompet-e2e-db/rara.json");
 const db = getDatabase();
 
 const { config, handler, parseLocal, parseAmount } = await import(R + "/plugins/ai/wallet.js");

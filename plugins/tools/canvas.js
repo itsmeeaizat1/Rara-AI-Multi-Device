@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // FIX 14 Sep 2026 (audit fitur canvas): api.miaou.xyz DOWN — TLS handshake
 // ditolak (SNI "unrecognized name"), bukan cuma DNS mati tapi subdomain-nya
 // udah dilepas dari routing servernya sama sekali. Graceful error mengikuti
 // pola fakedev/fakedev2/fakedev3 (API down beneran, no fallback palsu).
 // .canvas juga redundant — 22 command spesifik lain (.balogo/.wanted/.iqc/
 // .musiccard/dst) di kategori canvas udah nutupin kebutuhan yang sama.
-import { novaReply, tipText } from "../../src/lib/nova-menu-style.js";
+import { raraReply, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "canvas",
@@ -25,7 +25,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, config: botConfig }) {
   const prefix = botConfig?.command?.prefix || m.prefix || ".";
-  const msg = novaReply({
+  const msg = raraReply({
     title: "Canvas",
     info: [{ label: "Status", value: "API miaou.xyz OFFLINE" }],
     status: "API sedang down, fitur ini sementara tidak tersedia",

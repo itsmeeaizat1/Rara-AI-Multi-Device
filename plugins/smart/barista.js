@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "barista",
@@ -118,7 +118,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "kopi" || sub === "coffee") {
     const recipe = COFFEE[Math.floor(Math.random() * COFFEE.length)];
-    await m.reply(novaWrap("Barista: " + recipe.name, [
+    await m.reply(raraWrap("Barista: " + recipe.name, [
       "Type: Coffee | Level: " + recipe.difficulty + " | Time: " + recipe.time,
       "",
       "Ingredients:",
@@ -134,7 +134,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "mocktail" || sub === "nonalcohol") {
     const recipe = MOCKTAIL[Math.floor(Math.random() * MOCKTAIL.length)];
-    await m.reply(novaWrap("Barista: " + recipe.name, [
+    await m.reply(raraWrap("Barista: " + recipe.name, [
       "Type: Mocktail | Level: " + recipe.difficulty + " | Time: " + recipe.time,
       "",
       "Ingredients:",
@@ -151,7 +151,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "random" || sub === "acak") {
     const all = [...COFFEE.map(r => ({ ...r, type: "Coffee" })), ...MOCKTAIL.map(r => ({ ...r, type: "Mocktail" }))];
     const recipe = all[Math.floor(Math.random() * all.length)];
-    await m.reply(novaWrap("Barista: " + recipe.name, [
+    await m.reply(raraWrap("Barista: " + recipe.name, [
       "Type: " + recipe.type + " | Level: " + recipe.difficulty + " | Time: " + recipe.time,
       "",
       "Ingredients:",
@@ -168,7 +168,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "list" || sub === "daftar" || !sub) {
     const coffeeList = COFFEE.map((r, i) => (i + 1) + ". " + r.name + " (" + r.difficulty + ", " + r.time + ")").join("\n");
     const mocktailList = MOCKTAIL.map((r, i) => (i + 1) + ". " + r.name + " (" + r.difficulty + ", " + r.time + ")").join("\n");
-    await m.reply(novaWrap("Barista Menu", [
+    await m.reply(raraWrap("Barista Menu", [
       "COFFEE:",
       coffeeList,
       "",
@@ -182,7 +182,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Barista", [
+  await m.reply(raraWrap("Barista", [
     "BARISTA & MIXOLOGY",
     "",
     prefix + "barista kopi - random resep kopi",

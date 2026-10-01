@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/rara-countdown.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'birthday',
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
                 `Contoh: ${m.prefix}setbirthday 25-12`
             )
         }
-        { const __navText = novaWrap("birthday", `❌ User belum set birthday!`); return await m.reply(__navText); }
+        { const __navText = raraWrap("birthday", `❌ User belum set birthday!`); return await m.reply(__navText); }
     }
     
     const [day, month] = user.birthday.split('-').map(Number)
@@ -62,17 +62,17 @@ async function handler(m, { sock }) {
         today += `\n\n🎊 *happy birthday!* 🎊\n`
         today += `Semoga panjang umur dan\n`
         today += `sukses selalu! 🎉🎂`
-        await m.reply(novaWrap("Birthday", today), { mentions: [target] })
+        await m.reply(raraWrap("Birthday", today), { mentions: [target] })
         return
     }
 
     // 🔹 LIVE COUNTDOWN (13 Sep, request owner "fitur polos di-variasi biar
     // menarik"): "X hari lagi" gak lagi angka beku — kartu nge-tick HIDUP
-    // (hari + jam:menit:detik) pakai nova-countdown, lalu settle statis.
+    // (hari + jam:menit:detik) pakai rara-countdown, lalu settle statis.
     const bdayCard = (remainingMs, live = true) => {
         const days = Math.floor(Math.max(0, remainingMs) / 86400000)
         const hms = formatRemaining(Math.max(0, remainingMs) % 86400000)
-        return novaWrap("Birthday", [
+        return raraWrap("Birthday", [
             `🎂 *Birthday InғO*`,
             ``,
             `🏷️ @${cleanJid}`,

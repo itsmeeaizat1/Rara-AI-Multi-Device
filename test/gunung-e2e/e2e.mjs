@@ -1,8 +1,8 @@
 // E2E gunung — Pendakian Gunung Legenda: 8 zona, cuaca, jalur risiko, oksigen, rombongan, prestasi
 import path from "node:path";
 import fs from "node:fs";
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
-import { ensureRpg, saveRpg, getCash } from "../../src/lib/nova-rpg-service.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
+import { ensureRpg, saveRpg, getCash } from "../../src/lib/rara-rpg-service.js";
 
 process.env.GUNUNG_DAKI_CD_MS = "0"; // e2e anti-flaky
 process.env.GUNUNG_CINEMATIC_MS = "0"; // cutscene anti-flaky
@@ -258,7 +258,7 @@ t("15l. migrasi Fuji 0 puncak → country indonesia (tetap Fuji)", U().country =
 
 console.log("— section 16: ANIMASI CINEMATIC (lib libmountainclimberrpg, gaya Nintendo) —");
 const animLib = await import(R + "/src/lib/libanimationrpg/libmountainclimberrpg.js");
-const { sceneTotalMs } = await import(R + "/src/lib/nova-anim-runner.js");
+const { sceneTotalMs } = await import(R + "/src/lib/rara-anim-runner.js");
 const animFrames = [];
 const animSock = { sendMessage: async (jid, content) => {
   if (content?.edit) { animFrames.push({ edit: true, text: content.text }); return { key: { id: "anim1" } }; }
@@ -340,7 +340,7 @@ const runnerSock = { sendMessage: async (jid, content) => {
   return { key: { id: "r" } };
 } };
 animFrames.length = 0;
-const { animasiRunner } = await import(R + "/src/lib/nova-anim-runner.js");
+const { animasiRunner } = await import(R + "/src/lib/rara-anim-runner.js");
 await animasiRunner(runnerSock, "t@s.whatsapp.net", { level: 30, bioma: ["padang", "salju", "gurun"], hasil: "🎉 SAMPAI! +450 EXP +1.200 uang", frameMs: 0 });
 t("16f. lvl 30: 20 tile 3 bioma, frame lebih banyak (rintangan ⬆️ + peti 💎)", animFrames.length >= 10, animFrames.length);
 t("16g. lvl 30: ada frame lompat ⬆️ atau peti 💎", animFrames.some((f) => /⬆️|💎/.test(f.text)));

@@ -1,4 +1,4 @@
-// E2E nova-aicall-autostart — service AI Call auto-run saat bot boot
+// E2E rara-aicall-autostart — service AI Call auto-run saat bot boot
 // (request owner 18 Sep 2026: "aicall lngsung ke run saat bot dirun")
 // Logika diuji TANPA VPS: fetch di-mock (seam), pm2 fake (shell script di
 // PATH), binary ai-call fake executable, cwd pindah ke tmp dir.
@@ -17,7 +17,7 @@ function ok(name, cond, extra) {
   else { fail++; console.log(`[ FAIL ] ${name}${extra ? " — " + extra : ""}`); }
 }
 
-const mod = await import("../../src/lib/nova-aicall-autostart.js");
+const mod = await import("../../src/lib/rara-aicall-autostart.js");
 const { ensureAicallRunning, getAicallAutostartStatus,
   _setAicallAutostartFetchForTest, _clearAicallAutostartFetchForTest } = mod;
 

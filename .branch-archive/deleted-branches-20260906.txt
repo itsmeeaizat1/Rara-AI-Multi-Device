@@ -16,7 +16,7 @@ feat/lirik2-genius 22f29bdfb81fa75929bce470157bcf0c97133b0c
 feat/maker-format-rapih ece7de81308db341b949181a71f503cc00cbffb9
 feat/media-converter 7115d8a042409f84c97aa0dade1f74551461b91d
 feat/modern-menu-redesign ad9b871d72320dde161615d831e3bf7b8607e5ef
-feat/novaai-multiprovider-chain 8a4cdd735f2f819dd46bbfab8fee3f1d69a83ce2
+feat/raraai-multiprovider-chain 8a4cdd735f2f819dd46bbfab8fee3f1d69a83ce2
 feat/owner-format-rapih d2dfad6459c6fd3439edd0d30009592057bed7f6
 feat/panel-100-slots 4c06288412c596d3d38dd9e406eaa9e13860d6b9
 feat/play-audio-video-choice 224824451d7c5074fb0a5c23a0dfa589dc9420f4
@@ -35,8 +35,8 @@ fix/loading-react-and-ai-agent-facts 03f4f43d79651f06d1799f2fd3640a1b392f1ef9
 fix/menu-complete-info-buttons 8c1bbea8cff4753d57a3377789f2578369f82ee1
 fix/menu-redesign 2432f58a90179d683c38caa0d233f96678de5c11
 fix/menu-wordwrap-double-pipe 580f4481160c61de6bd5c1105c89e74732b7af25
-fix/novaai-kick-by-name 27e3874764b7991a7a53a762f8acbe6e4d18e3e6
-fix/novaai-session-continuity-and-vision 0f2f21dbe01a53c83f42754d2de75454a9ff1662
+fix/raraai-kick-by-name 27e3874764b7991a7a53a762f8acbe6e4d18e3e6
+fix/raraai-session-continuity-and-vision 0f2f21dbe01a53c83f42754d2de75454a9ff1662
 fix/remini-default-1080p ddd033260197c05ccaa10f1141bb933c73af8ec9
 fix/remove-flower-symbols b889961cf058257e6a4b6a7b12f4b79fb4c106b7
 fix/revive-iconic-rpg 2054f97aa32f9efc8374978fc1ab488c25bcc2c8

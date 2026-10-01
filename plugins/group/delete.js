@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'delete',
@@ -21,7 +21,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (!m.quoted) {
-        return m.reply(novaNoInput("Delete", "Balas / reply pesan yang mau dihapus ya!"))
+        return m.reply(raraNoInput("Delete", "Balas / reply pesan yang mau dihapus ya!"))
     }
 
     const quotedSender = m.quoted.sender || m.quoted.key?.participant
@@ -31,10 +31,10 @@ async function handler(m, { sock }) {
 
     if (!isOwnMessage && !isBotMessage) {
         if (!m.isBotAdmin) {
-            return m.reply(novaError("Delete", "Bot harus jadi admin grup dulu buat bisa hapus pesan member lain!"))
+            return m.reply(raraError("Delete", "Bot harus jadi admin grup dulu buat bisa hapus pesan member lain!"))
         }
         if (!m.isAdmin && !m.isOwner) {
-            return m.reply(novaError("Delete", "Hanya admin grup yang bisa menghapus pesan member lain!"))
+            return m.reply(raraError("Delete", "Hanya admin grup yang bisa menghapus pesan member lain!"))
         }
     }
 
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
 
         await sock.sendMessage(m.chat, { delete: key })
     } catch (err) {
-        return m.reply(novaError("Delete", `Gagal hapus pesan nih: ${err.message || "Pesan mungkin sudah terhapus atau terlalu lama."}`))
+        return m.reply(raraError("Delete", `Gagal hapus pesan nih: ${err.message || "Pesan mungkin sudah terhapus atau terlalu lama."}`))
     }
 }
 

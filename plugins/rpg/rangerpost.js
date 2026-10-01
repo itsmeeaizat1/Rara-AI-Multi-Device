@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // rangerpost.js — Ranger Post (daily patrol duty, earn salary)
 // Rombak khas (batch #14): animasi Radar Patroli + item khas
 // Lencana Jasa + tool Radar Ranger (+10% salary & reward per level).
 // FIX: expReward tadinya di-declare tapi GAK PERNAH dibayar →
 // sekarang addExp beneran (bonus: auto payout uang dari addExp).
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { ensureRpg, addExp, getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
-import { shapeRanger } from "../../src/lib/nova-rpg-shapes.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { ensureRpg, addExp, getCash, spendCash, formatRp } from "../../src/lib/rara-rpg-service.js";
+import { shapeRanger } from "../../src/lib/rara-rpg-shapes.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "rangerpost",
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
 
     // ── subcommand khas: radar status ──
     if (subCmd === "radar" || subCmd === "status") {
-      return m.reply(novaRpgBox("rangerpost",
+      return m.reply(raraRpgBox("rangerpost",
         `📡 RADAR RANGER KAMU\n\n` +
         `Level : *Lv.${lv}*\n⭐ Bonus : +${10 * lv}% salary & reward\n🎖️ Lencana Jasa : ${tool.badges || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
         `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.badgeCost(lv)}x Lencana + ${formatRp(TOOL.rpCost(lv))}\nKetik: ${m.prefix}rangerpost upgrade`));
@@ -87,12 +87,12 @@ async function handler(m, { sock }) {
       const needRp = TOOL.rpCost(lv);
       if ((tool.badges || 0) < needB) {
         await m.react("❌");
-        return m.reply(novaRpgBox("rangerpost",
+        return m.reply(raraRpgBox("rangerpost",
           `🎖️ Upgrade Radar ke Lv.${lv + 1} butuh:\n\n• Lencana Jasa : ${needB}x (punya ${tool.badges || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Lencana didapat dari tugas sukses — 30% per tugas, hari perfect (3/3 sukses) bonus +2!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
         await m.react("❌");
-        return m.reply(novaRpgBox("rangerpost", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("rangerpost", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = getTool(m.sender);
       fresh.badges = (fresh.badges || 0) - needB;
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
       fresh.spent = (fresh.spent || 0) + needRp;
       await db.setPlayerData?.(m.sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("rangerpost",
+      return m.reply(raraRpgBox("rangerpost",
         `📡 RADAR UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n⭐ Bonus : +${10 * (lv + 1)}% salary & reward\n\n🎖️ Material : −${needB} Lencana Jasa\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
@@ -109,10 +109,10 @@ async function handler(m, { sock }) {
       const taskId = parseInt(m.args?.[1] || "0");
       const task = TASKS.find((t) => t.id === taskId);
       if (!task) {
-        return m.reply(novaRpgBox("rangerpost", `Tugas tidak ditemukan. Pilih 1-3.`, "guide"));
+        return m.reply(raraRpgBox("rangerpost", `Tugas tidak ditemukan. Pilih 1-3.`, "guide"));
       }
       if (data.tasksDone?.includes(taskId)) {
-        return m.reply(novaRpgBox("rangerpost", `Tugas "${task.name}" sudah diselesaikan hari ini.`, "error"));
+        return m.reply(raraRpgBox("rangerpost", `Tugas "${task.name}" sudah diselesaikan hari ini.`, "error"));
       }
 
       await m.react("⏲️");
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
 
       const remaining = 3 - data.tasksDone.length;
       await m.react("🐣");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "rangerpost", icon: "🎖️",
         flavor: success ? "🏆 *BERHASIL!*" : "💀 *GAGAL!*",
         body: [
@@ -185,7 +185,7 @@ async function handler(m, { sock }) {
       }
       await db.setPlayerData?.(m.sender, "rangerpost", data);
       await m.react("🐣");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "rangerpost", icon: "🎖️",
         flavor: "🎖️ *CHECK-IN BERHASIL!*",
         body: [
@@ -203,7 +203,7 @@ async function handler(m, { sock }) {
     }
 
     // ── STATUS (default) ──
-    return m.reply(novaRpgBox("rangerpost",
+    return m.reply(raraRpgBox("rangerpost",
       `🎖️ RANGER POST\n\n` +
       `Ranger Level : *${data.level || 1}*\n` +
       `Hari bertugas : *${data.days || 0}*\n` +
@@ -213,7 +213,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("rangerpost error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("rangerpost", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("rangerpost", err.message || "Error", "error"));
   }
 }
 

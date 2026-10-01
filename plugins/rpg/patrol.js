@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // patrol.js — Patroli Ranger: event acak di perimeter pertahanan
 // Rombak khas 9 Sep 2026 (batch #6 antrean animasi per-game):
 // - Animasi bentuk baru RONDA PERIMETER (🛡️ pos-per-pos mengelilingi markas)
 // - Item khas: 🎖️ Lencana Patroli (25% per patroli, monster dijamin) → upgrade Peralatan Ranger
-// - Result box rapih novaRpgBox
+// - Result box rapih raraRpgBox
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { shapePatrol } from "../../src/lib/nova-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getCash, spendCash, formatRp } from "../../src/lib/rara-rpg-service.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { shapePatrol } from "../../src/lib/rara-rpg-shapes.js";
 
 const pluginConfig = {
   name: "patrol",
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
 
     // ── subcommand khas patrol: status & upgrade ──
     if (sub === "status" || sub === "peralatan") {
-      return m.reply(novaRpgBox("patrol",
+      return m.reply(raraRpgBox("patrol",
         `🛡️ PERALATAN RANGER KAMU\n\n` +
         `Level : *Lv.${lv}*\n💰 Bonus gold event : +${10 * lv}%\n✨ Bonus EXP event : +${10 * lv}%\n🎖️ Lencana Patroli : ${tool.badges || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
         `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.badgeCost(lv)}x Lencana + ${formatRp(TOOL.rpCost(lv))}\nKetik: .patrol upgrade`));
@@ -102,11 +102,11 @@ async function handler(m, { sock }) {
       const needBadge = TOOL.badgeCost(lv);
       const needRp = TOOL.rpCost(lv);
       if ((tool.badges || 0) < needBadge) {
-        return m.reply(novaRpgBox("patrol",
+        return m.reply(raraRpgBox("patrol",
           `🎖️ Upgrade Peralatan ke Lv.${lv + 1} butuh:\n\n• Lencana Patroli : ${needBadge}x (punya ${tool.badges || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Lencana didapat dari .patrol sendiri — 25% per patroli, event monster dijamin +1!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
-        return m.reply(novaRpgBox("patrol", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("patrol", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = getTool(sender);
       fresh.badges = (fresh.badges || 0) - needBadge;
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
       fresh.spent = (fresh.spent || 0) + needRp;
       getDatabase().setPlayerData(sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("patrol",
+      return m.reply(raraRpgBox("patrol",
         `🛡️ PERALATAN UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n💰 Bonus gold event : +${10 * (lv + 1)}%\n✨ Bonus EXP event : +${10 * (lv + 1)}%\n\n🎖️ Material : −${needBadge} Lencana Patroli\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
@@ -128,12 +128,12 @@ async function handler(m, { sock }) {
 
     if (profile.hp <= 0) {
       await m.react("❌");
-      return m.reply(novaRpgBox("patrol", "HP kamu telah habis! Gunakan item penyembuh atau istirahat terlebih dahulu sebelum berpatroli.", "error"));
+      return m.reply(raraRpgBox("patrol", "HP kamu telah habis! Gunakan item penyembuh atau istirahat terlebih dahulu sebelum berpatroli.", "error"));
     }
 
     if (profile.energi < PATROL_COST && !m.isOwner) {
       await m.react("❌");
-      return m.reply(novaRpgBox("patrol", `Energi tidak cukup! Patroli membutuhkan *${PATROL_COST} Energi*, kamu saat ini memiliki *${profile.energi} Energi*.`, "error"));
+      return m.reply(raraRpgBox("patrol", `Energi tidak cukup! Patroli membutuhkan *${PATROL_COST} Energi*, kamu saat ini memiliki *${profile.energi} Energi*.`, "error"));
     }
 
     if (!m.isOwner) {
@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
     await db.setPlayerData?.(sender, "profile", profile);
 
     await m.react("🐣");
-    return m.reply(novaRpgBox("patrol",
+    return m.reply(raraRpgBox("patrol",
       `${PATROL_FLAVOR[event.type] || "🧭 PATROLI SELESAI!"}\n\n` +
       `${event.narrative}\n\n` +
       `${event.icon} Event : ${event.name}\n` +
@@ -211,7 +211,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("patrol error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("patrol", err.message || "Terjadi kesalahan saat patroli.", "error"));
+    return m.reply(raraRpgBox("patrol", err.message || "Terjadi kesalahan saat patroli.", "error"));
   }
 }
 

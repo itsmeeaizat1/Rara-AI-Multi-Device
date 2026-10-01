@@ -1,16 +1,16 @@
 {
-  "_note": "API KEY CONFIG — SATU FILE BUAT SEMUA (semua key dipusatkan di sini biar gampang diganti). CARA BACA (FIX 19 Sep 2026, biar jelas mana nama rest api & mana fiturnya): tiap key punya '_note_<nama key>' berbentuk BERLABEL — \"restapi\" = nama + endpoint rest api sumbernya, \"fitur\" = daftar fitur bot yang pakai key itu, \"catatan\" = status/pendaftaran/tambahan. GANTI KEY = edit nilai string key-nya, ketik .reloadkey (atau restart bot) — gak perlu ubah kode. Urutan baca key oleh bot (nova-api-keys.js): db runtime (.setkey) > file ini > config lama > env var.",
+  "_note": "API KEY CONFIG — SATU FILE BUAT SEMUA (semua key dipusatkan di sini biar gampang diganti). CARA BACA (FIX 19 Sep 2026, biar jelas mana nama rest api & mana fiturnya): tiap key punya '_note_<nama key>' berbentuk BERLABEL — \"restapi\" = nama + endpoint rest api sumbernya, \"fitur\" = daftar fitur bot yang pakai key itu, \"catatan\" = status/pendaftaran/tambahan. GANTI KEY = edit nilai string key-nya, ketik .reloadkey (atau restart bot) — gak perlu ubah kode. Urutan baca key oleh bot (rara-api-keys.js): db runtime (.setkey) > file ini > config lama > env var.",
   "aiSatuan": {
     "_note": "KEY FITUR AI SATUAN & AI WRAPPER — tiap key punya '_note_<nama key>' BERLABEL: restapi = nama+endpoint rest api sumbernya, fitur = daftar fitur bot yang pakai key itu, catatan = status/pendaftaran/tambahan.",
     "_note_haidar": {
       "restapi": "HAIDARAPIS — api.haidarxd.my.id",
-      "fitur": ".alldl/.alldownloader/.alldownloaderv3 (fallback downloader), .txt2vid, .tts haidar (text2speech), .img2style, .nanobanana (image gen), .ai haidar (blackbox chat), nova-haidar textpro suite, sumber soal game factory (zmaths dll), fallback rantai AI + douyin",
+      "fitur": ".alldl/.alldownloader/.alldownloaderv3 (fallback downloader), .txt2vid, .tts haidar (text2speech), .img2style, .nanobanana (image gen), .ai haidar (blackbox chat), rara-haidar textpro suite, sumber soal game factory (zmaths dll), fallback rantai AI + douyin",
       "catatan": "336 endpoint all-in-one, daftar gratis api.haidarxd.my.id/register"
     },
     "haidar": "haidarapis-83c256f3a48c4bf43752aa5b",
     "_note_ikyyxd": {
       "restapi": "IKYYXD — api.ikyyxd.my.id",
-      "fitur": "rantai AI cadangan ikyy_gemini/ikyy_gpt5mini/ikyy_cici/ikyy_gemma (.novaai & fitur AI otomatis), .ikyydl (downloader ytmp3/ytmp4/tiktok fallback), .getdltiktok, .snaptikdouyin, .unlimitedai, fallback AI satuan (nova-ai-fallback)",
+      "fitur": "rantai AI cadangan ikyy_gemini/ikyy_gpt5mini/ikyy_cici/ikyy_gemma (.raraai & fitur AI otomatis), .ikyydl (downloader ytmp3/ytmp4/tiktok fallback), .getdltiktok, .snaptikdouyin, .unlimitedai, fallback AI satuan (rara-ai-fallback)",
       "catatan": "preset gratis key 'kyzz'"
     },
     "ikyyxd": "kyzz",
@@ -23,7 +23,7 @@
     "_note_termai": {
       "restapi": "TERMAI — api.termai.cc (DILEPAS 1 Okt 2026)",
       "fitur": "(dulu) .logicbell, .tourl, .animeapaini, .musikapaini, .qrcustom",
-      "catatan": "Jadi free-tier limit kecil (logic-bell 429 permanen, upload cepat kena limit) → semua fitur dimigrasi ke host upload publik nova-uploader (Kappa → Pone → Uguu). Zelapi gak dipakai: /tools/upload-nya mati. Key dibuang dari config."
+      "catatan": "Jadi free-tier limit kecil (logic-bell 429 permanen, upload cepat kena limit) → semua fitur dimigrasi ke host upload publik rara-uploader (Kappa → Pone → Uguu). Zelapi gak dipakai: /tools/upload-nya mati. Key dibuang dari config."
     },
     "_note_voiceai": {
       "restapi": "VOICEAI — api.voiceai",
@@ -51,7 +51,7 @@
     "autoresbot": "",
     "_note_min1ai": {
       "restapi": "1MIN.AI — api.1min.ai/api/chat-with-ai",
-      "fitur": "urutan #1 rantai AI NovaAI (.novaai/.autonovaai/fitur AI otomatis), aiagent, fallback AI satuan. Model free: qwen3-8b",
+      "fitur": "urutan #1 rantai AI RaraAI (.raraai/.autonovaai/fitur AI otomatis), aiagent, fallback AI satuan. Model free: qwen3-8b",
       "catatan": "auth header 'API-KEY', daftar app.1min.ai"
     },
     "min1ai": "e0c62b6f680315d27f80d8c434398aa5be8fb3ae39e1546f691e6f0e8abe5f3c",
@@ -75,7 +75,7 @@
     "zelapi": "zelapi-5f3379f44fdf42b4"
   },
   "aiMultiprovider": {
-    "_note": "CONFIG MULTI-PROVIDER AI (pindahan ai-providers.json — sekarang satu file di apikeys.json). (1) 'chain' = urutan prioritas otak AI .novaai/.autonovaai/autoflow — down/rate-limit otomatis geser kebawah. (2) 'providers' = KEY semua provider buat fitur AI satuan (.grok/.openai/.claude/dll) & rantai — isi 'apikey' provider yang lo punya; kosong = di-skip otomatis. Provider ikyy (free) udah preset key 'kyzz'. Dibaca LIVE tiap pemanggilan — edit tanpa restart.",
+    "_note": "CONFIG MULTI-PROVIDER AI (pindahan ai-providers.json — sekarang satu file di apikeys.json). (1) 'chain' = urutan prioritas otak AI .raraai/.autonovaai/autoflow — down/rate-limit otomatis geser kebawah. (2) 'providers' = KEY semua provider buat fitur AI satuan (.grok/.openai/.claude/dll) & rantai — isi 'apikey' provider yang lo punya; kosong = di-skip otomatis. Provider ikyy (free) udah preset key 'kyzz'. Dibaca LIVE tiap pemanggilan — edit tanpa restart.",
     "chain": [
       "min1ai",
       "nexai",
@@ -278,11 +278,11 @@
       "_note": "RANCANGAN 9ROUTER — key pooling: list apikey per provider, diputar round-robin. Contoh: \"pools\": {\"groq\": [\"key1\", \"key2\"]}. Key kena 429/401 -> router otomatis pindah key berikutnya. Kosongkan/skip provider yang cuma punya 1 key (tetep pake providers.<nama>.apikey)."
     }
   },
-  "novaai": {
-    "_note": "KEY ENGINE NOVA AI — otak fitur AI utama. Komentar berlabel per key di bawah (restapi/fitur/catatan).",
+  "raraai": {
+    "_note": "KEY ENGINE RARA AI — otak fitur AI utama. Komentar berlabel per key di bawah (restapi/fitur/catatan).",
     "_note_tioApiKey": {
       "restapi": "9ROUTER V2 — 9router.cloudku.us.kg (pengganti Tio, web gorouter/kktoken udah mati)",
-      "fitur": ".aitio, rantai AI nova-ai-service (.aichat/.aigrup/fitur AI otomatis semua), .aicaption, smartreply, fun-ai",
+      "fitur": ".aitio, rantai AI rara-ai-service (.aichat/.aigrup/fitur AI otomatis semua), .aicaption, smartreply, fun-ai",
       "catatan": "key SAMA dengan providers.router9v2 · format OpenAI-compatible SAJA (anthropic/gemini format auto-dikonversi kode) · bisa override env TIO_API_URL"
     },
     "tioApiKey": "sk-76d5cd22f743be8a-osqk8r-c6d857b6",
@@ -344,7 +344,7 @@
       "fitur": "downloader/stalker/info cadangan",
       "catatan": "key belum valid (placeholder) + API lagi bermasalah — isi key baru kalau mau dipakai"
     },
-    "lolhuman": "APIKey-Milik-Bot-NovaMD",
+    "lolhuman": "APIKey-Milik-Bot-RaraMD",
     "_note_neoxr": {
       "restapi": "NEOXR — api.neoxr.eu",
       "fitur": ".anime-gen, .txt2img, .asupantiktok, .pixeldraindl",

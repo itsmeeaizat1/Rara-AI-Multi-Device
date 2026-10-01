@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Asah Otak — game multiplayer multi-ronde (upgrade ala script owner 9 Sep 2026)
 // Menggantikan versi factory 1-soal. Fitur verbatim script:
 //   • 5 kategori: Teka-teki 🧩 / Logika 🧠 / Matematika 🔢 / Tebak Gambar 🖼️ / Sulit 🔥
@@ -13,8 +13,8 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { normalizeAnswer, getSimilarity } from "../../src/lib/nova-game-engine.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { normalizeAnswer, getSimilarity } from "../../src/lib/rara-game-engine.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

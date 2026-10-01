@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
-import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
-import te from '../../src/lib/nova-error.js'
+import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
+import te from '../../src/lib/rara-error.js'
 const allCommands = VALID_SERVERS.slice(0, 5).map(v => `deladmin${v}`)
 const allAliases = VALID_SERVERS.map(v => `hapusadmin${v}`)
 
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     // Owner & CEO (admin panel). Reseller tidak boleh menghapus admin panel.
     if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(novaWrap("deladmin", `❌ *akses ditolak*\n\n` +
+        return m.reply(raraWrap("deladmin", `❌ *akses ditolak*\n\n` +
             `Hapus admin panel hanya untuk *Owner* & *CEO (admin panel)*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}* | Server: *${serverLabel}*`))
     }
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
         } else {
             txt += `Isi di \`config.js\` bagian \`pterodactyl.server1\``
         }
-        return m.reply(novaWrap("deladmin", txt))
+        return m.reply(raraWrap("deladmin", txt))
     }
     
     const userId = m.text?.trim()
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
             `Email: \`${user.email}\``)
         
     } catch (err) {
-        return m.reply(novaWrap("deladmin", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("deladmin", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

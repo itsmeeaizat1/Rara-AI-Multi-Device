@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // cryptoprice.js — Harga Kripto Realtime IDR dari Indodax (exchange kripto Indonesia).
 // Sumber: indodax.com Public API (btcid/indodax-official-api-docs, daftar farizdotid) — TANPA API KEY.
 // .hargakripto → 10 koin populer | .hargakripto <koin> → detail pair IDR | .hargakripto btc usdt → pair lain
 // Riset 24 Sep 2026: endpoint lama /api/{pair} udah invalid method — path BENAR: /api/ticker/{pair}
 // (mis. btc_idr) + /api/ticker_all (semua pair, ~76KB). Pair gak valid → {error:"invalid_pair"}.
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const BASE = "https://indodax.com/api";
 
@@ -51,14 +51,14 @@ async function handler(m, { sock, db }) {
     if (!args.length) {
       const { status, data } = await fetchJson(`${BASE}/ticker_all`);
       if (status !== 200 || !data?.tickers) {
-        return m.reply(novaWrap("Harga Kripto", `❌ Indodax bermasalah (${status}). Coba lagi nanti.`));
+        return m.reply(raraWrap("Harga Kripto", `❌ Indodax bermasalah (${status}). Coba lagi nanti.`));
       }
       const lines = POPULAR.map((c) => {
         const t = data.tickers[`${c}_idr`];
         const harga = t ? rp(t.last) : "—";
         return `▸ ${NAMA_KOIN[c] || c.toUpperCase()} (${c.toUpperCase()}): ${harga}`;
       }).join("\n");
-      return m.reply(novaWrap("Harga Kripto (Indodax)",
+      return m.reply(raraWrap("Harga Kripto (Indodax)",
         `10 koin populer sekarang:\n\n${lines}\n\nDetail: .hargakripto <koin>\nContoh: .hargakripto btc`));
     }
     // resolusi pair: "btc" + [quote] → btc_idr; "btc_usdt" → langsung
@@ -69,9 +69,9 @@ async function handler(m, { sock, db }) {
     if (status !== 200 || !data || data.error) {
       const err = data?.error || status;
       if (err === "invalid_pair") {
-        return m.reply(novaWrap("Harga Kripto", `🔎 Pair "${pair}" gak ada di Indodax.\n\nCoba: .hargakripto btc · .hargakripto eth usdt\nPair format: <koin>_<pasangan> (mis. btc_idr, eth_usdt).`));
+        return m.reply(raraWrap("Harga Kripto", `🔎 Pair "${pair}" gak ada di Indodax.\n\nCoba: .hargakripto btc · .hargakripto eth usdt\nPair format: <koin>_<pasangan> (mis. btc_idr, eth_usdt).`));
       }
-      return m.reply(novaWrap("Harga Kripto", `❌ Indodax bermasalah (${err}). Coba lagi nanti.`));
+      return m.reply(raraWrap("Harga Kripto", `❌ Indodax bermasalah (${err}). Coba lagi nanti.`));
     }
     const t = data.ticker || {};
     const koin = pair.replace(/_/g, "/").toUpperCase();
@@ -85,9 +85,9 @@ async function handler(m, { sock, db }) {
       `24j Terendah: ${rp(t.low)}`,
       `Volume 24j: ${t[volKey] ? Number(t[volKey]).toLocaleString("id-ID") + " " + pair.split("_")[0].toUpperCase() : "—"}`,
     ].join("\n");
-    return m.reply(novaWrap("Harga Kripto (Indodax)", `${lines}\n\nSumber: Indodax, realtime.`));
+    return m.reply(raraWrap("Harga Kripto (Indodax)", `${lines}\n\nSumber: Indodax, realtime.`));
   } catch (e) {
-    return m.reply(novaWrap("Harga Kripto", `❌ Gagal nyambung ke Indodax: ${e.message || e}`));
+    return m.reply(raraWrap("Harga Kripto", `❌ Gagal nyambung ke Indodax: ${e.message || e}`));
   }
 }
 

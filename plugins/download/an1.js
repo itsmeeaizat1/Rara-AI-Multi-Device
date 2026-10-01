@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // an1.js — Search game mod dari AN1 (direct scrape, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { novaBox, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraBox, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "an1",
@@ -74,13 +74,13 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const query = m.args?.join(" ").trim();
     if (!query) {
-      return m.reply(novaGuide("AN1", "Masukkan nama game yang mau dicari!", ".an1 minecraft"));
+      return m.reply(raraGuide("AN1", "Masukkan nama game yang mau dicari!", ".an1 minecraft"));
     }
 
     const results = await scrapeAN1(query);
     if (!results.length) {
       await m.react("❌");
-      return m.reply(novaError("AN1", `Game tidak ditemukan untuk: *${query}*`));
+      return m.reply(raraError("AN1", `Game tidak ditemukan untuk: *${query}*`));
     }
 
     const lines = [`Hasil pencarian: ${query}`, ""];
@@ -89,12 +89,12 @@ async function handler(m, { sock }) {
       lines.push(`Link: ${item.url}`);
     });
 
-    await m.reply(novaBox("AN1 Search", lines));
+    await m.reply(raraBox("AN1 Search", lines));
     await m.react("🐣");
   } catch (err) {
     console.error("[AN1]", err);
     await m.react("❌");
-    m.reply(novaGagal("AN1"));
+    m.reply(raraGagal("AN1"));
   }
 }
 

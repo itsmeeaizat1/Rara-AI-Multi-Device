@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -33,12 +33,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "add") {
       const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-      if (!quoted) return m.reply(novaWrap("Audio Merge", `Reply audio yang mau digabung. Lalu ketik ${usedPrefix}audiomerge add`));
+      if (!quoted) return m.reply(raraWrap("Audio Merge", `Reply audio yang mau digabung. Lalu ketik ${usedPrefix}audiomerge add`));
 
       const audioMsg = quoted.audioMessage || quoted.pttMessage;
-      if (!audioMsg) return m.reply(novaWrap("Audio Merge", "Reply harus audio/voice note!"));
+      if (!audioMsg) return m.reply(raraWrap("Audio Merge", "Reply harus audio/voice note!"));
 
-      const tmpDir = path.join(os.tmpdir(), 'nova-merge');
+      const tmpDir = path.join(os.tmpdir(), 'rara-merge');
       if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
       const fileName = `merge_${Date.now()}_${data.queue.length}.mp3`;
@@ -50,7 +50,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       data.queue.push({ path: filePath, name: fileName, addedBy: m.sender });
       await db.save();
 
-      return m.reply(novaWrap("Audio Merge", [
+      return m.reply(raraWrap("Audio Merge", [
         `Audio ditambahkan!`,
         `Total dalam queue: ${data.queue.length}`,
         `Gap: ${data.gap} detik`,
@@ -60,9 +60,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "go" || sub === "merge") {
-      if (data.queue.length < 2) return m.reply(novaWrap("Audio Merge", `Minimal 2 audio. Tambah dengan ${usedPrefix}audiomerge add`));
+      if (data.queue.length < 2) return m.reply(raraWrap("Audio Merge", `Minimal 2 audio. Tambah dengan ${usedPrefix}audiomerge add`));
 
-      const tmpDir = path.join(os.tmpdir(), 'nova-merge');
+      const tmpDir = path.join(os.tmpdir(), 'rara-merge');
       const outputPath = path.join(tmpDir, `merged_${Date.now()}.mp3`);
 
       let listFile = data.queue.map((q, i) => `file '${q.path}'`).join("\n");
@@ -77,7 +77,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await queueFFmpeg(`ffmpeg -y ${filterCmd}`);
 
       if (!fs.existsSync(outputPath)) {
-        return m.reply(novaGagal("AudioMerge"));
+        return m.reply(raraGagal("AudioMerge"));
       }
 
       const buffer = fs.readFileSync(outputPath);
@@ -85,7 +85,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         audio: buffer,
         mimetype: "audio/ogg; codecs=opus",
         ptt: false,
-        caption: novaWrap("Audio Merge", `Berhasil merge ${data.queue.length} audio! Gap: ${data.gap} detik`),
+        caption: raraWrap("Audio Merge", `Berhasil merge ${data.queue.length} audio! Gap: ${data.gap} detik`),
       });
 
       fs.unlinkSync(outputPath);
@@ -96,36 +96,36 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "list") {
-      if (data.queue.length === 0) return m.reply(novaError("AudioMerge", "Queue kosong nih"));
+      if (data.queue.length === 0) return m.reply(raraError("AudioMerge", "Queue kosong nih"));
       const list = data.queue.map((q, i) => `${i + 1}. ${q.name} (@${q.addedBy.split("@")[0]})`).join("\n");
-      return m.reply(novaWrap("Audio Merge", [`Queue (${data.queue.length}):`, "", list, "", `Gap: ${data.gap} detik`].join("\n")));
+      return m.reply(raraWrap("Audio Merge", [`Queue (${data.queue.length}):`, "", list, "", `Gap: ${data.gap} detik`].join("\n")));
     }
 
     if (sub === "gap") {
       const sec = parseInt(args[1]) || 0;
-      if (sec < 0 || sec > 10) return m.reply(novaWrap("Info", "Gap 0-10 detik. Contoh: .audiomerge gap 1"));
+      if (sec < 0 || sec > 10) return m.reply(raraWrap("Info", "Gap 0-10 detik. Contoh: .audiomerge gap 1"));
       data.gap = sec;
       await db.save();
-      return m.reply(novaWrap("Audio Merge", `Jeda antar audio diatur ke ${sec} detik.`));
+      return m.reply(raraWrap("Audio Merge", `Jeda antar audio diatur ke ${sec} detik.`));
     }
 
     if (sub === "clear") {
       data.queue.forEach(q => { try { fs.unlinkSync(q.path); } catch (e) { console.error('[audiomerge.js]:', e.message); } });
       data.queue = [];
       await db.save();
-      return m.reply(novaWrap("Audio Merge", "Queue dibersihkan."));
+      return m.reply(raraWrap("Audio Merge", "Queue dibersihkan."));
     }
 
     if (sub === "remove" || sub === "del") {
       const idx = parseInt(args[1]) - 1;
-      if (isNaN(idx) || idx < 0 || idx >= data.queue.length) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}audiomerge remove <nomor>`));
+      if (isNaN(idx) || idx < 0 || idx >= data.queue.length) return m.reply(raraWrap("Usage", `Cara: ${usedPrefix}audiomerge remove <nomor>`));
       try { fs.unlinkSync(data.queue[idx].path); } catch (e) { console.error('[audiomerge.js]:', e.message); }
       data.queue.splice(idx, 1);
       await db.save();
-      return m.reply(novaWrap("Audio Merge", `Audio ${idx + 1} dihapus dari queue.`));
+      return m.reply(raraWrap("Audio Merge", `Audio ${idx + 1} dihapus dari queue.`));
     }
 
-    return m.reply(novaWrap("Audio Merge", [
+    return m.reply(raraWrap("Audio Merge", [
       `Audio Merge - Gabung 2+ audio jadi 1 file`,
       "",
       `Command:`,
@@ -136,10 +136,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       `5. ${usedPrefix}audiomerge remove <nomor> - Hapus dari queue`,
       `6. ${usedPrefix}audiomerge clear - Bersihkan queue`,
     ].join("\n")));
-      await m.reply(novaBerhasil("audiomerge"));
+      await m.reply(raraBerhasil("audiomerge"));
   } catch (e) {
     console.error("audiomerge error:", e);
-    return m.reply(novaGangguan("audiomerge"));
+    return m.reply(raraGangguan("audiomerge"));
   }
 }
 

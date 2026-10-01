@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // volume.js — Adjust audio volume
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "volume",
@@ -19,14 +19,14 @@ async function handler(m, { sock }) {
     const from = m.key.remoteJid;
     const quoted = m.quoted;
     if (!quoted || quoted.mtype !== "audioMessage") {
-      return m.reply(novaWrap("volume", "Reply audio yang ingin diubah volumenya!", "guide"));
+      return m.reply(raraWrap("volume", "Reply audio yang ingin diubah volumenya!", "guide"));
     }
     const vol = parseInt(m.args?.[0]) || 50;
-    if (vol < 1 || vol > 100) return m.reply(novaWrap("volume", "Volume harus 1-100!", "guide"));
+    if (vol < 1 || vol > 100) return m.reply(raraWrap("volume", "Volume harus 1-100!", "guide"));
 
     await m.react("🕒");
     const buffer = await quoted.download();
-    if (!buffer) return m.reply(novaWrap("volume", "Gagal mengunduh audio!", "error"));
+    if (!buffer) return m.reply(raraWrap("volume", "Gagal mengunduh audio!", "error"));
 
     // Use ffmpeg to change volume
     const { execSync } = await import("child_process");
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("volume error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("volume", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("volume", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

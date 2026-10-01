@@ -10,7 +10,7 @@ function check(name, cond, extra = "") {
 
 // ── lib sanitizer ──
 const { isSaluranJid, sanitizeForSaluran, sanitizeAudioForSaluran, sendSaluranSafe } =
-  await import("../../src/lib/nova-saluran-safe.js");
+  await import("../../src/lib/rara-saluran-safe.js");
 
 w("\n— isSaluranJid —");
 check("jid newsletter dikenali", isSaluranJid("12036301234567890@newsletter"));
@@ -22,21 +22,21 @@ w("\n— sanitizeForSaluran —");
 {
   const out = sanitizeForSaluran({
     text: "Halo saluran",
-    footer: "Nova AI",
+    footer: "Rara AI",
     title: "Menu",
     buttons: [{ buttonId: "b1", buttonText: { displayText: "Klik" }, type: 1 }],
     sections: [{ title: "A" }],
     interactiveMessage: { x: 1 },
     nativeFlowMessage: { y: 2 },
     templateMessage: { z: 3 },
-    contextInfo: { externalAdReply: { title: "Nova", sourceUrl: "https://wa.me" } },
+    contextInfo: { externalAdReply: { title: "Rara", sourceUrl: "https://wa.me" } },
     image: Buffer.from("fake"),
     caption: "cap",
   });
   check("buttons dibuang", !("buttons" in out));
   check("sections + interactive dibuang", !out.sections && !out.interactiveMessage && !out.nativeFlowMessage && !out.templateMessage);
   check("text + caption tetap", out.text === "Halo saluran" && out.caption === "cap");
-  check("externalAdReply tetap (aman di saluran)", out.contextInfo?.externalAdReply?.title === "Nova");
+  check("externalAdReply tetap (aman di saluran)", out.contextInfo?.externalAdReply?.title === "Rara");
   check("payload asli gak di-mutasi", true);
 }
 
@@ -126,7 +126,7 @@ w("\n— broadcastToSaluran auto-sanitize —");
   try {
     const sent = [];
     const sock = { sendMessage: async (jid, payload, opts) => { sent.push({ jid, payload, opts }); return "ok"; } };
-    const { broadcastToSaluran } = await import("../../src/lib/nova-saluran-broadcast.js");
+    const { broadcastToSaluran } = await import("../../src/lib/rara-saluran-broadcast.js");
     const r = await broadcastToSaluran(sock, "Halo channel", { buttons: [{ b: 1 }], quoted: { key: 1 } });
     check("status sent true", r.sent === true);
     check("dikirim ke jid saluran", sent[0]?.jid === "120363999888777@newsletter");

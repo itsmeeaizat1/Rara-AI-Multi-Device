@@ -1,4 +1,4 @@
-// NOVA SKILL PACK — GEMPA TERKINI (12 Sep 2026)
+// RARA SKILL PACK — GEMPA TERKINI (12 Sep 2026)
 // Info gempa terbaru: BMKG autogempa (Indonesia, M signifikan) + USGS last-day
 // M4.5+ dunia. Gratis no-key. Seam: _setGempaHttp buat e2e.
 

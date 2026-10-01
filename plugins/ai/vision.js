@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // vision — Analisis gambar dengan Gemini Vision (gratis, pakai API key Gemini)
-import { visionScan } from "../../src/lib/nova-vision-chain.js";
-import { novaCaption, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { visionScan } from "../../src/lib/rara-vision-chain.js";
+import { raraCaption, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "vision",
@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Cek apakah ada gambar (attach atau reply)
     const media = (m.quoted && m.quoted.isImage) || m.isImage; // FIX 10 Sep: m.msg gak ada di serializer — pake flags isImage
     if (!media) {
-      const guide = novaCaption({
+      const guide = raraCaption({
         emoji: "🔍",
         name: "vision",
         description: "Analisis gambar dengan Gemini Vision",
@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
     if (!buffer || buffer.length === 0) {
       await m.react("❌");
-      return m.reply(novaWrap("vision", "Gagal download gambar. Coba kirim ulang.", "error"));
+      return m.reply(raraWrap("vision", "Gagal download gambar. Coba kirim ulang.", "error"));
     }
 
     // Get prompt dari text message
@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!result.status) {
       await m.react("❌");
-      return m.reply(novaWrap("vision", result.error || "Gagal menganalisis gambar", "error"));
+      return m.reply(raraWrap("vision", result.error || "Gagal menganalisis gambar", "error"));
     }
 
     await m.react("🐣");
@@ -69,7 +69,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (err) {
     console.error("vision error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("vision", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("vision", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

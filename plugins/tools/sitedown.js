@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "sitedown",
@@ -26,7 +26,7 @@ async function checkSite(url) {
       method: "HEAD",
       redirect: "follow",
       signal: AbortSignal.timeout(10000),
-      headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
+      headers: { "User-Agent": "Mozilla/5.0 (Rara Bot)" },
     });
 
     const elapsed = Date.now() - start;
@@ -91,10 +91,10 @@ async function handler(m, { sock, config: botConfig }) {
       if (result.redirected) {
         lines.push("Final URL: " + (result.finalUrl.length > 60 ? result.finalUrl.substring(0, 60) + "..." : result.finalUrl));
       }
-      return m.reply(novaWrap("Site Check: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
+      return m.reply(raraWrap("Site Check: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
     } else {
       await m.react("🐣");
-      return m.reply(novaWrap("Site Check: " + url.replace(/^https?:\/\//, ""), [
+      return m.reply(raraWrap("Site Check: " + url.replace(/^https?:\/\//, ""), [
         "Status: DOWN",
         "Error: " + result.error,
         "Time: " + result.responseTime + "ms",
@@ -103,7 +103,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (e) {
     await m.react("❌");
     console.error("sitedown error:", e);
-    return m.reply(novaWrap("SiteDown", "Error: " + e.message));
+    return m.reply(raraWrap("SiteDown", "Error: " + e.message));
   }
 }
 

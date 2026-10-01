@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'buyfitur',
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
         text += `Gunakan: \`.buyfitur <id>\`\n`
         text += `Atau jadi *premium* unlock semua!`
         
-        await m.reply(novaWrap("buyfitur", text))
+        await m.reply(raraWrap("buyfitur", text))
         return
     }
     

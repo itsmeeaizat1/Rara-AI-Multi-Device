@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // FIX 14 Sep 2026: versi lama CUMA nyimpen foto ke tmp lalu ngirim balik
 // FOTO ASLI TANPA DIPROSES SAMA SEKALI, sambil klaim caption "Status: SUCCESS"
 // efek wanted poster — bug ditemukan pas audit kualitas fitur canvas.
@@ -6,7 +6,7 @@
 // lokal (gak ada ketergantungan API luar): kertas usang + bingkai + foto
 // desaturasi sepia + judul "WANTED" + "DEAD OR ALIVE" + reward acak.
 import { createCanvas, loadImage } from "@napi-rs/canvas";
-import { novaError, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "wanted",
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
   try {
     const media = extractImage(m);
     if (!media) {
-      return m.reply(novaWrap("wanted",
+      return m.reply(raraWrap("wanted",
         `🎨 *WANTED POSTER*\n\nKirim/reply foto buat dijadiin poster wanted ala koboi.\n\n${tipText(`Ketik ${m.prefix}wanted (kirim/reply gambar)`)}`));
     }
 
@@ -143,12 +143,12 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, {
       image: poster,
-      caption: novaWrap("wanted", "🤠 *WANTED POSTER JADI!*"),
+      caption: raraWrap("wanted", "🤠 *WANTED POSTER JADI!*"),
     }, { quoted: m });
   } catch (error) {
     console.error("[wanted]", error.message);
     await m.react("❌");
-    return m.reply(novaError("Wanted", "Gagal bikin poster nih, coba lagi ya"));
+    return m.reply(raraError("Wanted", "Gagal bikin poster nih, coba lagi ya"));
   }
 }
 

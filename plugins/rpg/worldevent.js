@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .worldevent — TIME CAPSULE RPG / EVENT DUNIA (26 Sep 2026, ide owner
 // no.6 "fitur masa depan"): event sekali sejarah yang gak bisa diulang.
 // Yang ikut dapet GELAR LANGKA PERMANEN. Yang ketinggalan, ketinggalan
-// selamanya. Engine: src/lib/nova-world-event.js (jangan duplikasi logika).
+// selamanya. Engine: src/lib/rara-world-event.js (jangan duplikasi logika).
 // Animasi khas per jenis: komet jatuh / boss muncul dari kabut / lentera
 // naik (libworldeventrpg.js).
 //
@@ -15,9 +15,9 @@
 //   .komet / .bossdunia / .festival — Ikut event yang lagi aktif (jalan
 //     dari chat mana aja — DM atau grup)
 
-import { novaGuide } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { ensureRpg, useEnergy, addGold, addExp } from "../../src/lib/nova-rpg-service.js";
+import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { ensureRpg, useEnergy, addGold, addExp } from "../../src/lib/rara-rpg-service.js";
 import {
   ensureWorldEventState, KINDS, spawnEvent, getActiveEvent, sweepEvents,
   participateKomet, attackBoss, joinFestival,
@@ -25,8 +25,8 @@ import {
   buildStatusCard, buildResultCard, buildHistoryCard, buildTitlesCard,
   announceCard, KOMET_GOLD, KOMET_FIRST10_GOLD, FEST_GOLD, FEST_EXP,
   BOSS_TOP_GOLD, BOSS_ATTACK_ENERGY,
-} from "../../src/lib/nova-world-event.js";
-import { broadcastSpawn, broadcastResult } from "../../src/lib/nova-world-event.js";
+} from "../../src/lib/rara-world-event.js";
+import { broadcastSpawn, broadcastResult } from "../../src/lib/rara-world-event.js";
 
 const pluginConfig = {
   name: "worldevent",
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
       m.react?.("\u{1F30D}");
       const live = getActiveEvent(st);
       if (live) return m.reply(buildStatusCard(st));
-      return m.reply(buildStatusCard(st) + "\n\n" + novaGuide(
+      return m.reply(buildStatusCard(st) + "\n\n" + raraGuide(
         "worldevent",
         "Event dunia itu SEKALI SEJARAH \u2014 komet yang lewat gak akan balik, boss yang tumbang gak bangkit lagi.\n.worldevent on — langganan umuman event di chat ini (grup/DM)\n.worldevent gelar — gelar abadi kamu\n.worldevent riwayat — sejarah semua event",
         ".worldevent on\n.worldevent gelar",

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // fluxkontext — Edit gambar dengan AI menggunakan prompt via Flux Kontext
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "fluxkontext",
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim() || m.args?.join(" ").trim() || "";
 
     if (!text) {
-      return m.reply(novaWrap("FluxKontext", [
+      return m.reply(raraWrap("FluxKontext", [
         "Edit gambar dengan AI (Flux Kontext)",
         "",
         "CARA PAKAI:",
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(novaWrap("FluxKontext", "Reply/kirim foto dengan prompt .fluxkontext untuk mengedit gambar."));
+      return m.reply(raraWrap("FluxKontext", "Reply/kirim foto dengan prompt .fluxkontext untuk mengedit gambar."));
     }
 
     await m.react("🕒");
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
         // Jika polling tidak dapat URL, coba pakai input_url sebagai fallback
         if (!resultUrl && data.result?.input_url) {
           await m.react("❌");
-          return m.reply(novaWrap("FluxKontext", "Gambar sedang diproses tapi belum selesai. Coba lagi dalam beberapa detik."));
+          return m.reply(raraWrap("FluxKontext", "Gambar sedang diproses tapi belum selesai. Coba lagi dalam beberapa detik."));
         }
       }
     }
@@ -122,16 +122,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: novaWrap("FluxKontext", `Prompt: ${text}`),
+        caption: raraWrap("FluxKontext", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaWrap("FluxKontext", data?.error || data?.message || data?.result?.message || "Gagal memproses. Coba lagi nanti."));
+      await m.reply(raraWrap("FluxKontext", data?.error || data?.message || data?.result?.message || "Gagal memproses. Coba lagi nanti."));
     }
   } catch (e) {
     console.error("[fluxkontext.js]:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("FluxKontext", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("FluxKontext", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

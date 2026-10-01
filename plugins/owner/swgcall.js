@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import { fileTypeFromBuffer } from "file-type";
 import fs from "fs";
 import path from "path";
 import { config } from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraLine, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const botConfig = config;
 
@@ -37,7 +37,7 @@ async function handler(m, { sock, db }) {
   if (args[0] === "--yes") {
     const pending = global._swgcallPending?.get(m.sender);
     if (!pending) {
-      return m.reply(novaWrap("Swgcall", `⚠️ *Tidak ada data pending. Kirim ulang media + .swgcall*`));
+      return m.reply(raraWrap("Swgcall", `⚠️ *Tidak ada data pending. Kirim ulang media + .swgcall*`));
     }
 
     const { rawContent, groups, tempFile } = pending;
@@ -118,7 +118,7 @@ async function handler(m, { sock, db }) {
   if (source) {
     try {
       buffer = await source.download();
-      if (!buffer) return m.reply(novaWrap("Swgcall", `❌ Gagal mengambil media.`));
+      if (!buffer) return m.reply(raraWrap("Swgcall", `❌ Gagal mengambil media.`));
 
       const fileType = await fileTypeFromBuffer(buffer);
       ext = fileType?.ext || "bin";
@@ -144,7 +144,7 @@ async function handler(m, { sock, db }) {
         rawContent.ptt = source.msg?.ptt || false;
       }
     } catch {
-      return m.reply(novaCaption({
+      return m.reply(raraCaption({
   emoji: "📢",
   name: "swgcall",
   description: "Post Group Status/Story ke SEMUA grup sekaligus (border hijau)",
@@ -173,7 +173,7 @@ async function handler(m, { sock, db }) {
     const groupList = Object.entries(groups);
 
     if (groupList.length === 0) {
-      return m.reply(novaWrap("Swgcall", `⚠️ *Bot tidak berada di grup manapun.*`));
+      return m.reply(raraWrap("Swgcall", `⚠️ *Bot tidak berada di grup manapun.*`));
     }
 
     if (!global._swgcallPending) global._swgcallPending = new Map();
@@ -214,7 +214,7 @@ async function handler(m, { sock, db }) {
       contextInfo: {
         ...saluranCtx(),
       },
-      footer: "NOVA MD",
+      footer: "RARA MD",
       interactiveButtons: [
         {
           name: "quick_reply",

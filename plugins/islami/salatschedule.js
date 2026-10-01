@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import moment from "moment-timezone";
 import config from "../../config.js";
@@ -8,11 +8,11 @@ import {
   extractPrayerTimes,
   computeNextPrayer,
   buildSholatCountdownCard,
-} from "../../src/lib/nova-sholat-api.js";
-import { runLiveTicker } from "../../src/lib/nova-countdown.js";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-sholat-api.js";
+import { runLiveTicker } from "../../src/lib/rara-countdown.js";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "jadwalsholat2",
   alias: ["jadwalsholat", "jadwalsolat", "solat", "prayerschedule"],
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
   try {
     const kota = await searchKota(city);
     if (!kota) {
-      return m.reply(novaError("Religi", `❌ *gagal*\n\nKota "${city}" tidak ditemukan\nCoba nama kabupaten/kota lain`));
+      return m.reply(raraError("Religi", `❌ *gagal*\n\nKota "${city}" tidak ditemukan\nCoba nama kabupaten/kota lain`));
     }
     const jadwalData = await getTodaySchedule(kota.id);
     const times = extractPrayerTimes(jadwalData);
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     const daerah = jadwalData.daerah || "";
     const today = moment.tz("Asia/Jakarta").format("dddd, DD MMMM YYYY");
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     // 🕒 PENGHITUNG (13 Sep 2026): sholat berikutnya ditandai 🔜 + ticker live
     const next = computeNextPrayer(times);
@@ -114,7 +114,7 @@ _Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
       } catch {}
     }
   } catch (error) {
-    m.reply(novaWrap("jadwalsholat2", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("jadwalsholat2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

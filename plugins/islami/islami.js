@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
 const pluginConfig = {
@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
                         articles.forEach((article, index) => {
                             message += `${index + 1}. *${article.title}*\n🔗 ${article.url}\n\n`
                         })
-                        return m.reply(novaWrap("islami", message))
+                        return m.reply(raraWrap("islami", message))
                     } else {
                         return m.reply('Gagal mengambil data artikel.')
                     }

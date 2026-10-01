@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tiktokstalk2.js — TikTok Stalker v2 (nexray API)
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "tiktokstalk2",
@@ -18,7 +18,7 @@ async function handler(m, { sock }) {
   try {
     const username = m.args.join(" ").trim().replace(/@/g, "");
     if (!username) {
-      return m.reply(novaWrap("tiktokstalk2", `Stalk TikTok siapa?\n\nContoh: ${m.prefix}tiktokstalk2 charlidamelio`, "guide"));
+      return m.reply(raraWrap("tiktokstalk2", `Stalk TikTok siapa?\n\nContoh: ${m.prefix}tiktokstalk2 charlidamelio`, "guide"));
     }
 
     await m.react("🕒");
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
     if (!data || data.status === false || (!data.result && !data.data)) {
       await m.react("❌");
-      return m.reply(novaWrap("tiktokstalk2", `User "${username}" tidak ditemukan.`, "error"));
+      return m.reply(raraWrap("tiktokstalk2", `User "${username}" tidak ditemukan.`, "error"));
     }
 
     const r = data.result || data.data || data;
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("tiktokstalk2 error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("tiktokstalk2", err.message || "Error", "error"));
+    return m.reply(raraWrap("tiktokstalk2", err.message || "Error", "error"));
   }
 }
 

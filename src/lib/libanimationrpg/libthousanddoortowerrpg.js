@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libthousanddoortowerrpg.js — LIB ANIMASI EMOJI-GRID khusus Thousand Door Tower / menara
 // (upgrade owner 28 Sep 2026: cutscene 3 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
 // Grid per frame: HUD tema+lantai · adegan tema (emoji tema + menara 🏰) · gerbang (gembok + slot kepingan 🧩) · status aksi.
@@ -9,7 +9,7 @@
 // KHUSUS menara (aturan "beda game beda animasi"). Isi MURNI KODE ANIMASI (pure dari ctx, gak import plugin).
 // Dipanggil plugin saat user main game — animasi dimuat dari lib ini. Fallback channel gak dukung edit → senyap.
 
-import { editFramesAnim } from "../nova-anim-runner.js";
+import { editFramesAnim } from "../rara-anim-runner.js";
 
 // ctx: { floor, themeName, themeEmoji }
 export function doorFrames({ floor, themeName, themeEmoji }) {

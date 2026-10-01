@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ttp.js — Text to PNG sticker (local canvas, no API)
 // Ported from Alice's generateTtp to @napi-rs/canvas
 import { createCanvas } from "@napi-rs/canvas";
 import config from "../../config.js";
-import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { addExifToWebp } from "../../src/lib/rara-exif.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ttp",
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   const text = m.args?.join(" ") || m.text?.trim();
 
   if (!text) {
-    return m.reply(novaWrap("ttp", `Masukkan teks untuk sticker!\n\nContoh: ${m.prefix}ttp Hai Cantik`, "guide"));
+    return m.reply(raraWrap("ttp", `Masukkan teks untuk sticker!\n\nContoh: ${m.prefix}ttp Hai Cantik`, "guide"));
   }
 
   try {
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
     let stickerBuffer = pngBuffer;
     try {
       stickerBuffer = await addExifToWebp(pngBuffer, {
-        packname: config.sticker?.packname || "Nova AI",
+        packname: config.sticker?.packname || "Rara AI",
         author: config.sticker?.author || "Aizat",
       });
     } catch (e) {
@@ -86,11 +86,11 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, { sticker: stickerBuffer }, { quoted: m });
     await m.react("🐣");
-    await m.reply(novaBerhasil("ttp"));
+    await m.reply(raraBerhasil("ttp"));
   } catch (err) {
     console.error("[TTP]", err);
     await m.react("❌");
-    m.reply(novaWrap("ttp", "Gagal membuat sticker. Coba lagi nanti!", "error"));
+    m.reply(raraWrap("ttp", "Gagal membuat sticker. Coba lagi nanti!", "error"));
   }
 }
 

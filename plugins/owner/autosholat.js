@@ -1,21 +1,21 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import * as timeHelper from "../../src/lib/nova-time.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import * as timeHelper from "../../src/lib/rara-time.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
 import {
   getTodaySchedule,
   extractPrayerTimes,
   searchKota,
-} from "../../src/lib/nova-sholat-api.js";
+} from "../../src/lib/rara-sholat-api.js";
 import {
   REMINDER_MINUTES,
   IQAMAH_DELAY,
-} from "../../src/lib/nova-sholat-scheduler.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaLine } from "../../src/lib/nova-menu-style.js";
-import { initSholatScheduler, stopSholatScheduler } from "../../src/lib/nova-sholat-scheduler.js";
+} from "../../src/lib/rara-sholat-scheduler.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraLine } from "../../src/lib/rara-menu-style.js";
+import { initSholatScheduler, stopSholatScheduler } from "../../src/lib/rara-sholat-scheduler.js";
 
-function novaWrap(title, text) {
+function raraWrap(title, text) {
   const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   const body = Array.isArray(text) ? text.join("\n") : text;
@@ -154,7 +154,7 @@ async function handler(m, { sock, db }) {
   if (args === "duration") {
     const duration = parseInt(m.args[1]);
     if (isNaN(duration) || duration < 1 || duration > 60) {
-      return m.reply(novaWrap("Autosholat", `Tolong masukkan angka antara 1 sampai 60 untuk durasi penutupan grup (dalam menit).`));
+      return m.reply(raraWrap("Autosholat", `Tolong masukkan angka antara 1 sampai 60 untuk durasi penutupan grup (dalam menit).`));
     }
     database.setting("autoSholatDuration", duration);
     return m.reply(
@@ -171,7 +171,7 @@ async function handler(m, { sock, db }) {
     try {
       const result = await searchKota(kotaName);
       if (!result) {
-        return m.reply(novaWrap("Autosholat", `Aduh, aku sudah mencari di database MyQuran tapi nama daerah ${kotaName} tidak dapat kutemukan. Coba nama kota yang lain?`));
+        return m.reply(raraWrap("Autosholat", `Aduh, aku sudah mencari di database MyQuran tapi nama daerah ${kotaName} tidak dapat kutemukan. Coba nama kota yang lain?`));
       }
       database.setting("autoSholatKota", {
         id: result.id,
@@ -182,7 +182,7 @@ async function handler(m, { sock, db }) {
         `Seluruh jadwal sholat sekarang telah dikalibrasi ulang untuk menyesuaikan dengan wilayah **${result.lokasi}**.`
       );
     } catch (e) {
-      await m.reply(novaWrap("autosholat", te(m.prefix, m.command, m.pushName), "error"));
+      await m.reply(raraWrap("autosholat", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 

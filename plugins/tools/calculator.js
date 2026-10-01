@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "calculator",
@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!expr) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🛠️",
   name: "calculator",
   description: "Kalkulator matematika",
@@ -46,7 +46,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (expr.length > 300) {
-      await m.reply(novaError("Calculator", "Ekspresi kepanjangan — maksimal 300 karakter"), "calculator");
+      await m.reply(raraError("Calculator", "Ekspresi kepanjangan — maksimal 300 karakter"), "calculator");
       return { handled: true };
     }
 
@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
       result = typeof val === "number" || typeof val === "string" ? String(val) : format(val, { precision: 10 });
     } catch {
       const text =
-        novaWrap("Calculator", [`Ekspresi: *${expr}*`,
+        raraWrap("Calculator", [`Ekspresi: *${expr}*`,
           "Status: *ekspresi tidak valid*"].join("\n")) +
         "\n" +
         tipText(`Contoh valid: sqrt(16), 5^2 + sin(pi/2), 2 * (3 + 4)`);
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      novaWrap("Calculator", [`Ekspresi: *${expr}*`,
+      raraWrap("Calculator", [`Ekspresi: *${expr}*`,
         `Hasil: *${result}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}calc <ekspresi> untuk menghitung lagi`) +
@@ -79,7 +79,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     await m.react("❌");
     const text =
-      novaError("Tools", "Gagal nih, coba lagi ya");
+      raraError("Tools", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "calculator");
   }

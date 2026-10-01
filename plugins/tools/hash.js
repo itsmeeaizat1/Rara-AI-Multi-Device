@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 import crypto from "node:crypto";
 
 const pluginConfig = {
@@ -18,7 +18,7 @@ async function handler(m, { sock, config: botConfig }) {
     const algo = args[0]?.toLowerCase() || "sha256";
     const text = args.slice(1).join(" ");
     if (!text) {
-      { const __navText = (novaCaption({
+      { const __navText = (raraCaption({
   emoji: "🛠️",
   name: "hash",
   description: "Hash text md5/sha256/sha1",
@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!valid.includes(algo)) throw new Error(`Algoritma tidak didukung. Pilih: ${valid.join(", ")}`);
     const hash = crypto.createHash(algo).update(text, "utf-8").digest("hex");
     await m.react("🐣");
-    await m.reply(novaWrap("Hash", [`Algoritma: *${algo}*`,
+    await m.reply(raraWrap("Hash", [`Algoritma: *${algo}*`,
       `Input: *${text.substring(0,40)}*`,
       `Hash: \`${hash}\``].join("\n")));
   } catch (e) {

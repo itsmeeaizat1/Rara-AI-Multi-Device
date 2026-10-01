@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Lirik2 (v2 — Genius no-key scraper)
  * Fitur: Cari lirik lagu via scrape Genius.com TANPA API KEY.
@@ -10,8 +10,8 @@
  */
 
 import { searchSongLyrics } from "../../src/scraper/genius-lyrics.js";
-import { novaGuide, novaEmpty, novaError, toSC } from "../../src/lib/nova-menu-style.js";
-import { lyricsCaption, enrichLyricsMeta } from "../../src/lib/nova-lyrics-format.js";
+import { raraGuide, raraEmpty, raraError, toSC } from "../../src/lib/rara-menu-style.js";
+import { lyricsCaption, enrichLyricsMeta } from "../../src/lib/rara-lyrics-format.js";
 
 const pluginConfig = {
   name: "lirik2",
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
 
   if (!query) {
     await m.react("❗");
-    return m.reply(novaGuide("Lirik2", "Mau nyari lirik lagu? Ketik judul atau judul + artisnya ya!", `${m.prefix}lirik2 sempurna andra`));
+    return m.reply(raraGuide("Lirik2", "Mau nyari lirik lagu? Ketik judul atau judul + artisnya ya!", `${m.prefix}lirik2 sempurna andra`));
   }
 
   try {
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
     if (!result?.status || !result?.data?.lyrics) {
       await m.react("❗");
-      return m.reply(novaEmpty("Lirik2", `Gak nemu lirik untuk "${query}". Coba judul yang lebih spesifik, atau tambahin nama artisnya ya!`));
+      return m.reply(raraEmpty("Lirik2", `Gak nemu lirik untuk "${query}". Coba judul yang lebih spesifik, atau tambahin nama artisnya ya!`));
     }
 
     const d = result.data;
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[lirik2] error:", err.message);
     await m.react("❗");
-    return m.reply(novaError("Lirik2", "Server Genius lagi ngambek nih, coba lagi ya!"));
+    return m.reply(raraError("Lirik2", "Server Genius lagi ngambek nih, coba lagi ya!"));
   }
 }
 

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // rt.js — Bot runtime info
 import os from "os";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const startTime = Date.now();
 
@@ -43,13 +43,13 @@ async function handler(m, { sock }) {
       _lines.push(`💾 RAM: ${(mem.rss / 1024 / 1024).toFixed(1)} MB`);
       _lines.push(`⚡ CPU: ${os.loadavg()[0].toFixed(2)}`);
       _lines.push(`🕐 Time: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}`);
-    let msg = novaBox("RUNTIME", _lines);
+    let msg = raraBox("RUNTIME", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
     console.error("rt error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("rt", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("rt", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

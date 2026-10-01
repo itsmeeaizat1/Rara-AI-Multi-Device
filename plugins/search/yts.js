@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import yts from "yt-search";
-import { novaGuide } from "../../src/lib/nova-menu-style.js";
+import { raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "yts",
@@ -24,7 +24,7 @@ function formatViews(n) {
 async function handler(m, { sock, text }) {
   const query = (text || m.text || "").trim();
   if (!query) {
-    return m.reply(novaGuide("YTS", "Cari video di YouTube", `${m.prefix}yts <kata kunci>`));
+    return m.reply(raraGuide("YTS", "Cari video di YouTube", `${m.prefix}yts <kata kunci>`));
   }
 
   try {

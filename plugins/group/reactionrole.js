@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "reactionrole",
@@ -28,7 +28,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const emoji = args[1];
       const roleName = args.slice(2).join(" ").trim();
       if (!emoji || !roleName) {
-        return m.reply(novaWrap("Reaction Role", [
+        return m.reply(raraWrap("Reaction Role", [
           `Cara: ${usedPrefix}reactionrole add <emoji> <rolename>`,
           `Reply pesan target lalu jalankan command ini.`,
           `Contoh: ${usedPrefix}reactionrole add 🎮 Gamer`,
@@ -37,7 +37,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         ].join("\n")));
       }
       if (!m.message?.extendedTextMessage?.contextInfo?.stanzaId) {
-        return m.reply(novaWrap("Reaction Role", "Reply pesan target dulu!"));
+        return m.reply(raraWrap("Reaction Role", "Reply pesan target dulu!"));
       }
       const targetMsg = m.message.extendedTextMessage.contextInfo;
       const existing = roles.find(r => r.emoji === emoji);
@@ -53,7 +53,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         });
       }
       await db.save();
-      return m.reply(novaWrap("Reaction Role", [
+      return m.reply(raraWrap("Reaction Role", [
         `Role berhasil ditambahkan!`,
         `Emoji: ${emoji}`,
         `Role: ${roleName}`,
@@ -64,23 +64,23 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "list") {
       if (roles.length === 0) {
-        return m.reply(novaWrap("Reaction Role", "Belum ada reaction role di grup ini."));
+        return m.reply(raraWrap("Reaction Role", "Belum ada reaction role di grup ini."));
       }
       const list = roles.map((r, i) => `${i + 1}. ${r.emoji} = ${r.roleName}`).join("\n");
-      return m.reply(novaWrap("Reaction Role", `Daftar Reaction Role (${roles.length}):\n\n${list}`, "info"));
+      return m.reply(raraWrap("Reaction Role", `Daftar Reaction Role (${roles.length}):\n\n${list}`, "info"));
     }
 
     if (sub === "del" || sub === "remove") {
       const emoji = args[1];
-      if (!emoji) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}reactionrole del <emoji>`, "info"));
+      if (!emoji) return m.reply(raraWrap("Usage", `Cara: ${usedPrefix}reactionrole del <emoji>`, "info"));
       const idx = roles.findIndex(r => r.emoji === emoji);
-      if (idx === -1) return m.reply(novaWrap("Info", `Reaction role ${emoji} tidak ditemukan.`));
+      if (idx === -1) return m.reply(raraWrap("Info", `Reaction role ${emoji} tidak ditemukan.`));
       roles.splice(idx, 1);
       await db.save();
-      return m.reply(novaWrap("Reaction Role", `Reaction role ${emoji} berhasil dihapus.`, "info"));
+      return m.reply(raraWrap("Reaction Role", `Reaction role ${emoji} berhasil dihapus.`, "info"));
     }
 
-    return m.reply(novaWrap("Reaction Role", [
+    return m.reply(raraWrap("Reaction Role", [
       `Reaction Role - Auto assign role via emoji reaction`,
       "",
       `Command:`,
@@ -92,7 +92,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("reactionrole error:", e);
-    return m.reply(novaError("Reactionrole", e.message));
+    return m.reply(raraError("Reactionrole", e.message));
   }
 }
 

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import * as timeHelper from '../../src/lib/nova-time.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { runLiveTicker } from "../../src/lib/nova-countdown.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import * as timeHelper from '../../src/lib/rara-time.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { runLiveTicker } from "../../src/lib/rara-countdown.js";
 const pluginConfig = {
     name: 'checksewa',
     alias: ["checksewa"],
@@ -41,20 +41,20 @@ async function handler(m, { sock }) {
     }
 
     if (!db.db.data.sewa.enabled) {
-        return m.reply(novaWrap("Checksewa", `ℹ️ Sistem sewa tidak aktif\n\nBot ini bisa digunakan di semua grup.`, "info"))
+        return m.reply(raraWrap("Checksewa", `ℹ️ Sistem sewa tidak aktif\n\nBot ini bisa digunakan di semua grup.`, "info"))
     }
 
     const sewaData = db.db.data.sewa.groups[m.chat]
 
     if (!sewaData) {
-        return m.reply(novaWrap("Checksewa", `Grup ini tidak terdaftar dalam sistem sewa\n\nHubungi owner bot untuk info sewa.`, "error"))
+        return m.reply(raraWrap("Checksewa", `Grup ini tidak terdaftar dalam sistem sewa\n\nHubungi owner bot untuk info sewa.`, "error"))
     }
 
     const groupName = sewaData.name || m.chat.split('@')[0]
     const addedDate = sewaData.addedAt ? timeHelper.fromTimestamp(sewaData.addedAt, 'D MMMM YYYY') : '-'
 
     if (sewaData.isLifetime) {
-        return m.reply(novaWrap("checksewa", `♾️ *status sewa*\n\n` +
+        return m.reply(raraWrap("checksewa", `♾️ *status sewa*\n\n` +
             `Grup: *${groupName}*\n` +
             `Status: *permanent* ♾️\n` +
             `Terdaftar sejak: *${addedDate}*\n\n` +
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     const expiredStr = timeHelper.fromTimestamp(sewaData.expiredAt, 'D MMMM YYYY HH:mm')
 
     if (countdown.expired) {
-        return m.reply(novaWrap("checksewa", `❌ *sewa expired*\n\n` +
+        return m.reply(raraWrap("checksewa", `❌ *sewa expired*\n\n` +
             `Grup: *${groupName}*\n` +
             `Berakhir: *${expiredStr}*\n\n` +
             `Hubungi owner bot untuk perpanjang sewa.`))
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
         text += `\n\n⚠️ Sewa hampir habis! Hubungi owner bot untuk perpanjang.`
     }
 
-    await m.reply(novaWrap("checksewa", text))
+    await m.reply(raraWrap("checksewa", text))
 
     // 🔹 LIVE COUNTDOWN (13 Sep, pola premium): sisa ≤24 jam → ticker nge-tick
     // 🕒 H:MM:SS sampai expired → "SEWA EXPIRED" + ajakan perpanjang.

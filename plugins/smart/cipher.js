@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "cipher",
@@ -68,7 +68,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const text = args.slice(textStart, textEnd).join(" ").trim();
 
   if (!method || method === "help" || !action) {
-    await m.reply(novaWrap("Cipher", [
+    await m.reply(raraWrap("Cipher", [
       "ENKRIPSI PESAN RAHASIA",
       "",
       "Cara pakai:",
@@ -86,7 +86,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (!text) {
-    await m.reply(novaError("Cipher", "Teks gak boleh kosong nih"));
+    await m.reply(raraError("Cipher", "Teks gak boleh kosong nih"));
     return { handled: true };
   }
 
@@ -96,13 +96,13 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (method === "caesar") {
     const shift = parseInt(key || "0", 10);
     if (isNaN(shift)) {
-      await m.reply(novaWrap("Cipher", "Shift harus angka. Contoh: " + prefix + "cipher caesar encode halo 3"));
+      await m.reply(raraWrap("Cipher", "Shift harus angka. Contoh: " + prefix + "cipher caesar encode halo 3"));
       return { handled: true };
     }
     result = caesarShift(text, isEncode ? shift : -shift);
   } else if (method === "vigenere") {
     if (!key || !/^[a-zA-Z]+$/.test(key)) {
-      await m.reply(novaWrap("Cipher", "Key harus huruf. Contoh: " + prefix + "cipher vigenere encode halo kunci"));
+      await m.reply(raraWrap("Cipher", "Key harus huruf. Contoh: " + prefix + "cipher vigenere encode halo kunci"));
       return { handled: true };
     }
     result = vigenere(text, key, !isEncode);
@@ -111,11 +111,11 @@ async function handler(m, { sock, db, config: botConfig }) {
   } else if (method === "reverse") {
     result = reverseText(text);
   } else {
-    await m.reply(novaWrap("Cipher", "Method: caesar, vigenere, base64, reverse"));
+    await m.reply(raraWrap("Cipher", "Method: caesar, vigenere, base64, reverse"));
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Cipher Result", [
+  await m.reply(raraWrap("Cipher Result", [
     "Method: " + method.toUpperCase(),
     "Mode: " + (isEncode ? "ENCODE" : "DECODE"),
     "Result:",

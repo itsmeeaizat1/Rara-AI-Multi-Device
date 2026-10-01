@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autoresource — Auto-Resource Optimizer
  *
@@ -35,8 +35,8 @@
 
 import os from "os";
 import { CronJob } from "cron";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -434,7 +434,7 @@ async function handler(m, { sock, config: botConfig }) {
         `| EventLoop: ${t.eventLoop}ms → ${settings.actions.eventLoop}\n` +
         `| API: ${t.apiLatency}ms → ${settings.actions.apiLatency}`;
 
-      await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+      await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
         `Status: ${status}`,
         `Interval: ${settings.intervalMinutes} menit`,
         `Notify: ${settings.notifyOwner ? "ON" : "OFF"}`,
@@ -452,7 +452,7 @@ async function handler(m, { sock, config: botConfig }) {
         `Peak:`,
         `| RAM: ${settings.stats.peakRAM}% | CPU: ${settings.stats.peakCPU}%`,
         `| Loop: ${settings.stats.peakEventLoop}ms | API: ${settings.stats.peakAPILatency}ms`,
-      ]) + "\n\n" + novaBox("COMMANDS", [
+      ]) + "\n\n" + raraBox("COMMANDS", [
         `${prefix}autoresource on/off`,
         `${prefix}autoresource set <ram/cpu/loop/api> <nilai>`,
         `${prefix}autoresource action <ram/cpu/loop/api> <action>`,
@@ -473,7 +473,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.enabled = true;
       db.db.write();
       startResourceCron(sock);
-      await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+      await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
         "Status: ON",
         `Interval: ${settings.intervalMinutes} menit`,
         `RAM threshold: ${settings.thresholds.ram}%`,
@@ -488,7 +488,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.enabled = false;
       db.db.write();
       stopResourceCron();
-      await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", ["Status: OFF", "Monitoring dihentikan"]));
+      await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", ["Status: OFF", "Monitoring dihentikan"]));
       return { handled: true };
     }
 
@@ -505,7 +505,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const realMetric = metricMap[metric];
       if (!realMetric) {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
           `Metric tidak dikenal: ${metric}`,
           "Pilihan: ram, cpu, loop, api",
           `Ketik: ${prefix}autoresource set <ram/cpu/loop/api> <nilai>`,
@@ -517,7 +517,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       if (!value || value < 1) {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
           `Nilai tidak valid: ${args[2]}`,
           `Ketik: ${prefix}autoresource set ${metric} <nilai>`,
           realMetric === "ram" || realMetric === "cpu" ? "Range: 1-100 (persen)" : "Range: 100-99999 (ms)",
@@ -530,7 +530,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.db.write();
 
       const unit = realMetric === "ram" || realMetric === "cpu" ? "%" : "ms";
-      await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+      await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
         `Threshold ${realMetric}: ${oldVal}${unit} → ${value}${unit}`,
         `Action: ${settings.actions[realMetric]}`,
       ]));
@@ -550,7 +550,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const realMetric = metricMap[metric];
       if (!realMetric) {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
           `Metric: ${metric} tidak dikenal`,
           "Pilihan: ram, cpu, loop, api",
         ]));
@@ -566,7 +566,7 @@ async function handler(m, { sock, config: botConfig }) {
       };
 
       if (!validActions[realMetric].includes(action)) {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
           `Action tidak valid: ${action}`,
           `Pilihan untuk ${realMetric}: ${validActions[realMetric].join(", ")}`,
           `Ketik: ${prefix}autoresource action ${metric} <action>`,
@@ -578,7 +578,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.actions[realMetric] = action;
       db.db.write();
 
-      await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+      await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
         `Action ${realMetric}: ${oldAction} → ${action}`,
         `Threshold: ${settings.thresholds[realMetric]}${realMetric === "ram" || realMetric === "cpu" ? "%" : "ms"}`,
       ]));
@@ -589,7 +589,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "interval") {
       const mins = parseInt(args[1]);
       if (!mins || mins < 1) {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
           `Current: ${settings.intervalMinutes} menit`,
           `Ketik: ${prefix}autoresource interval <menit>`,
         ]));
@@ -598,7 +598,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.intervalMinutes = mins;
       db.db.write();
       if (settings.enabled) startResourceCron(sock);
-      await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+      await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
         `Interval: ${mins} menit`,
         "Cron di-restart",
       ]));
@@ -609,7 +609,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "notify") {
       const val = (args[1] || "").toLowerCase();
       if (!["on", "off"].includes(val)) {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
           `Current: ${settings.notifyOwner ? "ON" : "OFF"}`,
           `Ketik: ${prefix}autoresource notify on/off`,
         ]));
@@ -617,7 +617,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.notifyOwner = val === "on";
       db.db.write();
-      await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [`Notify Owner: ${val.toUpperCase()}`]));
+      await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [`Notify Owner: ${val.toUpperCase()}`]));
       return { handled: true };
     }
 
@@ -640,7 +640,7 @@ async function handler(m, { sock, config: botConfig }) {
       const loopStatus = eventLoopLag >= t.eventLoop ? "⚠️ CRITICAL" : "✓ OK";
       const apiStatus = apiLatency >= t.apiLatency ? "⚠️ CRITICAL" : "✓ OK";
 
-      await m.reply(novaBox("RESOURCE STATUS (LIVE)", [
+      await m.reply(raraBox("RESOURCE STATUS (LIVE)", [
         `Uptime: ${uptimeStr}`,
         `Cores: ${os.cpus().length} | ${os.platform()}`,
         "---",
@@ -666,7 +666,7 @@ async function handler(m, { sock, config: botConfig }) {
       const cleared = clearCache();
       settings.stats.totalClearCache++;
       db.db.write();
-      await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+      await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
         `Cache cleared: ${cleared} modules`,
         `RAM before: ${getRAMUsage()}%`,
       ]));
@@ -682,13 +682,13 @@ async function handler(m, { sock, config: botConfig }) {
       db.db.write();
 
       if (freed > 0) {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
           `GC executed`,
           `Heap freed: ${freed}MB`,
           `Before: ${Math.round(before / 1024 / 1024)}MB → After: ${Math.round(after / 1024 / 1024)}MB`,
         ]));
       } else {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [
           `GC not available`,
           `Jalankan bot dengan: node --expose-gc index.js`,
           "Atau PM2: set --expose-gc flag",
@@ -701,7 +701,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ─── HISTORY ───
     if (sub === "history") {
       if (settings.history.length === 0) {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", ["History: kosong"]));
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", ["History: kosong"]));
         return { handled: true };
       }
       const recent = settings.history.slice(-15).reverse();
@@ -709,14 +709,14 @@ async function handler(m, { sock, config: botConfig }) {
         const time = new Date(h.timestamp).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
         return `| ${time} RAM:${h.ram}% CPU:${h.cpu}% Loop:${h.eventLoop}ms API:${h.apiLatency}ms`;
       });
-      await m.reply(novaBox("RESOURCE HISTORY", lines));
+      await m.reply(raraBox("RESOURCE HISTORY", lines));
       return { handled: true };
     }
 
     // ─── ACTIONS (action log) ───
     if (sub === "actions") {
       if (settings.actionLog.length === 0) {
-        await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", ["Action log: kosong"]));
+        await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", ["Action log: kosong"]));
         return { handled: true };
       }
       const recent = settings.actionLog.slice(-15).reverse();
@@ -724,7 +724,7 @@ async function handler(m, { sock, config: botConfig }) {
         const time = new Date(a.timestamp).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
         return `| ${a.metric} ${a.value} ≥ ${a.threshold} → ${a.action} ${time}`;
       });
-      await m.reply(novaBox("ACTION LOG", lines));
+      await m.reply(raraBox("ACTION LOG", lines));
       return { handled: true };
     }
 
@@ -747,17 +747,17 @@ async function handler(m, { sock, config: botConfig }) {
       settings.history = [];
       settings.actionLog = [];
       db.db.write();
-      await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", ["Stats, history & action log direset"]));
+      await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", ["Stats, history & action log direset"]));
       return { handled: true };
     }
 
     // ─── UNKNOWN ───
-    await m.reply(novaBox("AUTO-RESOURCE OPTIMIZER", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autoresource untuk dashboard`]));
+    await m.reply(raraBox("AUTO-RESOURCE OPTIMIZER", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autoresource untuk dashboard`]));
     return { handled: true };
 
   } catch (error) {
     console.error("[autoresource] handler error:", error.message);
-    await m.reply(novaError("AutoResource", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("AutoResource", "Gagal nih, coba lagi ya"));
     return { handled: true };
   }
 }

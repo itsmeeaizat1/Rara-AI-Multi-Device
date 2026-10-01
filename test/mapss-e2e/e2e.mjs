@@ -14,15 +14,15 @@ const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
 
 const dbDir = mkdtempSync(path.join(tmpdir(), "mapss-"));
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const lib = await import(R + "/src/scraper/nova-maps-browser.js");
+const lib = await import(R + "/src/scraper/rara-maps-browser.js");
 const plug = await import(R + "/plugins/browser/mapss.js");
 const handler = plug.handler;
 const answerHandler = plug.answerHandler;
 
-const { toSC } = await import(R + "/src/lib/nova-menu-style.js");
+const { toSC } = await import(R + "/src/lib/rara-menu-style.js");
 const has = (s, x) => {
   const l = String(s).toLowerCase();
   const e = String(x).toLowerCase();

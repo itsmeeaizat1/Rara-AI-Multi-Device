@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import { getGroupMode } from "../group/botmode.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 import config from "../../config.js";
 import {
   resolveAnyLidToJid,
   isLidConverted,
   getCachedJid,
-} from "../../src/lib/nova-lid.js";
+} from "../../src/lib/rara-lid.js";
 
 const pluginConfig = {
   name: "pushkontak",
@@ -33,8 +33,8 @@ const SESSION_TIMEOUT = 300000;
 const SERIAL_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 import axios from "axios";
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 let cachedThumb = null;
 let cachedDoc = null;
@@ -113,7 +113,7 @@ function nativeFlowMsg(m, title, buttons) {
   return {
     interactiveMessage: {
       title,
-      footer: config.bot?.name || "Nova-AI",
+      footer: config.bot?.name || "Rara-AI",
       image: cachedThumb,
       contextInfo: {
         mentionedJid: [m.sender],
@@ -123,7 +123,7 @@ function nativeFlowMsg(m, title, buttons) {
       nativeFlowMessage: {
         messageParamsJson: JSON.stringify({
           limited_time_offer: {
-            text: config.bot?.name || "Nova-AI",
+            text: config.bot?.name || "Rara-AI",
             url: "",
             copy_code: "Push Kontak",
             expiration_time: Date.now() * 7,
@@ -157,7 +157,7 @@ async function sendVcf(sock, ownerJid, contacts, groupName) {
     document: fs.readFileSync(vcfPath),
     fileName: `Kontak_${groupName || "Group"}_${contacts.length}.vcf`,
     mimetype: "text/vcard",
-    caption: novaWrap("Auto-Save Kontak", `📊 Total: ${contacts.length} kontak\n👥 Grup: ${groupName || "Unknown"}\n\n📱 Import file ini ke HP untuk menyimpan semua kontak`)
+    caption: raraWrap("Auto-Save Kontak", `📊 Total: ${contacts.length} kontak\n👥 Grup: ${groupName || "Unknown"}\n\n📱 Import file ini ke HP untuk menyimpan semua kontak`)
   });
   try {
     fs.unlinkSync(vcfPath);
@@ -166,10 +166,10 @@ async function sendVcf(sock, ownerJid, contacts, groupName) {
 
 async function handleStop(m) {
   if (!global.statuspush) {
-    return m.reply(novaWrap("Pushkontak", "❌ Tidak ada push kontak yang berjalan saat ini"));
+    return m.reply(raraWrap("Pushkontak", "❌ Tidak ada push kontak yang berjalan saat ini"));
   }
   global.stoppush = true;
-  return m.reply(novaWrap("Pushkontak", "⏹️ Push kontak dihentikan. Proses akan segera berhenti"));
+  return m.reply(raraWrap("Pushkontak", "⏹️ Push kontak dihentikan. Proses akan segera berhenti"));
 }
 
 function getPushSettings(db) {
@@ -325,7 +325,7 @@ async function handleSettingToggle(m, settingKey, label, onVal, offVal) {
   const cmd = m.command?.toLowerCase();
   const isOn = cmd.endsWith("_on");
   db.setting(settingKey, isOn ? onVal : offVal);
-  await m.reply(novaWrap("Pushkontak", `${label} ${isOn ? "dinyalakan" : "dimatikan"}\n\n⚙️ ${label}: ${isOn ? "ON" : "OFF"}`));
+  await m.reply(raraWrap("Pushkontak", `${label} ${isOn ? "dinyalakan" : "dimatikan"}\n\n⚙️ ${label}: ${isOn ? "ON" : "OFF"}`));
 }
 
 async function handleSetJeda(m, sock) {
@@ -402,11 +402,11 @@ async function handleSetJeda(m, sock) {
   }
 
   if (val < 1000 || val > 30000) {
-    return m.reply(novaWrap("Jeda Push", "❌ Jeda harus antara 1000ms - 30000ms"));
+    return m.reply(raraWrap("Jeda Push", "❌ Jeda harus antara 1000ms - 30000ms"));
   }
 
   db.setting("jedaPush", val);
-  return m.reply(novaWrap("Jeda Push", `✅ Jeda diubah menjadi ${val}ms (${(val / 1000).toFixed(1)} detik)`));
+  return m.reply(raraWrap("Jeda Push", `✅ Jeda diubah menjadi ${val}ms (${(val / 1000).toFixed(1)} detik)`));
 }
 
 async function handlePush(m, sock) {
@@ -543,27 +543,27 @@ async function handleStartSession(m, sock) {
   const groupMode = getGroupMode(m.chat, db);
 
   if (groupMode !== "pushkontak" && groupMode !== "all") {
-    return m.reply(novaWrap("Pushkontak", `🔒 Aktifkan mode pushkontak terlebih dahulu\n\n📝 ${m.prefix}botmode pushkontak`));
+    return m.reply(raraWrap("Pushkontak", `🔒 Aktifkan mode pushkontak terlebih dahulu\n\n📝 ${m.prefix}botmode pushkontak`));
   }
 
   if (global.statuspush) {
-    return m.reply(novaWrap("Pushkontak", `🔄 Push kontak sedang berjalan\n\n⏹️ Ketik ${m.prefix}stoppush untuk menghentikan`));
+    return m.reply(raraWrap("Pushkontak", `🔄 Push kontak sedang berjalan\n\n⏹️ Ketik ${m.prefix}stoppush untuk menghentikan`));
   }
 
   if (getSession(m.sender)) {
-    return m.reply(novaWrap("Pushkontak", `📝 Sesi push sudah aktif\n\n📩 Reply pesan sebelumnya dengan pesan yang ingin di-push\n❌ Atau reply \`batal\` untuk membatalkan`));
+    return m.reply(raraWrap("Pushkontak", `📝 Sesi push sudah aktif\n\n📩 Reply pesan sebelumnya dengan pesan yang ingin di-push\n❌ Atau reply \`batal\` untuk membatalkan`));
   }
 
   const session = createSession(m.sender, m.chat);
 
-  const sent = await m.reply(novaWrap("Sesi Push Kontak", `📝 Langkah 1/2 — Input Pesan\n\n🔤 Kirim pesan yang ingin di-push ke semua member\n\n📩 Reply pesan ini dengan pesan yang ingin dikirim\n❌ Reply \`batal\` untuk membatalkan sesi`));
+  const sent = await m.reply(raraWrap("Sesi Push Kontak", `📝 Langkah 1/2 — Input Pesan\n\n🔤 Kirim pesan yang ingin di-push ke semua member\n\n📩 Reply pesan ini dengan pesan yang ingin dikirim\n❌ Reply \`batal\` untuk membatalkan sesi`));
 
   session.promptId = sent?.key?.id || null;
 }
 
 async function startPush(m, sock, text) {
   if (global.statuspush) {
-    return m.reply(novaWrap("Pushkontak", `🔄 Push kontak sedang berjalan\n\n⏹️ Ketik ${m.prefix}stoppush untuk menghentikan`));
+    return m.reply(raraWrap("Pushkontak", `🔄 Push kontak sedang berjalan\n\n⏹️ Ketik ${m.prefix}stoppush untuk menghentikan`));
   }
 
 
@@ -580,7 +580,7 @@ async function startPush(m, sock, text) {
     );
 
     if (participants.length === 0) {
-      return m.reply(novaWrap("Pushkontak", "🚫 Tidak ada member yang bisa dikirim pesan"));
+      return m.reply(raraWrap("Pushkontak", "🚫 Tidak ada member yang bisa dikirim pesan"));
     }
 
     const jedaPush = s.jeda;
@@ -621,7 +621,7 @@ async function startPush(m, sock, text) {
       if (global.stoppush) {
         delete global.stoppush;
         delete global.statuspush;
-        await m.reply(novaWrap("Push Dihentikan", `✅ Berhasil: ${success}\nGagal: ${failed}\n⏸️ Sisa: ${participants.length - success - failed}`));
+        await m.reply(raraWrap("Push Dihentikan", `✅ Berhasil: ${success}\nGagal: ${failed}\n⏸️ Sisa: ${participants.length - success - failed}`));
         if (saved.length > 0 && s.autoVcf) {
           const vcfTarget = s.vcfTarget === "group" ? m.chat : m.sender;
           await sendVcf(sock, vcfTarget, saved, metadata.subject);
@@ -689,13 +689,13 @@ async function pushkontakAnswerHandler(m, sock) {
 
   if (["batal", "cancel", "batalkan"].includes(lowText)) {
     clearSession(m.sender);
-    m.reply(novaWrap("Pushkontak", `❌ *sesi push kontak dibatalkan*\n\n📢 *ketik* ${m.prefix}pushkontak *untuk memulai lagi*`));
+    m.reply(raraWrap("Pushkontak", `❌ *sesi push kontak dibatalkan*\n\n📢 *ketik* ${m.prefix}pushkontak *untuk memulai lagi*`));
     return true;
   }
 
   if (session.step === "message") {
     if (text.length < 1) {
-      await m.reply(novaWrap("Pushkontak", "❌ Pesan tidak boleh kosong\n\n📩 Reply lagi dengan pesan yang valid"));
+      await m.reply(raraWrap("Pushkontak", "❌ Pesan tidak boleh kosong\n\n📩 Reply lagi dengan pesan yang valid"));
       return true;
     }
 
@@ -715,7 +715,7 @@ async function pushkontakAnswerHandler(m, sock) {
     const jedaPush = s.jeda;
     const estimasi = Math.ceil((participants.length * jedaPush) / 60000);
 
-    const sent = await m.reply(novaWrap("Konfirmasi Push", `📝 Pesan: ${text.substring(0, 100)}${text.length > 100 ? "..." : ""}\n👥 Target: ${participants.length} member\n⏱️ Jeda: ${jedaPush}ms\n📊 Estimasi: ${estimasi} menit\n\nReply pesan ini dengan:\n✅ ya — Mulai push sekarang\n📝 ubah — Ubah pesan\n❌ batal — Batalkan sesi`));
+    const sent = await m.reply(raraWrap("Konfirmasi Push", `📝 Pesan: ${text.substring(0, 100)}${text.length > 100 ? "..." : ""}\n👥 Target: ${participants.length} member\n⏱️ Jeda: ${jedaPush}ms\n📊 Estimasi: ${estimasi} menit\n\nReply pesan ini dengan:\n✅ ya — Mulai push sekarang\n📝 ubah — Ubah pesan\n❌ batal — Batalkan sesi`));
 
     session.promptId = sent?.key?.id || session.promptId;
     return true;
@@ -733,12 +733,12 @@ async function pushkontakAnswerHandler(m, sock) {
 
     if (["ubah", "edit", "ganti", "revisi"].includes(lowText)) {
       session.step = "message";
-      const sent = await m.reply(novaWrap("Ubah Pesan", `🔤 Kirim pesan baru yang ingin di-push\n\n📩 Reply pesan ini dengan pesan baru\n❌ Reply \`batal\` untuk membatalkan`));
+      const sent = await m.reply(raraWrap("Ubah Pesan", `🔤 Kirim pesan baru yang ingin di-push\n\n📩 Reply pesan ini dengan pesan baru\n❌ Reply \`batal\` untuk membatalkan`));
       session.promptId = sent?.key?.id || session.promptId;
       return true;
     }
 
-    await m.reply(novaWrap("Pushkontak", "❌ Reply tidak valid\n\n📩 Reply dengan: `ya`, `ubah`, atau `batal`"));
+    await m.reply(raraWrap("Pushkontak", "❌ Reply tidak valid\n\n📩 Reply dengan: `ya`, `ubah`, atau `batal`"));
     return true;
   }
 

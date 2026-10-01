@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ytmp4.js — Download video YouTube
 // Primary: yt-dlp LOCAL (bestvideo+bestaudio di-merge — audio HQ ala .play 320,
 // hasilnya jauh lebih jernih daripada re-encode API) → IkyyXD → Sanka → ytdl fallback
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
-import { downloadVideo, isYtDlpAvailable } from "../../src/scraper/nova-ytdlp.js";
-import { novaGuideV2, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { downloadVideo, isYtDlpAvailable } from "../../src/scraper/rara-ytdlp.js";
+import { raraGuideV2, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
   const quality = qi >= 0 ? tokens[qi].replace(/p$/i, "") : "720";
   const url = tokens.filter((_, i) => i !== qi).join(" ").trim();
   if (!url) {
-    return m.reply(novaGuideV2("ytmp4", {
+    return m.reply(raraGuideV2("ytmp4", {
  kaomoji: "(๑•̀ㅂ•́)✧",
  sapaan: "download video youtube full? gas! (◕‿◕)♡",
       cara: "tempel link youtubenya sesudah command",
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     }));
   }
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
-    return m.reply(novaGuide("YTmp4", "Link-nya harus URL YouTube yang valid ya!", `${m.prefix}ytmp4 https://youtu.be/xxx`));
+    return m.reply(raraGuide("YTmp4", "Link-nya harus URL YouTube yang valid ya!", `${m.prefix}ytmp4 https://youtu.be/xxx`));
   }
 
   try {
@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
           } else {
             await sock.sendMessage(m.chat, { video: vid.buffer, caption: capV }, { quoted: m });
           }
-          return await m.reply(novaBerhasil("ytmp4"));
+          return await m.reply(raraBerhasil("ytmp4"));
         }
       } catch (eV) {
         console.error("[YTMP4] yt-dlp lokal gagal, lanjut fallback API:", eV.message);
@@ -171,13 +171,13 @@ async function handler(m, { sock }) {
     await sock.sendMessage(m.chat, {
       video: { url: result.download },
       caption,
-      contextInfo: { externalAdReply: { title: result.title || ytMeta.title || "YouTube Video", body: "Nova AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
+      contextInfo: { externalAdReply: { title: result.title || ytMeta.title || "YouTube Video", body: "Rara AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
     }, { quoted: m });
-    await m.reply(novaBerhasil("ytmp4"));
+    await m.reply(raraBerhasil("ytmp4"));
   } catch (err) {
     console.error("[YTMP4]", err);
     await m.react("❌");
-    m.reply(novaGagal("YTmp4"));
+    m.reply(raraGagal("YTmp4"));
   }
 }
 

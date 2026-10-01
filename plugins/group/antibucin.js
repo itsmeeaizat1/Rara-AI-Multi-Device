@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { novaWarning } from "../../src/lib/nova-group-protection.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { raraWarning } from "../../src/lib/rara-group-protection.js";
 
 const pluginConfig = {
     name: 'antibucin',
@@ -187,7 +187,7 @@ async function handleAntiBucin(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: novaWarning("ANTI BUCIN — TINDAKAN", [
+                        text: raraWarning("ANTI BUCIN — TINDAKAN", [
     ["Pengirim", `@${senderTag}`],
     ["Pelanggaran", "Bucin berlebihan terdeteksi"],
     ["Terdeteksi", matchesStr],
@@ -198,7 +198,7 @@ async function handleAntiBucin(m, sock, db) {
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: novaWarning("ANTI BUCIN — INFO", [
+                        text: raraWarning("ANTI BUCIN — INFO", [
     ["Pengirim", `@${senderTag}`],
     ["Pelanggaran", "Bucin berlebihan terdeteksi"],
     ["Peringatan", `${currentWarn} dari ${maxWarn}`],
@@ -209,7 +209,7 @@ async function handleAntiBucin(m, sock, db) {
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: novaWarning("ANTI BUCIN — PERINGATAN MAKSIMAL", [
+                    text: raraWarning("ANTI BUCIN — PERINGATAN MAKSIMAL", [
     ["Pengirim", `@${senderTag}`],
     ["Pelanggaran", "Bucin berlebihan terdeteksi"],
     ["Terdeteksi", matchesStr],
@@ -221,7 +221,7 @@ async function handleAntiBucin(m, sock, db) {
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: novaWarning("ANTI BUCIN — PERINGATAN", [
+                text: raraWarning("ANTI BUCIN — PERINGATAN", [
     ["Pengirim", `@${senderTag}`],
     ["Pelanggaran", "Bucin berlebihan terdeteksi"],
     ["Terdeteksi", matchesStr],
@@ -271,38 +271,38 @@ async function handler(m, { sock }) {
         txt += '│ `' + m.prefix + 'antibucin reset @user`\n'
         txt += '│ `' + m.prefix + 'antibucin resetall`\n'
         txt += ''
-        return await m.reply(novaWrap("antibucin", txt))
+        return await m.reply(raraWrap("antibucin", txt))
     }
 
     if (sub === 'on') {
         db.setGroup(m.chat, { antibucin: 'on' })
-        return m.reply(novaWrap("Antibucin", `
+        return m.reply(raraWrap("Antibucin", `
 │ Deteksi bucin/gombal diaktifkan
 │ Sistem: Warn 3x lalu kick
 `, "info"))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antibucin: 'off' })
-        return m.reply(novaWrap("Antibucin", `
+        return m.reply(raraWrap("Antibucin", `
 │ Deteksi bucin dinonaktifkan
 `, "info"))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
-        if (!count || count < 1 || count > 10) return m.reply(novaWrap("Antibucin", '❌ Masukkan angka 1-10'))
+        if (!count || count < 1 || count > 10) return m.reply(raraWrap("Antibucin", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { bucinMaxWarn: count })
-        return m.reply(novaWrap("Antibucin", `Max peringatan: ${count}x`, "info"))
+        return m.reply(raraWrap("Antibucin", `Max peringatan: ${count}x`, "info"))
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
-        if (opt === 'on') { db.setGroup(m.chat, { bucinKickMode: 'on' }); m.react('✅'); return m.reply(novaWrap("Antibucin", '✅ Auto-kick anti-bucin ON')) }
-        if (opt === 'off') { db.setGroup(m.chat, { bucinKickMode: 'off' }); m.react('✅'); return m.reply(novaWrap("Antibucin", '⚠️ Auto-kick anti-bucin OFF, hanya warn')) }
+        if (opt === 'on') { db.setGroup(m.chat, { bucinKickMode: 'on' }); m.react('✅'); return m.reply(raraWrap("Antibucin", '✅ Auto-kick anti-bucin ON')) }
+        if (opt === 'off') { db.setGroup(m.chat, { bucinKickMode: 'off' }); m.react('✅'); return m.reply(raraWrap("Antibucin", '⚠️ Auto-kick anti-bucin OFF, hanya warn')) }
         return m.reply('❌ Gunakan: `' + m.prefix + 'antibucin kick on/off`')
     }
     if (sub === 'delete') {
         const opt = args[1]?.toLowerCase()
-        if (opt === 'on') { db.setGroup(m.chat, { bucinDeleteMode: 'on' }); m.react('✅'); return m.reply(novaWrap("Antibucin", '✅ Auto-delete anti-bucin ON')) }
-        if (opt === 'off') { db.setGroup(m.chat, { bucinDeleteMode: 'off' }); m.react('✅'); return m.reply(novaWrap("Antibucin", '⚠️ Auto-delete anti-bucin OFF')) }
+        if (opt === 'on') { db.setGroup(m.chat, { bucinDeleteMode: 'on' }); m.react('✅'); return m.reply(raraWrap("Antibucin", '✅ Auto-delete anti-bucin ON')) }
+        if (opt === 'off') { db.setGroup(m.chat, { bucinDeleteMode: 'off' }); m.react('✅'); return m.reply(raraWrap("Antibucin", '⚠️ Auto-delete anti-bucin OFF')) }
         return m.reply('❌ Gunakan: `' + m.prefix + 'antibucin delete on/off`')
     }
     if (sub === 'reset') {
@@ -311,13 +311,13 @@ async function handler(m, { sock }) {
         const updated = groupData
         if (updated.bucinWarns?.[target]) delete updated.bucinWarns[target]
         db.setGroup(m.chat, updated)
-        return m.reply(novaWrap("Antibucin", `Warn warn bucin @${target.split('@')[0]} direset`, "info"), { mentions: [target] })
+        return m.reply(raraWrap("Antibucin", `Warn warn bucin @${target.split('@')[0]} direset`, "info"), { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.bucinWarns = {}
         db.setGroup(m.chat, updated)
-        return m.reply(novaWrap("Antibucin", `Semua warn bucin direset`, "info"))
+        return m.reply(raraWrap("Antibucin", `Semua warn bucin direset`, "info"))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antibucin` untuk daftar command')
 }

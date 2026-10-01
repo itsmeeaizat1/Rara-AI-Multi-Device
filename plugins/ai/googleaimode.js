@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Google AI Mode — .googleaimode
 // 🔹 Jawaban AI Mode Google (udm=50) via searchapi.io + sumber riset.
@@ -8,7 +8,7 @@
 // ═════════════════════════════════════════════
 
 import { googleAiModeSearch, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
 
 // seam buat e2e: upload gambar bisa di-mock
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     const isPhoto = (m.quoted && m.quoted.isImage) || m.isImage;
 
     if (!q && !isPhoto) {
-      return m.reply(novaGuideV2("googleaimode", {
+      return m.reply(raraGuideV2("googleaimode", {
  kaomoji: "(◍•ᴗ•◍)",
  sapaan: "tanya apa aja — dijawab AI Mode Google + link sumber riset real-time! (◕ᴗ◕)",
         cara: "ketik pertanyaannya sesudah command, atau reply foto + command",
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
         imageUrl = _uguuFn ? await _uguuFn(buffer) : await uploadToUguu(buffer, "aimode.jpg");
       } catch (imgErr) {
         await m.react("❌");
-        return m.reply(novaWrap("googleaimode",
+        return m.reply(raraWrap("googleaimode",
           `⚠️ Gagal upload foto buat mode visual (${imgErr?.message || "error"}). Kirim ulang fotonya, atau tanya pakai teks doang.`));
       }
     }
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
       const map = {
         API_KEY: "⚠️ API key searchapi.io belum di-set — owner isi dulu di apikeys.json (slot searchapi). Daftar gratis di searchapi.io (free trial ±100 request/bulan).",
       };
-      return m.reply(novaWrap("googleaimode",
+      return m.reply(raraWrap("googleaimode",
         `❌ *GAGAL: ${map[r.error] || r.error}*`));
     }
 
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     const followups = (r.followups || []).map((f, i) => `${i + 1}. ${f}`).join("\n");
 
     await m.react("🐣");
-    return m.reply(novaWrap("googleaimode",
+    return m.reply(raraWrap("googleaimode",
       `🔍 *AI MODE GOOGLE — ${(q || "ANALISIS GAMBAR").toUpperCase().slice(0, 60)}*\n\n` +
       `${r.answer}\n` +
       (srcs ? `\n📚 *SUMBER:*\n${srcs}\n` : "") +
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[googleaimode]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("googleaimode", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(raraWrap("googleaimode", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
-import { searchWeb, fetchPagePreview } from "./nova-websearch.js";
-import { detectYtSearchIntent } from "./nova-yt-search.js";
-import { detectSiteSearchIntent } from './nova-site-search.js';
-import { getAllSkills, awaitSkillPacks } from "./nova-skills.js";
-// 🔧 RE-EXPORT — plugin (novaai.js dll) ambil getAllSkills dari sini.
-// BUGFIX 12 Sep: re-export gak ada → novaai.js import error
+import { searchWeb, fetchPagePreview } from "./rara-websearch.js";
+import { detectYtSearchIntent } from "./rara-yt-search.js";
+import { detectSiteSearchIntent } from './rara-site-search.js';
+import { getAllSkills, awaitSkillPacks } from "./rara-skills.js";
+// 🔧 RE-EXPORT — plugin (raraai.js dll) ambil getAllSkills dari sini.
+// BUGFIX 12 Sep: re-export gak ada → raraai.js import error
 // "does not provide an export named 'getAllSkills'" → plugin gagal load
-// senyap → .novaagent unknown command di bot.
+// senyap → .raraagent unknown command di bot.
 export { getAllSkills };
-import { getMcpToolEntries } from "./nova-mcp.js";
+import { getMcpToolEntries } from "./rara-mcp.js";
 // ============================================================
 // 🔹 AI AGENT — Otak AI yang bisa ngatur fitur bot via bahasa natural
 // 🔹 Berbeda dari AI biasa (aichat/deepseek), AI Agent bisa EKSEKUSI aksi:
@@ -23,7 +23,7 @@ import { getMcpToolEntries } from "./nova-mcp.js";
 async function resolveParticipantId(conn, m, jid) {
   try {
     const gc = await conn.groupMetadata(m.chat)
-    const { findParticipantByNumber } = await import('./nova-lid.js')
+    const { findParticipantByNumber } = await import('./rara-lid.js')
     const p = findParticipantByNumber(gc.participants, jid)
     return p?.id || jid
   } catch { return jid }
@@ -55,7 +55,7 @@ export const TOOL_TOPIC = {
 // mau melakukan atau sdh dilakukan dia ngomong gt" — bukan cuma konfirmasi
 // SETELAH aksi yang natural, status SEBELUM aksi jalan juga harus kerasa
 // kayak asisten asli lagi ngomong "oke bentar ya", bukan status teknis
-// "sedang mengeksekusi: closegc..."). Dipakai novaai.js pas status loading
+// "sedang mengeksekusi: closegc..."). Dipakai raraai.js pas status loading
 // sebelum tool.run() — fallback generik kalau tool gak ada di map.
 export const TOOL_NATURAL_DOING = {
   searchsite: 'nyariin di situs web-nya...',
@@ -127,7 +127,7 @@ export const TOOLS = {
       // pakai RANTAI callImageGenChain: key hidup duluan → NANO-BANANA
       // canvas (free) → pollinations cuma juru penyelamat terakhir.
       // Engine ikut ditulis di caption biar keliatan beneran pakai apa.
-      const { callImageGenChain } = await import('./nova-ai-service.js');
+      const { callImageGenChain } = await import('./rara-ai-service.js');
       const img = await callImageGenChain(prompt, { ratio: a?.ratio || undefined });
       await conn.sendMessage(m.chat, {
         image: Buffer.from(img.base64, 'base64'),
@@ -136,13 +136,13 @@ export const TOOLS = {
     }
   },
 
-  // ─── SEARCH YOUTUBE + KIRIM VIDEO SAMPEL (fix owner 14 Sep 2026: ".novaagent
+  // ─── SEARCH YOUTUBE + KIRIM VIDEO SAMPEL (fix owner 14 Sep 2026: ".raraagent
   // carikan/cairkan bot alya md di youtube" hasilnya beda/nyasar — request
   // YouTube gak pernah ke-detect, jatuh ke think() AI yang milih tool salah
   // atau jawab dari halusinasi. Sekarang: cari video di YouTube (yt-search,
   // engine sama kaya .yts/.playvideo — akurat tanpa browser), kirim KARTU
   // INFO (judul/channel/durasi/views/deskripsi/link video lain) + VIDEO
-  // SAMPEL hasil unduhan (rantai nova-ytdlp → IkyyXD ytmp4 → ytdl.js,
+  // SAMPEL hasil unduhan (rantai rara-ytdlp → IkyyXD ytmp4 → ytdl.js,
   // 480p biar cepat & hemat, konversi H.264+AAC biar keputar di WA).
   // Gagal unduh → kartu info + link tetap keluar, tool gak mati.
   searchyt: {
@@ -151,11 +151,11 @@ export const TOOLS = {
     done: '✅ Hasil pencarian YouTube udah aku kirim di atas ya.',
     // request owner 14 Sep: ".aisuperagent juga di-upgrade — dua agent
     // bermasalah ngbug" → logic cari YouTube dipindah ke LIB BERSAMA
-    // src/lib/nova-yt-search.js supaya .novaagent DAN .aisuperagent
+    // src/lib/rara-yt-search.js supaya .raraagent DAN .aisuperagent
     // (tool ytsearch + deteksi lokal) manggil engine yang sama persis —
     // gak ada dua implementasi yang bisa beda perilaku.
     run: async (conn, m, a) => {
-      const { searchYoutubeAndSend } = await import('./nova-yt-search.js');
+      const { searchYoutubeAndSend } = await import('./rara-yt-search.js');
       return searchYoutubeAndSend(conn, m, {
         query: a?.query || a?.q || a?.text || a?.value,
         wantDownload: !!(a?.download || a?.dl || a?.unduh),
@@ -169,14 +169,14 @@ export const TOOLS = {
   // aplikasi whatsapp di apkmiror" — tes live: planner milih tool
   // download (403) karena gak ada tool buka situs. Sekarang chromium
   // beneran buka web-nya (DuckDuckGo site: search + halaman utama),
-  // kartu plain text + narasi alive — LIB BERSAMA nova-site-search.js
+  // kartu plain text + narasi alive — LIB BERSAMA rara-site-search.js
   // (dipakai juga .aisuperagent — deteksi lokal).
   searchsite: {
     perm: 'user', args: ['site', 'query'], danger: false,
     desc: 'MENCARI SESUATU di SITUS WEB tertentu (apkmirror/apkpure/playstore/shopee/dll — domain apa pun) pakai browser beneran lalu kirim hasilnya plain text (judul/link/deskripsi/isi halaman + AI jelasin hasilnya). Pakai kalau user minta cari sesuatu DI SEBUAH SITUS (contoh: "carikan aplikasi whatsapp di apkmirror"). JANGAN pakai buat link file langsung (itu download) atau YouTube (itu searchyt)',
     done: '✅ Hasil pencariannya udah aku kirim di atas ya.',
     run: async (conn, m, a) => {
-      const { searchSiteAndSend } = await import('./nova-site-search.js');
+      const { searchSiteAndSend } = await import('./rara-site-search.js');
       return searchSiteAndSend(conn, m, {
         site: a?.site || a?.website || a?.situs || a?.domain,
         query: a?.query || a?.q || a?.text || a?.value,
@@ -232,7 +232,7 @@ export const TOOLS = {
       const pid = await resolveParticipantId(conn, m, a.user)
       await conn.groupParticipantsUpdate(m.chat, [pid], 'remove')
       try {
-        const { getDatabase } = await import('./nova-database.js')
+        const { getDatabase } = await import('./rara-database.js')
         const db = getDatabase()
         if (!db.db.data.groupBlocklist) db.db.data.groupBlocklist = {}
         if (!db.db.data.groupBlocklist[m.chat]) db.db.data.groupBlocklist[m.chat] = []
@@ -250,7 +250,7 @@ export const TOOLS = {
     done: '✅ Udah aku bebasin dari blokir grup.',
     run: async (conn, m, a) => {
       try {
-        const { getDatabase } = await import('./nova-database.js')
+        const { getDatabase } = await import('./rara-database.js')
         const db = getDatabase()
         if (db.db.data.groupBlocklist?.[m.chat]) {
           db.db.data.groupBlocklist[m.chat] = db.db.data.groupBlocklist[m.chat].filter(u => u !== a.user)
@@ -427,7 +427,7 @@ export const TOOLS = {
     desc: 'menyalakan filter anti-link di grup ini',
     done: '🛡️ Anti-Link di grup ini: AKTIF ✅',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antilink', true)
     }
   },
@@ -436,7 +436,7 @@ export const TOOLS = {
     desc: 'mematikan filter anti-link di grup ini',
     done: '🛡️ Anti-Link di grup ini: MATI ❌',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antilink', false)
     }
   },
@@ -445,7 +445,7 @@ export const TOOLS = {
     desc: 'menyalakan filter kata kasar di grup ini',
     done: '🛡️ Anti-Badword di grup ini: AKTIF ✅',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antibadword', true)
     }
   },
@@ -454,7 +454,7 @@ export const TOOLS = {
     desc: 'mematikan filter kata kasar di grup ini',
     done: '🛡️ Anti-Badword di grup ini: MATI ❌',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antibadword', false)
     }
   },
@@ -463,7 +463,7 @@ export const TOOLS = {
     desc: 'menyalakan blokir sticker di grup ini',
     done: '🛡️ Anti-Sticker di grup ini: AKTIF ✅',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antisticker', true)
     }
   },
@@ -472,7 +472,7 @@ export const TOOLS = {
     desc: 'mematikan blokir sticker di grup ini',
     done: '🛡️ Anti-Sticker di grup ini: MATI ❌',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antisticker', false)
     }
   },
@@ -481,7 +481,7 @@ export const TOOLS = {
     desc: 'menyalakan blokir voice note di grup ini',
     done: '🛡️ Anti-Voice Note di grup ini: AKTIF ✅',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antivoice', true)
     }
   },
@@ -490,7 +490,7 @@ export const TOOLS = {
     desc: 'mematikan blokir voice note di grup ini',
     done: '🛡️ Anti-Voice Note di grup ini: MATI ❌',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antivoice', false)
     }
   },
@@ -499,7 +499,7 @@ export const TOOLS = {
     desc: 'menyalakan filter spam di grup ini',
     done: '🛡️ Anti-Spam di grup ini: AKTIF ✅',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antispam', true)
     }
   },
@@ -508,7 +508,7 @@ export const TOOLS = {
     desc: 'mematikan filter spam di grup ini',
     done: '🛡️ Anti-Spam di grup ini: MATI ❌',
     run: async (conn, m) => {
-      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      const { setAutomodRule } = await import('./rara-automation-hub.js')
       setAutomodRule(m.chat, 'antispam', false)
     }
   },
@@ -521,7 +521,7 @@ export const TOOLS = {
     run: async (conn, m, a) => {
       const gname = String(a?.group || a?.target || a?.name || '').trim()
       if (gname) {
-        const { resolveGroupByName } = await import('./nova-group-registry.js')
+        const { resolveGroupByName } = await import('./rara-group-registry.js')
         const r = await resolveGroupByName(conn, gname)
         if (!r) throw new Error('Grup "' + gname + '" gak ketemu — tulis nama grupnya persis')
         if (r.ambiguous) throw new Error('Nama "' + gname + '" ambigu (' + r.ambiguous.join(', ') + ') — tulis lebih spesifik')
@@ -573,7 +573,7 @@ export const TOOLS = {
   },
 
   // ─── CREATE FILE (request owner 12 Sep 2026: "bisa buatkan file kyk txt,
-  // doc, xls, ja, html dll" — .novaagent serba bisa layaknya superagent) ───
+  // doc, xls, ja, html dll" — .raraagent serba bisa layaknya superagent) ───
   // AI isi args: name (nama file tanpa ekstensi), ext (txt/doc/xls/xlsx/js/
   // html/py/php/json/md/css), content (ISI file lengkap — untuk xls/xlsx isi
   // tabel CSV: baris = record, kolom dipisah koma; koma dalam teks pakai "...").
@@ -603,12 +603,12 @@ export const TOOLS = {
 
       // FIX OWNER 12 Sep 2026 ("buatkan login web topup, kode-nya gak
       // lengkap cm singkat"): kode yang kepotong (placeholder/tag gak
-      // ketutup/bracket gak balance) DILENGKAPIN OTOMATIS via nova-codegen
+      // ketutup/bracket gak balance) DILENGKAPIN OTOMATIS via rara-codegen
       // loop — prompt quality bar + AI lanjutin PERSIS dari baris terakhir.
       try {
-        const { CODE_EXTS, looksIncomplete, generateCompleteCode } = await import('./nova-codegen.js')
+        const { CODE_EXTS, looksIncomplete, generateCompleteCode } = await import('./rara-codegen.js')
         if (CODE_EXTS.has(ext) && looksIncomplete(content, ext)) {
-          const { aiChainChat } = await import('./nova-ai-fallback.js')
+          const { aiChainChat } = await import('./rara-ai-fallback.js')
           const gen = await generateCompleteCode({
             spec: 'Lengkapi file ' + base + '.' + ext + ' sesuai draft berikut jadi versi final lengkap siap jalan:\n\n' + content,
             ext, lang: ext,
@@ -624,16 +624,16 @@ export const TOOLS = {
       let mimetype
       if (ext === 'xls' || ext === 'xlsx') {
         // CSV content → workbook Excel ASLI (exceljs) — AI dikasih format CSV
-        const { parseCsvContent } = await import('./nova-createfile.js')
+        const { parseCsvContent } = await import('./rara-createfile.js')
         const rows = parseCsvContent(content)
         if (!rows.length) throw new Error('tabelnya kosong — isi content dengan baris CSV (kolom dipisah koma)')
-        const { buildWorkbook } = await import('./nova-createfile.js')
+        const { buildWorkbook } = await import('./rara-createfile.js')
         buf = await buildWorkbook(rows, base)
         fileName = base + '.' + ext
         mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       } else if (ext === 'doc' || ext === 'docx') {
         // dokumen Word: HTML word-compatible bertipe .doc (Word lancar buka)
-        const { buildWordHtml } = await import('./nova-createfile.js')
+        const { buildWordHtml } = await import('./rara-createfile.js')
         buf = Buffer.from(buildWordHtml(content), 'utf-8')
         fileName = base + '.doc'
         mimetype = 'application/msword'
@@ -655,9 +655,9 @@ export const TOOLS = {
 // ================= REGISTRY GABUNGAN (TOOLS + SKILLS + MCP) =================
 // Request owner 12 Sep 2026: "jadi tool, skills dan mcp banyak yg dipasang
 // lengkap agent sebagai tool tambahan atau kebutuhan yang dibutuhkan agent".
-// TOOLS = tool inti; SKILLS = tool kecil serba bisa (nova-skills.js);
-// MCP = tool dari server MCP eksternal (nova-mcp.js). Semua bentuknya sama
-// (perm/args/danger/desc/run) → gerbang + executor novaai.js jalan generik.
+// TOOLS = tool inti; SKILLS = tool kecil serba bisa (rara-skills.js);
+// MCP = tool dari server MCP eksternal (rara-mcp.js). Semua bentuknya sama
+// (perm/args/danger/desc/run) → gerbang + executor raraai.js jalan generik.
 export async function getAgentTools() {
   await awaitSkillPacks() // source pack src/source/ siap sebelum registry dibangun
   let mcp = {};
@@ -667,7 +667,7 @@ export async function getAgentTools() {
 
 // ================= RESOLVE NAMA MEMBER KE JID =================
 // 🔹 AI AGENT: cari JID member grup dari nama/nomor yang disebut user
-// 🔹 Sumber nama: sock.store.contacts (Baileys cache) + nova-activity-tracker (histori chat grup)
+// 🔹 Sumber nama: sock.store.contacts (Baileys cache) + rara-activity-tracker (histori chat grup)
 // 🔹 Return: string JID kalau ketemu 1, { multiple: [...] } kalau ambigu, null kalau tidak ketemu
 export async function resolveUserByName(sock, m, nameQuery) {
   if (!nameQuery || !m?.chat) return null
@@ -728,7 +728,7 @@ export async function resolveUserByName(sock, m, nameQuery) {
 
       // Sumber 2: histori aktivitas grup (nama tersimpan dari pushName saat chat)
       try {
-        const { getLeaderboard } = await import('./nova-activity-tracker.js')
+        const { getLeaderboard } = await import('./rara-activity-tracker.js')
         const members = getLeaderboard(m.chat, 9999)
         for (const mem of members) {
           if (!participantJids.has(mem.jid)) continue
@@ -842,7 +842,7 @@ export function localParse(text) {
 
   // ─── SEARCH YOUTUBE — CEK LOKAL DULU (fix owner 14 Sep 2026: request
   // YouTube gak pernah ke-detect → jatuh ke think() AI → tool salah /
-  // halusinasi). Deteksi intent di LIB BERSAMA nova-yt-search.js
+  // halusinasi). Deteksi intent di LIB BERSAMA rara-yt-search.js
   // (dipakai juga .aisuperagent — request owner ".aisuperagent juga
   // upgrade, dua agent bermasalah ngbug"). Hasil cari = THUMBNAIL
   // preview + deskripsi plain text; video cuma diunduh kalau eksplisit.
@@ -851,13 +851,13 @@ export function localParse(text) {
 
   // ─── SITE SEARCH — CEK LOKAL setelah YouTube (request owner 14 Sep:
   // "carikan aplikasi whatsapp di apkmirror" tadinya milih tool
-  // download → 403. Deteksi di LIB BERSAMA nova-site-search.js —
+  // download → 403. Deteksi di LIB BERSAMA rara-site-search.js —
   // dipakai juga .aisuperagent). "di <situs>" + kata cari → searchsite.
   const __siteIntent = detectSiteSearchIntent(t, original);
   if (__siteIntent) return { tool: 'searchsite', args: { site: __siteIntent.site, query: __siteIntent.query } };
 
   // ─── GENERATE GAMBAR (AI IMAGE) — CEK LOKAL DULU, JANGAN LEWAT think() ───
-  // Bug nyata dilaporkan owner 13 Sep 2026: ".novaagent buatkan gambar
+  // Bug nyata dilaporkan owner 13 Sep 2026: ".raraagent buatkan gambar
   // kucing" (giliran kedua setelah sesi ngobrol ubah deskripsi grup) malah
   // think() balikin tool "setdesc" LAGI (AI provider bingung sama histori
   // sesi, ke-anchor ke aksi sebelumnya) + reply ngarang "gambar kucing
@@ -878,7 +878,7 @@ export function localParse(text) {
 
   // ─── TOGGLE FITUR AUTOMOD (antilink/antibadword/antisticker/antivoice/
   // antispam) — CEK DULU sebelum LINK GRUP di bawah. Bug nyata dilaporkan
-  // owner 12 Sep 2026: ".novaagent aktifkan antilink digrup ini" malah
+  // owner 12 Sep 2026: ".raraagent aktifkan antilink digrup ini" malah
   // ke-detect getlink (regex lama /(link|tautan|invite)\b/ nangkep substring
   // "link" di dalam "antilink" karena gak ada \b di AWAL match, cuma di akhir
   // — sekarang fitur toggle di cek LEBIH DULU + return early jadi gak sampe
@@ -982,7 +982,7 @@ export async function askAI(system, user, history = []) {
       let text
       // 🔹 FORMAT MIN1AI (api.1min.ai) — pakai scraper min1ai.js (key aiSatuan.
       // min1ai + parsing resultObject + error map). REQUEST OWNER 11 Sep 2026:
-      // "novaai dan autonovaai defaultnya qwen dr min1ai". Chain fold system+
+      // "raraai dan autonovaai defaultnya qwen dr min1ai". Chain fold system+
       // history jadi 1 prompt (1min.ai cuma terima promptObject.prompt).
       if (p.format === 'min1ai') {
         const { min1aiChat } = await import('../scraper/min1ai.js')
@@ -1056,14 +1056,14 @@ export async function askAI(system, user, history = []) {
   throw new Error('Semua provider AI gagal')
 }
 
-// 🔹 SANITIZE REPLY — bug nyata dilaporkan owner 12 Sep 2026: ".novaagent hp
+// 🔹 SANITIZE REPLY — bug nyata dilaporkan owner 12 Sep 2026: ".raraagent hp
 // terbaik tahun ini" dijawab niru gaya "Google AI Overview" — nulis markdown
 // heading (###), markdown link [label](url), DAN URL PLACEHOLDER PALSU
 // (http://googleusercontent.com/lmdx_content/... — bot GAK ADA browsing di
-// jalur chat biasa novaai, jadi link itu 100% HALUSINASI model, bukan data
+// jalur chat biasa raraai, jadi link itu 100% HALUSINASI model, bukan data
 // asli) — hasilnya WhatsApp nampilin teks berantakan+link mati. Sanitizer ini
 // jaring pengaman DEFENSI KEDUA (pertama = instruksi format di system prompt
-// think() di bawah) — dipanggil di parseAIResponse (novaai.js) sebelum teks
+// think() di bawah) — dipanggil di parseAIResponse (raraai.js) sebelum teks
 // dikirim ke user.
 export function sanitizeAiReply(text) {
   if (!text) return text;
@@ -1082,9 +1082,9 @@ export function sanitizeAiReply(text) {
   return s;
 }
 
-// 🔹 DETEKSI QUERY BUTUH INFO TERKINI (fix 12 Sep 2026: owner report ".novaagent
+// 🔹 DETEKSI QUERY BUTUH INFO TERKINI (fix 12 Sep 2026: owner report ".raraagent
 // sebutkan berita X yang viral" cuma dijawab dari training data lama/halusinasi,
-// padahal .novaagent gak punya browsing sama sekali — beda dari .aisuperagent).
+// padahal .raraagent gak punya browsing sama sekali — beda dari .aisuperagent).
 // Heuristik kata kunci "berita terkini/viral/dll" → trigger quick web search
 // SEBELUM think(), hasil dititip ke prompt biar jawaban akurat + boleh sertakan
 // link sumber ASLI (bukan halusinasi).
@@ -1147,7 +1147,7 @@ async function browserFactsFallback(url) {
   if (typeof _browserFactsForTest === "function") return _browserFactsForTest(url);
   if (_browserFactsForTest === null) return null;
   try {
-    const { browserPageFacts } = await import("../scraper/nova-web-browser.js");
+    const { browserPageFacts } = await import("../scraper/rara-web-browser.js");
     return await browserPageFacts(url);
   } catch { return null; }
 }
@@ -1161,7 +1161,7 @@ async function browserSearchFallback(query, limit) {
   if (typeof _browserSearchForTest === "function") return _browserSearchForTest(query, { limit });
   if (_browserSearchForTest === null) return null; // e2e disabled
   try {
-    const { browserWebSearch } = await import("../scraper/nova-web-browser.js");
+    const { browserWebSearch } = await import("../scraper/rara-web-browser.js");
     return await browserWebSearch(query, { limit });
   } catch { return null; } // puppeteer gak ada → diem, lanjut jawab dari pengetahuan
 }
@@ -1337,7 +1337,7 @@ RULE kode di content: kode HARUS utuh jadi seperti contoh di atas (boleh & bagus
 "jam berapa sekarang" → {"tool":null,"execCommand":null,"reply":"Sekarang jam ${jamSekarang}."}
 "siapa presiden indonesia" → {"tool":null,"execCommand":null,"reply":"Presiden Indonesia saat ini adalah Prabowo Subianto, didampingi Wakil Presiden Gibran Rakabuming Raka."}`
 
-  // ctx.memory: blok MEMORI DURABEL tentang user (nova-memory.js) — ditempel
+  // ctx.memory: blok MEMORI DURABEL tentang user (rara-memory.js) — ditempel
   // ke system prompt biar jawaban nyambung sama fakta user antar sesi
   const memorySection = ctx.memory
     ? `\n\n== MEMORI TENTANG USER ==\n${ctx.memory}`

@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
-import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
-import te from '../../src/lib/nova-error.js'
+import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
+import te from '../../src/lib/rara-error.js'
 const allCommands = VALID_SERVERS.slice(0, 5).map(v => `serverinfo${v}`)
 const allAliases = VALID_SERVERS.map(v => `sinfo${v}`)
 
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(novaWrap("serverinfo", `❌ *akses ditolak*\n\n` +
+        return m.reply(raraWrap("serverinfo", `❌ *akses ditolak*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
         if (available.length > 0) {
             txt += `Server tersedia: *${available.join(', ')}*`
         }
-        return m.reply(novaWrap("serverinfo", txt))
+        return m.reply(raraWrap("serverinfo", txt))
     }
     
     if (!serverId || isNaN(serverId)) {
@@ -131,10 +131,10 @@ async function handler(m, { sock }) {
         txt += `🔌 \`Allocations\`: *${features.allocations}*\n`
         txt += ""
         
-        return m.reply(novaWrap("serverinfo", txt))
+        return m.reply(raraWrap("serverinfo", txt))
         
     } catch (err) {
-        return m.reply(novaWrap("serverinfo", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("serverinfo", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

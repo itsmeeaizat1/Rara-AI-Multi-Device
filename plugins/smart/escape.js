@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -66,7 +66,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "start" || sub === "mulai") {
     if (game && game.status === "active") {
-      await m.reply(novaWrap("Escape Room", "Game masih aktif. Ketik " + prefix + "escape stop."));
+      await m.reply(raraWrap("Escape Room", "Game masih aktif. Ketik " + prefix + "escape stop."));
       return { handled: true };
     }
     // Pick 3 random puzzles
@@ -81,7 +81,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       players: {},
     };
     saveConfig(db, gid, data);
-    await m.reply(novaWrap("Escape Room", [
+    await m.reply(raraWrap("Escape Room", [
       "GAME DIMULAI!",
       "",
       "Kamu terjebak di ruangan misterius.",
@@ -99,12 +99,12 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "answer" || sub === "jawab") {
     if (!game || game.status !== "active") {
-      await m.reply(novaWrap("Escape Room", "Belum ada game. Ketik " + prefix + "escape start."));
+      await m.reply(raraWrap("Escape Room", "Belum ada game. Ketik " + prefix + "escape start."));
       return { handled: true };
     }
     const answer = args.slice(2).join(" ").trim();
     if (!answer) {
-      await m.reply(novaWrap("Escape Room", "Ketik jawaban: " + prefix + "escape answer <jawaban>"));
+      await m.reply(raraWrap("Escape Room", "Ketik jawaban: " + prefix + "escape answer <jawaban>"));
       return { handled: true };
     }
     const puzzle = game.puzzles[game.current];
@@ -118,7 +118,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         game.status = "completed";
         saveConfig(db, gid, game);
         const topPlayers = Object.entries(game.players).sort((a, b) => b[1] - a[1]).map(([jid, count], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + count + " solved").join("\n");
-        await m.reply(novaWrap("Escape Room - SELESAI!", [
+        await m.reply(raraWrap("Escape Room - SELESAI!", [
           "Kamu berhasil keluar dari ruangan!",
           "Waktu: " + Math.floor(time / 60) + "m " + (time % 60) + "s",
           "Hints used: " + game.hintUsed + "/" + MAX_HINTS,
@@ -131,7 +131,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         game.current++;
         saveConfig(db, gid, game);
         const next = game.puzzles[game.current];
-        await m.reply(novaWrap("Escape Room", [
+        await m.reply(raraWrap("Escape Room", [
           "Teka-teki " + (game.current) + " SELESAI!",
           "",
           "Teka-teki " + (game.current + 1) + "/" + game.puzzles.length + ":",
@@ -142,7 +142,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         ].join("\n")));
       }
     } else {
-      await m.reply(novaWrap("Escape Room", "Salah! Coba lagi.\nTeka-teki " + (game.current + 1) + ": " + puzzle.q));
+      await m.reply(raraWrap("Escape Room", "Salah! Coba lagi.\nTeka-teki " + (game.current + 1) + ": " + puzzle.q));
     }
     saveConfig(db, gid, game);
     return { handled: true };
@@ -150,43 +150,43 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "hint") {
     if (!game || game.status !== "active") {
-      await m.reply(novaWrap("Escape Room", "Belum ada game."));
+      await m.reply(raraWrap("Escape Room", "Belum ada game."));
       return { handled: true };
     }
     if (game.hintsLeft <= 0) {
-      await m.reply(novaWrap("Escape Room", "Hint habis!"));
+      await m.reply(raraWrap("Escape Room", "Hint habis!"));
       return { handled: true };
     }
     game.hintsLeft--;
     game.hintUsed++;
     saveConfig(db, gid, game);
     const puzzle = game.puzzles[game.current];
-    await m.reply(novaWrap("Escape Room Hint", "Hint (" + game.hintsLeft + " tersisa):\n" + puzzle.hint));
+    await m.reply(raraWrap("Escape Room Hint", "Hint (" + game.hintsLeft + " tersisa):\n" + puzzle.hint));
     return { handled: true };
   }
 
   if (sub === "stop" || sub === "batal") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Escape Room", "Khusus admin/owner."));
+      await m.reply(raraWrap("Escape Room", "Khusus admin/owner."));
       return { handled: true };
     }
     delConfig(db, gid);
-    await m.reply(novaWrap("Escape Room", "Game dibatalkan."));
+    await m.reply(raraWrap("Escape Room", "Game dibatalkan."));
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek" || !sub) {
     if (!game) {
-      await m.reply(novaWrap("Escape Room", "Belum ada game.\n\n" + prefix + "escape start - mulai game"));
+      await m.reply(raraWrap("Escape Room", "Belum ada game.\n\n" + prefix + "escape start - mulai game"));
       return { handled: true };
     }
     if (game.status !== "active") {
-      await m.reply(novaWrap("Escape Room", "Game selesai."));
+      await m.reply(raraWrap("Escape Room", "Game selesai."));
       return { handled: true };
     }
     const time = Math.floor((Date.now() - game.startedAt) / 1000);
     const puzzle = game.puzzles[game.current];
-    await m.reply(novaWrap("Escape Room", [
+    await m.reply(raraWrap("Escape Room", [
       "Status: " + game.status,
       "Teka-teki: " + (game.current + 1) + "/" + game.puzzles.length,
       "Hints tersisa: " + game.hintsLeft,
@@ -198,7 +198,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Escape Room", [
+  await m.reply(raraWrap("Escape Room", [
     "ESCAPE ROOM TEXT ADVENTURE",
     "",
     prefix + "escape start - mulai game",

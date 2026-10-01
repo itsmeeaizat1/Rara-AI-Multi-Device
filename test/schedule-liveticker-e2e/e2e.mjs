@@ -7,9 +7,9 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-schedule-db-" + Date.now();
+const DB_DIR = "/tmp/rara-schedule-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s || "")).toLowerCase();
@@ -39,7 +39,7 @@ function mkMock() {
 const texts = (mk) => mk.sends.map((s) => norm(s.txt)).filter(Boolean);
 
 const schedule = await import(R + "/plugins/owner/schedule.js");
-const scheduler = await import(R + "/src/lib/nova-scheduler.js");
+const scheduler = await import(R + "/src/lib/rara-scheduler.js");
 
 // ═══════════════════════════════════════════════════════════════
 w("\n— ADD: konfirmasi + live ticker nyala —");

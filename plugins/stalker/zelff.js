@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zff — backup Free Fire suite dari zelapi (4 endpoint live):
 //   .zff search <nickname>  — cari pemain → uid/region/level/like
@@ -14,7 +14,7 @@ import {
   ffSearch, ffProfile, ffStats, ffLike,
   ZEL_FF_MODES, _setZelffHttpForTest, _setZelffKeyForTest,
 } from "../../src/scraper/zelff.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "zff",
@@ -37,7 +37,7 @@ const ts = (s) => {
 };
 
 function usageCard() {
-  return novaWrap("zff", [
+  return raraWrap("zff", [
     "🎮 FREE FIRE (zelapi — backup):",
     "",
     "▸ .zff search <nickname> — cari pemain",
@@ -128,38 +128,38 @@ async function handler(m, { sock }) {
 
     if (action === "search") {
       const q = args.join(" ").trim();
-      if (!q) { await m.react("❌"); return m.reply(novaWrap("zff", "Kirim nickname-nya — .zff search <nickname>")); }
+      if (!q) { await m.react("❌"); return m.reply(raraWrap("zff", "Kirim nickname-nya — .zff search <nickname>")); }
       await m.react("🧠");
       const r = await ffSearch(q);
-      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zff", `FF search bermasalah: ${r.error}`)); }
-      await m.reply(novaWrap("zff", `✅ FF SEARCH (zelapi)\n\n${cardSearch(r.results)}`));
+      if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zff", `FF search bermasalah: ${r.error}`)); }
+      await m.reply(raraWrap("zff", `✅ FF SEARCH (zelapi)\n\n${cardSearch(r.results)}`));
     } else if (action === "profile") {
       await m.react("🧠");
       const r = await ffProfile(args[0]);
-      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zff", `FF profile bermasalah: ${r.error}`)); }
-      await m.reply(novaWrap("zff", "✅ FF PROFILE (zelapi)\n\n" + cardProfile(r.profile)));
+      if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zff", `FF profile bermasalah: ${r.error}`)); }
+      await m.reply(raraWrap("zff", "✅ FF PROFILE (zelapi)\n\n" + cardProfile(r.profile)));
     } else if (action === "stats") {
       const uid = args[0];
       const mode = (args[1] || "br").toLowerCase();
-      if (!ZEL_FF_MODES.includes(mode)) { await m.react("❌"); return m.reply(novaWrap("zff", "Mode gak valid — pilihan: br / cs")); }
+      if (!ZEL_FF_MODES.includes(mode)) { await m.react("❌"); return m.reply(raraWrap("zff", "Mode gak valid — pilihan: br / cs")); }
       await m.react("🧠");
       const r = await ffStats(uid, mode);
-      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zff", `FF stats bermasalah: ${r.error}`)); }
+      if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zff", `FF stats bermasalah: ${r.error}`)); }
       const card = cardStats(mode, r.stats);
-      if (!card) { await m.react("❌"); return m.reply(novaWrap("zff", "Stats-nya kosong buat mode ini — coba mode lain (br/cs)")); }
-      await m.reply(novaWrap("zff", `✅ FF STATS ${mode.toUpperCase()} (zelapi)\n\n${card}`));
+      if (!card) { await m.react("❌"); return m.reply(raraWrap("zff", "Stats-nya kosong buat mode ini — coba mode lain (br/cs)")); }
+      await m.reply(raraWrap("zff", `✅ FF STATS ${mode.toUpperCase()} (zelapi)\n\n${card}`));
     } else if (action === "like") {
       const uid = args[0];
       const region = (args[1] || "SG").toUpperCase();
       await m.react("🧠");
       const r = await ffLike(uid, region);
-      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zff", `FF like bermasalah: ${r.error}`)); }
-      await m.reply(novaWrap("zff", `✅ LIKE TERKIRIM (zelapi)\n\n❤️ like dikirim ke uid ${r.uid} (region ${r.region})`));
+      if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zff", `FF like bermasalah: ${r.error}`)); }
+      await m.reply(raraWrap("zff", `✅ LIKE TERKIRIM (zelapi)\n\n❤️ like dikirim ke uid ${r.uid} (region ${r.region})`));
     }
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(novaWrap("zff", `fitur error: ${e?.message || e}`));
+    await m.reply(raraWrap("zff", `fitur error: ${e?.message || e}`));
   }
 }
 

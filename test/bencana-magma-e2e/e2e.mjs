@@ -5,7 +5,7 @@ import {
   diffVolcanoState, fetchJsonWithRetry, FETCH_RETRY_DELAY_MS,
   evSumberKey, BENCANA_SUMBER, eventCard,
   dispatchNearQuake, dispatchNearEvent,
-} from "../../src/lib/nova-bencana.js";
+} from "../../src/lib/rara-bencana.js";
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");

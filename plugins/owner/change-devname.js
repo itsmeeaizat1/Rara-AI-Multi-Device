@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'ganti-namadev',
     alias: ["ganti-namadev"],
@@ -39,10 +39,10 @@ async function handler(m, { sock, config }) {
         
         config.bot.developer = newName
         
-        m.reply(novaWrap("Ganti-namadev", `✅ *Berhasil*\n\nNama developer diganti ke: *${newName}*`))
+        m.reply(raraWrap("Ganti-namadev", `✅ *Berhasil*\n\nNama developer diganti ke: *${newName}*`))
         
     } catch (error) {
-        await m.reply(novaWrap("ganti-namadev", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(raraWrap("ganti-namadev", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

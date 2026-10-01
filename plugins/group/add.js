@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'add',
     alias: ["add"],
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const args = m.args || []
     
     if (args.length === 0) {
-        return m.reply(novaWrap("Add", `📌 Cara pakai:
+        return m.reply(raraWrap("Add", `📌 Cara pakai:
 1. Di grup: \`${m.prefix}add <nomor>\`
 2. Multiple: \`${m.prefix}add <nomor1> <nomor2> ...\`
 3. Di private: \`${m.prefix}add <nomor> <link_grup>\`
@@ -48,7 +48,7 @@ Syarat:
                 const groupInfo = await sock.groupGetInviteInfo(linkMatch[1])
                 targetGroup = groupInfo.id
             } catch (e) {
-                return m.reply(novaError("Add", "Link grup gak valid atau expired nih"))
+                return m.reply(raraError("Add", "Link grup gak valid atau expired nih"))
             }
         } else if (arg.includes('@g.us')) {
             targetGroup = arg
@@ -64,11 +64,11 @@ Syarat:
     }
     
     if (targetNumbers.length === 0) {
-        return m.reply(novaError("Add", "Nomor gak valid nih"))
+        return m.reply(raraError("Add", "Nomor gak valid nih"))
     }
     
     if (!targetGroup) {
-        return m.reply(novaWrap("Add", `Jalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``, "error"))
+        return m.reply(raraWrap("Add", `Jalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``, "error"))
     }
     
     try {
@@ -79,7 +79,7 @@ Syarat:
         )
         
         if (!botParticipant || !['admin', 'superadmin'].includes(botParticipant.admin)) {
-            return m.reply(novaError("Add", "Bot bukan admin di grup " + groupMeta.subject))
+            return m.reply(raraError("Add", "Bot bukan admin di grup " + groupMeta.subject))
         }
         
         if (!m.isGroup) {
@@ -89,7 +89,7 @@ Syarat:
             )
             
             if (!senderParticipant || !['admin', 'superadmin'].includes(senderParticipant.admin)) {
-                return m.reply(novaError("Add", "Kamu bukan admin di grup " + groupMeta.subject))
+                return m.reply(raraError("Add", "Kamu bukan admin di grup " + groupMeta.subject))
             }
         }
         
@@ -109,7 +109,7 @@ Syarat:
         }
         
         if (validNumbers.length === 0) {
-            return m.reply(novaWrap("Add", `gagal\n\nSemua nomor sudah ada di grup!`, "error"))
+            return m.reply(raraWrap("Add", `gagal\n\nSemua nomor sudah ada di grup!`, "error"))
         }
         const results = await sock.groupParticipantsUpdate(targetGroup, validNumbers, 'add')
         
@@ -159,11 +159,11 @@ Syarat:
     } catch (error) {
         
         if (error.message?.includes('not-authorized')) {
-            await m.reply(novaWrap("Add", `gagal\n\nBot tidak memiliki izin untuk menambah member!`, "error"))
+            await m.reply(raraWrap("Add", `gagal\n\nBot tidak memiliki izin untuk menambah member!`, "error"))
         } else if (error.message?.includes('forbidden')) {
-            await m.reply(novaWrap("Add", `gagal\n\nBot tidak memiliki akses ke grup ini!`, "error"))
+            await m.reply(raraWrap("Add", `gagal\n\nBot tidak memiliki akses ke grup ini!`, "error"))
         } else {
-            m.reply(novaWrap("add", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(raraWrap("add", te(m.prefix, m.command, m.pushName), "error"))
         }
     }
 }

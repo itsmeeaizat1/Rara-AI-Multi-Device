@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Kill-switch global: .bot off → bot TOTAL silent (gak ada reply/react/fitur), cuma .bot yang diproses.
 // Intercept-nya ada di paling awal src/handler.js — sebelum semua fitur, anti, auto, dan statistik.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getSaluranChannel } from "../../src/lib/nova-saluran.js";
-import { sendSaluranSafe } from "../../src/lib/nova-saluran-safe.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getSaluranChannel } from "../../src/lib/rara-saluran.js";
+import { sendSaluranSafe } from "../../src/lib/rara-saluran-safe.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -86,9 +86,9 @@ async function broadcastStatusChange(sock, db, state, opts = {}) {
         for (const jid of Object.keys(db.getAllGroups() || {})) targets.add(jid)
     } catch {}
 
-    // channel utama — FIX 19 Sep 2026 (owner: "notif gak sampai ke saluran nova official"):
+    // channel utama — FIX 19 Sep 2026 (owner: "notif gak sampai ke saluran rara official"):
     // dulu cuma baca config.saluran.id yang placeholder "@newsletter" → DI-SKIP SENYAP.
-    // sekarang ID di-resolve otomatis dari LINK invite (nova-saluran.js), cek admin,
+    // sekarang ID di-resolve otomatis dari LINK invite (rara-saluran.js), cek admin,
     // dan kirim via sendSaluranSafe (payload disanitasi khusus saluran).
     let channelSkippedReason = ''
     try {
@@ -107,7 +107,7 @@ async function broadcastStatusChange(sock, db, state, opts = {}) {
     let ok = 0
     let fail = 0
     // DESAIN 19 Sep 2026 — notif status bot pakai banner preview card branding
-    // Nova (nova-notif-card, ala desain .play). Banner gak ngerubah isi teks.
+    // Rara (rara-notif-card, ala desain .play). Banner gak ngerubah isi teks.
     // REVISI 20 Sep 2026 (owner: "kan blank hitam aku kira bakal ada tulisan
     // huruf OFF/BOT DIMATIKAN... generate canvasnya jga ganti kyk bot di on
     // di thumbnailnya tulisan ON/BOT DIHIDUPKAN"): thumbnail statis diganti
@@ -118,7 +118,7 @@ async function broadcastStatusChange(sock, db, state, opts = {}) {
     // gak kirim `body` custom lagi — biar statusBanner() pakai default-nya
     // sendiri (waktu+tanggal Asia/Jakarta), sourceUrl juga udah dibuang di
     // statusBanner jadi baris "🔗 whatsapp.com" gak nongol lagi.
-    const { statusBanner } = await import("../../src/lib/nova-notif-card.js")
+    const { statusBanner } = await import("../../src/lib/rara-notif-card.js")
     const banner = await statusBanner(state)
     let saluranOutcome = { status: 'skipped', reason: channelSkippedReason || 'unknown', jid: channelTarget || null }
     // SALURAN DIKIRIM DULU (sebelum grup yang lama) biar owner cepet liat
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
             : db.setting('onlyPc') ? 'pc (cuma chat pribadi)'
             : 'all (semua chat)'
         const curStatus = isOff ? 'off (sunyi total)' : isMute ? 'mute (dijeda)' : 'on (aktif)'
-        return m.reply(novaWrap('Status Bot', [
+        return m.reply(raraWrap('Status Bot', [
             `Status : ${curStatus}`,
             `Mode : ${curMode}`,
             '',
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
     if (['off', 'mati', 'stop'].includes(act)) {
         if (db.setting('botPower') === false) {
             await m.react("🐣")
-            return m.reply(novaWrap('Status Bot', 'Bot udah off dari tadi kak.\nKetik *.bot on* buat nyalain.'))
+            return m.reply(raraWrap('Status Bot', 'Bot udah off dari tadi kak.\nKetik *.bot on* buat nyalain.'))
         }
         db.setting('botPower', false)
         db.setting('botMute', false) // off menimpa mute — level paling dalam
@@ -202,7 +202,7 @@ async function handler(m, { sock }) {
         // langsung liat status saluran di reply ini, gak senyap lagi
         const saluran = await waitSaluran(sock, db, 'off')
 
-        return m.reply(novaWrap('Bot Dimatikan', [
+        return m.reply(raraWrap('Bot Dimatikan', [
             'Bot sekarang *off* — sunyi total.',
             '',
             'Bot gak akan merespon fitur apa pun',
@@ -223,7 +223,7 @@ async function handler(m, { sock }) {
     if (['mute', 'jeda', 'pause'].includes(act)) {
         if (db.setting('botPower') === false) {
             await m.react("❗")
-            return m.reply(novaWrap('Status Bot', [
+            return m.reply(raraWrap('Status Bot', [
                 'Bot lagi *off* (sunyi total) — lebih dalam dari mute.',
                 '',
                 'Mute cuma bisa dipasang pas bot *on*.',
@@ -233,7 +233,7 @@ async function handler(m, { sock }) {
         }
         if (db.setting('botMute') === true) {
             await m.react("🐣")
-            return m.reply(novaWrap('Status Bot', 'Bot udah *mute* (dijeda) dari tadi kak.\nKetik *.bot on* buat nyalain.'))
+            return m.reply(raraWrap('Status Bot', 'Bot udah *mute* (dijeda) dari tadi kak.\nKetik *.bot on* buat nyalain.'))
         }
         db.setting('botMute', true)
         await m.react("🐣")
@@ -243,7 +243,7 @@ async function handler(m, { sock }) {
 
         const saluran = await waitSaluran(sock, db, 'mute')
 
-        return m.reply(novaWrap('Bot Dijeda', [
+        return m.reply(raraWrap('Bot Dijeda', [
             'Bot sekarang *mute* — sedang dijeda.',
             '',
             'Semua command gak bisa diakses.',
@@ -265,7 +265,7 @@ async function handler(m, { sock }) {
     if (['on', 'nyala', 'start', 'hidup'].includes(act)) {
         if (db.setting('botPower') !== false && db.setting('botMute') !== true) {
             await m.react("🐣")
-            return m.reply(novaWrap('Status Bot', 'Bot udah *on* kok, jalan normal.'))
+            return m.reply(raraWrap('Status Bot', 'Bot udah *on* kok, jalan normal.'))
         }
         db.setting('botPower', true)
         db.setting('botMute', false)
@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
 
         const saluran = await waitSaluran(sock, db, 'on')
 
-        return m.reply(novaWrap('Bot Dinyalakan', [
+        return m.reply(raraWrap('Bot Dinyalakan', [
             'Bot kembali *on* — semua fitur aktif lagi.',
             '',
             `Notifikasi dikirim ke *${grupCount}* grup`,
@@ -298,7 +298,7 @@ async function handler(m, { sock }) {
                 : db.setting('onlyPc') ? 'pc (cuma chat pribadi)'
                 : 'all (semua chat)'
             await m.react("🐣")
-            return m.reply(novaWrap('Mode Bot', [
+            return m.reply(raraWrap('Mode Bot', [
                 `Mode sekarang : ${curMode}`,
                 '',
                 '*.bot mode gc on* → bot cuma respon di grup',
@@ -315,7 +315,7 @@ async function handler(m, { sock }) {
                 db.setting('onlyGc', false)
                 db.setting('onlyPc', false)
                 await m.react("🐣")
-                return m.reply(novaWrap('Mode Bot', [
+                return m.reply(raraWrap('Mode Bot', [
                     'Mode *gc* dimatikan — bot respon di semua chat lagi.',
                     '',
                     `Matikan bot total: *.bot off*`,
@@ -324,7 +324,7 @@ async function handler(m, { sock }) {
             db.setting('onlyGc', true)
             db.setting('onlyPc', false)
             await m.react("🐣")
-            return m.reply(novaWrap('Mode Bot', [
+            return m.reply(raraWrap('Mode Bot', [
                 'Mode diubah ke *gc* — bot cuma respon di grup.',
                 '',
                 'Chat pribadi (PC) di-diamin.',
@@ -339,7 +339,7 @@ async function handler(m, { sock }) {
                 db.setting('onlyPc', false)
                 db.setting('onlyGc', false)
                 await m.react("🐣")
-                return m.reply(novaWrap('Mode Bot', [
+                return m.reply(raraWrap('Mode Bot', [
                     'Mode *pc* dimatikan — bot respon di semua chat lagi.',
                     '',
                     `Matikan bot total: *.bot off*`,
@@ -348,7 +348,7 @@ async function handler(m, { sock }) {
             db.setting('onlyPc', true)
             db.setting('onlyGc', false)
             await m.react("🐣")
-            return m.reply(novaWrap('Mode Bot', [
+            return m.reply(raraWrap('Mode Bot', [
                 'Mode diubah ke *pc* — bot cuma respon di chat pribadi.',
                 '',
                 'Grup di-diamin.',
@@ -362,14 +362,14 @@ async function handler(m, { sock }) {
             db.setting('onlyGc', false)
             db.setting('onlyPc', false)
             await m.react("🐣")
-            return m.reply(novaWrap('Mode Bot', [
+            return m.reply(raraWrap('Mode Bot', [
                 'Mode diubah ke *all* — bot respon di semua chat.',
                 'Grup + chat pribadi aktif lagi.',
             ].join('\n')))
         }
 
         await m.react("❗")
-        return m.reply(novaWrap('Mode Bot', [
+        return m.reply(raraWrap('Mode Bot', [
             `Mode *${sub}* gak dikenal.`,
             '',
             'Pilihan: *gc* (cuma grup), *pc* (cuma chat pribadi), *all* (semua)',
@@ -378,7 +378,7 @@ async function handler(m, { sock }) {
 
     // ── argumen gak dikenal ──
     await m.react("❗")
-    return m.reply(novaWrap('Status Bot', [
+    return m.reply(raraWrap('Status Bot', [
         `Argumen *${act}* gak dikenal.`,
         '',
         '📌 Ketik *.bot off* buat matiin bot (sunyi total)',

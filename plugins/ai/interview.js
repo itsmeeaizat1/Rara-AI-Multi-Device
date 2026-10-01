@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aiagentwawancara (dulu .wawancara, rename 12 Sep 2026) — Interview Simulator AI (ide fitur no 5):
 // AI jadi HRD buat latihan wawancara kerja.
 //   * .aiagentwawancara mulai <posisi> → sesi mulai, HRD nanya via VN
@@ -8,18 +8,18 @@
 //   * .aiagentwawancara ulang | skip | skor | stop
 // Sesi per user, expired 30 menit idle.
 
-import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
-import { novaWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { transcribeAudio } from "../../src/lib/nova-stt.js";
-import { speakToBuffer } from "../../src/lib/nova-telpon.js";
+import { aiChainChat } from "../../src/lib/rara-ai-fallback.js";
+import { raraWrap, raraCaption, tipText, toSC } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { transcribeAudio } from "../../src/lib/rara-stt.js";
+import { speakToBuffer } from "../../src/lib/rara-telpon.js";
 import { renderChart } from "../tools/chart.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 import {
   getSession, setSession, clearSession, TOTAL_QUESTIONS,
   questionsPrompt, parseQuestions, evaluatePrompt, parseEvaluation,
   finalTips, verdictOf,
-} from "../../src/lib/nova-wawancara.js";
+} from "../../src/lib/rara-wawancara.js";
 
 const pluginConfig = {
   name: "aiagentwawancara",
@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ═══ guide (kecuali reply VN — itu jawaban voice) ═══
     if (!sub && !m.quoted?.isAudio) {
-      const guide = novaCaption({
+      const guide = raraCaption({
         emoji: "💼",
         name: "aiagentwawancara",
         description: "Latihan wawancara kerja bareng AI HRD via voice note",
@@ -100,10 +100,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "mulai" || sub === "start") {
       const posisi = args.slice(1).join(" ").trim();
       if (!posisi) {
-        return m.reply(novaWrap("aiagentwawancara", `Mau latihan untuk posisi apa?\n\nFormat: ${prefix}aiagentwawancara mulai frontend developer`, "info"));
+        return m.reply(raraWrap("aiagentwawancara", `Mau latihan untuk posisi apa?\n\nFormat: ${prefix}aiagentwawancara mulai frontend developer`, "info"));
       }
       if (session) {
-        return m.reply(novaWrap("aiagentwawancara", `Masih ada sesi aktif (posisi *${session.posisi}*, pertanyaan ${session.qIdx + 1}/${session.questions.length}).\nLanjutin jawab, atau ${prefix}aiagentwawancara stop buat batalin.`, "info"));
+        return m.reply(raraWrap("aiagentwawancara", `Masih ada sesi aktif (posisi *${session.posisi}*, pertanyaan ${session.qIdx + 1}/${session.questions.length}).\nLanjutin jawab, atau ${prefix}aiagentwawancara stop buat batalin.`, "info"));
       }
       await m.react("🧠");
       let questions = null;
@@ -120,14 +120,14 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ═══ subcommand lain (tanpa sesi = info) ═══
     if (SUBS.has(sub) && !session && sub !== "stop" && sub !== "batal") {
-      return m.reply(novaWrap("aiagentwawancara", `Belum ada sesi latihan. Mulai dulu: ${prefix}aiagentwawancara mulai <posisi>`, "info"));
+      return m.reply(raraWrap("aiagentwawancara", `Belum ada sesi latihan. Mulai dulu: ${prefix}aiagentwawancara mulai <posisi>`, "info"));
     }
 
     if (sub === "stop" || sub === "selesai" || sub === "batal") {
-      if (!session) return m.reply(novaWrap("aiagentwawancara", "Gak ada sesi yang jalan.", "info"));
+      if (!session) return m.reply(raraWrap("aiagentwawancara", "Gak ada sesi yang jalan.", "info"));
       clearSession(db, m.sender);
       const done = session.answers.length;
-      return m.reply(novaWrap("aiagentwawancara", done
+      return m.reply(raraWrap("aiagentwawancara", done
         ? `🛑 Sesi dibatalkan. Terjawab ${done}/${session.questions.length} pertanyaan — ${prefix}aiagentwawancara mulai ${session.posisi} buat coba lagi.`
         : "🛑 Sesi dibatalkan. Kapan-kapan latihan lagi ya!"));
     }
@@ -145,15 +145,15 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (sub === "skor") {
       const answered = session.answers.filter((a) => !a.skipped);
-      if (!answered.length) return m.reply(novaWrap("aiagentwawancara", `Progress: pertanyaan ${session.qIdx + 1}/${session.questions.length} — belum ada jawaban yang dinilai.`, "info"));
+      if (!answered.length) return m.reply(raraWrap("aiagentwawancara", `Progress: pertanyaan ${session.qIdx + 1}/${session.questions.length} — belum ada jawaban yang dinilai.`, "info"));
       const avg = answered.reduce((s, a) => s + a.skor, 0) / answered.length;
       const lines = answered.map((a, i) => `${i + 1}. ${a.q.slice(0, 40)}… — *${a.skor}/10*`).join("\n");
-      return m.reply(novaWrap("aiagentwawancara", `📊 *SKOR SEMENTARA: ${avg.toFixed(1)}/10*\n\n${lines}\n\nProgress: ${session.qIdx + 1}/${session.questions.length}`));
+      return m.reply(raraWrap("aiagentwawancara", `📊 *SKOR SEMENTARA: ${avg.toFixed(1)}/10*\n\n${lines}\n\nProgress: ${session.qIdx + 1}/${session.questions.length}`));
     }
 
     // ═══ jalur jawaban — sesi WAJIB aktif ═══
     if (!session) {
-      return m.reply(novaWrap("aiagentwawancara", `Belum ada sesi latihan. Mulai dulu: ${prefix}aiagentwawancara mulai <posisi>`, "info"));
+      return m.reply(raraWrap("aiagentwawancara", `Belum ada sesi latihan. Mulai dulu: ${prefix}aiagentwawancara mulai <posisi>`, "info"));
     }
 
     // jawaban via reply VN
@@ -165,12 +165,12 @@ async function handler(m, { sock, config: botConfig }) {
       const buffer = await quotedVn.download();
       if (!buffer || !buffer.length) {
         await m.react("❌");
-        return m.reply(novaWrap("aiagentwawancara", "Gagal download VN-mu. Coba kirim ulang.", "error"));
+        return m.reply(raraWrap("aiagentwawancara", "Gagal download VN-mu. Coba kirim ulang.", "error"));
       }
       const transcript = await parserStt(buffer, quotedVn.mimetype || "audio/ogg; codecs=opus").catch(() => "");
       if (!transcript || transcript.trim().length < 2) {
         await m.react("❌");
-        return m.reply(novaWrap("aiagentwawancara", "Gak kedengeran jelas nih — rekam ulang lagi ya, atau ketik jawabanmu."));
+        return m.reply(raraWrap("aiagentwawancara", "Gak kedengeran jelas nih — rekam ulang lagi ya, atau ketik jawabanmu."));
       }
       answerText = transcript.trim().slice(0, 900);
     } else {
@@ -187,7 +187,7 @@ async function handler(m, { sock, config: botConfig }) {
     } catch {}
     if (!evalRes) {
       await m.react("❌");
-      return m.reply(novaWrap("aiagentwawancara", "AI penilai lagi bermasalah — coba kirim ulang jawabanmu ya.", "error"));
+      return m.reply(raraWrap("aiagentwawancara", "AI penilai lagi bermasalah — coba kirim ulang jawabanmu ya.", "error"));
     }
     session.answers.push({ q: question, a: answerText, skor: evalRes.skor, feedback: evalRes.feedback, kuat: evalRes.kuat, lemah: evalRes.lemah });
 
@@ -203,11 +203,11 @@ async function handler(m, { sock, config: botConfig }) {
       `📝 *PENILAIAN JAWABAN ${session.qIdx}/${session.questions.length}*\n` +
       `⭐ Skor: *${evalRes.skor}/10*\n💬 ${evalRes.feedback}\n💪 Kuat: ${evalRes.kuat}\n🎯 Perlu dipoles: ${evalRes.lemah}`;
     const voiceSent = await sendHrdVoice(m, sock, session.questions[session.qIdx]);
-    return m.reply(novaWrap("aiagentwawancara", fbCard + "\n\n" + questionCard(session, prefix)) + (voiceSent ? "" : ""));
+    return m.reply(raraWrap("aiagentwawancara", fbCard + "\n\n" + questionCard(session, prefix)) + (voiceSent ? "" : ""));
   } catch (err) {
     console.error("aiagentwawancara error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("aiagentwawancara", te.novaError(err) || "Gagal memproses", "error"));
+    return m.reply(raraWrap("aiagentwawancara", te.raraError(err) || "Gagal memproses", "error"));
   }
 }
 
@@ -248,7 +248,7 @@ async function finishInterview(m, sock, db, session, prefix) {
   if (tips) txt += `\n\n💡 *TIPS:*\n${tips}`;
   txt += `\n\n♻ ${toSC("latihan lagi?")} ${prefix}${toSC("aiagentwawancara mulai")} ${session.posisi}`;
   await m.react("🐣");
-  return m.reply(novaWrap("aiagentwawancara", txt));
+  return m.reply(raraWrap("aiagentwawancara", txt));
 }
 
 export { pluginConfig as config, handler };

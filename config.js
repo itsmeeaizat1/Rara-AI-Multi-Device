@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // config.js — Thin aggregator
 // Semua config dipindah ke src/lib/config/ per kategori
 // File ini tetap export object `config` dengan struktur sama persis
 // agar 359+ plugin yang import `config` tetap jalan tanpa perubahan
 
-import * as ownerPremiumDb from "./src/lib/nova-premium-db.js";
+import * as ownerPremiumDb from "./src/lib/rara-premium-db.js";
 
 // Import per kategori dari src/lib/config/
 import { apiKeys } from "./src/lib/config/apikey.js";
@@ -164,7 +164,7 @@ function getOwnerName(number) {
   const cfgNumbers = (config.owner?.number || []).map(n => String(n).replace(/[^0-9]/g, ""));
   if (cfgNumbers.includes(clean)) return config.owner?.name || "Owner";
   try {
-    const db = global.novaDb;
+    const db = global.raraDb;
     if (db?.data?.ownerList) {
       const entry = db.data.ownerList.find(o => String(o.number).replace(/[^0-9]/g, "") === clean);
       if (entry?.name) return entry.name;

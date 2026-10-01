@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .swpost — POSTING STATUS/STORY WA dari bot (teks & media).
-// Sistem langka bot MD luar sana yang belum ada di NOVA:
+// Sistem langka bot MD luar sana yang belum ada di RARA:
 //   .swpost <teks>            → status teks warna
 //   reply gambar/video + .swpost [caption] → status media
 //   .swpost warna #hex [teks] → status teks custom warna
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "statuspost",
@@ -67,14 +67,14 @@ async function handler(m, { sock }) {
             : { image: buf, caption: teks || "" }
         );
         return m.reply(
-          novaWrap("Status Post", [
+          raraWrap("Status Post", [
             `Status ${isVideo ? "video" : "gambar"} BERHASIL dipost ke story WA.`,
             teks ? `Caption: ${teks}` : "",
           ].filter(Boolean))
         );
       } catch (e) {
         return m.reply(
-          novaWrap("Status Post", [
+          raraWrap("Status Post", [
             "Gagal posting status media.",
             `Sebab: ${e?.message || "unduh media gagal"}`,
           ])
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
   // ── Jalur teks ──
   if (!teks) {
     return m.reply(
-      novaWrap("Status Post", [
+      raraWrap("Status Post", [
         "Posting status/story WA dari bot",
         "",
         "Cara pakai:",
@@ -106,14 +106,14 @@ async function handler(m, { sock }) {
       font: Number(cfg.font) || 3,
     });
     return m.reply(
-      novaWrap("Status Post", [
+      raraWrap("Status Post", [
         "Status teks BERHASIL dipost ke story WA.",
         `Warna: ${bg}`,
       ])
     );
   } catch (e) {
     return m.reply(
-      novaWrap("Status Post", [
+      raraWrap("Status Post", [
         "Gagal posting status teks.",
         `Sebab: ${e?.message || "kirim status gagal"}`,
       ])

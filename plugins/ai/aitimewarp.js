@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aitimewarp",
@@ -191,16 +191,16 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ════ OFF — exit time-warp mode (OWNER ONLY)
   if (sub === "off" || sub === "stop" || sub === "keluar" || sub === "exit") {
     if (!isOwner) {
-      await m.reply(novaWrap("Time-Warp", "Off hanya bisa dipakai owner."), "aitimewarp");
+      await m.reply(raraWrap("Time-Warp", "Off hanya bisa dipakai owner."), "aitimewarp");
       return { handled: true };
     }
     const session = warpSessions.get(sender);
     if (!session || !session.active) {
-      await m.reply(novaWrap("Time-Warp", "Kamu gak lagi dalam mode lintas waktu."), "aitimewarp");
+      await m.reply(raraWrap("Time-Warp", "Kamu gak lagi dalam mode lintas waktu."), "aitimewarp");
       return { handled: true };
     }
     warpSessions.delete(sender);
-    await m.reply( novaWrap("Time-Warp", [
+    await m.reply( raraWrap("Time-Warp", [
       "Mode lintas waktu dinonaktifkan.",
       "",
       "Kamu kembali ke realitas normal.",
@@ -213,7 +213,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "status" || sub === "info") {
     const session = warpSessions.get(sender);
     if (!session || !session.active) {
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "timewarp",
         "Status: TIDAK AKTIF — kamu lagi di realitas normal\n" +
         prefix + "timewarp <tahun/era> — one-shot (semua user)\n" +
@@ -225,7 +225,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const duration = Math.floor((Date.now() - session.startedAt) / 1000);
     const mins = Math.floor(duration / 60);
     const secs = duration % 60;
-    await m.reply( novaWrap("Time-Warp", [
+    await m.reply( raraWrap("Time-Warp", [
       "Status: AKTIF (persistent)",
       "",
       "Era: " + session.label,
@@ -240,7 +240,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   // ════ LIST — show available era presets (ALL USERS)
   if (sub === "list" || sub === "preset" || sub === "era") {
-    await m.reply( novaWrap("Time-Warp Preset", [
+    await m.reply( raraWrap("Time-Warp Preset", [
       "Era yang tersedia:",
       "",
       "MASA DEPAN:",
@@ -266,13 +266,13 @@ async function handler(m, { sock, db, config: botConfig }) {
   // Detect "on" as last argument
   if (sub === "on" || sub === "start" || sub === "mulai") {
     if (!isOwner) {
-      await m.reply(novaWrap("Time-Warp", "Mode persistent (on) hanya untuk owner."), "aitimewarp");
+      await m.reply(raraWrap("Time-Warp", "Mode persistent (on) hanya untuk owner."), "aitimewarp");
       return { handled: true };
     }
     // Re-parse: args[1] is "on", era is args[2]+
     const eraInput = args.slice(2).join(" ").trim();
     if (!eraInput) {
-      await m.reply( novaWrap("Time-Warp", [
+      await m.reply( raraWrap("Time-Warp", [
         "Format: " + prefix + "timewarp on <tahun/era>",
         "Contoh: " + prefix + "timewarp on 2035",
       ].join("\n")), "aitimewarp");
@@ -292,7 +292,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     session.systemPrompt = buildTemporalPrompt(session, senderName);
     warpSessions.set(sender, session);
 
-    await m.reply( novaWrap("Time-Warp", [
+    await m.reply( raraWrap("Time-Warp", [
       "Persistent mode AKTIF",
       "",
       "Era: " + parsed.label,
@@ -314,7 +314,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   const eraInput = args.slice(1).join(" ").trim();
   if (!eraInput) {
-    await m.reply(novaGuide(
+    await m.reply(raraGuide(
       "timewarp",
       "Mode chat lintas waktu\n" +
       prefix + "timewarp <tahun> <pertanyaan> — one-shot\n" +
@@ -404,19 +404,19 @@ async function handler(m, { sock, db, config: botConfig }) {
     try {
     await m.react("🕒");
       const { default: UnlimitedAI } = await import("../../src/scraper/unlimitedai.js");
-      const result = await UnlimitedAI(questionPart, "nova-ai");
+      const result = await UnlimitedAI(questionPart, "rara-ai");
       if (result) {
-        await m.reply( novaWrap("Time-Warp", [
+        await m.reply( raraWrap("Time-Warp", [
           "Era: " + parsed.label,
           "",
           result,
         ].join("\n")), "aitimewarp");
       } else {
-        await m.reply(novaError("AITimeWarp", "Gagal dapet respon AI nih, coba lagi ya"));
+        await m.reply(raraError("AITimeWarp", "Gagal dapet respon AI nih, coba lagi ya"));
       }
     } catch (e) {
       await m.react("🐣");
-      await m.reply(novaWrap("Time-Warp", "Error: " + e.message));
+      await m.reply(raraWrap("Time-Warp", "Error: " + e.message));
     }
     // Clean up one-shot
     oneShotPrompts.delete(sender);
@@ -439,7 +439,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     session.systemPrompt = buildTemporalPrompt(session, senderName);
     warpSessions.set(sender, session);
 
-    await m.reply( novaWrap("Time-Warp", [
+    await m.reply( raraWrap("Time-Warp", [
       "Persistent mode AKTIF",
       "",
       "Era: " + parsed.label,
@@ -453,7 +453,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   } else {
     // Non-owner without question -> one-shot instruction
-    await m.reply( novaWrap("Time-Warp", [
+    await m.reply( raraWrap("Time-Warp", [
       "Mode persistent hanya untuk owner.",
       "",
       "Kamu bisa pakai one-shot:",

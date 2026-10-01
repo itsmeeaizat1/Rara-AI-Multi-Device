@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const MODES = {
   mild: "Roasting ringan, santai, masih sopan dan bisa diterima semua orang.",
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   if (!args && !m.quoted) {
-    const help = novaWrap("RoastMe", [
+    const help = raraWrap("RoastMe", [
       `AI roasting pedas tapi lucu`,
       ``,
       `📌 Format:`,
@@ -61,10 +61,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.react("🕒");
     const prompt = `Kamu adalah master roaster Indonesia. Roast seseorang bernama "${targetName}" dengan mode ${mode}: ${MODES[mode]}. Buat roasting lucu, kreatif, pakai bahasa Indonesia santai. Maksimal 4 paragraf pendek. JANGAN pakai kata-kata SARA, jangan terlalu toxic, tetap dalam batas lucu. Format plain text, bukan markdown.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result || result.trim().length < 10) {
-      await m.reply(novaError("RoastMe", "Gagal roast nih, AI lagi mood jelek"));
+      await m.reply(raraError("RoastMe", "Gagal roast nih, AI lagi mood jelek"));
       return { handled: true };
     }
 
@@ -72,11 +72,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     if (m.quoted) header += ` - Target: ${targetName}`;
 
     await m.react("🐣");
-    await m.reply(novaWrap(header, result.trim()));
+    await m.reply(raraWrap(header, result.trim()));
   } catch (error) {
     await m.react("❌");
     console.error("roastme error:", error);
-    m.reply(novaError("RoastMe", `Gagal nih: ${error.message || "error"}`));
+    m.reply(raraError("RoastMe", `Gagal nih: ${error.message || "error"}`));
   }
 
   return { handled: true };

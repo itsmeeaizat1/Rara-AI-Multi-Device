@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // douyin-search.js — Douyin (抖音 / TikTok China) keyword search via Apify
 // Kenapa Apify: Douyin gak ada API publik & anti-botnya ekstrem (signature
 // a_bogus + cookie) — semua instance API gratis udah mati. Apify actors
@@ -12,7 +12,7 @@
 // menit (run gagal cuma kena biaya actor-start ~$0.0001, MURAH). Caller
 // wajib handle kasus kosong + kasih pesan jelas ke user.
 
-import { apifyRunSync } from "../lib/nova-apify.js";
+import { apifyRunSync } from "../lib/rara-apify.js";
 
 const ACTORS = [
   { id: "vulnv~douyin-search-scraper", label: "Douyin Apify" },

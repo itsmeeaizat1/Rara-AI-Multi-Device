@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Sistem Pacaran — Putus hubungan
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "putus",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
     if (!myData.fun.pasangan) {
       return m.reply(
-        novaWrap("putus",
+        raraWrap("putus",
           "Kamu tidak memiliki pasangan untuk diputuskan! 💔"
         )
       );
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
       db.setUser(m.sender, myData);
       db.save();
       return m.reply(
-        novaWrap("putus",
+        raraWrap("putus",
           "Hubungan sudah tidak aktif. Data pasangan dihapus. 🧹"
         )
       );
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     }
     rows.push("│ • 🙏 Semoga kamu lebih bahagia kedepannya!");
 
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "resmi putus", icon: "💔",
       flavor: "💔 *RESMI PUTUS...*",
       body: rows.join("\n"),

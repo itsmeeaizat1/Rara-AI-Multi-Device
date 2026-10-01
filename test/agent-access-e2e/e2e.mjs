@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT — E2E: AGENT GATE AKSES COMMAND (25 Sep 2026, owner:
+// RARA AI WHATSAPP BOT — E2E: AGENT GATE AKSES COMMAND (25 Sep 2026, owner:
 // "user bsa akses ai agent tp agent cm akses cmd yg bs user gunakan, fitur
 // owner-only ditolak jujur"). Agent jalan ATAS NAMA user — command di luar
 // hak user DITOLAK sebelum eksekusi, bukan pura-pura sukses.
 import fs from "node:fs";
 import path from "node:path";
-import { registerPlugin, loadPlugins } from "../../src/lib/nova-plugins.js";
+import { registerPlugin, loadPlugins } from "../../src/lib/rara-plugins.js";
 import { config as agentCfg, gateCommandAccess } from "../../plugins/ai-agent/agent.js";
 
 let pass = 0, fail = 0;
@@ -118,8 +118,8 @@ w("\n— 8. wiring sumber —");
   const fsReal = fs;
   const src = fsReal.readFileSync(new URL("../../plugins/ai-agent/agent.js", import.meta.url), "utf-8");
   check("8a. executor panggil gateCommandAccess sebelum eksekusi", /const denied = await gateCommandAccess\(cmd, m\);\s*\n\s*if \(denied\) return denied;/.test(src), "");
-  check("8b. anti-loop: .aisuperagent/.novaagent juga keblok", /cmd === "aisuperagent" \|\| cmd === "novaagent"/.test(src), "");
-  const agentSrc = fsReal.readFileSync(new URL("../../src/lib/nova-agent.js", import.meta.url), "utf-8");
+  check("8b. anti-loop: .aisuperagent/.raraagent juga keblok", /cmd === "aisuperagent" \|\| cmd === "raraagent"/.test(src), "");
+  const agentSrc = fsReal.readFileSync(new URL("../../src/lib/rara-agent.js", import.meta.url), "utf-8");
   check("8c. SYS_PLAN ada aturan hak akses", agentSrc.includes("ATURAN HAK AKSES"), "");
   check("8d. no-toolbox replace pattern tetap utuh", agentSrc.includes('TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):\\n{{TOOLBOX}}'), "");
 }

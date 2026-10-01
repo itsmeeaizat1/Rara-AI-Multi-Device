@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "comicsanka",
@@ -83,7 +83,7 @@ async function handler(m, { sock, args }) {
     // === SEARCH ===
     if (cmd === "search" || cmd === "cari" || cmd === "s") {
       const query = cmdArgs.join(" ").trim();
-      if (!query) return m.reply(novaWrap("Comicsanka", "Masukkan judul komik!\n\n💡 *Contoh:* `.comicsanka search naruto`"));
+      if (!query) return m.reply(raraWrap("Comicsanka", "Masukkan judul komik!\n\n💡 *Contoh:* `.comicsanka search naruto`"));
 
       const res = await apiGet(`/comic/search?q=${encodeURIComponent(query)}`);
       if (res.status !== 200 || !res.data?.status) throw new Error(res.data?.message || "API error");
@@ -100,13 +100,13 @@ async function handler(m, { sock, args }) {
         if (slug) txt += `   \`${m.prefix}comicsanka detail ${slug}\`\n`;
         txt += `\n`;
       }
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === DETAIL ===
     else if (cmd === "detail" || cmd === "d" || cmd === "info") {
       const slug = cmdArgs[0];
-      if (!slug) return m.reply(novaWrap("Comicsanka", "Masukkan slug komik!\n\n💡 *Contoh:* `.comicsanka detail naruto-manga`"));
+      if (!slug) return m.reply(raraWrap("Comicsanka", "Masukkan slug komik!\n\n💡 *Contoh:* `.comicsanka detail naruto-manga`"));
 
       const res = await apiGet(`/comic/comic/${slug}`);
       if (res.status !== 200 || !res.data?.status) throw new Error(res.data?.message || "API error");
@@ -144,13 +144,13 @@ async function handler(m, { sock, args }) {
           }
         } catch (e) { console.error('[comicsanka.js]:', e.message); }
       }
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === CHAPTER (baca) ===
     else if (cmd === "chapter" || cmd === "read" || cmd === "baca") {
       const slug = cmdArgs[0];
-      if (!slug) return m.reply(novaWrap("Comicsanka", "Masukkan slug chapter!\n\n💡 *Contoh:* `.comicsanka chapter naruto-chapter-1`"));
+      if (!slug) return m.reply(raraWrap("Comicsanka", "Masukkan slug chapter!\n\n💡 *Contoh:* `.comicsanka chapter naruto-chapter-1`"));
 
       const res = await apiGet(`/comic/chapter/${slug}`);
       if (res.status !== 200 || !res.data?.status) throw new Error(res.data?.message || "API error");
@@ -162,7 +162,7 @@ async function handler(m, { sock, args }) {
       let txt = `${data.title || data.name || slug}\n`;
       txt += `${images.length} halaman\n`;
       txt += `Mengirim ${Math.min(images.length, 10)} halaman pertama...`;
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
 
       for (let i = 0; i < Math.min(images.length, 10); i++) {
         try {
@@ -200,7 +200,7 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       txt += `Halaman ${page} | Next: \`${m.prefix}comicsanka terbaru ${page + 1}\``;
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === POPULER ===
@@ -219,7 +219,7 @@ async function handler(m, { sock, args }) {
         if (slug) txt += `   \`${m.prefix}comicsanka detail ${slug}\`\n`;
         txt += `\n`;
       }
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === TRENDING ===
@@ -237,7 +237,7 @@ async function handler(m, { sock, args }) {
         if (slug) txt += `   \`${m.prefix}comicsanka detail ${slug}\`\n`;
         txt += `\n`;
       }
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === RANDOM ===
@@ -265,7 +265,7 @@ async function handler(m, { sock, args }) {
           }
         } catch (e) { console.error('[comicsanka.js]:', e.message); }
       }
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === RECOMMENDATIONS ===
@@ -284,7 +284,7 @@ async function handler(m, { sock, args }) {
         if (slug) txt += `   \`${m.prefix}comicsanka detail ${slug}\`\n`;
         txt += `\n`;
       }
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === HOMEPAGE ===
@@ -321,7 +321,7 @@ async function handler(m, { sock, args }) {
         }
       }
 
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === GENRES (list) ===
@@ -341,13 +341,13 @@ async function handler(m, { sock, args }) {
         if (slug) txt += `   \`${m.prefix}comicsanka genre ${slug}\`\n`;
       }
       if (genres.length > 30) txt += `\n...dan ${genres.length - 30} genre lainnya.`;
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === GENRE (by name) ===
     else if (cmd === "genre" || cmd === "g") {
       const genreSlug = cmdArgs[0];
-      if (!genreSlug) return m.reply(novaWrap("Comicsanka", "Masukkan nama genre!\n\n💡 *Contoh:* `.comicsanka genre action`"));
+      if (!genreSlug) return m.reply(raraWrap("Comicsanka", "Masukkan nama genre!\n\n💡 *Contoh:* `.comicsanka genre action`"));
 
       const res = await apiGet(`/comic/genre/${encodeURIComponent(genreSlug)}`);
       if (res.status !== 200 || !res.data?.status) throw new Error(res.data?.message || "API error");
@@ -362,7 +362,7 @@ async function handler(m, { sock, args }) {
         if (slug) txt += `   \`${m.prefix}comicsanka detail ${slug}\`\n`;
         txt += `\n`;
       }
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === TYPE (manga/manhwa/manhua) ===
@@ -387,7 +387,7 @@ async function handler(m, { sock, args }) {
         if (slug) txt += `   \`${m.prefix}comicsanka detail ${slug}\`\n`;
         txt += `\n`;
       }
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === BERWARNA ===
@@ -408,7 +408,7 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       txt += `Halaman ${page} | Next: \`${m.prefix}comicsanka berwarna ${page + 1}\``;
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     // === PUSTAKA ===
@@ -431,7 +431,7 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       txt += `Halaman ${page} | Next: \`${m.prefix}comicsanka pustaka ${page + 1}\``;
-      await m.reply(novaWrap("comicsanka", txt));
+      await m.reply(raraWrap("comicsanka", txt));
     }
 
     else {
@@ -443,7 +443,7 @@ async function handler(m, { sock, args }) {
     console.error("[COMICSANKA] Error:", e.message);
     let txt = `Gagal memproses!\n\n`;
     txt += `Error: ${e.message}`;
-    await m.reply(novaWrap("comicsanka", txt));
+    await m.reply(raraWrap("comicsanka", txt));
   }
 }
 

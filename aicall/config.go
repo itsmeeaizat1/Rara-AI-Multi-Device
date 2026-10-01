@@ -27,7 +27,7 @@ type Config struct {
 	PromptLang    string
 	TTSEngine     string // "geminitts", "edgetts", "elevenlabs", "openai", "animetts", "google"
 	TTSCharacter  string
-	TTSVoice      string // Voice for Gemini TTS ("Puck", "Kore", "Aoede"), Edge TTS ("ms-MY-YasminNeural"), OpenAI ("nova")
+	TTSVoice      string // Voice for Gemini TTS ("Puck", "Kore", "Aoede"), Edge TTS ("ms-MY-YasminNeural"), OpenAI ("rara")
 	ElevenVoiceID string // ElevenLabs Voice ID
 	TTSLang       string
 	TTSSpeed      float64
@@ -159,7 +159,7 @@ func LoadConfig() *Config {
 		} else if ttsEngine == "geminitts" {
 			ttsVoice = "Puck"
 		} else {
-			ttsVoice = "nova"
+			ttsVoice = "rara"
 		}
 	}
 

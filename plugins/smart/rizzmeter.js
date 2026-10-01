@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "rizzmeter",
@@ -88,7 +88,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (cfg[mentioned].checkedToday) {
     const tier = RIZZ_TIERS.find(t => cfg[mentioned].score >= t.min && cfg[mentioned].score <= t.max);
-    await m.reply(novaWrap("Rizz Meter", [
+    await m.reply(raraWrap("Rizz Meter", [
       (isSelf ? "Kamu" : "@" + mentioned.split("@")[0]) + " udah dicek hari ini!",
       "Score: " + cfg[mentioned].score + "/100",
       "Tier: " + (tier?.emoji || "") + " " + (tier?.title || "?"),
@@ -124,7 +124,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   cfg[mentioned].tier = tier.title;
   saveConfig(db, gid, cfg);
 
-  await m.reply(novaWrap("Rizz Meter", [
+  await m.reply(raraWrap("Rizz Meter", [
     (isSelf ? "" : "@" + mentioned.split("@")[0] + " - "),
     "Score: " + score + "/100",
     "[" + bar + "]",

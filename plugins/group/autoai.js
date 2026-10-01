@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
 import axios from "axios";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 const execAsync = promisify(exec);
 
 const pluginConfig = {
@@ -16,8 +16,8 @@ const pluginConfig = {
   description:
     "Toggle auto AI response untuk grup dengan pilihan text atau voice",
   usage:
-    ".autoai on/off --novamode=<character|custom> --logic=<custom instruction> --type=<text|voice> --mode=<onlychat|assistant>",
-  example: ".autoai on --novamode=furina --type=voice --mode=onlychat",
+    ".autoai on/off --raramode=<character|custom> --logic=<custom instruction> --type=<text|voice> --mode=<onlychat|assistant>",
+  example: ".autoai on --raramode=furina --type=voice --mode=onlychat",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -53,9 +53,9 @@ const characters = {
     instruction:
       "Kamu adalah Waguri. Bicara singkat, agak dingin tapi sebenarnya peduli. Sedikit tsundere, to the point, seperti chat biasa. Jangan mengaku sebagai AI.",
   },
-  nova: {
-    name: "Nova",
-    instruction: config.autoaiPersonas?.Nova || "",
+  rara: {
+    name: "Rara",
+    instruction: config.autoaiPersonas?.Rara || "",
   },
 };
 async function convertToOggOpus(inputPath) {
@@ -79,11 +79,11 @@ async function handler(m, { sock }) {
   const fullArgs = m.fullArgs || "";
 
   if (!m.isGroup) {
-    return m.reply(novaError("AutoAI", "Fitur ini khusus untuk grup ya!"));
+    return m.reply(raraError("AutoAI", "Fitur ini khusus untuk grup ya!"));
   }
 
   if (!m.isAdmin && !m.isOwner) {
-    return m.reply(novaError("AutoAI", "Hanya admin grup yang bisa menggunakan fitur ini!"));
+    return m.reply(raraError("AutoAI", "Hanya admin grup yang bisa menggunakan fitur ini!"));
   }
 
   if (!db.db.data.autoai) db.db.data.autoai = {};
@@ -94,20 +94,20 @@ async function handler(m, { sock }) {
 
   if (subcmd === "tambahpersona") {
     if (!m.isOwner)
-      return m.reply(novaError("AutoAI", "Hanya owner yang bisa menambah persona!"));
+      return m.reply(raraError("AutoAI", "Hanya owner yang bisa menambah persona!"));
     const personaArgs = fullArgs
       .replace(/^tambahpersona\s*/i, "")
       .split("|")
       .map((s) => s.trim());
     if (personaArgs.length < 2 || !personaArgs[0] || !personaArgs[1])
       return m.reply(
-        novaNoInput("AutoAI Persona", "Format tambah persona salah!", `${m.prefix || "."}autoai tambahpersona nexa | kamu adalah nexa ai, ...`)
+        raraNoInput("AutoAI Persona", "Format tambah persona salah!", `${m.prefix || "."}autoai tambahpersona nexa | kamu adalah nexa ai, ...`)
       );
     const pName = personaArgs[0].toLowerCase().replace(/\s+/g, "_");
     const pInstruction = personaArgs.slice(1).join("|").trim();
     if (characters[pName])
       return m.reply(
-        novaError("AutoAI Persona", `Nama persona "${pName}" sudah dipakai persona bawaan! Pilih nama lain.`)
+        raraError("AutoAI Persona", `Nama persona "${pName}" sudah dipakai persona bawaan! Pilih nama lain.`)
       );
     db.db.data.autoai_personas[pName] = {
       name: personaArgs[0],
@@ -117,34 +117,34 @@ async function handler(m, { sock }) {
     };
     db.save();
     return m.reply(
-      `✅ *persona ditambahkan*\n\nNama: ${personaArgs[0]}\nKey: ${pName}\nLogic: ${pInstruction.substring(0, 80)}${pInstruction.length > 80 ? "..." : ""}\n\nGunakan: .autoai on --novamode=${pName}`,
+      `✅ *persona ditambahkan*\n\nNama: ${personaArgs[0]}\nKey: ${pName}\nLogic: ${pInstruction.substring(0, 80)}${pInstruction.length > 80 ? "..." : ""}\n\nGunakan: .autoai on --raramode=${pName}`,
     );
   }
 
   if (subcmd === "hapuspersona") {
     if (!m.isOwner)
-      return m.reply(novaError("AutoAI", "Hanya owner yang bisa menghapus persona!"));
+      return m.reply(raraError("AutoAI", "Hanya owner yang bisa menghapus persona!"));
     const pKey = (args[1] || "").toLowerCase().trim();
     if (!pKey)
       return m.reply(
-        novaNoInput("AutoAI Persona", "Masukkan nama persona yang mau dihapus", `${m.prefix || "."}autoai hapuspersona nexa`)
+        raraNoInput("AutoAI Persona", "Masukkan nama persona yang mau dihapus", `${m.prefix || "."}autoai hapuspersona nexa`)
       );
     if (!db.db.data.autoai_personas[pKey])
       return m.reply(
-        novaEmpty("AutoAI Persona", `Persona "${pKey}" tidak ditemukan! Ketik .autoai listpersona untuk melihat daftar`)
+        raraEmpty("AutoAI Persona", `Persona "${pKey}" tidak ditemukan! Ketik .autoai listpersona untuk melihat daftar`)
       );
     delete db.db.data.autoai_personas[pKey];
     db.save();
-    return m.reply(novaWrap("Autoai", `Persona "${pKey}" berhasil dihapus`, "success"));
+    return m.reply(raraWrap("Autoai", `Persona "${pKey}" berhasil dihapus`, "success"));
   }
 
   if (subcmd === "enablecommand" || subcmd === "enablecmd") {
     if (!m.isAdmin && !m.isOwner)
-      return m.reply(novaError("AutoAI", "Hanya admin yang bisa mengatur ini!"));
+      return m.reply(raraError("AutoAI", "Hanya admin yang bisa mengatur ini!"));
     const cfg = db.db.data.autoai[m.chat];
-    if (!cfg?.enabled) return m.reply(novaError("AutoAI", "AutoAI belum aktif di grup ini!"));
+    if (!cfg?.enabled) return m.reply(raraError("AutoAI", "AutoAI belum aktif di grup ini!"));
     if (cfg.enableCommands)
-      return m.reply(novaGuide("AutoAI Command", "Command sudah di-enable sebelumnya. User tetap bisa pakai command walau AutoAI aktif."));
+      return m.reply(raraGuide("AutoAI Command", "Command sudah di-enable sebelumnya. User tetap bisa pakai command walau AutoAI aktif."));
     cfg.enableCommands = true;
     db.save();
     return m.reply(
@@ -154,11 +154,11 @@ async function handler(m, { sock }) {
 
   if (subcmd === "disablecommand" || subcmd === "disablecmd") {
     if (!m.isAdmin && !m.isOwner)
-      return m.reply(novaError("AutoAI", "Hanya admin yang bisa mengatur ini!"));
+      return m.reply(raraError("AutoAI", "Hanya admin yang bisa mengatur ini!"));
     const cfg = db.db.data.autoai[m.chat];
-    if (!cfg?.enabled) return m.reply(novaError("AutoAI", "AutoAI belum aktif di grup ini!"));
+    if (!cfg?.enabled) return m.reply(raraError("AutoAI", "AutoAI belum aktif di grup ini!"));
     if (!cfg.enableCommands)
-      return m.reply(novaGuide("AutoAI Command", "Command sudah di-disable sebelumnya. Semua command (kecuali owner) diblokir saat AutoAI aktif."));
+      return m.reply(raraGuide("AutoAI Command", "Command sudah di-disable sebelumnya. Semua command (kecuali owner) diblokir saat AutoAI aktif."));
     cfg.enableCommands = false;
     db.save();
     return m.reply(
@@ -183,26 +183,26 @@ async function handler(m, { sock }) {
     txt += `*bawaan:*\n${builtIn}\n\n`;
     txt += `*custom:*\n${custom}\n\n`;
     txt += `*global:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
-    txt += `.autoai on --novamode=<key>\n`;
+    txt += `.autoai on --raramode=<key>\n`;
     txt += `.autoai tambahpersona nama | logic\n`;
     txt += `.autoai hapuspersona nama\n`;
     txt += `.autoai global on/off`;
-    return await m.reply(novaWrap("autoai", txt));
+    return await m.reply(raraWrap("autoai", txt));
   }
 
   if (subcmd === "global") {
-    if (!m.isOwner) return m.reply(novaError("AutoAI Global", "Hanya owner yang bisa toggle global!"));
+    if (!m.isOwner) return m.reply(raraError("AutoAI Global", "Hanya owner yang bisa toggle global!"));
     const globalMode = (args[1] || "").toLowerCase();
     if (!["on", "off"].includes(globalMode))
       return m.reply(
-        novaNoInput("AutoAI Global", `Gunakan 'on' atau 'off'. Status global saat ini: ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}`, `${m.prefix || "."}autoai global on`)
+        raraNoInput("AutoAI Global", `Gunakan 'on' atau 'off'. Status global saat ini: ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}`, `${m.prefix || "."}autoai global on`)
       );
     if (globalMode === "on") {
-      const modeMatch = fullArgs.match(/--novamode=(\w+)/i);
+      const modeMatch = fullArgs.match(/--raramode=(\w+)/i);
       const typeMatch = fullArgs.match(/--type=(text|voice)/i);
       const aimodeMatch = fullArgs.match(/--mode=(onlychat|assistant)/i);
       const logicMatch = fullArgs.match(
-        /--logic=(.+?)(?=\s+--(?:novamode|type|logic|mode)|$)/i,
+        /--logic=(.+?)(?=\s+--(?:raramode|type|logic|mode)|$)/i,
       );
       const charKey = modeMatch ? modeMatch[1].toLowerCase() : null;
       const responseType = typeMatch ? typeMatch[1].toLowerCase() : "text";
@@ -233,7 +233,7 @@ async function handler(m, { sock }) {
           characterName = existingGlobal.characterName || "Global";
         } else {
           return m.reply(
-            novaError("AutoAI Global", "Belum ada persona global yang diset! Ketik: .autoai global on --novamode=furina")
+            raraError("AutoAI Global", "Belum ada persona global yang diset! Ketik: .autoai global on --raramode=furina")
           );
         }
       } else {
@@ -242,7 +242,7 @@ async function handler(m, { sock }) {
           ...Object.keys(db.db.data.autoai_personas),
           "custom",
         ].join(", ");
-        return m.reply(novaError("AutoAI Global", `Karakter tidak valid! Tersedia: ${charList}`));
+        return m.reply(raraError("AutoAI Global", `Karakter tidak valid! Tersedia: ${charList}`));
       }
 
       db.db.data.autoai_global = {
@@ -287,16 +287,16 @@ async function handler(m, { sock }) {
   🧠 Logic: ${ins || "(kosong)"}${(x.instruction || "").length > 100 ? "..." : ""}`;
     };
     let txt = fmt(cfg, "GRUP INI") + "\n\n" + fmt(g, "GLOBAL");
-    txt += `\n\n💡 Kalau AI-nya jawab gaya aneh (misal kayak anime), cek Persona/Logic di atas — itu yang dipakai bot. Ganti: .autoai on --novamode=custom --logic=kamu adalah ...`;
-    return m.reply(novaWrap("Autoai Status", txt));
+    txt += `\n\n💡 Kalau AI-nya jawab gaya aneh (misal kayak anime), cek Persona/Logic di atas — itu yang dipakai bot. Ganti: .autoai on --raramode=custom --logic=kamu adalah ...`;
+    return m.reply(raraWrap("Autoai Status", txt));
   }
 
   const mode = subcmd;
-  const modeMatch = fullArgs.match(/--novamode=(\w+)/i);
+  const modeMatch = fullArgs.match(/--raramode=(\w+)/i);
   const typeMatch = fullArgs.match(/--type=(text|voice)/i);
   const aimodeMatch = fullArgs.match(/--mode=(onlychat|assistant)/i);
   const logicMatch = fullArgs.match(
-    /--logic=(.+?)(?=\s+--(?:novamode|type|logic|mode)|$)/i,
+    /--logic=(.+?)(?=\s+--(?:raramode|type|logic|mode)|$)/i,
   );
   const charKey = modeMatch ? modeMatch[1].toLowerCase() : null;
   const responseType = typeMatch ? typeMatch[1].toLowerCase() : "text";
@@ -304,10 +304,10 @@ async function handler(m, { sock }) {
   const customLogic = logicMatch ? logicMatch[1].trim() : null;
 
   if (!mode || !["on", "off"].includes(mode)) {
-    return await m.reply(novaGuide(
+    return await m.reply(raraGuide(
       "AutoAI Usage",
       "Mengaktifkan/menonaktifkan auto AI response grup",
-      `${m.prefix || "."}autoai on --novamode=furina --type=voice\n${m.prefix || "."}autoai off\n${m.prefix || "."}autoai listpersona`
+      `${m.prefix || "."}autoai on --raramode=furina --type=voice\n${m.prefix || "."}autoai off\n${m.prefix || "."}autoai listpersona`
     ));
   }
 
@@ -329,14 +329,14 @@ async function handler(m, { sock }) {
       "custom",
     ].join(", ");
     return m.reply(
-      novaError("AutoAI", `Karakter tidak valid! Karakter tersedia: ${charList}`)
+      raraError("AutoAI", `Karakter tidak valid! Karakter tersedia: ${charList}`)
     );
   }
 
   if (charKey === "custom") {
     if (!customLogic) {
       return m.reply(
-        novaNoInput("AutoAI Custom", "Mode custom membutuhkan --logic!", `${m.prefix || "."}autoai on --novamode=custom --logic=kamu adalah nexa ai`)
+        raraNoInput("AutoAI Custom", "Mode custom membutuhkan --logic!", `${m.prefix || "."}autoai on --raramode=custom --logic=kamu adalah nexa ai`)
       );
     }
     db.db.data.autoai[m.chat] = {
@@ -363,7 +363,7 @@ async function handler(m, { sock }) {
     txt +=
       responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
     txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
-    return m.reply(novaWrap("Auto AI", txt), { mentions: [m.sender] });
+    return m.reply(raraWrap("Auto AI", txt), { mentions: [m.sender] });
   }
 
   const customPersona = db.db.data.autoai_personas[charKey];
@@ -391,7 +391,7 @@ async function handler(m, { sock }) {
     txt +=
       responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
     txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
-    return m.reply(novaWrap("Auto AI", txt), { mentions: [m.sender] });
+    return m.reply(raraWrap("Auto AI", txt), { mentions: [m.sender] });
   }
 
   if (!characters[charKey]) {
@@ -401,7 +401,7 @@ async function handler(m, { sock }) {
       "custom",
     ].join(", ");
     return m.reply(
-      novaError("AutoAI", `Karakter tidak valid! Karakter tersedia: ${charList}`)
+      raraError("AutoAI", `Karakter tidak valid! Karakter tersedia: ${charList}`)
     );
   }
 
@@ -430,7 +430,7 @@ async function handler(m, { sock }) {
     responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
   txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
 
-  await m.reply(novaWrap("Auto AI", txt), { mentions: [m.sender] });
+  await m.reply(raraWrap("Auto AI", txt), { mentions: [m.sender] });
 }
 
 async function generateVoiceResponse(text, sock, chatId, quotedMsg) {

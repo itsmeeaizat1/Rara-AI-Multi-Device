@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
-import { runLiveTicker } from "../../src/lib/nova-countdown.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { persistLoad, persistSave } from "../../src/lib/rara-ram-persist.js";
+import { runLiveTicker } from "../../src/lib/rara-countdown.js";
 const pluginConfig = {
   name: "mulaiabsen",
   alias: ["mulaiabsen"],
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const chatId = m.chat;
 
   if (global.absensi[chatId]) {
-    return m.reply(novaWrap("Masih Ada Absen", 
+    return m.reply(raraWrap("Masih Ada Absen", 
         `Masih ada sesi absen di grup ini!\n\n` +
         `Ketik *.hapusabsen* untuk menghapus\n` +
         `atau *.cekabsen* untuk melihat daftar`));
@@ -44,13 +44,13 @@ async function handler(m, { sock }) {
   persistSave("absensi");
 
   const saluranId = config.saluran?.id || "@newsletter";
-  const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+  const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
   // 🔹 LIVE COUNT-UP (13 Sep, pola AFK): kartu sesi nunjukin
   // 🕒 sesi berjalan yang nge-tick tiap detik ±12 dtk lalu settle —
   // biar admin langsung keliatan sesinya hidup + lama sesi berjalan.
   const startedTs = Date.now();
-  const mulaiCard = (ms) => novaWrap("ABSEN UDAH JALAN NIHH",
+  const mulaiCard = (ms) => raraWrap("ABSEN UDAH JALAN NIHH",
       `「 📋 *InғO* 」\n` +
       `📝 ${keterangan}\n` +
       `👑 Dibuat oleh: @${m.sender.split("@")[0]}\n` +

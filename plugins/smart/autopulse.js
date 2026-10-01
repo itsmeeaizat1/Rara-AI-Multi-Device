@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { CronJob } from "cron";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { resolveNewsletterJid } from "../../src/lib/nova-saluran.js";
-import { sendSaluranSafe } from "../../src/lib/nova-saluran-safe.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { resolveNewsletterJid } from "../../src/lib/rara-saluran.js";
+import { sendSaluranSafe } from "../../src/lib/rara-saluran-safe.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -216,7 +216,7 @@ async function generateAndPostReport(db, groupId, sock) {
   else if (avgPerDay > 10) healthScore = "Sepi";
 
   report += `\nSKOR KESEHATAN: ${healthScore}\n`;
-  report += `Dilaporkan oleh Nova AI`;
+  report += `Dilaporkan oleh Rara AI`;
 
   // Save to history
   data.history = data.history || [];
@@ -243,7 +243,7 @@ async function generateAndPostReport(db, groupId, sock) {
   savePulseData(db, groupId, data);
 
   // Post to saluran
-  const wrappedReport = novaWrap("AutoPulse Report", report);
+  const wrappedReport = raraWrap("AutoPulse Report", report);
   let saluranId = "";
   try { saluranId = await resolveNewsletterJid(sock) } catch {}
   if (saluranId && /^\d+@newsletter$/.test(saluranId)) {
@@ -382,7 +382,7 @@ async function handler(m, { sock, db }) {
       "Track pesan manual (untuk test):",
       `  ${prefix}autopulse track`,
     ].join("\n");
-    await m.reply(novaWrap("AutoPulse", helpText));
+    await m.reply(raraWrap("AutoPulse", helpText));
     return { handled: true };
   }
 
@@ -396,7 +396,7 @@ async function handler(m, { sock, db }) {
     const cronExpr = data.cron || "0 8 * * 0";
     if (sock) startJob(db, groupId, cronExpr, sock);
 
-    await m.reply(novaWrap("AutoPulse",
+    await m.reply(raraWrap("AutoPulse",
       `Monitor aktif!\n\nJadwal auto-report: ${cronExpr}\n(Setiap Minggu jam 08:00 WIB)\n\nBot akan track aktivitas grup dan kirim laporan otomatis ke saluran.`,
       "success"));
     return { handled: true };
@@ -406,14 +406,14 @@ async function handler(m, { sock, db }) {
   if (subCmd === "off" || subCmd === "mati" || subCmd === "disable") {
     const data = getPulseData(db, groupId);
     if (!data) {
-      await m.reply(novaWrap("AutoPulse", "Monitor belum aktif.", "warn"));
+      await m.reply(raraWrap("AutoPulse", "Monitor belum aktif.", "warn"));
       return { handled: true };
     }
     data.enabled = false;
     savePulseData(db, groupId, data);
     stopJob(groupId);
 
-    await m.reply(novaWrap("AutoPulse", "Monitor dimatikan. Data tersimpan.", "warn"));
+    await m.reply(raraWrap("AutoPulse", "Monitor dimatikan. Data tersimpan.", "warn"));
     return { handled: true };
   }
 
@@ -429,7 +429,7 @@ async function handler(m, { sock, db }) {
     const mentions = topUsers.map(([u]) => `${u}@s.whatsapp.net`);
 
     await sock.sendMessage(m.chat, {
-      text: novaWrap("AutoPulse Report", reportText),
+      text: raraWrap("AutoPulse Report", reportText),
       mentions,
     }, { quoted: m });
     return { handled: true };
@@ -439,7 +439,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "setcron" || subCmd === "setjadwal" || subCmd === "jadwal") {
     const cronExpr = args.slice(2).join(" ").trim();
     if (!cronExpr) {
-      await m.reply(novaWrap("AutoPulse",
+      await m.reply(raraWrap("AutoPulse",
         `Format: ${prefix}autopulse setcron <cron>\n💡 *Contoh:* ${prefix}autopulse setcron 0 8 * * 0\n\nFormat cron: menit jam * * hari\n0=Min 1=Sen 2=Sel 3=Rab 4=Kam 5=Jum 6=Sab`,
         "warn"));
       return { handled: true };
@@ -448,7 +448,7 @@ async function handler(m, { sock, db }) {
     // Validate cron format (basic)
     const parts = cronExpr.split(/\s+/);
     if (parts.length < 5 || parts.length > 6) {
-      await m.reply(novaError("AutoPulse", "Format cron gak valid nih! Harus 5-6 field"));
+      await m.reply(raraError("AutoPulse", "Format cron gak valid nih! Harus 5-6 field"));
       return { handled: true };
     }
 
@@ -461,7 +461,7 @@ async function handler(m, { sock, db }) {
       startJob(db, groupId, cronExpr, sock);
     }
 
-    await m.reply(novaWrap("AutoPulse",
+    await m.reply(raraWrap("AutoPulse",
       `Jadwal auto-report diupdate!\nCron: ${cronExpr}\n${data.enabled ? "Monitor aktif, jadwal berlaku." : "Aktifkan dengan .autopulse on"}`,
       "success"));
     return { handled: true };
@@ -471,7 +471,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "status" || subCmd === "info") {
     const data = getPulseData(db, groupId);
     if (!data) {
-      await m.reply(novaWrap("AutoPulse", "Belum di-setup. Ketik .autopulse on untuk mulai.", "warn"));
+      await m.reply(raraWrap("AutoPulse", "Belum di-setup. Ketik .autopulse on untuk mulai.", "warn"));
       return { handled: true };
     }
 
@@ -490,7 +490,7 @@ async function handler(m, { sock, db }) {
       `Cron job running: ${activeJobs.has(groupId) ? "YA" : "TIDAK"}`,
     ].join("\n");
 
-    await m.reply(novaWrap("AutoPulse Status", statusText));
+    await m.reply(raraWrap("AutoPulse Status", statusText));
     return { handled: true };
   }
 
@@ -498,7 +498,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "reset" || subCmd === "clear") {
     const data = getPulseData(db, groupId);
     if (!data) {
-      await m.reply(novaWrap("AutoPulse", "Belum ada data untuk direset.", "warn"));
+      await m.reply(raraWrap("AutoPulse", "Belum ada data untuk direset.", "warn"));
       return { handled: true };
     }
 
@@ -513,7 +513,7 @@ async function handler(m, { sock, db }) {
     };
     savePulseData(db, groupId, data);
 
-    await m.reply(novaWrap("AutoPulse", "Statistik direset. Tracking dimulai dari nol.", "success"));
+    await m.reply(raraWrap("AutoPulse", "Statistik direset. Tracking dimulai dari nol.", "success"));
     return { handled: true };
   }
 
@@ -521,7 +521,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "history" || subCmd === "riwayat") {
     const data = getPulseData(db, groupId);
     if (!data || !data.history || data.history.length === 0) {
-      await m.reply(novaWrap("AutoPulse", "Belum ada history laporan.", "warn"));
+      await m.reply(raraWrap("AutoPulse", "Belum ada history laporan.", "warn"));
       return { handled: true };
     }
 
@@ -537,7 +537,7 @@ async function handler(m, { sock, db }) {
       histText += `${i + 1}. ${date}\n   ${h.totalMessages} pesan | ${h.activeUsers} aktif | ${h.healthScore}\n`;
     });
 
-    await m.reply(novaWrap("AutoPulse History", histText.trim()));
+    await m.reply(raraWrap("AutoPulse History", histText.trim()));
     return { handled: true };
   }
 
@@ -545,21 +545,21 @@ async function handler(m, { sock, db }) {
   if (subCmd === "track" || subCmd === "catat") {
     const data = ensureTracker(db, groupId);
     if (!data.enabled) {
-      await m.reply(novaWrap("AutoPulse", "Monitor belum aktif. Ketik .autopulse on dulu.", "warn"));
+      await m.reply(raraWrap("AutoPulse", "Monitor belum aktif. Ketik .autopulse on dulu.", "warn"));
       return { handled: true };
     }
 
     // Track this message as a test
     trackMessage(db, groupId, m.sender, Date.now());
 
-    await m.reply(novaWrap("AutoPulse",
+    await m.reply(raraWrap("AutoPulse",
       `Pesan ini di-track!\nTotal tracked: ${data.stats.totalMessages + 1}`,
       "success"));
     return { handled: true };
   }
 
   // Unknown command
-  await m.reply(novaWrap("AutoPulse",
+  await m.reply(raraWrap("AutoPulse",
     `Perintah tidak dikenal.\nKetik ${prefix}autopulse help untuk bantuan.`,
     "warn"));
   return { handled: true };

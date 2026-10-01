@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { fetchGroupsSafe } from "../../src/lib/nova-jpm-helper.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { fetchGroupsSafe } from "../../src/lib/rara-jpm-helper.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, broadcastFormat, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, broadcastFormat, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "bcgc",
@@ -56,10 +56,10 @@ async function handler(m, { sock }) {
 
   if (command === "stopbcgc" || command === "stopbroadcastgc") {
     if (!global.statusBcgc) {
-      return m.reply(novaBox("Broadcast Grup", ["Tidak ada broadcast yang sedang berjalan"]));
+      return m.reply(raraBox("Broadcast Grup", ["Tidak ada broadcast yang sedang berjalan"]));
     }
     global.stopBcgc = true;
-    return m.reply(novaWrap("bcgc", "Sedang dihentikan..."));
+    return m.reply(raraWrap("bcgc", "Sedang dihentikan..."));
   }
 
   if (
@@ -72,12 +72,12 @@ async function handler(m, { sock }) {
 
   if (input.toLowerCase() === "on") {
     db.setting("bcgcEnabled", true);
-    return m.reply(novaBox("Broadcast Grup", ["✅ Berhasil diaktifkan", "Sekarang bisa broadcast ke semua grup"]));
+    return m.reply(raraBox("Broadcast Grup", ["✅ Berhasil diaktifkan", "Sekarang bisa broadcast ke semua grup"]));
   }
 
   if (input.toLowerCase() === "off") {
     db.setting("bcgcEnabled", false);
-    return m.reply(novaWrap("bcgc", "Berhasil dinonaktifkan"));
+    return m.reply(raraWrap("bcgc", "Berhasil dinonaktifkan"));
   }
 
   if (!input && !m.quoted) {
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     const groupCount = Object.keys(groups).length;
     const blacklist = db.setting("jpmBlacklist") || [];
     return m.reply(
-      novaWrap("bcgc", [
+      raraWrap("bcgc", [
         "Broadcast pesan + media ke semua grup",
         "",
         "Target: " + groupCount + " grup" + (blacklist.length ? " (" + blacklist.length + " blacklist)" : ""),
@@ -106,12 +106,12 @@ async function handler(m, { sock }) {
   }
 
   if (global.statusBcgc) {
-    return m.reply(novaWrap("bcgc", "Sedang berjalan.\nKetik *" + m.prefix + "stopbcgc* untuk hentikan"));
+    return m.reply(raraWrap("bcgc", "Sedang berjalan.\nKetik *" + m.prefix + "stopbcgc* untuk hentikan"));
   }
 
   const enabled = db.setting("bcgcEnabled");
   if (!enabled) {
-    return m.reply(novaWrap("bcgc", "Belum aktif.\nKetik *" + m.prefix + "bcgc on* untuk mengaktifkan"));
+    return m.reply(raraWrap("bcgc", "Belum aktif.\nKetik *" + m.prefix + "bcgc on* untuk mengaktifkan"));
   }
 
   try {
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
 
     if (!text && !mediaBuffer) {
       return m.reply(
-        novaWrap("bcgc", [
+        raraWrap("bcgc", [
           "Tidak ada konten terdeteksi",
           "",
           `📌 Format: kirim teks/foto/video/audio, lalu reply dengan ${m.prefix}bcgc`,
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
 
     if (groupIds.length === 0) {
       return m.reply(
-        novaWrap("bcgc", "Tidak ada grup yang bisa dituju" + (blCount > 0 ? " (" + blCount + " grup di-blacklist)" : ""), "error")
+        raraWrap("bcgc", "Tidak ada grup yang bisa dituju" + (blCount > 0 ? " (" + blCount + " grup di-blacklist)" : ""), "error")
       );
     }
 
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
     // Status report ke owner
     await m.react("🕒");
     await m.reply(
-      novaWrap("bcgc", [
+      raraWrap("bcgc", [
         "Broadcast Grup Dimulai",
         "",
         "Pesan: " + text.substring(0, 50) + (text.length > 50 ? "..." : ""),
@@ -186,7 +186,7 @@ async function handler(m, { sock }) {
     let failed = 0;
 
     // Format pesan dengan header info untuk penerima
-    const botName = config.bot?.name || "Nova AI";
+    const botName = config.bot?.name || "Rara AI";
     const senderName = m.pushName || "Owner";
     const broadcastText = broadcastFormat({
       botName,
@@ -201,7 +201,7 @@ async function handler(m, { sock }) {
         delete global.statusBcgc;
         await m.react("❌");
         await m.reply(
-          novaWrap("bcgc", [
+          raraWrap("bcgc", [
             "Broadcast Grup Dihentikan",
             "",
             `Berhasil: ${success}`,
@@ -256,7 +256,7 @@ async function handler(m, { sock }) {
     delete global.statusBcgc;
     await m.react("🐣");
     await m.reply(
-      novaWrap("bcgc", [
+      raraWrap("bcgc", [
         "Broadcast Grup Selesai",
         "",
         `Berhasil: ${success}`,
@@ -269,7 +269,7 @@ async function handler(m, { sock }) {
     delete global.statusBcgc;
     await m.react("❌");
     m.reply(
-      novaWrap("bcgc", "Terjadi kesalahan saat broadcast\n" + te(m.prefix, m.command, m.pushName), "error")
+      raraWrap("bcgc", "Terjadi kesalahan saat broadcast\n" + te(m.prefix, m.command, m.pushName), "error")
     );
   }
 }
@@ -296,7 +296,7 @@ async function handleSetDelay(m, db, input) {
 
   const ms = parseDelay(input);
   if (!ms || ms < 1000) {
-    return m.reply(novaWrap("bcgc", "Format salah.\n💡 Contoh: 5s, 2m, 1h, 1d"));
+    return m.reply(raraWrap("bcgc", "Format salah.\n💡 Contoh: 5s, 2m, 1h, 1d"));
   }
 
   db.setting("jedaBcgc", ms);

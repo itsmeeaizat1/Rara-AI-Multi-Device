@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { bratVid } from "brat-canvas/video";
 import fs from "fs";
 import path from "path";
 import os from "os";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: "bratvid2",
@@ -42,11 +42,11 @@ async function handler(m, { sock }) {
         });
         await fs.promises.unlink(tempFile).catch(() => {});
         await m.react("🐣");
-        await m.reply(novaBerhasil("bratvid2"));
+        await m.reply(raraBerhasil("bratvid2"));
     } catch (error) {
         await fs.promises.unlink(tempFile).catch(() => {});
         console.error("[bratvid2] Error:", error.message);
-        m.reply(novaGangguan("bratvid2"));
+        m.reply(raraGangguan("bratvid2"));
     }
 }
 

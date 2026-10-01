@@ -7,14 +7,14 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { buildPremTickerCard } = await import(R + "/src/lib/nova-prem-card.js");
-const { runLiveTicker } = await import(R + "/src/lib/nova-countdown.js");
+const { buildPremTickerCard } = await import(R + "/src/lib/rara-prem-card.js");
+const { runLiveTicker } = await import(R + "/src/lib/rara-countdown.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s)).toLowerCase();
 
-const DB_DIR = "/tmp/nova-prem-db-" + Date.now();
+const DB_DIR = "/tmp/rara-prem-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const { handler } = await import(R + "/plugins/sewa-premium/premium.js");
@@ -61,7 +61,7 @@ const makeMock = (replies, sends) => ({
 });
 {
   // skenario 1: premium sisa 23 jam → ticker live harus KEFIRE
-  const database = (await import(R + "/src/lib/nova-database.js")).getDatabase();
+  const database = (await import(R + "/src/lib/rara-database.js")).getDatabase();
   database.data.premium = [{ id: "628123456789", name: "Budi", expired: Date.now() + 23 * 3600000 }];
   const replies = [], sends = [];
   const m = makeMock(replies, sends);
@@ -75,7 +75,7 @@ const makeMock = (replies, sends) => ({
 }
 {
   // skenario 2: premium sisa 5 hari → GAK ada ticker
-  const database = (await import(R + "/src/lib/nova-database.js")).getDatabase();
+  const database = (await import(R + "/src/lib/rara-database.js")).getDatabase();
   database.data.premium = [{ id: "628123456789", name: "Budi", expired: Date.now() + 5 * 86400000 }];
   const replies = [], sends = [];
   const m = makeMock(replies, sends);
@@ -85,7 +85,7 @@ const makeMock = (replies, sends) => ({
 }
 {
   // skenario 3: free user (gak ada di db) → kartu Free User, gak ticker
-  const database = (await import(R + "/src/lib/nova-database.js")).getDatabase();
+  const database = (await import(R + "/src/lib/rara-database.js")).getDatabase();
   database.data.premium = [];
   const replies = [], sends = [];
   const m = makeMock(replies, sends);

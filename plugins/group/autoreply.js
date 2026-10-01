@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import config from '../../config.js'
 import fs from 'fs'
 import path from 'path'
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "autoreply",
     alias: ["autoreply"],
@@ -38,19 +38,19 @@ async function handler(m, { sock }) {
     
     if (action === 'private') {
         if (!m.isOwner) {
-            return m.reply(novaError("Autoreply", "Fitur autoreply private cuma bisa diatur oleh Owner bot ya!"))
+            return m.reply(raraError("Autoreply", "Fitur autoreply private cuma bisa diatur oleh Owner bot ya!"))
         }
         
         const subAction = args[1]?.toLowerCase()
         
         if (subAction === 'on') {
             db.setting('autoreplyPrivate', true)
-            return m.reply(novaWrap("Autoreply", `autoreply private diaktifkan\n\nBot akan merespon otomatis di private chat`, "success"))
+            return m.reply(raraWrap("Autoreply", `autoreply private diaktifkan\n\nBot akan merespon otomatis di private chat`, "success"))
         }
         
         if (subAction === 'off') {
             db.setting('autoreplyPrivate', false)
-            return m.reply(novaWrap("Autoreply", `autoreply private dinonaktifkan\n\nBot tidak akan merespon otomatis di private chat`, "error"))
+            return m.reply(raraWrap("Autoreply", `autoreply private dinonaktifkan\n\nBot tidak akan merespon otomatis di private chat`, "error"))
         }
         
         const currentStatus = db.setting('autoreplyPrivate') ?? false
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     
     if (action === 'global') {
         if (!m.isOwner) {
-            return m.reply(novaError("Autoreply", "Fitur global autoreply cuma bisa diatur oleh Owner bot ya!"))
+            return m.reply(raraError("Autoreply", "Fitur global autoreply cuma bisa diatur oleh Owner bot ya!"))
         }
         
         const subAction = args[1]?.toLowerCase()
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
             const fullBody = m.body || ''
             const pipeIdx = fullBody.indexOf('|')
             if (pipeIdx === -1) {
-                return m.reply(novaNoInput("Autoreply Global", `Format salah nih! Gunakan format: trigger|reply\nContoh: ${m.prefix}autoreply global add halo|Hai {name}!`))
+                return m.reply(raraNoInput("Autoreply Global", `Format salah nih! Gunakan format: trigger|reply\nContoh: ${m.prefix}autoreply global add halo|Hai {name}!`))
             }
             
             const triggerStart = fullBody.toLowerCase().indexOf('global add ') + 'global add '.length
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
             const reply = fullBody.substring(pipeIdx + 1)
             
             if (!trigger.trim() || !reply) {
-                return m.reply(novaError("Autoreply Global", "Trigger dan reply tidak boleh kosong ya!"))
+                return m.reply(raraError("Autoreply Global", "Trigger dan reply tidak boleh kosong ya!"))
             }
             
             const existingIndex = globalCustomReplies.findIndex(r => r.trigger.toLowerCase() === trigger.trim().toLowerCase())
@@ -107,19 +107,19 @@ async function handler(m, { sock }) {
         if (subAction === 'del' || subAction === 'rm') {
             const trigger = args.slice(2).join(' ').toLowerCase().trim()
             if (!trigger) {
-                return m.reply(novaNoInput("Autoreply Global", "Masukkan trigger yang mau dihapus ya!"))
+                return m.reply(raraNoInput("Autoreply Global", "Masukkan trigger yang mau dihapus ya!"))
             }
             
             const index = globalCustomReplies.findIndex(r => r.trigger === trigger)
             if (index === -1) {
-                return m.reply(novaEmpty("Autoreply Global", `Trigger "${trigger}" tidak ditemukan!`))
+                return m.reply(raraEmpty("Autoreply Global", `Trigger "${trigger}" tidak ditemukan!`))
             }
             
             globalCustomReplies.splice(index, 1)
             db.setting('globalCustomReplies', globalCustomReplies)
             await db.save()
             
-            return m.reply(novaWrap("Autoreply", `🗑️ global autoreply dihapus\n\nTrigger ${trigger} berhasil dihapus!`, "info"))
+            return m.reply(raraWrap("Autoreply", `🗑️ global autoreply dihapus\n\nTrigger ${trigger} berhasil dihapus!`, "info"))
         }
         
         if (subAction === 'list' || !subAction) {
@@ -164,7 +164,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
     }
     
     if (!m.isAdmin && !m.isOwner) {
-        return m.reply(novaError("Autoreply", "Hanya admin grup atau owner yang bisa mengatur autoreply di grup!"))
+        return m.reply(raraError("Autoreply", "Hanya admin grup atau owner yang bisa mengatur autoreply di grup!"))
     }
     
     const groupData = db.getGroup(m.chat) || {}
@@ -208,12 +208,12 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
     
     if (action === 'on') {
         db.setGroup(m.chat, { ...groupData, autoreply: true })
-        return m.reply(novaWrap("Autoreply", `autoreply diaktifkan\n\nBot akan merespon otomatis di grup ini`, "success"))
+        return m.reply(raraWrap("Autoreply", `autoreply diaktifkan\n\nBot akan merespon otomatis di grup ini`, "success"))
     }
     
     if (action === 'off') {
         db.setGroup(m.chat, { ...groupData, autoreply: false })
-        return m.reply(novaWrap("Autoreply", `autoreply dinonaktifkan\n\nBot tidak akan merespon otomatis di grup ini`, "error"))
+        return m.reply(raraWrap("Autoreply", `autoreply dinonaktifkan\n\nBot tidak akan merespon otomatis di grup ini`, "error"))
     }
     
     if (action === 'add') {
@@ -245,7 +245,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         const reply = fullBody.substring(pipeIdx + 1)
         
         if (!trigger) {
-            return m.reply(novaWrap("Autoreply", `gagal\n\nTrigger tidak boleh kosong!`, "error"))
+            return m.reply(raraWrap("Autoreply", `gagal\n\nTrigger tidak boleh kosong!`, "error"))
         }
         
         let imageBuffer = null
@@ -316,14 +316,14 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         const trigger = args.slice(1).join(' ').toLowerCase().trim()
         
         if (!trigger) {
-            return m.reply(novaNoInput("Autoreply", `Masukkan trigger yang mau dihapus ya!\nContoh: ${m.prefix}autoreply del halo`))
+            return m.reply(raraNoInput("Autoreply", `Masukkan trigger yang mau dihapus ya!\nContoh: ${m.prefix}autoreply del halo`))
         }
         
         const customReplies = groupData.customReplies || []
         const index = customReplies.findIndex(r => r.trigger === trigger)
         
         if (index === -1) {
-            return m.reply(novaEmpty("Autoreply Global", `Trigger "${trigger}" tidak ditemukan!`))
+            return m.reply(raraEmpty("Autoreply Global", `Trigger "${trigger}" tidak ditemukan!`))
         }
         
         if (customReplies[index].image) {
@@ -350,7 +350,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         const defaultTriggers = [
             { trigger: '@mention', reply: '👋 Hai! Ada yang manggil bot?' },
             { trigger: 'p', reply: '💬 Budayakan salam sebelum percakapan!' },
-            { trigger: 'bot / nova', reply: '🤖 Bot aktif dan siap!' },
+            { trigger: 'bot / rara', reply: '🤖 Bot aktif dan siap!' },
             { trigger: 'assalamualaikum', reply: 'Waalaikumsalam saudaraku' }
         ]
         
@@ -380,7 +380,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         
         text += `_Catatan: Default triggers bawaan bot tidak bisa di-edit._`
         
-        return await m.reply(novaWrap("autoreply", text))
+        return await m.reply(raraWrap("autoreply", text))
     }
     
     if (action === 'reset' || action === 'clear') {
@@ -394,10 +394,10 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         }
         
         db.setGroup(m.chat, { ...groupData, customReplies: [] })
-        return m.reply(novaWrap("Autoreply", `🗑️ autoreply direset\n\nSemua autoreply custom dihapus!`, "info"))
+        return m.reply(raraWrap("Autoreply", `🗑️ autoreply direset\n\nSemua autoreply custom dihapus!`, "info"))
     }
     
-    return m.reply(novaWrap("Auto reply", `Action Tidak Valid\n\nGunakan: \`on\`, \`off\`, \`private on/off\`, \`add\`, \`del\`, \`list\`, \`reset\``, "error"))
+    return m.reply(raraWrap("Auto reply", `Action Tidak Valid\n\nGunakan: \`on\`, \`off\`, \`private on/off\`, \`add\`, \`del\`, \`list\`, \`reset\``, "error"))
 }
 
 export { pluginConfig as config, handler }

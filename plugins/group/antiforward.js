@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "antiforward",
@@ -18,7 +18,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-import { novaWarning } from "../../src/lib/nova-group-protection.js";
+import { raraWarning } from "../../src/lib/rara-group-protection.js";
 
 export function checkForward(m, sock, db) {
   const groupId = m.key.remoteJid;
@@ -57,7 +57,7 @@ export function checkForward(m, sock, db) {
       }
 
       sock.sendMessage(groupId, {
-        text: novaWarning("ANTI FORWARD — PERINGATAN", [
+        text: raraWarning("ANTI FORWARD — PERINGATAN", [
           ["Pengirim", "@" + sender.split("@")[0]],
           ["Pelanggaran", "Mengirim pesan yang diteruskan " + forwardingScore + "x"],
           ["Peringatan", warnCount + " dari " + (cfg.maxWarn || 3)],
@@ -92,7 +92,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (scoreArg && scoreArg >= 1 && scoreArg <= 100) cfg.minScore = scoreArg;
       await db.save();
 
-      return m.reply(novaWrap("Anti Forward", [
+      return m.reply(raraWrap("Anti Forward", [
         "Anti Forward DIAKTIFKAN!",
         "",
         "Min forwarding score: " + cfg.minScore,
@@ -107,18 +107,18 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "off" || sub === "mati" || sub === "nonaktif") {
       cfg.enabled = false;
       await db.save();
-      return m.reply(novaWrap("Anti Forward", "Anti Forward DIMATIKAN.\nKetik .antiforward on untuk aktifkan lagi."));
+      return m.reply(raraWrap("Anti Forward", "Anti Forward DIMATIKAN.\nKetik .antiforward on untuk aktifkan lagi."));
     }
 
     // ACTION
     if (sub === "action" || sub === "aksi") {
       const action = (args[1] || "").toLowerCase();
       if (!["delete", "warn", "kick"].includes(action)) {
-        return m.reply(novaWrap("Anti Forward", "Pilih: delete, warn, atau kick\n💡 *Contoh:* .antiforward action warn"));
+        return m.reply(raraWrap("Anti Forward", "Pilih: delete, warn, atau kick\n💡 *Contoh:* .antiforward action warn"));
       }
       cfg.action = action;
       await db.save();
-      return m.reply(novaWrap("Anti Forward", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
+      return m.reply(raraWrap("Anti Forward", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
     }
 
     // STATUS
@@ -129,7 +129,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         warnList = warnedUsers.map(([jid, count]) => "@" + jid.split("@")[0] + " (" + count + "x)").join("\n");
       }
 
-      return m.reply(novaWrap("Anti Forward", [
+      return m.reply(raraWrap("Anti Forward", [
         "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Min forwarding score: " + cfg.minScore,
         "Action: " + (cfg.action || "delete").toUpperCase(),
@@ -146,11 +146,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "reset") {
       cfg.warns = {};
       await db.save();
-      return m.reply(novaWrap("Anti Forward", "Semua warning direset.", "success"));
+      return m.reply(raraWrap("Anti Forward", "Semua warning direset.", "success"));
     }
 
     // HELP
-    return m.reply( novaWrap("Anti Forward", [
+    return m.reply( raraWrap("Anti Forward", [
       "Blokir pesan forwarded (diteruskan) di grup",
       "",
       "Berguna untuk cegah penyebaran hoax/info yang udah diteruskan berkali-kali",
@@ -172,7 +172,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]), "antiforward");
   } catch (e) {
     console.error("[Anti Forward]", e);
-    m.reply(novaWrap("Anti Forward", "Error: " + e.message));
+    m.reply(raraWrap("Anti Forward", "Error: " + e.message));
   }
 }
 

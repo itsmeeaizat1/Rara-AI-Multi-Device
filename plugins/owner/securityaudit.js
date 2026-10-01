@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getBackupStatus } from "../../src/lib/nova-auto-backup.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getBackupStatus } from "../../src/lib/rara-auto-backup.js";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "securityaudit",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   const groupId = m.key.remoteJid;
 
   let lines = [
-    "Audit keamanan bot Nova AI",
+    "Audit keamanan bot Rara AI",
     "Tanggal: " + new Date().toLocaleString("id-ID"),
     "",
     "STATUS BOT:",
@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
     lines.push("Semua proteksi sudah aktif. Mantap!");
   }
 
-  return m.reply(novaWrap("Security Audit", lines));
+  return m.reply(raraWrap("Security Audit", lines));
 }
 
 export { pluginConfig as config, handler };

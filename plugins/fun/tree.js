@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "pohon",
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   if (!name) name = m.pushName || "kamu";
 
   if (!args && !m.quoted) {
-    const help = novaWrap("Pohon", [
+    const help = raraWrap("Pohon", [
       `Generator silsilah keluarga lucu`,
       ``,
       `📌 Format:`,
@@ -70,19 +70,19 @@ Aturan:
 - Bikin kreatif, lucu, absurd tapi tetap sopan
 - Maksimal 15 baris total`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result || result.trim().length < 10) {
-      await m.reply(novaWrap("Pohon", "AI lagi cari buku catatan keluarga, coba lagi ya."));
+      await m.reply(raraWrap("Pohon", "AI lagi cari buku catatan keluarga, coba lagi ya."));
       return { handled: true };
     }
 
     await m.react("🐣");
-    await m.reply(novaWrap(`Pohon Keluarga - ${name}`, result.trim()));
+    await m.reply(raraWrap(`Pohon Keluarga - ${name}`, result.trim()));
   } catch (error) {
     await m.react("❌");
     console.error("pohon error:", error);
-    m.reply(novaError("Pohon", `Gagal nih: ${error.message || "error"}`));
+    m.reply(raraError("Pohon", `Gagal nih: ${error.message || "error"}`));
   }
 
   return { handled: true };

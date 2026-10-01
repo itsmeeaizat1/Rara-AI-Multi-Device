@@ -80,7 +80,7 @@ func GenerateTTS(text string) (string, error) {
 	case "geminitts":
 		tempOutPath := filepath.Join(".", "temp", fmt.Sprintf("tts_gemini_%s.wav", sessionHash))
 		voice := AppConfig.TTSVoice
-		if voice == "" || voice == "id-ID-GadisNeural" || voice == "nova" {
+		if voice == "" || voice == "id-ID-GadisNeural" || voice == "rara" {
 			voice = "Puck"
 		}
 		audioPath, err := generateGeminiTTS(text, voice, sessionHash, tempOutPath)
@@ -98,7 +98,7 @@ func GenerateTTS(text string) (string, error) {
 	case "edgetts":
 		tempOutPath := filepath.Join(".", "temp", fmt.Sprintf("tts_edge_%s.mp3", sessionHash))
 		voice := AppConfig.TTSVoice
-		if voice == "" || strings.HasPrefix(voice, "特别") || voice == "nova" || voice == "Puck" {
+		if voice == "" || strings.HasPrefix(voice, "特别") || voice == "rara" || voice == "Puck" {
 			voice = "id-ID-GadisNeural"
 		}
 		audioPath, err := generateEdgeTTS(text, voice, sessionHash, tempOutPath)
@@ -126,7 +126,7 @@ func GenerateTTS(text string) (string, error) {
 		tempOutPath := filepath.Join(".", "temp", fmt.Sprintf("tts_openai_%s.mp3", sessionHash))
 		voice := AppConfig.TTSVoice
 		if voice == "" || voice == "Puck" {
-			voice = "nova"
+			voice = "rara"
 		}
 		audioPath, err := generateOpenAITTS(text, voice, sessionHash, tempOutPath)
 		if err == nil && audioPath != "" {
@@ -406,7 +406,7 @@ func generateOpenAITTS(text, voice, sessionHash, outputPath string) (string, err
 	}
 
 	if voice == "" {
-		voice = "nova"
+		voice = "rara"
 	}
 
 	reqBody := OpenAITTSRequest{

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // AlightMotionV1 — Auto register AM premium via RyezenStore + CatchMail
 // Source: https://api.andaraz.com/snippets/ai1/alightmotionv3
 // © 2026 All Rights Reserved.
@@ -6,8 +6,8 @@ import https from "https";
 import { URL } from "url";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getAndarazConfig } from "../../src/lib/config/env-loader.js";
 const andarazConfig = getAndarazConfig();
 
@@ -286,7 +286,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const session = await loadSession();
       const accounts = session.accounts || [];
       if (accounts.length === 0) {
-        return m.reply(novaWrap("AM Premium V1", "Belum ada akun dibuat. Ketik .amprem create 1"));
+        return m.reply(raraWrap("AM Premium V1", "Belum ada akun dibuat. Ketik .amprem create 1"));
       }
       let lines = ["DAFTAR AKUN AM PREMIUM V1", "Total: " + accounts.length + " akun", ""];
       accounts.slice(-20).forEach((acc, i) => {
@@ -297,7 +297,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (accounts.length > 20) {
         lines.push("", "... dan " + (accounts.length - 20) + " akun lainnya");
       }
-      return m.reply(novaWrap("AM Premium V1", lines));
+      return m.reply(raraWrap("AM Premium V1", lines));
     }
 
     // LOGIN (manual dengan user/pass yang udah ada)
@@ -305,13 +305,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const username = args[1] || "";
       const password = args[2] || "";
       if (!username || !password) {
-        return m.reply(novaWrap("AM Premium V1", "Format: .amprem login <username> <password>"));
+        return m.reply(raraWrap("AM Premium V1", "Format: .amprem login <username> <password>"));
       }
-      m.reply(novaWrap("AM Premium V1", "Login ke RyezenStore..."));
+      m.reply(raraWrap("AM Premium V1", "Login ke RyezenStore..."));
       const am = new AlightMotionV1();
       try {
         const loginRes = await am.login(username, password);
-        return m.reply(novaWrap("AM Premium V1", [
+        return m.reply(raraWrap("AM Premium V1", [
           "LOGIN BERHASIL",
           "",
           "Username: " + username,
@@ -321,7 +321,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           "Ketik: .amprem create 1",
         ], "success"));
       } catch (e) {
-        return m.reply(novaWrap("AM Premium V1", "Login gagal: " + e.message));
+        return m.reply(raraWrap("AM Premium V1", "Login gagal: " + e.message));
       }
     }
 
@@ -454,11 +454,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("", "Total akun tersimpan: .amprem list");
       lines.push("Source: RyezenStore + CatchMail");
 
-      return m.reply(novaWrap("AM Premium V1", lines, successCount > 0 ? "success" : "warn"));
+      return m.reply(raraWrap("AM Premium V1", lines, successCount > 0 ? "success" : "warn"));
     }
 
     // HELP
-    return m.reply(novaWrap("AM Premium V1", [
+    return m.reply(raraWrap("AM Premium V1", [
       "Alight Motion Premium Creator V1",
       "Auto register via RyezenStore + CatchMail",
       "",
@@ -472,7 +472,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]));
   } catch (e) {
     console.error("[AM Premium V1]", e);
-    m.reply(novaWrap("AM Premium V1", "Error: " + e.message));
+    m.reply(raraWrap("AM Premium V1", "Error: " + e.message));
   }
 }
 

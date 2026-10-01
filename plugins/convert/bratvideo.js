@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { bratVid } from "brat-canvas/video";
 import fs from "fs";
 import path from "path";
 import os from "os";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "bratvideo",
@@ -26,10 +26,10 @@ const pluginConfig = {
 async function handler(m, { sock, text }) {
   try {
     if (!text) {
-      return m.reply(novaWrap("bratvideo", `Kirim teks untuk brat video.\n\nContoh: .${m.command} hai bang`, "guide"));
+      return m.reply(raraWrap("bratvideo", `Kirim teks untuk brat video.\n\nContoh: .${m.command} hai bang`, "guide"));
     }
     if (text.length > 250) {
-      return m.reply(novaWrap("bratvideo", "Karakter terbatas, max 250!", "info"));
+      return m.reply(raraWrap("bratvideo", "Karakter terbatas, max 250!", "info"));
     }
 
     await m.react("🕒");
@@ -46,7 +46,7 @@ async function handler(m, { sock, text }) {
       buffer = Buffer.from(res.data)
     }
 
-    const tmpDir = path.join(os.tmpdir(), "nova-brat");
+    const tmpDir = path.join(os.tmpdir(), "rara-brat");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const outputPath = path.join(tmpDir, `brat-${Date.now()}.mp4`);
     fs.writeFileSync(outputPath, buffer);
@@ -60,11 +60,11 @@ async function handler(m, { sock, text }) {
     setTimeout(() => {
       try { if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath); } catch {}
     }, 5000);
-    await m.reply(novaBerhasil("bratvideo"));
+    await m.reply(raraBerhasil("bratvideo"));
   } catch (e) {
     console.error("[bratvideo] error:", e.message);
     await m.react("❌");
-    m.reply(novaWrap("bratvideo", "Gagal membuat brat video. Coba lagi ya.", "error"));
+    m.reply(raraWrap("bratvideo", "Gagal membuat brat video. Coba lagi ya.", "error"));
   }
 }
 

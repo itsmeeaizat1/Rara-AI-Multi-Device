@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     const media = (m.quoted && m.quoted.isImage) || m.isImage; // FIX 10 Sep: flags isImage
     if (!media) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🤖",
   name: "ai-ocr",
   description: "Ekstrak teks dari gambar",
@@ -52,7 +52,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!apiKey) {
       const text =
-        novaError("AIOcr", "Gagal nih, coba lagi ya");
+        raraError("AIOcr", "Gagal nih, coba lagi ya");
 
       await m.reply(text, "ai-ocr");
       return { handled: true };
@@ -87,7 +87,7 @@ async function handler(m, { sock, config: botConfig }) {
     const reply = data?.choices?.[0]?.message?.content || "Tidak ada teks terdeteksi.";
 
     const out =
-      novaWrap("AI OCR", [`Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      raraWrap("AI OCR", [`Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-ocr untuk ekstrak teks lain`) +
       "\n" +
@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AIOcr", "Gagal nih, coba lagi ya");
+      raraError("AIOcr", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "ai-ocr");
   }

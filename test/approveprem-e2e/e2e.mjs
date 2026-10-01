@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: APPROVE PREMIUM (buyprem pending → .approveprem)
+// RARA AI WHATSAPP BOT — E2E: APPROVE PREMIUM (buyprem pending → .approveprem)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -12,7 +12,7 @@ const t = (name, cond, extra = "") => {
 process.on("unhandledRejection", (e) => { console.log("UNHANDLED:", e?.stack || e); process.exit(1); });
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "approveprem-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
 const buyPlug = await import(R + "/plugins/sewa-premium/buyprem.js");

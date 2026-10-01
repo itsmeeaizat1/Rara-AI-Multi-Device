@@ -7,8 +7,8 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase(mkdtempSync(path.join(tmpdir(), "rampersist-e2e-db-")) + "/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase(mkdtempSync(path.join(tmpdir(), "rampersist-e2e-db-")) + "/rara.json");
 const db = getDatabase();
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s)).toLowerCase();
@@ -17,9 +17,9 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
 
-// ── 1. nova-ram-persist generik ──
-w("\n— nova-ram-persist (escrow/market/gbank/absensi/santet) —");
-const { persistLoad, persistSave, _resetPersistForTest } = await import(R + "/src/lib/nova-ram-persist.js");
+// ── 1. rara-ram-persist generik ──
+w("\n— rara-ram-persist (escrow/market/gbank/absensi/santet) —");
+const { persistLoad, persistSave, _resetPersistForTest } = await import(R + "/src/lib/rara-ram-persist.js");
 
 // simulasi: proses lama nyimpen escrow lalu "restart" (global dikosongin)
 global.rpgEscrow = [{ id: 1, sender: "a@s.whatsapp.net", receiver: "b@s.whatsapp.net", amount: 500, status: "pending" }];
@@ -64,41 +64,41 @@ check("1f. tertulis ke db.setting", (db.setting("ramPersist:rpgGuildBank") || {}
 
 // ── 2. reminder engine ──
 w("\n— reminder engine (persist + re-arm + terlewat) —");
-const engine = await import(R + "/src/lib/nova-reminder-engine.js");
+const engine = await import(R + "/src/lib/rara-reminder-engine.js");
 const { persistReminders, armReminder, fireReminder, restoreReminders } = engine;
 
 const sent = [];
 const sock = { sendMessage: async (jid, payload) => { sent.push({ jid, text: norm(payload.text || ""), mentions: payload.mentions }); } };
 
 // buat reminder 2 detik → persist → fires
-global.novaReminders = [];
+global.raraReminders = [];
 const rem = { id: "RT1", jid: "chat@g.us", sender: "a@s.whatsapp.net", senderName: "A", message: "tes reminder", fireAt: Date.now() + 1500, createdAt: Date.now(), fired: false };
-global.novaReminders.push(rem);
+global.raraReminders.push(rem);
 armReminder(sock, rem);
 persistReminders();
-check("2a. reminder aktif tersimpan di db", (db.setting("novaReminders") || []).length === 1);
+check("2a. reminder aktif tersimpan di db", (db.setting("raraReminders") || []).length === 1);
 await new Promise(r => setTimeout(r, 2200));
 check("2b. reminder bunyi tepat waktu", sent.length === 1 && sent[0].text.includes("reminder berbunyi"));
-check("2c. setelah bunyi, db dibersihin (fired gak disimpen)", (db.setting("novaReminders") || []).length === 0);
+check("2c. setelah bunyi, db dibersihin (fired gak disimpen)", (db.setting("raraReminders") || []).length === 0);
 
 // restore: reminder masa depan → re-arm; kelewat → notif terlewat
 sent.length = 0;
-db.setting("novaReminders", [
+db.setting("raraReminders", [
   { id: "RT2", jid: "chat@g.us", sender: "a@s.whatsapp.net", message: "masa depan", fireAt: Date.now() + 3600_000, createdAt: Date.now(), fired: false },
   { id: "RT3", jid: "chat@g.us", sender: "a@s.whatsapp.net", message: "kelewat pas bot mati", fireAt: Date.now() - 3600_000, createdAt: Date.now(), fired: false },
 ]);
-global.novaReminders = [];
+global.raraReminders = [];
 const rr = restoreReminders(sock);
 check("2d. restore: 1 dipasang ulang", rr.rearmed === 1, JSON.stringify(rr));
 check("2e. restore: 1 terlewat dikabarin", rr.missed === 1);
 await new Promise(r => setTimeout(r, 300));
 check("2f. notif terlewat kekirim ke chat asal", sent.length === 1 && sent[0].text.includes("terlewat") && sent[0].jid === "chat@g.us");
-check("2g. timer masa depan aktif (timerId kepasang)", global.novaReminders.some(r => r.id === "RT2" && r.timerId));
-global.novaReminders.forEach(r => { if (r.timerId) clearTimeout(r.timerId); });
+check("2g. timer masa depan aktif (timerId kepasang)", global.raraReminders.some(r => r.id === "RT2" && r.timerId));
+global.raraReminders.forEach(r => { if (r.timerId) clearTimeout(r.timerId); });
 
 // ── 3. alarm engine ──
 w("\n— alarm engine (scheduler beneran + persist + 1x per hari) —");
-const alarmLib = await import(R + "/src/lib/nova-alarm.js");
+const alarmLib = await import(R + "/src/lib/rara-alarm.js");
 const { loadAlarms, saveAlarms, initAlarmScheduler } = alarmLib;
 
 global.alarms = {};
@@ -112,8 +112,8 @@ const targetTime = `${hh}:${mm}`;
 const mA = { sender, pushName: "A", chat: "chat@g.us", args: [targetTime, "bangun"], text: `${targetTime} bangun`, reply: async () => {}, prefix: "." };
 const alarmPlugin = await import(R + "/plugins/utility/alarm.js");
 await alarmPlugin.handler(mA, { sock: { sendMessage: async () => {} }, config: { command: { prefix: "." } } });
-check("3a. alarm kepasang + tersimpan di db", (db.setting("novaAlarms") || {})[sender]?.length === 1);
-check("3b. alarm nyimpen chat tujuan", db.setting("novaAlarms")[sender][0].chat === "chat@g.us");
+check("3a. alarm kepasang + tersimpan di db", (db.setting("raraAlarms") || {})[sender]?.length === 1);
+check("3b. alarm nyimpen chat tujuan", db.setting("raraAlarms")[sender][0].chat === "chat@g.us");
 
 // scheduler nyala → alarm bunyi di menit target (tunggu max 100 dtk)
 sent.length = 0;
@@ -128,7 +128,7 @@ check("3d. alarm BUNYI beneran di jam target", fired, `target ${targetTime}, dap
 if (fired) {
   const msg = sent.find(s => s.text.includes("alarm berbunyi"));
   check("3e. alarm kekirim ke chat yang bener + mention", msg.jid === "chat@g.us" && (msg.mentions || []).includes(sender));
-  check("3f. guard 1x per hari (lastFiredYmd tercatat)", db.setting("novaAlarms")[sender][0].lastFiredYmd !== null);
+  check("3f. guard 1x per hari (lastFiredYmd tercatat)", db.setting("raraAlarms")[sender][0].lastFiredYmd !== null);
 }
 clearInterval(global.__novaAlarmTimer);
 global.__novaAlarmTimer = null;

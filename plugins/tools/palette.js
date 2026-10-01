@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "palette", alias: ["palette"], category: "tools",
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
       hslToHex(h, s, Math.min(90, l+15)),
       hslToHex(h, s, Math.min(95, l+30)),
     ];
-    let text = novaWrap("Color Palette", [`Base: *${hex}*`,
+    let text = raraWrap("Color Palette", [`Base: *${hex}*`,
       ...shades.map((c,i) => `${i===0?"Dark":i===4?"Light":"Shade"}: ${c}`)].join("\n")) + "\n" + tipText(`Ketik ${prefix}palette #ff6600 untuk warna lain`);
     await m.react("🐣");
     await m.reply(text, "palette");

@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 ZelAI Hub — .zel (daftar 86 AI) + .zimage (gambar AI)
 // ═════════════════════════════════════════════
 
 import { zelAiChat, zelAiImage, ZEL_AI_REGISTRY, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { sendImage } from "../../src/lib/nova-message.js";
+import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { sendImage } from "../../src/lib/rara-message.js";
 
 const pluginConfig = {
   name: "zelhub",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const text = args.join(" ").trim();
 
     if (cmd === "zimage") {
-      if (!text) return m.reply(novaGuideV2("zimage", {
+      if (!text) return m.reply(raraGuideV2("zimage", {
  kaomoji: "(◍•ᴗ•◍)",
  sapaan: "generator gambar AI zelapi, deskripsikan aja yang kamu mau!",
         cara: "ketik deskripsi gambar yang mau dibuat",
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
       if (!r.ok) {
         await m.react("❌");
         const map = { API_KEY: "⚠️ Key zelapi belum di-set.", TEXT_KOSONG: "⚠️ Prompt kosong." };
-        return m.reply(novaWrap("zelai", map[r.error] || `⚠️ *ZIMAGE MATI:* ${r.error}`));
+        return m.reply(raraWrap("zelai", map[r.error] || `⚠️ *ZIMAGE MATI:* ${r.error}`));
       }
       await m.react("🐣");
       await sendImage(sock, m.chat, r.buffer, `🎨 *(engine: zelapi zimage)_ ${text.slice(0, 80)}`, { quoted: m });
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
       const chat = cmds.filter((c) => ZEL_AI_REGISTRY[c].type !== "image");
       const vision = cmds.filter((c) => ZEL_AI_REGISTRY[c].type === "vision");
       const lines = chat.map((c) => `• .${c} — ${ZEL_AI_REGISTRY[c].desc}`);
-      return m.reply(novaWrap("zelai",
+      return m.reply(raraWrap("zelai",
         `⚡ *ZELAPI SUITE — ${cmds.length} AI (PREFIX Z)*\n\n` +
         `Semua AI dari zelapi.eu.cc, prefix "z" biar keliatan bedanya. Endpoint mati = error asli keluar (no fallback).\n\n` +
         `📖 *CARA PAKAI:*\n.z<nama> <pesan>\n\n` +
@@ -65,16 +65,16 @@ async function handler(m, { sock }) {
     const rest = args.slice(1).join(" ").trim();
     const spec = ZEL_AI_REGISTRY[target];
     if (!spec) {
-      return m.reply(novaWrap("zelai", `⚠️ AI *${args[0]}* gak ada di registry — ketik *.zel list* buat daftar lengkap.`));
+      return m.reply(raraWrap("zelai", `⚠️ AI *${args[0]}* gak ada di registry — ketik *.zel list* buat daftar lengkap.`));
     }
     const r = await zelAiChat(target, rest);
-    if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zelai", `⚠️ *${target.toUpperCase()} MATI:* ${r.error}`)); }
+    if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zelai", `⚠️ *${target.toUpperCase()} MATI:* ${r.error}`)); }
     await m.react("🐣");
-    return m.reply(novaWrap("zelai", `⚡ *${target.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
+    return m.reply(raraWrap("zelai", `⚡ *${target.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
   } catch (err) {
     console.error("[zelhub]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("zelai", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(raraWrap("zelai", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

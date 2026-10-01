@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // jadihijab — Tambahkan hijab ke foto via Gemini Flash (IkyyXD)
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "jadihijab",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(novaWrap("JadiHijab", [
+      return m.reply(raraWrap("JadiHijab", [
         "Tambahkan hijab ke foto",
         "",
         "CARA PAKAI:",
@@ -59,16 +59,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: novaWrap("JadiHijab", "Berhasil menambahkan hijab"),
+        caption: raraWrap("JadiHijab", "Berhasil menambahkan hijab"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaWrap("JadiHijab", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
+      await m.reply(raraWrap("JadiHijab", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
     }
   } catch (e) {
     console.error("[becomehijab.js]:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("JadiHijab", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("JadiHijab", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

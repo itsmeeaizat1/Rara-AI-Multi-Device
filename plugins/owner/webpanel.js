@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .webpanel — start/stop WEB DASHBOARD (port website engine lama utuh)
 // Engine: src/lib/hiweb/ — server HTTP standalone + halaman login + panel. OWNER-ONLY.
-import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "webpanel",
@@ -28,11 +28,11 @@ function getPort() {
 
 async function start(m, sock) {
   if (state.server?.listening) {
-    await m.reply(novaWrap("WebPanel", "Dashboard udah jalan di port " + getPort()));
+    await m.reply(raraWrap("WebPanel", "Dashboard udah jalan di port " + getPort()));
     return;
   }
   if (state.starting) {
-    await m.reply(novaWrap("WebPanel", "Lagi nyala... sabar ya"));
+    await m.reply(raraWrap("WebPanel", "Lagi nyala... sabar ya"));
     return;
   }
   state.starting = true;
@@ -47,7 +47,7 @@ async function start(m, sock) {
     }
     if (!srv?.listening) throw new Error("server gak mau listening — port kepake?");
     state.server = srv;
-    await m.reply(novaWrap("WebPanel", [
+    await m.reply(raraWrap("WebPanel", [
       "Dashboard NYALA!",
       "",
       "Buka: http://<ip-vps>:" + getPort(),
@@ -58,7 +58,7 @@ async function start(m, sock) {
     ].join("\n")));
   } catch (e) {
     console.error("[webpanel]:", e.message);
-    await m.reply(novaError("WebPanel", "Gagal nyala: " + String(e.message).slice(0, 150)));
+    await m.reply(raraError("WebPanel", "Gagal nyala: " + String(e.message).slice(0, 150)));
   } finally {
     state.starting = false;
   }
@@ -66,13 +66,13 @@ async function start(m, sock) {
 
 async function stop(m) {
   if (!state.server?.listening) {
-    await m.reply(novaWrap("WebPanel", "Dashboard lagi mati"));
+    await m.reply(raraWrap("WebPanel", "Dashboard lagi mati"));
     return;
   }
   const srv = state.server;
   state.server = null;
   await new Promise((r) => srv.close(r));
-  await m.reply(novaWrap("WebPanel", "Dashboard dimatiin"));
+  await m.reply(raraWrap("WebPanel", "Dashboard dimatiin"));
 }
 
 async function handler(m, { sock, config: botConfig }) {
@@ -86,12 +86,12 @@ async function handler(m, { sock, config: botConfig }) {
       await stop(m);
     } else if (arg === "status") {
       await m.react("⚡");
-      await m.reply(novaWrap("WebPanel", state.server?.listening
+      await m.reply(raraWrap("WebPanel", state.server?.listening
         ? "NYALA — port " + getPort()
         : "MATI"));
     } else {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "webpanel",
         "Panel web dashboard bot : monitoring, kelola file & sesi — semua lewat browser.",
         prefix + "webpanel on",
@@ -101,7 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[webpanel]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("WebPanel", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("WebPanel", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }

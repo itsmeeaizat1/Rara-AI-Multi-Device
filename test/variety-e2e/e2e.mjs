@@ -1,7 +1,7 @@
 // E2E — FITUR POLOS DI-VARIASI (13 Sep 2026)
 // Request owner: "fitur yg polos dicek trus di variasi agar menarik".
 // Dipilih owner: .birthday countdown + .langganan countdown + .rate animasi
-// meter. Semua pakai nova-countdown runLiveTicker / morphing edit-in-place.
+// meter. Semua pakai rara-countdown runLiveTicker / morphing edit-in-place.
 process.env.NOVA_TICK_MAXEDITS = "2";
 
 import { mkdtempSync } from "fs";
@@ -11,9 +11,9 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
-await initDatabase(mkdtempSync(path.join(tmpdir(), "var-e2e-db-")) + "/nova.json");
+await initDatabase(mkdtempSync(path.join(tmpdir(), "var-e2e-db-")) + "/rara.json");
 const db = getDatabase();
 
 let pass = 0, fail = 0;

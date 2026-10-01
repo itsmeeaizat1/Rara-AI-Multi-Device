@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // igv2 — Download video/foto Instagram via IkyyXD igv2 endpoint
 // Primary: IkyyXD /download/igv2 → all-in-one | Fallback: builtin ig.js
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
-import te from "../../src/lib/nova-error.js";
+import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import te from "../../src/lib/rara-error.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -54,10 +54,10 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuide("IG V2", "Download dari Instagram (V2)! Kasih linknya ya!", `${m.prefix}igv2 https://www.instagram.com/reel/xxx`));
+    return m.reply(raraGuide("IG V2", "Download dari Instagram (V2)! Kasih linknya ya!", `${m.prefix}igv2 https://www.instagram.com/reel/xxx`));
   }
   if (!url.match(/instagram\.com|instagr\.am/i)) {
-    return m.reply(novaGuide("IG V2", "URL-nya gak valid nih! Pakai link Instagram ya.", `${m.prefix}igv2 https://www.instagram.com/reel/xxx`));
+    return m.reply(raraGuide("IG V2", "URL-nya gak valid nih! Pakai link Instagram ya.", `${m.prefix}igv2 https://www.instagram.com/reel/xxx`));
   }
 
   try {
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
         } else {
           const _cap2 = tiktokCaption({ header: "Instagram Downloader", title: result.title || "Instagram Media", download: "Foto" });
           await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap2, contextInfo: ctxInfo }, { quoted: m });
-          await m.reply(novaBerhasil("IG V2"));
+          await m.reply(raraBerhasil("IG V2"));
         }
         break;
       }
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
       if (igResult?.media?.length) {
         const ctxInfo = mediaPreviewCard({ title: igResult.title || "Instagram Media", body: "Instagram", sourceUrl: url, thumbnailUrl: igResult.thumbnail || "" });
         await m.react("🐣");
-        await m.reply(novaBerhasil("IG V2"));
+        await m.reply(raraBerhasil("IG V2"));
         for (const item of igResult.media) {
           if (item.type === "video") {
             const _cap3 = tiktokCaption({ header: "Instagram Downloader", title: igResult.title || "Instagram Media", download: "MP4" });
@@ -110,11 +110,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("❌");
-    return m.reply(novaGagal("IG V2"));
+    return m.reply(raraGagal("IG V2"));
   } catch (error) {
     console.error("[igv2.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaGangguan("IG V2"));
+    return m.reply(raraGangguan("IG V2"));
   }
 }
 

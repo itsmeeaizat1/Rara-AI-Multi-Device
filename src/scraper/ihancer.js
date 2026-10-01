@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/scraper/ihancer.js — AI Photo Enhancer ihancer.com (ala app Remini)
 // Request owner 17 Sep 2026: "cba fitur remini ganti pakai api ini" — port
 // verbatim dari kode owner (axios + form-data, endpoint /api/enhance).

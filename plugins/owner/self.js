@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 /**
  * @file plugins/owner/self.js
  * @description Plugin untuk mengaktifkan mode self (hanya owner & bot)
  */
-import { getDatabase } from '../../src/lib/nova-database.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'self',
     alias: ["self"],
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     try {
         const isRealOwner = validateOwner(m);
         if (!isRealOwner) {
-            return m.reply(novaWrap("Self", '🚫 *Akses Ditolak*\n\nHanya owner yang bisa mengubah mode bot!'));
+            return m.reply(raraWrap("Self", '🚫 *Akses Ditolak*\n\nHanya owner yang bisa mengubah mode bot!'));
         }
         const currentMode = config.mode;
         if (currentMode === 'self') {
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
         console.log(`[Mode] Changed to SELF by ${m.pushName} (${m.sender})`);
     } catch (error) {
         console.error('[Self Command Error]', error);
-        await m.reply(novaWrap("self", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(raraWrap("self", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 

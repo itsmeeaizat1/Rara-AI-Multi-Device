@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .setnotfound — Not-Found Suggestion Controller (Owner Only)
  *
@@ -13,7 +13,7 @@
  *   .setnotfound reset        — Reset semua tracker user
  */
 
-import { novaReply } from "../../src/lib/nova-menu-style.js";
+import { raraReply } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
   // .setnotfound on
   if (sub === "on") {
     config.features.commandSuggestion = true;
-    return await m.reply(novaReply({
+    return await m.reply(raraReply({
       title: "Not Found Suggestion",
       info: [{ label: "Status", value: "ON" }],
       content: "|\n| Saran command not found diaktifkan",
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
   // .setnotfound off
   if (sub === "off") {
     config.features.commandSuggestion = false;
-    return await m.reply(novaReply({
+    return await m.reply(raraReply({
       title: "Not Found Suggestion",
       info: [{ label: "Status", value: "OFF" }],
       content: "|\n| Saran command not found dimatikan\n| Bot tidak akan reply saat command tidak ditemukan",
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     const mode = args[1] || "";
     if (mode === "manual") {
       config.features.commandSuggestionSmart = false;
-      return await m.reply(novaReply({
+      return await m.reply(raraReply({
         title: "Not Found Mode",
         info: [{ label: "Mode", value: "Manual" }],
         content: "|\n| Cooldown statis untuk semua user\n| Setiap salah command -> cooldown " + (config.features?.commandSuggestionCooldown || 5) + " detik",
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     if (mode === "smart") {
       config.features.commandSuggestionSmart = true;
       const cd = config.features?.commandSuggestionCooldown || 5;
-      return await m.reply(novaReply({
+      return await m.reply(raraReply({
         title: "Not Found Mode",
         info: [{ label: "Mode", value: "Smart" }],
         content: [
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
         ].join("\n"),
       }));
     }
-    return await m.reply(novaReply({
+    return await m.reply(raraReply({
       title: "Not Found Mode",
       status: "Pilih: manual atau smart",
       content: "|\n| " + m.prefix + "setnotfound mode manual \u2014 cooldown statis\n| " + m.prefix + "setnotfound mode smart \u2014 progressive escalation",
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
   if (sub === "cooldown") {
     const seconds = parseInt(args[1]);
     if (!seconds || seconds < 1 || seconds > 300) {
-      return await m.reply(novaReply({
+      return await m.reply(raraReply({
         title: "Not Found Cooldown",
         status: "Masukkan angka 1-300 detik",
         content: "|\n| Contoh: " + m.prefix + "setnotfound cooldown 5",
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     config.features.commandSuggestionCooldown = seconds;
     const isSmart = config.features?.commandSuggestionSmart !== false;
     if (isSmart) {
-      return await m.reply(novaReply({
+      return await m.reply(raraReply({
         title: "Not Found Cooldown",
         info: [
           { label: "Base Cooldown", value: seconds + " detik" },
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
         ].join("\n"),
       }));
     }
-    return await m.reply(novaReply({
+    return await m.reply(raraReply({
       title: "Not Found Cooldown",
       info: [
         { label: "Base Cooldown", value: seconds + " detik" },
@@ -131,10 +131,10 @@ async function handler(m, { sock }) {
   // .setnotfound reset
   if (sub === "reset") {
     try {
-      const { cleanupNotFoundTracker } = await import("../../src/lib/nova-notfound-antispam.js");
+      const { cleanupNotFoundTracker } = await import("../../src/lib/rara-notfound-antispam.js");
       cleanupNotFoundTracker();
     } catch (e) {}
-    return await m.reply(novaReply({
+    return await m.reply(raraReply({
       title: "Not Found Tracker",
       info: [{ label: "Status", value: "Reset" }],
       content: "|\n| Semua tracker user di-reset\n| Semua user kembali ke level 0",
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
   const cd = config.features?.commandSuggestionCooldown || 5;
 
   if (isSmart) {
-    return await m.reply(novaReply({
+    return await m.reply(raraReply({
       title: "Not Found Suggestion",
       info: [
         { label: "Suggestion", value: isOn ? "ON" : "OFF" },
@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
     }));
   }
 
-  return await m.reply(novaReply({
+  return await m.reply(raraReply({
     title: "Not Found Suggestion",
     info: [
       { label: "Suggestion", value: isOn ? "ON" : "OFF" },

@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // sdxl — Stable Diffusion XL image generation
 // FIX 16 Sep 2026 (owner report ".sdxl gagal"): pollinations gratis flaky —
 // sekarang ada FALLBACK ke ZelAPI ai-image/sdxl (key owner) kalau pollinations
 // total gagal, dan error reply nunjukin PENYEBAB asli biar bisa didiagnosis.
 import { stableDiffusion, _setSdHttpForTest } from "../../src/scraper/stable-diffusion.js";
 import { zelImageEndpoint } from "../../src/scraper/zelapi.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "sdxl",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("sdxl", `Mau gambar apa?\n\nContoh: ${m.prefix}sdxl futuristic city at sunset, cyberpunk\n${m.prefix}sdxl kucing lucu pink, kartun style`, "guide"));
+      return m.reply(raraWrap("sdxl", `Mau gambar apa?\n\nContoh: ${m.prefix}sdxl futuristic city at sunset, cyberpunk\n${m.prefix}sdxl kucing lucu pink, kartun style`, "guide"));
     }
 
     await m.react("🕒");
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
       } else {
         await m.react("❌");
         const alasan = result?.error || zl?.error || "tidak diketahui";
-        return m.reply(novaWrap("sdxl", `Gagal generate gambar.\nPenyebab: ${alasan}\n\nCoba lagi sebentar — kalau masih gagal, lapor dengan teks penyebab di atas ya.`, "error"));
+        return m.reply(raraWrap("sdxl", `Gagal generate gambar.\nPenyebab: ${alasan}\n\nCoba lagi sebentar — kalau masih gagal, lapor dengan teks penyebab di atas ya.`, "error"));
       }
     }
 
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("sdxl error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("sdxl", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("sdxl", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

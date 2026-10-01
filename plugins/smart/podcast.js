@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -45,7 +45,7 @@ async function generateScript(topic) {
       "[SEGMENT 3] (30 detik) - Opini / take pembawa acara\n" +
       "[OUTRO] (10 detik) - Penutup & call to action\n\n" +
       "Tulis dengan gaya bicara natural, bukan formal. Gunakan bahasa santai tapi informatif.";
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
     return result?.success ? result.response : null;
   } catch {
     return null;
@@ -62,12 +62,12 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "gen" || sub === "generate" || sub === "buat") {
     const topic = args.slice(2).join(" ").trim();
     if (!topic) {
-      await m.reply(novaWrap("Podcast", "Format: " + prefix + "podcast gen <topik>\n💡 *Contoh:* " + prefix + "podcast gen Teknologi AI di Indonesia"));
+      await m.reply(raraWrap("Podcast", "Format: " + prefix + "podcast gen <topik>\n💡 *Contoh:* " + prefix + "podcast gen Teknologi AI di Indonesia"));
       return { handled: true };
     }
     const script = await generateScript(topic);
     if (!script) {
-      await m.reply(novaError("Podcast", "Gagal generate nih, coba lagi ya"));
+      await m.reply(raraError("Podcast", "Gagal generate nih, coba lagi ya"));
       return { handled: true };
     }
 
@@ -75,7 +75,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     cfg.totalGenerated++;
     saveConfig(db, gid, cfg);
 
-    await m.reply(novaWrap("Podcast: " + topic, [
+    await m.reply(raraWrap("Podcast: " + topic, [
       "Durasi: ~2 menit",
       "Episode #" + cfg.episodes.length,
       "",
@@ -86,12 +86,12 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "list" || sub === "daftar") {
     if (cfg.episodes.length === 0) {
-      await m.reply(novaWrap("Podcast", "Belum ada episode. Ketik " + prefix + "podcast gen <topik>."));
+      await m.reply(raraWrap("Podcast", "Belum ada episode. Ketik " + prefix + "podcast gen <topik>."));
       return { handled: true };
     }
     const recent = cfg.episodes.slice(-5).reverse();
     const list = recent.map(e => "#" + e.id + " " + e.topic + " - " + new Date(e.createdAt).toLocaleDateString("id-ID")).join("\n") || "(kosong)";
-    await m.reply(novaWrap("Podcast", "Episode terakhir:\n" + list));
+    await m.reply(raraWrap("Podcast", "Episode terakhir:\n" + list));
     return { handled: true };
   }
 
@@ -99,15 +99,15 @@ async function handler(m, { sock, db, config: botConfig }) {
     const id = parseInt(args[2] || "0", 10);
     const ep = cfg.episodes.find(e => e.id === id) || cfg.episodes[cfg.episodes.length - 1];
     if (!ep) {
-      await m.reply(novaWrap("Podcast", "Episode tidak ditemukan."));
+      await m.reply(raraWrap("Podcast", "Episode tidak ditemukan."));
       return { handled: true };
     }
-    await m.reply(novaWrap("Podcast #" + ep.id + ": " + ep.topic, ep.script));
+    await m.reply(raraWrap("Podcast #" + ep.id + ": " + ep.topic, ep.script));
     return { handled: true };
   }
 
   if (sub === "stats" || sub === "cek" || !sub) {
-    await m.reply(novaWrap("Podcast", [
+    await m.reply(raraWrap("Podcast", [
       "Total episode: " + cfg.episodes.length,
       "Total generated: " + cfg.totalGenerated,
       "",
@@ -118,7 +118,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Podcast", [
+  await m.reply(raraWrap("Podcast", [
     "AI PODCAST GENERATOR",
     "",
     prefix + "podcast gen <topik> - generate script",

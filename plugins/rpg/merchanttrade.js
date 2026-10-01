@@ -1,20 +1,20 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Berdagang — Trade goods between villages for profit
 // Rombak khas 9 Sep 2026 (batch #3 antrean animasi per-game):
 // - Animasi bentuk baru RUTE KARAVAN (🐪 merangkak di garis jarak)
 // - Item khas: 📜 Sertifikat Dagang (tiap dagang untung) → upgrade 🐪 Karavan
-// - Result box rapih novaRpgBox
+// - Result box rapih raraRpgBox
 
 import {
   ensureRpg, saveRpg, addExp, addGold, removeGold,
   spendCash, getCash, formatRp,
   checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { shapeDagang } from "../../src/lib/nova-rpg-shapes.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import te from "../../src/lib/nova-error.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { shapeDagang } from "../../src/lib/rara-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "merchanttrade",
@@ -59,7 +59,7 @@ const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { leve
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("berdagang", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("berdagang", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // ── subcommand khas berdagang: karavan status & upgrade ──
     const sub = (m.args?.[0] || "").toLowerCase();
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     const lv = tool.level || 0;
 
     if (sub === "karavan" || sub === "status") {
-      return m.reply(novaRpgBox("berdagang",
+      return m.reply(raraRpgBox("berdagang",
         `🐪 KARAVAN KAMU\n\n` +
         `Level : *Lv.${lv}*\n💰 Harga jual : +${10 * lv}%\n📜 Sertifikat Dagang : ${tool.certs || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
         `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.certCost(lv)}x Sertifikat + ${formatRp(TOOL.rpCost(lv))}\nKetik: .berdagang upgrade`));
@@ -77,11 +77,11 @@ async function handler(m, { sock }) {
       const needCert = TOOL.certCost(lv);
       const needRp = TOOL.rpCost(lv);
       if ((tool.certs || 0) < needCert) {
-        return m.reply(novaRpgBox("berdagang",
+        return m.reply(raraRpgBox("berdagang",
           `📜 Upgrade Karavan ke Lv.${lv + 1} butuh:\n\n• Sertifikat Dagang : ${needCert}x (punya ${tool.certs || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Sertifikat didapat dari .berdagang sendiri — tiap dagang UNTUNG dapet +1 (+2 kalau profit ≥100)`, "warn"));
       }
       if (!spendCash(m, needRp)) {
-        return m.reply(novaRpgBox("berdagang", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("berdagang", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = getTool(m.sender);
       fresh.certs = (fresh.certs || 0) - needCert;
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
       fresh.spent = (fresh.spent || 0) + needRp;
       getDatabase().setPlayerData(m.sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("berdagang",
+      return m.reply(raraRpgBox("berdagang",
         `🐪 KARAVAN UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n💰 Harga jual : +${10 * (lv + 1)}%\n\n📜 Material : −${needCert} Sertifikat Dagang\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
@@ -98,12 +98,12 @@ async function handler(m, { sock }) {
     const cd = checkCooldown(m, "lastDagang");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("berdagang", `Cooldown dagang tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("berdagang", `Cooldown dagang tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < DAGANG_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("berdagang", `Energi kurang! Butuh *${DAGANG_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(raraRpgBox("berdagang", `Energi kurang! Butuh *${DAGANG_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     // Energy cost
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     const investAmount = Math.min(rpg.gold, 50 + rpg.level * 5);
     if (investAmount < buyPrice) {
       // Can't afford even 1 unit
-      return m.reply(novaRpgBox("berdagang", `Gold kurang untuk dagang. Minimal butuh *${buyPrice} gold* untuk beli ${good.name}.`, "warn"));
+      return m.reply(raraRpgBox("berdagang", `Gold kurang untuk dagang. Minimal butuh *${buyPrice} gold* untuk beli ${good.name}.`, "warn"));
     }
 
     // Animasi khas berdagang: RUTE KARAVAN
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
 
     const profitLine = profit > 0 ? `✅ Profit : +${profit} gold` : profit < 0 ? `❌ Rugi : ${profit} gold` : "🟰 Hasil : 0 gold (balik modal)";
     await m.react("🐣");
-    return m.reply(novaRpgBox("berdagang",
+    return m.reply(raraRpgBox("berdagang",
       `${profit > 0 ? "📈 DAGANG UNTUNG!" : profit < 0 ? "📉 DAGANG RUGI!" : "🟰 BALIK MODAL!"}\n\n` +
       `🏘️ Dari : ${buyVillage.name}\n📍 Ke : ${sellVillage.name}\n📦 Barang : ${good.name} x${qty}\n\n` +
       `💵 Beli : ${buyPrice} gold/pcs (total ${cost})\n💰 Jual : ${sellPrice} gold/pcs (total ${revenue})\n${profitLine}\n✨ EXP : +${expGain}\n\n` +
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("berdagang error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("berdagang", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("berdagang", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

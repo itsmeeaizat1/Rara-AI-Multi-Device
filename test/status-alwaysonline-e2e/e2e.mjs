@@ -14,13 +14,13 @@ process.on("unhandledRejection", (e) => { console.error("[UNHANDLED]", e); proce
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
-await initDatabase(fs.mkdtempSync(path.join(os.tmpdir(), "status-alwaysonline-db-")) + "/nova.json");
+await initDatabase(fs.mkdtempSync(path.join(os.tmpdir(), "status-alwaysonline-db-")) + "/rara.json");
 const db = getDatabase();
 
-const ao = await import(R + "/src/lib/nova-always-online.js");
-const sd = await import(R + "/src/lib/nova-status-download.js");
+const ao = await import(R + "/src/lib/rara-always-online.js");
+const sd = await import(R + "/src/lib/rara-status-download.js");
 const pluginAo = await import(R + "/plugins/owner/alwaysonline.js");
 const pluginSp = await import(R + "/plugins/owner/statuspost.js");
 const pluginSs = await import(R + "/plugins/owner/statussave.js");
@@ -184,7 +184,7 @@ check("3k. .swsave status → nunjukin mode", /mode/.test(mSsSt.__sent[0].text))
 w("\n— 4. registrasi lewat loader —");
 // FIX 19 Sep: loadPlugins balikin ANGKA (jumlah plugin), bukan array —
 // cek registrasi lewat getPlugin() per nama (pola test/plugins-import-e2e).
-const { loadPlugins, getPlugin } = await import(R + "/src/lib/nova-plugins.js");
+const { loadPlugins, getPlugin } = await import(R + "/src/lib/rara-plugins.js");
 await loadPlugins(path.join(R, "plugins"));
 check("4a. alwaysonline teregistrasi", !!getPlugin("alwaysonline"));
 check("4b. statuspost teregistrasi", !!getPlugin("statuspost"));

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import _sharp from 'sharp'
 import axios from "axios";
 import * as cheerio from "cheerio";
@@ -6,8 +6,8 @@ import * as cheerio from "cheerio";
 function getSharp() {
   return _sharp;
 }
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 async function nerdfonts() {
   try {
     const { data } = await axios.get(
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (err) {
-    return m.reply(novaWrap("nerdfont", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("nerdfont", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

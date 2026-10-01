@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Mailbox — Mail system + medal display
 
-import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
-import te from "../../src/lib/nova-error.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/rara-rpg-service.js";
+import te from "../../src/lib/rara-error.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
 import { boxMessage } from "../../src/lib/styler.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "mailbox",
@@ -30,11 +30,11 @@ const MEDAL_TYPES = {
 async function handler(m, { sock, text, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("mailbox", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("mailbox", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (command === "medal") {
       rpg.medals = rpg.medals || [];
-      if (rpg.medals.length === 0) return m.reply(novaRpgBox("medal", "Kamu belum punya medali.", "info"));
+      if (rpg.medals.length === 0) return m.reply(raraRpgBox("medal", "Kamu belum punya medali.", "info"));
       // GUARD FORMAT: kotak wajib boxLeft() — kalimat bebas panjang
       const msg = [];
       for (const medalId of rpg.medals) {
@@ -52,14 +52,14 @@ async function handler(m, { sock, text, command }) {
       if (action === "send") {
         const target = m.quoted?.sender || (args[1]?.startsWith("@") ? args[1].replace("@", "") + "@s.whatsapp.net" : null);
         const item = args.slice(2).join(" ").trim();
-        if (!target) return m.reply(novaRpgBox("mailbox", "Reply target atau ketik .mail send @target <item>", "guide"));
-        if (!item) return m.reply(novaRpgBox("mailbox", "Masukkan nama item. Contoh: .mail send @target hpPotion", "guide"));
+        if (!target) return m.reply(raraRpgBox("mailbox", "Reply target atau ketik .mail send @target <item>", "guide"));
+        if (!item) return m.reply(raraRpgBox("mailbox", "Masukkan nama item. Contoh: .mail send @target hpPotion", "guide"));
 
         rpg.inventory = rpg.inventory || {};
-        if (!rpg.inventory[item] || rpg.inventory[item] < 1) return m.reply(novaRpgBox("mailbox", "Item *" + item + "* tidak ada di inventory.", "info"));
+        if (!rpg.inventory[item] || rpg.inventory[item] < 1) return m.reply(raraRpgBox("mailbox", "Item *" + item + "* tidak ada di inventory.", "info"));
 
         const targetRpg = ensureRpg({ sender: target }, "");
-        if (!targetRpg) return m.reply(novaRpgBox("mailbox", "Target belum terdaftar RPG.", "error"));
+        if (!targetRpg) return m.reply(raraRpgBox("mailbox", "Target belum terdaftar RPG.", "error"));
 
         await m.react("🕒");
         rpg.inventory[item] -= 1;
@@ -74,7 +74,7 @@ async function handler(m, { sock, text, command }) {
 
       // .mailbox — lihat kotak surat
       rpg.mailbox = rpg.mailbox || [];
-      if (rpg.mailbox.length === 0) return m.reply(novaRpgBox("mailbox", "Kotak suratmu kosong.", "info"));
+      if (rpg.mailbox.length === 0) return m.reply(raraRpgBox("mailbox", "Kotak suratmu kosong.", "info"));
 
       await animGeneric(m, sock, '📬', 'Opening mailbox');
 
@@ -90,7 +90,7 @@ async function handler(m, { sock, text, command }) {
   } catch (e) {
     console.error("mailbox error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox(m.command || "mailbox", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox(m.command || "mailbox", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

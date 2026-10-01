@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .index — panel kontrol bot saat run (request owner 26 Sep 2026: "di
 // kategori owner ada plugin index.js, kalau ketik .index muncul usage
 // dan list fitur yang tersedia untuk kontrol bot — mengontrol bagian
@@ -6,17 +6,17 @@
 // Sub: optimizer (RAM auto-turun > 500MB, default off) · pinglog · jam
 // · ram · ramalert (DM owner pas RAM sistem lewat ambang, default off) ·
 // status.
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import { getConnectionState, forceReconnect } from "../../src/connection.js";
 import {
   startWatchdog, stopWatchdog, getWatchdogStatus, setWatchdogInterval,
 } from "../../src/connection.js";
-import { formatBytes, formatDuration, formatClockLine, getCpuLoadInfo } from "../../src/lib/nova-pinglog.js";
+import { formatBytes, formatDuration, formatClockLine, getCpuLoadInfo } from "../../src/lib/rara-pinglog.js";
 import {
   getOptimizerState, setOptimizer, optimizeNow,
-} from "../../src/lib/nova-optimizer.js";
-import { gracefulRestart, isRestarting } from "../../src/lib/nova-process-control.js";
+} from "../../src/lib/rara-optimizer.js";
+import { gracefulRestart, isRestarting } from "../../src/lib/rara-process-control.js";
 
 const pluginConfig = {
   name: "index",
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!sub) {
       return mm.reply(
-        novaGuideV2("index", {
+        raraGuideV2("index", {
           sapaan: "Panel kontrol bot saat run — bagian index.js & connection.js",
           cara: SUB_LIST.map((s) => "• " + prefix + s).join("\n"),
           contoh: `${prefix}index optimizer on · ${prefix}index optimizer on 600 · ${prefix}index pinglog off`,
@@ -77,7 +77,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (act === "on") {
         const mb = Number(m.args[2]) >= 100 ? Number(m.args[2]) : undefined;
         const st = setOptimizer(true, mb);
-        return mm.reply(novaWrap("index", [
+        return mm.reply(raraWrap("index", [
           `✅ Optimizer AKTIF`,
           "",
           `Ambang: ${st.thresholdMB} MB`,
@@ -86,11 +86,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
       if (act === "off") {
         setOptimizer(false);
-        return mm.reply(novaWrap("index", "❌ Optimizer dimatikan — RAM gak dipantau otomatis lagi."));
+        return mm.reply(raraWrap("index", "❌ Optimizer dimatikan — RAM gak dipantau otomatis lagi."));
       }
       if (act === "status") {
         const st = getOptimizerState();
-        return mm.reply(novaWrap("index", [
+        return mm.reply(raraWrap("index", [
           `⚙️ Status Optimizer`,
           "",
           `Kondisi: ${st.on ? "🟢 ON" : "🔴 OFF"}`,
@@ -99,7 +99,7 @@ async function handler(m, { sock, config: botConfig }) {
           `Bebas terakhir: ${st.lastFreedMB || 0} MB`,
         ]));
       }
-      return mm.reply(novaSalahV2("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
+      return mm.reply(raraSalahV2("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
     }
 
     // ─── optimize manual ───
@@ -114,44 +114,44 @@ async function handler(m, { sock, config: botConfig }) {
       ];
       if (res.methods.length) lines.push(`Metode: ${res.methods.join(", ")}`);
       if (res.hint) lines.push(`⚠ ${res.hint}`);
-      return mm.reply(novaWrap("index", lines));
+      return mm.reply(raraWrap("index", lines));
     }
 
     // ─── pinglog (alias .index ping — rev owner: "log ping bisa di off lewat .index ping off") ───
     if (sub === "pinglog" || sub === "ping") {
       const act = (arg1 || "").toLowerCase();
-      const { startPingLog, stopPingLog, _pingLogInternalsForTest } = await import("../../src/lib/nova-pinglog.js");
+      const { startPingLog, stopPingLog, _pingLogInternalsForTest } = await import("../../src/lib/rara-pinglog.js");
       if (act === "on") {
         startPingLog(sock);
-        return mm.reply(novaWrap("index", "✅ Ping log dinyalakan — baris ping tiap 20 dtk + jam tiap 10 dtk di panel."));
+        return mm.reply(raraWrap("index", "✅ Ping log dinyalakan — baris ping tiap 20 dtk + jam tiap 10 dtk di panel."));
       }
       if (act === "off") {
         stopPingLog();
-        return mm.reply(novaWrap("index", "❌ Ping log dimatikan (baris ping + jam berhenti)."));
+        return mm.reply(raraWrap("index", "❌ Ping log dimatikan (baris ping + jam berhenti)."));
       }
       if (act === "status") {
         const itl = _pingLogInternalsForTest();
-        return mm.reply(novaWrap("index", [
+        return mm.reply(raraWrap("index", [
           `📡 Ping Log: ${itl.isRunning() ? "🟢 jalan" : "🔴 mati"}`,
           `🕒 Jam: ${itl.isClockRunning() ? "🟢 jalan" : "🔴 mati"}`,
         ]));
       }
-      return mm.reply(novaSalahV2("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
+      return mm.reply(raraSalahV2("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
     }
 
     // ─── jam ───
     if (sub === "jam") {
       const act = (arg1 || "").toLowerCase();
-      const { startPingClock, stopPingClock, _pingLogInternalsForTest } = await import("../../src/lib/nova-pinglog.js");
+      const { startPingClock, stopPingClock, _pingLogInternalsForTest } = await import("../../src/lib/rara-pinglog.js");
       if (act === "on") {
         startPingClock();
-        return mm.reply(novaWrap("index", `✅ Log jam dinyalakan — ${formatClockLine()}`));
+        return mm.reply(raraWrap("index", `✅ Log jam dinyalakan — ${formatClockLine()}`));
       }
       if (act === "off") {
         stopPingClock();
-        return mm.reply(novaWrap("index", "❌ Log jam dimatikan."));
+        return mm.reply(raraWrap("index", "❌ Log jam dimatikan."));
       }
-      return mm.reply(novaSalahV2("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
+      return mm.reply(raraSalahV2("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
     }
 
     // ─── ram ───
@@ -159,7 +159,7 @@ async function handler(m, { sock, config: botConfig }) {
       const rss = process.memoryUsage().rss;
       const heap = process.memoryUsage().heapUsed;
       const cs = getConnectionState();
-      return mm.reply(novaWrap("index", [
+      return mm.reply(raraWrap("index", [
         `🧠 RAM: ${formatBytes(rss)}`,
         `🧠 Heap: ${formatBytes(heap)}`,
         `⏱ Uptime: ${formatDuration(process.uptime())}`,
@@ -169,24 +169,24 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ─── ramalert (owner 26 Sep: "ya mau defaultnya off") ───
     if (sub === "ramalert") {
-      const { setRamAlert, getRamAlertStatus } = await import("../../src/lib/nova-pinglog.js");
+      const { setRamAlert, getRamAlertStatus } = await import("../../src/lib/rara-pinglog.js");
       const act = (arg1 || "status").toLowerCase();
       if (act === "on") {
         const persen = Number(m.args[2]);
         if (Number.isFinite(persen) && (persen < 50 || persen > 99)) {
-          return mm.reply(novaSalahV2("index", { pesan: "ambang persen harus 50-99 (persen pemakaian RAM sistem)", contoh: prefix + "index ramalert on 85" }));
+          return mm.reply(raraSalahV2("index", { pesan: "ambang persen harus 50-99 (persen pemakaian RAM sistem)", contoh: prefix + "index ramalert on 85" }));
         }
         const st = setRamAlert(true, Number.isFinite(persen) ? persen : undefined);
         // alert numpang tick pinglog — kalau pinglog mati, nyalain sekalian
         let nyalain = "";
-        const { _pingLogInternalsForTest } = await import("../../src/lib/nova-pinglog.js");
+        const { _pingLogInternalsForTest } = await import("../../src/lib/rara-pinglog.js");
         const itl = _pingLogInternalsForTest();
         if (!itl.isRunning()) {
-          const { startPingLog } = await import("../../src/lib/nova-pinglog.js");
+          const { startPingLog } = await import("../../src/lib/rara-pinglog.js");
           startPingLog(sock);
           nyalain = "\nPing log tadi mati — saya nyalain sekalian biar alert bisa jalan.";
         }
-        return mm.reply(novaWrap("index", [
+        return mm.reply(raraWrap("index", [
           `✅ RAM Alert AKTIF`,
           "",
           `Ambang: ${st.thresholdPct}% RAM sistem`,
@@ -195,12 +195,12 @@ async function handler(m, { sock, config: botConfig }) {
       }
       if (act === "off") {
         setRamAlert(false);
-        return mm.reply(novaWrap("index", "❌ RAM Alert dimatikan — gak ada DM lagi pas RAM tinggi."));
+        return mm.reply(raraWrap("index", "❌ RAM Alert dimatikan — gak ada DM lagi pas RAM tinggi."));
       }
       if (act === "status") {
         const st = getRamAlertStatus();
         const last = st.lastAlertAt ? new Date(st.lastAlertAt).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "belum pernah";
-        return mm.reply(novaWrap("index", [
+        return mm.reply(raraWrap("index", [
           `🧠 Status RAM Alert`,
           "",
           `Kondisi: ${st.on ? "🟢 ON" : "🔴 OFF (default)"}`,
@@ -211,16 +211,16 @@ async function handler(m, { sock, config: botConfig }) {
           `Alert terakhir: ${last}`,
         ]));
       }
-      return mm.reply(novaSalahV2("index", { pesan: "aksi gak dikenal — on [persen] / off / status", contoh: prefix + "index ramalert on 85" }));
+      return mm.reply(raraSalahV2("index", { pesan: "aksi gak dikenal — on [persen] / off / status", contoh: prefix + "index ramalert on 85" }));
     }
 
     // ─── status ───
     if (sub === "status") {
       const st = getOptimizerState();
-      const { _pingLogInternalsForTest } = await import("../../src/lib/nova-pinglog.js");
+      const { _pingLogInternalsForTest } = await import("../../src/lib/rara-pinglog.js");
       const itl = _pingLogInternalsForTest();
       const cs = getConnectionState();
-      return mm.reply(novaWrap("index", [
+      return mm.reply(raraWrap("index", [
         `📊 Ringkasan Kontrol Bot`,
         "",
         `Optimizer: ${st.on ? "🟢 ON (ambang ${st.thresholdMB} MB)" : "🔴 OFF"}`,
@@ -229,16 +229,16 @@ async function handler(m, { sock, config: botConfig }) {
         `RAM: ${formatBytes(process.memoryUsage().rss)}`,
         `WA: ${cs?.isConnected ? "✅ nyambung" : "❌ terputus"}`,
         `Uptime: ${formatDuration(process.uptime())}`,
-        `RAM Alert: ${(await import("../../src/lib/nova-pinglog.js")).getRamAlertStatus().on ? "🟢 ON" : "🔴 OFF (default)"}`,
+        `RAM Alert: ${(await import("../../src/lib/rara-pinglog.js")).getRamAlertStatus().on ? "🟢 ON" : "🔴 OFF (default)"}`,
       ]));
     }
 
     // ─── dbsave (no.3 — paksa simpan DB sebelum restart/backup) ───
     if (sub === "dbsave" || sub === "db" || sub === "dbsimpan") {
       const db = getDatabase();
-      if (!db?.save) return mm.reply(novaWrap("index", "❌ Database belum siap."));
+      if (!db?.save) return mm.reply(raraWrap("index", "❌ Database belum siap."));
       await db.save();
-      return mm.reply(novaWrap("index", [
+      return mm.reply(raraWrap("index", [
         "💾 Database tersimpan sekarang.",
         "",
         "Semua perubahan (user, sesi, config) udah ditulis ke disk.",
@@ -250,7 +250,7 @@ async function handler(m, { sock, config: botConfig }) {
       const act = (arg1 || "").toLowerCase();
       if (act === "status") {
         const wd = getWatchdogStatus();
-        return mm.reply(novaWrap("index", [
+        return mm.reply(raraWrap("index", [
           "🐕 Status Watchdog",
           "",
           `Kondisi: ${wd.active ? "🟢 aktif" : "🔴 mati"}`,
@@ -261,24 +261,24 @@ async function handler(m, { sock, config: botConfig }) {
       }
       if (act === "on") {
         startWatchdog(() => forceReconnect("watchdog aktif"));
-        return mm.reply(novaWrap("index", "✅ Watchdog dinyalakan — bot beku akan di-restart otomatis saat hening lewat batas."));
+        return mm.reply(raraWrap("index", "✅ Watchdog dinyalakan — bot beku akan di-restart otomatis saat hening lewat batas."));
       }
       if (act === "off") {
         stopWatchdog();
-        return mm.reply(novaWrap("index", "❌ Watchdog dimatikan — koneksi beku gak dideteksi otomatis lagi."));
+        return mm.reply(raraWrap("index", "❌ Watchdog dimatikan — koneksi beku gak dideteksi otomatis lagi."));
       }
       if (act === "interval") {
         const res = setWatchdogInterval(m.args[2]);
         if (!res.ok) {
-          return mm.reply(novaWrap("index", [
+          return mm.reply(raraWrap("index", [
             "❌ Interval gak valid.",
             "",
             `Harus 1-1440 menit. Contoh: ${prefix}index watchdog interval 10`,
           ]));
         }
-        return mm.reply(novaWrap("index", `✅ Batas watchdog diubah ke ${res.intervalMin} menit — langsung aktif tanpa restart.`));
+        return mm.reply(raraWrap("index", `✅ Batas watchdog diubah ke ${res.intervalMin} menit — langsung aktif tanpa restart.`));
       }
-      return mm.reply(novaSalahV2("index", { pesan: "sub watchdog gak dikenal — status / on / off / interval", contoh: prefix + "index watchdog interval 10" }));
+      return mm.reply(raraSalahV2("index", { pesan: "sub watchdog gak dikenal — status / on / off / interval", contoh: prefix + "index watchdog interval 10" }));
     }
 
     // ─── reconnect (no.4 — bot beku? putus & nyambung lagi TANPA restart proses) ───
@@ -287,14 +287,14 @@ async function handler(m, { sock, config: botConfig }) {
       try { await db?.save?.(); } catch {}
       const res = forceReconnect("panel .index reconnect (owner)");
       if (!res.ok) {
-        return mm.reply(novaWrap("index", [
+        return mm.reply(raraWrap("index", [
           "❌ Reconnect gagal dijalankan.",
           "",
           res.reason || "Koneksi belum aktif.",
           "Kalau bot emang beku parah, pakai " + prefix + "index restart ya.",
         ]));
       }
-      return mm.reply(novaWrap("index", [
+      return mm.reply(raraWrap("index", [
         "🔄 Reconnect dijalankan...",
         "",
         "Koneksi sengaja diputus (DB udah disimpan), bot nyambung lagi otomatis.",
@@ -308,26 +308,26 @@ async function handler(m, { sock, config: botConfig }) {
       if (act === "ya") {
         const res = await gracefulRestart();
         if (!res.ok) {
-          return mm.reply(novaWrap("index", "⚠ Proses restart udah jalan — bot bakal bangun sendiri."));
+          return mm.reply(raraWrap("index", "⚠ Proses restart udah jalan — bot bakal bangun sendiri."));
         }
-        return mm.reply(novaWrap("index", [
+        return mm.reply(raraWrap("index", [
           "🔄 Restart dijalankan...",
           "",
           "Database disimpan dulu, bot keluar, lalu pm2 bangunin lagi.",
           "Tunggu ± 10 dtk, panel log bakal nampilin boot berikutnya.",
         ]));
       }
-      return mm.reply(novaWrap("index", [
+      return mm.reply(raraWrap("index", [
         "⚠ Restart bot akan memutus koneksi WA sejenak (± 10 dtk).",
         "",
         `Yakin? Ketik: ${prefix}index restart ya`,
       ]));
     }
 
-    return mm.reply(novaSalahV2("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
+    return mm.reply(raraSalahV2("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("index", `❌ Gagal: ${e?.message || e}`), "index");
+    return m.reply(raraWrap("index", `❌ Gagal: ${e?.message || e}`), "index");
   }
 }
 

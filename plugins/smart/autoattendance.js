@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autoabsen",
@@ -43,45 +43,45 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "on" || sub === "enable") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Absen", "Khusus owner."));
+      await m.reply(raraWrap("Auto Absen", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = true;
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Auto Absen", "AKTIF!\nThreshold: " + cfg.threshold + " hari\nReport: setiap tanggal " + cfg.reportDay + "\nBot akan notify member yang tidak aktif."));
+    await m.reply(raraWrap("Auto Absen", "AKTIF!\nThreshold: " + cfg.threshold + " hari\nReport: setiap tanggal " + cfg.reportDay + "\nBot akan notify member yang tidak aktif."));
     return { handled: true };
   }
 
   if (sub === "off" || sub === "disable") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Absen", "Khusus owner."));
+      await m.reply(raraWrap("Auto Absen", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = false;
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Auto Absen", "Dimatikan."));
+    await m.reply(raraWrap("Auto Absen", "Dimatikan."));
     return { handled: true };
   }
 
   if (sub === "threshold" || sub === "batas") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Absen", "Khusus owner."));
+      await m.reply(raraWrap("Auto Absen", "Khusus owner."));
       return { handled: true };
     }
     const days = parseInt(args[2] || "0", 10);
     if (!days || days < 1) {
-      await m.reply(novaWrap("Auto Absen", "Format: " + prefix + "autoabsen threshold <hari>\n💡 *Contoh:* " + prefix + "autoabsen threshold 14"));
+      await m.reply(raraWrap("Auto Absen", "Format: " + prefix + "autoabsen threshold <hari>\n💡 *Contoh:* " + prefix + "autoabsen threshold 14"));
       return { handled: true };
     }
     cfg.threshold = days;
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Auto Absen", "Threshold diset: " + days + " hari"));
+    await m.reply(raraWrap("Auto Absen", "Threshold diset: " + days + " hari"));
     return { handled: true };
   }
 
   if (sub === "report" || sub === "laporan") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Absen", "Khusus owner."));
+      await m.reply(raraWrap("Auto Absen", "Khusus owner."));
       return { handled: true };
     }
     const now = Date.now();
@@ -90,7 +90,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       .sort((a, b) => a[1] - b[1]);
 
     if (inactive.length === 0) {
-      await m.reply(novaWrap("Auto Absen", "Semua member aktif! Tidak ada yang melebihi " + cfg.threshold + " hari."));
+      await m.reply(raraWrap("Auto Absen", "Semua member aktif! Tidak ada yang melebihi " + cfg.threshold + " hari."));
       return { handled: true };
     }
 
@@ -99,7 +99,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return (i + 1) + ". @" + jid.split("@")[0] + " - " + days + " hari tidak aktif";
     }).join("\n");
 
-    await m.reply(novaWrap("Auto Absen Report", [
+    await m.reply(raraWrap("Auto Absen Report", [
       "Member tidak aktif (" + inactive.length + " orang)",
       "Threshold: " + cfg.threshold + " hari",
       "",
@@ -112,12 +112,12 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "reset") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Absen", "Khusus owner."));
+      await m.reply(raraWrap("Auto Absen", "Khusus owner."));
       return { handled: true };
     }
     cfg.activity = {};
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Auto Absen", "Aktivitas direset."));
+    await m.reply(raraWrap("Auto Absen", "Aktivitas direset."));
     return { handled: true };
   }
 
@@ -126,7 +126,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const total = Object.keys(cfg.activity).length;
     const active = Object.values(cfg.activity).filter(ts => (now - ts) / 86400000 < cfg.threshold).length;
     const inactiveCount = total - active;
-    await m.reply(novaWrap("Auto Absen", [
+    await m.reply(raraWrap("Auto Absen", [
       "Status: " + (cfg.enabled ? "AKTIF" : "MATI"),
       "Threshold: " + cfg.threshold + " hari",
       "Total tracked: " + total,
@@ -137,7 +137,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Auto Absen", [
+  await m.reply(raraWrap("Auto Absen", [
     "AUTO ABSENCE NOTIFY",
     "",
     prefix + "autoabsen on/off",

@@ -1,4 +1,4 @@
-// NOVA — E2E: AUTO SEWA & PREMIUM MANAGER .rentauto (27 Sep 2026)
+// RARA — E2E: AUTO SEWA & PREMIUM MANAGER .rentauto (27 Sep 2026)
 // Lib murni (processRentAutoTick) + plugin handler. Pola: botdoctor-e2e.
 import path from "node:path";
 import fs from "node:fs";
@@ -6,20 +6,20 @@ import { fileURLToPath } from "node:url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-rentauto-db-" + Date.now();
+const DB_DIR = "/tmp/rara-rentauto-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
-const lib = await import(R + "/src/lib/nova-rent-auto.js");
+const lib = await import(R + "/src/lib/rara-rent-auto.js");
 const {
   ensureRentAutoState, processRentAutoTick, buildRentAutoStatus,
   initRentAutoScheduler, stopRentAutoScheduler,
   _setRentAutoNowForTest, _clearRentAutoNowForTest,
   _setRentAutoOwnerJidForTest, _clearRentAutoOwnerJidForTest,
 } = lib;
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
-const { addPremium, loadPremium } = await import(R + "/src/lib/nova-premium-db.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
+const { addPremium, loadPremium } = await import(R + "/src/lib/rara-premium-db.js");
 const { handler } = await import(R + "/plugins/owner/rentauto.js");
 
 let pass = 0, fail = 0;

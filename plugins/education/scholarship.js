@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "beasiswa",
@@ -165,7 +165,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     try {
       const results = await fetchBeasiswaFromWeb(level);
       if (results.length === 0) {
-        return m.reply( novaWrap("Beasiswa", [
+        return m.reply( raraWrap("Beasiswa", [
           "Maaf, tidak ada hasil saat ini.",
           "Coba lagi ya atau cari manual di:",
           "https://beasiswaindonesia.com",
@@ -187,12 +187,12 @@ async function handler(m, { sock, args, config: botConfig }) {
       txt += tipText("Info dapat berubah, cek link resmi untuk konfirmasi");
       return m.reply( txt, { commandName: "beasiswa" });
     } catch (e) {
-      return m.reply( novaError("Beasiswa", `Gagal cari nih: ${e.message}`), { commandName: "beasiswa" });
+      return m.reply( raraError("Beasiswa", `Gagal cari nih: ${e.message}`), { commandName: "beasiswa" });
     }
   }
 
   // Default: help
-  const txt = novaWrap("Beasiswa - Pencari Info Beasiswa", [
+  const txt = raraWrap("Beasiswa - Pencari Info Beasiswa", [
     `Cari info beasiswa dari berbagai sumber online.`,
     ``,
     `Perintah:`,

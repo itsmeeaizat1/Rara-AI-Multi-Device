@@ -11,7 +11,7 @@ const market = {
   dogecoin: { idr: 1_500, idr_24h_change: 5 },
 };
 
-import * as lib from "../../src/lib/nova-cryptoalert.js";
+import * as lib from "../../src/lib/rara-cryptoalert.js";
 lib.setPriceFetcher(async (ids) => {
   const out = {};
   ids.forEach((id) => { if (market[id]) out[id] = { ...market[id] }; });

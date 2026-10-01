@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .mal — suite data MyAnimeList via package mal-scraper (16 Sep 2026, request
 // owner: audit dependencies → mal-scraper terverifikasi hidup, live Steins;Gate
 // skor 9.07). TANPA API key. STRICT satuan: error asli keluar tanpa fallback.
@@ -10,8 +10,8 @@
 
 import * as malScraper from "mal-scraper";
 import {
-  novaError, novaCaption, novaWrap, tipText,
-} from "../../src/lib/nova-menu-style.js";
+  raraError, raraCaption, raraWrap, tipText,
+} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "mal",
@@ -60,7 +60,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
 
     if (!raw || (isSub && parts.length < 2 && sub !== "musim")) {
       const text =
-        novaCaption({
+        raraCaption({
           emoji: "🎌",
           name: "mal",
           description: "Info anime langsung dari MyAnimeList — skor, episode, studio, sinopsis",
@@ -83,7 +83,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
       await m.react("🔍");
       const list = await _mal.season(year, season);
       if (!Array.isArray(list) || !list.length) {
-        await m.reply(novaError("Mal", `Anime musim ${season} ${year} tidak ditemukan — coba tahun/musim lain`), "mal");
+        await m.reply(raraError("Mal", `Anime musim ${season} ${year} tidak ditemukan — coba tahun/musim lain`), "mal");
         await m.react("❌");
         return { handled: true };
       }
@@ -93,7 +93,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
         return `${i + 1}. *${judul}*${skor && skor !== "—" ? " — " + skor : ""}`;
       });
       const text =
-        novaWrap(`MyAnimeList`, [
+        raraWrap(`MyAnimeList`, [
           `🎬 Anime Musim *${season.toUpperCase()} ${year}*`,
           "",
           ...rows,
@@ -113,7 +113,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
       await m.react("🔍");
       const list = await _mal.search(q);
       if (!Array.isArray(list) || !list.length) {
-        await m.reply(novaError("Mal", `Pencarian "${q}" tidak menemukan anime — coba judul lain`), "mal");
+        await m.reply(raraError("Mal", `Pencarian "${q}" tidak menemukan anime — coba judul lain`), "mal");
         await m.react("❌");
         return { handled: true };
       }
@@ -124,7 +124,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
         return `${i + 1}. *${judul}*${type ? ` (${type}${tahun ? " " + tahun : ""})` : ""}`;
       });
       const text =
-        novaWrap("MyAnimeList", [
+        raraWrap("MyAnimeList", [
           `🔍 Hasil pencarian: *${q}*`,
           "",
           ...rows,
@@ -143,13 +143,13 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
     await m.react("🔍");
     const a = await _mal.infoFromName(q);
     if (!a || !a.title) {
-      await m.reply(novaError("Mal", `Anime "${q}" tidak ditemukan di MyAnimeList — coba ${prefix}mal cari <judul>`), "mal");
+      await m.reply(raraError("Mal", `Anime "${q}" tidak ditemukan di MyAnimeList — coba ${prefix}mal cari <judul>`), "mal");
       await m.react("❌");
       return { handled: true };
     }
     const genres = (a.genres || []).map((g) => g?.name || g).filter(Boolean);
     const text =
-      novaWrap("MyAnimeList", [
+      raraWrap("MyAnimeList", [
         `🎌 *${a.title}*`,
         a.japaneseTitle ? `🈶 ${a.japaneseTitle}` : "",
         "",
@@ -170,7 +170,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
     await m.reply(text, "mal");
   } catch (error) {
     await m.react("❌");
-    await m.reply(novaError("Mal", `Gagal ambil data MyAnimeList: ${String(error?.message || error).slice(0, 120)}`), "mal");
+    await m.reply(raraError("Mal", `Gagal ambil data MyAnimeList: ${String(error?.message || error).slice(0, 120)}`), "mal");
   }
   return { handled: true };
 }

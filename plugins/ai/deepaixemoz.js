@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 /**
  * plugins/ai/deepaixemoz.js
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   const input = args.join(" ").trim();
 
   if (!input) {
-    return m.reply(novaGuideV2("deepaixemoz", {
+    return m.reply(raraGuideV2("deepaixemoz", {
  kaomoji: "(◕‿◕)",
  sapaan: "ngobrol sama DeepAI Xemoz, otaknya serba bisa! (≧▽≦)",
       cara: "kirim pertanyaannya setelah command, reset buat hapus sesi",
@@ -78,9 +78,9 @@ async function handler(m, { sock }) {
     const key = sessionKey(m);
     if (sessions.has(key)) {
       sessions.delete(key);
-      return m.reply(novaWrap("DeepAI Chat", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
+      return m.reply(raraWrap("DeepAI Chat", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
     }
-    return m.reply(novaWrap("DeepAI Chat", "Tidak ada sesi aktif untuk direset."));
+    return m.reply(raraWrap("DeepAI Chat", "Tidak ada sesi aktif untuk direset."));
   }
   try {
   await m.react("🕒");
@@ -92,9 +92,9 @@ async function handler(m, { sock }) {
       sessions.set(key, result.sessionUuid);
     }
     await m.react("🐣");
-    return m.reply(novaWrap("DeepAI", result.response || "Tidak ada response."));
+    return m.reply(raraWrap("DeepAI", result.response || "Tidak ada response."));
   } catch (error) {
-    return m.reply(novaWrap("DeepAI Error", error.message || "Gagal hubungin AI nih"));
+    return m.reply(raraWrap("DeepAI Error", error.message || "Gagal hubungin AI nih"));
   }
 }
 

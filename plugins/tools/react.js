@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .linkreact — react emoji ke pesan WA manapun via link (port engine lama reaction.js)
-import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "react",
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
     const emoji = parts[1] || "";
     if (!link || !emoji) {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "react",
         "Kirim reaksi emoji ke pesan WhatsApp manapun lewat link pesannya (port engine lama).",
         prefix + "react https://chat.whatsapp.com/.... 👍",
@@ -45,15 +45,15 @@ async function handler(m, { sock, config: botConfig }) {
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
       await m.react("⚡");
-      await m.reply(novaWrap("React", "Reaksi " + emoji + " udah dikirim ke link pesan itu."));
+      await m.reply(raraWrap("React", "Reaksi " + emoji + " udah dikirim ke link pesan itu."));
     } else {
       await m.react("❌");
-      await m.reply(novaError("React", "Gagal: " + JSON.stringify(data).slice(0, 120)));
+      await m.reply(raraError("React", "Gagal: " + JSON.stringify(data).slice(0, 120)));
     }
   } catch (error) {
     console.error("[linkreact]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("React", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("React", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }

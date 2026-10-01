@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // welcome.js — pesan sambutan member baru (single design, engine text)
-import { novaWrap, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { detectCountry, fillWelcomeTemplate } from "../../src/lib/nova-welcome-card.js";
+import { raraWrap, raraError, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { detectCountry, fillWelcomeTemplate } from "../../src/lib/rara-welcome-card.js";
 import config from "../../config.js";
 
 // ─── 2 MODE DI DM (request owner 2026-09-06) ───
@@ -12,7 +12,7 @@ import config from "../../config.js";
 //   2. On Per Grup — pilih grup target lewat popup single_select
 async function sendWelcomeModeChooser(m, sock, db, prefix) {
   const globalOn = db.setting("welcomeGlobal") === true;
-  const text = novaWrap("welcome", [
+  const text = raraWrap("welcome", [
     `Fitur : welcome message`,
     `Lokasi : chat pribadi`,
     ``,
@@ -48,7 +48,7 @@ async function sendWelcomeGroupPicker(m, sock, prefix) {
     .sort((a, b) => a.subject.localeCompare(b.subject));
 
   if (!list.length) {
-    return m.reply(novaWrap("welcome", [
+    return m.reply(raraWrap("welcome", [
       `Fitur : welcome message`,
       `Mode : per grup target`,
       ``,
@@ -68,7 +68,7 @@ async function sendWelcomeGroupPicker(m, sock, prefix) {
     id: `${prefix}welcome grup ${g.jid} off`,
   }));
 
-  const text = novaWrap("welcome", [
+  const text = raraWrap("welcome", [
     `Fitur : welcome message`,
     `Mode : per grup target`,
     ``,
@@ -105,7 +105,7 @@ async function setWelcomeTargetGroup(m, sock, db, parts, prefix) {
   const action = parts[2] === "off" ? "off" : "on";
 
   if (!/\d-\d+@g\.us$/.test(groupJid)) {
-    return m.reply(novaWrap("welcome", [
+    return m.reply(raraWrap("welcome", [
       `Fitur : welcome message`,
       `Mode : per grup target`,
       ``,
@@ -118,7 +118,7 @@ async function setWelcomeTargetGroup(m, sock, db, parts, prefix) {
   let subject = groupJid;
   try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid; } catch {}
 
-  return m.reply(novaWrap("welcome", [
+  return m.reply(raraWrap("welcome", [
     `Fitur : welcome message`,
     `Mode : per grup target`,
     `Status : ${action.toUpperCase()}`,
@@ -143,7 +143,7 @@ async function handler(m, { sock, config: botConfig }) {
       // .welcome onglobal | .welcome on global
       if (parts[0] === "onglobal" || (parts[0] === "on" && parts[1] === "global")) {
         db.setting("welcomeGlobal", true);
-        await m.reply(novaWrap("welcome", [
+        await m.reply(raraWrap("welcome", [
           `Fitur : welcome message`,
           `Mode : global semua grup`,
           `Status : ON`,
@@ -157,7 +157,7 @@ async function handler(m, { sock, config: botConfig }) {
       // .welcome offglobal | .welcome off global
       if (parts[0] === "offglobal" || (parts[0] === "off" && parts[1] === "global")) {
         db.setting("welcomeGlobal", false);
-        await m.reply(novaWrap("welcome", [
+        await m.reply(raraWrap("welcome", [
           `Fitur : welcome message`,
           `Mode : global semua grup`,
           `Status : OFF`,
@@ -181,13 +181,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ─── DI GRUP: perilaku lama (per-grup) ───
     if (!["on", "off"].includes(raw)) {
-      await m.reply(novaGuide('Welcome', `Aktifkan atau matikan pesan sambutan member baru. Custom pesannya? Ketik ${prefix}setwelcome <pesan>.`, `${prefix}welcome on`));
+      await m.reply(raraGuide('Welcome', `Aktifkan atau matikan pesan sambutan member baru. Custom pesannya? Ketik ${prefix}setwelcome <pesan>.`, `${prefix}welcome on`));
       return { handled: true };
     }
 
     db.setGroup(m.chat, { welcome: raw === "on" });
 
-    await m.reply(novaWrap("welcome", [
+    await m.reply(raraWrap("welcome", [
       `Fitur : welcome message`,
       `Status : ${raw === "on" ? "ON" : "OFF"}`,
       `Grup : ${m.chat}`,
@@ -195,7 +195,7 @@ async function handler(m, { sock, config: botConfig }) {
       `💡 Custom pesan? Ketik ${prefix}setwelcome <pesan>`,
     ].join("\n")));
   } catch (error) {
-    await m.reply(novaError('Welcome', `Gagal: ${error.message}`));
+    await m.reply(raraError('Welcome', `Gagal: ${error.message}`));
   }
 
   return { handled: true };
@@ -245,7 +245,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
       memberCount,
       desc: metadata?.desc || "",
       ownerName,
-      botName: config.bot?.name || "Nova AI",
+      botName: config.bot?.name || "Rara AI",
       prefix,
     });
   } else if (metadata?.desc) {
@@ -274,7 +274,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
     rows.push("│", `│ • 📋 ${rulesText}`);
   }
 
-  const engineText = novaGameBox({
+  const engineText = raraGameBox({
     title: "welcome", icon: "👋",
     flavor: `👋 *${sapaan}*`,
     body: rows.join("\n"),
@@ -294,8 +294,8 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
     }
   } catch {}
   try {
-    const { generateWelcomeCard } = await import("../../src/lib/nova-welcome-canvas.js");
-    const { levelPreviewThumb } = await import("../../src/lib/nova-level.js");
+    const { generateWelcomeCard } = await import("../../src/lib/rara-welcome-canvas.js");
+    const { levelPreviewThumb } = await import("../../src/lib/rara-level.js");
     const card = await generateWelcomeCard({
       groupName, ppBuffer, name: displayName,
       memberKe: memberCount || 1,

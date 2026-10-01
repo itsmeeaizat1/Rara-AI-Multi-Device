@@ -4,9 +4,9 @@ import http from "node:http"
 import fs from "node:fs"
 const ckpt = (s) => fs.appendFileSync("/tmp/e2e-ckpt.log", s + "\n")
 ckpt("start")
-import { initDatabase } from "../../src/lib/nova-database.js"
+import { initDatabase } from "../../src/lib/rara-database.js"
 
-await initDatabase("/tmp/createpanel-e2e-db/nova.json")
+await initDatabase("/tmp/createpanel-e2e-db/rara.json")
 ckpt("db ok")
 const { handler, parseDiskCpu, config } = await import("../../plugins/panel/createserver.js")
 ckpt("plugin imported")
@@ -61,7 +61,7 @@ ckpt("server listen port=" + srv.address().port)
 const PORT = srv.address().port
 cfg.pterodactyl.server1 = { domain: "http://127.0.0.1:" + PORT, apikey: "ptla_mock", capikey: "", egg: "15", nestid: "5", location: "1" }
 
-const { getDatabase } = await import("../../src/lib/nova-database.js")
+const { getDatabase } = await import("../../src/lib/rara-database.js")
 getDatabase().setting("panelCreateJeda", 0) // matiin jeda 5 menit buat e2e
 
 const replies = []

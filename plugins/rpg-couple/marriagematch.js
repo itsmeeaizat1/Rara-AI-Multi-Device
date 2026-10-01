@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Lamar pasangan untuk menikah (butuh min affection + dating days)
 
-import { ensureRpg, getRpgData, removeGold } from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, getRpgData, removeGold } from "../../src/lib/rara-rpg-service.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
 import {
   getCintaData, marry,
   MARRIAGE_MIN_AFFECTION, MARRIAGE_MIN_DATING_DAYS, formatDurasi
-} from "../../src/lib/nova-rpg-cinta.js";
+} from "../../src/lib/rara-rpg-cinta.js";
 
 const pluginConfig = {
   name: "nikahmatch",
@@ -36,18 +36,18 @@ async function handler(m, { sock }) {
 
     if (!cinta.spouse) {
       return m.reply(
-        novaRpgBox("Nikah", `Belum punya pacar, mau nikah sama siapa?\nGunakan ${m.prefix}rpgcouple @tag dulu.`)
+        raraRpgBox("Nikah", `Belum punya pacar, mau nikah sama siapa?\nGunakan ${m.prefix}rpgcouple @tag dulu.`)
       );
     }
 
     if (cinta.married) {
-      return m.reply(novaRpgBox("Nikah", `Kamu sudah menikah dengan *${cinta.spouseName}*`));
+      return m.reply(raraRpgBox("Nikah", `Kamu sudah menikah dengan *${cinta.spouseName}*`));
     }
 
     // Cek affection
     if ((cinta.affection || 0) < MARRIAGE_MIN_AFFECTION) {
       return m.reply(
-        novaRpgBox("Nikah", `Affection belum cukup.\nButuh: *${MARRIAGE_MIN_AFFECTION}* | Punya: *${cinta.affection || 0}*\nKencan lebih banyak dengan ${m.prefix}rpgkencan`)
+        raraRpgBox("Nikah", `Affection belum cukup.\nButuh: *${MARRIAGE_MIN_AFFECTION}* | Punya: *${cinta.affection || 0}*\nKencan lebih banyak dengan ${m.prefix}rpgkencan`)
       );
     }
 
@@ -56,14 +56,14 @@ async function handler(m, { sock }) {
     const datingDays = Math.floor(datingMs / 86400000);
     if (datingDays < MARRIAGE_MIN_DATING_DAYS) {
       return m.reply(
-        novaRpgBox("Nikah", `Belum cukup lama pacaran.\nButuh: *${MARRIAGE_MIN_DATING_DAYS} hari* | Sudah: *${datingDays} hari*`)
+        raraRpgBox("Nikah", `Belum cukup lama pacaran.\nButuh: *${MARRIAGE_MIN_DATING_DAYS} hari* | Sudah: *${datingDays} hari*`)
       );
     }
 
     // Cek gold
     if ((rpg.gold || 0) < MARRIAGE_COST) {
       return m.reply(
-        novaRpgBox("Nikah", `Gold tidak cukup untuk biaya nikah.\nBiaya: *${MARRIAGE_COST} gold* | Punya: *${rpg.gold || 0} gold*`)
+        raraRpgBox("Nikah", `Gold tidak cukup untuk biaya nikah.\nBiaya: *${MARRIAGE_COST} gold* | Punya: *${rpg.gold || 0} gold*`)
       );
     }
 
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
       timestamp: Date.now(),
     };
 
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "rpg cinta", icon: "💍",
       flavor: "💍 *LAMARAN TERKIRIM!*",
       body: [
@@ -120,7 +120,7 @@ async function answerHandler(m, sock) {
       marry(m);
       delete global.rpgNikahSessions[sessKey];
       await m.react("💍");
-      await m.reply(novaGameBox({
+      await m.reply(raraGameBox({
         title: "rpg cinta", icon: "💍",
         flavor: "💍 *SELAMAT MENIKAH!*",
         body: [
@@ -138,7 +138,7 @@ async function answerHandler(m, sock) {
       delete global.rpgNikahSessions[sessKey];
       await m.react("💔");
       await m.reply(
-        novaRpgBox("Nikah", `@${m.sender.split("@")[0]} menolak @${proposer.split("@")[0]}\nSabar ya, jodoh tidak kemana!`)
+        raraRpgBox("Nikah", `@${m.sender.split("@")[0]} menolak @${proposer.split("@")[0]}\nSabar ya, jodoh tidak kemana!`)
       );
       return true;
     }

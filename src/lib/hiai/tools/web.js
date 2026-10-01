@@ -1,5 +1,5 @@
 import { ctx, MODELS, captureWebsiteScreenshot, createGeminiClient, detectPlatform, fetchWebsiteHtmlFallback, getNextKey, getPersonality, peekAnalyzeWithVision, peekFetchBuffer, peekFetchVideoBuffer, searchWebGrounded } from '../mcp.js';
-import { browserWebSearch, browserPageFacts } from '../../../scraper/nova-web-browser.js';
+import { browserWebSearch, browserPageFacts } from '../../../scraper/rara-web-browser.js';
 import fs from 'fs'
 
 // Seam e2e: override browserWebSearch yang dipakai fallback search_web (jangan nyala chromium beneran di suite test).

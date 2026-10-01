@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // rockpaperscissors.js — Batu Gunting Kertas vs Bot (single player, no API needed)
 
-import { novaError } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
+import { raraError } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
-import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
-import { formatRp } from "../../src/lib/nova-rpg-service.js";
-import { rollBonus } from "../../src/lib/nova-game-rewards.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { addExpWithLevelCheck } from "../../src/lib/rara-level.js";
+import { formatRp } from "../../src/lib/rara-rpg-service.js";
+import { rollBonus } from "../../src/lib/rara-game-rewards.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "rockpaperscissors",
@@ -40,7 +40,7 @@ async function handler(m, { args, prefix }) {
   const pilihan = (args[0] || "").toLowerCase().trim();
 
   if (!pilihan) {
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "suit",
       icon: "✊",
       flavor: "✊ *SUIT: BATU GUNTING KERTAS!*",
@@ -50,7 +50,7 @@ async function handler(m, { args, prefix }) {
   }
 
   if (!CHOICES.includes(pilihan)) {
-    return m.reply(novaError("Suit", `Pilihan gak valid nih! Ketik: batu, gunting, atau kertas`));
+    return m.reply(raraError("Suit", `Pilihan gak valid nih! Ketik: batu, gunting, atau kertas`));
   }
 
   // Bot picks random

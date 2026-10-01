@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // remove-clothesv2 — NSFW: Remove clothes v2 dari foto (IkyyXD, butuh key khusus)
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "remove-clothesv2",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const prefix = m.prefix || ".";
 
     if (!RC_KEY) {
-      return m.reply(novaWrap("Remove Clothes V2", "Fitur ini butuh key khusus. Hubungi owner untuk setup key."));
+      return m.reply(raraWrap("Remove Clothes V2", "Fitur ini butuh key khusus. Hubungi owner untuk setup key."));
     }
 
     let imageUrl = null;
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(novaWrap("Remove Clothes V2", [
+      return m.reply(raraWrap("Remove Clothes V2", [
         "NSFW: Remove clothes v2 dari foto",
         "",
         "CARA PAKAI:",
@@ -64,16 +64,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: novaWrap("Remove Clothes V2", "Berhasil memproses gambar"),
+        caption: raraWrap("Remove Clothes V2", "Berhasil memproses gambar"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaWrap("Remove Clothes V2", data?.message || data?.error || "Gagal. Key mungkin tidak valid."));
+      await m.reply(raraWrap("Remove Clothes V2", data?.message || data?.error || "Gagal. Key mungkin tidak valid."));
     }
   } catch (e) {
     console.error("[remove-clothesv2.js]:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("Remove Clothes V2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("Remove Clothes V2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

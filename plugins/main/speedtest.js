@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .speedtest — tes kecepatan internet (ping/jitter/download/upload).
 // Request owner 11 Sep 2026: "tmbah speedtes".
 // Sumber: Cloudflare speed endpoint (https://speed.cloudflare.com) — gratis,
 // tanpa key, HTTPS-only: /cdn-cgi/trace (info IP/colo), /__down (download),
 // /__up (upload). Progress live via edit-in-place (pola rpgScene).
-import { novaError, novaInfoSections, toSC } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraInfoSections, toSC } from "../../src/lib/rara-menu-style.js";
 import { performance } from "perf_hooks";
-import { fetchTrace, measureLatency, measureDownload, measureUpload, saveSpeedtest } from "../../src/lib/nova-speedtest.js";
+import { fetchTrace, measureLatency, measureDownload, measureUpload, saveSpeedtest } from "../../src/lib/rara-speedtest.js";
 
 const pluginConfig = {
   name: "speedtest",
@@ -102,9 +102,9 @@ async function handler(m, { sock, db }) {
     ];
 
     await m.react("🐣");
-    await stage(`「 ✦ ${toSC("Speedtest")} ✦ 」\n\n` + novaInfoSections(info));
+    await stage(`「 ✦ ${toSC("Speedtest")} ✦ 」\n\n` + raraInfoSections(info));
   } catch (error) {
-    await m.reply(novaError("speedtest", error.message));
+    await m.reply(raraError("speedtest", error.message));
   }
   return { handled: true };
 }

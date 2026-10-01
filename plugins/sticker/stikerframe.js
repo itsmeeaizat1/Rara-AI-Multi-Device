@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // ─── Frame definitions ───
 const FRAMES = {
@@ -674,7 +674,7 @@ export default {
     const sender = m.sender || m.key?.participant || "";
     const senderName = m.pushName || sender.split("@")[0];
     const raw = m.text?.trim() || "";
-    const packname = botConfig?.sticker?.packname || botConfig?.bot?.name || "Nova-AI";
+    const packname = botConfig?.sticker?.packname || botConfig?.bot?.name || "Rara-AI";
     const author = botConfig?.sticker?.author || "Bot";
 
     // ─── Check for image ───
@@ -713,13 +713,13 @@ export default {
         `*${prefix}stikerframe random* = bingkai acak`,
       );
 
-      await m.reply(novaWrap("StikerFrame", lines.join("\n")));
+      await m.reply(raraWrap("StikerFrame", lines.join("\n")));
       return { handled: true };
     }
 
     // ─── Need image ───
     if (!isImage && !hasQuotedImage) {
-      await m.reply(novaWrap("StikerFrame", [
+      await m.reply(raraWrap("StikerFrame", [
         `Kirim atau reply foto dengan caption:`,
         `*${prefix}stikerframe [jenis]*`,
         ``,
@@ -737,7 +737,7 @@ export default {
         imgBuffer = await m.download();
       }
     } catch (e) {
-      await m.reply(novaWrap("StikerFrame", [
+      await m.reply(raraWrap("StikerFrame", [
         `Gagal download foto nih.`,
         `Coba kirim ulang ya.`,
       ].join("\n")));
@@ -745,7 +745,7 @@ export default {
     }
 
     if (!imgBuffer || imgBuffer.length === 0) {
-      await m.reply(novaWrap("StikerFrame", [
+      await m.reply(raraWrap("StikerFrame", [
         `Foto kosong nih, coba ulangi.`,
       ].join("\n")));
       return { handled: true };
@@ -764,7 +764,7 @@ export default {
 
     // Validate frame
     if (!FRAMES[useFrame]) {
-      await m.reply(novaWrap("StikerFrame", [
+      await m.reply(raraWrap("StikerFrame", [
         `Jenis bingkai tidak ditemukan: *${useFrame}*`,
         ``,
         `Ketik *${prefix}stikerframe list* untuk lihat semua pilihan.`,
@@ -793,10 +793,10 @@ export default {
         contextInfo: { isForwarded: false, forwardingScore: 0, premium: 1 },
       }, { quoted: m });
         await m.react("🐣");
-        await m.reply(novaBerhasil("Polaroid"));
+        await m.reply(raraBerhasil("Polaroid"));
     } catch (e) {
       console.log("[StikerFrame] Error:", e.message);
-      await m.reply(novaWrap("StikerFrame", [
+      await m.reply(raraWrap("StikerFrame", [
         `Gagal memproses bingkai: ${e.message}`,
         `Coba jenis bingkai lain ya.`,
       ].join("\n")));

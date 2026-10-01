@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 /**
  * Mimpi / Dream World - Fun dream interpretation generator
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     const args = m.args || []
     let name = args.join(' ') || m.pushName || m.sender.split('@')[0]
     
-    await m.reply(novaWrap("Mimpi", '🌙 *memasuki alam mimpi...*'))
+    await m.reply(raraWrap("Mimpi", '🌙 *memasuki alam mimpi...*'))
     await new Promise(r => setTimeout(r, 1500))
     
     const dream = generateDream(name)
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
     txt += `${dream.message}\n`
     txt += ""
     
-    await m.reply(novaWrap("mimpi", txt))
+    await m.reply(raraWrap("mimpi", txt))
 }
 
 export { pluginConfig as config, handler }

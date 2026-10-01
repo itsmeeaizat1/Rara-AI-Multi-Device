@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "hadisnabi",
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
 
     const book = BOOKS[bookKey];
     if (!book) {
-      return m.reply(novaWrap("hadisnabi", "Perawi tidak ditemukan!\nKetik .hadisnabi list buat lihat semua perawi."));
+      return m.reply(raraWrap("hadisnabi", "Perawi tidak ditemukan!\nKetik .hadisnabi list buat lihat semua perawi."));
     }
 
     // Fetch section 1 dari buku untuk ambil hadis pertama
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     return await m.reply(txt);
   } catch (error) {
     await m.react("❌");
-    return m.reply(novaWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti atau pilih perawi lain."));
+    return m.reply(raraWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti atau pilih perawi lain."));
   }
 }
 

@@ -1,6 +1,6 @@
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
 
 const pluginConfig = {
   name: "summon",
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
         msg += `💡 Ketik *${m.prefix}summon list* untuk memanggil spirit.\n`;
       }
             await m.react("🐣");
-      return m.reply(novaRpgBox("summon", msg));
+      return m.reply(raraRpgBox("summon", msg));
     }
 
     if (!input || input === "list") {
@@ -70,13 +70,13 @@ async function handler(m, { sock }) {
       });
       listMsg += `💡 *Cek Buff:* ${m.prefix}summon status\n`;
             await m.react("🐣");
-      return m.reply(novaRpgBox("summon", listMsg));
+      return m.reply(raraRpgBox("summon", listMsg));
     }
 
     const spirit = SPIRITS.find(s => s.id === input || s.aliases.includes(input));
     if (!spirit) {
       await m.react("❌");
-      return m.reply(novaRpgBox("summon", `Spirit "*${input}*" tidak dikenali.\n\nKetik *${m.prefix}summon list* untuk melihat pilihan spirit.`, "error"));
+      return m.reply(raraRpgBox("summon", `Spirit "*${input}*" tidak dikenali.\n\nKetik *${m.prefix}summon list* untuk melihat pilihan spirit.`, "error"));
     }
 
     const profile = await db.getPlayerData?.(sender, "profile") || { gold: 2000, energi: 100 };
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
 
     if ((profile.gold < SUMMON_COST_GOLD || profile.energi < SUMMON_COST_ENERGI) && !m.isOwner) {
       await m.react("❌");
-      return m.reply(novaRpgBox("summon", `Biaya tidak cukup! Membutuhkan *${SUMMON_COST_GOLD} Gold* & *${SUMMON_COST_ENERGI} Energi*.\nKamu memiliki: *${profile.gold} Gold* & *${profile.energi} Energi*.`, "error"));
+      return m.reply(raraRpgBox("summon", `Biaya tidak cukup! Membutuhkan *${SUMMON_COST_GOLD} Gold* & *${SUMMON_COST_ENERGI} Energi*.\nKamu memiliki: *${profile.gold} Gold* & *${profile.energi} Energi*.`, "error"));
     }
 
     if (!m.isOwner) {
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
     await db.setPlayerData?.(sender, "summon", summonData);
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "summon", icon: "🔮",
       flavor: "🌟 *SPIRIT BERHASIL DIPANGGIL!*",
       body: [
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("summon error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("summon", err.message || "Terjadi kesalahan saat pemanggilan spirit.", "error"));
+    return m.reply(raraRpgBox("summon", err.message || "Terjadi kesalahan saat pemanggilan spirit.", "error"));
   }
 }
 

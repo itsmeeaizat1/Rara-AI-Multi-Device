@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // anilist.js — AniList GraphQL: search, seasonal, top, detail (no API key)
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "anilist",
@@ -47,7 +47,7 @@ async function handler(m, { sock, config, db }) {
     const query = m.args?.slice(1).join(" ") || "";
 
     if (!sub || sub === "help") {
-      return m.reply(novaWrap("AniList", [
+      return m.reply(raraWrap("AniList", [
         "Cari anime dari AniList database",
         "",
         "📌 *Cara Pakai:*",
@@ -67,7 +67,7 @@ async function handler(m, { sock, config, db }) {
       );
       const list = data?.Page?.media || [];
       if (!list.length) {
-        return m.reply(novaError("AniList", `Gak nemu anime untuk: "${query}" nih`));
+        return m.reply(raraError("AniList", `Gak nemu anime untuk: "${query}" nih`));
       }
       text = `Hasil pencarian: "${query}"\n\n` + list.map(fmtAnime).join("\n\n");
     }
@@ -82,7 +82,7 @@ async function handler(m, { sock, config, db }) {
       );
       const list = data?.Page?.media || [];
       if (!list.length) {
-        return m.reply(novaWrap("AniList", "Tidak ada anime musim ini."));
+        return m.reply(raraWrap("AniList", "Tidak ada anime musim ini."));
       }
       text = `Anime Musim ${season} ${year}\n\n` + list.map(fmtAnime).join("\n\n");
     }
@@ -96,7 +96,7 @@ async function handler(m, { sock, config, db }) {
     else if (sub === "detail" && query) {
       const id = parseInt(query);
       if (!id) {
-        return m.reply(novaGuide("AniList", "ID gak valid nih!", ".anilist detail 21"));
+        return m.reply(raraGuide("AniList", "ID gak valid nih!", ".anilist detail 21"));
       }
       const data = await gql(
         `query($id: Int) { Media(id: $id, type: ANIME) { id title { romaji english } description averageScore episodes status format duration genres studios { nodes { name } } } }`,
@@ -104,7 +104,7 @@ async function handler(m, { sock, config, db }) {
       );
       const a = data?.Media;
       if (!a) {
-        return m.reply(novaWrap("AniList", `Anime dengan ID ${id} tidak ditemukan.`));
+        return m.reply(raraWrap("AniList", `Anime dengan ID ${id} tidak ditemukan.`));
       }
       const title = a.title?.romaji || a.title?.english || "Unknown";
       const desc = (a.description || "No description").replace(/<[^>]+>/g, "").slice(0, 300);
@@ -113,13 +113,13 @@ async function handler(m, { sock, config, db }) {
       text = `${title}\n\n★ ${a.averageScore || "N/A"}/100\n${a.format || "?"} | ${a.episodes || "?"} eps | ${a.duration || "?"} min/eps\nStatus: ${a.status || "?"}\nGenre: ${genres}\nStudio: ${studio}\n\n${desc}...`;
     }
     else {
-      return m.reply(novaWrap("AniList", [
+      return m.reply(raraWrap("AniList", [
         "Command tidak dikenal.",
         `Lihat: ${m.prefix}anilist help`,
       ]));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("AniList", text));
+    return m.reply(raraWrap("AniList", text));
   } catch (e) {
     console.error("[anilist] error:", e.message);
     await m.react("❌");

@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT — E2E: AGENT MEMORY LAYER (upgrade #2 "bot masa depan")
-// Owner 25 Sep 2026: "harusnya nyambung ke dua ai agent novaagent dan
+// RARA AI WHATSAPP BOT — E2E: AGENT MEMORY LAYER (upgrade #2 "bot masa depan")
+// Owner 25 Sep 2026: "harusnya nyambung ke dua ai agent raraagent dan
 // aisuperagent" + "autonovaagent juga harusnya punya memory jangka panjang
-// krna itu ai otomatis". Engine = nova-memory.js (store per-user db.setting
-// "novaMemory"); ini nge-verifikasi WIRING-nya: engine sanity, injeksi blok
+// krna itu ai otomatis". Engine = rara-memory.js (store per-user db.setting
+// "raraMemory"); ini nge-verifikasi WIRING-nya: engine sanity, injeksi blok
 // memori ke prompt runAgent, agentloop & autotask (recall + auto-extract),
-// dan static wiring .aisuperagent/.novaagent/autoflow aichat.
+// dan static wiring .aisuperagent/.raraagent/autoflow aichat.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -18,11 +18,11 @@ const t = (name, cond, extra = "") => {
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "agentmem-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 const db = getDatabase();
 
-const mem = await import(R + "/src/lib/nova-memory.js");
+const mem = await import(R + "/src/lib/rara-memory.js");
 const {
   addMemory, listMemories, removeMemory, resetMemories,
   toggleMemory, isMemoryOn, memoryBlock, relevantMemories,
@@ -33,7 +33,7 @@ const U = "6289988776655@s.whatsapp.net";
 const sent = [];
 const sock = { sendMessage: async (jid, payload) => { sent.push({ jid, text: payload.text }); return true; } };
 
-console.log("— section 1: engine nova-memory.js (sanity: add/dedupe/recall/off/cap) —");
+console.log("— section 1: engine rara-memory.js (sanity: add/dedupe/recall/off/cap) —");
 {
   resetMemories(db, U);
   t("1a. addMemory tersimpan", addMemory(db, U, "pelihara kucing bernama Lucas") === true && listMemories(db, U).length === 1);
@@ -56,7 +56,7 @@ console.log("— section 1: engine nova-memory.js (sanity: add/dedupe/recall/off
 
 console.log("— section 2: runAgent opts.memBlock — blok nyangkut di prompt AI —");
 {
-  const { runAgent, setAgentDeps, resetAgentDeps } = await import(R + "/src/lib/nova-agent.js");
+  const { runAgent, setAgentDeps, resetAgentDeps } = await import(R + "/src/lib/rara-agent.js");
   resetMemories(db, U);
   addMemory(db, U, "suka kopi susu gula aren");
 
@@ -121,27 +121,27 @@ console.log("— section 3: .agentloop — recall ke prompt putaran + auto-extra
   });
 
   resetMemories(db, OWNER);
-  addMemory(db, OWNER, "punya proyek bot whatsapp bernama Nova");
+  addMemory(db, OWNER, "punya proyek bot whatsapp bernama Rara");
 
   let runnerPrompt = "";
   const extracts = [];
   I.resetSeams();
   I.setExtractor(async (dbx, sender, instr, res) => { extracts.push({ sender, instr: String(instr), res: String(res) }); return 0; });
-  I.setPlanner(async () => JSON.stringify({ goal: "audit fitur Nova", criteria: "ada daftar fitur", steps: ["baca fitur"] }));
+  I.setPlanner(async () => JSON.stringify({ goal: "audit fitur Rara", criteria: "ada daftar fitur", steps: ["baca fitur"] }));
   I.setRunner(async (prompt) => { runnerPrompt = String(prompt); return "HASIL PUTARAN 1: audit oke"; });
   I.setCritic(async () => JSON.stringify({ satisfied: true, missing: "", next: "" }));
   I.setComposer(async () => "JAWABAN FINAL: audit selesai.");
 
-  await al.handler(mkM({ text: "audit fitur nova bot" }), { sock, db, config: { command: { prefix: "." } } });
+  await al.handler(mkM({ text: "audit fitur rara bot" }), { sock, db, config: { command: { prefix: "." } } });
   await wait(900);
-  t("3a. prompt putaran mengandung fakta memori owner", runnerPrompt.includes("punya proyek bot whatsapp bernama Nova"), runnerPrompt?.slice(0, 90));
+  t("3a. prompt putaran mengandung fakta memori owner", runnerPrompt.includes("punya proyek bot whatsapp bernama Rara"), runnerPrompt?.slice(0, 90));
   t("3b. auto-extract jalan pasca hasil putaran, sender = pemilik loop", extracts.length >= 1 && extracts[0].sender === OWNER, extracts);
   t("3c. extractor nerima instruksi putaran + hasilnya", extracts[0] && extracts[0].instr === "baca fitur" && /HASIL PUTARAN/i.test(extracts[0].res), extracts[0]);
 
   // memory off → prompt putaran tanpa blok memori
   toggleMemory(db, OWNER, false);
   runnerPrompt = ""; extracts.length = 0;
-  await al.handler(mkM({ text: "audit kedua fitur nova" }), { sock, db, config: { command: { prefix: "." } } });
+  await al.handler(mkM({ text: "audit kedua fitur rara" }), { sock, db, config: { command: { prefix: "." } } });
   await wait(900);
   t("3d. memory off → prompt putaran tanpa blok memori", !runnerPrompt.includes("MEMORI TENTANG USER"), runnerPrompt?.slice(0, 90));
   t("3e. memory off → extractor tetap dipanggil (extractMemories skip sendiri)", extracts.length >= 1, extracts.length);
@@ -194,11 +194,11 @@ console.log("— section 5: wiring statis semua pintu agent (owner 25 Sep) —")
   const src = (p) => fs.readFileSync(R + "/" + p, "utf8");
   const agentJs = src("plugins/ai-agent/agent.js");
   t("5a. .aisuperagent: recall (memBlock) + auto-extract terpasang", agentJs.includes("memBlock: memoryBlock(db, m.sender, task)") && agentJs.includes("extractMemories(db, m.sender, task"), null);
-  const novaaiJs = src("plugins/ai/novaai.js");
-  t("5b. .novaagent: recall + extract udah nyambung (store sama)", novaaiJs.includes("memoryBlock(db, m.sender") && novaaiJs.includes("extractMemories(db, m.sender"), null);
+  const raraaiJs = src("plugins/ai/raraai.js");
+  t("5b. .raraagent: recall + extract udah nyambung (store sama)", raraaiJs.includes("memoryBlock(db, m.sender") && raraaiJs.includes("extractMemories(db, m.sender"), null);
   const autoflowJs = src("src/lib/autoflow.js");
   t("5c. .anovaagent rule aichat (AI otomatis): recall + extract", autoflowJs.includes("memoryBlock(getDatabase(), user") && autoflowJs.includes("extractMemories(getDatabase(), user"), null);
-  const engineJs = src("src/lib/nova-agent.js");
+  const engineJs = src("src/lib/rara-agent.js");
   t("5d. engine runAgent nerima opts.memBlock + inject ${mem}", /export async function runAgent\([^)]*\{[^}]*memBlock/.test(engineJs) && engineJs.includes("${mem}"), null);
   const loopJs = src("plugins/ai-agent/agentloop.js");
   t("5e. agentloop: memoryBlock per-sender + extractor seam", loopJs.includes("memoryBlock(getDatabase(), run.sender") && loopJs.includes("setExtractor"), null);

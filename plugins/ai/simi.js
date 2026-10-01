@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "simi",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ") || m.text?.trim();
 
   if (!text) {
-        return m.reply(novaGuideV2("simi", {
+        return m.reply(raraGuideV2("simi", {
  kaomoji: "(◕ᴗ◕)",
  sapaan: "mau ngobrol apa sama Simi? dia jawab sembarangan lho! (≧◡≦) ♡",
       cara: "ketik apa aja yang mau kamu omongin",
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
     const data = res.data;
     if (!data.status || !data.result) {
-      return m.reply(novaWrap("Simi", "⚠️ Simi lagi ngambek, nggak mau balas."));
+      return m.reply(raraWrap("Simi", "⚠️ Simi lagi ngambek, nggak mau balas."));
     }
 
     await m.reply(data.result);
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
 
     console.error("[SimiSimi]", error.message);
     await m.react("🐣");
-    m.reply(novaWrap("simi", "😔 Simi gagal membalas pesanmu."));
+    m.reply(raraWrap("simi", "😔 Simi gagal membalas pesanmu."));
   }
 }
 

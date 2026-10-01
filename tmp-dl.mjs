@@ -2,7 +2,7 @@ import fs from "node:fs";
 import axios from "axios";
 const t0 = Date.now();
 const url = "https://www.youtube.com/watch?v=GNfRXKsvG04";
-// Try 2: IkyyXD ytmp4 (Try 1 nova-ytdlp udah gue tes FAIL)
+// Try 2: IkyyXD ytmp4 (Try 1 rara-ytdlp udah gue tes FAIL)
 let buffer = null;
 try {
   const { data } = await axios.get("https://api.ikyyxd.my.id/download/ytmp4", { params: { q: url, apikey: "kyzz" }, timeout: 60000 });

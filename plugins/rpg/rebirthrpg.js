@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Rebirth — Prestige system, reset level for permanent stat bonus
 
 import {
   ensureRpg, rebirth, getItemCount
-} from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "rebirth",
@@ -27,7 +27,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("rebirthrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("rebirthrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // Cek apakah sudah memenuhi syarat
     const hasStone = getItemCount(m, "rebirthStone") > 0;
@@ -108,12 +108,12 @@ async function handler(m, { sock }) {
       return m.reply(msg);
     } else {
   await animGeneric(m, sock, "🔄", "Rebirth");
-      return m.reply(novaRpgBox("rebirthrpg", result.reason || "Gagal reinkarnasi.", "warn"));
+      return m.reply(raraRpgBox("rebirthrpg", result.reason || "Gagal reinkarnasi.", "warn"));
     }
   } catch (err) {
     console.error("rebirthrpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("rebirthrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("rebirthrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

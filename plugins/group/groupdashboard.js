@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // grupdashboard — Ringkasan aktivitas grup
 // 12 Sep 2026 fix: rewrite total — dulu baca db.data.groupActivity yang GAK
 // PERNAH ditulis (mati) + signature legacy (isGroupOnly, conn/usedPrefix, db.save())
 // + subcommand "auto" yang gak ada schedulernya (fake feature) → dihapus.
-// Sekarang live dari nova-activity-tracker: stats mingguan + top member + jam rame.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getWeeklyStats, getLeaderboard, getHourly } from "../../src/lib/nova-activity-tracker.js";
+// Sekarang live dari rara-activity-tracker: stats mingguan + top member + jam rame.
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getWeeklyStats, getLeaderboard, getHourly } from "../../src/lib/rara-activity-tracker.js";
 
 const pluginConfig = {
   name: "grupdashboard",
@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
     const hourly = getHourly(groupId);
 
     if (stats.totalMessages === 0) {
-      return m.reply(novaWrap("Group Dashboard", [
+      return m.reply(raraWrap("Group Dashboard", [
         "Belum ada aktivitas yang tercatat di grup ini.",
         "Data tercatat otomatis setiap member chat — coba lagi nanti.",
       ].join("\n")));
@@ -56,10 +56,10 @@ async function handler(m, { sock, config: botConfig }) {
     ].join("\n");
 
     const since = new Date(stats.weekStart).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
-    return m.reply(novaWrap("Group Dashboard", lines + `\n\nPeriode: ${since} - hari ini`));
+    return m.reply(raraWrap("Group Dashboard", lines + `\n\nPeriode: ${since} - hari ini`));
   } catch (e) {
     console.error("grupdashboard error:", e);
-    return m.reply(novaWrap("Group Dashboard", "Gagal membaca statistik: " + e.message, "error"));
+    return m.reply(raraWrap("Group Dashboard", "Gagal membaca statistik: " + e.message, "error"));
   }
 }
 

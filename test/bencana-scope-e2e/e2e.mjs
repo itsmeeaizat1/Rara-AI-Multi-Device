@@ -9,10 +9,10 @@ let pass = 0, fail = 0;
 const t = (label, ok, extra) => { if (ok) { pass++; out("✅ " + label); } else { fail++; out("❌ " + label + (extra ? " — " + extra : "")); } };
 
 const R = process.cwd();
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/bencana-scope-e2e/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/bencana-scope-e2e/rara.json");
 const db = getDatabase();
-const L = await import(R + "/src/lib/nova-bencana.js");
+const L = await import(R + "/src/lib/rara-bencana.js");
 
 out("\n— 1. classifyGeoScope (dari addresstype Nominatim) —");
 t("1a. country → negara", L.classifyGeoScope({ addresstype: "country" }) === "negara");

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaHeader, separator, tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraHeader, separator, tipText, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "aipoll", alias: ["aipoll"], category: "smart",
@@ -15,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const topic = m.text?.trim();
     if (!topic) {
-      await m.reply(novaCaption({
+      await m.reply(raraCaption({
   emoji: "📊",
   name: "aipoll",
   description: "AI bikin polling dari topik",
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(prompt);
     const choices = result.split("|").map(s => s.trim()).filter(Boolean).slice(0, 4);
     if (choices.length < 2) throw new Error("Gagal bikin polling nih");
-    const pollMsg = novaHeader("AI Poll: " + topic, "📊") + "\n\n";
+    const pollMsg = raraHeader("AI Poll: " + topic, "📊") + "\n\n";
     let text = pollMsg;
     choices.forEach((c, i) => { text += `${["1️⃣","2️⃣","3️⃣","4️⃣"][i]} ${c}\n`; });
     text += "\n" + tipText("Ketik nomor pilihanmu!");

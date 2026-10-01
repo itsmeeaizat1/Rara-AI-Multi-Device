@@ -34,7 +34,7 @@ let replied = null;
 const fakeM = { text: ".webpanel", chat: "x@s.whatsapp.net", sender: "x@s.whatsapp.net", isOwner: true,
   react: async () => {}, reply: async (t) => { replied = t; return { key: { id: "K" } }; } };
 await plugin.handler(fakeM, { sock: { user: { id: "b@s.whatsapp.net" }, sendMessage: async () => ({}) }, config: { command: { prefix: "." } } });
-ok("handler: usage → novaGuide (gak nyalain server)", /webpanel/i.test(String(replied)) && !/NYALA/i.test(String(replied).replace(/nyala\n/i, "")) || /Cara Pakai/i.test(String(replied)));
+ok("handler: usage → raraGuide (gak nyalain server)", /webpanel/i.test(String(replied)) && !/NYALA/i.test(String(replied).replace(/nyala\n/i, "")) || /Cara Pakai/i.test(String(replied)));
 
 console.log(`─── hasil: ${pass}/${total} ${pass === total ? "PASSED ✓" : "ADA YANG GAGAL ✗"} ───`);
 process.exit(pass === total ? 0 : 1);

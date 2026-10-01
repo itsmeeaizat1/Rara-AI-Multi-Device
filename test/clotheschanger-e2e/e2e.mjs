@@ -10,8 +10,8 @@ function t(label, cond, extra) {
 }
 
 const R = path.resolve(".");
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/clothes-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/clothes-e2e-db/rara.json");
 const db = getDatabase();
 
 const { config, handler, buildEditPrompt, parseClothesDesc, expandPreset, parseHdFlag, PRESET_STYLES, HAIR_PRESETS, buildAgePrompt, buildHairPrompt, buildGenderPrompt, buildBgPrompt, buildRemovePrompt, buildFaceSwapPrompt, parseFaceDesc, _setClothesDepsForTest } = await import(R + "/plugins/ai-image/clotheschanger.js");

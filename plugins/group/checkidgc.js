@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import sharp from "sharp";
 import config from "../../config.js";
 import axios from "axios";
 import { generateWAMessageFromContent, proto } from "nova";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
  name: "cekidgc",
@@ -46,33 +46,33 @@ async function handler(m, { sock }) {
  ?.split(/[\s?]/)[0];
 
  if (!inviteCode) {
- return m.reply(novaError("Cek ID Grup", "Link grup yang kamu masukkan gak valid nih!"));
+ return m.reply(raraError("Cek ID Grup", "Link grup yang kamu masukkan gak valid nih!"));
  }
 
  try {
  groupMeta = await sock.groupGetInviteInfo(inviteCode);
  groupJid = groupMeta?.id;
  } catch {
- return m.reply(novaError("Cek ID Grup", "Link grup gak valid atau udah expired nih!"));
+ return m.reply(raraError("Cek ID Grup", "Link grup gak valid atau udah expired nih!"));
  }
  } else if (input && input.endsWith("@g.us")) {
  groupJid = input;
  try {
  groupMeta = await sock.groupMetadata(groupJid);
  } catch {
- return m.reply(novaError("Cek ID Grup", "Gak bisa mengakses grup tersebut nih!"));
+ return m.reply(raraError("Cek ID Grup", "Gak bisa mengakses grup tersebut nih!"));
  }
  } else if (m.isGroup) {
  groupJid = m.chat;
  groupMeta = await sock.groupMetadata(groupJid);
  } else {
  return m.reply(
- novaNoInput("Cek ID Grup", `Gunakan perintah ini di dalam grup atau masukkan link/ID grup ya!\n\nContoh:\n${m.prefix}cekidgc\n${m.prefix}cekidgc https://chat.whatsapp.com/xxx`)
+ raraNoInput("Cek ID Grup", `Gunakan perintah ini di dalam grup atau masukkan link/ID grup ya!\n\nContoh:\n${m.prefix}cekidgc\n${m.prefix}cekidgc https://chat.whatsapp.com/xxx`)
  );
  }
 
  if (!groupMeta || !groupJid) {
- return m.reply(novaEmpty("Cek ID Grup", "Data info grup gak ditemukan nih."));
+ return m.reply(raraEmpty("Cek ID Grup", "Data info grup gak ditemukan nih."));
  }
 
  const groupName = groupMeta.subject || "Unknown";
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
  } catch (e) { console.error('[checkidgc.js]:', e.message); }
 
  const saluranId = config.saluran?.id || "@newsletter";
- const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+ const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
  const infoText =
  `── . 𝗚𝗥𝗢𝗨𝗣 𝗜𝗡𝗙𝗢 . ── \n\n` +
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
  `Join Mode : *${joinMode}*\n` +
  `Deskripsi : ${descPreview}\n` +
  
- ` © ${config.bot?.name || "Nova-AI"}`;
+ ` © ${config.bot?.name || "Rara-AI"}`;
 
  const buttons = [
  {
@@ -179,7 +179,7 @@ async function handler(m, { sock }) {
  text: infoText,
  }),
  footer: proto.Message.InteractiveMessage.Footer.fromObject({
- text: `© ${config.bot?.name || "Nova-AI"}`,
+ text: `© ${config.bot?.name || "Rara-AI"}`,
  }),
  header: proto.Message.InteractiveMessage.Header.fromObject({
  hasMediaAttachment: !!headerMedia,
@@ -217,7 +217,7 @@ async function handler(m, { sock }) {
  text: infoText,
  }),
  footer: proto.Message.InteractiveMessage.Footer.fromObject({
- text: `© ${config.bot?.name || "Nova-AI"}`,
+ text: `© ${config.bot?.name || "Rara-AI"}`,
  }),
  nativeFlowMessage:
  proto.Message.InteractiveMessage.NativeFlowMessage.fromObject(
@@ -239,7 +239,7 @@ async function handler(m, { sock }) {
  }
  } catch (error) {
  console.error("[CekIdGc] Error:", error.message);
- m.reply(novaError("Cek ID Grup", "Terjadi kendala saat memproses info grup, coba lagi nanti ya!"));
+ m.reply(raraError("Cek ID Grup", "Terjadi kendala saat memproses info grup, coba lagi nanti ya!"));
  }
 }
 

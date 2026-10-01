@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 // ── Format Rupiah ────────────────────────────────────────────────
 function rp(n) {
@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   const cmd = parts[0] || "";
 
   if (!cmd || cmd === "help" || cmd === "menu") {
-    const help = novaWrap("Kalkulatur", [
+    const help = raraWrap("Kalkulatur", [
       `Kalkulator Kantoran`,
       ``,
       `*mode:*`,
@@ -139,13 +139,13 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     if (cmd === "pph21" || cmd === "pph") {
       const gaji = parseFloat(parts[1]) || 0;
-      if (!gaji) return m.reply(novaWrap("Kalkulatur", `Format: ${prefix}kalkulatur pph21 <gaji> [k/tk] [tanggungan]`));
+      if (!gaji) return m.reply(raraWrap("Kalkulatur", `Format: ${prefix}kalkulatur pph21 <gaji> [k/tk] [tanggungan]`));
 
       const kawin = parts[2] === "k";
       const tanggungan = parseInt(parts[3]) || 0;
       const r = calcPPh21(gaji, kawin, tanggungan);
 
-      result = novaWrap("PPh 21 Bulanan", [
+      result = raraWrap("PPh 21 Bulanan", [
         `Gaji Bruto: ${rp(gaji)}/bln`,
         `Status: ${kawin ? "Kawin" : "Tidak Kawin"} (${tanggungan} tanggungan)`,
         `Biaya Jabatan (5%): ${rp(r.biayaJabatan)}/thn`,
@@ -160,12 +160,12 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     else if (cmd === "thr") {
       const gaji = parseFloat(parts[1]) || 0;
-      if (!gaji) return m.reply(novaWrap("Kalkulatur", `Format: ${prefix}kalkulatur thr <gaji> [masa kerja bulan]`));
+      if (!gaji) return m.reply(raraWrap("Kalkulatur", `Format: ${prefix}kalkulatur thr <gaji> [masa kerja bulan]`));
 
       const masaKerja = parseInt(parts[2]) || 12;
       const thr = calcTHR(gaji, masaKerja);
 
-      result = novaWrap("THR", [
+      result = raraWrap("THR", [
         `Gaji Pokok: ${rp(gaji)}`,
         `Masa Kerja: ${masaKerja} bulan`,
         `Prorata: ${masaKerja >= 12 ? "Tidak (full)" : `${masaKerja}/12`}`,
@@ -177,12 +177,12 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     else if (cmd === "lembur" || cmd === "overtime" || cmd === "ot") {
       const upahPerJam = parseFloat(parts[1]) || 0;
       const jam = parseFloat(parts[2]) || 0;
-      if (!upahPerJam || !jam) return m.reply(novaWrap("Kalkulatur", `Format: ${prefix}kalkulatur lembur <upah/jam> <jam> [kerja/libur/liburnasional]`));
+      if (!upahPerJam || !jam) return m.reply(raraWrap("Kalkulatur", `Format: ${prefix}kalkulatur lembur <upah/jam> <jam> [kerja/libur/liburnasional]`));
 
       const jenis = parts[3] || "kerja";
       const upah = calcLembur(upahPerJam, jam, jenis);
 
-      result = novaWrap("Lembur", [
+      result = raraWrap("Lembur", [
         `Upah/Jam: ${rp(upahPerJam)}`,
         `Jumlah Jam: ${jam} jam`,
         `Jenis Hari: ${jenis}`,
@@ -193,11 +193,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     else if (cmd === "bpjs") {
       const gaji = parseFloat(parts[1]) || 0;
-      if (!gaji) return m.reply(novaWrap("Kalkulatur", `Format: ${prefix}kalkulatur bpjs <gaji>`));
+      if (!gaji) return m.reply(raraWrap("Kalkulatur", `Format: ${prefix}kalkulatur bpjs <gaji>`));
 
       const r = calcBPJS(gaji);
 
-      result = novaWrap("BPJS", [
+      result = raraWrap("BPJS", [
         `Gaji: ${rp(gaji)}`,
         ``,
         `Potongan Karyawan:`,
@@ -213,13 +213,13 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     else if (cmd === "thp" || cmd === "takehome" || cmd === "take-home") {
       const gaji = parseFloat(parts[1]) || 0;
-      if (!gaji) return m.reply(novaWrap("Kalkulatur", `Format: ${prefix}kalkulatur thp <gaji> [k/tk] [tanggungan]`));
+      if (!gaji) return m.reply(raraWrap("Kalkulatur", `Format: ${prefix}kalkulatur thp <gaji> [k/tk] [tanggungan]`));
 
       const kawin = parts[2] === "k";
       const tanggungan = parseInt(parts[3]) || 0;
       const r = calcTakeHome(gaji, kawin, tanggungan);
 
-      result = novaWrap("Take Home Pay", [
+      result = raraWrap("Take Home Pay", [
         `Gaji Bruto: ${rp(r.gajiBruto)}`,
         `Status: ${kawin ? "Kawin" : "Tidak Kawin"} (${tanggungan} tanggungan)`,
         ``,
@@ -235,14 +235,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     }
 
     else {
-      result = novaWrap("Kalkulatur", `Mode tidak dikenal. Ketik ${prefix}kalkulatur untuk daftar mode.`);
+      result = raraWrap("Kalkulatur", `Mode tidak dikenal. Ketik ${prefix}kalkulatur untuk daftar mode.`);
     }
 
     await m.react("🐣");
     await m.reply(result);
   } catch (error) {
     await m.react("❌");
-    m.reply(novaWrap("Kalkulatur", `❌ Error: ${error.message}`));
+    m.reply(raraWrap("Kalkulatur", `❌ Error: ${error.message}`));
   }
 
   return { handled: true };

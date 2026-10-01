@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // report.js — Laporkan masalah ke owner (kirim langsung ke WA owner + simpan DB)
-import { novaWrap, novaCaption, tipText, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap, raraCaption, tipText, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "report",
@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!message) {
-      return m.reply(novaGuide("Report", "Laporkan masalah atau kendala langsung ke owner bot!", `${prefix}report Ada spam di grup`));
+      return m.reply(raraGuide("Report", "Laporkan masalah atau kendala langsung ke owner bot!", `${prefix}report Ada spam di grup`));
     }
 
     // Save to database
@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
         timeStyle: "short",
       });
 
-      const ownerMsg = novaWrap("Report Masuk", [
+      const ownerMsg = raraWrap("Report Masuk", [
         `Pesan: *${message.slice(0, 1000)}${message.length > 1000 ? "..." : ""}*`,
         "",
         `Dari: ${reporterName} (${reporterNum})`,
@@ -92,19 +92,19 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Reply ke pengirim
     if (ownerNotified) {
-      await m.reply(novaWrap("Report", [
+      await m.reply(raraWrap("Report", [
         `Pesan: *${message.slice(0, 500)}${message.length > 500 ? "..." : ""}*`,
         `Status: Terkirim ke owner`,
       ]));
     } else {
-      await m.reply(novaWrap("Report", [
+      await m.reply(raraWrap("Report", [
         `Pesan: *${message.slice(0, 500)}${message.length > 500 ? "..." : ""}*`,
         `Status: Tersimpan (owner tidak terjangkau)`,
       ]));
     }
   } catch (error) {
     console.error("[report] error:", error.message);
-    return m.reply(novaError("Report", `Gagal mengirim laporan: ${error.message || "terjadi kesalahan"}`));
+    return m.reply(raraError("Report", `Gagal mengirim laporan: ${error.message || "terjadi kesalahan"}`));
   }
 
   return { handled: true };

@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aio — All in one downloader
 // Primary: IkyyXD all-in-one | Fallback: builtin aiodl scraper
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaGuideV2, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraError, raraEmpty, raraGuide, raraGuideV2, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply(novaGuideV2("aio", {
+    return m.reply(raraGuideV2("aio", {
  kaomoji: "(◕ᴗ◕)",
  sapaan: "download semua platform! tinggal kasih linknya! (≧∇≦)ﾉ",
       cara: "tempel linknya sesudah command",
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   }
 
   if (!url.startsWith("http")) {
-    return m.reply(novaSalahV2("aio", {
+    return m.reply(raraSalahV2("aio", {
  kaomoji: "(;ω;)",
       pesan: "linknya gak valid nih kak, harus diawali http atau https~",
       contoh: `${m.prefix}aio link`,
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
 
     if (!result || !result.medias?.length) {
       await m.react("❌");
-      return m.reply(novaError('AIO', 'Gagal ambil media — pastikan URL valid ya'));
+      return m.reply(raraError('AIO', 'Gagal ambil media — pastikan URL valid ya'));
     }
 
     const ctxInfo = saluranCtx();
@@ -124,11 +124,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("aio"));
+    await m.reply(raraBerhasil("aio"));
   } catch (error) {
     console.error("[aio.js]:", error.message);
     await m.react("❌");
-    m.reply(novaError('AIO', 'Ada error nih, coba lagi ya'));
+    m.reply(raraError('AIO', 'Ada error nih, coba lagi ya'));
   }
 }
 

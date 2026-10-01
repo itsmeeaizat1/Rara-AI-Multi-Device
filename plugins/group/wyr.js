@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { delay } from "../../src/lib/nova-utils.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { delay } from "../../src/lib/rara-utils.js";
 
 const pluginConfig = {
   name: "wyr",
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
       "Cara vote: ketik A atau B langsung di chat",
       "Voting otomatis 60 detik lalu hasil keluar",
     ].join("\n");
-    await safeReply(m, sock, novaWrap("Would You Rather", helpText));
+    await safeReply(m, sock, raraWrap("Would You Rather", helpText));
     return { handled: true };
   }
 
@@ -196,10 +196,10 @@ async function handler(m, { sock }) {
   if (subCmd === "result" || subCmd === "hasil" || subCmd === "skor") {
     const game = findGame(m.chat);
     if (!game) {
-      await safeReply(m, sock, novaWrap("Would You Rather", "Tidak ada voting aktif.", "warn"));
+      await safeReply(m, sock, raraWrap("Would You Rather", "Tidak ada voting aktif.", "warn"));
       return { handled: true };
     }
-    await safeReply(m, sock, novaWrap("Would You Rather - Live Results", buildResultsText(game)));
+    await safeReply(m, sock, raraWrap("Would You Rather - Live Results", buildResultsText(game)));
     return { handled: true };
   }
 
@@ -207,7 +207,7 @@ async function handler(m, { sock }) {
   if (subCmd === "stop" || subCmd === "tutup" || subCmd === "end") {
     const game = findGame(m.chat);
     if (!game) {
-      await safeReply(m, sock, novaWrap("Would You Rather", "Tidak ada voting aktif.", "warn"));
+      await safeReply(m, sock, raraWrap("Would You Rather", "Tidak ada voting aktif.", "warn"));
       return { handled: true };
     }
 
@@ -217,7 +217,7 @@ async function handler(m, { sock }) {
     const gameId = Object.keys(global.wyrGames).find(k => global.wyrGames[k] === game);
     const voters = Object.keys(game.votes).map(j => "@" + j.split("@")[0]);
 
-    await safeReply(m, sock, novaWrap("Would You Rather - Final", buildResultsText(game, true), "success"),
+    await safeReply(m, sock, raraWrap("Would You Rather - Final", buildResultsText(game, true), "success"),
       { mentions: Object.keys(game.votes) });
     delete global.wyrGames[gameId];
     return { handled: true };
@@ -237,7 +237,7 @@ async function handler(m, { sock }) {
   // .wyr (start new)
   const existingGame = findGame(m.chat);
   if (existingGame) {
-    await safeReply(m, sock, novaWrap("Would You Rather",
+    await safeReply(m, sock, raraWrap("Would You Rather",
       `Masih ada voting aktif!\n\nKetik ${prefix}wyr result untuk lihat skor\nKetik ${prefix}wyr stop untuk tutup\nKetik ${prefix}wyr next untuk ganti dilema`,
       "warn"));
     return { handled: true };
@@ -271,7 +271,7 @@ async function handler(m, { sock }) {
     `Voting otomatis 60 detik`,
   ].join("\n");
 
-  await safeReply(m, sock, novaWrap("Would You Rather", qText, "info"));
+  await safeReply(m, sock, raraWrap("Would You Rather", qText, "info"));
 
   // Auto-close timer
   game.timer = setTimeout(async () => {
@@ -284,7 +284,7 @@ async function handler(m, { sock }) {
 
     try {
       await sock.sendMessage(m.chat, {
-        text: novaWrap("Would You Rather - Time Up", closeText, "success"),
+        text: raraWrap("Would You Rather - Time Up", closeText, "success"),
         mentions: voters,
       });
     } catch (e) { console.error('[wyr.js]:', e.message); }

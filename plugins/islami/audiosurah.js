@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // audiosurah.js — Audio murattal surah
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const SURAH_LIST = {
   1: "Al-Fatihah", 2: "Al-Baqarah", 3: "Ali Imran", 4: "An-Nisa", 5: "Al-Maidah",
@@ -34,13 +34,13 @@ async function handler(m, { sock }) {
         _lines.push(`${n}. ${name}`);
       });
         _lines.push(`...`);
-      let msg = novaBox("AUDIO SURAH", _lines);
+      let msg = raraBox("AUDIO SURAH", _lines);
       return m.reply(msg);
     }
 
     const res = await axios.get(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`);
     const d = res.data?.data;
-    if (!d) return m.reply(novaWrap("audiosurah", "Surah tidak ditemukan!", "error"));
+    if (!d) return m.reply(raraWrap("audiosurah", "Surah tidak ditemukan!", "error"));
 
     const audioUrl = d.audio;
     if (audioUrl) {
@@ -50,13 +50,13 @@ async function handler(m, { sock }) {
         caption: `Murattal: ${d.englishName} (${d.numberOfAyahs} ayat)`
       }, { quoted: m });
     } else {
-      return m.reply(novaWrap("audiosurah", "Audio tidak tersedia!", "error"));
+      return m.reply(raraWrap("audiosurah", "Audio tidak tersedia!", "error"));
     }
     await m.react("🐣");
   } catch (err) {
     console.error("audiosurah error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("audiosurah", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("audiosurah", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

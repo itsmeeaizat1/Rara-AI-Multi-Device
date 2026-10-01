@@ -1,5 +1,5 @@
 // E2E .dbexport — export + read-back verify pakai exceljs
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
 import ExcelJS from "exceljs";
 
 await initDatabase("/tmp/dbexport-e2e-db.json");

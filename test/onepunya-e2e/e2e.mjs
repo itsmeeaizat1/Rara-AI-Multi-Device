@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT — E2E: ONEPUNYA API (31 endpoint, 8 plugin, 34 command)
+// RARA AI WHATSAPP BOT — E2E: ONEPUNYA API (31 endpoint, 8 plugin, 34 command)
 // Cover: lib dasar (auth error, struktur respon, seam http), resolve command
 // via loader, handler happy/sad path tiap plugin, deteksi platform onedl,
-// format teks smallcaps-aware (novaWrap output).
+// format teks smallcaps-aware (raraWrap output).
 // Jalankan dari repo root: node test/onepunya-e2e/e2e.mjs
 import fs from "node:fs";
 import os from "node:os";
@@ -17,11 +17,11 @@ const t = (name, cond, extra = "") => {
 process.on("unhandledRejection", (e) => { console.log("UNHANDLED:", e?.stack || e); process.exit(1); });
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "onepunya-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const { setApiKey, getApiKey, hasApiKey, API_KEYS } = await import(R + "/src/lib/nova-api-keys.js");
-const lib = await import(R + "/src/lib/nova-onepunya.js");
+const { setApiKey, getApiKey, hasApiKey, API_KEYS } = await import(R + "/src/lib/rara-api-keys.js");
+const lib = await import(R + "/src/lib/rara-onepunya.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 
 // ─── harness pesan ───
@@ -146,7 +146,7 @@ setApiKey("onepunya", KEY);
 
 console.log("— section 1: lib dasar —");
 {
-  t("1a. key onepunya terdaftar di API_KEYS", !!API_KEYS.onepunya, "entry hilang dari nova-api-keys.js");
+  t("1a. key onepunya terdaftar di API_KEYS", !!API_KEYS.onepunya, "entry hilang dari rara-api-keys.js");
   t("1b. setApiKey/getApiKey runtime", getApiKey("onepunya") === KEY, getApiKey("onepunya"));
   t("1c. hasApiKey true", hasApiKey("onepunya") === true);
 
@@ -192,9 +192,9 @@ console.log("— section 2: resolve command via loader —");
   const childCode = `
     const path = await import("node:path");
     const { pathToFileURL } = await import("node:url");
-    const { initDatabase } = await import(pathToFileURL(process.env.R + "/src/lib/nova-database.js").href);
-    await initDatabase("/tmp/onepunya-e2e-loader-db/nova.json");
-    const { loadPlugins, getPlugin } = await import(pathToFileURL(process.env.R + "/src/lib/nova-plugins.js").href);
+    const { initDatabase } = await import(pathToFileURL(process.env.R + "/src/lib/rara-database.js").href);
+    await initDatabase("/tmp/onepunya-e2e-loader-db/rara.json");
+    const { loadPlugins, getPlugin } = await import(pathToFileURL(process.env.R + "/src/lib/rara-plugins.js").href);
     await loadPlugins(path.join(process.env.R, "plugins"));
     const cmds = ["onepixiv","onepixiv18","oneyts","oneytmusic","oneplay","hololive","holovideos","holovid","holochannels","holochid","holosearch","onedl","onepunyadl","oneimg","oneimage","oneupscale","onenobg","onechat","oneai","onepunyaai","onettts","onettvoices","onevits","onevitslang","onevitsmodel","oneanime","oneanimesid","oneanimetts","hentaisearch","hentaiep","hentaidl","onehentaisearch"];
     let ok = 0; const bad = [];

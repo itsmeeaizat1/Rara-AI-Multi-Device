@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "taubat",
@@ -147,16 +147,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "taubat <nomor>")
       lines.push("Contoh: " + usedPrefix + "taubat 1 (Sayyidul Istighfar)")
-      return m.reply(novaWrap("Taubat & Istighfar", lines.join("\n")))
+      return m.reply(raraWrap("Taubat & Istighfar", lines.join("\n")))
     }
 
     const t = TAUBAT[input - 1]
 
     if (t.isi) {
-      return m.reply(novaWrap("Taubat - " + t.judul, t.isi.join("\n")))
+      return m.reply(raraWrap("Taubat - " + t.judul, t.isi.join("\n")))
     }
 
-    return m.reply(novaWrap("Taubat - " + t.judul, [
+    return m.reply(raraWrap("Taubat - " + t.judul, [
       "Teks Arab:",
       t.arab,
       "",
@@ -170,7 +170,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       t.keutamaan,
     ].join("\n")))
   } catch (e) {
-    return m.reply(novaWrap("Taubat & Istighfar", "Error: " + e.message))
+    return m.reply(raraWrap("Taubat & Istighfar", "Error: " + e.message))
   }
 }
 

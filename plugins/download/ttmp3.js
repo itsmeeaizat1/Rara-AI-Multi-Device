@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import ttdown from "../../src/scraper/tiktok.js";
 import axios from "axios";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { novaWrap, novaLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { raraWrap, raraLine, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -117,11 +117,11 @@ async function handler(m, { sock }) {
   };
 
   if (!url) {
-    return m.reply(novaNoInput("TikTok Audio", "Kirim link TikTok yang ingin kamu ambil lagunya!", `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`));
+    return m.reply(raraNoInput("TikTok Audio", "Kirim link TikTok yang ingin kamu ambil lagunya!", `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`));
   }
 
   if (!url.match(/tiktok\.com|vt\.tiktok/i)) {
-    return m.reply(novaGuide("TikTok Audio", "Link yang kamu masukkan bukan link TikTok valid!", `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`));
+    return m.reply(raraGuide("TikTok Audio", "Link yang kamu masukkan bukan link TikTok valid!", `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`));
   }
   try {
     await m.react("🕒");
@@ -168,11 +168,11 @@ async function handler(m, { sock }) {
     }, { quoted: m });
     // cleanup
     cleanupTempFiles();
-    await m.reply(novaBerhasil("Ttmp3"));
+    await m.reply(raraBerhasil("Ttmp3"));
   } catch (err) {
     cleanupTempFiles();
     console.error("[TikTokDL] Error:", err);
-    m.reply(novaError("TikTok Audio", err.message || "Gagal mengunduh audio TikTok"));
+    m.reply(raraError("TikTok Audio", err.message || "Gagal mengunduh audio TikTok"));
   }
 }
 

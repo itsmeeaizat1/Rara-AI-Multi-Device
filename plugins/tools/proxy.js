@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/tools/proxy.js — Proxy fetcher via ProxyScrape v4
 // (port dari script owner 9 Sep 2026).
 //
@@ -9,8 +9,8 @@
 import fs from "fs";
 import path from "path";
 import { fetchProxies, pickAlive, COUNTRIES } from "../../src/scraper/proxyscrape.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "proxy",
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
 
     // help
     if (sub === "help" || sub === "?") {
-      return m.reply(novaWrap("proxy",
+      return m.reply(raraWrap("proxy",
         `🌐 PROXY FETCHER — ProxyScrape v4\n\n` +
         `.proxy — 10 proxy hidup acak\n` +
         `.proxy <1-50> — sejumlah itu\n` +
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     const proxies = await fetchProxies({ protocol, country });
     if (!proxies.length) {
       await m.react("❌");
-      return m.reply(novaWrap("proxy",
+      return m.reply(raraWrap("proxy",
         `Gak nemu proxy${country ? ` untuk negara *${country.toUpperCase()}*` : ""}.\n\nCoba negara lain, atau lihat daftar: ${m.prefix}proxy help`, "warn"));
     }
 
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
     );
     const filterInfo = `${country ? `negara ${country.toUpperCase()} | ` : ""}${protocol === "http,socks4,socks5" ? "semua protokol" : protocol}`;
     await m.react("🐣");
-    return m.reply(novaWrap("proxy",
+    return m.reply(raraWrap("proxy",
       `🌐 ${picked.length} PROXY HIDUP (acak)\n` +
       `Filter: ${filterInfo} | Stok: ${proxies.length}\n\n` +
       lines.join("\n") +
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("proxy error:", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("proxy", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("proxy", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

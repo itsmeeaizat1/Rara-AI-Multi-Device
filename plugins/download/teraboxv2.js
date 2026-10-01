@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // teraboxv2.js — Download TeraBox v2 (pakai scraper terabox.js lokal)
 import { TeraBoxDL } from "../../src/scraper/terabox.js";
-import { novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
   try {
     const url = m.text?.trim();
     if (!url || (!url.includes("terabox") && !url.includes("teraboxapp"))) {
-      return m.reply(novaGuide("TeraBox v2", "Kirim URL TeraBox yang valid!", ".teraboxv2 https://terabox.com/s/xxx"));
+      return m.reply(raraGuide("TeraBox v2", "Kirim URL TeraBox yang valid!", ".teraboxv2 https://terabox.com/s/xxx"));
     }
 
     await m.react("🕒");
@@ -58,13 +58,13 @@ async function handler(m, { sock }) {
     const result = await TeraBoxDL(url);
     if (!result || result.status === false || result.error) {
       await m.react("❌");
-      return m.reply(novaError("TeraBox v2", result?.error || "Gagal download dari TeraBox!"));
+      return m.reply(raraError("TeraBox v2", result?.error || "Gagal download dari TeraBox!"));
     }
 
     const dlUrl = result.download || result.url || result.dl;
     if (!dlUrl) {
       await m.react("❌");
-      return m.reply(novaError("TeraBox v2", "Link download tidak ditemukan!"));
+      return m.reply(raraError("TeraBox v2", "Link download tidak ditemukan!"));
     }
 
     const axios = (await import("axios")).default;
@@ -99,11 +99,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("teraboxv2"));
+    await m.reply(raraBerhasil("teraboxv2"));
   } catch (err) {
     console.error("[TeraBox v2]", err);
     await m.react("❌");
-    m.reply(novaGagal("TeraBox v2"));
+    m.reply(raraGagal("TeraBox v2"));
   }
 }
 

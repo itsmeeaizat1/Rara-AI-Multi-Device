@@ -1,4 +1,4 @@
-// NOVA AI — autojoin e2e: jadwalkan bot join/leave grup & channel otomatis
+// RARA AI — autojoin e2e: jadwalkan bot join/leave grup & channel otomatis
 // (owner 26 Sep 2026: ".autojoin group <link> 12:00 → otomatis bot join dijam 12:00").
 // Yang dites: parser waktu (relatif/jam absolut/besok/tanggal), validasi link,
 // eksekusi timer via fake sock (groupAcceptInvite/newsletterFollow/groupLeave/
@@ -21,10 +21,10 @@ import fs from "fs";
 const DB_DIR = R + "/test/autojoin-e2e/tmp-db";
 fs.rmSync(DB_DIR, { recursive: true, force: true });
 fs.mkdirSync(DB_DIR, { recursive: true });
-const dbm = await import(R + "/src/lib/nova-database.js");
+const dbm = await import(R + "/src/lib/rara-database.js");
 await dbm.initDatabase(DB_DIR + "/db.json");
 
-const mod = await import(R + "/src/lib/nova-autojoin.js");
+const mod = await import(R + "/src/lib/rara-autojoin.js");
 const {
   extractGroupCode, isChannelLink, parseWaktuAutojoin, formatWaktuAutojoin,
   addAutojoinTask, cancelAutojoinTask, listAutojoinTasks,
@@ -76,18 +76,18 @@ const fakeSock = {
   newsletterFollow: async (jid) => { calls.followChannel.push(jid); },
   groupGetInviteInfo: async (code) => ({ id: "120363012345678901@g.us" }),
   groupLeave: async (jid) => { calls.leaveGroup.push(jid); },
-  cekIDSaluran: async (url) => ({ id: "0029VaXyz123@newsletter", name: "Nova Update" }),
+  cekIDSaluran: async (url) => ({ id: "0029VaXyz123@newsletter", name: "Rara Update" }),
   newsletterUnfollow: async (jid) => { calls.unfollowChannel.push(jid); },
   sendMessage: async (jid, payload) => { calls.dm.push({ jid, text: payload.text }); },
 };
 
 // tugas 1: join grup (timer dekat biar cepat — pakai arm manual)
 const t1 = { id: "AJ-TEST1", action: "join", target: "group", link: GLINK, code: "AbCdEf12345", at: Date.now() + 250, createdAt: Date.now(), owner: OWNER, status: "pending" };
-global.novaAutojoinTasks.push(t1);
+global.raraAutojoinTasks.push(t1);
 armAutojoinTask(fakeSock, t1);
 // tugas 2: out channel
 const t2 = { id: "AJ-TEST2", action: "out", target: "channel", link: CLINK, code: null, at: Date.now() + 450, createdAt: Date.now(), owner: OWNER, status: "pending" };
-global.novaAutojoinTasks.push(t2);
+global.raraAutojoinTasks.push(t2);
 armAutojoinTask(fakeSock, t2);
 // tugas 3: join channel (dieksekusi langsung buat tes sync)
 const ok3 = await fireAutojoinTask(fakeSock, { id: "AJ-TEST3", action: "join", target: "channel", link: CLINK, at: Date.now(), owner: OWNER });
@@ -98,7 +98,7 @@ t("4b timer join grup jalan → groupAcceptInvite(code)", calls.joinGroup.length
 t("4c timer out channel jalan → newsletterUnfollow(jid)", calls.unfollowChannel.length === 1 && calls.unfollowChannel[0] === "0029VaXyz123@newsletter", JSON.stringify(calls.unfollowChannel));
 t("4d DM hasil dikirim ke owner", calls.dm.length >= 3 && calls.dm.every((d) => d.jid === OWNER), JSON.stringify(calls.dm.map((d) => d.jid)));
 t("4e DM join grup bilang BERHASIL (smallcaps)", calls.dm.some((d) => d.text.includes("ʙᴇʀʜᴀꜱɪʟ") && d.text.includes("ᴊᴏɪɴ")), (calls.dm[0] || {}).text?.slice(0, 120));
-t("4f status fired setelah eksekusi", global.novaAutojoinTasks.find((x) => x.id === "AJ-TEST1")?.status === "fired");
+t("4f status fired setelah eksekusi", global.raraAutojoinTasks.find((x) => x.id === "AJ-TEST1")?.status === "fired");
 
 // ─── 5. eksekusi GAGAL jujur ───
 const badSock = {

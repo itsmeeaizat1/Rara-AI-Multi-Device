@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "barcode",
@@ -70,17 +70,17 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!data) {
-      return m.reply(novaWrap("Barcode", "Data tidak boleh kosong!"));
+      return m.reply(raraWrap("Barcode", "Data tidak boleh kosong!"));
     }
 
     // Validate data for type
     const typeInfo = SUPPORTED_TYPES[type];
     if (!typeInfo) {
-      return m.reply(novaWrap("Barcode", "Type tidak dikenal!\nKetik " + prefix + "barcode untuk lihat daftar type"));
+      return m.reply(raraWrap("Barcode", "Type tidak dikenal!\nKetik " + prefix + "barcode untuk lihat daftar type"));
     }
 
     if (!typeInfo.validate(data)) {
-      return m.reply(novaWrap("Barcode", "Data tidak valid untuk type " + typeInfo.name + "!\n" + typeInfo.desc));
+      return m.reply(raraWrap("Barcode", "Data tidak valid untuk type " + typeInfo.name + "!\n" + typeInfo.desc));
     }
     // Generate barcode via QuickChart API
     const apiUrl = "https://quickchart.io/barcode?type=" + type +
@@ -104,7 +104,7 @@ async function handler(m, { sock, config: botConfig }) {
       caption: "Type: " + typeInfo.name + " | Data: " + (data.length > 40 ? data.substring(0, 40) + "..." : data),
     });
 
-    const out = novaWrap("Barcode Generator", [
+    const out = raraWrap("Barcode Generator", [
       "Type: " + typeInfo.name,
       "Data: " + (data.length > 50 ? data.substring(0, 50) + "..." : data),
       "Format: PNG",
@@ -118,7 +118,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (e) {
     await m.react("❌");
     console.error("barcode error:", e);
-    return m.reply(novaWrap("Barcode", "Error: " + e.message));
+    return m.reply(raraWrap("Barcode", "Error: " + e.message));
   }
 }
 

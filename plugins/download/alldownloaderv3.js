@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/download/alldownloaderv3.js — ALLDOWNLOADER V3 (MORI-STYLE)
 //
 // Referensi arsitektur: github.com/coflyn/Mori — client-side downloader
-// 14 platform dengan multi-engine fallback. Di-port ke Nova:
+// 14 platform dengan multi-engine fallback. Di-port ke Rara:
 //   (1) Platform matrix — deteksi platform dari URL
 //   (2) Multi-engine fallback — tiap platform punya RANTAI engine:
 //       scraper spesifik repo → engine direct baru (pixiv/bandcamp) →
@@ -33,11 +33,11 @@ import { scdl } from "../../src/scraper/soundclouddl.js";
 import { omnifyResolve } from "../../src/scraper/omnify-aio.js";
 import { valoreResolve } from "../../src/scraper/valore-dl.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
-import { haidarAio } from "../../src/lib/nova-haidar.js";
+import { haidarAio } from "../../src/lib/rara-haidar.js";
 import { pixivDownload, pixivUgoiraToMp4 } from "../../src/scraper/pixiv.js";
 import { bandcampDownload } from "../../src/scraper/bandcamp.js";
 import { moriScrape } from "../../src/scraper/mori-bridge.js";
-import { novaWrap, novaGuide, toSC } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraGuide, toSC } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -144,7 +144,7 @@ function normType(rawType, url) {
 const ENGINES = {
   // ── Engine direct baru ala Mori ──
   pixivDirect: {
-    name: "Nova Pixiv Direct",
+    name: "Rara Pixiv Direct",
     fn: async (url) => {
       const r = await pixivDownload(url);
       return {
@@ -154,7 +154,7 @@ const ENGINES = {
     },
   },
   bandcampDirect: {
-    name: "Nova Bandcamp Direct",
+    name: "Rara Bandcamp Direct",
     fn: async (url) => {
       const r = await bandcampDownload(url);
       return {
@@ -230,7 +230,7 @@ const ENGINES = {
     },
   },
   igNovav1: {
-    name: "Nova IG v1",
+    name: "Rara IG v1",
     fn: async (url) => {
       const r = await igDownload(url);
       const list = Array.isArray(r) ? r : [r];
@@ -434,12 +434,12 @@ async function handlePixiv(sock, m, platform, r, progressLabel) {
     author: r.author,
     authorHandle: r.pixiv.authorHandle,
     format: r.kind === "ugoira" ? "🎞️ UGOIRA → MP4" : `🖼️ Image ×${r.pixiv.urls.length}`,
-    method: "Nova Pixiv Direct",
+    method: "Rara Pixiv Direct",
   });
   await m.reply((progressLabel ? progressLabel + "\n" : "") + cap);
 
   if (r.kind === "ugoira") {
-    const dir = await mkdtemp(join(tmpdir(), "nova-pixiv-"));
+    const dir = await mkdtemp(join(tmpdir(), "rara-pixiv-"));
     try {
       const out = join(dir, "ugoira.mp4");
       await pixivUgoiraToMp4(r.pixiv.zipUrl, r.pixiv.frames, out, dir);
@@ -474,7 +474,7 @@ async function handleBandcamp(sock, m, platform, r, progressLabel) {
     title: r.title,
     author: r.author,
     format: r.kind === "album" ? `🎶 MP3 128kbps — ${r.medias.length} track, kirim ${tracks.length} pertama` : "🎶 MP3 128kbps",
-    method: "Nova Bandcamp Direct",
+    method: "Rara Bandcamp Direct",
   });
   await m.reply((progressLabel ? progressLabel + "\n" : "") + cap);
 
@@ -534,14 +534,14 @@ async function handlerCore(m, { sock }) {
     }
     body.push("");
     body.push(`Batch: tempel beberapa link sekaligus (maks ${MAX_BATCH}).`);
-    await m.reply(novaWrap("Downloader V3", body));
+    await m.reply(raraWrap("Downloader V3", body));
     await m.react("🐣");
     return true;
   }
 
   const urls = extractUrls(m.text || args.join(" "));
   if (!urls.length) {
-    await m.reply(novaGuide("alldl3", "Universal downloader v3 ala Mori — 14 platform, multi-engine fallback, batch multi-link.", ".alldl3 <url>", `Tempel beberapa link sekaligus untuk batch (maks ${MAX_BATCH}). Lihat .alldl3 engines`));
+    await m.reply(raraGuide("alldl3", "Universal downloader v3 ala Mori — 14 platform, multi-engine fallback, batch multi-link.", ".alldl3 <url>", `Tempel beberapa link sekaligus untuk batch (maks ${MAX_BATCH}). Lihat .alldl3 engines`));
     await m.react("❗");
     return true;
   }
@@ -598,7 +598,7 @@ async function handlerCore(m, { sock }) {
   }
 
   if (okCount === 0) {
-    await m.reply(novaWrap("Downloader V3", [
+    await m.reply(raraWrap("Downloader V3", [
       "❌ Semua link gagal — semua engine di chain udah dicoba.",
       "",
       ...failLogs.map((l) => l.slice(0, 160)),
@@ -615,7 +615,7 @@ async function handlerCore(m, { sock }) {
     for (const l of failLogs) body.push("❌ " + l);
   }
   if (batch.length > 1 || failLogs.length || skipped) {
-    await m.reply(novaWrap("Downloader V3", body, "success"));
+    await m.reply(raraWrap("Downloader V3", body, "success"));
   }
   await m.react("🐣");
   return true;

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "bingo",
@@ -81,14 +81,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const game = db.data.bingoGames[groupId];
 
     if (sub === "start") {
-      if (game.active) return m.reply(novaWrap("Bingo", "Game sudah berjalan!"));
+      if (game.active) return m.reply(raraWrap("Bingo", "Game sudah berjalan!"));
       game.active = true;
       game.called = [];
       game.caller = sender;
       game.startTime = Date.now();
       game.players = {};
       await db.save();
-      return m.reply(novaWrap("Bingo", [
+      return m.reply(raraWrap("Bingo", [
         `Game Bingo dimulai!`,
         `Caller: @${sender.split("@")[0]}`,
         "",
@@ -98,15 +98,15 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "join") {
-      if (!game.active) return m.reply(novaWrap("Bingo", `Belum ada game. Mulai dengan ${usedPrefix}bingo start`, "info"));
+      if (!game.active) return m.reply(raraWrap("Bingo", `Belum ada game. Mulai dengan ${usedPrefix}bingo start`, "info"));
       if (game.players[sender]) {
-        return m.reply(novaWrap("Bingo", "Kamu sudah join!"));
+        return m.reply(raraWrap("Bingo", "Kamu sudah join!"));
       }
       game.players[sender] = { card: generateBingoCard(), won: false };
       await db.save();
       const card = game.players[sender].card;
       const cardStr = formatCard(card);
-      return m.reply(novaWrap("Bingo", [
+      return m.reply(raraWrap("Bingo", [
         `Kamu join game Bingo!`,
         `Kartu kamu:`,
         "",
@@ -117,28 +117,28 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "claim") {
-      if (!game.active) return m.reply(novaWrap("Bingo", "Tidak ada game aktif."));
-      if (!game.players[sender]) return m.reply(novaWrap("Bingo", `Kamu belum join! Ketik ${usedPrefix}bingo join`, "info"));
-      if (game.players[sender].won) return m.reply(novaWrap("Bingo", "Kamu sudah menang!"));
+      if (!game.active) return m.reply(raraWrap("Bingo", "Tidak ada game aktif."));
+      if (!game.players[sender]) return m.reply(raraWrap("Bingo", `Kamu belum join! Ketik ${usedPrefix}bingo join`, "info"));
+      if (game.players[sender].won) return m.reply(raraWrap("Bingo", "Kamu sudah menang!"));
       const card = game.players[sender].card;
       if (checkBingo(card, game.called)) {
         game.players[sender].won = true;
         game.active = false;
         await db.save();
-        return m.reply(novaWrap("Bingo", [
+        return m.reply(raraWrap("Bingo", [
           `BINGO! @${sender.split("@")[0]} MENANG!`,
           `Angka dipanggil: ${game.called.length}`,
           `Durasi: ${Math.floor((Date.now() - game.startTime) / 1000)} detik`,
         ].join("\n")));
       } else {
-        return m.reply(novaWrap("Bingo", "Belum BINGO! Kartu kamu belum lengkap. Cek lagi angka yang dipanggil."));
+        return m.reply(raraWrap("Bingo", "Belum BINGO! Kartu kamu belum lengkap. Cek lagi angka yang dipanggil."));
       }
     }
 
     if (sub === "card") {
-      if (!game.active) return m.reply(novaWrap("Bingo", "Tidak ada game aktif."));
-      if (!game.players[sender]) return m.reply(novaWrap("Bingo", `Belum join. Ketik ${usedPrefix}bingo join`, "info"));
-      return m.reply(novaWrap("Bingo", [
+      if (!game.active) return m.reply(raraWrap("Bingo", "Tidak ada game aktif."));
+      if (!game.players[sender]) return m.reply(raraWrap("Bingo", `Belum join. Ketik ${usedPrefix}bingo join`, "info"));
+      return m.reply(raraWrap("Bingo", [
         `Kartu kamu:`,
         "",
         formatCard(game.players[sender].card),
@@ -148,8 +148,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "called" || sub === "numbers") {
-      if (!game.active) return m.reply(novaWrap("Bingo", "Tidak ada game aktif."));
-      return m.reply(novaWrap("Bingo", [
+      if (!game.active) return m.reply(raraWrap("Bingo", "Tidak ada game aktif."));
+      return m.reply(raraWrap("Bingo", [
         `Angka dipanggil (${game.called.length}):`,
         game.called.join(", ") || "Belum ada",
       ].join("\n")));
@@ -161,16 +161,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.called = [];
       game.caller = null;
       await db.save();
-      return m.reply(novaWrap("Bingo", "Game dihentikan."));
+      return m.reply(raraWrap("Bingo", "Game dihentikan."));
     }
 
     if (sub === "players") {
-      if (!game.active) return m.reply(novaWrap("Bingo", "Tidak ada game aktif."));
+      if (!game.active) return m.reply(raraWrap("Bingo", "Tidak ada game aktif."));
       const playerList = Object.entries(game.players).map(([jid, p], i) => `${i + 1}. @${jid.split("@")[0]}${p.won ? " (MENANG)" : ""}`).join("\n");
-      return m.reply(novaWrap("Bingo", `Pemain (${Object.keys(game.players).length}):\n\n${playerList}`, "info"));
+      return m.reply(raraWrap("Bingo", `Pemain (${Object.keys(game.players).length}):\n\n${playerList}`, "info"));
     }
 
-    return m.reply(novaWrap("Bingo", [
+    return m.reply(raraWrap("Bingo", [
       `Bingo - Game real-time grup`,
       "",
       `Command:`,
@@ -184,7 +184,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("bingo error:", e);
-    return m.reply(novaError("Bingo", e.message));
+    return m.reply(raraError("Bingo", e.message));
   }
 }
 

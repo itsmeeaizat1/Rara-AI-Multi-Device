@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // sindo.js — Berita Sindo News
-import { fetchNewsList } from "../../src/lib/nova-rss-news.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { fetchNewsList } from "../../src/lib/rara-rss-news.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "sindo",
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const data = await fetchNewsList("https://www.sindonews.com/rss", 8);
     if (!Array.isArray(data) || data.length === 0) {
       await m.react("❌");
-      return m.reply(novaWrap("sindo", "Gagal mengambil berita!", "error"));
+      return m.reply(raraWrap("sindo", "Gagal mengambil berita!", "error"));
     }
 
     let _lines = [];
@@ -30,13 +30,13 @@ async function handler(m, { sock }) {
       if (item.url || item.link) _lines.push(`${item.url || item.link}`);
       _lines.push(``);
     });
-    let msg = novaBox("BERITA SINDO NEWS", _lines);
+    let msg = raraBox("BERITA SINDO NEWS", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
     console.error("sindo error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("sindo", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("sindo", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

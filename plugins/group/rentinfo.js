@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 
 const pluginConfig = {
   name: "sewainfo",
@@ -44,13 +44,13 @@ function handler(m, { sock }) {
     const groupName = sewaData.name || m.chat.split("@")[0];
 
     if (sewaData.isLifetime) {
-      return m.reply( novaWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Status: *permanent* ♾️", "Bot aktif selamanya di grup ini.", "", "Untuk sewa bot di grup lain, hubungi owner."].join("\n")), "sewainfo");
+      return m.reply( raraWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Status: *permanent* ♾️", "Bot aktif selamanya di grup ini.", "", "Untuk sewa bot di grup lain, hubungi owner."].join("\n")), "sewainfo");
     }
 
     const countdown = formatCountdown(sewaData.expiredAt);
     const expiredStr = timeHelper.fromTimestamp(sewaData.expiredAt, "D MMMM YYYY HH:mm");
 
-    return m.reply( novaWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Sisa waktu: *" + countdown + "*", "Berakhir: *" + expiredStr + "*", "", "Untuk perpanjang sewa, hubungi owner bot."].join("\n")), "sewainfo");
+    return m.reply( raraWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Sisa waktu: *" + countdown + "*", "Berakhir: *" + expiredStr + "*", "", "Untuk perpanjang sewa, hubungi owner bot."].join("\n")), "sewainfo");
   }
 
   // Grup tidak terdaftar - tampilkan info cara sewa

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, toSC } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -21,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock, conn, args }) {
   // Wajib di grup
   if (!m.isGroup) {
-    await m.reply(novaWrap("List Online", "❗ Command ini hanya bisa dipakai di grup.", "warn"));
+    await m.reply(raraWrap("List Online", "❗ Command ini hanya bisa dipakai di grup.", "warn"));
     return;
   }
 
@@ -30,7 +30,7 @@ async function handler(m, { sock, conn, args }) {
     const presences = store?.presences?.[m.chat];
 
     if (!presences || Object.keys(presences).length === 0) {
-      await m.reply(novaWrap("List Online", "💤 Tidak ada data aktivitas yang terdeteksi saat ini.", "info"));
+      await m.reply(raraWrap("List Online", "💤 Tidak ada data aktivitas yang terdeteksi saat ini.", "info"));
       return;
     }
 
@@ -38,7 +38,7 @@ async function handler(m, { sock, conn, args }) {
     const onlineJids = Object.keys(presences).filter(jid => jid !== botNum && !jid.startsWith("0@"));
 
     if (onlineJids.length === 0) {
-      await m.reply(novaWrap("List Online", "💤 Tidak ada member lain yang terlihat aktif.", "info"));
+      await m.reply(raraWrap("List Online", "💤 Tidak ada member lain yang terlihat aktif.", "info"));
       return;
     }
 
@@ -73,7 +73,7 @@ async function handler(m, { sock, conn, args }) {
       lines.push(`   ${toSC("Status")}: ${toSC(status)}`);
     }
 
-    const teks = novaWrap("List Online", lines, "success");
+    const teks = raraWrap("List Online", lines, "success");
 
     // Kirim dengan mentions + contextInfo
     await sock.sendMessage(m.chat, {
@@ -83,7 +83,7 @@ async function handler(m, { sock, conn, args }) {
         forwardingScore: 999,
         isForwarded: true,
         externalAdReply: {
-          title: config.bot?.name || "Nova AI",
+          title: config.bot?.name || "Rara AI",
           body: `Mendeteksi ${onlineJids.length} aktivitas terbaru`,
           thumbnailUrl: config.bot?.thumbnailUrl || "",
           sourceUrl: config.info?.website || "",
@@ -94,7 +94,7 @@ async function handler(m, { sock, conn, args }) {
     }, { quoted: m });
   } catch (e) {
     console.error("[listonline] Error:", e.message);
-    await m.reply(novaWrap("List Online", "❌ Terjadi kesalahan teknis saat mengecek daftar online.", "error"));
+    await m.reply(raraWrap("List Online", "❌ Terjadi kesalahan teknis saat mengecek daftar online.", "error"));
   }
 }
 

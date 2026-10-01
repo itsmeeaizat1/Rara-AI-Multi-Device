@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { getQuotedStickerHash, addStickerCommand, listStickerCommands } from '../../src/lib/nova-sticker-command.js'
-import { getPlugin } from '../../src/lib/nova-plugins.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getQuotedStickerHash, addStickerCommand, listStickerCommands } from '../../src/lib/rara-sticker-command.js'
+import { getPlugin } from '../../src/lib/rara-plugins.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'addcmdsticker',
     alias: ["addcmdsticker"],
@@ -45,17 +45,17 @@ async function handler(m, { sock }) {
             txt += `---`
         }
         
-        return await m.reply(novaWrap("addcmdsticker", txt))
+        return await m.reply(raraWrap("addcmdsticker", txt))
     }
     
     // Validasi reply sticker
     if (!m.quoted) {
-        return m.reply(novaWrap("Addcmdsticker", '⚠️ *reply sticker* yang ingin dijadikan command!'))
+        return m.reply(raraWrap("Addcmdsticker", '⚠️ *reply sticker* yang ingin dijadikan command!'))
     }
     
     const stickerHash = getQuotedStickerHash(m)
     if (!stickerHash) {
-        return m.reply(novaWrap("Addcmdsticker", '⚠️ Pesan yang di-reply bukan *sticker*!'))
+        return m.reply(raraWrap("Addcmdsticker", '⚠️ Pesan yang di-reply bukan *sticker*!'))
     }
     
     // Validasi command exists
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
             `_Kirim sticker tersebut untuk menjalankan command!_`
         )
     } else {
-        await m.reply(novaError('AddCmdSticker', 'Gagal simpan sticker command nih'))
+        await m.reply(raraError('AddCmdSticker', 'Gagal simpan sticker command nih'))
     }
 }
 

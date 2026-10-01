@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autosummary — Auto-Smart Summary (Daily Group Digest)
  *
@@ -8,7 +8,7 @@
  * - Member yang offline tinggal baca summary, tidak ketinggalan
  * - UPGRADE 21 Sep 2026 (owner: "buat no 1" — ringkasan grup terjadwal
  *   dari histori PERSISTEN): sumber pesan kini chathistory.json
- *   (nova-chat-log.js, tetap ada walau bot restart — ilang hanya kalau
+ *   (rara-chat-log.js, tetap ada walau bot restart — ilang hanya kalau
  *   file db dihapus). Buffer in-memory jadi FALLBACK kalau histori kosong.
  *   Default jadi jam 07:00 WIB kirim ke DM owner (tiap pagi).
  * - 2 mode: full (detail per topik) atau brief (sangat singkat)
@@ -33,10 +33,10 @@
  */
 
 import { CronJob } from "cron";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
-import { getChatHistory } from "../../src/lib/nova-chat-log.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
+import { getChatHistory } from "../../src/lib/rara-chat-log.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -465,7 +465,7 @@ async function handler(m, { sock, config: botConfig }) {
         .map(([jid, msgs]) => `| ${jid.slice(0, 18)}... : ${msgs.length} pesan`)
         .join("\n") || "Belum ada pesan buffered";
 
-      await m.reply(novaBox("AUTO-SMART SUMMARY", [
+      await m.reply(raraBox("AUTO-SMART SUMMARY", [
         `Status: ${status}`,
         `Mode: ${settings.mode}`,
         `Kirim: ${settings.sendTime} WIB`,
@@ -480,7 +480,7 @@ async function handler(m, { sock, config: botConfig }) {
         "---",
         `Buffer:`,
         bufferInfo,
-      ]) + "\n\n" + novaBox("COMMANDS", [
+      ]) + "\n\n" + raraBox("COMMANDS", [
         `${prefix}autosummary on/off`,
         `${prefix}autosummary mode <full/brief>`,
         `${prefix}autosummary time HH:MM`,
@@ -499,7 +499,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.enabled = true;
       db.db.write();
       startSummaryCron(sock);
-      await m.reply(novaBox("AUTO-SMART SUMMARY", [
+      await m.reply(raraBox("AUTO-SMART SUMMARY", [
         "Status: ON",
         `Kirim: ${settings.sendTime} WIB`,
         `Mode: ${settings.mode}`,
@@ -513,7 +513,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.enabled = false;
       db.db.write();
       stopSummaryCron();
-      await m.reply(novaBox("AUTO-SMART SUMMARY", ["Status: OFF", "Cron dihentikan"]));
+      await m.reply(raraBox("AUTO-SMART SUMMARY", ["Status: OFF", "Cron dihentikan"]));
       return { handled: true };
     }
 
@@ -521,7 +521,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "mode") {
       const mode = (args[1] || "").toLowerCase();
       if (!["full", "brief"].includes(mode)) {
-        await m.reply(novaBox("AUTO-SMART SUMMARY", [
+        await m.reply(raraBox("AUTO-SMART SUMMARY", [
           `Current: ${settings.mode}`,
           "Pilihan: full, brief",
           `Ketik: ${prefix}autosummary mode <full/brief>`,
@@ -533,7 +533,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.mode = mode;
       db.db.write();
-      await m.reply(novaBox("AUTO-SMART SUMMARY", [`Mode: ${mode}`]));
+      await m.reply(raraBox("AUTO-SMART SUMMARY", [`Mode: ${mode}`]));
       return { handled: true };
     }
 
@@ -541,7 +541,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "time") {
       const time = args[1];
       if (!time || !/^\d{1,2}:\d{2}$/.test(time)) {
-        await m.reply(novaBox("AUTO-SMART SUMMARY", [
+        await m.reply(raraBox("AUTO-SMART SUMMARY", [
           `Current: ${settings.sendTime} WIB`,
           `Ketik: ${prefix}autosummary time HH:MM`,
           `Contoh: ${prefix}autosummary time 22:00`,
@@ -551,7 +551,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.sendTime = time;
       db.db.write();
       if (settings.enabled) startSummaryCron(sock);
-      await m.reply(novaBox("AUTO-SMART SUMMARY", [
+      await m.reply(raraBox("AUTO-SMART SUMMARY", [
         `Waktu kirim: ${time} WIB`,
         "Cron di-restart",
       ]));
@@ -562,7 +562,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "sendto") {
       const target = (args[1] || "").toLowerCase();
       if (!["group", "owner"].includes(target)) {
-        await m.reply(novaBox("AUTO-SMART SUMMARY", [
+        await m.reply(raraBox("AUTO-SMART SUMMARY", [
           `Current: ${settings.sendTo}`,
           `Ketik: ${prefix}autosummary sendto group/owner`,
         ]));
@@ -570,7 +570,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.sendTo = target;
       db.db.write();
-      await m.reply(novaBox("AUTO-SMART SUMMARY", [`Send to: ${target === "group" ? "Grup" : "PM Owner"}`]));
+      await m.reply(raraBox("AUTO-SMART SUMMARY", [`Send to: ${target === "group" ? "Grup" : "PM Owner"}`]));
       return { handled: true };
     }
 
@@ -582,11 +582,11 @@ async function handler(m, { sock, config: botConfig }) {
           settings.activeGroups.push(gid);
           db.db.write();
         }
-        await m.reply(novaBox("AUTO-SMART SUMMARY", [`Grup ditambah: ${gid}`, `Total: ${settings.activeGroups.length}`]));
+        await m.reply(raraBox("AUTO-SMART SUMMARY", [`Grup ditambah: ${gid}`, `Total: ${settings.activeGroups.length}`]));
       } else {
         settings.activeGroups = settings.activeGroups.filter((g) => g !== gid);
         db.db.write();
-        await m.reply(novaBox("AUTO-SMART SUMMARY", [`Grup dihapus: ${gid}`, `Total: ${settings.activeGroups.length}`]));
+        await m.reply(raraBox("AUTO-SMART SUMMARY", [`Grup dihapus: ${gid}`, `Total: ${settings.activeGroups.length}`]));
       }
       return { handled: true };
     }
@@ -595,25 +595,25 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "now") {
       const gid = args[1] || m.chat;
       if (!gid || !gid.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-SMART SUMMARY", [
+        await m.reply(raraBox("AUTO-SMART SUMMARY", [
           `Ketik di grup atau: ${prefix}autosummary now <groupId>`,
           `Contoh: ${prefix}autosummary now 120363xxx@g.us`,
         ]));
         return { handled: true };
       }
 
-      await m.reply(novaBox("AUTO-SMART SUMMARY", [`Generating summary for ${gid.slice(0, 18)}...`]));
+      await m.reply(raraBox("AUTO-SMART SUMMARY", [`Generating summary for ${gid.slice(0, 18)}...`]));
 
       const result = await generateAndSendSummary(sock, gid, true);
       if (result.success) {
-        await m.reply(novaBox("AUTO-SMART SUMMARY", [
+        await m.reply(raraBox("AUTO-SMART SUMMARY", [
           `Summary terkirim!`,
           `Grup: ${result.groupName}`,
           `Pesan: ${result.messageCount}`,
           `Mode: ${result.usedAI ? "AI" : "Fallback"}`,
         ]));
       } else {
-        await m.reply(novaBox("AUTO-SMART SUMMARY", [
+        await m.reply(raraBox("AUTO-SMART SUMMARY", [
           `Gagal: ${result.reason}`,
           "Belum ada pesan 24 jam terakhir di histori grup itu",
         ]));
@@ -624,7 +624,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ─── HISTORY ───
     if (sub === "history") {
       if (settings.history.length === 0) {
-        await m.reply(novaBox("AUTO-SMART SUMMARY", ["History: kosong"]));
+        await m.reply(raraBox("AUTO-SMART SUMMARY", ["History: kosong"]));
         return { handled: true };
       }
       const recent = settings.history.slice(-10).reverse();
@@ -632,7 +632,7 @@ async function handler(m, { sock, config: botConfig }) {
         const time = new Date(h.timestamp).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
         return `| ${h.group} — ${h.messageCount} msgs ${h.ai ? "[AI]" : "[FB]"} ${time}`;
       });
-      await m.reply(novaBox("SUMMARY HISTORY", lines));
+      await m.reply(raraBox("SUMMARY HISTORY", lines));
       return { handled: true };
     }
 
@@ -644,7 +644,7 @@ async function handler(m, { sock, config: botConfig }) {
         .map(([jid, s]) => `| ${jid.slice(0, 18)}... : ${s.count}x, ${s.messages} msgs`)
         .join("\n") || "Belum ada data";
 
-      await m.reply(novaBox("SMART SUMMARY — STATISTIK", [
+      await m.reply(raraBox("SMART SUMMARY — STATISTIK", [
         `Total summaries: ${settings.stats.totalSummaries}`,
         `Messages summarized: ${settings.stats.totalMessagesSummarized}`,
         `AI: ${settings.stats.totalAI}`,
@@ -672,17 +672,17 @@ async function handler(m, { sock, config: botConfig }) {
       // Clear buffers too
       for (const k of Object.keys(messageBuffers)) delete messageBuffers[k];
       db.db.write();
-      await m.reply(novaBox("AUTO-SMART SUMMARY", ["Stats, history & buffer direset"]));
+      await m.reply(raraBox("AUTO-SMART SUMMARY", ["Stats, history & buffer direset"]));
       return { handled: true };
     }
 
     // ─── UNKNOWN ───
-    await m.reply(novaBox("AUTO-SMART SUMMARY", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autosummary untuk dashboard`]));
+    await m.reply(raraBox("AUTO-SMART SUMMARY", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autosummary untuk dashboard`]));
     return { handled: true };
 
   } catch (error) {
     console.error("[autosummary] handler error:", error.message);
-    await m.reply(novaError("AutoSummary", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("AutoSummary", "Gagal nih, coba lagi ya"));
     return { handled: true };
   }
 }

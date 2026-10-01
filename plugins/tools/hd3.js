@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import axios from "axios";
 import FormData from "form-data";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const config = {
   name: "hd3",
@@ -324,7 +324,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     await m.react("❌");
     console.error("[HD3]", e.message);
-    m.reply(novaWrap("hd3", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("hd3", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

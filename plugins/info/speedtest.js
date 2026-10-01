@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { exec } from "child_process";
 import os from "os";
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { startStatusRotation } from "../../src/lib/nova-status-rotate.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { startStatusRotation } from "../../src/lib/rara-status-rotate.js";
 
 const pluginConfig = {
   name: "speedtest",
@@ -51,28 +51,28 @@ function formatUptime(seconds) {
 // 🔍 ping → ⬇️ unduh → ⬆️ unggah → ✅ susun hasil.
 // ═════════════════════════════════════════════════════════════════
 const STATUS_PHASES = [
-  () => novaWrap("Speedtest Berjalan", [
+  () => raraWrap("Speedtest Berjalan", [
     "⚡ *TES KECEPATAN DIMULAI*",
     "",
     "🔍 Mengukur ping ke server...",
     "",
     "_biasanya 5-30 detik, sabar ya_ ✨",
   ].join("\n")),
-  () => novaWrap("Speedtest Berjalan", [
+  () => raraWrap("Speedtest Berjalan", [
     "⚡ *TES KECEPATAN JALAN*",
     "",
     "⬇️ Mengunduh file tes...",
     "",
     "_ngukur kecepatan download_ ✨",
   ].join("\n")),
-  () => novaWrap("Speedtest Berjalan", [
+  () => raraWrap("Speedtest Berjalan", [
     "⚡ *TES KECEPATAN JALAN*",
     "",
     "⬆️ Mengunggah file tes...",
     "",
     "_ngukur kecepatan upload_ ✨",
   ].join("\n")),
-  () => novaWrap("Speedtest Berjalan", [
+  () => raraWrap("Speedtest Berjalan", [
     "⚡ *TES KECEPATAN JALAN*",
     "",
     "✅ Menyusun hasil...",
@@ -170,7 +170,7 @@ export function _setSpeedtestFnForTest(fn) { _speedtestFn = fn; }
 export function _resetSpeedtestFnForTest() { _speedtestFn = runSpeedtest; }
 
 function buildResultCard(sys, result) {
-  return novaWrap("Hasil Speedtest", [
+  return raraWrap("Hasil Speedtest", [
     "⚡ *HASIL TES KECEPATAN*",
     "",
     `🖥 Host: ${sys.hostname}`,

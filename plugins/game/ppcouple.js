@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!couple) {
       const text =
-        novaWrap("PP Couple", ["Kamu belum memiliki pasangan!",
+        raraWrap("PP Couple", ["Kamu belum memiliki pasangan!",
           "",
           `Coba: *${prefix}marry @member*`,
           `Atau: *${prefix}couple*`].join("\n")) +
@@ -38,7 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      novaWrap("PP Couple", [`Kamu: *${m.pushName || "Player"}*`,
+      raraWrap("PP Couple", [`Kamu: *${m.pushName || "Player"}*`,
         `Pasangan: *${couple.partner || "Unknown"}*`,
         "Status: *married*"].join("\n")) +
       "\n" +
@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Game", [`Status: *gagal*`,
+      raraError("Game", [`Status: *gagal*`,
         `Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

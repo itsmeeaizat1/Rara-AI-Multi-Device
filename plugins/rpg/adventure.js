@@ -1,16 +1,16 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Adventure — Random exploration event (multiple outcomes)
 
 import {
   ensureRpg, saveRpg, addExp, addGold, addGems, useEnergy,
   addItem, removeItem, getEquipStats, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
-  getCash} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animAdventure, animBattleTurns } from "../../src/lib/nova-rpg-anim.js";
+  getCash} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, renderStatBar, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animAdventure, animBattleTurns } from "../../src/lib/rara-rpg-anim.js";
 import { playPetaAnim as libPlayPetaAnim, playAdventureCinematic } from "../../src/lib/libanimationrpg/libadventurerpg.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "adventure",
@@ -122,17 +122,17 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("adventure", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("adventure", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastAdventure");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("adventure", `Cooldown petualangan tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("adventure", `Cooldown petualangan tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < ADV_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("adventure", `Energi kurang! Butuh *${ADV_ENERGY} energy*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(raraRpgBox("adventure", `Energi kurang! Butuh *${ADV_ENERGY} energy*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     useEnergy(m, ADV_ENERGY, sock);
@@ -297,7 +297,7 @@ async function handler(m, { sock }) {
     const dropLines = drops.map(d => `│ • 📦 ${ITEM_DB[d.item]?.name || d.item} : +${d.qty}x`);
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "adventure", icon: "🧭",
       flavor,
       body: [
@@ -317,7 +317,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("adventure error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("adventure", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("adventure", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

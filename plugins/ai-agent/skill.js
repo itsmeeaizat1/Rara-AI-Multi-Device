@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .skill — AGENT SKILLS BROWSER (owner-only).
  *
  * Registry 4.727 skill (wshobson/agents + kurasi skills.sh: 212 repo
  * official/populer, dedupe) di skills/<nama>/SKILL.md — di-inject OTOMATIS ke pintu
- * AI (.novaagent/.aisuperagent/.agentloop/.autotask) lewat nova-askills.js
+ * AI (.raraagent/.aisuperagent/.agentloop/.autotask) lewat rara-askills.js
  * skillsBlock (progressive disclosure: cuma skill yang nyambung sama tugas
  * yang isinya dimuat). Plugin ini buat lihat/mastuin isinya manual.
  *
@@ -15,9 +15,9 @@
  *   .skill match <tugas>      — preview skill apa yang ke-inject buat tugas itu
  *   .skill count              — jumlah skill terpasang
  */
-import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError } from "../../src/lib/rara-menu-style.js";
 import { splitChatChunks } from "../../src/lib/aiagent.js";
-import { matchSkills, getSkillBody, findSkill, listSkills, skillCount } from "../../src/lib/nova-askills.js";
+import { matchSkills, getSkillBody, findSkill, listSkills, skillCount } from "../../src/lib/rara-askills.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -37,11 +37,11 @@ async function handler(m, { sock }) {
 
   // ── tanpa subcommand → usage ──
   if (!sub) {
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       pluginConfig.name,
       `${skillCount()} skill terpasang — AI otomatis pakai yang nyambung sama tugasmu`,
       ".skill list [kata] · .skill <nama> · .skill match <tugas> · .skill count",
-      `skill dari wshobson/agents + kurasi skills.sh (212 repo official/populer, dedupe), otomatis di-inject ke .novaagent/.aisuperagent/.agentloop/.autotask`,
+      `skill dari wshobson/agents + kurasi skills.sh (212 repo official/populer, dedupe), otomatis di-inject ke .raraagent/.aisuperagent/.agentloop/.autotask`,
     ));
   }
 
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     const q = (args[1] || "").toLowerCase();
     const filtered = listSkills(q);
     if (!filtered.length) {
-      return m.reply(novaError(pluginConfig.name, `gak ada skill yang cocok dengan "${q}"`));
+      return m.reply(raraError(pluginConfig.name, `gak ada skill yang cocok dengan "${q}"`));
     }
     // plafon tampilan — registry gede, gak mungkin dump ribuan baris
     const MAX_TAMPIL = 60;
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
   if (sub === "match" || sub === "cek") {
     const q = args.slice(1).join(" ");
     if (!q) {
-      return m.reply(novaGuide(
+      return m.reply(raraGuide(
         pluginConfig.name,
         "lihat skill apa aja yang bakal di-inject buat sebuah tugas",
         ".skill match <tugas>",
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
 
   // ── .skill count ──
   if (sub === "count" || sub === "total") {
-    return m.reply(`「 ✦ AGENT SKILLS ✦ 」\n\n⚡ Total skill terpasang: ${skillCount()}\n📡 Sumber: wshobson/agents (anthropic agent skills spec)\n🤖 Auto-inject: .novaagent · .aisuperagent · .agentloop · .autotask`);
+    return m.reply(`「 ✦ AGENT SKILLS ✦ 」\n\n⚡ Total skill terpasang: ${skillCount()}\n📡 Sumber: wshobson/agents (anthropic agent skills spec)\n🤖 Auto-inject: .raraagent · .aisuperagent · .agentloop · .autotask`);
   }
 
   // ── .skill <nama> ──

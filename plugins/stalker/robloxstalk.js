@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "robloxstalk",
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
   const username = m.args[0]?.trim();
 
   if (!username) {
-    return m.reply(novaWrap("robloxstalk", [
+    return m.reply(raraWrap("robloxstalk", [
       "Stalk profil Roblox lengkap dengan statistik.",
       "",
       `📌 Format: ${m.prefix}robloxstalk <username>`,
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
 
     if (res.error) {
       await m.react("❌");
-      return m.reply(novaWrap("robloxstalk", `Username *${username}* tidak ditemukan`, "error"));
+      return m.reply(raraWrap("robloxstalk", `Username *${username}* tidak ditemukan`, "error"));
     }
 
     const topGroups =
@@ -211,7 +211,7 @@ async function handler(m, { sock }) {
     }
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("robloxstalk", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("robloxstalk", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

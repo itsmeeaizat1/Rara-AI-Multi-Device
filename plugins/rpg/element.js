@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Element System — Pilih elemen, cek kelemahan, bonus damage
 
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "element",
@@ -27,7 +27,7 @@ const ELEMENTS = {
 async function handler(m, { sock, text }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("element", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("element", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = (text || "").trim().split(/\s+/);
     const action = args[0]?.toLowerCase();
@@ -66,13 +66,13 @@ async function handler(m, { sock, text }) {
 
     // Pilih elemen
     if (!ELEMENTS[action]) {
-      return m.reply(novaRpgBox("element", "Elemen tidak valid. Pilih: api, air, tanah, angin", "guide"));
+      return m.reply(raraRpgBox("element", "Elemen tidak valid. Pilih: api, air, tanah, angin", "guide"));
     }
 
     if (rpg.element) {
       const elem = ELEMENTS[rpg.element];
   await animGeneric(m, sock, "🔮", "Selecting Element");
-      return m.reply(novaRpgBox("element", "Elemenmu sudah dipilih: *" + elem.name + "*\nTidak bisa diganti.", "info"));
+      return m.reply(raraRpgBox("element", "Elemenmu sudah dipilih: *" + elem.name + "*\nTidak bisa diganti.", "info"));
     }
 
     await m.react("🕒");
@@ -92,7 +92,7 @@ async function handler(m, { sock, text }) {
   } catch (e) {
     console.error("element error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("element", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("element", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

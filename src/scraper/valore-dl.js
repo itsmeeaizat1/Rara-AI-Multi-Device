@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 //  Valore DL — Multi Platform Downloader (ESM scraper)
 //  Target  : https://dl.valore.web.id/

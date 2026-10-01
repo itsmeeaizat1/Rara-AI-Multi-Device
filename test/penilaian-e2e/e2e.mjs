@@ -16,8 +16,8 @@ const { fromSC, toSC } = await import(pathToFileURL(path.join(REPO, "src/lib/sty
 
 // DB real (pola welcome-e2e): handler manggil getDatabase() internal
 fs.rmSync("/tmp/penilaian-e2e-db", { recursive: true, force: true });
-const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-database.js")).href);
-await initDatabase("/tmp/penilaian-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-database.js")).href);
+await initDatabase("/tmp/penilaian-e2e-db/rara.json");
 const db = getDatabase();
 
 const { config: pluginConfig, handler: penilaianHandler } =
@@ -48,7 +48,7 @@ function mockSock() {
   };
 }
 const botConfig = {
-  bot: { name: "Nova AI", version: "9.0" },
+  bot: { name: "Rara AI", version: "9.0" },
   command: { prefix: "." },
   owner: { number: ["6281234567890"] },
 };
@@ -161,7 +161,7 @@ const botConfig = {
 
 // ── case 7: tombol Support menu card ada row "Beri Penilaian" ──
 {
-  const { buildNavButtons } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-menu-card.js")).href);
+  const { buildNavButtons } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-menu-card.js")).href);
   const m = { sender: "6289999000001@s.whatsapp.net", isGroup: false };
   const btns = buildNavButtons(m, db, ".");
   const support = btns.find((b) => b.type === "single_select" && /support/i.test(fromSC(b.text || "")));
@@ -202,7 +202,7 @@ const botConfig = {
 
 // ── case 8: info section menu/allmenu nunjukin Rating dari db (persist) ──
 {
-  const { buildMenuInfo } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-info-section.js")).href);
+  const { buildMenuInfo } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-info-section.js")).href);
   const m = { sender: "6289999000001@s.whatsapp.net", isGroup: false, isOwner: false, isPremium: false, timestamp: 0 };
 
   // kosong → "-/5.0 (belum ada)"

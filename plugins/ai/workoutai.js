@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // workoutai — AI rencana workout personal
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "workoutai",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("workoutai", `Mau workout plan untuk apa?\n\nContoh: ${m.prefix}workoutai turun berat badan pemula\n${m.prefix}workoutai six pack menengah\n${m.prefix}workoutai badan besar advance`, "guide"));
+      return m.reply(raraWrap("workoutai", `Mau workout plan untuk apa?\n\nContoh: ${m.prefix}workoutai turun berat badan pemula\n${m.prefix}workoutai six pack menengah\n${m.prefix}workoutai badan besar advance`, "guide"));
     }
 
     await m.react("🕒");
@@ -50,11 +50,11 @@ TIPS: [3 tips penting untuk program ini]
 
 Gunakan bahasa Indonesia. Sesuaikan dengan level yang disebutkan. Realistis dan aman.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("workoutai", "AI-nya lagi rest day 💪", "error"));
+      return m.reply(raraWrap("workoutai", "AI-nya lagi rest day 💪", "error"));
     }
 
     await m.react("🐣");
@@ -69,7 +69,7 @@ Gunakan bahasa Indonesia. Sesuaikan dengan level yang disebutkan. Realistis dan 
   } catch (err) {
     console.error("workoutai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("workoutai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("workoutai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

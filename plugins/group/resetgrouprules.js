@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 const pluginConfig = {
     name: 'resetrulesgrup',
     alias: ["resetrulesgrup"],
@@ -23,7 +23,7 @@ function handler(m, { sock }) {
     
     db.setGroup(m.chat, { groupRules: null })
     
-    m.reply(novaWrap("Grup Rules Direset", 
+    m.reply(raraWrap("Grup Rules Direset", 
         `Rules grup berhasil direset ke default!\n` +
         `Ketik \`${m.prefix}rulesgrup\` untuk melihat.`))
 }

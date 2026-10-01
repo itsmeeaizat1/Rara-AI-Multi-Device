@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { Txt2Img2 } from "../../src/scraper/txt2img2.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "txt2img2",
@@ -21,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(novaGuideV2("txt2img2", {
+    return m.reply(raraGuideV2("txt2img2", {
  kaomoji: "(•̀ᴗ•́)و",
  sapaan: "bikin gambar dari teks pakai AI Flux Klein 4B, hasilnya tajam! (๑•̀ㅂ•́)و✧",
       cara: "ketik deskripsi gambar yang mau dibuat",
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const result = await Txt2Img2(text);
 
     if (!result.status) {
-      { return await m.reply(novaWrap(m.command, result.error || "Generate gagal, coba lagi ya", "error")); };
+      { return await m.reply(raraWrap(m.command, result.error || "Generate gagal, coba lagi ya", "error")); };
     }
 
     await sock.sendMedia(m.chat, result.url, `🎨 *Flux Klein 4B*\n\nPrompt: *${result.prompt}*`, m, {
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     });
   } catch (e) {
     console.error(e);
-    m.reply(novaError("Txt2Img2", "❌ Gagal generate gambar, coba lagi nanti"));
+    m.reply(raraError("Txt2Img2", "❌ Gagal generate gambar, coba lagi nanti"));
   }
 }
 

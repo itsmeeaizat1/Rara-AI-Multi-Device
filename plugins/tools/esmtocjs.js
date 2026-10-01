@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from '../../src/lib/nova-error.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from '../../src/lib/rara-error.js'
 import config from '../../config.js'
 
 const pluginConfig = {
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
     let code = m.quotedBody || m.text?.trim()
 
     if (!code) {
-        return m.reply(novaWrap("esmtocjs", [
+        return m.reply(raraWrap("esmtocjs", [
       `🔄 *esm to cjs converter*`,
       `Convert ES Modules ke CommonJS`,
       ``,
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
         await sock.sendCodeBlock(m.chat, convertEsmToCjs(code), m)
     } catch (error) {
     await m.react("❌");
-        m.reply(novaWrap("esmtocjs", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("esmtocjs", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

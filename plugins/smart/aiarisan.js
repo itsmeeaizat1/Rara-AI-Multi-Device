@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { parseMention, delay } from "../../src/lib/nova-utils.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { parseMention, delay } from "../../src/lib/rara-utils.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aiarisan",
@@ -47,16 +47,16 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== BUAT
   if (sub === "buat" || sub === "create") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Arisan", "Khusus admin grup atau owner."));
+      await m.reply(raraWrap("Arisan", "Khusus admin grup atau owner."));
       return { handled: true };
     }
     if (getArisan(db, gid)) {
-      await m.reply(novaWrap("Arisan", "Arisan sudah ada di grup ini. Ketik " + prefix + "aiarisan hapus dulu."));
+      await m.reply(raraWrap("Arisan", "Arisan sudah ada di grup ini. Ketik " + prefix + "aiarisan hapus dulu."));
       return { handled: true };
     }
     const iuran = parseInt(args[2] || "0", 10);
     if (!iuran || iuran < 1000) {
-      await m.reply(novaWrap("Arisan", "Format: " + prefix + "aiarisan buat <iuran>\n💡 *Contoh:* " + prefix + "aiarisan buat 50000"));
+      await m.reply(raraWrap("Arisan", "Format: " + prefix + "aiarisan buat <iuran>\n💡 *Contoh:* " + prefix + "aiarisan buat 50000"));
       return { handled: true };
     }
     const data = {
@@ -70,7 +70,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       status: "open",
     };
     saveArisan(db, gid, data);
-    await m.reply(novaWrap("Arisan Dibuat", [
+    await m.reply(raraWrap("Arisan Dibuat", [
       "Iuran: Rp" + iuran.toLocaleString("id-ID"),
       "Slot: " + data.slots + " orang",
       "Status: Terbuka",
@@ -85,24 +85,24 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "join" || sub === "ikut") {
     const arisan = getArisan(db, gid);
     if (!arisan) {
-      await m.reply(novaWrap("Arisan", "Belum ada arisan. Ketik " + prefix + "aiarisan buat <iuran>."));
+      await m.reply(raraWrap("Arisan", "Belum ada arisan. Ketik " + prefix + "aiarisan buat <iuran>."));
       return { handled: true };
     }
     if (arisan.status !== "open") {
-      await m.reply(novaWrap("Arisan", "Arisan sudah ditutup."));
+      await m.reply(raraWrap("Arisan", "Arisan sudah ditutup."));
       return { handled: true };
     }
     if (arisan.peserta.includes(m.sender)) {
-      await m.reply(novaWrap("Arisan", "Kamu sudah ikut arisan."));
+      await m.reply(raraWrap("Arisan", "Kamu sudah ikut arisan."));
       return { handled: true };
     }
     if (arisan.peserta.length >= arisan.slots) {
-      await m.reply(novaWrap("Arisan", "Slot penuh! (" + arisan.slots + " orang)"));
+      await m.reply(raraWrap("Arisan", "Slot penuh! (" + arisan.slots + " orang)"));
       return { handled: true };
     }
     arisan.peserta.push(m.sender);
     saveArisan(db, gid, arisan);
-    await m.reply(novaWrap("Arisan", "Berhasil join! Slot: " + arisan.peserta.length + "/" + arisan.slots));
+    await m.reply(raraWrap("Arisan", "Berhasil join! Slot: " + arisan.peserta.length + "/" + arisan.slots));
     return { handled: true };
   }
 
@@ -110,11 +110,11 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "undang" || sub === "invite") {
     const arisan = getArisan(db, gid);
     if (!arisan) {
-      await m.reply(novaWrap("Arisan", "Belum ada arisan."));
+      await m.reply(raraWrap("Arisan", "Belum ada arisan."));
       return { handled: true };
     }
     if (!m.mentionedJid || m.mentionedJid.length === 0) {
-      await m.reply(novaWrap("Arisan", "Format: " + prefix + "aiarisan undang @member"));
+      await m.reply(raraWrap("Arisan", "Format: " + prefix + "aiarisan undang @member"));
       return { handled: true };
     }
     for (const jid of m.mentionedJid) {
@@ -123,7 +123,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       }
     }
     saveArisan(db, gid, arisan);
-    await m.reply(novaWrap("Arisan", "Diundang: " + m.mentionedJid.length + " orang. Slot: " + arisan.peserta.length + "/" + arisan.slots));
+    await m.reply(raraWrap("Arisan", "Diundang: " + m.mentionedJid.length + " orang. Slot: " + arisan.peserta.length + "/" + arisan.slots));
     return { handled: true };
   }
 
@@ -131,45 +131,45 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "undur" || sub === "keluar") {
     const arisan = getArisan(db, gid);
     if (!arisan) {
-      await m.reply(novaWrap("Arisan", "Belum ada arisan."));
+      await m.reply(raraWrap("Arisan", "Belum ada arisan."));
       return { handled: true };
     }
     arisan.peserta = arisan.peserta.filter(p => p !== m.sender);
     saveArisan(db, gid, arisan);
-    await m.reply(novaWrap("Arisan", "Kamu keluar dari arisan."));
+    await m.reply(raraWrap("Arisan", "Kamu keluar dari arisan."));
     return { handled: true };
   }
 
   // ==================== DRAW (acak pemenang)
   if (sub === "draw" || sub === "acak") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Arisan", "Khusus admin/owner."));
+      await m.reply(raraWrap("Arisan", "Khusus admin/owner."));
       return { handled: true };
     }
     const arisan = getArisan(db, gid);
     if (!arisan) {
-      await m.reply(novaWrap("Arisan", "Belum ada arisan."));
+      await m.reply(raraWrap("Arisan", "Belum ada arisan."));
       return { handled: true };
     }
     if (arisan.peserta.length < 2) {
-      await m.reply(novaWrap("Arisan", "Minimal 2 peserta untuk draw."));
+      await m.reply(raraWrap("Arisan", "Minimal 2 peserta untuk draw."));
       return { handled: true };
     }
     const eligible = arisan.peserta.filter(p => !arisan.winners.includes(p));
     if (eligible.length === 0) {
-      await m.reply(novaWrap("Arisan", "Semua peserta sudah menang! Arisan selesai."));
+      await m.reply(raraWrap("Arisan", "Semua peserta sudah menang! Arisan selesai."));
       arisan.status = "done";
       saveArisan(db, gid, arisan);
       return { handled: true };
     }
-    await m.reply(novaWrap("Arisan", "_Mengacak pemenang..._"));
+    await m.reply(raraWrap("Arisan", "_Mengacak pemenang..._"));
     await delay(2000);
     const winner = eligible[Math.floor(Math.random() * eligible.length)];
     arisan.winners.push(winner);
     arisan.ronde++;
     saveArisan(db, gid, arisan);
     const total = arisan.iuran * arisan.peserta.length;
-    await m.reply(novaWrap("Arisan Result", [
+    await m.reply(raraWrap("Arisan Result", [
       "Ronde ke-" + arisan.ronde,
       "Pemenang: @" + winner.split("@")[0],
       "Hadiah: Rp" + total.toLocaleString("id-ID"),
@@ -182,7 +182,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "info" || sub === "cek" || !sub) {
     const arisan = getArisan(db, gid);
     if (!arisan) {
-      await m.reply(novaWrap("Arisan", [
+      await m.reply(raraWrap("Arisan", [
         "Belum ada arisan di grup ini.",
         "",
         "Cara pakai:",
@@ -196,7 +196,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     const pesertaList = arisan.peserta.map((p, i) => (i + 1) + ". @" + p.split("@")[0] + (arisan.winners.includes(p) ? " (sudah menang)" : "")).join("\n");
-    await m.reply(novaWrap("Arisan Info", [
+    await m.reply(raraWrap("Arisan Info", [
       "Iuran: Rp" + arisan.iuran.toLocaleString("id-ID"),
       "Slot: " + arisan.peserta.length + "/" + arisan.slots,
       "Ronde: " + arisan.ronde,
@@ -212,15 +212,15 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== HAPUS
   if (sub === "hapus" || sub === "delete") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Arisan", "Khusus admin/owner."));
+      await m.reply(raraWrap("Arisan", "Khusus admin/owner."));
       return { handled: true };
     }
     delArisan(db, gid);
-    await m.reply(novaWrap("Arisan", "Arisan dihapus."));
+    await m.reply(raraWrap("Arisan", "Arisan dihapus."));
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Arisan", "Ketik " + prefix + "aiarisan info untuk bantuan."));
+  await m.reply(raraWrap("Arisan", "Ketik " + prefix + "aiarisan info untuk bantuan."));
   return { handled: true };
 }
 

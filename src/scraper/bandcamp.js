@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/scraper/bandcamp.js — BANDCAMP DIRECT ENGINE (ala Mori)
 // Sumber referensi: github.com/coflyn/Mori — Bandcamp direct page scrape.
 // Pattern VERIFIED LIVE 2026-09-07: page 200, trackinfo berupa JSON

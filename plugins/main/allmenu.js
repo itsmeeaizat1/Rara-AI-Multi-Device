@@ -1,26 +1,26 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua command per kategori (Nova box style + thumbnail menu.jpg)
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// allmenu.js — Semua command per kategori (Rara box style + thumbnail menu.jpg)
 import * as botmodePlugin from "../group/botmode.js";
-import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
+import { getCasesByCategory, getCaseCount } from "../../case/rara.js";
 import config from "../../config.js";
 import {
   getTimeGreeting,
   formatUptime,
   getImportantDay,
-} from "../../src/lib/nova-formatter.js";
+} from "../../src/lib/rara-formatter.js";
 import {
   getCommandsByCategory,
   getCategories,
   getPlugin,
-} from "../../src/lib/nova-plugins.js";
+} from "../../src/lib/rara-plugins.js";
 import fs from "fs";
 import os from "os";
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
-import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { buildNavButtons } from "../../src/lib/nova-menu-card.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight, novaBox, novaMenuLayout, getAccessSymbols } from "../../src/lib/nova-menu-style.js";
-import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
+import { sendMenuCard } from "../../src/lib/rara-menu-card.js";
+import { buildNavButtons } from "../../src/lib/rara-menu-card.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, commandListLine, toSC, closeBoxRight, raraBox, raraMenuLayout, getAccessSymbols } from "../../src/lib/rara-menu-style.js";
+import { buildMenuInfo } from "../../src/lib/rara-info-section.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -112,7 +112,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const user = db.getUser(m.sender);
     const now = new Date();
 
-    const timeHelper = await import("../../src/lib/nova-time.js");
+    const timeHelper = await import("../../src/lib/rara-time.js");
     const timeStr = timeHelper.formatTime("HH:mm");
     const dayName = timeHelper.formatFull("dddd");
     const dateStr = timeHelper.formatFull("DD MMMM YYYY");
@@ -149,7 +149,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     let totalActiveGroups = Object.values(allGroups).filter(g => g.isLeft !== true && g.isBanned !== true).length;
     // live count grup (request owner 13 Sep) — registry bisa kosong
     try {
-      const { countGroupsLive } = await import("../../src/lib/nova-group-registry.js");
+      const { countGroupsLive } = await import("../../src/lib/rara-group-registry.js");
       const live = await countGroupsLive(sock, db);
       if (live > 0) { totalGroups = live; totalActiveGroups = live; }
     } catch {}
@@ -193,7 +193,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const expMax = userLevel * 20000;
     const expCurr = userExp - expMin;
 
-    const botName = config.bot?.name || "Nova AI Whatsapp Bot";
+    const botName = config.bot?.name || "Rara AI Whatsapp Bot";
 
     // ── Info section lengkap (user, bot, database, server, weather) ──
     const { greeting: aiIntro, info: menuInfo, weatherStr } = await buildMenuInfo(m, { db, config: botConfig, uptime, sock });
@@ -245,9 +245,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       { sym: "Ⓖ", desc: "Grup - khusus di grup" },
     ];
 
-    const txt = novaMenuLayout({
+    const txt = raraMenuLayout({
       intro,
-      introTitle: "Nova",
+      introTitle: "Rara",
       infoTitle: "Info",
       info,
       legend,
@@ -275,7 +275,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
-    try { await m.reply(novaError("Allmenu", "Ada error nih, coba lagi ya")); } catch {}
+    try { await m.reply(raraError("Allmenu", "Ada error nih, coba lagi ya")); } catch {}
   }
 }
 

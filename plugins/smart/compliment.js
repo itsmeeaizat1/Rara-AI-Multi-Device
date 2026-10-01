@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "compliment",
@@ -85,13 +85,13 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "random" || sub === "acak") {
     const msg = COMPLIMENTS[Math.floor(Math.random() * COMPLIMENTS.length)];
-    await m.reply(novaWrap("Compliment", msg));
+    await m.reply(raraWrap("Compliment", msg));
     return { handled: true };
   }
 
   if (sub === "sweet" || sub === "gombal") {
     const msg = SWEET[Math.floor(Math.random() * SWEET.length)];
-    await m.reply(novaWrap("Sweet Words", msg));
+    await m.reply(raraWrap("Sweet Words", msg));
     return { handled: true };
   }
 
@@ -101,7 +101,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       cfg[m.sender].dailyDate = today;
       cfg[m.sender].dailySent = 0;
     }
-    await m.reply(novaWrap("Compliment", [
+    await m.reply(raraWrap("Compliment", [
       "COMPLIMENT BOT",
       "",
       "Kamu: " + cfg[m.sender].sent + " sent | " + cfg[m.sender].received + " received",
@@ -121,11 +121,11 @@ async function handler(m, { sock, db, config: botConfig }) {
   // Default: send compliment to mentioned user
   const mentioned = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid[0] : null;
   if (!mentioned) {
-    await m.reply(novaWrap("Compliment", "Tag orang yang mau di-compliment!\n💡 *Contoh:* " + prefix + "compliment @user\n" + prefix + "compliment sweet @user"));
+    await m.reply(raraWrap("Compliment", "Tag orang yang mau di-compliment!\n💡 *Contoh:* " + prefix + "compliment @user\n" + prefix + "compliment sweet @user"));
     return { handled: true };
   }
   if (mentioned === m.sender) {
-    await m.reply(novaWrap("Compliment", "Tidak bisa compliment diri sendiri! Tapi kamu memang keren kok."));
+    await m.reply(raraWrap("Compliment", "Tidak bisa compliment diri sendiri! Tapi kamu memang keren kok."));
     return { handled: true };
   }
 
@@ -136,7 +136,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     cfg[m.sender].dailySent = 0;
   }
   if (cfg[m.sender].dailySent >= 5) {
-    await m.reply(novaWrap("Compliment", "Limit harian habis! Maksimal 5 compliment per hari.\nBesok lagi ya!"));
+    await m.reply(raraWrap("Compliment", "Limit harian habis! Maksimal 5 compliment per hari.\nBesok lagi ya!"));
     return { handled: true };
   }
 
@@ -157,7 +157,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   saveConfig(db, gid, cfg);
 
   const title = (sub === "sweet" || sub === "gombal") ? "Sweet Words" : "Compliment";
-  await m.reply(novaWrap(title + " dari @" + m.sender.split("@")[0], [
+  await m.reply(raraWrap(title + " dari @" + m.sender.split("@")[0], [
     "@" + mentioned.split("@")[0],
     "",
     msg,

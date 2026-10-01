@@ -1,4 +1,4 @@
-# 📖 Panduan Fitur Nova Bot
+# 📖 Panduan Fitur Rara Bot
 
 Kumpulan panduan instalasi + penggunaan fitur yang butuh setup khusus.
 Satu fitur satu file biar gampang dicari.

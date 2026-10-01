@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
-import te from '../../src/lib/nova-error.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import te from '../../src/lib/rara-error.js'
 import axios from 'axios'
 import config from '../../config.js'
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
     name: "matematika",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const text = m.args.join(' ')
 
     if (!text) {
-        return m.reply(novaGuideV2("matematika", {
+        return m.reply(raraGuideV2("matematika", {
  kaomoji: "(•̀ᴗ•́)و",
  sapaan: "kirim soalnya, nanti aku bantu kerjain! (๑•̀ㅂ•́)و✧",
           cara: "ketik soal matematikanya sesudah command",
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
         })
 
         if (!data.status || !data.result) {
-            return m.reply(novaError("Matematika", "Gagal proses soal nih"))
+            return m.reply(raraError("Matematika", "Gagal proses soal nih"))
         }
 
         const answer = data.result
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       console.error("[mathematics.js] IkyyXD fallback failed:", ikyyErr.message);
     }
 
-        m.reply(novaWrap("matematika", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("matematika", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

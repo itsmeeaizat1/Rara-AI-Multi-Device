@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .whois — "Siapa nomor ini?" dossier AI dari histori persisten.
  * Saran fitur #2 owner (21 Sep 2026): reply pesan / mention / nomor /
@@ -6,7 +6,7 @@
  * sering ngomongin apa, di grup mana dia aktif, interaksi terakhir,
  * plus catatan buat owner. Kaya CRM pribadi.
  *
- * Sumber data: HANYA jejak histori persisten (nova-chat-log) —
+ * Sumber data: HANYA jejak histori persisten (rara-chat-log) —
  * AI dilarang mengarang identitas. Kalau histori kosong → jujur bilang.
  *
  * Commands:
@@ -17,11 +17,11 @@
  *   .whois <nomor> raw      — jejak mentah (tanpa AI)
  */
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { searchSenderMessages } from "../../src/lib/nova-chat-log.js";
-import { novaBox } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { searchSenderMessages } from "../../src/lib/rara-chat-log.js";
+import { raraBox } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 
 const pluginConfig = {
   name: "whois",
@@ -172,7 +172,7 @@ function buildFallbackBox(data) {
     `Catatan: AI sedang gak merespons —`,
     `ini statistik mentah dari histori.`,
   ];
-  return novaBox("WHOIS — " + data.number, lines);
+  return raraBox("WHOIS — " + data.number, lines);
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -241,7 +241,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
 
   const number = resolveTargetNumber(m);
   if (!number) {
-    await m.reply(novaBox("WHOIS — SIAPA NOMOR INI?", [
+    await m.reply(raraBox("WHOIS — SIAPA NOMOR INI?", [
       `Cara pakai:`,
       `${prefix}whois <nomor> — dossier nomor itu`,
       `${prefix}whois — reply pesan orangnya`,
@@ -257,7 +257,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
 
   const data = buildDossierData(number, { raw });
   if (!data.total) {
-    await m.reply(novaBox("WHOIS — +" + number, [
+    await m.reply(raraBox("WHOIS — +" + number, [
       `Belum ada jejak orang ini di histori.`,
       `Bot cuma mencatat pesan sejak fitur histori aktif —`,
       `orang yang belum pernah ngobrol di chat yang bot ikuti`,
@@ -271,7 +271,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
     const lines = data.rows.slice(0, 15).map((r) =>
       `| ${fmtTime(r.t)} ${chatLabel(r.chat)}: ${String(r.b || "(" + (KIND_LABEL[r.k] || "media") + ")").slice(0, 60)}`
     );
-    await m.reply(novaBox("WHOIS RAW — +" + number, [
+    await m.reply(raraBox("WHOIS RAW — +" + number, [
       `Total: ${data.total} pesan (15 terakhir)`,
       "---",
       ...lines,
@@ -282,7 +282,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
   // AI dossier, fallback statistik
   const ai = await generateAIDossier(data);
   if (ai) {
-    await m.reply(novaBox("WHOIS — +" + number, [
+    await m.reply(raraBox("WHOIS — +" + number, [
       `Jejak: ${data.total} pesan · ${Object.keys(data.chats).length} chat`,
       `Terakhir aktif: ${data.last ? fmtTime(data.last) : "-"}`,
       "---",

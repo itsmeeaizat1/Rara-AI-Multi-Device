@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // hashtagai — AI generator hashtag Instagram/TikTok
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "hashtagai",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("hashtagai", `Mau hashtag untuk postingan apa?\n\nContoh: ${m.prefix}hashtagai foto pantai sunset\n${m.prefix}hashtagai review makanan street food`, "guide"));
+      return m.reply(raraWrap("hashtagai", `Mau hashtag untuk postingan apa?\n\nContoh: ${m.prefix}hashtagai foto pantai sunset\n${m.prefix}hashtagai review makanan street food`, "guide"));
     }
 
     await m.react("🕒");
@@ -38,11 +38,11 @@ Format:
 
 Pisahkan dengan koma, langsung copy-paste ready. Hashtag dalam bahasa Indonesia dan Inggris. Jangan pakai penjelasan, langsung hashtag saja.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("hashtagai", "AI-nya lagi break #️⃣", "error"));
+      return m.reply(raraWrap("hashtagai", "AI-nya lagi break #️⃣", "error"));
     }
 
     await m.react("🐣");
@@ -51,7 +51,7 @@ Pisahkan dengan koma, langsung copy-paste ready. Hashtag dalam bahasa Indonesia 
   } catch (err) {
     console.error("hashtagai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("hashtagai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("hashtagai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // linkedinnotify.js — Auto LinkedIn Job Notifier (request owner 10 Sep 2026).
 // Sumber: Apify valig/linkedin-jobs-scraper ($0.0004/job). Card per-lowongan
 // ala anime notifier: metadata lengkap + deskripsi ℅readmore + banner.
@@ -12,8 +12,8 @@ import {
   addTarget, removeTarget, isTarget, getStatus, runCheck,
   addKeyword, delKeyword, setLocation, setEasyApply, setDatePosted,
   setIntervalMenit, isLinkedInNotifierOn, setLinkedInNotifierOn,
-} from "../../src/lib/nova-linkedin-notify.js";
-import { novaError, novaSuccess, novaGuide } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-linkedin-notify.js";
+import { raraError, raraSuccess, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "linkedinnotify",
@@ -41,17 +41,17 @@ async function handler(m, { sock, args }) {
   if (sub === "on") {
     await m.react("🕒");
     const chatId = m.chat;
-    if (isTarget(chatId)) return m.reply(novaSuccess(pluginConfig.name, "chat ini udah langganan lowongan LinkedIn"));
+    if (isTarget(chatId)) return m.reply(raraSuccess(pluginConfig.name, "chat ini udah langganan lowongan LinkedIn"));
     addTarget(chatId);
     if (!isLinkedInNotifierOn()) setLinkedInNotifierOn(true);
     await m.react("🐣");
-    return m.reply(novaSuccess(pluginConfig.name, "chat ini langganan lowongan LinkedIn — job baru bakal masuk otomatis (cek tiap 2 jam, jam 07:00–22:00 WIB)"));
+    return m.reply(raraSuccess(pluginConfig.name, "chat ini langganan lowongan LinkedIn — job baru bakal masuk otomatis (cek tiap 2 jam, jam 07:00–22:00 WIB)"));
   }
   if (sub === "off") {
     await m.react("🕒");
     removeTarget(m.chat);
     await m.react("🐣");
-    return m.reply(novaSuccess(pluginConfig.name, "chat ini berhenti langganan lowongan LinkedIn"));
+    return m.reply(raraSuccess(pluginConfig.name, "chat ini berhenti langganan lowongan LinkedIn"));
   }
 
   if (sub === "status") {
@@ -79,12 +79,12 @@ async function handler(m, { sock, args }) {
       await m.react("🕒");
       const r = addKeyword(kw);
       await m.react("🐣");
-      if (!r.ok) return m.reply(novaError(pluginConfig.name, r.error));
-      return m.reply(novaSuccess(pluginConfig.name, `keyword ditambah: *${kw}* — sekarang: ${r.keywords.join(", ")}`));
+      if (!r.ok) return m.reply(raraError(pluginConfig.name, r.error));
+      return m.reply(raraSuccess(pluginConfig.name, `keyword ditambah: *${kw}* — sekarang: ${r.keywords.join(", ")}`));
     }
     if ((act === "del" || act === "hapus") && kw) {
       const r = delKeyword(kw);
-      return m.reply(novaSuccess(pluginConfig.name, `keyword dihapus — sekarang: ${r.keywords.join(", ") || "kosong"}`));
+      return m.reply(raraSuccess(pluginConfig.name, `keyword dihapus — sekarang: ${r.keywords.join(", ") || "kosong"}`));
     }
     const st = getStatus();
     return m.reply(
@@ -95,40 +95,40 @@ async function handler(m, { sock, args }) {
   }
 
   if (sub === "lokasi" || sub === "location") {
-    if (!val) return m.reply(novaError(pluginConfig.name, "tentukan lokasi — contoh: .linkedinnotify lokasi Jakarta"));
+    if (!val) return m.reply(raraError(pluginConfig.name, "tentukan lokasi — contoh: .linkedinnotify lokasi Jakarta"));
     const loc = setLocation(val);
-    return m.reply(novaSuccess(pluginConfig.name, `lokasi lowongan sekarang: *${loc}*`));
+    return m.reply(raraSuccess(pluginConfig.name, `lokasi lowongan sekarang: *${loc}*`));
   }
 
   if (sub === "periode") {
-    if (!val) return m.reply(novaError(pluginConfig.name, "pilih: hari | minggu | bulan — contoh: .linkedinnotify periode hari"));
+    if (!val) return m.reply(raraError(pluginConfig.name, "pilih: hari | minggu | bulan — contoh: .linkedinnotify periode hari"));
     const dp = setDatePosted(val);
-    return m.reply(novaSuccess(pluginConfig.name, `periode lowongan: *${PERIODE_LABEL[dp] || dp}*`));
+    return m.reply(raraSuccess(pluginConfig.name, `periode lowongan: *${PERIODE_LABEL[dp] || dp}*`));
   }
 
   if (sub === "easyapply" || sub === "ea") {
-    if (!val) return m.reply(novaError(pluginConfig.name, "pilih on/off — .linkedinnotify easyapply on"));
+    if (!val) return m.reply(raraError(pluginConfig.name, "pilih on/off — .linkedinnotify easyapply on"));
     const v = setEasyApply(val === "on" || val === "true");
-    return m.reply(novaSuccess(pluginConfig.name, `filter Easy Apply: *${v ? "ON" : "OFF"}*`));
+    return m.reply(raraSuccess(pluginConfig.name, `filter Easy Apply: *${v ? "ON" : "OFF"}*`));
   }
 
   if (sub === "interval") {
-    if (!val) return m.reply(novaError(pluginConfig.name, "set jeda cek 30–720 menit (jaga credit Apify) — .linkedinnotify interval 60"));
+    if (!val) return m.reply(raraError(pluginConfig.name, "set jeda cek 30–720 menit (jaga credit Apify) — .linkedinnotify interval 60"));
     const r = setIntervalMenit(val);
-    if (!r) return m.reply(novaError(pluginConfig.name, "interval harus 30–720 menit"));
-    return m.reply(novaSuccess(pluginConfig.name, `interval cek sekarang *tiap ${r} menit*`));
+    if (!r) return m.reply(raraError(pluginConfig.name, "interval harus 30–720 menit"));
+    return m.reply(raraSuccess(pluginConfig.name, `interval cek sekarang *tiap ${r} menit*`));
   }
 
   if (sub === "now") {
     await m.react("🕒");
     const r = await runCheck({ force: true, chatId: m.chat });
     await m.react("🐣");
-    if (r.error) return m.reply(novaError(pluginConfig.name, `gagal ambil lowongan: ${r.error}`));
-    if (!r.jobs) return m.reply(novaSuccess(pluginConfig.name, "belum ada lowongan baru buat keyword saat ini"));
-    return m.reply(novaSuccess(pluginConfig.name, `${r.capped || r.jobs} lowongan dikirim (total baru terdeteksi: ${r.jobs})`));
+    if (r.error) return m.reply(raraError(pluginConfig.name, `gagal ambil lowongan: ${r.error}`));
+    if (!r.jobs) return m.reply(raraSuccess(pluginConfig.name, "belum ada lowongan baru buat keyword saat ini"));
+    return m.reply(raraSuccess(pluginConfig.name, `${r.capped || r.jobs} lowongan dikirim (total baru terdeteksi: ${r.jobs})`));
   }
 
-  return m.reply(novaGuide(
+  return m.reply(raraGuide(
     pluginConfig.name,
     "notifikasi lowongan LinkedIn baru — card per-job metadata lengkap (perusahaan, lokasi, gaji, pelamar, deskripsi) via Apify",
     pluginConfig.example,

@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Toko RPG — Belanja pakai UANG (Rp), mata uang RPG terpisah dari Gold.
 // Ekonomi: kerja/game dapet Rp -> belanja equip premium + alat profesi (+30% gajian) + kotak misteri.
 
 import {
   ensureRpg, saveRpg, addItem, addCash, getCash, spendCash, formatRp, ITEM_DB,
-} from "../../src/lib/nova-rpg-service.js";
-import { animShop } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { animShop } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "rpgstore",
@@ -105,7 +105,7 @@ function equipList(rpg) {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("tokorpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("tokorpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.args?.length ? m.args : (m.text?.trim().split(/\s+/) || []).filter(Boolean);
     const action = (args[0] || "").toLowerCase();
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
 📝  cara beli
    .tokorpg beli <id> [qty] — contoh: .tokorpg beli hpPotion 5`;
       await m.react("🐣");
-      return m.reply(novaRpgBox("tokorpg", msg, "info"));
+      return m.reply(raraRpgBox("tokorpg", msg, "info"));
     }
 
     // ═══ KATEGORI: equip ═══
@@ -142,7 +142,7 @@ ${equipList(rpg)}
 
 📝 beli: .tokorpg beli <id>`;
       await m.react("🐣");
-      return m.reply(novaRpgBox("tokorpg", msg, "info"));
+      return m.reply(raraRpgBox("tokorpg", msg, "info"));
     }
 
     // ═══ KATEGORI: potion/consumable ═══
@@ -155,7 +155,7 @@ ${SHOP_CONSUMABLE.map(c => `${ITEM_DB[c.id]?.name || c.id} — ${formatRp(c.pric
 
 📝 beli borongan: .tokorpg beli hpPotion 5`;
       await m.react("🐣");
-      return m.reply(novaRpgBox("tokorpg", msg, "info"));
+      return m.reply(raraRpgBox("tokorpg", msg, "info"));
     }
 
     // ═══ KATEGORI: alat profesi ═══
@@ -172,7 +172,7 @@ ${SHOP_TOOLS.map(t => {
 
 📝 beli: .tokorpg beli <idProfesi> — contoh: .tokorpg beli dokter`;
       await m.react("🐣");
-      return m.reply(novaRpgBox("tokorpg", msg, "info"));
+      return m.reply(raraRpgBox("tokorpg", msg, "info"));
     }
 
     // ═══ KOTAK MISTERI ═══
@@ -180,7 +180,7 @@ ${SHOP_TOOLS.map(t => {
       await m.react("🕒");
       if (!spendCash(m, MYSTERY_PRICE)) {
         await m.react("❌");
-        return m.reply(novaRpgBox("tokorpg", `Uang kurang! Kotak misteri ${formatRp(MYSTERY_PRICE)}.\n💵 Uang kamu: ${formatRp(getCash(m))}\nKerja dulu: .kerja dokter (gajian Rp 12.000.000)`, "warn"));
+        return m.reply(raraRpgBox("tokorpg", `Uang kurang! Kotak misteri ${formatRp(MYSTERY_PRICE)}.\n💵 Uang kamu: ${formatRp(getCash(m))}\nKerja dulu: .kerja dokter (gajian Rp 12.000.000)`, "warn"));
       }
       await animShop(m, sock);
       let pick = Math.random() * 100;
@@ -199,7 +199,7 @@ ${SHOP_TOOLS.map(t => {
         rewardText = `cashback ${formatRp(result.amount)}`;
       }
       await m.react("🐣");
-      return m.reply(novaRpgBox("tokorpg", `🎁 KOTAK MISTERI DIBUKA!
+      return m.reply(raraRpgBox("tokorpg", `🎁 KOTAK MISTERI DIBUKA!
 
 Harga: ${formatRp(MYSTERY_PRICE)}
 🎁 Hadiah: ${rewardText}
@@ -213,7 +213,7 @@ Coba lagi? .tokorpg kotak`, "success"));
       const id = (args[1] || "").toLowerCase();
       if (!id) {
         await m.react("🐣");
-        return m.reply(novaRpgBox("tokorpg", "Mau beli apa? Lihat katalog: .tokorpg (atau .tokorpg equip/potion/alat)\nContoh: .tokorpg beli hpPotion 5", "warn"));
+        return m.reply(raraRpgBox("tokorpg", "Mau beli apa? Lihat katalog: .tokorpg (atau .tokorpg equip/potion/alat)\nContoh: .tokorpg beli hpPotion 5", "warn"));
       }
       await m.react("🕒");
 
@@ -223,16 +223,16 @@ Coba lagi? .tokorpg kotak`, "success"));
         const tools = rpg.jobTools || (rpg.jobTools = {});
         if (tools[tool.id]) {
           await m.react("🐣");
-          return m.reply(novaRpgBox("tokorpg", `Kamu udah punya *${tool.name}*! Alat profesi cuma bisa dibeli 1x.`, "warn"));
+          return m.reply(raraRpgBox("tokorpg", `Kamu udah punya *${tool.name}*! Alat profesi cuma bisa dibeli 1x.`, "warn"));
         }
         if (!spendCash(m, tool.price)) {
           await m.react("❌");
-          return m.reply(novaRpgBox("tokorpg", `Uang kurang! *${tool.name}* ${formatRp(tool.price)}.\n💵 Uang kamu: ${formatRp(getCash(m))}\nKerja dulu: .kerja ${tool.id === "kantoran" ? "kantor" : tool.id}`, "warn"));
+          return m.reply(raraRpgBox("tokorpg", `Uang kurang! *${tool.name}* ${formatRp(tool.price)}.\n💵 Uang kamu: ${formatRp(getCash(m))}\nKerja dulu: .kerja ${tool.id === "kantoran" ? "kantor" : tool.id}`, "warn"));
         }
         rpg.jobTools[tool.id] = true;
         saveRpg(m, rpg);
         await m.react("🐣");
-        return m.reply(novaRpgBox("tokorpg", `🛒 PEMBELIAN BERHASIL
+        return m.reply(raraRpgBox("tokorpg", `🛒 PEMBELIAN BERHASIL
 
 🔧 Item: ${tool.name}
 💵 Harga: ${formatRp(tool.price)}
@@ -246,20 +246,20 @@ Cek alat kamu: .tokorpg alat`, "success"));
       const entry = SHOP_CONSUMABLE.find(c => c.id.toLowerCase() === id) || SHOP_EQUIP.find(c => c.id.toLowerCase() === id);
       if (!entry) {
         await m.react("❌");
-        return m.reply(novaRpgBox("tokorpg", `Item *${id}* gak ada di toko Rp. Lihat katalog: .tokorpg`, "error"));
+        return m.reply(raraRpgBox("tokorpg", `Item *${id}* gak ada di toko Rp. Lihat katalog: .tokorpg`, "error"));
       }
       const isEquip = SHOP_EQUIP.includes(entry);
       const qty = isEquip ? 1 : Math.max(1, Math.min(50, parseInt(args[2], 10) || 1));
       const total = entry.price * qty;
       if (!spendCash(m, total)) {
         await m.react("❌");
-        return m.reply(novaRpgBox("tokorpg", `Uang kurang! *${ITEM_DB[entry.id]?.name || entry.id}* x${qty} = ${formatRp(total)}.\n💵 Uang kamu: ${formatRp(getCash(m))}`, "warn"));
+        return m.reply(raraRpgBox("tokorpg", `Uang kurang! *${ITEM_DB[entry.id]?.name || entry.id}* x${qty} = ${formatRp(total)}.\n💵 Uang kamu: ${formatRp(getCash(m))}`, "warn"));
       }
       await animShop(m, sock);
       addItem(m, entry.id, qty);
       const def = ITEM_DB[entry.id] || {};
       await m.react("🐣");
-      return m.reply(novaRpgBox("tokorpg", `🛒 PEMBELIAN BERHASIL
+      return m.reply(raraRpgBox("tokorpg", `🛒 PEMBELIAN BERHASIL
 
 📦 Item: ${def.name || entry.id} x${qty}
 💵 Harga: ${formatRp(entry.price)}/pcs × ${qty} = ${formatRp(total)}
@@ -270,11 +270,11 @@ Masih ada uang? .tokorpg kotak buat test luck!`, "success"));
     }
 
     await m.react("🐣");
-    return m.reply(novaRpgBox("tokorpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("tokorpg", te(m.prefix, m.command, m.pushName), "error"));
   } catch (err) {
     console.error("tokorpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("tokorpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("tokorpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

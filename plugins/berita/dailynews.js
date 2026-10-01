@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // dailynews.js — Daily News Indonesia
-import { fetchNewsList } from "../../src/lib/nova-rss-news.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { fetchNewsList } from "../../src/lib/rara-rss-news.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "dailynews",
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const data = await fetchNewsList("https://news.google.com/rss?hl=id&gl=ID&ceid=ID:id", 8);
     if (!Array.isArray(data) || data.length === 0) {
       await m.react("❌");
-      return m.reply(novaWrap("dailynews", "Gagal mengambil berita!", "error"));
+      return m.reply(raraWrap("dailynews", "Gagal mengambil berita!", "error"));
     }
 
     let _lines = [];
@@ -30,13 +30,13 @@ async function handler(m, { sock }) {
       if (item.url || item.link) _lines.push(`${item.url || item.link}`);
       _lines.push(``);
     });
-    let msg = novaBox("DAILY NEWS INDONESIA", _lines);
+    let msg = raraBox("DAILY NEWS INDONESIA", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
     console.error("dailynews error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("dailynews", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("dailynews", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

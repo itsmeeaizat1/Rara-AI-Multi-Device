@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, toSC, bracketBox, tipText } from "../../src/lib/rara-menu-style.js";
 import {
   enableHealthCheck,
   disableHealthCheck,
   getHealthStatus,
   triggerManualCheck,
   getApiEndpoints,
-} from "../../src/lib/nova-auto-api-health.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+} from "../../src/lib/rara-auto-api-health.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "autohealth",
@@ -63,13 +63,13 @@ async function handler(m, { sock }) {
       const interval = parseInt(args[1]) || 30;
 
       if (interval < 5) {
-        return m.reply(novaWrap("autohealth", toSC("Interval minimal 5 menit!")));
+        return m.reply(raraWrap("autohealth", toSC("Interval minimal 5 menit!")));
       }
 
       const result = enableHealthCheck(interval, sock);
 
       if (!result.success) {
-        return m.reply(novaWrap("autohealth", `❌ ${toSC(result.error)}`));
+        return m.reply(raraWrap("autohealth", `❌ ${toSC(result.error)}`));
       }
       return m.reply(
         bracketBox("✅", toSC("API Health Check Diaktifkan"), [
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableHealthCheck();
-      return m.reply(novaWrap("autohealth", toSC("API Health Check dinonaktifkan")));
+      return m.reply(raraWrap("autohealth", toSC("API Health Check dinonaktifkan")));
     }
 
     case "status":
@@ -118,9 +118,9 @@ async function handler(m, { sock }) {
     case "trigger": {
       try {
         await triggerManualCheck(sock);
-        return m.reply(novaWrap("autohealth", toSC("Health check selesai! Lihat notif di DM owner.")));
+        return m.reply(raraWrap("autohealth", toSC("Health check selesai! Lihat notif di DM owner.")));
       } catch (error) {
-        return m.reply(novaWrap("autohealth", te(m.prefix, m.command, m.pushName), "error"));
+        return m.reply(raraWrap("autohealth", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 

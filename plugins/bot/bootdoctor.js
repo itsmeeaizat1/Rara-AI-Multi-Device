@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .bootdoctor — Cek kesehatan fitur (apikey expired / endpoint down / error)
-// Laporan OTOMATIS ke DM owner tiap bot nyala/restart (nova-boot-doctor.js).
+// Laporan OTOMATIS ke DM owner tiap bot nyala/restart (rara-boot-doctor.js).
 // Beda dari .autoapicheck (monitor berkala ping endpoint biasa):
 // bootdoctor ngetes KEY ASLI ke endpoint yang beneran dipakai fitur.
 //
@@ -12,8 +12,8 @@ import {
   runAndReport,
   getBootDoctorStatus,
   setBootDoctorEnabled,
-} from "../../src/lib/nova-boot-doctor.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-boot-doctor.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "bootdoctor",
@@ -56,14 +56,14 @@ async function handler(m, { config: botConfig }) {
       }
       lines.push("");
       lines.push("💡 Ketik " + prefix + "bootdoctor buat cek ulang sekarang");
-      return m.reply(novaWrap("Boot Doctor", lines));
+      return m.reply(raraWrap("Boot Doctor", lines));
     }
 
     // ── toggle ──
     if (sub === "on" || sub === "off" || sub === "aktif" || sub === "matikan") {
       const on = sub === "on" || sub === "aktif";
       const now = setBootDoctorEnabled(on);
-      return m.reply(novaWrap("Boot Doctor", [
+      return m.reply(raraWrap("Boot Doctor", [
         (on ? "✅" : "❌") + " Laporan otomatis pas boot: " + (now ? "AKTIF" : "MATI"),
         "",
         on ? "Tiap bot nyala/restart, hasil cek kesehatan fitur otomatis ke DM kamu" : "Cek tetap jalan pas boot, cuma DM-nya dimatiin",
@@ -77,12 +77,12 @@ async function handler(m, { config: botConfig }) {
     await m.react("✅");
     const bad = results.filter(r => r.status !== "ok" && r.status !== "nokey").length;
     if (!bad) return;
-    return m.reply(novaWrap("Boot Doctor", [
+    return m.reply(raraWrap("Boot Doctor", [
       "Ada " + bad + " fitur bermasalah — ganti key di src/lib/apikey/apikeys.json lalu ketik " + prefix + "reloadkey",
     ]));
   } catch (e) {
     console.error("[bootdoctor] Error:", e.message);
-    return m.reply(novaWrap("Boot Doctor", ["❌ Gagal cek fitur: " + (e.message || e)]));
+    return m.reply(raraWrap("Boot Doctor", ["❌ Gagal cek fitur: " + (e.message || e)]));
   }
 }
 

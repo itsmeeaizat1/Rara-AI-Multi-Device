@@ -13,7 +13,7 @@ const TMP = "/tmp/nonton-e2e";
 fs.rmSync(TMP, { recursive: true, force: true });
 fs.mkdirSync(TMP, { recursive: true });
 process.env.NOVA_DB_DIR = TMP;
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(TMP + "/db.json");
 const { fromSC } = await import("../../src/lib/styler.js");
 const norm = (s) => fromSC(String(s || "")).toLowerCase();

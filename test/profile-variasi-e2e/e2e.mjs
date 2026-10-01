@@ -9,9 +9,9 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-profile-db-" + Date.now();
+const DB_DIR = "/tmp/rara-profile-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 const db = await initDatabase(DB_DIR + "/db.json");
 
 const { handler } = await import(R + "/plugins/user/profile.js");

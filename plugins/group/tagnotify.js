@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import {
   isToxic,
   handleToxicMessage,
   DEFAULT_TOXIC_WORDS,
 } from "./antitoxic.js";
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "notifgantitag",
   alias: ["notifgantitag"],
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   const currentStatus = groupData.notifLabelChange === true;
   if (sub === "on" && sub2 === "all") {
     if (!m.isOwner) {
-      return m.reply(novaWrap("Notifgantitag", `Hanya owner yang bisa menggunakan fitur ini!`, "error"));
+      return m.reply(raraWrap("Notifgantitag", `Hanya owner yang bisa menggunakan fitur ini!`, "error"));
     }
     try {
       const groups = await sock.groupFetchAllParticipating();
@@ -41,18 +41,18 @@ async function handler(m, { sock }) {
         db.setGroup(groupId, { notifLabelChange: true });
         count++;
       }
-      return m.reply(novaWrap("notifgantitag", [
+      return m.reply(raraWrap("notifgantitag", [
         "Notif label global ON",
         "",
         `Notifikasi ganti label diaktifkan di *${count}* grup!`,
       ].join("\n")));
     } catch (err) {
-      return m.reply(novaWrap("notifgantitag", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("notifgantitag", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
   if (sub === "off" && sub2 === "all") {
     if (!m.isOwner) {
-      return m.reply(novaWrap("Notifgantitag", `Hanya owner yang bisa menggunakan fitur ini!`, "error"));
+      return m.reply(raraWrap("Notifgantitag", `Hanya owner yang bisa menggunakan fitur ini!`, "error"));
     }
     try {
       const groups = await sock.groupFetchAllParticipating();
@@ -62,21 +62,21 @@ async function handler(m, { sock }) {
         db.setGroup(groupId, { notifLabelChange: false });
         count++;
       }
-      return m.reply(novaWrap("notifgantitag", [
+      return m.reply(raraWrap("notifgantitag", [
         "Notif label global OFF",
         "",
         `Notifikasi ganti label dinonaktifkan di *${count}* grup!`,
       ].join("\n")));
     } catch (err) {
-      return m.reply(novaWrap("notifgantitag", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("notifgantitag", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
   if (sub === "on") {
     if (currentStatus) {
-      return m.reply(novaWrap("Notif Gantitag", `Notifikasi ganti label sudah aktif di grup ini.\nGunakan \`${m.prefix}notifgantitag off\` untuk menonaktifkan.`, "warn"));
+      return m.reply(raraWrap("Notif Gantitag", `Notifikasi ganti label sudah aktif di grup ini.\nGunakan \`${m.prefix}notifgantitag off\` untuk menonaktifkan.`, "warn"));
     }
     db.setGroup(m.chat, { notifLabelChange: true });
-    return m.reply(novaWrap("notifgantitag", [
+    return m.reply(raraWrap("notifgantitag", [
       "Notif label aktif",
       "",
       "Notifikasi perubahan label member berhasil diaktifkan!",
@@ -87,20 +87,20 @@ async function handler(m, { sock }) {
   }
   if (sub === "off") {
     if (!currentStatus) {
-      return m.reply(novaWrap("notifgantitag", [
+      return m.reply(raraWrap("notifgantitag", [
         "Notif label sudah nonaktif di grup ini.",
         "",
         `Gunakan \`${m.prefix}notifgantitag on\` untuk mengaktifkan.`,
       ].join("\n")));
     }
     db.setGroup(m.chat, { notifLabelChange: false });
-    return m.reply(novaWrap("notifgantitag", [
+    return m.reply(raraWrap("notifgantitag", [
       "Notif label nonaktif",
       "",
       "Notifikasi perubahan label member berhasil dinonaktifkan.",
     ].join("\n")));
   }
-  m.reply(novaWrap("notifgantitag", [
+  m.reply(raraWrap("notifgantitag", [
     `🏷️ Notifikasi perubahan label member grup.`,
     "",
     `Status : ${currentStatus ? "Aktif" : "Nonaktif"}`,

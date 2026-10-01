@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { Client } from 'ssh2'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'installtemabilling',
     alias: ["installtemabilling"],
@@ -66,7 +66,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply(novaGuide(
+        return m.reply(raraGuide(
             "installtemabilling",
             "Install tema Billing ke VPS",
             `${m.prefix}installtemabilling 192.168.1.1|secretpass`
@@ -102,14 +102,14 @@ function handler(m, { sock }) {
             ])
 
                         await execSSH(conn, BUILD_CMD)
-            await m.reply(novaWrap("installtemabilling", `✅ Status: *Terinstall*\nIP: ${ipvps}\n\n_Tema Billing + dependencies berhasil diinstall!_`))
+            await m.reply(raraWrap("installtemabilling", `✅ Status: *Terinstall*\nIP: ${ipvps}\n\n_Tema Billing + dependencies berhasil diinstall!_`))
         } catch (err) {
-            m.reply(novaWrap("installtemabilling", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(raraWrap("installtemabilling", te(m.prefix, m.command, m.pushName), "error"))
         } finally {
             conn.end()
         }
     }).on('error', (err) => {
-        m.reply(novaWrap("installtemabilling", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
+        m.reply(raraWrap("installtemabilling", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
     }).connect(connSettings)
 }
 

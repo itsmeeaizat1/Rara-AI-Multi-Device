@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 const pluginConfig = {
   name: "filmget",
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const { data } = await axios.get(apiUrl, { timeout: 30000 });
 
     if (!data?.status || !data?.data) {
-      return m.reply(novaWrap("filmget", "❌ *gagal*\n\nFilm tidak ditemukan"));
+      return m.reply(raraWrap("filmget", "❌ *gagal*\n\nFilm tidak ditemukan"));
     }
 
     const film = data.data;
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     });
 
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     const msgContent = {
       text,
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, msgContent, { quoted: m });
   } catch (error) {
-    m.reply(novaWrap("filmget", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("filmget", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

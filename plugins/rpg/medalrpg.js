@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Medal — Tampilkan medali pemain
-import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "medal", alias: ["medal", "medalrpg", "medali"],
@@ -14,13 +14,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("medalrpg", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("medalrpg", "RPG belum siap.", "error"));
     const medals = rpg.achievements || [];
-    if (!medals.length) return m.reply(novaRpgBox("medalrpg", "🎖️ Kamu belum punya medali.", "info"));
+    if (!medals.length) return m.reply(raraRpgBox("medalrpg", "🎖️ Kamu belum punya medali.", "info"));
     await animGeneric(m, sock, '🏅', 'Loading medals');
-    return m.reply(novaRpgBox("medalrpg", `🎖️ *MEDALI-MU:*\n${medals.map(a => `🏅 ${a}`).join("\n")}`, "info"));
+    return m.reply(raraRpgBox("medalrpg", `🎖️ *MEDALI-MU:*\n${medals.map(a => `🏅 ${a}`).join("\n")}`, "info"));
   } catch (e) {
-    return m.reply(novaRpgBox("medalrpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("medalrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

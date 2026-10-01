@@ -11,9 +11,9 @@ function t(label, cond, extra) {
 
 const R = path.resolve(".")
 process.env.JASHER_DELAY_MS = "0"
-const { initDatabase } = await import(R + "/src/lib/nova-database.js")
-await initDatabase("/tmp/jasher-e2e-db/nova.json")
-const db = (await import(R + "/src/lib/nova-database.js")).getDatabase()
+const { initDatabase } = await import(R + "/src/lib/rara-database.js")
+await initDatabase("/tmp/jasher-e2e-db/rara.json")
+const db = (await import(R + "/src/lib/rara-database.js")).getDatabase()
 
 // registry TG simulasi (2 grup TG via adapter di VPS)
 db.db.data.jasher = {
@@ -24,10 +24,10 @@ db.db.data.jasher = {
 }
 await db.save()
 
-const { checkPermission } = await import(R + "/src/lib/nova-middleware.js")
+const { checkPermission } = await import(R + "/src/lib/rara-middleware.js")
 const { handler, config: plug } = await import(R + "/plugins/promotion/jasher.js")
 const { fromSC } = await import(R + "/src/lib/styler.js")
-// GOTCHA: novaWrap merender smallcaps → asersi WAJIB dinormalisasi fromSC
+// GOTCHA: raraWrap merender smallcaps → asersi WAJIB dinormalisasi fromSC
 const sc = (s) => fromSC(String(s || "")).toLowerCase()
 const config = (await import(R + "/config.js")).default
 
@@ -41,7 +41,7 @@ const mockSock = {
   user: { id: "bot" },
   sendPresenceUpdate: async () => {},
   groupFetchAllParticipating: async () => WA_GROUPS,
-  newsletterFetchAllSubscribe: async () => [{ id: "123456789@newsletter", name: "Saluran Nova Promo" }],
+  newsletterFetchAllSubscribe: async () => [{ id: "123456789@newsletter", name: "Saluran Rara Promo" }],
   sendMessage: async (to, msg) => {
     sends.push({ to, msg })
     return { key: { id: "s" + sends.length, remoteJid: to } }
@@ -69,7 +69,7 @@ t("1b. nama grup WA kebaca", sc(got).includes("warung olshop"))
 t("1c. nama grup TG kebaca", sc(got).includes("grup saya telegram") || sc(got).includes("warung kopi tg"))
 t("1d. total & platform ringkas (grup WA/TG + saluran)", /total: 6 target — grup wa 3 · grup tg 2 · saluran 1/.test(sc(got)))
 t("1e. status toggle tampil (default grup on, saluran off)", /aktif: grup 🟢 · saluran 🔴/.test(sc(got)))
-t("1f. saluran kebaca di list", sc(got).includes("saluran nova promo"))
+t("1f. saluran kebaca di list", sc(got).includes("saluran rara promo"))
 
 // ═══ 2. BROADCAST SEMUA (tanpa target) ═══
 replies.length = 0; sends.length = 0; reacts.length = 0
@@ -120,7 +120,7 @@ t("7a. stop saat idle → jujur gak ada jalan", /gak ada broadcast yang lagi jal
 t("8a. knob JASHER_DELAY_MS=0 dipakai", process.env.JASHER_DELAY_MS === "0")
 
 // ═══ 9. REGISTRY ADAPTER: telegramToRaw bawa groupTitle ═══
-const { telegramToRaw } = await import(R + "/src/lib/novabridge/adapter.js")
+const { telegramToRaw } = await import(R + "/src/lib/rarabridge/adapter.js")
 const rawTg = telegramToRaw({ from: { id: 111, is_bot: false }, chat: { id: -1004391233, type: "supergroup", title: "Squad Gaming" }, text: "hai", message_id: 1 })
 t("9a. remoteJid grup tg_g*@g.us tanpa minus", rawTg.key.remoteJid === "tg_g1004391233@g.us")
 t("9b. _bridge.groupTitle terisi", rawTg._bridge.groupTitle === "Squad Gaming")
@@ -196,7 +196,7 @@ t("12d. laporan selesai nyebut media", sc(replies.join("\n")).includes("gambar +
 const strictSock = {
   user: { id: "bot" }, sendPresenceUpdate: async () => {},
   groupFetchAllParticipating: async () => WA_GROUPS,
-  newsletterFetchAllSubscribe: async () => [{ id: "123456789@newsletter", name: "Saluran Nova Promo" }],
+  newsletterFetchAllSubscribe: async () => [{ id: "123456789@newsletter", name: "Saluran Rara Promo" }],
   sendMessage: async (to, msg) => {
     // media+caption DITOLAK; media doang & teks doang BOLEH
     if ((msg?.image || msg?.video || msg?.document) && msg?.caption) throw new Error("caption not supported")
@@ -427,9 +427,9 @@ t("23f. checkPermission: partner juga lolos", (() => {
 // whitespace, newline ikut ke-makan regex \s+) — bukan dari m.text ASLI.
 replies.length = 0; sends.length = 0; reacts.length = 0
 const promoAsli = [
-  "Nova AI Multi Device 🐣 — Asisten WhatsApp Paling Lengkap",
+  "Rara AI Multi Device 🐣 — Asisten WhatsApp Paling Lengkap",
   "",
-  "Tanya apa aja, Nova jawab!",
+  "Tanya apa aja, Rara jawab!",
   "",
   "┏━━━「 💰 Sewa Bot 」",
   "┃ ↷ 1 minggu : Rp 5.000",

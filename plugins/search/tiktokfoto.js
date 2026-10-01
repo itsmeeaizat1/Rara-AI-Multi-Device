@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 import axios from 'axios'
 import crypto from 'crypto'
 import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'nova'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 
 const pluginConfig = {
     name: 'tiktokfoto',
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
         const images = Array.isArray(post?.images) ? post.images.slice(0, 10) : []
 
         if (!post || images.length === 0) {
-            return m.reply(novaError("TikTokFoto", `Gak nemu foto TikTok untuk: ${query} nih`))
+            return m.reply(raraError("TikTokFoto", `Gak nemu foto TikTok untuk: ${query} nih`))
         }
 
         let caption = '📸 *tiktok foto search*\n\n'
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
         caption += `🆔 *ID:* ${post.id || '-'}\n\n`
         caption += `📝 ${trimText(post.description || post.title, 220)}`
 
-        await m.reply(novaWrap("tiktokfoto", caption))
+        await m.reply(raraWrap("tiktokfoto", caption))
 
         const mediaList = []
         for (const url of images) {
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
         }
 
         if (mediaList.length === 0) {
-            return m.reply(novaError("TikTokFoto", "Gagal load foto nih"))
+            return m.reply(raraError("TikTokFoto", "Gagal load foto nih"))
         }
 
         try {
@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
         }
     } catch (error) {
         console.log(error)
-        m.reply(novaWrap("tiktokfoto", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("tiktokfoto", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -26,7 +26,7 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-// ═══ INTEGRASI NOVA BOT (17 Sep 2026, request owner "gmna supaya bot aku
+// ═══ INTEGRASI RARA BOT (17 Sep 2026, request owner "gmna supaya bot aku
 // support tlpon kesambung ai pakai fitur ini") ═══
 // Service ini jalan BERSAMA bot utama Node.js (Baileys gak support VOIP
 // call WhatsApp). Bot utama manggil lewat HTTP lokal (plugin .aicall):
@@ -313,7 +313,7 @@ func handleMessage(client *whatsmeow.Client, callerClient *meowcaller.Client, ms
 • *!engine <nama_engine>*
   ↳ Ganti Engine TTS live (edgetts / geminitts / elevenlabs / openai / animetts).
 • *!voice <nama_suara>*
-  ↳ Ganti suara TTS live (contoh: ms-MY-YasminNeural, id-ID-ArdiNeural, Puck, nova).
+  ↳ Ganti suara TTS live (contoh: ms-MY-YasminNeural, id-ID-ArdiNeural, Puck, rara).
 
 📊 *Informasi & Status Bot:*
 • *!status* / *.ping*

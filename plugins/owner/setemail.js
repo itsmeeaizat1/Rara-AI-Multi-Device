@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { isEmailConfigured, getEmailUser, setEmailDb } from "../../src/lib/nova-email.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { isEmailConfigured, getEmailUser, setEmailDb } from "../../src/lib/rara-email.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "setemail",
@@ -59,7 +59,7 @@ async function handler(m, { args, sock, isOwner }) {
     config.emailOtp.user = "";
     config.emailOtp.pass = "";
     db.setSetting("emailOtp", { enabled: false });
-    return await m.reply(novaWrap("Setemail", "✅ Email SMTP dimatikan."));
+    return await m.reply(raraWrap("Setemail", "✅ Email SMTP dimatikan."));
   }
 
   if (input.toLowerCase() === "info") {
@@ -82,15 +82,15 @@ async function handler(m, { args, sock, isOwner }) {
 
   if (input.toLowerCase() === "test") {
     if (!isEmailConfigured()) {
-      return await m.reply(novaWrap("setemail", "❌ Email belum dikonfigurasi! Set dulu dengan `.setemail <email> <password>`"));
+      return await m.reply(raraWrap("setemail", "❌ Email belum dikonfigurasi! Set dulu dengan `.setemail <email> <password>`"));
     }
 
     try {
-      const { sendOtpEmail } = await import("../../src/lib/nova-email.js");
-      await sendOtpEmail(getEmailUser(), "000000", config.bot?.name || "Nova AI");
-      return await m.reply(novaWrap("Setemail", "✅ Test email berhasil dikirim! Cek inbox kamu."));
+      const { sendOtpEmail } = await import("../../src/lib/rara-email.js");
+      await sendOtpEmail(getEmailUser(), "000000", config.bot?.name || "Rara AI");
+      return await m.reply(raraWrap("Setemail", "✅ Test email berhasil dikirim! Cek inbox kamu."));
     } catch (e) {
-      return await m.reply(novaWrap("setemail", `❌ Test gagal: ${e.message}`));
+      return await m.reply(raraWrap("setemail", `❌ Test gagal: ${e.message}`));
     }
   }
 
@@ -99,11 +99,11 @@ async function handler(m, { args, sock, isOwner }) {
   const password = parts.slice(1).join(" ").replace(/\s+/g, "");
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return await m.reply(novaWrap("Setemail", "❌ Format email tidak valid!"));
+    return await m.reply(raraWrap("Setemail", "❌ Format email tidak valid!"));
   }
 
   if (!password || password.length < 8) {
-    return await m.reply(novaWrap("Setemail", "❌ Password terlalu pendek! Gunakan App Password (16 karakter untuk Gmail)."));
+    return await m.reply(raraWrap("Setemail", "❌ Password terlalu pendek! Gunakan App Password (16 karakter untuk Gmail)."));
   }
 
   config.emailOtp.user = email;
@@ -114,7 +114,7 @@ async function handler(m, { args, sock, isOwner }) {
     enabled: true,
     user: email,
     pass: password,
-    fromName: config.bot?.name || "Nova AI",
+    fromName: config.bot?.name || "Rara AI",
     host: config.emailOtp.host || "smtp.gmail.com",
     port: config.emailOtp.port || 587,
     secure: config.emailOtp.secure || false,

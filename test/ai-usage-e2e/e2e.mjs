@@ -3,8 +3,8 @@
 // + 📋 model tersedia. Label smallcaps, command + nama model VERBATIM (harus bisa
 // diketik persis). Jalankan dari cwd DIR KOSONG:
 //   mkdir -p /tmp/aiusage-e2e && cd /tmp/aiusage-e2e && node <repo>/test/ai-usage-e2e/e2e.mjs
-import { novaAiUsage } from "../../src/lib/nova-menu-style.js";
-import { getAllProviders } from "../../src/lib/nova-ai-service.js";
+import { raraAiUsage } from "../../src/lib/rara-menu-style.js";
+import { getAllProviders } from "../../src/lib/rara-ai-service.js";
 import { config as provConfig, handler as provHandler } from "../../plugins/ai/ai-providers.js";
 
 let pass = 0, fail = 0;
@@ -17,10 +17,10 @@ const toSC = (s) => String(s ?? "");
 const providers = getAllProviders();
 
 // ─── 1. RENDER .gemini — format V2 ───
-w("\n— novaAiUsage gemini (V2) —");
+w("\n— raraAiUsage gemini (V2) —");
 {
   const p = providers.gemini;
-  const out = novaAiUsage("gemini", { prefix: ".", command: "gemini", modelAktif: p.defaultModel, models: p.models });
+  const out = raraAiUsage("gemini", { prefix: ".", command: "gemini", modelAktif: p.defaultModel, models: p.models });
   const lines = out.split("\n");
   check("header 「✧ gemini ✧」", lines[0] === `「✧ ${toSC("gemini")} ✧」`, lines[0]);
   check("kaomoji + nama!! (baris cute)", /gemini!!/.test(lines[1]) && /\(/.test(lines[1]), lines[1]);
@@ -38,17 +38,17 @@ w("\n— novaAiUsage gemini (V2) —");
 }
 
 // ─── 2. RENDER provider lain (openai / tanpa model) ───
-w("\n— novaAiUsage provider lain —");
+w("\n— raraAiUsage provider lain —");
 {
-  const out = novaAiUsage("openai", { prefix: "!", command: "openai", modelAktif: providers.openai.defaultModel, models: providers.openai.models });
+  const out = raraAiUsage("openai", { prefix: "!", command: "openai", modelAktif: providers.openai.defaultModel, models: providers.openai.models });
   check("header openai smallcaps + prefix ! jalan", out.startsWith(`「✧ ${toSC("openai")} ✧」`) && out.includes("!openai [pertanyaan]"));
   check("model aktif gpt-4o-mini + list models verbatim", out.includes("gpt-4o-mini") && out.includes("gpt-5.5"));
 }
 {
   // provider tanpa models list → section list gak muncul
-  const out = novaAiUsage("bot", { prefix: ".", command: "bot", modelAktif: "custom-1", models: [] });
+  const out = raraAiUsage("bot", { prefix: ".", command: "bot", modelAktif: "custom-1", models: [] });
   check("models kosong → 📋 list gak muncul, ✨ model aktif tetap ada", !out.includes(toSC("Model tersedia")) && out.includes("custom-1"));
-  const out2 = novaAiUsage("bot2", { prefix: ".", command: "bot2", modelAktif: null, models: [] });
+  const out2 = raraAiUsage("bot2", { prefix: ".", command: "bot2", modelAktif: null, models: [] });
   check("tanpa modelAktif → ✨ section gak muncul", !out2.includes("✨"));
 }
 

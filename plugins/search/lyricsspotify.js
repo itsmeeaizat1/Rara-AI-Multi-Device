@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // lyricsspotify.js — Lirik lagu versi Spotify via LRCLIB
 // Request owner 12 Sep 2026: "tmbah fitur baru lirik versi spotify .lirikspotify"
 // Engine: lrclib.net (src/scraper/spotify-lyrics.js — port kode owner) —
 // input judul ATAU link track spotify, exact match dulu → fuzzy search.
 // Lirik plain diprioritasin; kalau cuma ada synced (LRC), timestamp-nya
 // dibersihin biar enak dibaca di chat.
-import { novaWrap, novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraGuide, raraError } from "../../src/lib/rara-menu-style.js";
 import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
-import { lyricsCaption } from "../../src/lib/nova-lyrics-format.js";
+import { lyricsCaption } from "../../src/lib/rara-lyrics-format.js";
 
 const pluginConfig = {
   name: "lirikspotify",
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
 
   if (!input) {
     return m.reply(
-      novaWrap("LirikSpotify", [
+      raraWrap("LirikSpotify", [
         `📌 Cari lirik lagu versi Spotify:`,
         ``,
         `💡 Contoh:`,
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     const r = await getLyrics(input);
     if (!r.status || (!r.plainLyrics && !r.syncedLyrics)) {
       await m.react("❌");
-      return m.reply(novaError("LirikSpotify", `Lirik untuk \`${input}\` gak ketemu nih`));
+      return m.reply(raraError("LirikSpotify", `Lirik untuk \`${input}\` gak ketemu nih`));
     }
 
     // Lirik plain diprioritasin; cuma ada LRC → bersihin timestamp
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     if (lyrics.length > MAX) lyrics = lyrics.slice(0, MAX) + "\n... (dipotong)";
 
     await m.react("🐣");
-    // format owner 19 Sep: judul/artis/album/durasi → lirik (satu pintu nova-lyrics-format)
+    // format owner 19 Sep: judul/artis/album/durasi → lirik (satu pintu rara-lyrics-format)
     return m.reply(
       lyricsCaption({
         title: r.trackName || input,
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[LirikSpotify]", err.message || err);
     await m.react("❌");
-    return m.reply(novaError("LirikSpotify", "Gagal ambil lirik — coba lagi sebentar ya"));
+    return m.reply(raraError("LirikSpotify", "Gagal ambil lirik — coba lagi sebentar ya"));
   }
 }
 

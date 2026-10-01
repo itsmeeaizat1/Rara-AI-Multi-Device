@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ssweb",
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
   let text = m.text?.trim();
 
   if (!text) {
-    return m.reply(novaGuideV2("ssweb", {
+    return m.reply(raraGuideV2("ssweb", {
  kaomoji: "(≧▽≦)",
  sapaan: "tangkap layar website jadi gambar? gas! (ᵔ◡ᵔ)",
       cara: "tempel link webnya sesudah command, opsi --mobile buat tampilan HP",
@@ -58,14 +58,14 @@ async function handler(m, { sock }) {
     const imageBuffer = await ssweb(text, mode);
 
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     await sock.sendMedia(m.chat, imageBuffer, null, m, {
       type: "image",
     });
   } catch (error) {
     await m.react("❌");
-    m.reply(novaWrap("ssweb", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("ssweb", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

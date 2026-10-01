@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .pollenai — free AI chat via pollinations.ai (port engine lama pollination.js)
-import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "pollination",
@@ -29,7 +29,7 @@ async function handler(m, { sock, config: botConfig }) {
       const prompt = (m.text || "").replace(new RegExp("^" + prefix + "pollenimg\\s*", "i"), "").trim();
       if (!prompt) {
         await m.react("🐣");
-        await m.reply(novaGuide(
+        await m.reply(raraGuide(
           "pollenimg",
           "Bikin gambar AI gratis via pollinations.ai (tanpa key).",
           prefix + "pollenimg kucing astronot gaya cat air",
@@ -47,13 +47,13 @@ async function handler(m, { sock, config: botConfig }) {
       if (!res.ok) throw new Error("HTTP " + res.status);
       const buf = Buffer.from(await res.arrayBuffer());
       await m.react("⚡");
-      await sock.sendMessage(m.chat, { image: buf, caption: novaWrap("PollenImg", cleanPrompt.slice(0, 100)) }, { quoted: m });
+      await sock.sendMessage(m.chat, { image: buf, caption: raraWrap("PollenImg", cleanPrompt.slice(0, 100)) }, { quoted: m });
       return { handled: true };
     }
     const text = (m.text || "").replace(new RegExp("^" + prefix + "pollination\\s*", "i"), "").trim();
     if (!text || text.toLowerCase() === "help") {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "pollination",
         "Chat AI gratis (pollinations.ai, tanpa key) — ingat percakapan per user.",
         prefix + "pollen jelaskan black hole ke anak smp",
@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[pollenai]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("Pollination", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("Pollination", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }

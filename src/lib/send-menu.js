@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // send-menu.js — Reusable helper untuk kirim menu dengan preview card + nav buttons
 // Pattern: sendMessage + text + buttons (template type:1) + contextInfo.externalAdReply (thumbnail)
 // NO interactiveMessage, NO nativeFlowMessage — pakai template buttons yang support preview card
 import fs from 'fs';
 import stream from 'stream';
 import path from 'path';
-import { getAssetBuffer, getStaticThumbnail } from './nova-asset-manager.js';
+import { getAssetBuffer, getStaticThumbnail } from './rara-asset-manager.js';
 
 // Load thumbnail kecil (100x100 JPEG) — preview card only, TIDAK tersimpan ke galeri HP
 // getStaticThumbnail resize pakai sharp ke 100x100 JPEG quality 50 — cuma untuk externalAdReply preview
@@ -17,12 +17,12 @@ async function ensureThumbLoaded() {
   menuThumbLoaded = true;
   try {
     // Prioritas: getStaticThumbnail (100x100 JPEG) — kecil, tidak tersimpan ke galeri
-    menuThumb = await getStaticThumbnail('nova-thumbnail-menu');
+    menuThumb = await getStaticThumbnail('rara-thumbnail-menu');
     if (!menuThumb) {
-      menuThumb = await getStaticThumbnail('nova-thumbnail');
+      menuThumb = await getStaticThumbnail('rara-thumbnail');
     }
     if (!menuThumb) {
-      menuThumb = await getStaticThumbnail('nova');
+      menuThumb = await getStaticThumbnail('rara');
     }
     if (!menuThumb) {
       // Fallback: direct fs.readFileSync lalu resize manual pakai sharp
@@ -76,7 +76,7 @@ export async function sendMenuPreview(sock, m, {
       mentionedJid: [m.sender],
       isForwarded: false,
       externalAdReply: {
-        title: title || "Nova AI WhatsApp Bot",
+        title: title || "Rara AI WhatsApp Bot",
         body: body || 'WhatsApp Multi Device',
         thumbnail: menuThumb,
         sourceUrl: sourceUrl || '',
@@ -111,7 +111,7 @@ export async function sendMenuPreview(sock, m, {
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
-            title: title || "Nova AI WhatsApp Bot",
+            title: title || "Rara AI WhatsApp Bot",
             body: body || 'WhatsApp Multi Device',
             thumbnail: menuThumb,
             sourceUrl: sourceUrl || '',
@@ -163,7 +163,7 @@ async function ensureMenuAudioLoaded() {
 
   try {
     // Load MP3 buffer
-    _menuAudioMp3 = getAssetBuffer('nova-mp3');
+    _menuAudioMp3 = getAssetBuffer('rara-mp3');
     if (!_menuAudioMp3) {
       const p = path.join(process.cwd(), 'assets', 'audio', 'cinta-terbaik-cassandra.mp3');
       if (fs.existsSync(p)) {
@@ -211,7 +211,7 @@ async function ensureMenuAudioLoaded() {
         _menuAudioPtt = _menuAudioMp3;
       }
     } else {
-      console.warn('[send-menu] ⚠️ Menu audio not found (nova-mp3 / cinta-terbaik-cassandra.mp3)');
+      console.warn('[send-menu] ⚠️ Menu audio not found (rara-mp3 / cinta-terbaik-cassandra.mp3)');
     }
   } catch (e) {
     console.error('[send-menu] ❌ Menu audio load failed:', e.message);
@@ -233,7 +233,7 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
     try {
       await ensureMenuAudioLoaded();
       if (!_menuAudioPtt) return;
-      const { sanitizeAudioForSaluran } = await import("./nova-saluran-safe.js");
+      const { sanitizeAudioForSaluran } = await import("./rara-saluran-safe.js");
       const audioEnabledNl = db?.setting ? (db.setting("audioMenu") !== false) : true;
       if (!audioEnabledNl) return;
       await sock.sendMessage(m.chat, sanitizeAudioForSaluran({
@@ -284,7 +284,7 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
         audio: _menuAudioPtt,
         ptt: true,
         mimetype: pttMimetype,
-      }, { quoted: { key: fakeKey, message: { pollCreationMessage: { name: 'Nova AI Menu', options: [], selectableOptionsCount: 0 } } } });
+      }, { quoted: { key: fakeKey, message: { pollCreationMessage: { name: 'Rara AI Menu', options: [], selectableOptionsCount: 0 } } } });
     } else if (style === 3) {
       // MP3 biasa + reply fake text
       const fakeKey = {
@@ -297,7 +297,7 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
         audio: _menuAudioMp3,
         ptt: false,
         mimetype: 'audio/mpeg',
-      }, { quoted: { key: fakeKey, message: { conversation: '🎵 Nova AI WhatsApp Bot - Menu Audio' } } });
+      }, { quoted: { key: fakeKey, message: { conversation: '🎵 Rara AI WhatsApp Bot - Menu Audio' } } });
     } else if (style === 4) {
       // MP3 biasa + reply fake troli order
       const fakeKey = {
@@ -310,7 +310,7 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
         audio: _menuAudioMp3,
         ptt: false,
         mimetype: 'audio/mpeg',
-      }, { quoted: { key: fakeKey, message: { orderMessage: { orderId: 'NOVA-' + Date.now(), thumbnail: null, itemCount: 1, status: 1, surface: 1, message: 'Nova AI WhatsApp Bot', sellerJid: '0@s.whatsapp.net', token: 'nova' } } } });
+      }, { quoted: { key: fakeKey, message: { orderMessage: { orderId: 'RARA-' + Date.now(), thumbnail: null, itemCount: 1, status: 1, surface: 1, message: 'Rara AI WhatsApp Bot', sellerJid: '0@s.whatsapp.net', token: 'rara' } } } });
     }
   } catch (e) {
     console.error('[send-menu] ❌ sendMenuAudio error:', e.message);

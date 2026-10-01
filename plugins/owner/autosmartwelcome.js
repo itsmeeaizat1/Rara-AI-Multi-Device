@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autosmartwelcome — Auto-Smart Welcome (AI Personalized)
  *
@@ -25,10 +25,10 @@
  *   .autosmartwelcome reset                — Reset stats & history
  */
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
-import { createWideDiscordCard } from "../../src/lib/nova-welcome-card.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
+import { createWideDiscordCard } from "../../src/lib/rara-welcome-card.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -344,7 +344,7 @@ async function handler(m, { sock, config: botConfig }) {
       const modeLabel = settings.mode === 1 ? "1 (Teks Personal)" : settings.mode === 2 ? "2 (Canvas + AI Caption)" : "3 (Full AI Teks)";
       const groupCount = settings.activeGroups.length === 0 ? "Semua grup" : `${settings.activeGroups.length} grup`;
 
-      await m.reply(novaBox("AUTO-SMART WELCOME", [
+      await m.reply(raraBox("AUTO-SMART WELCOME", [
         `Status: ${status}`,
         `Mode: ${modeLabel}`,
         `Personality: ${settings.personality}`,
@@ -355,7 +355,7 @@ async function handler(m, { sock, config: botConfig }) {
         `| AI generated: ${settings.stats.totalAI}`,
         `| Fallback: ${settings.stats.totalFallback}`,
         `| Last: ${settings.stats.lastWelcome || "Belum ada"}`,
-      ]) + "\n\n" + novaBox("COMMANDS", [
+      ]) + "\n\n" + raraBox("COMMANDS", [
         `${prefix}autosmartwelcome on/off`,
         `${prefix}autosmartwelcome mode <1/2/3>`,
         `${prefix}autosmartwelcome personality <teks>`,
@@ -372,7 +372,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "on") {
       settings.enabled = true;
       db.db.write();
-      await m.reply(novaBox("AUTO-SMART WELCOME", [
+      await m.reply(raraBox("AUTO-SMART WELCOME", [
         "Status: ON",
         "AI personalized welcome aktif",
         `Mode: ${settings.mode === 1 ? "Teks Personal" : settings.mode === 2 ? "Canvas + AI" : "Full AI"}`,
@@ -384,7 +384,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "off") {
       settings.enabled = false;
       db.db.write();
-      await m.reply(novaBox("AUTO-SMART WELCOME", ["Status: OFF"]));
+      await m.reply(raraBox("AUTO-SMART WELCOME", ["Status: OFF"]));
       return { handled: true };
     }
 
@@ -392,7 +392,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "mode") {
       const mode = parseInt(args[1]);
       if (![1, 2, 3].includes(mode)) {
-        await m.reply(novaBox("AUTO-SMART WELCOME", [
+        await m.reply(raraBox("AUTO-SMART WELCOME", [
           `Mode: ${settings.mode}`,
           "1 = Teks Personal (AI generate teks singkat)",
           "2 = Canvas Image + AI Caption (banner + teks AI)",
@@ -404,7 +404,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.mode = mode;
       db.db.write();
       const label = mode === 1 ? "Teks Personal" : mode === 2 ? "Canvas + AI Caption" : "Full AI Teks";
-      await m.reply(novaBox("AUTO-SMART WELCOME", [`Mode: ${mode} (${label})`]));
+      await m.reply(raraBox("AUTO-SMART WELCOME", [`Mode: ${mode} (${label})`]));
       return { handled: true };
     }
 
@@ -412,7 +412,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "personality") {
       const text = args.slice(1).join(" ");
       if (!text) {
-        await m.reply(novaBox("AUTO-SMART WELCOME", [
+        await m.reply(raraBox("AUTO-SMART WELCOME", [
           `Current: ${settings.personality}`,
           `Ketik: ${prefix}autosmartwelcome personality <deskripsi personality>`,
           `Contoh: ${prefix}autosmartwelcome personality ramah, suka nyapa, kadang bikin joke`,
@@ -421,13 +421,13 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.personality = text;
       db.db.write();
-      await m.reply(novaBox("AUTO-SMART WELCOME", [`Personality updated:`, `| ${text}`]));
+      await m.reply(raraBox("AUTO-SMART WELCOME", [`Personality updated:`, `| ${text}`]));
       return { handled: true };
     }
 
     // ─── TEST (generate welcome untuk diri sendiri) ───
     if (sub === "test") {
-      await m.reply(novaBox("AUTO-SMART WELCOME", ["Generating test welcome..."]));
+      await m.reply(raraBox("AUTO-SMART WELCOME", ["Generating test welcome..."]));
       const participantJid = m.sender;
       const metadata = {
         subject: m.groupName || "Test Grup",
@@ -436,14 +436,14 @@ async function handler(m, { sock, config: botConfig }) {
 
       const welcomeText = await generateAIWelcome(sock, m.chat, participantJid, metadata, settings);
       if (welcomeText) {
-        await m.reply(novaBox("AI WELCOME (TEST)", [
+        await m.reply(raraBox("AI WELCOME (TEST)", [
           `| ${welcomeText}`,
           "---",
           "Mode: AI Generated",
         ]));
       } else {
         const fallback = generateFallbackWelcome(participantJid, metadata);
-        await m.reply(novaBox("FALLBACK WELCOME (TEST)", [
+        await m.reply(raraBox("FALLBACK WELCOME (TEST)", [
           `| ${fallback}`,
           "---",
           "AI gagal — pakai fallback",
@@ -455,7 +455,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ─── HISTORY ───
     if (sub === "history") {
       if (settings.history.length === 0) {
-        await m.reply(novaBox("AUTO-SMART WELCOME", ["History: kosong"]));
+        await m.reply(raraBox("AUTO-SMART WELCOME", ["History: kosong"]));
         return { handled: true };
       }
       const recent = settings.history.slice(-15).reverse();
@@ -463,7 +463,7 @@ async function handler(m, { sock, config: botConfig }) {
         const time = new Date(h.timestamp).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
         return `| ${h.username} -> ${h.group} ${h.ai ? "[AI]" : "[FB]"} ${time}`;
       });
-      await m.reply(novaBox("WELCOME HISTORY", lines));
+      await m.reply(raraBox("WELCOME HISTORY", lines));
       return { handled: true };
     }
 
@@ -471,14 +471,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "addgc") {
       const gid = args[1] || m.chat;
       if (!gid) {
-        await m.reply(novaBox("AUTO-SMART WELCOME", [`Ketik: ${prefix}autosmartwelcome addgc <group_id>`]));
+        await m.reply(raraBox("AUTO-SMART WELCOME", [`Ketik: ${prefix}autosmartwelcome addgc <group_id>`]));
         return { handled: true };
       }
       if (!settings.activeGroups.includes(gid)) {
         settings.activeGroups.push(gid);
         db.db.write();
       }
-      await m.reply(novaBox("AUTO-SMART WELCOME", [
+      await m.reply(raraBox("AUTO-SMART WELCOME", [
         `Grup ditambah: ${gid}`,
         `Total active: ${settings.activeGroups.length}`,
       ]));
@@ -490,7 +490,7 @@ async function handler(m, { sock, config: botConfig }) {
       const gid = args[1] || m.chat;
       settings.activeGroups = settings.activeGroups.filter((g) => g !== gid);
       db.db.write();
-      await m.reply(novaBox("AUTO-SMART WELCOME", [
+      await m.reply(raraBox("AUTO-SMART WELCOME", [
         `Grup dihapus: ${gid}`,
         `Total active: ${settings.activeGroups.length}`,
       ]));
@@ -509,7 +509,7 @@ async function handler(m, { sock, config: botConfig }) {
         ? Math.round((settings.stats.totalAI / settings.stats.totalWelcome) * 100)
         : 0;
 
-      await m.reply(novaBox("SMART WELCOME — STATISTIK", [
+      await m.reply(raraBox("SMART WELCOME — STATISTIK", [
         `Total: ${settings.stats.totalWelcome}`,
         `AI: ${settings.stats.totalAI} (${aiRate}%)`,
         `Fallback: ${settings.stats.totalFallback}`,
@@ -533,17 +533,17 @@ async function handler(m, { sock, config: botConfig }) {
       settings.history = [];
       settings.lastWelcomeTime = {};
       db.db.write();
-      await m.reply(novaBox("AUTO-SMART WELCOME", ["Stats & history direset"]));
+      await m.reply(raraBox("AUTO-SMART WELCOME", ["Stats & history direset"]));
       return { handled: true };
     }
 
     // ─── UNKNOWN ───
-    await m.reply(novaBox("AUTO-SMART WELCOME", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autosmartwelcome untuk dashboard`]));
+    await m.reply(raraBox("AUTO-SMART WELCOME", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autosmartwelcome untuk dashboard`]));
     return { handled: true };
 
   } catch (error) {
     console.error("[autosmartwelcome] handler error:", error.message);
-    await m.reply(novaError("AutoSmartWelcome", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("AutoSmartWelcome", "Gagal nih, coba lagi ya"));
     return { handled: true };
   }
 }

@@ -8,9 +8,9 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-fazzai-db-" + Date.now();
+const DB_DIR = "/tmp/rara-fazzai-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const { turboseekSearch, notrackChat, agnesChat, fazzcodeAiChat,
@@ -25,7 +25,7 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
 
-// GOTCHA (ke-6x): novaWrap = smallcaps — assert output kartu WAJIB fromSC (→ lowercase)
+// GOTCHA (ke-6x): raraWrap = smallcaps — assert output kartu WAJIB fromSC (→ lowercase)
 const norm = (s) => fromSC(String(s)).toLowerCase();
 
 // ═══════════════════════════════════════════════════════════════
@@ -159,7 +159,7 @@ w("\n— plugin .notrack —");
 // ═══════════════════════════════════════════════════════════════
 w("\n— rantai fallback: step 1.7 terpasang —");
 {
-  const src = fs.readFileSync(R + "/src/lib/nova-ai-fallback.js", "utf-8");
+  const src = fs.readFileSync(R + "/src/lib/rara-ai-fallback.js", "utf-8");
   const iNexai = src.indexOf("1.6 NexAI");
   const iFazz = src.indexOf("fazzcodeAiChat");
   const iHaidar = src.indexOf("// 2. Haidar");

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nexray-dl.js — Scraper AIO downloader api.nexray.web.id (porting fitur
-// .aio script JPM APENBOTZ ke Nova sebagai .aio2, 21 Sep 2026).
+// .aio script JPM APENBOTZ ke Rara sebagai .aio2, 21 Sep 2026).
 // Endpoint GET (redirect 301 otomatis diikuti axios):
 //   /downloader/aio?url=<link>     → semua platform (yt/tt/ig/x/fb/dll)
 //   /downloader/terabox?url=<link> → file TeraBox

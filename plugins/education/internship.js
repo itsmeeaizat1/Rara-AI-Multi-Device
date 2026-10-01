@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "magang",
@@ -150,7 +150,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   // .magang help
   if (input === "" || (args[0] || "").toLowerCase() === "help" || (args[0] || "").toLowerCase() === "bantuan") {
-    const txt = novaWrap("Magang - Pencari Lowongan Internship", [
+    const txt = raraWrap("Magang - Pencari Lowongan Internship", [
       `Cari lowongan magang/internship dari berbagai sumber online.`,
       ``,
       `Perintah:`,
@@ -191,7 +191,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
     const results = await fetchMagang(keyword, location);
     if (results.length === 0) {
-      return m.reply( novaWrap("Magang", [
+      return m.reply( raraWrap("Magang", [
         "Tidak ada hasil ditemukan.",
         "Coba kata kunci lain atau cek:",
         "https://www.magang.id",
@@ -215,7 +215,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     txt += tipText("Cek link untuk detail & cara apply");
     return m.reply( txt, { commandName: "magang" });
   } catch (e) {
-    return m.reply( novaError("Magang", `Gagal cari nih: ${e.message}`), { commandName: "magang" });
+    return m.reply( raraError("Magang", `Gagal cari nih: ${e.message}`), { commandName: "magang" });
   }
 }
 

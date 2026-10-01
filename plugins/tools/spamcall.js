@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "spamcall",
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!count || count <= 0 || !target) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🛠️",
   name: "spamcall",
   description: "Spam call/virtual call untuk entertainment",
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      novaWrap("Spam Call", [`Target: *@${targetClean}*`,
+      raraWrap("Spam Call", [`Target: *@${targetClean}*`,
         `Jumlah: *${count}x*`,
         "Status: *selesai*"].join("\n")) +
       "\n" +
@@ -69,7 +69,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Tools", "Gagal nih, coba lagi ya");
+      raraError("Tools", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "spamcall");
   }

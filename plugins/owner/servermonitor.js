@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // servermonitor.js — VPS Health Monitor + Auto-Alert (integrated with automation hub)
 import os from 'os'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
 import { exec } from 'child_process'
 import { promisify } from 'util'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { initAutomationHub } from '../../src/lib/nova-automation-hub.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { initAutomationHub } from '../../src/lib/rara-automation-hub.js'
 
 const execAsync = promisify(exec)
 
@@ -86,10 +86,10 @@ async function handler(m, { sock }) {
       const toggle = args[1]?.toLowerCase()
       if (toggle === "on") {
         cfg.alertEnabled = true; save(db)
-        return m.reply(novaBox("Server Monitor", ["✅ Auto-alert: ON", "Cek tiap 60 detik, alert ke PM owner", "---", "Threshold: CPU " + cfg.cpuThreshold + "% | RAM " + cfg.ramThreshold + "% | Disk " + cfg.diskThreshold + "%"]))
+        return m.reply(raraBox("Server Monitor", ["✅ Auto-alert: ON", "Cek tiap 60 detik, alert ke PM owner", "---", "Threshold: CPU " + cfg.cpuThreshold + "% | RAM " + cfg.ramThreshold + "% | Disk " + cfg.diskThreshold + "%"]))
       } else if (toggle === "off") {
         cfg.alertEnabled = false; save(db)
-        return m.reply(novaBox("Server Monitor", ["❌ Auto-alert: OFF", "Monitoring dimatikan"]))
+        return m.reply(raraBox("Server Monitor", ["❌ Auto-alert: OFF", "Monitoring dimatikan"]))
       }
     }
 
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
         if (key === "disk" && val) cfg.diskThreshold = val
       }
       save(db);
-      return m.reply(novaBox("Server Monitor", ["✅ Threshold diupdate!", "CPU: " + cfg.cpuThreshold + "%", "RAM: " + cfg.ramThreshold + "%", "Disk: " + cfg.diskThreshold + "%"]))
+      return m.reply(raraBox("Server Monitor", ["✅ Threshold diupdate!", "CPU: " + cfg.cpuThreshold + "%", "RAM: " + cfg.ramThreshold + "%", "Disk: " + cfg.diskThreshold + "%"]))
     }
 
     if (subCmd === "test") {
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
       if (ram >= cfg.ramThreshold) alerts.push("⚠️ RAM " + ram + "% >= " + cfg.ramThreshold + "%")
       if (disk >= cfg.diskThreshold) alerts.push("⚠️ Disk " + disk + "% >= " + cfg.diskThreshold + "%")
       if (alerts.length) return m.reply(alerts.join("\n"))
-      return m.reply(novaWrap("servermonitor", "Semua normal. Tidak ada alert.\nCPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%"))
+      return m.reply(raraWrap("servermonitor", "Semua normal. Tidak ada alert.\nCPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%"))
     }
 
     // Default: status
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     return m.reply(text.trim())
   } catch (e) {
     console.error("[servermonitor] error:", e.message)
-    return m.reply(novaWrap("servermonitor", "Gagal proses. Coba lagi.", "error"))
+    return m.reply(raraWrap("servermonitor", "Gagal proses. Coba lagi.", "error"))
   }
 }
 

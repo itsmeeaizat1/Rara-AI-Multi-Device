@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autogreet",
@@ -48,29 +48,29 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "on") {
       data.enabled = true;
       await db.save();
-      return m.reply(novaWrap("Auto Greet", "Auto greet diaktifkan! Bot akan sapa grup sesuai waktu."));
+      return m.reply(raraWrap("Auto Greet", "Auto greet diaktifkan! Bot akan sapa grup sesuai waktu."));
     }
 
     if (sub === "off") {
       data.enabled = false;
       await db.save();
-      return m.reply(novaWrap("Auto Greet", "Auto greet dimatikan."));
+      return m.reply(raraWrap("Auto Greet", "Auto greet dimatikan."));
     }
 
     if (sub === "set") {
       const slot = (args[1] || "").toLowerCase();
       const msg = args.slice(2).join(" ").trim();
       if (!["pagi", "siang", "sore", "malam"].includes(slot)) {
-        return m.reply(novaWrap("Auto Greet", [
+        return m.reply(raraWrap("Auto Greet", [
           `Slot: pagi, siang, sore, malam`,
           `Cara: ${usedPrefix}autogreet set <slot> <pesan>`,
           `Contoh: ${usedPrefix}autogreet set pagi Halo semuanya, semangat pagi!`,
         ].join("\n")));
       }
-      if (!msg) return m.reply(novaGuide("AutoGreet", "Pesan tidak boleh kosong nih!", usedPrefix + "autogreet set " + slot + " Pesan kamu"));
+      if (!msg) return m.reply(raraGuide("AutoGreet", "Pesan tidak boleh kosong nih!", usedPrefix + "autogreet set " + slot + " Pesan kamu"));
       data.greetings[slot] = msg;
       await db.save();
-      return m.reply(novaWrap("Auto Greet", `Pesan ${slot} diupdate:\n"${msg}"`, "info"));
+      return m.reply(raraWrap("Auto Greet", `Pesan ${slot} diupdate:\n"${msg}"`, "info"));
     }
 
     if (sub === "status") {
@@ -80,7 +80,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         const range = s.start < s.end ? `${s.start}:00-${s.end}:00` : `${s.start}:00-05:00`;
         return `${slot} (${range}): ${data.greetings[slot] || DEFAULT_GREETINGS[slot]}`;
       }).join("\n");
-      return m.reply(novaWrap("Auto Greet", [
+      return m.reply(raraWrap("Auto Greet", [
         `Status: ${status}`,
         "",
         greetList,
@@ -90,10 +90,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "reset") {
       data.greetings = { ...DEFAULT_GREETINGS };
       await db.save();
-      return m.reply(novaWrap("Auto Greet", "Pesan direset ke default."));
+      return m.reply(raraWrap("Auto Greet", "Pesan direset ke default."));
     }
 
-    return m.reply(novaWrap("Auto Greet", [
+    return m.reply(raraWrap("Auto Greet", [
       `Auto Greet - Auto sapa grup sesuai waktu`,
       "",
       `Command:`,
@@ -105,7 +105,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("autogreet error:", e);
-    return m.reply(novaError("Auto greet", e.message));
+    return m.reply(raraError("Auto greet", e.message));
   }
 }
 

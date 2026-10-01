@@ -12,7 +12,7 @@ const REPO = path.resolve(__dirname, "..", "..");
 
 const mod = await import(pathToFileURL(path.join(REPO, "plugins/owner/ytproxy.js")).href);
 const { handler, validateProxy, maskProxy, PROXY_PATH, proxyStatus, config } = mod;
-const ytdlp = await import(pathToFileURL(path.join(REPO, "src/scraper/nova-ytdlp.js")).href);
+const ytdlp = await import(pathToFileURL(path.join(REPO, "src/scraper/rara-ytdlp.js")).href);
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");

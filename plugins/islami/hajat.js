@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "hajat",
@@ -171,16 +171,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "hajat <nomor>")
       lines.push("Contoh: " + usedPrefix + "hajat 3 (Doa utama)")
-      return m.reply(novaWrap("Sholat & Doa Hajat", lines.join("\n")))
+      return m.reply(raraWrap("Sholat & Doa Hajat", lines.join("\n")))
     }
 
     const h = HAJAT[input - 1]
 
     if (h.isi) {
-      return m.reply(novaWrap("Hajat - " + h.judul, h.isi.join("\n")))
+      return m.reply(raraWrap("Hajat - " + h.judul, h.isi.join("\n")))
     }
 
-    return m.reply(novaWrap("Hajat - " + h.judul, [
+    return m.reply(raraWrap("Hajat - " + h.judul, [
       "Teks Arab:",
       h.arab,
       "",
@@ -194,7 +194,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       h.keterangan,
     ].join("\n")))
   } catch (e) {
-    return m.reply(novaWrap("Sholat & Doa Hajat", "Error: " + e.message))
+    return m.reply(raraWrap("Sholat & Doa Hajat", "Error: " + e.message))
   }
 }
 

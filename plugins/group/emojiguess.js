@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "emojiguess",
@@ -69,7 +69,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // START
     if (sub === "start") {
       if (game.active) {
-        return m.reply(novaWrap("Emoji Guess", "Game lagi jalan!\nKetik .emojiguess stop untuk hentikan."));
+        return m.reply(raraWrap("Emoji Guess", "Game lagi jalan!\nKetik .emojiguess stop untuk hentikan."));
       }
 
       const puzzle = PUZZLES[Math.floor(Math.random() * PUZZLES.length)];
@@ -82,7 +82,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.winner = null;
       await db.save();
 
-      return m.reply(novaWrap("Emoji Guess", [
+      return m.reply(raraWrap("Emoji Guess", [
         "Tebak judul dari emoji ini!",
         "",
         "Emoji: " + game.puzzle,
@@ -96,33 +96,33 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // HINT
     if (sub === "hint") {
       if (!game.active) {
-        return m.reply(novaWrap("Emoji Guess", "Gak ada game aktif. Ketik .emojiguess start."));
+        return m.reply(raraWrap("Emoji Guess", "Gak ada game aktif. Ketik .emojiguess start."));
       }
       if (game.hintUsed >= game.hints.length) {
-        return m.reply(novaWrap("Emoji Guess", "Hint habis! Tebak aja."));
+        return m.reply(raraWrap("Emoji Guess", "Hint habis! Tebak aja."));
       }
       const hint = game.hints[game.hintUsed];
       game.hintUsed++;
       await db.save();
 
-      return m.reply(novaWrap("Emoji Guess", "Hint " + game.hintUsed + ": " + hint));
+      return m.reply(raraWrap("Emoji Guess", "Hint " + game.hintUsed + ": " + hint));
     }
 
     // STOP
     if (sub === "stop") {
       if (!game.active) {
-        return m.reply(novaWrap("Emoji Guess", "Gak ada game aktif."));
+        return m.reply(raraWrap("Emoji Guess", "Gak ada game aktif."));
       }
       game.active = false;
       await db.save();
-      return m.reply(novaWrap("Emoji Guess", "Game dihentikan!\nJawabannya: " + game.answer, "warn"));
+      return m.reply(raraWrap("Emoji Guess", "Game dihentikan!\nJawabannya: " + game.answer, "warn"));
     }
 
     // ANSWER
     if (game.active) {
       const answer = text.trim().toLowerCase();
       if (!answer) {
-        return m.reply(novaWrap("Emoji Guess", "Ketik jawaban: .emojiguess <jawaban>"));
+        return m.reply(raraWrap("Emoji Guess", "Ketik jawaban: .emojiguess <jawaban>"));
       }
       if (answer === game.answer || answer.replace(/\s/g, "") === game.answer.replace(/\s/g, "")) {
         game.active = false;
@@ -131,7 +131,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         await db.save();
 
         let scoreText = "Total menang: " + game.scores[sender] + "x";
-        return m.reply(novaWrap("Emoji Guess", [
+        return m.reply(raraWrap("Emoji Guess", [
           "BENAR! @" + sender.split("@")[0] + " menang!",
           "Jawaban: " + game.answer,
           "",
@@ -140,12 +140,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           "Ketik .emojiguess start untuk ronde baru!",
         ], "success"));
       } else {
-        return m.reply(novaWrap("Emoji Guess", "Salah! Coba lagi.\nHint: .emojiguess hint", "warn"));
+        return m.reply(raraWrap("Emoji Guess", "Salah! Coba lagi.\nHint: .emojiguess hint", "warn"));
       }
     }
 
     // DEFAULT - help
-    return m.reply(novaWrap("Emoji Guess", [
+    return m.reply(raraWrap("Emoji Guess", [
       "Tebak judul dari emoji — film, lagu, makanan, dll",
       "",
       "CARA PAKAI:",
@@ -160,7 +160,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]));
   } catch (e) {
     console.error("[Emoji Guess]", e);
-    m.reply(novaWrap("Emoji Guess", "Error: " + e.message));
+    m.reply(raraWrap("Emoji Guess", "Error: " + e.message));
   }
 }
 

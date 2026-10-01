@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'addtoxic',
     alias: ["addtoxic"],
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const word = m.args.join(' ').trim().toLowerCase()
     
     if (!word) {
-        return m.reply(novaWrap("addtoxic", [
+        return m.reply(raraWrap("addtoxic", [
             "Tambah kata toxic ke daftar filter.",
             "",
             `📌 Format: ${m.prefix}addtoxic <kata>`,
@@ -32,11 +32,11 @@ async function handler(m, { sock }) {
     }
     
     if (word.length < 2) {
-        return m.reply(novaWrap("Addtoxic", `gagal\n\nKata terlalu pendek (min 2 huruf)`, "error"))
+        return m.reply(raraWrap("Addtoxic", `gagal\n\nKata terlalu pendek (min 2 huruf)`, "error"))
     }
     
     if (word.length > 30) {
-        return m.reply(novaWrap("Addtoxic", `Kata terlalu panjang (max 30 huruf)`, "error"))
+        return m.reply(raraWrap("Addtoxic", `Kata terlalu panjang (max 30 huruf)`, "error"))
     }
     
     const groupData = db.getGroup(m.chat) || {}

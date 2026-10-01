@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "apkmod-get",
   alias: ["apkmod-get", "apkmod"],
@@ -19,7 +19,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
+const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 async function handler(m, { sock }) {
   const args = m.args || [];
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const query = args.slice(1).join(" ");
 
   if (!no || !query) {
-    return m.reply(novaGuide("ApkModGet", "Format-nya salah nih!", m.prefix + "apkmod-get <no> <query>"));
+    return m.reply(raraGuide("ApkModGet", "Format-nya salah nih!", m.prefix + "apkmod-get <no> <query>"));
   }
   try {
     const { data } = await axios.get(
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     const file = data.file;
 
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     if (file?.url) {
       await sock.sendMessage(
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
 
     }
   } catch (err) {
-    return m.reply(novaWrap("apkmod-get", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("apkmod-get", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

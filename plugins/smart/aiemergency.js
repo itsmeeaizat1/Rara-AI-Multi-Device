@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aiemergency",
@@ -65,51 +65,51 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== ON / OFF
   if (sub === "on" || sub === "enable") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Emergency Watch", "Khusus admin/owner."));
+      await m.reply(raraWrap("Emergency Watch", "Khusus admin/owner."));
       return { handled: true };
     }
     const data = getEmergency(db, gid);
     data.enabled = true;
     if (!data.admins.includes(m.sender)) data.admins.push(m.sender);
     saveEmergency(db, gid, data);
-    await m.reply(novaWrap("Emergency Watch", "AKTIF!\nBot akan alert admin kalau ada kata darurat terdeteksi.\nKetik " + prefix + "emergency kontak untuk nomor darurat."));
+    await m.reply(raraWrap("Emergency Watch", "AKTIF!\nBot akan alert admin kalau ada kata darurat terdeteksi.\nKetik " + prefix + "emergency kontak untuk nomor darurat."));
     return { handled: true };
   }
 
   if (sub === "off" || sub === "disable") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Emergency Watch", "Khusus admin/owner."));
+      await m.reply(raraWrap("Emergency Watch", "Khusus admin/owner."));
       return { handled: true };
     }
     const data = getEmergency(db, gid);
     data.enabled = false;
     saveEmergency(db, gid, data);
-    await m.reply(novaWrap("Emergency Watch", "Dimatikan."));
+    await m.reply(raraWrap("Emergency Watch", "Dimatikan."));
     return { handled: true };
   }
 
   // ==================== ADD ADMIN
   if (sub === "addadmin" || sub === "admin") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Emergency Watch", "Khusus admin/owner."));
+      await m.reply(raraWrap("Emergency Watch", "Khusus admin/owner."));
       return { handled: true };
     }
     const target = m.mentionedJid?.[0];
     if (!target) {
-      await m.reply(novaWrap("Emergency Watch", "Format: " + prefix + "emergency addadmin @member"));
+      await m.reply(raraWrap("Emergency Watch", "Format: " + prefix + "emergency addadmin @member"));
       return { handled: true };
     }
     const data = getEmergency(db, gid);
     if (!data.admins.includes(target)) data.admins.push(target);
     saveEmergency(db, gid, data);
-    await m.reply(novaWrap("Emergency Watch", "Admin darurat ditambah: @" + target.split("@")[0]), { mentions: [target] });
+    await m.reply(raraWrap("Emergency Watch", "Admin darurat ditambah: @" + target.split("@")[0]), { mentions: [target] });
     return { handled: true };
   }
 
   // ==================== KEYWORDS
   if (sub === "keyword" || sub === "kata") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Emergency Watch", "Khusus admin/owner."));
+      await m.reply(raraWrap("Emergency Watch", "Khusus admin/owner."));
       return { handled: true };
     }
     const action = (args[2] || "").toLowerCase();
@@ -119,20 +119,20 @@ async function handler(m, { sock, db, config: botConfig }) {
       if (!data.keywords.includes(word)) {
         data.keywords.push(word);
         saveEmergency(db, gid, data);
-        await m.reply(novaWrap("Emergency Watch", "Kata darurat ditambah: " + word));
+        await m.reply(raraWrap("Emergency Watch", "Kata darurat ditambah: " + word));
       } else {
-        await m.reply(novaWrap("Emergency Watch", "Kata sudah ada: " + word));
+        await m.reply(raraWrap("Emergency Watch", "Kata sudah ada: " + word));
       }
       return { handled: true };
     }
     if (action === "del" && word) {
       data.keywords = data.keywords.filter(k => k !== word);
       saveEmergency(db, gid, data);
-      await m.reply(novaWrap("Emergency Watch", "Kata dihapus: " + word));
+      await m.reply(raraWrap("Emergency Watch", "Kata dihapus: " + word));
       return { handled: true };
     }
     if (action === "list" || !action) {
-      await m.reply(novaWrap("Emergency Watch", "Kata darurat (" + data.keywords.length + "):\n" + data.keywords.join(", ")));
+      await m.reply(raraWrap("Emergency Watch", "Kata darurat (" + data.keywords.length + "):\n" + data.keywords.join(", ")));
       return { handled: true };
     }
   }
@@ -140,7 +140,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== KONTAK DARURAT
   if (sub === "kontak" || sub === "darurat" || sub === "nomor") {
     const list = Object.values(KONTAK_DARURAT).map(k => k.nama + ": " + k.nomor + " (" + k.desc + ")").join("\n");
-    await m.reply(novaWrap("Nomor Darurat", list));
+    await m.reply(raraWrap("Nomor Darurat", list));
     return { handled: true };
   }
 
@@ -150,7 +150,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const adminList = data.admins.length > 0
       ? data.admins.map(a => "@" + a.split("@")[0]).join(", ")
       : "(belum ada)";
-    await m.reply(novaWrap("Emergency Watch", [
+    await m.reply(raraWrap("Emergency Watch", [
       "Status: " + (data.enabled ? "AKTIF" : "MATI"),
       "Keywords: " + data.keywords.length,
       "Admin darurat: " + adminList,
@@ -160,7 +160,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   // ==================== HELP
-  await m.reply(novaWrap("Emergency Watch", [
+  await m.reply(raraWrap("Emergency Watch", [
     "AI EMERGENCY WATCH",
     "",
     "Cara pakai:",

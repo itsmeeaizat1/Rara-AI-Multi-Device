@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "gachapull",
@@ -30,7 +30,7 @@ const RARITIES = [
 
 const CHARACTERS = [
   { name: "Aizat Knight", element: "Fire", baseAtk: 50, baseDef: 30, baseHp: 200, emoji: "Knight" },
-  { name: "Nova Mage", element: "Ice", baseAtk: 70, baseDef: 15, baseHp: 150, emoji: "Mage" },
+  { name: "Rara Mage", element: "Ice", baseAtk: 70, baseDef: 15, baseHp: 150, emoji: "Mage" },
   { name: "Clara Archer", element: "Wind", baseAtk: 60, baseDef: 25, baseHp: 180, emoji: "Archer" },
   { name: "Bayu Assassin", element: "Shadow", baseAtk: 80, baseDef: 10, baseHp: 140, emoji: "Assassin" },
   { name: "Rina Healer", element: "Light", baseAtk: 30, baseDef: 40, baseHp: 250, emoji: "Healer" },
@@ -101,7 +101,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const totalCost = PULL_COST * count;
 
     if (user.coin < totalCost) {
-      await m.reply(novaWrap("Gacha", "Coin tidak cukup!\nButuh: " + totalCost + " coins\nCoin kamu: " + (user.coin || 0)));
+      await m.reply(raraWrap("Gacha", "Coin tidak cukup!\nButuh: " + totalCost + " coins\nCoin kamu: " + (user.coin || 0)));
       return { handled: true };
     }
     user.coin -= totalCost;
@@ -139,7 +139,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return (i + 1) + ". [" + p.rarity + "] " + stars + " " + p.name + " (" + p.element + ") ATK:" + p.atk;
     }).join("\n");
 
-    await m.reply(novaWrap("Gacha Pull " + (isMulti ? "x10" : "x1"), [
+    await m.reply(raraWrap("Gacha Pull " + (isMulti ? "x10" : "x1"), [
       "(-" + totalCost + " coins)",
       "Best pull: [" + bestRarity + "] " + "★".repeat(bestStars),
       "",
@@ -157,12 +157,12 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "collection" || sub === "koleksi" || sub === "inv") {
     const owned = Object.values(gdata.collection);
     if (owned.length === 0) {
-      await m.reply(novaError("GachaPull", "Koleksi kosong nih! Ketik " + prefix + "gachapull buat mulai"));
+      await m.reply(raraError("GachaPull", "Koleksi kosong nih! Ketik " + prefix + "gachapull buat mulai"));
       return { handled: true };
     }
     const sorted = owned.sort((a, b) => b.stars - a.stars);
     const list = sorted.map(c => "[" + c.rarity + "] " + "★".repeat(c.stars) + " " + c.name + " (" + c.element + ") x" + c.count + " | ATK:" + c.atk + " DEF:" + c.def + " HP:" + c.hp).join("\n");
-    await m.reply(novaWrap("Gacha Collection", [
+    await m.reply(raraWrap("Gacha Collection", [
       "Total pulls: " + gdata.totalPulls,
       "Unique: " + owned.length + "/" + (CHARACTERS.length * RARITIES.length),
       "Duplicates: " + gdata.duplicates,
@@ -174,7 +174,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "rates" || sub === "rate") {
     const list = RARITIES.map(r => r.name + " (" + r.color + "): " + r.weight + "% - " + "★".repeat(r.stars)).join("\n");
-    await m.reply(novaWrap("Gacha Rates", [
+    await m.reply(raraWrap("Gacha Rates", [
       "Cost: " + PULL_COST + " coins/pull",
       "",
       list,
@@ -186,7 +186,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (sub === "stats" || sub === "cek") {
-    await m.reply(novaWrap("Gacha Stats", [
+    await m.reply(raraWrap("Gacha Stats", [
       "Total pulls: " + gdata.totalPulls,
       "Coins spent: " + gdata.coinsSpent,
       "Unique cards: " + Object.keys(gdata.collection).length,
@@ -196,7 +196,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Gacha", [
+  await m.reply(raraWrap("Gacha", [
     "GACHA COLLECTION SYSTEM",
     "",
     prefix + "gachapull - pull 1x (" + PULL_COST + " coins)",

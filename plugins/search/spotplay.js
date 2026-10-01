@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spotplay.js — Putar musik dari Spotify (engine azbry)
 //
 // REVISI 14 Sep 2026 (owner: "disamain krna beda endpoint tp untuk dichat
@@ -11,9 +11,9 @@
 // title/artist/downloadLink doang (live-checked 14 Sep 2026: 403 konsisten,
 // gak bisa diverifikasi field lengkapnya). Album/Genre/Durasi DIOMIT kalau
 // emang gak ada, gak dipaksa sama kayak .playspotify/.spotifyplay2.
-import te from "../../src/lib/nova-error.js";
-import novaApi from "../../src/lib/nova-apimanager.js";
-import { novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import raraApi from "../../src/lib/rara-apimanager.js";
+import { raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "spotplay",
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕒");
 
-    const data = await novaApi.azbry.spotplay(query, {
+    const data = await raraApi.azbry.spotplay(query, {
       timeout: 30000,
       headers: {
         "user-agent": "Mozilla/5.0",
@@ -85,11 +85,11 @@ async function handler(m, { sock }) {
     });
     await m.reply(cardText);
     await m.react("🐣");
-    await m.reply(novaBerhasil("spotplay"));
+    await m.reply(raraBerhasil("spotplay"));
   } catch (e) {
     console.log(e);
     await m.react("❌");
-    m.reply(novaWrap("spotplay", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("spotplay", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

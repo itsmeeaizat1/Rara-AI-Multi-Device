@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .ztools — 6 tools ZelAPI yang hidup (kategori /tools, disweep live 15 Sep 2026):
 //   .zcode <js>       — Code Runner (sandbox Node v24 + axios/cheerio prebundled)
@@ -15,7 +15,7 @@ import {
   zelToolCall, ZEL_TOOLS_KINDS, ZEL_CONVERT_TYPES,
   _setZelToolsHttpForTest, _setZelToolsKeyForTest,
 } from "../../src/scraper/zeltools.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ztools",
@@ -47,7 +47,7 @@ function getCodeInput(m, args) {
 }
 
 function usageCard() {
-  return novaWrap("ztools", [
+  return raraWrap("ztools", [
     "🧰 ZELAPI TOOLS — 6 tool hidup:",
     "",
     "▸ .zcode <kode js> — jalanin kode di sandbox (Node v24, axios/cheerio tersedia); reply pesan kode juga bisa",
@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
     if (kind === "convert") {
       const t = (args[0] || "").toLowerCase();
       if (!ZEL_CONVERT_TYPES.includes(t)) {
-        return m.reply(novaWrap("ztools", "Format salah — pakai: *.zconvert toesm* atau *.zconvert tocjs* diikuti kode (atau reply pesan kode)"));
+        return m.reply(raraWrap("ztools", "Format salah — pakai: *.zconvert toesm* atau *.zconvert tocjs* diikuti kode (atau reply pesan kode)"));
       }
       params = { type: t, code: args.slice(1).join(" ").trim() || getCodeInput(m, []) };
     } else if (kind === "domain") {
@@ -168,18 +168,18 @@ async function handler(m, { sock }) {
     const r = await zelToolCall(kind, params);
     if (!r.ok) {
       await m.react("❌");
-      return m.reply(novaWrap("ztools", `${ZEL_TOOLS_KINDS[kind].label} bermasalah: ${r.error}`));
+      return m.reply(raraWrap("ztools", `${ZEL_TOOLS_KINDS[kind].label} bermasalah: ${r.error}`));
     }
     const d = r.data;
 
     if (kind === "code") {
-      await m.reply(novaWrap("ztools", "✅ CODE RUNNER (zelapi)\n\n" + cardCode(d)));
+      await m.reply(raraWrap("ztools", "✅ CODE RUNNER (zelapi)\n\n" + cardCode(d)));
     } else if (kind === "obfuscate" || kind === "convert") {
       const out = typeof d?.result === "string" ? d.result : (typeof d?.result === "object" && d.result ? JSON.stringify(d.result) : null);
-      if (!out) { await m.react("❌"); return m.reply(novaWrap("ztools", "Output kosong dari zelapi")); }
+      if (!out) { await m.react("❌"); return m.reply(raraWrap("ztools", "Output kosong dari zelapi")); }
       const label = kind === "obfuscate" ? "OBFUSCATED CODE" : "CONVERTED CODE (" + params.type + ")";
       if (out.length <= 3500) {
-        await m.reply(novaWrap("ztools", `✅ ${label}:\n\n\`\`\`\n${out.slice(0, 3400)}\n\`\`\``));
+        await m.reply(raraWrap("ztools", `✅ ${label}:\n\n\`\`\`\n${out.slice(0, 3400)}\n\`\`\``));
       } else {
         await sock.sendMessage(m.chat, {
           document: Buffer.from(out, "utf-8"),
@@ -190,11 +190,11 @@ async function handler(m, { sock }) {
       }
     } else if (kind === "domain") {
       const card = cardDomain(d);
-      if (!card) { await m.react("❌"); return m.reply(novaWrap("ztools", `Domain gak ketemu: ${v(d?.message) || v(d?.error) || "coba domain lain"}`)); }
-      await m.reply(novaWrap("ztools", "✅ DOMAIN CHECKER (zelapi)\n\n" + card));
+      if (!card) { await m.react("❌"); return m.reply(raraWrap("ztools", `Domain gak ketemu: ${v(d?.message) || v(d?.error) || "coba domain lain"}`)); }
+      await m.reply(raraWrap("ztools", "✅ DOMAIN CHECKER (zelapi)\n\n" + card));
     } else if (kind === "source") {
       const { card, html } = cardSource(d);
-      await m.reply(novaWrap("ztools", "✅ GET SOURCE (zelapi)\n\n" + card));
+      await m.reply(raraWrap("ztools", "✅ GET SOURCE (zelapi)\n\n" + card));
       if (html && html.length > 300) {
         await sock.sendMessage(m.chat, {
           document: Buffer.from(html, "utf-8"),
@@ -205,16 +205,16 @@ async function handler(m, { sock }) {
       }
     } else if (kind === "webtest") {
       if (v(d?.result?.result?.resultJson?.meta)) {
-        await m.reply(novaWrap("ztools", "✅ WEBSITE SPEED TEST (zelapi)\n\n" + cardWebtest(d)));
+        await m.reply(raraWrap("ztools", "✅ WEBSITE SPEED TEST (zelapi)\n\n" + cardWebtest(d)));
       } else {
         await m.react("❌");
-        return m.reply(novaWrap("ztools", `Tes gagal — ${v(d?.result?.result?.error) || v(d?.message) || "coba lagi / cek URL-nya"}`));
+        return m.reply(raraWrap("ztools", `Tes gagal — ${v(d?.result?.result?.error) || v(d?.message) || "coba lagi / cek URL-nya"}`));
       }
     }
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(novaWrap("ztools", `fitur error: ${e?.message || e}`));
+    await m.reply(raraWrap("ztools", `fitur error: ${e?.message || e}`));
   }
 }
 

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // melolo — Cari drama pendek Melolo (API covenant sedang down)
-import { novaReply } from "../../src/lib/nova-menu-style.js";
+import { raraReply } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "melolo",
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
   var category = m.text ? m.text.trim() : "";
 
   if (!category) {
-    var msg = novaReply({
+    var msg = raraReply({
       title: "Melolo Drama",
       status: "Masukkan kategori drama",
       content: "|\n| Contoh: " + m.prefix + "melolo fantasy",
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     return await m.reply(msg);
   }
 
-  var msg = novaReply({
+  var msg = raraReply({
     title: "Melolo Drama",
     info: [
       { label: "Kategori", value: category },

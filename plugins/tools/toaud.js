@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "toaud",
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     }
 
     if (!downloadFn) {
-      return m.reply(novaWrap("toaud", "Reply atau kirim video/audio yang ingin diubah menjadi MP3.", "guide"));
+      return m.reply(raraWrap("toaud", "Reply atau kirim video/audio yang ingin diubah menjadi MP3.", "guide"));
     }
 
     await m.react("🕒");
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const mediaBuffer = await downloadFn();
     if (!mediaBuffer || mediaBuffer.length === 0) {
       await m.react("❌");
-      return m.reply(novaWrap("toaud", "❌ Gagal mengunduh media."));
+      return m.reply(raraWrap("toaud", "❌ Gagal mengunduh media."));
     }
 
     const tempDir = path.join(process.cwd(), "tmp");
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
 
       if (!fs.existsSync(outputPath) || fs.statSync(outputPath).size === 0) {
         await m.react("❌");
-        return m.reply(novaWrap("toaud", "❌ Gagal mengonversi media ke audio."));
+        return m.reply(raraWrap("toaud", "❌ Gagal mengonversi media ke audio."));
       }
 
       const audioBuffer = fs.readFileSync(outputPath);
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("toaud error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("toaud", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("toaud", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

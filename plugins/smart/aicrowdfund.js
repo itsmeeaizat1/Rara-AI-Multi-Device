@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aicrowdfund",
@@ -52,13 +52,13 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== BUAT
   if (sub === "buat" || sub === "create") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Crowdfund", "Khusus admin/owner."));
+      await m.reply(raraWrap("Crowdfund", "Khusus admin/owner."));
       return { handled: true };
     }
     const target = parseInt(args[args.length - 1] || "0", 10);
     const title = args.slice(2, -1).join(" ").trim();
     if (!title || !target || target < 1000) {
-      await m.reply(novaWrap("Crowdfund", "Format: " + prefix + "crowdfund buat <judul> <target>\n💡 *Contoh:* " + prefix + "crowdfund buat Beli gift ultah 50000"));
+      await m.reply(raraWrap("Crowdfund", "Format: " + prefix + "crowdfund buat <judul> <target>\n💡 *Contoh:* " + prefix + "crowdfund buat Beli gift ultah 50000"));
       return { handled: true };
     }
     const deadlineDays = parseInt(args[args.length] || "7", 10);
@@ -73,7 +73,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       status: "active",
     };
     saveFund(db, gid, data);
-    await m.reply(novaWrap("Crowdfund Dibuat", [
+    await m.reply(raraWrap("Crowdfund Dibuat", [
       "Judul: " + title,
       "Target: Rp" + target.toLocaleString("id-ID"),
       "Deadline: " + new Date(data.deadline).toLocaleDateString("id-ID"),
@@ -87,26 +87,26 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "donor" || sub === "isi" || sub === "contribute") {
     const fund = getFund(db, gid);
     if (!fund) {
-      await m.reply(novaWrap("Crowdfund", "Belum ada crowdfund. Ketik " + prefix + "crowdfund buat."));
+      await m.reply(raraWrap("Crowdfund", "Belum ada crowdfund. Ketik " + prefix + "crowdfund buat."));
       return { handled: true };
     }
     if (fund.status !== "active") {
-      await m.reply(novaWrap("Crowdfund", "Crowdfund sudah " + fund.status + "."));
+      await m.reply(raraWrap("Crowdfund", "Crowdfund sudah " + fund.status + "."));
       return { handled: true };
     }
     if (Date.now() > fund.deadline) {
       fund.status = "expired";
       saveFund(db, gid, fund);
-      await m.reply(novaWrap("Crowdfund", "Deadline sudah lewat. Target tidak tercapai."));
+      await m.reply(raraWrap("Crowdfund", "Deadline sudah lewat. Target tidak tercapai."));
       return { handled: true };
     }
     const amount = parseInt(args[2] || "0", 10);
     if (!amount || amount < 1000) {
-      await m.reply(novaWrap("Crowdfund", "Format: " + prefix + "crowdfund donor <nominal>\n💡 *Contoh:* " + prefix + "crowdfund donor 10000"));
+      await m.reply(raraWrap("Crowdfund", "Format: " + prefix + "crowdfund donor <nominal>\n💡 *Contoh:* " + prefix + "crowdfund donor 10000"));
       return { handled: true };
     }
     if (fund.collected + amount > fund.target * 1.5) {
-      await m.reply(novaWrap("Crowdfund", "Melebihi 150% target. Kontribusi terlalu besar."));
+      await m.reply(raraWrap("Crowdfund", "Melebihi 150% target. Kontribusi terlalu besar."));
       return { handled: true };
     }
     if (!fund.contributors[m.sender]) fund.contributors[m.sender] = 0;
@@ -117,7 +117,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     if (fund.collected >= fund.target) {
       fund.status = "achieved";
       saveFund(db, gid, fund);
-      await m.reply(novaWrap("Crowdfund - TARGET TERCAPAI!", [
+      await m.reply(raraWrap("Crowdfund - TARGET TERCAPAI!", [
         "Judul: " + fund.title,
         "Target: Rp" + fund.target.toLocaleString("id-ID"),
         "Terkumpul: Rp" + fund.collected.toLocaleString("id-ID"),
@@ -129,7 +129,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.reply(novaWrap("Crowdfund", [
+    await m.reply(raraWrap("Crowdfund", [
       "Kontribusi: Rp" + amount.toLocaleString("id-ID"),
       "Total terkumpul: Rp" + fund.collected.toLocaleString("id-ID"),
       "Target: Rp" + fund.target.toLocaleString("id-ID"),
@@ -144,7 +144,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "info" || sub === "cek" || !sub) {
     const fund = getFund(db, gid);
     if (!fund) {
-      await m.reply(novaWrap("Crowdfund", [
+      await m.reply(raraWrap("Crowdfund", [
         "Belum ada crowdfund aktif.",
         "",
         "Cara pakai:",
@@ -162,7 +162,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       .slice(0, 5)
       .map(([jid, amt], i) => (i + 1) + ". @" + jid.split("@")[0] + " - Rp" + amt.toLocaleString("id-ID"))
       .join("\n") || "(belum ada)";
-    await m.reply(novaWrap("Crowdfund Info", [
+    await m.reply(raraWrap("Crowdfund Info", [
       "Judul: " + fund.title,
       "Target: Rp" + fund.target.toLocaleString("id-ID"),
       "Terkumpul: Rp" + fund.collected.toLocaleString("id-ID"),
@@ -183,32 +183,32 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== CLOSE
   if (sub === "close" || sub === "tutup") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Crowdfund", "Khusus admin/owner."));
+      await m.reply(raraWrap("Crowdfund", "Khusus admin/owner."));
       return { handled: true };
     }
     const fund = getFund(db, gid);
     if (!fund) {
-      await m.reply(novaWrap("Crowdfund", "Tidak ada crowdfund."));
+      await m.reply(raraWrap("Crowdfund", "Tidak ada crowdfund."));
       return { handled: true };
     }
     fund.status = "closed";
     saveFund(db, gid, fund);
-    await m.reply(novaWrap("Crowdfund", "Crowdfund ditutup.\nTotal: Rp" + fund.collected.toLocaleString("id-ID")));
+    await m.reply(raraWrap("Crowdfund", "Crowdfund ditutup.\nTotal: Rp" + fund.collected.toLocaleString("id-ID")));
     return { handled: true };
   }
 
   // ==================== DELETE
   if (sub === "hapus" || sub === "delete") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Crowdfund", "Khusus admin/owner."));
+      await m.reply(raraWrap("Crowdfund", "Khusus admin/owner."));
       return { handled: true };
     }
     delFund(db, gid);
-    await m.reply(novaWrap("Crowdfund", "Crowdfund dihapus."));
+    await m.reply(raraWrap("Crowdfund", "Crowdfund dihapus."));
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Crowdfund", "Ketik " + prefix + "crowdfund info."));
+  await m.reply(raraWrap("Crowdfund", "Ketik " + prefix + "crowdfund info."));
   return { handled: true };
 }
 

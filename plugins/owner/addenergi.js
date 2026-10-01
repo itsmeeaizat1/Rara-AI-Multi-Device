@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'addenergi',
     alias: ["addenergi"],
@@ -75,10 +75,10 @@ async function handler(m, { sock }) {
 
     if (isUnlimited) {
         db.setUser(targetJid, { energi: -1 })
-        await m.reply(novaWrap("Addenergi", `✅ *Energi @${targetJid.split('@')[0]} sekarang unlimited / tidak terbatas*`))
+        await m.reply(raraWrap("Addenergi", `✅ *Energi @${targetJid.split('@')[0]} sekarang unlimited / tidak terbatas*`))
     } else {
         const newEnergi = db.updateEnergi(targetJid, amount)
-        await m.reply(novaWrap("Addenergi", `✅ Energi *@${targetJid.split('@')[0]}* berhasil di tambahkan sebanyak *${formatNumber(amount)}*!\nSekarang dia mempunyai *${formatNumber(newEnergi)}* energi`))
+        await m.reply(raraWrap("Addenergi", `✅ Energi *@${targetJid.split('@')[0]}* berhasil di tambahkan sebanyak *${formatNumber(amount)}*!\nSekarang dia mempunyai *${formatNumber(newEnergi)}* energi`))
     }
 }
 

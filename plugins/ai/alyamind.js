@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // alyamind — AlyaMind AI (khusus dari Alya bot)
 import { alyamind } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "alyamind",
@@ -25,17 +25,17 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("alyamind", `Mau nanya apa ke AlyaMind?\n\nContoh: ${m.prefix}alyamind buatin jadwal belajar\n${m.prefix}alyamind bagaimana cara mengatasi stres?`, "guide"));
+      return m.reply(raraWrap("alyamind", `Mau nanya apa ke AlyaMind?\n\nContoh: ${m.prefix}alyamind buatin jadwal belajar\n${m.prefix}alyamind bagaimana cara mengatasi stres?`, "guide"));
     }
 
     await m.react("🕒");
 
     let result = await alyamind(text);
-    if (!result.status) result = await UnlimitedAI(text, "nova-ai");
+    if (!result.status) result = await UnlimitedAI(text, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("alyamind", "AlyaMind lagi offline 🧠", "error"));
+      return m.reply(raraWrap("alyamind", "AlyaMind lagi offline 🧠", "error"));
     }
 
     await m.react("🐣");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("alyamind error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("alyamind", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("alyamind", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import moment from "moment-timezone";
 import fs from "fs";
 import path from "path";
 import archiver from "archiver";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "backupsc",
   alias: ["backupsc"],
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
     const projectRoot = process.cwd();
     const timestamp = moment().tz("Asia/Jakarta").format("YYYY-MM-DD_HH-mm-ss");
     const botName =
-      config.bot?.name?.replace(/[^a-zA-Z0-9]/g, "") || "NovaBot";
+      config.bot?.name?.replace(/[^a-zA-Z0-9]/g, "") || "RaraBot";
     const zipFileName = `${botName}_backup_${timestamp}.zip`;
     const backupDir = getBackupOutputDir(projectRoot);
     const zipFilePath = path.join(backupDir, zipFileName);
@@ -182,7 +182,7 @@ async function handler(m, { sock }) {
     const stats = fs.statSync(zipFilePath);
     const fileSizeMB = (stats.size / (1024 * 1024)).toFixed(2);
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     await sock.sendMessage(
       m.chat,
@@ -209,7 +209,7 @@ async function handler(m, { sock }) {
       fs.unlinkSync(zipFilePath);
     } catch (e) { console.error('[backupsc.js]:', e.message); }
   } catch (error) {
-    await m.reply(novaWrap("backupsc", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(raraWrap("backupsc", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

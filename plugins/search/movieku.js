@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 import axios from "axios"
 import * as cheerio from "cheerio"
-import te from "../../src/lib/nova-error.js"
+import te from "../../src/lib/rara-error.js"
 
 const pluginConfig = {
     name: "movieku",
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
         const movies = await searchMovies(query)
 
         if (!movies || movies.length === 0) {
-            return m.reply(novaWrap("movieku", `❌ Film dengan kata kunci *${query}* tidak ditemukan, coba gunakan judul yang lebih spesifik ya`))
+            return m.reply(raraWrap("movieku", `❌ Film dengan kata kunci *${query}* tidak ditemukan, coba gunakan judul yang lebih spesifik ya`))
         }
 
         const movie = movies[0]
@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
                 caption: txt
             }, { quoted: m })
         } else {
-            await m.reply(novaWrap("movieku", txt))
+            await m.reply(raraWrap("movieku", txt))
         }
 
         if (movies.length > 1) {
@@ -168,7 +168,7 @@ ${movies[i].post_link}\n\n`
         }
 
     } catch (error) {
-        m.reply(novaWrap("movieku", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("movieku", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

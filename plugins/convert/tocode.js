@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "tocode",
@@ -16,8 +16,8 @@ const pluginConfig = {
 
 async function handler(m, { sock, text }) {
   try {
-    if (!text && !m.quoted) return m.reply(novaWrap("tocode", `Reply something, then enter the file name.\n\nContoh: .${m.command} yaya`, "guide"));
-    if (!m.quoted) return m.reply(novaWrap("tocode", "Reply pesan yang mau dijadikan plugin code.", "guide"));
+    if (!text && !m.quoted) return m.reply(raraWrap("tocode", `Reply something, then enter the file name.\n\nContoh: .${m.command} yaya`, "guide"));
+    if (!m.quoted) return m.reply(raraWrap("tocode", "Reply pesan yang mau dijadikan plugin code.", "guide"));
 
     await m.react("🕒");
 
@@ -54,7 +54,7 @@ export default async function handler(m, { sock, prefix, reply }) {
   } catch (e) {
     console.error("tocode error:", e.message);
     await m.react("❌");
-    m.reply(novaWrap("tocode", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("tocode", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

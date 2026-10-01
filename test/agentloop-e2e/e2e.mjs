@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: .AGENTLOOP — agent loop iteratif dengan self-critique
+// RARA AI WHATSAPP BOT — E2E: .AGENTLOOP — agent loop iteratif dengan self-critique
 // Upgrade #1 "bot masa depan" (owner 24 Sep 2026): plan → kerjakan → kritik diri
 // → koreksi → ulangi, budget putaran, laporan jujur saat budget habis.
 import fs from "node:fs";
@@ -14,7 +14,7 @@ const t = (name, cond, extra = "") => {
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "agentloop-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
 const al = await import(R + "/plugins/ai-agent/agentloop.js");

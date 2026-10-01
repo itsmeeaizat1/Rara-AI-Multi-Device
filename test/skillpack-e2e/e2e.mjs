@@ -2,7 +2,7 @@
 // kbbi (arti kata) | gempa (BMKG+USGS) | hoki (nomor hoki primbon) | lirik (LRCLIB)
 // + integrasi: registry getAgentTools + prompt buildThinkSystemPrompt.
 import fs from "node:fs"
-import { initDatabase } from "../../src/lib/nova-database.js"
+import { initDatabase } from "../../src/lib/rara-database.js"
 import { getAgentTools, buildThinkSystemPrompt } from "../../src/lib/aiagent.js"
 import { hitungHoki } from "../../src/source/hoki.js"
 import { _setKbbiHttp } from "../../src/source/kbbi.js"
@@ -25,7 +25,7 @@ w("\n— integrasi registry & prompt —")
 const REG = await getAgentTools()
 t("1a. 4 pack ke-load otomatis ke registry", !!REG.kbbi && !!REG.gempa && !!REG.hoki && !!REG.lirik, Object.keys(REG).filter((k) => ["kbbi","gempa","hoki","lirik"].includes(k)).join(","));
 t("1b. built-in skill lama tetep ada (calc/translate)", !!REG.calc && !!REG.translate);
-const prompt = buildThinkSystemPrompt({ botname: "Nova AI" })
+const prompt = buildThinkSystemPrompt({ botname: "Rara AI" })
 t("1c. prompt ke-list pack baru (kbbi/gempa/hoki/lirik)", prompt.includes("kbbi") && prompt.includes("gempa") && prompt.includes("hoki") && prompt.includes("lirik"));
 t("1d. desc kbbi & hoki ke-list di prompt", prompt.includes("CARI ARTI kata") && prompt.includes("RAMAL NOMOR HOKI"));
 

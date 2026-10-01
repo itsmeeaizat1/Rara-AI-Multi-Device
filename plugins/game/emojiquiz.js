@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .emojiquiz — tebak film/lagu/benda dari emoji (port altftool.com "Emoji Quiz")
 // Sesi per CHAT (siapa pun boleh jawab — mode grup seru). Nyawa 3, 10 soal per ronde.
 // ANIMASI KHAS: kaca pembesar 🔍 mendekati emoji.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { editFramesAnim } from "../../src/lib/rara-anim-runner.js";
 
 const pluginConfig = {
   name: "emojiquiz", alias: ["tebakemoji", "emojitebak"], category: "game",
@@ -71,7 +71,7 @@ const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9\s]/g, "").re
 
 function soalCard(s, m) {
   const q = BANK[s.order[s.idx]];
-  return novaWrap("Emoji Quiz", [`SOAL ${s.idx + 1}/${s.order.length} · SKOR: ${s.score} · NYAWA: ${"❤️".repeat(s.lives)}${"🖤".repeat(LIVES - s.lives)}`,
+  return raraWrap("Emoji Quiz", [`SOAL ${s.idx + 1}/${s.order.length} · SKOR: ${s.score} · NYAWA: ${"❤️".repeat(s.lives)}${"🖤".repeat(LIVES - s.lives)}`,
     "",
     "```" + q.e + "```",
     "",
@@ -95,10 +95,10 @@ async function handler(m, { sock, config }) {
     if (sub === "stop") {
       clearTimeout(sessions.get(chat).timer);
       sessions.delete(chat);
-      return m.reply(novaWrap("Emoji Quiz", ["Kuis diakhiri."].join("\n")));
+      return m.reply(raraWrap("Emoji Quiz", ["Kuis diakhiri."].join("\n")));
     }
     if (sub === "skip") return skipSoal(m, sock);
-    return m.reply(novaWrap("Emoji Quiz", ["KUIS SEDANG BERLANGSUNG — BALAS SOALNYA",
+    return m.reply(raraWrap("Emoji Quiz", ["KUIS SEDANG BERLANGSUNG — BALAS SOALNYA",
       "",
       "Ketik jawabanmu langsung · .emojiquiz skip buat lompat · .emojiquiz stop buat keluar"].join("\n")));
   }
@@ -124,7 +124,7 @@ async function skipSoal(m, sock) {
   clearTimeout(s.timer);
   if (s.lives <= 0) {
     sessions.delete(m.chat);
-    await m.reply(novaWrap("Emoji Quiz", ["💔 NYAWA HABIS — GAME OVER",
+    await m.reply(raraWrap("Emoji Quiz", ["💔 NYAWA HABIS — GAME OVER",
       "",
       `Jawaban terakhir: ${q.a}`,
       `Skor akhir: ${s.score}/${s.order.length}`,
@@ -135,7 +135,7 @@ async function skipSoal(m, sock) {
   s.idx++;
   if (s.idx >= s.order.length) return hasilAkhir(m, s);
   resetT(s, m.chat);
-  await m.reply(novaWrap("Emoji Quiz", [`⏭️ Skip! Jawabannya: ${q.a}`,
+  await m.reply(raraWrap("Emoji Quiz", [`⏭️ Skip! Jawabannya: ${q.a}`,
     "",
     `Nyawa sisa: ${"❤️".repeat(s.lives)}${"🖤".repeat(LIVES - s.lives)}`,
     "",
@@ -146,7 +146,7 @@ async function skipSoal(m, sock) {
 
 async function hasilAkhir(m, s) {
   sessions.delete(m.chat);
-  await m.reply(novaWrap("Emoji Quiz", ["🏁 RONDE SELESAI!",
+  await m.reply(raraWrap("Emoji Quiz", ["🏁 RONDE SELESAI!",
     "",
     `Skor: ${s.score}/${s.order.length}`,
     s.score === s.order.length ? "SEMPURNA! 🏆" : s.score >= 7 ? "Hebat! 🔥" : "Lumayan! Coba lagi ya 💪",
@@ -169,7 +169,7 @@ export async function answerHandler(m, sock) {
     clearTimeout(s.timer);
     if (s.idx >= s.order.length) return hasilAkhir(m, s);
     resetT(s, m.chat);
-    await m.reply(novaWrap("Emoji Quiz", ["✅ BENAR! Jawabannya: " + q.a,
+    await m.reply(raraWrap("Emoji Quiz", ["✅ BENAR! Jawabannya: " + q.a,
       "",
       `Skor: ${s.score} · Sisa soal: ${s.order.length - s.idx}`,
       "",
@@ -181,7 +181,7 @@ export async function answerHandler(m, sock) {
   clearTimeout(s.timer);
   if (s.lives <= 0) {
     sessions.delete(m.chat);
-    await m.reply(novaWrap("Emoji Quiz", ["💔 SALAH — NYAWA HABIS, GAME OVER",
+    await m.reply(raraWrap("Emoji Quiz", ["💔 SALAH — NYAWA HABIS, GAME OVER",
       "",
       `Jawabannya: ${q.a}`,
       `Skor akhir: ${s.score}/${s.order.length}`,
@@ -190,7 +190,7 @@ export async function answerHandler(m, sock) {
     return true;
   }
   resetT(s, m.chat);
-  await m.reply(novaWrap("Emoji Quiz", ["❌ Belum tepat. Nyawa: " + "❤️".repeat(s.lives) + "🖤".repeat(LIVES - s.lives),
+  await m.reply(raraWrap("Emoji Quiz", ["❌ Belum tepat. Nyawa: " + "❤️".repeat(s.lives) + "🖤".repeat(LIVES - s.lives),
     "",
     "```" + q.e + "```",
     "",

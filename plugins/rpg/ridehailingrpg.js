@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Ojek — Drive people for gold (motorcycle taxi)
 
 import {
   ensureRpg, addExp, addGold, useEnergy,
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
-} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animOjek } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animOjek } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "ojek",
@@ -43,17 +43,17 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("ojekrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("ojekrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastOjek");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("ojekrpg", `Cooldown ojek tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("ojekrpg", `Cooldown ojek tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < OJEK_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("ojekrpg", `Energi kurang! Butuh *${OJEK_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(raraRpgBox("ojekrpg", `Energi kurang! Butuh *${OJEK_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     useEnergy(m, OJEK_ENERGY, sock);
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastOjek", OJEK_COOLDOWN);
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "ojekrpg", icon: "🏍️",
       flavor: "🏍️ *ONGKOS MASUK!*",
       body: [
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("ojekrpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("ojekrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("ojekrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import * as cheerio from "cheerio";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "wikipedia",
@@ -191,13 +191,13 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ") || m.text?.trim();
 
   if (!query) {
-    return m.reply(novaGuide("Wikipedia", "Masukin kata kunci pencarian nih!", ".wikipedia Indonesia"));
+    return m.reply(raraGuide("Wikipedia", "Masukin kata kunci pencarian nih!", ".wikipedia Indonesia"));
   }
   try {
     const search = await searchWikipedia(query);
 
     if (!search.results.length) {
-      return m.reply(novaWrap("wikipedia", `⚠️ Artikel tentang *${query}* tidak ditemukan di Wikipedia.`));
+      return m.reply(raraWrap("wikipedia", `⚠️ Artikel tentang *${query}* tidak ditemukan di Wikipedia.`));
     }
 
     const first = search.results[0];
@@ -228,11 +228,11 @@ async function handler(m, { sock }) {
         caption: text
       }, { quoted: m });
     } else {
-      await m.reply(novaWrap("wikipedia", text));
+      await m.reply(raraWrap("wikipedia", text));
     }
   } catch (error) {
     console.error("[Wikipedia Search]", error.message);
-    m.reply(novaError("Wikipedia", "Ada error nih, coba lagi ya"));
+    m.reply(raraError("Wikipedia", "Ada error nih, coba lagi ya"));
   }
 }
 

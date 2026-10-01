@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // goodbye.js — pesan perpisahan member keluar (single design, engine text)
-import { novaError, novaGuide, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { detectCountry, fillWelcomeTemplate } from "../../src/lib/nova-welcome-card.js";
+import { raraError, raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { detectCountry, fillWelcomeTemplate } from "../../src/lib/rara-welcome-card.js";
 import config from "../../config.js";
 
 async function handler(m, { sock, config: botConfig }) {
@@ -12,14 +12,14 @@ async function handler(m, { sock, config: botConfig }) {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {
-      await m.reply(novaGuide('Goodbye', `Pesan perpisahan saat member keluar grup. Custom pesannya? Ketik ${prefix}setgoodbye <pesan>.`, `${prefix}goodbye on`));
+      await m.reply(raraGuide('Goodbye', `Pesan perpisahan saat member keluar grup. Custom pesannya? Ketik ${prefix}setgoodbye <pesan>.`, `${prefix}goodbye on`));
       return { handled: true };
     }
 
     const db = getDatabase();
     db.setGroup(m.chat, { goodbye: args === "on" });
 
-    await m.reply(novaWrap("goodbye", [
+    await m.reply(raraWrap("goodbye", [
       `Fitur : goodbye message`,
       `Status : ${args === "on" ? "ON" : "OFF"}`,
       `Grup : ${m.chat}`,
@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
       `💡 Custom pesan? Ketik ${prefix}setgoodbye <pesan>`,
     ].join("\n")));
   } catch (error) {
-    await m.reply(novaError("Goodbye", `Gagal: ${error.message}`));
+    await m.reply(raraError("Goodbye", `Gagal: ${error.message}`));
   }
 
   return { handled: true };
@@ -73,7 +73,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
       memberCount,
       desc: metadata?.desc || "",
       ownerName,
-      botName: config.bot?.name || "Nova AI",
+      botName: config.bot?.name || "Rara AI",
       prefix,
     });
     if (customText.length > 200) customText = customText.slice(0, 197) + "...";
@@ -98,7 +98,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   if (customText) {
     rows.push("│", `│ • 💌 ${customText}`);
   }
-const engineText = novaGameBox({
+const engineText = raraGameBox({
     title: "goodbye", icon: "🚪",
     flavor: `🚪 *${sapaanOut}*`,
     body: rows.join("\n"),
@@ -118,18 +118,18 @@ const engineText = novaGameBox({
     }
   } catch {}
 
-  // Pesan apresiasi: AI (rantai nova, maks 20 dtk) → fallback template random
+  // Pesan apresiasi: AI (rantai rara, maks 20 dtk) → fallback template random
   let apresiasi = null;
   try {
-    const { apresiasiOrTemplate } = await import("../../src/lib/nova-welcome-canvas.js");
+    const { apresiasiOrTemplate } = await import("../../src/lib/rara-welcome-canvas.js");
     apresiasi = await apresiasiOrTemplate(displayName, groupName);
   } catch (e) {
     console.error("goodbye apresiasi error:", e);
   }
 
   try {
-    const { generateGoodbyeCard } = await import("../../src/lib/nova-welcome-canvas.js");
-    const { levelPreviewThumb } = await import("../../src/lib/nova-level.js");
+    const { generateGoodbyeCard } = await import("../../src/lib/rara-welcome-canvas.js");
+    const { levelPreviewThumb } = await import("../../src/lib/rara-level.js");
     const card = await generateGoodbyeCard({
       groupName, ppBuffer, name: displayName, apresiasi: apresiasi || "Sampai jumpa lagi suatu hari nanti.",
     });

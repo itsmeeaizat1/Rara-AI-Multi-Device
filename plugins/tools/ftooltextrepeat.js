@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooltextrepeat — ulang teks berkalang-kali (port altftool.com/tools/all/text-repeater)
 // Cap 20x + 3000 karakter biar gak jadi senjata spam.
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltextrepeat", alias: ["textrepeat", "repeattext", "ulangteks"], category: "tools",
@@ -19,7 +19,7 @@ async function handler(m, { sock, config: botConfig }) {
     const raw = (m.text || "").trim();
     const pipe = raw.indexOf("|");
     if (!raw || pipe < 1) {
-      return m.reply(novaGuideV2("ftooltextrepeat", {
+      return m.reply(raraGuideV2("ftooltextrepeat", {
         kaomoji: "(๑˃ᴗ˂)ﻭ",
         sapaan: "teks mau diulang berkali-kali? tinggal kasih jumlahnya~",
         cara: "ketik jumlah lalu tanda | lalu teksnya",
@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = raw.slice(pipe + 1).trim();
     if (!Number.isFinite(n) || n < 1 || !text) {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftooltextrepeat", {
+      return m.reply(raraSalahV2("ftooltextrepeat", {
         kaomoji: "(・_・;)",
         pesan: "jumlahnya harus angka lebih dari 0 dan teksnya gak boleh kosong",
         contoh: `${prefix}ftooltextrepeat 5|halo dunia`,
@@ -48,10 +48,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (n > MAX_REPEAT) lines.push("", `⚠️ jumlah ${n} dibatasi jadi ${MAX_REPEAT}x`);
     if (cut) lines.push(`⚠️ hasil dipotong di ${MAX_CHARS} karakter`);
     await m.react("🐣");
-    await m.reply(novaWrap("Text Repeat", lines.join("\n")));
+    await m.reply(raraWrap("Text Repeat", lines.join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("Text Repeat", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("Text Repeat", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

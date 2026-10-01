@@ -1,4 +1,4 @@
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!isVideo) {
       const text =
-        novaWrap("Video to GIF", ["Reply video lalu ketik .vid2gif",
+        raraWrap("Video to GIF", ["Reply video lalu ketik .vid2gif",
           "Convert video ke GIF dengan FFmpeg",
           "",
           "*opsi:*",
@@ -94,7 +94,7 @@ async function handler(m, { sock, config: botConfig }) {
       mediaBuffer = await m.quoted.download();
     } else {
       const text =
-        novaWrap("Video to GIF", ["Status: *gagal download video*",
+        raraWrap("Video to GIF", ["Status: *gagal download video*",
           "Coba reply video yang valid"].join("\n")) + "\n" +
         tipText("Reply video lalu ketik .vid2gif");
 
@@ -104,7 +104,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       const text =
-        novaWrap("Video to GIF", ["Status: *buffer video tidak valid*"].join("\n")) + "\n" +
+        raraWrap("Video to GIF", ["Status: *buffer video tidak valid*"].join("\n")) + "\n" +
         tipText("Coba video lain");
 
       await m.reply( text, "vid2gif");
@@ -114,7 +114,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (mediaBuffer.length > MAX_VIDEO_SIZE) {
       const sizeMB = (mediaBuffer.length / 1024 / 1024).toFixed(1);
       const text =
-        novaWrap("Video to GIF", [`Ukuran: *${sizeMB} MB*`,
+        raraWrap("Video to GIF", [`Ukuran: *${sizeMB} MB*`,
           `Maksimal: *20 MB*`,
           "Compress video dulu atau gunakan video lebih kecil"].join("\n")) + "\n" +
         tipText("Gunakan video di bawah 20MB");
@@ -146,8 +146,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Save video to temp
     const tmpdir = os.tmpdir();
-    const inputPath = path.join(tmpdir, "nova_vid2gif_" + Date.now() + ".mp4");
-    const outputPath = path.join(tmpdir, "nova_vid2gif_" + Date.now() + ".gif");
+    const inputPath = path.join(tmpdir, "rara_vid2gif_" + Date.now() + ".mp4");
+    const outputPath = path.join(tmpdir, "rara_vid2gif_" + Date.now() + ".gif");
 
     fs.writeFileSync(inputPath, mediaBuffer);
 
@@ -190,7 +190,7 @@ async function handler(m, { sock, config: botConfig }) {
         fileName: "converted_" + Date.now() + ".gif",
         mimetype: "image/gif",
         caption:
-          novaWrap("Video to GIF", [`Status: *berhasil*`,
+          raraWrap("Video to GIF", [`Status: *berhasil*`,
             `Mode: *Dokumen (file besar)*`,
             `Durasi: *${durLabel}*`,
             `Resolusi: *${resolution}p*`,
@@ -204,7 +204,7 @@ async function handler(m, { sock, config: botConfig }) {
       await sock.sendMessage(m.chat, {
         video: gifBuffer,
         caption:
-          novaWrap("Video to GIF", [`Status: *berhasil*`,
+          raraWrap("Video to GIF", [`Status: *berhasil*`,
             `Durasi: *${durLabel}*`,
             `Resolusi: *${resolution}p*`,
             `FPS: *${fps}*`,
@@ -218,7 +218,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("❌");
     console.error("[Vid2GIF Error]", error);
     const text =
-      novaError("Tools", "Gagal nih, coba lagi ya");
+      raraError("Tools", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "vid2gif");
     return { handled: true };

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .simulate — simulasi event grup (port engine lama simulate.js, adaptasi via ev.emit)
-import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "simulate",
@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     const event = (parts[0] || "").toLowerCase();
     if (!event) {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "simulate",
         "Simulasi event grup buat ngetes respons bot (welcome/bye/promote/demote) tanpa ada orang beneran keluar/masuk.",
         prefix + "simulate welcome @user",
@@ -39,12 +39,12 @@ async function handler(m, { sock, config: botConfig }) {
     const action = map[event];
     if (!action) {
       await m.react("❌");
-      await m.reply(novaError("Simulate", 'Event "' + event + '" gak dikenal — pilih add/bye/promote/demote'));
+      await m.reply(raraError("Simulate", 'Event "' + event + '" gak dikenal — pilih add/bye/promote/demote'));
       return { handled: true };
     }
     const mentioned = (raw.match(/@\d+/g) || []).map((x) => x.slice(1) + "@s.whatsapp.net");
     const participants = mentioned.length ? mentioned : [m.sender];
-    await m.reply(novaWrap("Simulate", "Simulasi *" + action + "* berjalan..."));
+    await m.reply(raraWrap("Simulate", "Simulasi *" + action + "* berjalan..."));
     sock.ev?.emit("group-participants.update", {
       id: m.chat,
       participants,
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[simulate]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("Simulate", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("Simulate", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }

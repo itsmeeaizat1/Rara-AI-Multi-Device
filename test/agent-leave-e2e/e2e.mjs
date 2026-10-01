@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT — E2E: AGENT LEAVE GROUP BY NAME
-// Request owner 21 Sep 2026: ".novaagent/.aisuperagent disuruh dari DM:
+// RARA AI WHATSAPP BOT — E2E: AGENT LEAVE GROUP BY NAME
+// Request owner 21 Sep 2026: ".raraagent/.aisuperagent disuruh dari DM:
 // keluar dari grup cari teman sejati" — agent harus nemuin grup dari NAMA.
 import fs from "node:fs";
 import os from "node:os";
@@ -13,11 +13,11 @@ const t = (name, cond, extra = "") => {
 };
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "agent-leave-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const registry = await import(R + "/src/lib/nova-group-registry.js");
-const novaAgent = await import(R + "/src/lib/nova-agent.js");
+const registry = await import(R + "/src/lib/rara-group-registry.js");
+const raraAgent = await import(R + "/src/lib/rara-agent.js");
 const agentPlugin = await import(R + "/plugins/ai-agent/agent.js");
 const aiagentLib = await import(R + "/src/lib/aiagent.js");
 const cfg = { command: { prefix: "." } };
@@ -61,7 +61,7 @@ console.log("— section 1: resolveGroupByName (lib) —");
 
 console.log("— section 2: detectActLocal — leave vs kick (.aisuperagent planner lokal) —");
 {
-  const detectAct = (s) => novaAgent.detectActLocal(s);
+  const detectAct = (s) => raraAgent.detectActLocal(s);
   const a1 = detectAct("keluar dari grup cari teman sejati");
   t("2a. 'keluar dari grup X' → act leave + nama grup", a1?.[0]?.action === "leave" && a1[0].target === "cari teman sejati", a1);
   const a2 = detectAct("keluarin bot dari grup gaul chatting");
@@ -114,7 +114,7 @@ console.log("— section 3: execAction leave (.aisuperagent) —");
   t("3h. dari dalam grup tanpa nama → keluar grup itu", r6?.ok === true && leftOf[0] === GRP_OTHER, { r6, leftOf });
 }
 
-console.log("— section 4: leavegc by name (.novaagent) —");
+console.log("— section 4: leavegc by name (.raraagent) —");
 {
   const TOOLS = aiagentLib.TOOLS;
   t("4a. leavegc tetap owner-only", TOOLS.leavegc?.perm === "owner", TOOLS.leavegc?.perm);
@@ -132,7 +132,7 @@ console.log("— section 4: leavegc by name (.novaagent) —");
   t("4f. grup ngaco gak pernah dikeloncingin", leftOf.length === 0, leftOf);
 }
 
-console.log("— section 5: localParse .novaagent —");
+console.log("— section 5: localParse .raraagent —");
 {
   const lp = (s) => aiagentLib.localParse ? aiagentLib.localParse(s) : null;
   const p1 = lp("keluar dari grup cari teman sejati");

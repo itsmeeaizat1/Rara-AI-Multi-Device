@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Tes Buta Warna (Ishihara)
  * Fitur: .butawarna — 5 ronde plate Ishihara DIGENERASI canvas (tiap tes
@@ -8,7 +8,7 @@
  */
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "butawarna",
@@ -111,7 +111,7 @@ async function sendPlate(m, sock, sess, prefix) {
     // angka kebalik (rng jelek) — regenerate
     return sendPlate(m, sock, sess, prefix);
   }
-  const caption = novaWrap("Buta Warna", [
+  const caption = raraWrap("Buta Warna", [
     `🎨 *PLATE ${sess.round}/${ROUNDS}*`,
     "",
     "Angka berapa yang kamu lihat?",
@@ -128,7 +128,7 @@ async function handler(m, { sock, config: botConfig }) {
   // ── mulai ──
   if (arg === "mulai" || arg === "start") {
     if (sessions.has(key)) {
-      return m.reply(novaWrap("Buta Warna", `Tes kamu lagi jalan — plate ${sessions.get(key).round}/${ROUNDS}. Ketik ${prefix}butawarna <jawaban>`));
+      return m.reply(raraWrap("Buta Warna", `Tes kamu lagi jalan — plate ${sessions.get(key).round}/${ROUNDS}. Ketik ${prefix}butawarna <jawaban>`));
     }
     const sess = { round: 1, answers: [], current: 10 + Math.floor(Math.random() * 90), startedAt: Date.now(), lastPlateAt: Date.now() };
     sessions.set(key, sess);
@@ -139,17 +139,17 @@ async function handler(m, { sock, config: botConfig }) {
 
   // ── stop ──
   if (arg === "stop" || arg === "batal" || arg === "stop" || arg === "selesai") {
-    if (!sessions.has(key)) return m.reply(novaWrap("Buta Warna", "Gak ada tes yang jalan."));
+    if (!sessions.has(key)) return m.reply(raraWrap("Buta Warna", "Gak ada tes yang jalan."));
     sessions.delete(key);
     await m.react("🐣");
-    return m.reply(novaWrap("Buta Warna", "🛑 Tes dibatalin. Ketik .butawarna mulai kapan aja buat coba lagi."));
+    return m.reply(raraWrap("Buta Warna", "🛑 Tes dibatalin. Ketik .butawarna mulai kapan aja buat coba lagi."));
   }
 
   const sess = sessions.get(key);
 
   // tanpa sesi → panduan
   if (!sess) {
-    return m.reply(novaWrap("Buta Warna", [
+    return m.reply(raraWrap("Buta Warna", [
       "🎨 *Tes Buta Warna (Ishihara)*",
       "",
       `Ketik ${prefix}butawarna mulai — nanti aku kirim 5 plate titik-titik warna.`,
@@ -163,12 +163,12 @@ async function handler(m, { sock, config: botConfig }) {
   // ── jawaban ──
   const guess = parseInt(String(m.args?.[0] || "").replace(/\D/g, ""), 10);
   if (!Number.isFinite(guess)) {
-    return m.reply(novaWrap("Buta Warna", `Ketik angkanya ya: ${prefix}butawarna <angka>\nPlate ${sess.round}/${ROUNDS} masih nunggu.`));
+    return m.reply(raraWrap("Buta Warna", `Ketik angkanya ya: ${prefix}butawarna <angka>\nPlate ${sess.round}/${ROUNDS} masih nunggu.`));
   }
   // timeout 60 dtk sejak plate terakhir
   if (Date.now() - sess.lastPlateAt > ROUND_TIMEOUT_MS) {
     sessions.delete(key);
-    return m.reply(novaWrap("Buta Warna", "⏰ Waktu 60 detik habis — tes dibatalin. Ketik .butawarna mulai buat ulang."));
+    return m.reply(raraWrap("Buta Warna", "⏰ Waktu 60 detik habis — tes dibatalin. Ketik .butawarna mulai buat ulang."));
   }
 
   const ok = guess === sess.current;
@@ -179,7 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
     sessions.delete(key);
     await m.react(skor === ROUNDS ? "🎉" : "🐣");
     const detail = sess.answers.map((a, i) => `${i + 1}. Angka ${a.num} → kamu jawab ${a.guess} ${a.ok ? "✅" : "❌"}`).join("\n");
-    return m.reply(novaWrap("Buta Warna", [
+    return m.reply(raraWrap("Buta Warna", [
       `📊 *HASIL TES BUTA WARNA*`,
       "",
       `🎯 Skor: *${skor}/${ROUNDS}*`,

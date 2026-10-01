@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // quotesislamic.js — Quotes Islami
-import te from "../../src/lib/nova-error.js";
-import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";
 
 const QUOTES = [
   { arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", arti: "Sesungguhnya bersama kesulitan ada kemudahan (QS. Al-Insyirah: 6)" },
@@ -34,13 +34,13 @@ async function handler(m, { sock }) {
     let _lines = [];
       _lines.push(`${q.arabic}`);
       _lines.push(`"${q.arti}"`);
-    let msg = novaBox("QUOTES ISLAMI", _lines);
+    let msg = raraBox("QUOTES ISLAMI", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
     console.error("quotesislami error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("quotesislami", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("quotesislami", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

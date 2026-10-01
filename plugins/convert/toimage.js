@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Toimage — convert sticker (webp) → gambar, auto REMINI + UPSCALE biar jernih.
 // Request owner 9 Sep 2026: "pas di convert jd gambar, gambar di remini + upscale
 // dlu biar hasilnya pas jadi gambar ga burik plus jernih" + arahan:
@@ -8,7 +8,7 @@
 //   ENGINE 1 (default) : REMINI bawaan bot — Swin2SR realworld 4x (Real-ESRGAN
 //                        family, ala Remini) via @huggingface/transformers,
 //                        100% lokal setelah model ke-cache, TANPA WATERMARK,
-//                        jalan di worker pool (nova-hd-pool) biar bot tetap responsif.
+//                        jalan di worker pool (rara-hd-pool) biar bot tetap responsif.
 //                        .toimage → langsung remini AI. Sticker 512px → hasil ±1536px.
 //   ENGINE 2 (fallback): HD LOKAL sharp — upscale 2x lanczos3 + unsharp mask
 //                        (instan, gak butuh model). Dipakai otomatis kalau AI
@@ -18,9 +18,9 @@
 import fs from "fs";
 import path from "path";
 import os from "os";
-import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { novaWrap, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { enhanceLocalAsync, isModelCached } from "../../src/lib/nova-hd-pool.js";
+import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
+import { raraWrap, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { enhanceLocalAsync, isModelCached } from "../../src/lib/rara-hd-pool.js";
 
 const pluginConfig = {
   name: "toimage",
@@ -79,10 +79,10 @@ async function handler(m, { sock }) {
   const tmpFiles = [];
   try {
     const quoted = m.quoted;
-    if (!quoted) return m.reply(novaWrap("toimage", "Reply sticker-nya dulu, terus ketik .toimage", "guide"));
+    if (!quoted) return m.reply(raraWrap("toimage", "Reply sticker-nya dulu, terus ketik .toimage", "guide"));
 
     const isSticker = quoted.isSticker || quoted.type === "stickerMessage" || quoted.mtype === "stickerMessage";
-    if (!isSticker) return m.reply(novaWrap("toimage", "Yang di-reply harus sticker! 💡 Reply sticker → .toimage", "guide"));
+    if (!isSticker) return m.reply(raraWrap("toimage", "Yang di-reply harus sticker! 💡 Reply sticker → .toimage", "guide"));
 
     // mode: cepat/hd = lokal sharp aja (instan), default = remini AI
     const mode = (m.args?.[0] || "").toLowerCase();
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     if (!fastMode && !isModelCached("real")) {
       // model AI belum ke-download di mesin ini → kasih notice sekali (unduh ±59MB, setelah itu permanen offline)
       try {
-        await m.reply(novaWrap("toimage", [
+        await m.reply(raraWrap("toimage", [
           "🕒 Remini AI: unduh model pertama kali (±59MB)...",
           "",
           "Setelah ini model ke-cache permanen — pemakaian berikutnya jauh lebih cepat.",
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
     const mediaBuffer = await quoted.download();
     if (!mediaBuffer || !mediaBuffer.length) {
       await m.react("❌");
-      return m.reply(novaWrap("toimage", "Gagal mengunduh sticker — coba reply ulang sticker-nya.", "error"));
+      return m.reply(raraWrap("toimage", "Gagal mengunduh sticker — coba reply ulang sticker-nya.", "error"));
     }
 
     // decode webp via sharp dulu (frame pertama kalau animasi) — AI & HD dua-duanya
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
       decoded = await sharp(mediaBuffer, { failOn: "none" }).png().toBuffer();
     } catch (e) {
       // fallback ffmpeg (safety terakhir buat format aneh)
-      const tmpDir = path.join(os.tmpdir(), "nova-toimg");
+      const tmpDir = path.join(os.tmpdir(), "rara-toimg");
       if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
       const inputPath = path.join(tmpDir, `sticker_${Date.now()}.webp`);
       const outputPath = path.join(tmpDir, `image_${Date.now()}.png`);
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
     }
     if (!decoded || !decoded.length) {
       await m.react("❌");
-      return m.reply(novaWrap("toimage", "Sticker ini gak bisa di-convert ke gambar (kemungkinan sticker lottie). Coba sticker lain!", "error"));
+      return m.reply(raraWrap("toimage", "Sticker ini gak bisa di-convert ke gambar (kemungkinan sticker lottie). Coba sticker lain!", "error"));
     }
 
     // ── pipeline hasil ──
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[toimage] error:", e.message);
     await m.react("❌");
-    m.reply(novaGangguan("toimage"));
+    m.reply(raraGangguan("toimage"));
   } finally {
     for (const f of tmpFiles) {
       try { fs.unlinkSync(f); } catch {}

@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nanobananav2 — Edit gambar dengan prompt via Gemini Flash (IkyyXD)
 // Original /edit/nanobananav2 down (lexcode.biz.id ENOTFOUND), redirected to /edit/gemini-flash
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "nanobananav2",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim() || m.args?.join(" ").trim() || "";
 
     if (!text) {
-      return m.reply(novaWrap("NanoBanana V2", [
+      return m.reply(raraWrap("NanoBanana V2", [
         "Edit gambar dengan prompt via Nano Banana v2",
         "",
         "CARA PAKAI:",
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(novaWrap("NanoBanana V2", "Reply/kirim foto dengan prompt .nanobananav2 untuk mengedit gambar."));
+      return m.reply(raraWrap("NanoBanana V2", "Reply/kirim foto dengan prompt .nanobananav2 untuk mengedit gambar."));
     }
 
     await m.react("🕒");
@@ -64,16 +64,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: novaWrap("NanoBanana V2", `Prompt: ${text}`),
+        caption: raraWrap("NanoBanana V2", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaWrap("NanoBanana V2", data?.error || data?.message || "Gagal memproses. Coba lagi nanti."));
+      await m.reply(raraWrap("NanoBanana V2", data?.error || data?.message || "Gagal memproses. Coba lagi nanti."));
     }
   } catch (e) {
     console.error("[nanobananav2.js]:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("NanoBanana V2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("NanoBanana V2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

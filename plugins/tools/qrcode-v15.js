@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "qrcode",
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        novaCaption({
+        raraCaption({
   emoji: "🛠️",
   name: "qrcode",
   description: "Buat QR code dari teks/link",
@@ -52,7 +52,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const out =
-      novaWrap("QR Code", [`Text: *${text}*`,
+      raraWrap("QR Code", [`Text: *${text}*`,
         "Format: *png*",
         "Status: *berhasil*"].join("\n")) +
       "\n" +
@@ -66,9 +66,9 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Tools", "Gagal nih, coba lagi ya");
+      raraError("Tools", "Gagal nih, coba lagi ya");
 
-    await m.reply(novaWrap("qrcode", text));
+    await m.reply(raraWrap("qrcode", text));
   }
 
   return { handled: true };

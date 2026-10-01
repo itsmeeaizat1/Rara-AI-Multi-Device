@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { novaWarning } from "../../src/lib/nova-group-protection.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { raraWarning } from "../../src/lib/rara-group-protection.js";
 
 const pluginConfig = {
     name: 'antiribut',
@@ -197,7 +197,7 @@ async function handleAntiRibut(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: novaWarning("ANTI KERIBUTAN — TINDAKAN", [
+                        text: raraWarning("ANTI KERIBUTAN — TINDAKAN", [
     ["Pengirim", `@${senderTag}`],
     ["Pelanggaran", "Keributan terdeteksi"],
     ["Terdeteksi", matchesStr],
@@ -208,7 +208,7 @@ async function handleAntiRibut(m, sock, db) {
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: novaWarning("ANTI KERIBUTAN — INFO", [
+                        text: raraWarning("ANTI KERIBUTAN — INFO", [
     ["Pengirim", `@${senderTag}`],
     ["Pelanggaran", "Keributan terdeteksi"],
     ["Peringatan", `${currentWarn} dari ${maxWarn}`],
@@ -219,7 +219,7 @@ async function handleAntiRibut(m, sock, db) {
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: novaWarning("ANTI KERIBUTAN — PERINGATAN MAKSIMAL", [
+                    text: raraWarning("ANTI KERIBUTAN — PERINGATAN MAKSIMAL", [
     ["Pengirim", `@${senderTag}`],
     ["Pelanggaran", "Keributan terdeteksi"],
     ["Terdeteksi", matchesStr],
@@ -231,7 +231,7 @@ async function handleAntiRibut(m, sock, db) {
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: novaWarning("ANTI KERIBUTAN — PERINGATAN", [
+                text: raraWarning("ANTI KERIBUTAN — PERINGATAN", [
     ["Pengirim", `@${senderTag}`],
     ["Pelanggaran", "Keributan terdeteksi"],
     ["Terdeteksi", matchesStr],
@@ -281,38 +281,38 @@ async function handler(m, { sock }) {
         txt += '│ `' + m.prefix + 'antiribut reset @user`\n'
         txt += '│ `' + m.prefix + 'antiribut resetall`\n'
         txt += ''
-        return await m.reply(novaWrap("antiribut", txt))
+        return await m.reply(raraWrap("antiribut", txt))
     }
 
     if (sub === 'on') {
         db.setGroup(m.chat, { antiribut: 'on' })
-        return m.reply(novaWrap("Antiribut", `
+        return m.reply(raraWrap("Antiribut", `
 │ Deteksi keributan diaktifkan
 │ Sistem: Warn 3x lalu kick
 `, "info"))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antiribut: 'off' })
-        return m.reply(novaWrap("Antiribut", `
+        return m.reply(raraWrap("Antiribut", `
 │ Deteksi keributan dinonaktifkan
 `, "info"))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
-        if (!count || count < 1 || count > 10) return m.reply(novaWrap("Antiribut", '❌ Masukkan angka 1-10'))
+        if (!count || count < 1 || count > 10) return m.reply(raraWrap("Antiribut", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { ributMaxWarn: count })
-        return m.reply(novaWrap("Antiribut", `Max peringatan: ${count}x`, "info"))
+        return m.reply(raraWrap("Antiribut", `Max peringatan: ${count}x`, "info"))
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
-        if (opt === 'on') { db.setGroup(m.chat, { ributKickMode: 'on' }); m.react('✅'); return m.reply(novaWrap("Antiribut", '✅ Auto-kick anti-ribut ON')) }
-        if (opt === 'off') { db.setGroup(m.chat, { ributKickMode: 'off' }); m.react('✅'); return m.reply(novaWrap("Antiribut", '⚠️ Auto-kick anti-ribut OFF, hanya warn')) }
+        if (opt === 'on') { db.setGroup(m.chat, { ributKickMode: 'on' }); m.react('✅'); return m.reply(raraWrap("Antiribut", '✅ Auto-kick anti-ribut ON')) }
+        if (opt === 'off') { db.setGroup(m.chat, { ributKickMode: 'off' }); m.react('✅'); return m.reply(raraWrap("Antiribut", '⚠️ Auto-kick anti-ribut OFF, hanya warn')) }
         return m.reply('❌ Gunakan: `' + m.prefix + 'antiribut kick on/off`')
     }
     if (sub === 'delete') {
         const opt = args[1]?.toLowerCase()
-        if (opt === 'on') { db.setGroup(m.chat, { ributDeleteMode: 'on' }); m.react('✅'); return m.reply(novaWrap("Antiribut", '✅ Auto-delete anti-ribut ON')) }
-        if (opt === 'off') { db.setGroup(m.chat, { ributDeleteMode: 'off' }); m.react('✅'); return m.reply(novaWrap("Antiribut", '⚠️ Auto-delete anti-ribut OFF')) }
+        if (opt === 'on') { db.setGroup(m.chat, { ributDeleteMode: 'on' }); m.react('✅'); return m.reply(raraWrap("Antiribut", '✅ Auto-delete anti-ribut ON')) }
+        if (opt === 'off') { db.setGroup(m.chat, { ributDeleteMode: 'off' }); m.react('✅'); return m.reply(raraWrap("Antiribut", '⚠️ Auto-delete anti-ribut OFF')) }
         return m.reply('❌ Gunakan: `' + m.prefix + 'antiribut delete on/off`')
     }
     if (sub === 'reset') {
@@ -321,13 +321,13 @@ async function handler(m, { sock }) {
         const updated = groupData
         if (updated.ributWarns?.[target]) delete updated.ributWarns[target]
         db.setGroup(m.chat, updated)
-        return m.reply(novaWrap("Antiribut", `Warn warn ribut @${target.split('@')[0]} direset`, "info"), { mentions: [target] })
+        return m.reply(raraWrap("Antiribut", `Warn warn ribut @${target.split('@')[0]} direset`, "info"), { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.ributWarns = {}
         db.setGroup(m.chat, updated)
-        return m.reply(novaWrap("Antiribut", `Semua warn ribut direset`, "info"))
+        return m.reply(raraWrap("Antiribut", `Semua warn ribut direset`, "info"))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antiribut` untuk daftar command')
 }

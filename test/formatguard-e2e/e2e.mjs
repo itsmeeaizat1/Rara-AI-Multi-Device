@@ -1,4 +1,4 @@
-// NOVA AI — formatGuard e2e: sanitizer format pesan permanen
+// RARA AI — formatGuard e2e: sanitizer format pesan permanen
 // Fix 18 Sep 2026 (owner: pesan ".bot on" broadcast muncul literal "\n"
 // sebagai teks — akar: plugins/bot/bot.js join('\\n') dua-backslash.
 // FIX berlapis: (1) akar dibenerin di bot.js, (2) formatGuard() di
@@ -12,13 +12,13 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
-// handler anti-mati-senyap (nova-lid swallow exception → exit 0)
+// handler anti-mati-senyap (rara-lid swallow exception → exit 0)
 process.on("uncaughtException", (e) => { console.log("UNCAUGHT:", e.stack); process.exit(1); });
 process.on("unhandledRejection", (e) => { console.log("UNHANDLED:", e && e.stack || e); process.exit(1); });
 
-const DB_DIR = "/tmp/nova-fg-db-" + Date.now();
+const DB_DIR = "/tmp/rara-fg-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 let pass = 0, fail = 0;
@@ -26,8 +26,8 @@ const w = (s) => console.log(s);
 const t = (name, ok, extra) => { ok ? pass++ : fail++; w((ok ? "✅ " : "❌ ") + name + (ok ? "" : extra ? " — " + extra : "")); };
 
 const { formatGuard } = await import(R + "/src/lib/styler.js");
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
-const { makeLangAwareSock } = await import(R + "/src/lib/nova-i18n-sock.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
+const { makeLangAwareSock } = await import(R + "/src/lib/rara-i18n-sock.js");
 
 const BS = String.fromCharCode(92);   // "\"
 const NL = String.fromCharCode(10);  // newline

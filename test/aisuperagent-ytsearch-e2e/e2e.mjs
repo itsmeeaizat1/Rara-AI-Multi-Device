@@ -1,21 +1,21 @@
 // E2E AISUPERAGENT YTSEARCH (fix owner 14 Sep 2026: ".aisuperagent juga
-// di-upgrade — agent itu novaagent sama aisuperagent bermasalah ngbug").
+// di-upgrade — agent itu raraagent sama aisuperagent bermasalah ngbug").
 // .aisuperagent (plugins/ai-agent/agent.js) kena akar bug yang sama kaya
-// .novaagent: request "cairkan/carikan X di youtube" gak pernah ke-detect
+// .raraagent: request "cairkan/carikan X di youtube" gak pernah ke-detect
 // → planner AI milih tool salah / jawab halusinasi. FIX: (1) logic cari
-// YouTube dipindah ke LIB BERSAMA src/lib/nova-yt-search.js
+// YouTube dipindah ke LIB BERSAMA src/lib/rara-yt-search.js
 // (browser beneran → thumbnail preview + deskripsi plain text, unduh cuma
 // kalau eksplisit), (2) .aisuperagent dapat DETEKSI LOKAL INSTAN di handler
-// (tanpa lewat planner AI) + (3) tool ytsearch terdaftar di nova-agent.js
+// (tanpa lewat planner AI) + (3) tool ytsearch terdaftar di rara-agent.js
 // TOOL_LIST/SYS_PLAN buat jalur planner. Offline, semua dep di-inject.
 import fs from "node:fs";
-import { initDatabase } from "../../src/lib/nova-database.js";
-import { setAgentDeps, resetAgentDeps } from "../../src/lib/nova-agent.js";
+import { initDatabase } from "../../src/lib/rara-database.js";
+import { setAgentDeps, resetAgentDeps } from "../../src/lib/rara-agent.js";
 import { config as agConfig, handler as agHandler } from "../../plugins/ai-agent/agent.js";
 import {
   detectYtSearchIntent, searchYoutubeAndSend,
   _setYtSearchDepsForTest, _resetYtSearchDepsForTest,
-} from "../../src/lib/nova-yt-search.js";
+} from "../../src/lib/rara-yt-search.js";
 
 const DB = "/tmp/aisuperagent-ytsearch-e2e-db.json";
 fs.rmSync(DB, { recursive: true, force: true });
@@ -172,12 +172,12 @@ t("3i. handler gak crash (error planner tertangani rapi)", !o3.some(x => /is not
 // ═══ 4. REGISTRASI TOOL ytsearch di planner ═══
 w("\n— registrasi tool planner —");
 const { TOOLS_LIST_NAME } = {};
-const na = await import("../../src/lib/nova-agent.js");
+const na = await import("../../src/lib/rara-agent.js");
 const sysPlan = na.SYS_PLAN || "";
-t("4a. ytsearch ada di TOOL_LIST nova-agent.js", na.TOOL_LIST?.includes("ytsearch") || /ytsearch/.test(sysPlan), "cek export");
+t("4a. ytsearch ada di TOOL_LIST rara-agent.js", na.TOOL_LIST?.includes("ytsearch") || /ytsearch/.test(sysPlan), "cek export");
 
-// ═══ 5. tool searchyt .novaagent tetap delegasi lib bersama ═══
-w("\n— .novaagent TOOLS.searchyt (delegasi) —");
+// ═══ 5. tool searchyt .raraagent tetap delegasi lib bersama ═══
+w("\n— .raraagent TOOLS.searchyt (delegasi) —");
 const { TOOLS, _setSearchytDepsForTest, _resetSearchytDepsForTest } = await import("../../src/lib/aiagent.js");
 _resetSearchytDepsForTest();
 _setSearchytDepsForTest({
@@ -188,7 +188,7 @@ _setSearchytDepsForTest({
 const sentN = [];
 const connN = { sendMessage: async (c, msg) => { sentN.push(msg); return { key: {} }; } };
 await TOOLS.searchyt.run(connN, mMock, { query: "bot alya md" });
-t("5a. novaagent delegasi → preview thumbnail jalan", !!sentN[0]?.image && sentN[0].caption.includes("Cara Cairkan Bot Alya MD"), JSON.stringify(sentN.map(x => Object.keys(x))));
+t("5a. raraagent delegasi → preview thumbnail jalan", !!sentN[0]?.image && sentN[0].caption.includes("Cara Cairkan Bot Alya MD"), JSON.stringify(sentN.map(x => Object.keys(x))));
 t("5b. dua agent SEKARANG pakai ENGINE YANG SAMA (lib bersama)", !!sentN[0]?.image);
 
 _resetYtSearchDepsForTest();

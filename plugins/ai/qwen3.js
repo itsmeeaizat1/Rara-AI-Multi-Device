@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Qwen3 replaced with callIkyy (ikyyxd qwen endpoint)
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { aiFallbackChat } from "../../src/lib/rara-ai-fallback.js";
 
 const pluginConfig = {
   name: "qwen3",
@@ -24,7 +24,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(novaGuideV2("qwen3", {
+    return m.reply(raraGuideV2("qwen3", {
  kaomoji: "(๑´ㅂ`๑)",
  sapaan: "tanya apa aja ke Qwen3, model besar dari Alibaba yang jago bahasa apa aja! (◍•ᴗ•◍)",
       cara: "ketik pertanyaannya sesudah command",
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(novaError("Qwen3", te(m.prefix, m.command, m.pushName, e), "error"));
+    m.reply(raraError("Qwen3", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 

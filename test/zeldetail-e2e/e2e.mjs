@@ -1,7 +1,7 @@
 // E2E — zeldetail (7 endpoint zelapi kategori Details) — offline penuh via seam
 import fs from "node:fs";
 fs.rmSync(new URL("./e2e-db.json", import.meta.url), { recursive: true, force: true });
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(new URL("./e2e-db.json", import.meta.url).pathname);
 
 const {
@@ -119,7 +119,7 @@ _setZelDetailHttpForTest(async (u) => {
   lastUrl = u;
   return { status: 200, json: async () => ({
     status: true, source_url: "https://whatsapp.com/channel/0029VaK8z", ok: true,
-    channel: { id: "0029VaK8z", name: "Nova Test Channel", handle: "@novatest", bio: "bio tes", followers: "340 followers", invite_url: "https://whatsapp.com/channel/0029VaK8z" },
+    channel: { id: "0029VaK8z", name: "Rara Test Channel", handle: "@raratest", bio: "bio tes", followers: "340 followers", invite_url: "https://whatsapp.com/channel/0029VaK8z" },
   }) };
 });
 let m = mkM("", "zeldetail", []);
@@ -130,12 +130,12 @@ t("  tanpa argumen → usage 7 pencarian + cara pakai",
 m = mkM("https://whatsapp.com/channel/0029VaK8z", "zeldetail", ["https://whatsapp.com/channel/0029VaK8z"]);
 await plugin.handler(m, { sock: {} });
 t("  hub + link channel → auto-detect whatsapp → kartu nama channel",
-  m.replyed.length === 1 && sc(m.replyed[0]).includes("nova test channel") && lastUrl.includes("/details/whatsapp?"));
+  m.replyed.length === 1 && sc(m.replyed[0]).includes("rara test channel") && lastUrl.includes("/details/whatsapp?"));
 t("  react 🧠 → 🐣", m.reacts[0] === "🧠" && m.reacts.includes("🐣"));
 
 m = mkM("https://whatsapp.com/channel/0029VaK8z", "zchannel", ["https://whatsapp.com/channel/0029VaK8z"]);
 await plugin.handler(m, { sock: {} });
-t("  alias .zchannel → sama kayak hub", m.replyed.length === 1 && sc(m.replyed[0]).includes("nova test channel"));
+t("  alias .zchannel → sama kayak hub", m.replyed.length === 1 && sc(m.replyed[0]).includes("rara test channel"));
 
 m = mkM("h? bio tes", "zchannel", ["h?", "bio", "tes"]);
 await plugin.handler(m, { sock: {} });

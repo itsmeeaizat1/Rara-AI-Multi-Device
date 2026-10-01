@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Mount — Tunggangan, feed mount, bonus spd
 
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
 import { playStableAnim as libPlayStableAnim } from "../../src/lib/libanimationrpg/libmountrpg.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "mount",
@@ -41,14 +41,14 @@ async function handler(m, { sock, text }) {
     // Dulu cabang feed gak pernah jalan → .mount feed balas kosong (stuck di loading).
     const cmd = (m.command || "").toLowerCase();
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("mount", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("mount", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const feedArgs = (text || "").trim().split(/\s+/);
     const action0 = feedArgs[0]?.toLowerCase();
     if (cmd === "mountfeed" || action0 === "feed" || (text || "").trim().toLowerCase() === "feed") {
-      if (!rpg.mount) return m.reply(novaRpgBox("mount", "Kamu belum punya tunggangan. Ketik .mount list.", "guide"));
+      if (!rpg.mount) return m.reply(raraRpgBox("mount", "Kamu belum punya tunggangan. Ketik .mount list.", "guide"));
       const mount = MOUNTS[rpg.mount.id];
-      if (!mount) return m.reply(novaRpgBox("mount", "Tunggangan tidak valid.", "error"));
+      if (!mount) return m.reply(raraRpgBox("mount", "Tunggangan tidak valid.", "error"));
 
       await m.react("🕒");
       await playStableAnim(m, sock, { mode: "feed", mountName: mount.name, emoji: mount.emoji });
@@ -83,11 +83,11 @@ async function handler(m, { sock, text }) {
 
     if (action === "pilih" || action === "beli") {
       const mountId = args[1]?.toLowerCase();
-      if (!mountId || !MOUNTS[mountId]) return m.reply(novaRpgBox("mount", "Tunggangan tidak valid. Ketik .mount list.", "guide"));
-      if (rpg.mount) return m.reply(novaRpgBox("mount", "Kamu sudah punya tunggangan: " + MOUNTS[rpg.mount.id].name, "info"));
+      if (!mountId || !MOUNTS[mountId]) return m.reply(raraRpgBox("mount", "Tunggangan tidak valid. Ketik .mount list.", "guide"));
+      if (rpg.mount) return m.reply(raraRpgBox("mount", "Kamu sudah punya tunggangan: " + MOUNTS[rpg.mount.id].name, "info"));
 
       const mount = MOUNTS[mountId];
-      if ((rpg.gold || 0) < mount.cost) return m.reply(novaRpgBox("mount", "Gold tidak cukup. Butuh " + mount.cost + " gold.", "info"));
+      if ((rpg.gold || 0) < mount.cost) return m.reply(raraRpgBox("mount", "Gold tidak cukup. Butuh " + mount.cost + " gold.", "info"));
 
       await m.react("🕒");
       await playStableAnim(m, sock, { mode: "pilih", mountName: mount.name, emoji: mount.emoji });
@@ -103,7 +103,7 @@ async function handler(m, { sock, text }) {
   } catch (e) {
     console.error("mount error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox(m.command || "mount", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox(m.command || "mount", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

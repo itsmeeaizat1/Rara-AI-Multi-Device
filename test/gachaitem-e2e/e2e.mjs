@@ -1,8 +1,8 @@
 // E2E gachaitem — Gacha Item Berbayar: kuota harian, atomic, refund, pity, EV
 import path from "node:path";
 import fs from "node:fs";
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
-import { ensureRpg, saveRpg, getCash } from "../../src/lib/nova-rpg-service.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
+import { ensureRpg, saveRpg, getCash } from "../../src/lib/rara-rpg-service.js";
 
 process.env.GACHA_ROLL_DELAY_MS = "0"; // e2e tanpa jeda animasi
 process.env.GACHA_CD_MS = "3000";      // cooldown asli 3 dtk — diuji beneran

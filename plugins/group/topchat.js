@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// topchat — Top chat member di grup (data LIVE dari nova-activity-tracker,
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// topchat — Top chat member di grup (data LIVE dari rara-activity-tracker,
 // hook handler.js — 12 Sep 2026 fix: dulu baca chatStats yang recordernya gak ada = selalu kosong)
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getLeaderboard, getWeeklyStats } from "../../src/lib/nova-activity-tracker.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getLeaderboard, getWeeklyStats } from "../../src/lib/rara-activity-tracker.js";
 
 const pluginConfig = {
   name: "topchat",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   const stats = getWeeklyStats(m.chat);
 
   if (!board.length || stats.totalMessages === 0) {
-    return m.reply(novaWrap("Total Chat", [
+    return m.reply(raraWrap("Total Chat", [
       "Belum ada data chat di grup ini.",
       "Data tercatat otomatis setiap member chat — coba lagi nanti.",
     ].join("\n")));

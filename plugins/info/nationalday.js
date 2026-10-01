@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nationalday.js — kontrol NOTIFIER HARI BESAR & TANGGAL MERAH INDONESIA
 // (request owner 16 Sep 2026): jam 08:00 WIB bot kirim pesan SEKALI per hari
 // "Selamat Hari X" + tanggal + badge tanggal merah + pesan inspirasi AI.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   getHariBesar, addCustomDay, removeCustomDay, listCustomDays,
   upcomingHariBesar, setSubscribed, isSubscribed, setAllGroups, getAllGroups,
   getSubs, buildHariBesarText, listLiburMendatang, listHariPentingMendatang,
-} from "../../src/lib/nova-haribesar.js";
+} from "../../src/lib/rara-haribesar.js";
 
 const pluginConfig = {
   name: "haribesar",
@@ -36,7 +36,7 @@ async function handler(m, { sock, args, prefix }) {
   if (sub === "on" || sub === "off") {
     const on = sub === "on";
     const total = setSubscribed(chat, on);
-    return m.reply(novaWrap("hari besar", [
+    return m.reply(raraWrap("hari besar", [
       `Fitur : notif hari besar`,
       `Status : ${on ? "AKTIF" : "NONAKTIF"} di ${m.isGroup ? "grup ini" : "chat ini"}`,
       ``,
@@ -47,12 +47,12 @@ async function handler(m, { sock, args, prefix }) {
 
   // ─── mode semua grup (owner — setting global) ───
   if (sub === "all") {
-    if (!m.isOwner) return m.reply(novaWrap("hari besar", [
+    if (!m.isOwner) return m.reply(raraWrap("hari besar", [
       `Khusus owner — mengubah mode semua grup.`,
     ].join("\n")));
     const on = String(args?.[1] || "").toLowerCase() !== "off";
     setAllGroups(on);
-    return m.reply(novaWrap("hari besar", [
+    return m.reply(raraWrap("hari besar", [
       `Fitur : notif hari besar`,
       `Mode : ${on ? "SEMUA GRUP ON — kirim ke semua grup yang bot masuk" : "kembali ke mode langganan per chat"}`,
       ``,
@@ -63,7 +63,7 @@ async function handler(m, { sock, args, prefix }) {
 
   // ─── tambah hari custom (libur bergerak dsb) ───
   if (sub === "tambah" || sub === "add") {
-    if (!m.isOwner) return m.reply(novaWrap("hari besar", [
+    if (!m.isOwner) return m.reply(raraWrap("hari besar", [
       `Khusus owner — tambah hari custom mengubah kalender global.`,
     ].join("\n")));
     const raw = m.text || "";
@@ -73,7 +73,7 @@ async function handler(m, { sock, args, prefix }) {
     const nama = pipe[1] || "";
     const merah = (pipe[2] || "").toLowerCase().includes("merah");
     if (!dateStr || !nama) {
-      return m.reply(novaWrap("hari besar", [
+      return m.reply(raraWrap("hari besar", [
         `Format : ${pf}haribesar tambah <DD-MM atau DD-MM-YYYY> | <Nama Hari> [| merah]`,
         ``,
         `DD-MM = tahunan (tiap tahun sama)`,
@@ -84,12 +84,12 @@ async function handler(m, { sock, args, prefix }) {
     }
     const r = addCustomDay(dateStr, nama, merah);
     if (!r.ok) {
-      return m.reply(novaWrap("hari besar", [
+      return m.reply(raraWrap("hari besar", [
         `Tanggal "${dateStr}" tidak valid.`,
         `Gunakan DD-MM atau DD-MM-YYYY, contoh: 22-12 atau 20-03-2026`,
       ].join("\n")));
     }
-    return m.reply(novaWrap("hari besar", [
+    return m.reply(raraWrap("hari besar", [
       `Hari custom ditambahkan`,
       `Tanggal : ${r.key} (${r.yearly ? "tahunan" : "sekali di tahun itu"})`,
       `Nama : ${nama}${merah ? " (tanggal merah)" : ""}`,
@@ -101,13 +101,13 @@ async function handler(m, { sock, args, prefix }) {
 
   // ─── hapus hari custom ───
   if (sub === "hapus" || sub === "del" || sub === "delete") {
-    if (!m.isOwner) return m.reply(novaWrap("hari besar", [
+    if (!m.isOwner) return m.reply(raraWrap("hari besar", [
       `Khusus owner — hapus hari custom mengubah kalender global.`,
     ].join("\n")));
     const dateStr = String(args?.[1] || "");
     if (!dateStr) return m.reply(`Format : ${pf}haribesar hapus <DD-MM[-YYYY]>`);
     const r = removeCustomDay(dateStr);
-    return m.reply(novaWrap("hari besar", [
+    return m.reply(raraWrap("hari besar", [
       r.removed > 0 ? `Hari custom "${dateStr}" dihapus (${r.removed})` : `Hari custom "${dateStr}" tidak ditemukan`,
     ].join("\n")));
   }
@@ -116,7 +116,7 @@ async function handler(m, { sock, args, prefix }) {
   if (sub === "penting" || sub === "hari") {
     const items = listHariPentingMendatang(null, 90);
     if (!items.length) {
-      return m.reply(novaWrap("hari besar", [
+      return m.reply(raraWrap("hari besar", [
         `Tidak ada hari penting dalam 90 hari ke depan.`,
       ].join("\n")));
     }
@@ -126,14 +126,14 @@ async function handler(m, { sock, args, prefix }) {
       const label = it.h === 0 ? `⭐ HARI INI` : `🕒 H-${it.h}`;
       lines.push(`${i + 1}. ${it.emoji} ${it.nama}`, `   ${d[2]}-${d[1]}-${d[0]} _(${label})_`);
     });
-    return m.reply(novaWrap("hari besar", lines.join("\n")));
+    return m.reply(raraWrap("hari besar", lines.join("\n")));
   }
 
   // ─── daftar LIBUR NASIONAL 90 hari ke depan + label H-X ───
   if (sub === "libur" || sub === "jadwal") {
     const items = listLiburMendatang(null, 120); // 120 hari — 90 bakal kosong pas gap Sep-Des
     if (!items.length) {
-      return m.reply(novaWrap("hari besar", [
+      return m.reply(raraWrap("hari besar", [
         `Tidak ada hari libur nasional dalam 90 hari ke depan.`,
         `Tambah manual: ${pf}haribesar tambah DD-MM-YYYY | Nama | merah`,
       ].join("\n")));
@@ -144,7 +144,7 @@ async function handler(m, { sock, args, prefix }) {
       const label = it.h === 0 ? `⭐ HARI INI` : `🕒 H-${it.h}`;
       lines.push(`${i + 1}. ${it.emoji} ${it.nama}`, `   ${d[2]}-${d[1]}-${d[0]} _(${label})_`);
     });
-    return m.reply(novaWrap("hari besar", lines.join("\n")));
+    return m.reply(raraWrap("hari besar", lines.join("\n")));
   }
 
   // ─── daftar custom + yang akan datang ───
@@ -161,7 +161,7 @@ async function handler(m, { sock, args, prefix }) {
     for (const u of up.slice(0, 10)) {
       lines.push(`• ${u.ymd} — ${u.nama}${u.merah ? " 🔴 tanggal merah" : ""}`);
     }
-    return m.reply(novaWrap("hari besar", lines.join("\n")));
+    return m.reply(raraWrap("hari besar", lines.join("\n")));
   }
 
   // ─── tes kirim sekarang (hari ini; kalau bukan hari besar, pakai contoh) ───
@@ -197,7 +197,7 @@ async function handler(m, { sock, args, prefix }) {
     `Jadwal libur : ${pf}haribesar libur`,
     `Custom : ${pf}haribesar tambah 20-03-2026 | Idulfitri | merah`,
   ];
-  return m.reply(novaWrap("hari besar", lines.join("\n")));
+  return m.reply(raraWrap("hari besar", lines.join("\n")));
 }
 
 export default { config: pluginConfig, handler };
