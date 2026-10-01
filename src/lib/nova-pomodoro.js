@@ -7,7 +7,7 @@
 // pusat tiap 30 dtk jadi sumber kebenaran pergantian fase, (3) live
 // ticker 🕒 edit-in-place per fase (start/status/otomatis pas ganti fase).
 // ═══════════════════════════════════════════════════════════════════
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { runLiveTicker, formatRemaining } from "./nova-countdown.js";
 import { persistLoad, persistSave } from "./nova-ram-persist.js";
 
@@ -113,14 +113,14 @@ export function buildPhaseCard(s, prefix = ".") {
     "",
     `Ketik *${prefix}pomodoro stop* untuk berhenti`,
   ];
-  return claraWrap("Pomodoro", lines.join("\n"));
+  return novaWrap("Pomodoro", lines.join("\n"));
 }
 
 /** Kartu tick live (edit-in-place tiap detik/menit). */
 export function buildTickCard(s) {
   const remaining = Math.max(0, phaseEndTs(s) - Date.now());
   if (s.phase === "focus") {
-    return claraWrap("Pomodoro — Fokus", [
+    return novaWrap("Pomodoro — Fokus", [
       "🍅 *SESI FOKUS*",
       "",
       `🕒 Sisa: *${formatRemaining(remaining)}*`,
@@ -129,7 +129,7 @@ export function buildTickCard(s) {
       "_tahan fokusnya, hampir sampai_ ✨",
     ].join("\n"));
   }
-  return claraWrap("Pomodoro — Istirahat", [
+  return novaWrap("Pomodoro — Istirahat", [
     "☕ *WAKTU ISTIRAHAT*",
     "",
     `🕒 Sisa: *${formatRemaining(remaining)}*`,
@@ -142,7 +142,7 @@ export function buildTickCard(s) {
 /** Kartu transisi fase (dikirim scheduler pas fase ganti). */
 export function buildTransitionCard(s) {
   if (s.phase === "break") {
-    return claraWrap("Fokus Selesai", [
+    return novaWrap("Fokus Selesai", [
       "✅ *SESI FOKUS SELESAI!*",
       "",
       `🔁 Cycle: ${s.cycles}x`,
@@ -153,7 +153,7 @@ export function buildTransitionCard(s) {
       "_ Santai dulu, bot bakal manggil pas udah waktunya_ ✨",
     ].join("\n"));
   }
-  return claraWrap("Istirahat Selesai", [
+  return novaWrap("Istirahat Selesai", [
     "🔄 *ISTIRAHAT SELESAI!*",
     "",
     `🍅 Mulai *fokus lagi ${formatTime(s.focusMs)}*`,
@@ -236,7 +236,7 @@ export function restorePomodoro(sock) {
       if (missed > 0) {
         sock
           .sendMessage(s.chat, {
-            text: claraWrap("Pomodoro Lanjut", [
+            text: novaWrap("Pomodoro Lanjut", [
               "⚠️ Bot sempat mati/restart",
               "",
               `${missed} pergantian fase kelewat`,

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { persistReminders, armReminder } from "../../src/lib/nova-reminder-engine.js";
 import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
 
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
 
   // === HELP ===
   if (!text || subCmd === "help" || subCmd === "bantuan") {
-    return m.reply( claraWrap("Reminder", [
+    return m.reply( novaWrap("Reminder", [
       "Sistem pengingat pribadi - bot nge-tag kamu pas waktunya tiba",
       "",
       "Perintah tersedia:",
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
     const myReminders = global.novaReminders.filter((r) => r.sender === sender && !r.fired);
 
     if (myReminders.length === 0) {
-      return m.reply(claraWrap("Reminder", "Kamu gak punya reminder aktif!\n\nKetik .remind help untuk buat reminder", "info"));
+      return m.reply(novaWrap("Reminder", "Kamu gak punya reminder aktif!\n\nKetik .remind help untuk buat reminder", "info"));
     }
 
     const lines = myReminders.map((r, i) => {
@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
       return `${i + 1}. ID: ${r.id}\n   Pesan: ${r.message}\n   Berbunyi: ${timeLeft} lagi`;
     });
 
-    return m.reply(claraWrap(`Reminder Aktif (${myReminders.length})`, lines));
+    return m.reply(novaWrap(`Reminder Aktif (${myReminders.length})`, lines));
   }
 
   // === CANCEL ===
@@ -143,25 +143,25 @@ async function handler(m, { sock }) {
       persistReminders(); // simpen ke db — anti hilang pas restart
       const cancelled = myReminders.length;
       if (cancelled === 0) {
-        return m.reply(claraWrap("Reminder", "Gak ada reminder aktif untuk dibatalkan!", "warn"));
+        return m.reply(novaWrap("Reminder", "Gak ada reminder aktif untuk dibatalkan!", "warn"));
       }
-      return m.reply(claraWrap("Reminder", `Berhasil batalkan ${cancelled} reminder!`, "success"));
+      return m.reply(novaWrap("Reminder", `Berhasil batalkan ${cancelled} reminder!`, "success"));
     }
 
     if (!target) {
-      return m.reply(claraWrap("Reminder", "Format: .remind cancel <id> atau .remind cancel all", "error"));
+      return m.reply(novaWrap("Reminder", "Format: .remind cancel <id> atau .remind cancel all", "error"));
     }
 
     const reminder = global.novaReminders.find((r) => r.id === target && r.sender === sender && !r.fired);
     if (!reminder) {
-      return m.reply(claraWrap("Reminder", `Reminder ${target} tidak ditemukan atau sudah berbunyi!`, "error"));
+      return m.reply(novaWrap("Reminder", `Reminder ${target} tidak ditemukan atau sudah berbunyi!`, "error"));
     }
 
     if (reminder.timerId) clearTimeout(reminder.timerId);
     reminder.fired = true;
 
     persistReminders(); // simpen ke db — anti hilang pas restart
-    return m.reply(claraWrap("Reminder", [
+    return m.reply(novaWrap("Reminder", [
       `Reminder ${target} dibatalkan!`,
       `Pesan: ${reminder.message}`,
     ], "success"));
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
   const durationMs = parseDuration(durStr);
 
   if (!durationMs) {
-    return m.reply(claraWrap("Reminder", [
+    return m.reply(novaWrap("Reminder", [
       "Format durasi salah!",
       "",
       "Gunakan: .remind <durasi> <pesan>",
@@ -188,23 +188,23 @@ async function handler(m, { sock }) {
   const message = text.slice(durStr.length).trim();
 
   if (!message) {
-    return m.reply(claraWrap("Reminder", "Pesan reminder gak boleh kosong!\n\n💡 *Contoh:* .remind 30m beli pulsa", "error"));
+    return m.reply(novaWrap("Reminder", "Pesan reminder gak boleh kosong!\n\n💡 *Contoh:* .remind 30m beli pulsa", "error"));
   }
 
   if (message.length > 200) {
-    return m.reply(claraWrap("Reminder", "Pesan terlalu panjang (max 200 karakter)", "error"));
+    return m.reply(novaWrap("Reminder", "Pesan terlalu panjang (max 200 karakter)", "error"));
   }
 
   // Max 10 active reminders per user
   const myActive = global.novaReminders.filter((r) => r.sender === sender && !r.fired);
   if (myActive.length >= 10) {
-    return m.reply(claraWrap("Reminder", "Maksimal 10 reminder aktif per user!\n\nKetik .remind list untuk lihat, .remind cancel <id> untuk hapus", "warn"));
+    return m.reply(novaWrap("Reminder", "Maksimal 10 reminder aktif per user!\n\nKetik .remind list untuk lihat, .remind cancel <id> untuk hapus", "warn"));
   }
 
   // Anti-spam rate limit
   const rateCheck = checkRateLimit(sender);
   if (!rateCheck.allowed) {
-    return m.reply(claraWrap("Reminder", `Terlalu banyak reminder dibuat!\n\nTunggu ${rateCheck.waitSec} detik lagi sebelum buat reminder baru.`, "warn"));
+    return m.reply(novaWrap("Reminder", `Terlalu banyak reminder dibuat!\n\nTunggu ${rateCheck.waitSec} detik lagi sebelum buat reminder baru.`, "warn"));
   }
 
   const id = generateReminderId();
@@ -246,7 +246,7 @@ async function handler(m, { sock }) {
   const fireWib = new Date(Number(fireAt) + 7 * 3600 * 1000);
   const fp = (n) => String(n).padStart(2, "0");
   const fireStr = `${fp(fireWib.getUTCHours())}:${fp(fireWib.getUTCMinutes())} WIB`;
-  const card = (remainingMs, live = true) => claraWrap("Reminder Dibuat", [
+  const card = (remainingMs, live = true) => novaWrap("Reminder Dibuat", [
     `ID: ${id}`,
     `Pesan: ${message}`,
     `Berbunyi dalam: ${formatRemaining(remainingMs)}${live ? " 🕒" : ""}`,

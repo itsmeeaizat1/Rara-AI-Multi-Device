@@ -4,7 +4,7 @@
 // .onepixiv18 <query>      — cari artwork Pixiv versi R-18 (konten dewasa)
 // Sumber: onepunya.qzz.io (key .setkey onepunya) — beda engine dari .pixiv (NeoXR).
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { pixivSearch, pixiv18Search } from "../../src/lib/nova-onepunya.js";
 
 const pluginConfig = {
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const cmd = (m.command || "").toLowerCase();
   const query = (m.args || []).join(" ").trim();
   if (!query) {
-    return m.reply(claraWrap("Onepunya Pixiv", `Masukkan kata kunci!\n\nContoh: .${cmd} frieren`));
+    return m.reply(novaWrap("Onepunya Pixiv", `Masukkan kata kunci!\n\nContoh: .${cmd} frieren`));
   }
   const apiKey = getApiKey("onepunya");
   try {
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
       : await pixivSearch(apiKey, query);
     const list = (Array.isArray(results) ? results : []).slice(0, 10);
     if (!list.length) {
-      return m.reply(claraWrap("Onepunya Pixiv", `Gak ada hasil untuk: ${query}`));
+      return m.reply(novaWrap("Onepunya Pixiv", `Gak ada hasil untuk: ${query}`));
     }
     const is18 = cmd === "onepixiv18";
     let text = `${is18 ? "🔞" : "🎨"} Onepunya Pixiv ${is18 ? "R-18" : ""} Search\nKueri: ${query}\nHasil: ${list.length} artwork\n\n`;
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
       text += `${i + 1}. ${String(art.title || "").slice(0, 60)}${art.r18 ? " 🔞" : ""}\n   ${art.author} · ${art.width}x${art.height} · ID ${art.pid}\n`;
     });
     text += `\nPowered by Onepunya API`;
-    await m.reply(claraWrap("Onepunya Pixiv", text));
+    await m.reply(novaWrap("Onepunya Pixiv", text));
     // kirim artwork pertama sebagai preview
     const first = list[0];
     const imgUrl = first?.urls?.regular || first?.urls?.original || "";
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
       try { await sock.sendMessage(m.chat, { image: { url: imgUrl }, caption: `🎨 ${first.title} — ${first.author}` }, { quoted: m }); } catch {}
     }
   } catch (e) {
-    return m.reply(claraWrap("Onepunya Pixiv", `Gagal: ${String(e.message || e).slice(0, 200)}`));
+    return m.reply(novaWrap("Onepunya Pixiv", `Gagal: ${String(e.message || e).slice(0, 200)}`));
   }
 }
 

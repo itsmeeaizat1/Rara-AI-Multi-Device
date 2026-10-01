@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 import { f } from '../../src/lib/nova-http.js';
 import te from '../../src/lib/nova-error.js';
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
         } catch (ikyyErr) {
             console.error("[muslimai.js] IkyyXD fallback failed:", ikyyErr.message);
         }
-        m.reply(claraWrap("Muslim AI", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("Muslim AI", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

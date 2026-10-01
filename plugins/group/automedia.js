@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "automedia",
     alias: ["automedia"],
@@ -39,23 +39,23 @@ async function handler(m, { sock }) {
     
     if (arg === 'on' || arg === '1' || arg === 'aktif') {
         if (current) {
-            return m.reply(claraWrap("Automedia", `Sudah aktif!`))
+            return m.reply(novaWrap("Automedia", `Sudah aktif!`))
         }
         db.setGroup(m.chat, { automedia: true })
         await db.save()
-        return m.reply(claraWrap("Automedia", `Berhasil diaktifkan!\nSticker akan otomatis jadi gambar/video`, "success"))
+        return m.reply(novaWrap("Automedia", `Berhasil diaktifkan!\nSticker akan otomatis jadi gambar/video`, "success"))
     }
     
     if (arg === 'off' || arg === '0' || arg === 'nonaktif') {
         if (!current) {
-            return m.reply(claraWrap("Automedia", `Sudah nonaktif!`))
+            return m.reply(novaWrap("Automedia", `Sudah nonaktif!`))
         }
         db.setGroup(m.chat, { automedia: false })
         await db.save()
         { const __navText = `🎬 *automedia*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
     }
     
-    return m.reply(claraWrap("Auto media", `Gunakan: \`${m.prefix}automedia on/off\``, "error"))
+    return m.reply(novaWrap("Auto media", `Gunakan: \`${m.prefix}automedia on/off\``, "error"))
 }
 
 async function autoMediaHandler(m, sock) {

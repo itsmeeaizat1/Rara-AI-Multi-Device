@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Meme Generator — Buat meme dari 100+ template via Imgflip API (free, no login)
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "memegenapi",
@@ -99,7 +99,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("Contoh:");
       lines.push(usedPrefix + "memegen 112126428 | Saya | Nova AI");
       lines.push(usedPrefix + "memegen random | Test | Berhasil");
-      return m.reply(claraWrap("Meme Generator", lines, "info"));
+      return m.reply(novaWrap("Meme Generator", lines, "info"));
     }
 
     // Parse: templateId | text1 | text2 | text3
@@ -108,7 +108,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const textParts = parts.slice(1);
 
     if (!textParts.length || textParts.every((t) => !t)) {
-      return m.reply(claraWrap("Meme Generator", [
+      return m.reply(novaWrap("Meme Generator", [
         "Text tidak boleh kosong",
         "",
         "Format: " + usedPrefix + "memegen <id> | text1 | text2",
@@ -135,7 +135,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           m.key.remoteJid,
           {
             image: imgBuf,
-            caption: claraWrap("Meme Generator", [
+            caption: novaWrap("Meme Generator", [
               "Meme berhasil dibuat!",
               "Template ID: " + templateId,
               "Text: " + textParts.join(" | "),
@@ -146,14 +146,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         );
       } catch (dlErr) {
         // If download fails, send URL
-        return m.reply(claraWrap("Meme Generator", [
+        return m.reply(novaWrap("Meme Generator", [
           "Meme berhasil dibuat (URL):",
           result.data.url,
         ], "info"));
       }
     } else {
       // Fallback: Download template and overlay text locally
-      return m.reply(claraWrap("Meme Generator", [
+      return m.reply(novaWrap("Meme Generator", [
         "Caption API butuh akun Imgflip",
         "",
         "Gunakan template ID untuk download gambar:",
@@ -164,7 +164,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
   } catch (e) {
     console.error("[MemeGen]", e);
-    m.reply(claraWrap("Meme Generator", [
+    m.reply(novaWrap("Meme Generator", [
       "Error: " + e.message,
       "",
       "Kemungkinan:",

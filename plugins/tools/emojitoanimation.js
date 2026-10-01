@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
 const pluginConfig = {
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
   const emoji = m.text?.trim();
 
   if (!emoji) {
-    return m.reply(claraWrap("emojitoanimasi", [
+    return m.reply(novaWrap("emojitoanimasi", [
       `Konversi emoji ke sticker animasi.`,
       ``,
       `📌 Format: ${m.prefix}emojitoanimasi <emoji>`,
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const { data } = await axios.get(apiUrl, { timeout: 15000 });
 
     if (!data?.status || !data?.data?.url) {
-      return m.reply(claraWrap("emojitoanimasi", "❌ *gagal*\n\nEmoji tidak ditemukan atau API error"));
+      return m.reply(novaWrap("emojitoanimasi", "❌ *gagal*\n\nEmoji tidak ditemukan atau API error"));
     }
 
     const webpUrl = data.data.url;
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     await m.react("❌");
-    m.reply(claraWrap("emojitoanimasi", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("emojitoanimasi", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

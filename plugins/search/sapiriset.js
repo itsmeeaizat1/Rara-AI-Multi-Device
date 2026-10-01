@@ -5,7 +5,7 @@
 // ═════════════════════════════════════════════
 
 import { searchApiEngine, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { sapiErrorMessage, renderScholar, renderBooks, renderPatents, renderFinance, renderTranscript } from "../../src/lib/nova-sapi-render.js";
 
 const pluginConfig = {
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         : cmd === "gpatents" ? "🧪 Paten: judul, nomor, pemilik.\n\nContoh: *.gpatents battery technology*"
         : cmd === "gfinance" ? "📈 Saham: harga, perubahan, kapitalisasi.\n\nContoh: *.gfinance AAPL* atau .gfinance BBCA"
         : "🎬 Transkrip video YouTube jadi teks utuh.\n\nContoh: *.ytranscript https://youtube.com/watch?v=xxxx*";
-      return m.reply(claraWrap("scholar", usage));
+      return m.reply(novaWrap("scholar", usage));
     }
 
     await m.react("🧠");
@@ -47,14 +47,14 @@ async function handler(m, { sock }) {
       const vid = extractVideoId(q);
       if (!vid) {
         await m.react("❌");
-        return m.reply(claraWrap("scholar", "⚠️ Kirim URL video YouTube atau ID video (11 karakter).\n\nContoh: .ytranscript https://youtube.com/watch?v=dQw4w9WgXcQ"));
+        return m.reply(novaWrap("scholar", "⚠️ Kirim URL video YouTube atau ID video (11 karakter).\n\nContoh: .ytranscript https://youtube.com/watch?v=dQw4w9WgXcQ"));
       }
       const r = await searchApiEngine("youtube_transcripts", { video_id: vid });
-      if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("scholar", sapiErrorMessage(r.error))); }
+      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("scholar", sapiErrorMessage(r.error))); }
       const body = renderTranscript(r.data);
-      if (!body) { await m.react("❌"); return m.reply(claraWrap("scholar", "⚠️ Transkrip gak tersedia buat video itu (mungkin gak ada subtitle).")); }
+      if (!body) { await m.react("❌"); return m.reply(novaWrap("scholar", "⚠️ Transkrip gak tersedia buat video itu (mungkin gak ada subtitle).")); }
       await m.react("🐣");
-      return m.reply(claraWrap("scholar", `🎬 *TRANSKRIP VIDEO (${vid})*\n\n${body}`));
+      return m.reply(novaWrap("scholar", `🎬 *TRANSKRIP VIDEO (${vid})*\n\n${body}`));
     }
 
     let engine, render, label;
@@ -65,15 +65,15 @@ async function handler(m, { sock }) {
 
     const params = engine === "google_finance" ? { q } : { q };
     const r = await searchApiEngine(engine, params);
-    if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("scholar", sapiErrorMessage(r.error))); }
+    if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("scholar", sapiErrorMessage(r.error))); }
     const body = render(r.data);
-    if (!body) { await m.react("❌"); return m.reply(claraWrap("scholar", "⚠️ Gak ada hasil — coba kata kunci lain.")); }
+    if (!body) { await m.react("❌"); return m.reply(novaWrap("scholar", "⚠️ Gak ada hasil — coba kata kunci lain.")); }
     await m.react("🐣");
-    return m.reply(claraWrap("scholar", `${label} — ${q.toUpperCase().slice(0, 50)}\n\n${body}`));
+    return m.reply(novaWrap("scholar", `${label} — ${q.toUpperCase().slice(0, 50)}\n\n${body}`));
   } catch (err) {
     console.error("[sapiriset]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("scholar", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(novaWrap("scholar", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

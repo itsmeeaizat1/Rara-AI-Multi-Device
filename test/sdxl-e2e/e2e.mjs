@@ -80,7 +80,7 @@ t("7b. caption engine = zelapi-sdxl", (sent[0]?.o?.caption || "").includes("zela
 // pollinations gagal + zelapi gak ada key → error reply berisi penyebab
 zel._setZelKeyForTest(null);
 await mod.handler(mkM(["kucing", "pink"]), { sock: { sendMedia: async () => { sent.push({}); return {}; } } });
-// GOTCHA: claraWrap → smallcaps, asersi jangan andalkan huruf kecil normal
+// GOTCHA: novaWrap → smallcaps, asersi jangan andalkan huruf kecil normal
 const r8 = replies.at(-1) || "";
 t("8a. dua-duanya gagal → reply error + penyebab HTTP 500", /ɢᴀɢᴀʟ|[Gg]agal/.test(r8) && /500/.test(r8), r8.slice(0, 90));
 

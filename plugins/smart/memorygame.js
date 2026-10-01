@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "memorygame",
@@ -48,7 +48,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "start" || sub === "mulai") {
     if (game && game.active && game.player === m.sender) {
-      await m.reply(claraWrap("Memory Game", "Kamu masih main! Ketik " + prefix + "memorygame answer <urutan>"));
+      await m.reply(novaWrap("Memory Game", "Kamu masih main! Ketik " + prefix + "memorygame answer <urutan>"));
       return { handled: true };
     }
     // Generate first sequence (3 symbols)
@@ -71,7 +71,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     };
     saveConfig(db, gid, data);
     const seqDisplay = sequence.join(" ");
-    await m.reply(claraWrap("Memory Game", [
+    await m.reply(novaWrap("Memory Game", [
       "Game dimulai!",
       "",
       "Level: " + data.level + " | Round: " + data.round + "/" + data.maxRound,
@@ -88,11 +88,11 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "answer" || sub === "jawab" || sub === "cek") {
     if (!game || !game.active) {
-      await m.reply(claraWrap("Memory Game", "Belum ada game. Ketik " + prefix + "memorygame start"));
+      await m.reply(novaWrap("Memory Game", "Belum ada game. Ketik " + prefix + "memorygame start"));
       return { handled: true };
     }
     if (game.player !== m.sender) {
-      await m.reply(claraWrap("Memory Game", "Bukan game kamu! @" + game.player.split("@")[0] + " yang main."), { mentions: [game.player] });
+      await m.reply(novaWrap("Memory Game", "Bukan game kamu! @" + game.player.split("@")[0] + " yang main."), { mentions: [game.player] });
       return { handled: true };
     }
 
@@ -124,7 +124,7 @@ async function handler(m, { sock, db, config: botConfig }) {
           game.bestPlayer = m.sender;
         }
         saveConfig(db, gid, game);
-        await m.reply(claraWrap("Memory Game - SELESAI!", [
+        await m.reply(novaWrap("Memory Game - SELESAI!", [
           "@" + m.sender.split("@")[0],
           "",
           "Score: " + game.score,
@@ -149,7 +149,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
       saveConfig(db, gid, game);
       const seqDisplay = game.sequence.join(" ");
-      await m.reply(claraWrap("Memory Game - BENAR!", [
+      await m.reply(novaWrap("Memory Game - BENAR!", [
         "Score: " + game.score,
         "Level: " + game.level + " | Round: " + game.round + "/" + game.maxRound,
         "",
@@ -165,7 +165,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         game.bestPlayer = m.sender;
       }
       saveConfig(db, gid, game);
-      await m.reply(claraWrap("Memory Game - KALAH", [
+      await m.reply(novaWrap("Memory Game - KALAH", [
         "@" + m.sender.split("@")[0],
         "",
         "Jawaban salah!",
@@ -182,26 +182,26 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "best" || sub === "highscore") {
     if (!game || !game.bestScore) {
-      await m.reply(claraWrap("Memory Game", "Belum ada high score. Ketik " + prefix + "memorygame start"));
+      await m.reply(novaWrap("Memory Game", "Belum ada high score. Ketik " + prefix + "memorygame start"));
       return { handled: true };
     }
-    await m.reply(claraWrap("Memory Game High Score", "Best: " + game.bestScore + " by @" + (game.bestPlayer || "").split("@")[0]), { mentions: game.bestPlayer ? [game.bestPlayer] : [] });
+    await m.reply(novaWrap("Memory Game High Score", "Best: " + game.bestScore + " by @" + (game.bestPlayer || "").split("@")[0]), { mentions: game.bestPlayer ? [game.bestPlayer] : [] });
     return { handled: true };
   }
 
   if (sub === "stop" || sub === "berhenti") {
     if (game && game.active) {
       delConfig(db, gid);
-      await m.reply(claraWrap("Memory Game", "Game dihentikan. Score: " + (game.score || 0)));
+      await m.reply(novaWrap("Memory Game", "Game dihentikan. Score: " + (game.score || 0)));
     } else {
-      await m.reply(claraWrap("Memory Game", "Tidak ada game aktif."));
+      await m.reply(novaWrap("Memory Game", "Tidak ada game aktif."));
     }
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek" || !sub) {
     if (!game || !game.active) {
-      await m.reply(claraWrap("Memory Game", [
+      await m.reply(novaWrap("Memory Game", [
         "MEMORY GAME",
         "",
         prefix + "memorygame start - mulai game",
@@ -213,7 +213,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       ].join("\n")));
       return { handled: true };
     }
-    await m.reply(claraWrap("Memory Game Status", [
+    await m.reply(novaWrap("Memory Game Status", [
       "Player: @" + game.player.split("@")[0],
       "Level: " + game.level,
       "Round: " + game.round + "/" + game.maxRound,
@@ -222,7 +222,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Memory Game", [
+  await m.reply(novaWrap("Memory Game", [
     "MEMORY GAME",
     "",
     prefix + "memorygame start - mulai game",

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ipk",
@@ -49,7 +49,7 @@ async function handler(m, { sock, args }) {
     if (cmd === "quick" || cmd === "cepat") {
       const inputArgs = cmdArgs;
       if (inputArgs.length < 2 || inputArgs.length % 2 !== 0) {
-        return m.reply(claraWrap("ipk", "Format salah!\n\n💡 *Contoh:* `.ipk quick A 4 B 3 AB 2`\n\nFormat: <nilai> <sks> <nilai> <sks> ..."));
+        return m.reply(novaWrap("ipk", "Format salah!\n\n💡 *Contoh:* `.ipk quick A 4 B 3 AB 2`\n\nFormat: <nilai> <sks> <nilai> <sks> ..."));
       }
       let totalBobot = 0, totalSKS = 0, details = [];
       for (let i = 0; i < inputArgs.length; i += 2) {
@@ -69,23 +69,23 @@ async function handler(m, { sock, args }) {
       txt += `\nTotal SKS: ${totalSKS}\nTotal Bobot: ${totalBobot.toFixed(1)}\n`;
       txt += `IPK: *${ipk.toFixed(2)}*\nPredikat: *${getPredicate(ipk)}*\n\n`;
       txt += `_Konversi: A=4, AB=3.5, B=3, BC=2.5, C=2, CD=1.5, D=1, E=0_`;
-      await m.reply(claraWrap("IPK", txt));
+      await m.reply(novaWrap("IPK", txt));
     }
     else if (cmd === "add" || cmd === "input" || cmd === "tambah") {
       sessions.set(sender, { courses: [], active: true });
       let txt = `Input Mata Kuliah\n\nKirim format:\n<nilai> <sks> <nama matkul (opsional)>\n\n`;
       txt += `Contoh: \`A 4 Kalkulus\`\nAtau: \`A 4\` (tanpa nama)\n\n`;
       txt += `Ketik *done* untuk menghitung\nKetik *cancel* untuk batal`;
-      await m.reply(claraWrap("IPK", txt));
+      await m.reply(novaWrap("IPK", txt));
     }
     else if (cmd === "cancel" || cmd === "batal") {
       sessions.delete(sender);
-      await m.reply(claraWrap("Ipk", "Sesi input IPK dibatalkan."));
+      await m.reply(novaWrap("Ipk", "Sesi input IPK dibatalkan."));
     }
     else if (cmd === "calc" || cmd === "hitung" || cmd === "done") {
       const session = sessions.get(sender);
       if (!session || session.courses.length === 0) {
-        return m.reply(claraWrap("ipk", "Belum ada mata kuliah yang diinput!\n\nKetik `.ipk add` untuk mulai."));
+        return m.reply(novaWrap("ipk", "Belum ada mata kuliah yang diinput!\n\nKetik `.ipk add` untuk mulai."));
       }
       let totalBobot = 0, totalSKS = 0;
       let txt = `Hasil Perhitungan IPK\n\nMata Kuliah:\n`;
@@ -101,7 +101,7 @@ async function handler(m, { sock, args }) {
       const ipk = totalBobot / totalSKS;
       txt += `\nTotal SKS: ${totalSKS}\nTotal Bobot: ${totalBobot.toFixed(1)}\n`;
       txt += `IPK: *${ipk.toFixed(2)}*\nPredikat: *${getPredicate(ipk)}*`;
-      await m.reply(claraWrap("IPK", txt));
+      await m.reply(novaWrap("IPK", txt));
       sessions.delete(sender);
     }
     else {
@@ -109,7 +109,7 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[IPK] Error:", e.message);
-    await m.reply(claraWrap("ipk", `Error: ${e.message}`));
+    await m.reply(novaWrap("ipk", `Error: ${e.message}`));
   }
 }
 

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "beasiswa",
@@ -165,7 +165,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     try {
       const results = await fetchBeasiswaFromWeb(level);
       if (results.length === 0) {
-        return m.reply( claraWrap("Beasiswa", [
+        return m.reply( novaWrap("Beasiswa", [
           "Maaf, tidak ada hasil saat ini.",
           "Coba lagi ya atau cari manual di:",
           "https://beasiswaindonesia.com",
@@ -192,7 +192,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   }
 
   // Default: help
-  const txt = claraWrap("Beasiswa - Pencari Info Beasiswa", [
+  const txt = novaWrap("Beasiswa - Pencari Info Beasiswa", [
     `Cari info beasiswa dari berbagai sumber online.`,
     ``,
     `Perintah:`,

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { notifyPremiumAdd } from "../../src/lib/nova-saluran-broadcast.js";
@@ -82,7 +82,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     }
 
     if (db.data.premium.length === 0) {
-      return m.reply(claraWrap("addprem", `💎 Belum ada premium terdaftar`));
+      return m.reply(novaWrap("addprem", `💎 Belum ada premium terdaftar`));
     }
     let txt = `💎 *DAFTAR PREMIUM*\n\n`;
     const now = Date.now();
@@ -120,7 +120,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
   }
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
-    return m.reply(claraWrap("Addprem", `❌ Format nomor tidak valid`));
+    return m.reply(novaWrap("Addprem", `❌ Format nomor tidak valid`));
   }
 
   if (isJadibot && jadibotId) {
@@ -219,7 +219,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     );
 
     if (index === -1) {
-      return m.reply(claraWrap("Addprem", `❌ *${targetNumber}* bukan premium`));
+      return m.reply(novaWrap("Addprem", `❌ *${targetNumber}* bukan premium`));
     }
 
     db.data.premium.splice(index, 1);

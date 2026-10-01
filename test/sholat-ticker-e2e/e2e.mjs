@@ -12,7 +12,7 @@ const { computeNextPrayer, buildSholatCountdownCard } = await import(R + "/src/l
 const { runLiveTicker } = await import(R + "/src/lib/nova-countdown.js");
 const moment = (await import("moment-timezone")).default;
 const { fromSC } = await import(R + "/src/lib/styler.js");
-// GOTCHA (ke-4x): claraWrap nge-render smallcaps → assert WAJIB norm fromSC + lowercase
+// GOTCHA (ke-4x): novaWrap nge-render smallcaps → assert WAJIB norm fromSC + lowercase
 const norm = (s) => fromSC(String(s)).toLowerCase();
 
 let pass = 0, fail = 0;

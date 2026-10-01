@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'deltoxic',
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const word = m.args.join(' ').trim().toLowerCase()
     
     if (!word) {
-        return m.reply( claraWrap("Del Toxic", 
+        return m.reply( novaWrap("Del Toxic", 
             `Gunakan: \`.deltoxic <kata>\`\n\n` +
             `\`Contoh: ${m.prefix}deltoxic katakasar\``), "deltoxic")
     }
@@ -34,12 +34,12 @@ async function handler(m, { sock }) {
     const index = toxicWords.indexOf(word)
     
     if (index === -1) {
-        { const __navText = `❌ *gagal*\n\nKata \`${word}\` tidak ada di daftar`; return await m.reply(claraWrap("deltoxic", __navText)); }
+        { const __navText = `❌ *gagal*\n\nKata \`${word}\` tidak ada di daftar`; return await m.reply(novaWrap("deltoxic", __navText)); }
     }
     
     toxicWords.splice(index, 1)
     db.setGroup(m.chat, { toxicWords })
-    await m.reply(claraWrap("Kata Toxic Dihapus", `` +
+    await m.reply(novaWrap("Kata Toxic Dihapus", `` +
         "" +
         `📝 Kata: \`${word}\`\n` +
         `📊 sIsa: \`${toxicWords.length}\` kata\n` +

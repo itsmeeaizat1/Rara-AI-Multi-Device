@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,13 +19,13 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Audio Loop", "Reply audio yang mau di-loop."));
+    if (!quoted) return m.reply(novaWrap("Audio Loop", "Reply audio yang mau di-loop."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(claraWrap("Audio Loop", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(novaWrap("Audio Loop", "Reply harus audio/voice note!"));
 
     const loopCount = parseInt(args[0]);
     if (!loopCount || loopCount < 2 || loopCount > 20) {
-      return m.reply(claraWrap("Audio Loop", [
+      return m.reply(novaWrap("Audio Loop", [
         "Jumlah loop 2-20x.",
         "Contoh: " + usedPrefix + "audioloop 3",
         "Dengan fade: " + usedPrefix + "audioloop 3 fade 1",
@@ -33,7 +33,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     const fadeSec = args[1] === "fade" ? (parseFloat(args[2]) || 0) : 0;
-    if (fadeSec > 5) return m.reply(claraWrap("Info", "Fade maksimal 5 detik."));
+    if (fadeSec > 5) return m.reply(novaWrap("Info", "Fade maksimal 5 detik."));
 
     const isPtt = !!quoted.pttMessage;
     const tmpDir = path.join(os.tmpdir(), 'nova-loop');
@@ -81,7 +81,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: claraWrap("Audio Loop", [
+      caption: novaWrap("Audio Loop", [
         "Berhasil loop!",
         "Jumlah: " + loopCount + "x",
         fadeSec > 0 ? "Fade: " + fadeSec + " detik" : "Tanpa fade",

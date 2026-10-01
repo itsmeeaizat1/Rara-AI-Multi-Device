@@ -6,7 +6,7 @@ import path from "path";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const botConfig = config;
 
@@ -37,7 +37,7 @@ async function handler(m, { sock, db }) {
   if (args[0] === "--yes") {
     const pending = global._swgcallPending?.get(m.sender);
     if (!pending) {
-      return m.reply(claraWrap("Swgcall", `⚠️ *Tidak ada data pending. Kirim ulang media + .swgcall*`));
+      return m.reply(novaWrap("Swgcall", `⚠️ *Tidak ada data pending. Kirim ulang media + .swgcall*`));
     }
 
     const { rawContent, groups, tempFile } = pending;
@@ -118,7 +118,7 @@ async function handler(m, { sock, db }) {
   if (source) {
     try {
       buffer = await source.download();
-      if (!buffer) return m.reply(claraWrap("Swgcall", `❌ Gagal mengambil media.`));
+      if (!buffer) return m.reply(novaWrap("Swgcall", `❌ Gagal mengambil media.`));
 
       const fileType = await fileTypeFromBuffer(buffer);
       ext = fileType?.ext || "bin";
@@ -173,7 +173,7 @@ async function handler(m, { sock, db }) {
     const groupList = Object.entries(groups);
 
     if (groupList.length === 0) {
-      return m.reply(claraWrap("Swgcall", `⚠️ *Bot tidak berada di grup manapun.*`));
+      return m.reply(novaWrap("Swgcall", `⚠️ *Bot tidak berada di grup manapun.*`));
     }
 
     if (!global._swgcallPending) global._swgcallPending = new Map();

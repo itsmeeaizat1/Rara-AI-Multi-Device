@@ -2,7 +2,7 @@
 // (Plugin .alarm lama cuma nyimpen ke array tanpa scheduler — gak pernah
 // bunyi sama sekali, dan ilang pas restart. Rombak total 13 Sep 2026.)
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 
 const KEY = "novaAlarms";
 if (!global.alarms) global.alarms = {};
@@ -52,7 +52,7 @@ export function initAlarmScheduler(sock) {
           a.lastFiredYmd = ymd;
           saveAlarms();
           const num = String(sender).split("@")[0];
-          const text = claraWrap("Alarm Berbunyi", [
+          const text = novaWrap("Alarm Berbunyi", [
             `@${num}`,
             ``,
             `⏰ Waktu: *${a.time}* WIB`,

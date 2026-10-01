@@ -13,7 +13,7 @@ import { offerConvert } from "../../src/lib/nova-convert.js";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { claraWrap, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
@@ -143,7 +143,7 @@ async function extractMp3(videoUrl) {
 
 function usageReply(m) {
   const p = m.prefix;
-  return m.reply(claraWrap("Instagram Media", [
+  return m.reply(novaWrap("Instagram Media", [
     `📌 Kirim link post Instagram, hasil dikirim sesuai formatnya:`,
     ``,
     `💡 Contoh:`,
@@ -172,7 +172,7 @@ async function handler(m, { sock }) {
       const videos = result.medias.filter((i) => i.type === "video");
       if (!videos.length) {
         await m.react("❗");
-        return m.reply(claraWrap("Instagram Media", `Post ini gak ada video — coba .igimage buat ambil fotonya`));
+        return m.reply(novaWrap("Instagram Media", `Post ini gak ada video — coba .igimage buat ambil fotonya`));
       }
       for (const item of videos.slice(0, 5)) {
         // format owner 19 Sep — disamakan ke semua downloader
@@ -203,7 +203,7 @@ async function handler(m, { sock }) {
       const images = result.medias.filter((i) => i.type === "image" || /\.(jpe?g|png|webp)(\?|$)/i.test(itemUrlSafe(i)));
       if (!images.length) {
         await m.react("❗");
-        return m.reply(claraWrap("Instagram Media", `Post ini gak ada foto — coba .igvideo buat ambil videonya`));
+        return m.reply(novaWrap("Instagram Media", `Post ini gak ada foto — coba .igvideo buat ambil videonya`));
       }
       // format owner 19 Sep — disamakan ke semua downloader
       const caption = tiktokCaption({
@@ -234,7 +234,7 @@ async function handler(m, { sock }) {
       const video = result.medias.find((i) => i.type === "video" || i.type === "audio");
       if (!video) {
         await m.react("❗");
-        return m.reply(claraWrap("Instagram Media", `Post ini gak ada video/audio buat diekstrak audionya — coba .igimage`));
+        return m.reply(novaWrap("Instagram Media", `Post ini gak ada video/audio buat diekstrak audionya — coba .igimage`));
       }
       const isDirectAudio = video.type === "audio" || /\.(mp3|m4a|ogg|opus)(\?|$)/i.test(video.url);
       const audioBuffer = isDirectAudio ? null : await extractMp3(video.url);

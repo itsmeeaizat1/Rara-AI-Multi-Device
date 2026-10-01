@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antinomorluar",
@@ -77,24 +77,24 @@ async function handler(m, { sock }) {
   if (action === "on") {
     const prefix = prefixArg || groupData.nomorluarBlock || "60";
     db.setGroup(m.chat, { antinomorluar: true, nomorluarBlock: prefix });
-    return m.reply(claraWrap("Antinomorluar", `Anti Nomor Luar diaktifkan\nPrefix diblokir: ${prefix}`, "info"));
+    return m.reply(novaWrap("Antinomorluar", `Anti Nomor Luar diaktifkan\nPrefix diblokir: ${prefix}`, "info"));
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antinomorluar: false });
-    return m.reply(claraWrap("Antinomorluar", `Anti Nomor Luar dinonaktifkan`));
+    return m.reply(novaWrap("Antinomorluar", `Anti Nomor Luar dinonaktifkan`));
   }
 
   if (action === "set") {
     if (!prefixArg) {
-      return m.reply(claraWrap("Anti nomorluar", `Masukkan prefix nomor!\n💡 Contoh: \`${m.prefix}antinomorluar set 60\``, "info"));
+      return m.reply(novaWrap("Anti nomorluar", `Masukkan prefix nomor!\n💡 Contoh: \`${m.prefix}antinomorluar set 60\``, "info"));
     }
     db.setGroup(m.chat, { nomorluarBlock: prefixArg });
     const isOn = groupData.antinomorluar;
-    return m.reply(claraWrap("Antinomorluar", `Prefix diblokir diubah ke: ${prefixArg}\nStatus: ${isOn ? "ON" : "OFF"}`, "info"));
+    return m.reply(novaWrap("Antinomorluar", `Prefix diblokir diubah ke: ${prefixArg}\nStatus: ${isOn ? "ON" : "OFF"}`, "info"));
   }
 
-  return m.reply(claraWrap("Anti nomorluar", `Gunakan:\n\`${m.prefix}antinomorluar on 60\`\n\`${m.prefix}antinomorluar set 60,44\`\n\`${m.prefix}antinomorluar off\``, "info"));
+  return m.reply(novaWrap("Anti nomorluar", `Gunakan:\n\`${m.prefix}antinomorluar on 60\`\n\`${m.prefix}antinomorluar set 60,44\`\n\`${m.prefix}antinomorluar off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiNomorLuar };

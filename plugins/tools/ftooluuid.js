@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooluuid — generator UUID v4 (port altftool.com/tools/all/uuid-generator) pakai crypto.randomUUID().
 import { randomUUID } from "node:crypto";
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftooluuid", alias: ["uuid", "uuidgen", "guid"], category: "tools",
@@ -32,12 +32,12 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const ids = Array.from({ length: n }, () => randomUUID());
     await m.react("🐣");
-    await m.reply(claraWrap("UUID Generator", [`UUID V4 ×${n} BERHASIL`,
+    await m.reply(novaWrap("UUID Generator", [`UUID V4 ×${n} BERHASIL`,
       "",
       "```" + ids.join("\n") + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("UUID Generator", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("UUID Generator", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

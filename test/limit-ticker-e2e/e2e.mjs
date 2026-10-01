@@ -13,7 +13,7 @@ const { computeNextResetTs, buildLimitCard } = await import(R + "/src/lib/nova-l
 const { runLiveTicker } = await import(R + "/src/lib/nova-countdown.js");
 const moment = (await import("moment-timezone")).default;
 const { fromSC } = await import(R + "/src/lib/styler.js");
-// GOTCHA (ke-5x): claraWrap smallcaps → assert WAJIB norm fromSC + lowercase
+// GOTCHA (ke-5x): novaWrap smallcaps → assert WAJIB norm fromSC + lowercase
 const norm = (s) => fromSC(String(s)).toLowerCase();
 
 const DB_DIR = "/tmp/nova-limit-db-" + Date.now();

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // faktaai — AI generator fakta menarik
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("faktaai", `Mau tahu fakta tentang apa?\n\nContoh: ${m.prefix}faktaai luar angkasa\n${m.prefix}faktaai kucing\n${m.prefix}faktaai sejarah Indonesia`, "guide"));
+      return m.reply(novaWrap("faktaai", `Mau tahu fakta tentang apa?\n\nContoh: ${m.prefix}faktaai luar angkasa\n${m.prefix}faktaai kucing\n${m.prefix}faktaai sejarah Indonesia`, "guide"));
     }
 
     await m.react("🕒");
@@ -37,7 +37,7 @@ Format nomor 1-7. Tiap fakta 2-3 kalimat. Bahasa Indonesia. Pilih fakta yang kur
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("faktaai", "AI-nya lagi baca buku ensiklopedia 📚", "error"));
+      return m.reply(novaWrap("faktaai", "AI-nya lagi baca buku ensiklopedia 📚", "error"));
     }
 
     await m.react("🐣");
@@ -46,7 +46,7 @@ Format nomor 1-7. Tiap fakta 2-3 kalimat. Bahasa Indonesia. Pilih fakta yang kur
   } catch (err) {
     console.error("faktaai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("faktaai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("faktaai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

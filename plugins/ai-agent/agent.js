@@ -9,7 +9,7 @@
 //    + participants), tutup/buka grup, promote/demote, rename/desc, tagall,
 //    link, lockedit. Gate: user wajib admin/owner + bot wajib admin (pola
 //    nova-auto-ai executeAction). Progress live edit-in-place per fase.
-import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
 import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
@@ -678,7 +678,7 @@ async function handler(m, { sock, db, deps } = {}) {
   try {
     const { voiceSubReply, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
     const subReply = voiceSubReply(db, m.chat, task.toLowerCase(), VOICE_KEYS.aisuperagent);
-    if (subReply) return m.reply(claraWrap("superagent", subReply));
+    if (subReply) return m.reply(novaWrap("superagent", subReply));
   } catch {}
 
   if (!task) {
@@ -751,7 +751,7 @@ async function handler(m, { sock, db, deps } = {}) {
         await m.react("🐣");
       } catch (e) {
         await m.react("❌");
-        const em = claraWrap("superagent", "gagal cari video youtube: " + (e?.message || "error"), "error");
+        const em = novaWrap("superagent", "gagal cari video youtube: " + (e?.message || "error"), "error");
         if (statusKey) { try { await sock.sendMessage(m.chat, { text: em, edit: statusKey }); return; } catch {} }
         await m.reply(em);
       }
@@ -774,7 +774,7 @@ async function handler(m, { sock, db, deps } = {}) {
         await m.react("🐣");
       } catch (e) {
         await m.react("❌");
-        const em = claraWrap("superagent", "gagal cari di " + siteIntent.site + ": " + (e?.message || "error"), "error");
+        const em = novaWrap("superagent", "gagal cari di " + siteIntent.site + ": " + (e?.message || "error"), "error");
         if (statusKey) { try { await sock.sendMessage(m.chat, { text: em, edit: statusKey }); return; } catch {} }
         await m.reply(em);
       }
@@ -823,7 +823,7 @@ async function handler(m, { sock, db, deps } = {}) {
 
     if (res?.error) {
       await m.react("❌");
-      const errMsg = claraWrap("superagent", res.error, "error");
+      const errMsg = novaWrap("superagent", res.error, "error");
       if (statusKey) { try { await sock.sendMessage(m.chat, { text: errMsg, edit: statusKey }); return; } catch {} }
       return m.reply(errMsg);
     }
@@ -897,7 +897,7 @@ async function handler(m, { sock, db, deps } = {}) {
   } catch (e) {
     console.error("agent error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("superagent", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("superagent", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

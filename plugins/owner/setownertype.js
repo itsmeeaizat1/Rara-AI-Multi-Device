@@ -3,7 +3,7 @@ import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import fs from 'fs'
 import path from 'path'
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'setownertype',
     alias: ["setownertype"],
@@ -35,7 +35,7 @@ async function handler(m, { sock, db }) {
         db.setting('ownerType', id)
         await db.save()
 
-        await m.reply(claraWrap("V${id}", `✅ Owner type diubah ke *V${id}*\n\n` +
+        await m.reply(novaWrap("V${id}", `✅ Owner type diubah ke *V${id}*\n\n` +
             `*${VARIANTS[id].name}*\n` +
             `_${VARIANTS[id].desc}_`))
         return

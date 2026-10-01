@@ -2,7 +2,7 @@
 // twitterdl.js — Download video dari Twitter/X (Sanka API + scrape fallback)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const url = m.args?.[0]?.trim();
     if (!url || (!url.includes("twitter") && !url.includes("x.com"))) {
-      return m.reply(claraWrap("twitterdl", `Masukkan URL Twitter/X!\n\nContoh: .twitterdl https://twitter.com/user/status/xxx`, "guide"));
+      return m.reply(novaWrap("twitterdl", `Masukkan URL Twitter/X!\n\nContoh: .twitterdl https://twitter.com/user/status/xxx`, "guide"));
     }
 
     const result = await twitterDownload(url);
@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("twitterdl error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("twitterdl", "Gagal download video Twitter. Pastikan URL valid dan contain video!", "error"));
+    return m.reply(novaWrap("twitterdl", "Gagal download video Twitter. Pastikan URL valid dan contain video!", "error"));
   }
 }
 

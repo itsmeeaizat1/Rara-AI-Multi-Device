@@ -11,7 +11,7 @@ import {
 } from './nova-game-engine.js';
 import { getDatabase } from './nova-database.js';
 import { gameCTA, pickFlavor } from './nova-games.js';
-import { claraWrap } from './nova-menu-style.js';
+import { novaWrap } from './nova-menu-style.js';
 import { haidarGame } from './nova-haidar.js';
 import { zelMaths, zelPresiden } from '../scraper/zelgames.js';
 import { addExpWithLevelCheck } from './nova-level.js';
@@ -111,7 +111,7 @@ class GameFactory {
             question = null;
           }
           if (!question) {
-            await m.reply(claraWrap(cfg.gameType, [
+            await m.reply(novaWrap(cfg.gameType, [
               'Sumber soal (HaidarApis) belum siap, coba lagi nanti.',
               '',
               '📌 Kemungkinan:',

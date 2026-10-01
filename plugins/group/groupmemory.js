@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 import { novaError, novaEmpty, novaGuide, novaNoInput,   separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+  tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "groupmemory",
@@ -45,11 +45,11 @@ function buildMemoryBook(prefix, groupName) {
   const topMembers = randomTopMembers();
 
   return (
-    claraWrap("Group Memory Book", [`Grup: *${groupName || "Grup ini"}*`,
+    novaWrap("Group Memory Book", [`Grup: *${groupName || "Grup ini"}*`,
       `Vibe: *${vibe}*`,
       `Momen: *${highlight}*`].join("\n")) +
     "\n" +
-    claraWrap("Top Member", topMembers) +
+    novaWrap("Top Member", topMembers) +
     "\n\n" +
     
     tipText("Catatan: ini versi statis simulasi dulu") +
@@ -66,7 +66,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text = buildMemoryBook(prefix, m.chatName || m.subject || "Grup ini");
 
-    await m.reply(claraWrap("groupmemory", text));
+    await m.reply(novaWrap("groupmemory", text));
   } catch (error) {
     const text =
     await m.reply(novaError("GroupMemory", "Gagal nih, coba lagi ya"));

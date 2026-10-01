@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { findParticipantByNumber } from '../../src/lib/nova-lid.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'kick',
     alias: ["kick"],
@@ -40,12 +40,12 @@ async function handler(m, { sock }) {
     const targetNumber = targetJid.replace(/@.*$/, '')
 
     if (targetJid === botNumber || targetNumber === botNumber.replace(/@.*$/, '')) {
-        await m.reply(claraWrap("kick", `gagal\n\nTidak bisa kick bot sendiri!`, "error"))
+        await m.reply(novaWrap("kick", `gagal\n\nTidak bisa kick bot sendiri!`, "error"))
         return
     }
 
     if (targetJid === m.sender) {
-        await m.reply(claraWrap("kick", `gagal\n\nTidak bisa kick diri sendiri!`, "error"))
+        await m.reply(novaWrap("kick", `gagal\n\nTidak bisa kick diri sendiri!`, "error"))
         return
     }
 
@@ -54,12 +54,12 @@ async function handler(m, { sock }) {
         const targetParticipant = findParticipantByNumber(groupMeta.participants, targetJid)
         
         if (!targetParticipant) {
-            m.reply(claraWrap("Kick", `gagal\n\nUser tidak ditemukan dalam grup!`, "error"))
+            m.reply(novaWrap("Kick", `gagal\n\nUser tidak ditemukan dalam grup!`, "error"))
             return
         }
         
         if (targetParticipant.admin) {
-            await m.reply(claraWrap("kick", `gagal\n\nTidak bisa kick admin grup!`, "error"))
+            await m.reply(novaWrap("kick", `gagal\n\nTidak bisa kick admin grup!`, "error"))
             return
         }
         
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
         { const __navText = `✅ @${targetNumber} telah dikeluarkan dari grup ini.`; await m.reply(__navText); }
 
     } catch (error) {
-        m.reply(claraWrap("kick", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("kick", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

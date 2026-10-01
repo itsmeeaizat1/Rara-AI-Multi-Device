@@ -8,7 +8,7 @@ import fs from "fs";
 
 import { uploadTo0x0 } from "../../src/lib/nova-tmpfiles.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakeml",
   alias: ["fakeml"],
@@ -44,13 +44,13 @@ async function handler(m, { sock }) {
     try {
       buffer = await m.quoted.download();
     } catch (e) {
-      m.reply(claraWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
+      m.reply(novaWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
     }
   } else if (m.isMedia && m.type === "imageMessage") {
     try {
       buffer = await m.download();
     } catch (e) {
-      m.reply(claraWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
+      m.reply(novaWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
     }
   } else {
     try {
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (error) {
     await m.react("❌");
-    m.reply(claraWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Request owner 20 Sep 2026: tombol Penggunaan (popup Rules & Tutorial) di
 // menu card — .tutorial adalah tujuan baris "Tutorial" di popup itu.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'tutorial',
@@ -81,7 +81,7 @@ async function handler(m, { config: botConfig }) {
         `Fitur media harus reply/kirim gambar atau video dulu`,
         `Kalau masih error, ketik ${prefix}menu lalu pilih Support`,
     ]
-    await m.reply(claraWrap('Tutorial Penggunaan Bot', lines))
+    await m.reply(novaWrap('Tutorial Penggunaan Bot', lines))
 }
 
 export { pluginConfig as config, handler }

@@ -6,7 +6,7 @@
 
 import { zelImageEndpoint, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
 import { ZEL_IMAGE_REGISTRY, getZelImageSpec } from "../../src/lib/nova-zel-registry.js";
-import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { sendImage } from "../../src/lib/nova-message.js";
 import { fetchBuffer } from "../../src/lib/nova-utils.js";
 
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     if (cmd === "zimg" && (!args.length || ["list", "daftar"].includes((args[0] || "").toLowerCase()))) {
       const text2img = Object.entries(ZEL_IMAGE_REGISTRY).filter(([, s]) => s.type !== "imgedit");
       const imgedit = Object.entries(ZEL_IMAGE_REGISTRY).filter(([, s]) => s.type === "imgedit");
-      return m.reply(claraWrap("zelai",
+      return m.reply(novaWrap("zelai",
         `🎨 *ZELAPI IMAGE — ${Object.keys(ZEL_IMAGE_REGISTRY).length} GENERATOR (PREFIX Z)*\n\n` +
         `🖼️ *TEXT → GAMBAR:*\n${text2img.map(([c, s]) => `• .${c} — ${s.desc}`).join("\n")}\n\n` +
         `✏️ *EDIT FOTO (reply foto + prompt):*\n${imgedit.map(([c, s]) => `• .${c} — ${s.desc}`).join("\n")}\n\n` +
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
     const spec = getZelImageSpec(cmd) || (cmd !== "zimg" ? null : null);
     if (!spec) {
-      return m.reply(claraWrap("zelai", `💡 Ketik *.zimg list* buat daftar generator gambar zelapi.`));
+      return m.reply(novaWrap("zelai", `💡 Ketik *.zimg list* buat daftar generator gambar zelapi.`));
     }
 
     const prompt = args.join(" ").trim();
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
       } catch {}
       if (!imageUrl) {
         await m.react("❌");
-        return m.reply(claraWrap("zelai", "⚠️ Gagal upload foto — coba kirim ulang."));
+        return m.reply(novaWrap("zelai", "⚠️ Gagal upload foto — coba kirim ulang."));
       }
     }
 
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
         TEXT_KOSONG: "⚠️ Prompt kosong.",
         NEED_IMAGE: "⚠️ Generator ini WAJIB reply foto + prompt.",
       };
-      return m.reply(claraWrap("zelai", map[r.error] || `⚠️ *${cmd.toUpperCase()} MATI:* ${r.error}`));
+      return m.reply(novaWrap("zelai", map[r.error] || `⚠️ *${cmd.toUpperCase()} MATI:* ${r.error}`));
     }
 
     await m.react("🐣");
@@ -118,13 +118,13 @@ async function handler(m, { sock }) {
     }
     if (!sent) {
       await m.react("❌");
-      return m.reply(claraWrap("zelai", `⚠️ Gambar dapet URL tapi gagal diunduh — coba lagi atau generator lain (.zimg list).`));
+      return m.reply(novaWrap("zelai", `⚠️ Gambar dapet URL tapi gagal diunduh — coba lagi atau generator lain (.zimg list).`));
     }
     return;
   } catch (err) {
     console.error("[zelimg]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("zelai", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(novaWrap("zelai", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

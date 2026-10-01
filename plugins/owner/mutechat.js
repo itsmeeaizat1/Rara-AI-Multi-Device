@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['mutechat', 'mute'],
     alias: ["mutechat", "mute"],
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
                 ? `🔇 *Chat Dimute*\n\nTarget: ${target}`
                 : `🔊 *Chat Diunmute*\n\nTarget: ${target}`)
     } catch (err) {
-        return m.reply(claraWrap("mutechat", `❌ Gagal: ${err.message}`))
+        return m.reply(novaWrap("mutechat", `❌ Gagal: ${err.message}`))
     }
 }
 

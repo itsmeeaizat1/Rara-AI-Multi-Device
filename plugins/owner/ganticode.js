@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { hotReloadPlugin } from "../../src/lib/nova-plugins.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ganticode",
@@ -74,12 +74,12 @@ async function handler(m, { sock }) {
     try {
       code = (await quoted.download()).toString();
     } catch (e) {
-      return m.reply(claraWrap("ganticode", `❌ *GAGAL*\n\nGagal download file`));
+      return m.reply(novaWrap("ganticode", `❌ *GAGAL*\n\nGagal download file`));
     }
   }
 
   if (!code || code.length < 50) {
-    return m.reply(claraWrap("ganticode", `❌ *GAGAL*\n\nCode terlalu pendek atau tidak valid`));
+    return m.reply(novaWrap("ganticode", `❌ *GAGAL*\n\nCode terlalu pendek atau tidak valid`));
   }
 
   const hasExport = code.includes("module.exports") || code.includes("export ");
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
   fileName = fileName.toLowerCase().replace(/[^a-z0-9\-_]/g, "");
 
   if (!fileName) {
-    { const __navText = claraWrap("GAGAL", `Nama file tidak valid`); return await m.reply(__navText); };
+    { const __navText = novaWrap("GAGAL", `Nama file tidak valid`); return await m.reply(__navText); };
   }
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");
@@ -178,7 +178,7 @@ async function handler(m, { sock }) {
 
     return m.reply(replyText);
   } catch (error) {
-    await m.reply(claraWrap("ganticode", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(novaWrap("ganticode", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText, claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -157,7 +157,7 @@ export default {
         return { handled: true };
       }
       toggleOn(groupId);
-      await m.reply(claraWrap("Patungan", [
+      await m.reply(novaWrap("Patungan", [
         `Status: *Aktif*`,
         ``,
         `Fitur Split Bill & Patungan dinyalakan.`,
@@ -173,7 +173,7 @@ export default {
         return { handled: true };
       }
       toggleOff(groupId);
-      await m.reply(claraWrap("Patungan", [
+      await m.reply(novaWrap("Patungan", [
         `Status: *Nonaktif*`,
         ``,
         `Fitur Patungan dimatikan.`,
@@ -202,7 +202,7 @@ export default {
         );
       });
 
-      await m.reply(claraWrap("Patungan - Riwayat", lines.join("\n")));
+      await m.reply(novaWrap("Patungan - Riwayat", lines.join("\n")));
       return { handled: true };
     }
 
@@ -233,7 +233,7 @@ export default {
         );
       });
 
-      await m.reply(claraWrap("Patungan - Daftar Aktif", lines.join("\n")));
+      await m.reply(novaWrap("Patungan - Daftar Aktif", lines.join("\n")));
       return { handled: true };
     }
 
@@ -291,7 +291,7 @@ export default {
         const mentionText = unpaidJids.map(j => `@${j.split("@")[0]}`).join(" ");
         lines.push(``, `📢 Tag yang belum bayar:`, `${mentionText}`);
 
-        const text = claraWrap("Patungan - Status", lines.join("\n")) +
+        const text = novaWrap("Patungan - Status", lines.join("\n")) +
           "\n" +
           tipText(`${prefix}ptg bayar ${bill.shortId} untuk tandai sudah bayar`);
 
@@ -301,7 +301,7 @@ export default {
         });
       } else {
         lines.push(``, `🎉 Patungan LUNAS semua!`);
-        const text = claraWrap("Patungan - Status", lines.join("\n")) +
+        const text = novaWrap("Patungan - Status", lines.join("\n")) +
           "\n" +
           tipText(`${prefix}ptg close ${bill.shortId} untuk tutup (owner)`);
         await m.reply(text);
@@ -374,7 +374,7 @@ export default {
         lines.push(``, `Ketik *${prefix}ptg bayar ${bill.shortId}* untuk tandai bayar`);
       }
 
-      await m.reply(claraWrap("Patungan - Bayar", lines.join("\n")));
+      await m.reply(novaWrap("Patungan - Bayar", lines.join("\n")));
       return { handled: true };
     }
 
@@ -447,7 +447,7 @@ export default {
       }
 
       await sock.sendMessage(groupId, {
-        text: claraWrap("Patungan - Lunas (Owner)", lines.join("\n")),
+        text: novaWrap("Patungan - Lunas (Owner)", lines.join("\n")),
         mentions: mentionedJids,
       });
       return { handled: true };
@@ -492,7 +492,7 @@ export default {
         `Status: CLOSED ✅`,
       ];
 
-      await m.reply(claraWrap("Patungan - Tutup", lines.join("\n")));
+      await m.reply(novaWrap("Patungan - Tutup", lines.join("\n")));
       return { handled: true };
     }
 
@@ -541,7 +541,7 @@ export default {
         }
       });
 
-      await m.reply(claraWrap("Patungan - Join", [
+      await m.reply(novaWrap("Patungan - Join", [
         `✅ *${senderName}* bergabung di patungan *${billId}*`,
         `${bill.description}`,
         `Bagian kamu: *${bill.perPerson}*`,
@@ -714,7 +714,7 @@ export default {
         `Ketik *${prefix}ptg status ${billId}*`,
       );
 
-      const text = claraWrap("Patungan - Baru", lines.join("\n")) +
+      const text = novaWrap("Patungan - Baru", lines.join("\n")) +
         "\n" +
         tipText(`${prefix}ptg status ${billId} untuk cek siapa belum bayar`);
 
@@ -725,7 +725,7 @@ export default {
       return { handled: true };
     }
 
-    const text = claraWrap("Patungan - Baru", lines.join("\n")) +
+    const text = novaWrap("Patungan - Baru", lines.join("\n")) +
       "\n" +
       tipText(`${prefix}ptg status ${billId} untuk cek siapa belum bayar`);
 

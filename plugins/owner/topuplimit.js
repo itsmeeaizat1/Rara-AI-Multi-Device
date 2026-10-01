@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetJid) {
-    return m.reply( claraWrap("Topup Limit",
+    return m.reply( novaWrap("Topup Limit",
       `Tag atau reply user yang mau ditambah limitnya.\n\n` +
       `Usage: \`.topuplimit @tag <jumlah>\`\n` +
       `Contoh: \`.topuplimit @user 500\``, "warn"), "topuplimit");
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
   const amount = parseInt(m.args?.find(a => !isNaN(a) && !a.startsWith("@")) || 0);
 
   if (!amount || amount <= 0) {
-    return m.reply( claraWrap("Topup Limit",
+    return m.reply( novaWrap("Topup Limit",
       `Jumlah tidak valid!\n\n` +
       `Contoh: \`.topuplimit @user 500\``, "warn"), "topuplimit");
   }

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // zelbetterwaifu.js — BetterWaifu Image via ZelAPI (NSFW, default DISABLED)
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { sendImage } from "../../src/lib/nova-message.js";
 import { fetchBuffer } from "../../src/lib/nova-utils.js";
 import { zelImageEndpoint } from "../../src/scraper/zelapi.js";
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   try {
     const prompt = (m.args || []).join(" ").trim();
     if (!prompt) {
-      return m.reply(claraWrap("zbetterwaifu", "🎨 *zbetterwaifu* — BetterWaifu Image Generator via ZelAPI (NSFW)\n\n⚠️ Fitur NSFW — default nonaktif (isEnabled: false di plugin), aktifin lewat kode kalau mau.\n\nContoh: *.zbetterwaifu waifu catgirl*"));
+      return m.reply(novaWrap("zbetterwaifu", "🎨 *zbetterwaifu* — BetterWaifu Image Generator via ZelAPI (NSFW)\n\n⚠️ Fitur NSFW — default nonaktif (isEnabled: false di plugin), aktifin lewat kode kalau mau.\n\nContoh: *.zbetterwaifu waifu catgirl*"));
     }
     await m.react("🧠");
     const r = await zelImageEndpoint("ai-image/betterwaifu", prompt, {

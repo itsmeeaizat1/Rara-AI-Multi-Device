@@ -2,7 +2,7 @@
 // yuprav2 — Yup AI
 // API asli (text.pollinations.ai) udah mati → sekarang lewat rantai fallback multi-API
 // (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
@@ -24,7 +24,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
-  if (!text) return m.reply(claraWrap("yuprav2", `Tanya apa?\nContoh: ${m.prefix}yuprav2 apa itu AI`, "guide"));
+  if (!text) return m.reply(novaWrap("yuprav2", `Tanya apa?\nContoh: ${m.prefix}yuprav2 apa itu AI`, "guide"));
   try {
     await m.react("🕒");
     const reply = await aiFallbackChat(text, { persona: "Yup AI", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("yuprav2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("yuprav2", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(novaWrap("yuprav2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

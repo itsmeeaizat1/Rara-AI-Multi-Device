@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "linkscanner",
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
   const url = m.args.join(" ").trim();
 
   if (!url) {
-    return m.reply( claraWrap("Link Scanner", [
+    return m.reply( novaWrap("Link Scanner", [
       "Scan URL untuk cek keamanan (phishing/malware/scam)",
       "",
       "CARA PAKAI:",
@@ -152,7 +152,7 @@ async function handler(m, { sock }) {
     const result = scanUrl(url);
 
     if (result.error) {
-      return m.reply(claraWrap("Link Scanner", "Error: " + result.error));
+      return m.reply(novaWrap("Link Scanner", "Error: " + result.error));
     }
 
     const verdictEmoji = result.verdict === "AMAN" ? "✅" : result.verdict === "HATI-HATI" ? "⚠️" : result.verdict === "MENCURIGAKAN" ? "⚠️" : "🚫";
@@ -188,10 +188,10 @@ async function handler(m, { sock }) {
     lines.push("Scan lokal — tanpa API, berdasarkan pattern matching");
 
     await m.react(result.verdict === "AMAN" ? "✅" : "⚠️");
-    return m.reply(claraWrap("Link Scanner", lines));
+    return m.reply(novaWrap("Link Scanner", lines));
   } catch (e) {
     console.error("[Link Scanner]", e);
-    return m.reply(claraWrap("Link Scanner", "Error: " + e.message));
+    return m.reply(novaWrap("Link Scanner", "Error: " + e.message));
   }
 }
 

@@ -6,7 +6,7 @@
 // ═════════════════════════════════════════════
 
 import { searchApiEngine, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { sapiErrorMessage } from "../../src/lib/nova-sapi-render.js";
 
 const pluginConfig = {
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         : cmd === "grute"
           ? `🗺️ Rute langkah-demi-langkah.\n\nFormat: *.grute <dari> | <ke> [| cara]*\nCara: mobil (default), jalan kaki, sepeda, bis\n\nContoh: .grute stasiun gambir | monas`
           : `📍 Info tempat (alamat, rating, jam buka, telepon).\n\nContoh: *.gmaps kafe jakarta*`;
-      return m.reply(claraWrap("gmaps", usage));
+      return m.reply(novaWrap("gmaps", usage));
     }
 
     await m.react("🧠");
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
       const parts = q.split("|").map((s) => s.trim()).filter(Boolean);
       if (parts.length < 2) {
         await m.react("❌");
-        return m.reply(claraWrap("gmaps", `💡 Format: *.grute <dari> | <ke> [| cara]*\n\nContoh: .grute stasiun gambir | monas | jalan kaki`));
+        return m.reply(novaWrap("gmaps", `💡 Format: *.grute <dari> | <ke> [| cara]*\n\nContoh: .grute stasiun gambir | monas | jalan kaki`));
       }
       const from = parts[0];
       const to = parts[1];
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
 
     if (!r.ok) {
       await m.react("❌");
-      return m.reply(claraWrap("gmaps", sapiErrorMessage(r.error)));
+      return m.reply(novaWrap("gmaps", sapiErrorMessage(r.error)));
     }
 
     const { renderPlaces, renderReviews, renderDirections } = await import("../../src/lib/nova-sapi-render.js");
@@ -68,14 +68,14 @@ async function handler(m, { sock }) {
 
     if (!body) {
       await m.react("❌");
-      return m.reply(claraWrap("gmaps", "⚠️ Gak ada hasil — coba nama tempat lebih spesifik."));
+      return m.reply(novaWrap("gmaps", "⚠️ Gak ada hasil — coba nama tempat lebih spesifik."));
     }
     await m.react("🐣");
-    return m.reply(claraWrap("gmaps", body));
+    return m.reply(novaWrap("gmaps", body));
   } catch (err) {
     console.error("[sapimaps]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("gmaps", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(novaWrap("gmaps", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

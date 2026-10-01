@@ -5,7 +5,7 @@
 
 import JavaScriptObfuscator from "javascript-obfuscator";
 import {
-  novaError, novaCaption, claraWrap, tipText,
+  novaError, novaCaption, novaWrap, tipText,
 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
 
     if (out.length <= 3500) {
       const text =
-        claraWrap("Obfuscate", [
+        novaWrap("Obfuscate", [
           "✅ Kode berhasil di-obfuscate (lokal, tanpa API)",
           "",
           "```" + out + "```",
@@ -93,7 +93,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
         { quoted: m },
       );
       const text =
-        claraWrap("Obfuscate", [
+        novaWrap("Obfuscate", [
           "✅ Kode berhasil di-obfuscate",
           `Hasil kepanjangan (${out.length} karakter) — dikirim sebagai file *${namaFile}*`,
         ].join("\n")) +

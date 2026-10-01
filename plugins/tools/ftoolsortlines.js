@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolsortlines — urutkan baris teks (port altftool.com/tools/all/sort-text-lines)
-import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolsortlines", alias: ["sortlines", "urutbaris", "sorttext"], category: "tools",
@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
     const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
     if (!lines.length) {
       await m.react("❌");
-      return m.reply(claraWrap("Sort Lines", ["ERROR: gak ada baris yang bisa diurutin"].join("\n")));
+      return m.reply(novaWrap("Sort Lines", ["ERROR: gak ada baris yang bisa diurutin"].join("\n")));
     }
     let out;
     if (mode === "az") out = [...lines].sort((a, b) => a.localeCompare(b, "id"));
@@ -45,12 +45,12 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     await m.react("🐣");
-    await m.reply(claraWrap("Sort Lines", [`HASIL SORT (${mode.toUpperCase()} ×${lines.length} baris)`,
+    await m.reply(novaWrap("Sort Lines", [`HASIL SORT (${mode.toUpperCase()} ×${lines.length} baris)`,
       "",
       "```" + (out.join("\n").length > 800 ? out.join("\n").substring(0, 800) + "…" : out.join("\n")) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Sort Lines", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Sort Lines", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

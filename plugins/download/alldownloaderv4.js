@@ -5,7 +5,7 @@
 // V1/V2/V3 gak disentuh sama sekali.
 
 import axios from "axios";
-import { claraWrap, novaGuide, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuide, toSC } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -175,7 +175,7 @@ async function handler(m, { sock, args }) {
   // daftar platform
   if (first === "platforms" || first === "list" || first === "site") {
     const lines = PLATFORMS.map((p) => `${p.icon} ${p.name} — ${p.id}`).join("\n");
-    return m.reply(claraWrap("All Downloader V4 — NixDL", `22 platform didukung:\n\n${lines}`));
+    return m.reply(novaWrap("All Downloader V4 — NixDL", `22 platform didukung:\n\n${lines}`));
   }
 
   // kumpulin semua URL dari args (batch)
@@ -248,7 +248,7 @@ async function handler(m, { sock, args }) {
   if (urls.length > 1 && fail) {
     await m.react(fail && !ok ? "❌" : "🐣");
     return m.reply(
-      claraWrap(
+      novaWrap(
         "All Downloader V4",
         `Berhasil ${ok}/${urls.length} link.` + (errors.length ? `\n\nGagal:\n${errors.join("\n")}` : "")
       )
@@ -257,7 +257,7 @@ async function handler(m, { sock, args }) {
 
   if (!ok) {
     await m.react("❌");
-    return m.reply(claraWrap("All Downloader V4", `Gagal: ${errors[0] || "link gak bisa diproses"}\n\nCoba ulang beberapa detik lagi (resolver publik kadang cold start), atau pakai .alldl / .alldownloader / .alldl3 sebagai alternatif.`));
+    return m.reply(novaWrap("All Downloader V4", `Gagal: ${errors[0] || "link gak bisa diproses"}\n\nCoba ulang beberapa detik lagi (resolver publik kadang cold start), atau pakai .alldl / .alldownloader / .alldl3 sebagai alternatif.`));
   }
 
   await m.react("🐣");

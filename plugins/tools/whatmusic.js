@@ -4,7 +4,7 @@ import { downloadMediaMessage } from "nova";
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "musikapaini",
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   }
 
   if (!audioBuffer) {
-    return m.reply(claraWrap("musikapaini", [
+    return m.reply(novaWrap("musikapaini", [
       `🎵 *MUsIK APA INI?*`,
       `Identifikasi lagu dari audio`,
       ``,
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const audioUrl = await uploadTo0x0(audioBuffer, filename);
 
-    await m.reply(claraWrap("Musikapaini", "🔍 *mengidentifikasi...*\n\nMencari info lagu..."));
+    await m.reply(novaWrap("Musikapaini", "🔍 *mengidentifikasi...*\n\nMencari info lagu..."));
 
     const data = await novaApi.neoxr.whatMusic(
       {
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data?.status || !data?.data) {
-      return m.reply(claraWrap("musikapaini", "❌ *gagal*\n\nLagu tidak dikenali atau API error"));
+      return m.reply(novaWrap("musikapaini", "❌ *gagal*\n\nLagu tidak dikenali atau API error"));
     }
 
     const music = data.data;
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(m.chat, msgContent, { quoted: m });
   } catch (error) {
     await m.react("❌");
-    m.reply(claraWrap("musikapaini", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("musikapaini", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

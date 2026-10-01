@@ -14,7 +14,7 @@ import {
   parseWaktuAutojoin, formatWaktuAutojoin, extractGroupCode, isChannelLink,
   _autojoinForTest,
 } from "../../src/lib/nova-autojoin.js";
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autojoin",
@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "list") {
       const tasks = listAutojoinTasks(owner);
       if (tasks.length === 0) {
-        return m.reply(claraWrap(label, "Belum ada tugas autojoin/autoout pending."), "autojoin");
+        return m.reply(novaWrap(label, "Belum ada tugas autojoin/autoout pending."), "autojoin");
       }
       const lines = [`🕒 ${tasks.length} tugas pending:`, ""];
       for (const t of tasks) {
@@ -79,7 +79,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(`   🔗 ${t.link}`);
         lines.push("");
       }
-      return m.reply(claraWrap(label, lines.join("\n").trim()), "autojoin");
+      return m.reply(novaWrap(label, lines.join("\n").trim()), "autojoin");
     }
 
     // ─── cancel ───
@@ -90,14 +90,14 @@ async function handler(m, { sock, config: botConfig }) {
       }
       const t = cancelAutojoinTask(String(id).toUpperCase(), owner);
       if (!t) {
-        return m.reply(claraWrap(label, [
+        return m.reply(novaWrap(label, [
           "❌ Tugas gak ketemu / udah dieksekusi.",
           "",
           `Cek id di ${prefix}autojoin list.`,
         ]), "autojoin");
       }
       await m.react("🐣");
-      return m.reply(claraWrap(label, [
+      return m.reply(novaWrap(label, [
         "✅ Tugas dibatalkan.",
         "",
         `${t.id} — ${t.action === "join" ? "join" : "out"} ${t.target}`,
@@ -115,7 +115,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (target === "group" && !extractGroupCode(link)) {
       await m.react("❌");
-      return m.reply(claraWrap(label, [
+      return m.reply(novaWrap(label, [
         "❌ Link grup gak valid.",
         "",
         `Harus berformat chat.whatsapp.com/<kode> — contoh:`,
@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (target === "channel" && !isChannelLink(link)) {
       await m.react("❌");
-      return m.reply(claraWrap(label, [
+      return m.reply(novaWrap(label, [
         "❌ Link channel gak valid.",
         "",
         `Harus berformat whatsapp.com/channel/<kode> — contoh:`,
@@ -133,7 +133,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (!waktuStr) {
       await m.react("❌");
-      return m.reply(claraWrap(label, [
+      return m.reply(novaWrap(label, [
         "❌ Waktu belum ditentukan.",
         "",
         WAKTU_HINT,
@@ -142,7 +142,7 @@ async function handler(m, { sock, config: botConfig }) {
     const at = parseWaktuAutojoin(waktuStr);
     if (!at) {
       await m.react("❌");
-      return m.reply(claraWrap(label, [
+      return m.reply(novaWrap(label, [
         "❌ Waktu gak valid / terlalu dekat / terlalu jauh.",
         "",
         WAKTU_HINT,
@@ -152,14 +152,14 @@ async function handler(m, { sock, config: botConfig }) {
     const res = addAutojoinTask(sock, { action, target, link, at, owner });
     if (!res.ok) {
       await m.react("❌");
-      return m.reply(claraWrap(label, [
+      return m.reply(novaWrap(label, [
         "❌ Tugas gagal dipasang.",
         "",
         res.reason || "",
       ]), "autojoin");
     }
     await m.react("🐣");
-    return m.reply(claraWrap(label, [
+    return m.reply(novaWrap(label, [
       `🕒 Tugas terpasang — ${res.task.id}`,
       "",
       `Aksi: ${action === "join" ? "📥 join" : "📤 keluar"} ${target === "group" ? "grup" : "channel"}`,
@@ -171,7 +171,7 @@ async function handler(m, { sock, config: botConfig }) {
     ]), "autojoin");
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("autojoin", `❌ Gagal: ${e?.message || e}`), "autojoin");
+    return m.reply(novaWrap("autojoin", `❌ Gagal: ${e?.message || e}`), "autojoin");
   }
 }
 

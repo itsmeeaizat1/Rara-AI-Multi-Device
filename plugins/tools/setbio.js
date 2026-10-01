@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'setbio',
     alias: ["setbio"],
@@ -20,7 +20,7 @@ async function handler(m, { sock }) {
     const newBio = m.text?.trim()
     
     if (!newBio && m.args?.length === 0) {
-        await m.reply(claraWrap("setbio", [
+        await m.reply(novaWrap("setbio", [
       `📌 Format: ${m.prefix}setbio <bio bot baru>`,
       `💡 Contoh: ${m.prefix}setbio Nova AI siap membantu`,
       `Hapus bio: ${m.prefix}setbio clear`
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     const bioToSet = newBio?.toLowerCase() === 'clear' ? '' : (newBio || '')
     
     if (bioToSet.length > 139) {
-        await m.reply(claraWrap("setbio", `⚠️ *validasi*\n\n` +
+        await m.reply(novaWrap("setbio", `⚠️ *validasi*\n\n` +
             `Bio maksimal 139 karakter.`))
         return
     }
@@ -41,12 +41,12 @@ async function handler(m, { sock }) {
         await sock.updateProfileStatus(bioToSet)
         
         if (bioToSet) {
-            await m.reply(claraWrap("setbio", `✅ *bio bot diubah*\n\n` +
+            await m.reply(novaWrap("setbio", `✅ *bio bot diubah*\n\n` +
                 `Bio bot sekarang:\n` +
                 `_${bioToSet}_`))
         } else {
             await m.react("🐣");
-            await m.reply(claraWrap("setbio", `✅ *bio bot dihapus*\n\n` +
+            await m.reply(novaWrap("setbio", `✅ *bio bot dihapus*\n\n` +
                 `Bio bot berhasil dihapus!`))
         }
     } catch (error) {

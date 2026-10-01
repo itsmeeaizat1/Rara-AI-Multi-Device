@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autohadith",
@@ -76,7 +76,7 @@ export function startAutoHadith(groupId, sock, db) {
       const msg = "Hadist Hari Ini:\n\n" + hadith.text + "\n\n" + hadith.source + "\nDari: " + hadith.narrator + "\n\nMode: Otomatis tiap " + g.interval + " menit";
 
       await sock.sendMessage(groupId, {
-        text: claraWrap("Auto Hadith", msg, "info"),
+        text: novaWrap("Auto Hadith", msg, "info"),
       });
     } catch (e) {
       console.error("[AutoHadith interval]", e);
@@ -118,7 +118,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       startAutoHadith(groupId, conn, db);
 
-      return m.reply(claraWrap("Auto Hadith", [
+      return m.reply(novaWrap("Auto Hadith", [
         "Hadist otomatis DIAKTIFKAN!",
         "",
         "Interval: " + interval + " menit",
@@ -135,14 +135,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await db.save();
       stopAutoHadith(groupId);
 
-      return m.reply(claraWrap("Auto Hadith", "Hadist otomatis DIMATIKAN.\nKetik .autohadith on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Auto Hadith", "Hadist otomatis DIMATIKAN.\nKetik .autohadith on untuk aktifkan lagi."));
     }
 
     // STATUS
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
 
-      return m.reply(claraWrap("Auto Hadith", [
+      return m.reply(novaWrap("Auto Hadith", [
         "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit",
         "Total terkirim: " + (cfg.totalSent || 0),
@@ -159,7 +159,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       cfg.totalSent = (cfg.totalSent || 0) + 1;
       await db.save();
 
-      return m.reply(claraWrap("Auto Hadith", [
+      return m.reply(novaWrap("Auto Hadith", [
         "Hadist:",
         "",
         hadith.text,
@@ -172,7 +172,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // HELP
-    return m.reply(claraWrap("Auto Hadith", [
+    return m.reply(novaWrap("Auto Hadith", [
       "Kirim hadist random otomatis tiap interval",
       "",
       "CARA PAKAI:",
@@ -187,7 +187,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]));
   } catch (e) {
     console.error("[Auto Hadith]", e);
-    m.reply(claraWrap("Auto Hadith", "Error: " + e.message));
+    m.reply(novaWrap("Auto Hadith", "Error: " + e.message));
   }
 }
 

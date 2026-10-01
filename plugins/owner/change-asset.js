@@ -2,7 +2,7 @@
 import config from '../../config.js';
 import { updateAssetUrl } from '../../src/lib/nova-uploader.js';
 import te from '../../src/lib/nova-error.js';
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'ganti-asset',
@@ -44,13 +44,13 @@ async function handler(m, { sock }) {
         }
 
         if (!buffer) {
-            return m.reply(claraWrap("Ganti-asset", '❌ Gagal mendownload media.'));
+            return m.reply(novaWrap("Ganti-asset", '❌ Gagal mendownload media.'));
         }
 
         const assets = config.assets || {};
         const keys = Object.keys(assets);
         if (keys.length === 0) {
-            return m.reply(claraWrap("Ganti-asset", '❌ Tidak ada asset di config.js.'));
+            return m.reply(novaWrap("Ganti-asset", '❌ Tidak ada asset di config.js.'));
         }
 
         const imageKeys = [];
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
             }
         }, 120000);
     } catch (error) {
-        await m.reply(claraWrap("ganti-asset", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(novaWrap("ganti-asset", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 
@@ -145,7 +145,7 @@ async function gantiAssetAnswerHandler(m, sock) {
 
     if (num < 1 || num > session.keys.length) {
         if (m.quoted && m.quoted.fromMe) {
-            m.reply(claraWrap("Ganti-asset", `❌ Nomor tidak valid. Pilih antara 1-${session.keys.length}.`));
+            m.reply(novaWrap("Ganti-asset", `❌ Nomor tidak valid. Pilih antara 1-${session.keys.length}.`));
         }
         return false;
     }
@@ -158,19 +158,19 @@ async function gantiAssetAnswerHandler(m, sock) {
     const isFontUpload = session.isFontUpload;
 
     if (session.imageKeys && session.imageKeys.includes(selectedKey) && !isImageUpload) {
-        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file gambar (Image).`));
+        await m.reply(novaWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file gambar (Image).`));
         return true;
     }
     if (session.videoKeys && session.videoKeys.includes(selectedKey) && !isVideoUpload) {
-        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file video.`));
+        await m.reply(novaWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file video.`));
         return true;
     }
     if (session.audioKeys && session.audioKeys.includes(selectedKey) && !isAudioUpload) {
-        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file audio.`));
+        await m.reply(novaWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file audio.`));
         return true;
     }
     if (session.fontKeys && session.fontKeys.includes(selectedKey) && !isFontUpload) {
-        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file dokumen font (.ttf/.otf).`));
+        await m.reply(novaWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file dokumen font (.ttf/.otf).`));
         return true;
     }
 
@@ -185,7 +185,7 @@ async function gantiAssetAnswerHandler(m, sock) {
         { const __navText = `✅ *berhasil*\n\nAsset *${selectedKey}* telah diganti ke:\n${newPath}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); };
         delete global.gantiAssetSessions[m.chat];
     } catch (e) {
-        await m.reply(claraWrap("ganti-asset", `❌ Gagal mengganti asset: ${e.message}`));
+        await m.reply(novaWrap("ganti-asset", `❌ Gagal mengganti asset: ${e.message}`));
     }
 
     return true;

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // mewarnai — Warnai foto sketsa otomatis via IkyyXD
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(claraWrap("Mewarnai", [
+      return m.reply(novaWrap("Mewarnai", [
         "Warnai foto sketsa otomatis",
         "",
         "CARA PAKAI:",
@@ -58,16 +58,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: claraWrap("Mewarnai", "Berhasil: Warnai foto sketsa otomatis"),
+        caption: novaWrap("Mewarnai", "Berhasil: Warnai foto sketsa otomatis"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("Mewarnai", data?.error?.message || data?.error || data?.message || "Gagal memproses. Coba foto lain."));
+      await m.reply(novaWrap("Mewarnai", data?.error?.message || data?.error || data?.message || "Gagal memproses. Coba foto lain."));
     }
   } catch (e) {
     console.error("[coloring.js]:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("Mewarnai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("Mewarnai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

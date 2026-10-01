@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * .belanja — sistem belanja untuk user (lihat katalog, pesan, cek pesanan).
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
   // ── KATALOG ──
   if (action === "katalog" || action === "list" || action === "all" || !action) {
     const products = listProducts();
-    if (products.length === 0) return m.reply(claraWrap("belanja", "Maaf, toko belum punya produk."));
+    if (products.length === 0) return m.reply(novaWrap("belanja", "Maaf, toko belum punya produk."));
 
     const storeConfig = getStoreConfig();
     const cats = listCategories();
@@ -65,16 +65,16 @@ async function handler(m, { sock }) {
       txt += `${cat} (${count} produk)\n`;
     }
     txt += "\nLihat: .belanja katalog <nama kategori>";
-    return await m.reply(claraWrap("belanja", txt));
+    return await m.reply(novaWrap("belanja", txt));
   }
 
   // ── PESAN ──
   if (action === "pesan" || action === "order" || action === "beli") {
     const id = args[1];
-    if (!id) return m.reply(claraWrap("Belanja", "Format: .belanja pesan <id produk> [qty] [catatan]"));
+    if (!id) return m.reply(novaWrap("Belanja", "Format: .belanja pesan <id produk> [qty] [catatan]"));
 
     const product = getProduct(id);
-    if (!product) return m.reply(claraWrap("Belanja", `Produk tidak ditemukan: ${id}`, "error"));
+    if (!product) return m.reply(novaWrap("Belanja", `Produk tidak ditemukan: ${id}`, "error"));
 
     const qty = parseInt(args[2]) || 1;
     const note = args.slice(3).join(" ").trim();
@@ -99,13 +99,13 @@ async function handler(m, { sock }) {
     txt += `Tanggal: ${formatDate(order.createdAt)}\n`;
     if (order.note) txt += `Catatan: ${order.note}\n`;
     if (order.sellerNote) txt += `Catatan penjual: ${order.sellerNote}\n`;
-    return await m.reply(claraWrap("belanja", txt));
+    return await m.reply(novaWrap("belanja", txt));
   }
 
   // ── CEK PESANAN ──
   if (action === "cek" || action === "pesanan") {
     const orders = getOrdersByBuyer(jid);
-    if (orders.length === 0) return m.reply(claraWrap("belanja", "Kamu belum punya pesanan. Ketik .belanja katalog untuk lihat produk."));
+    if (orders.length === 0) return m.reply(novaWrap("belanja", "Kamu belum punya pesanan. Ketik .belanja katalog untuk lihat produk."));
 
     let txt = `PESANANKU\n\n`;
     for (const o of orders) {
@@ -114,11 +114,11 @@ async function handler(m, { sock }) {
       txt += `  Status: ${statusText(o.status)}\n\n`;
     }
     txt += "Detail: .belanja cek <id pesanan>";
-    return await m.reply(claraWrap("belanja", txt));
+    return await m.reply(novaWrap("belanja", txt));
   }
 
   // ── HELP ──
-  return m.reply(claraWrap("belanja", [
+  return m.reply(novaWrap("belanja", [
     "1. .belanja — Lihat katalog",
     "2. .belanja detail <id> — Detail produk",
     "3. .belanja cari <kata> — Cari produk",

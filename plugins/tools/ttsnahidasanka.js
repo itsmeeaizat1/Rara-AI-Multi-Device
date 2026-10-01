@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ttsnahidasanka",
@@ -81,7 +81,7 @@ async function handler(m, { sock, args }) {
     let txt = `Gagal generate voice Nahida!\n\n`;
     txt += `Error: ${e.message}\n\n`;
     txt += `API mungkin sedang down atau rate limited.`;
-    await m.reply(claraWrap("ttsnahidasanka", txt));
+    await m.reply(novaWrap("ttsnahidasanka", txt));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // ─── Frame definitions ───
 const FRAMES = {
@@ -713,13 +713,13 @@ export default {
         `*${prefix}stikerframe random* = bingkai acak`,
       );
 
-      await m.reply(claraWrap("StikerFrame", lines.join("\n")));
+      await m.reply(novaWrap("StikerFrame", lines.join("\n")));
       return { handled: true };
     }
 
     // ─── Need image ───
     if (!isImage && !hasQuotedImage) {
-      await m.reply(claraWrap("StikerFrame", [
+      await m.reply(novaWrap("StikerFrame", [
         `Kirim atau reply foto dengan caption:`,
         `*${prefix}stikerframe [jenis]*`,
         ``,
@@ -737,7 +737,7 @@ export default {
         imgBuffer = await m.download();
       }
     } catch (e) {
-      await m.reply(claraWrap("StikerFrame", [
+      await m.reply(novaWrap("StikerFrame", [
         `Gagal download foto nih.`,
         `Coba kirim ulang ya.`,
       ].join("\n")));
@@ -745,7 +745,7 @@ export default {
     }
 
     if (!imgBuffer || imgBuffer.length === 0) {
-      await m.reply(claraWrap("StikerFrame", [
+      await m.reply(novaWrap("StikerFrame", [
         `Foto kosong nih, coba ulangi.`,
       ].join("\n")));
       return { handled: true };
@@ -764,7 +764,7 @@ export default {
 
     // Validate frame
     if (!FRAMES[useFrame]) {
-      await m.reply(claraWrap("StikerFrame", [
+      await m.reply(novaWrap("StikerFrame", [
         `Jenis bingkai tidak ditemukan: *${useFrame}*`,
         ``,
         `Ketik *${prefix}stikerframe list* untuk lihat semua pilihan.`,
@@ -796,7 +796,7 @@ export default {
         await m.reply(novaBerhasil("Polaroid"));
     } catch (e) {
       console.log("[StikerFrame] Error:", e.message);
-      await m.reply(claraWrap("StikerFrame", [
+      await m.reply(novaWrap("StikerFrame", [
         `Gagal memproses bingkai: ${e.message}`,
         `Coba jenis bingkai lain ya.`,
       ].join("\n")));

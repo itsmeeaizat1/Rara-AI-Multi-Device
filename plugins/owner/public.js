@@ -6,7 +6,7 @@ import config from '../../config.js'
  */
 import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "public",
     alias: ["public"],
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     try {
         const isRealOwner = validateOwner(m);
         if (!isRealOwner) {
-            return m.reply(claraWrap("Public", '🚫 *Akses Ditolak*\n\nHanya owner yang bisa mengubah mode bot!'));
+            return m.reply(novaWrap("Public", '🚫 *Akses Ditolak*\n\nHanya owner yang bisa mengubah mode bot!'));
         }
         const currentMode = config.mode;
         if (currentMode === 'public') {
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
         console.log(`[Mode] Changed to PUBLIC by ${m.pushName} (${m.sender})`);
     } catch (error) {
         console.error('[Public Command Error]', error);
-        await m.reply(claraWrap("public", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(novaWrap("public", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 

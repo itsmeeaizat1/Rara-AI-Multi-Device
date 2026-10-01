@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolurlcode — encode/decode URL (port altftool.com/tools/all/url-encoder-decoder)
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolurlcode", alias: ["urlcode", "urlencode", "urldecode"], category: "tools",
@@ -49,12 +49,12 @@ async function handler(m, { sock, config: botConfig }) {
       }), "ftoolurlcode");
     }
     await m.react("🐣");
-    await m.reply(claraWrap("URL Encode/Decode", [`Hasil (${action === "enc" || action === "encode" ? "encode" : "decode"}):`,
+    await m.reply(novaWrap("URL Encode/Decode", [`Hasil (${action === "enc" || action === "encode" ? "encode" : "decode"}):`,
       "",
       "```" + (result.length > 800 ? result.substring(0, 800) + "…" : result) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("URL Encode/Decode", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("URL Encode/Decode", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

@@ -4,7 +4,7 @@
 import fs from "fs";
 import path from "path";
 import { proto } from "nova";
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "addmsg",
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
       msgs[text] = proto.WebMessageInfo.fromObject(obj).toJSON();
       saveMsgs(msgs);
       await m.react("⚡");
-      await m.reply(claraWrap("Addmsg", "Pesan '" + text + "' tersimpan. Panggil: " + prefix + "getmsg " + text));
+      await m.reply(novaWrap("Addmsg", "Pesan '" + text + "' tersimpan. Panggil: " + prefix + "getmsg " + text));
       return { handled: true };
     }
 
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
       delete msgs[text];
       saveMsgs(msgs);
       await m.react("⚡");
-      await m.reply(claraWrap("Delmsg", "Pesan '" + text + "' dihapus"));
+      await m.reply(novaWrap("Delmsg", "Pesan '" + text + "' dihapus"));
       return { handled: true };
     }
 
@@ -98,7 +98,7 @@ async function handler(m, { sock, config: botConfig }) {
     // list
     const names = Object.keys(msgs);
     await m.react("⚡");
-    await m.reply(claraWrap("Bank Pesan", names.length
+    await m.reply(novaWrap("Bank Pesan", names.length
       ? ["Total: *" + names.length + "*", "", ...names.slice(0, 50).map((n) => "- " + n), names.length > 50 ? "... dan " + (names.length - 50) + " lagi" : ""].filter(Boolean).join("\n")
       : "Masih kosong — simpen dengan " + prefix + "addmsg <nama> (reply pesan)"));
   } catch (error) {

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { gpMsg } from "../../src/lib/nova-group-protection.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antivn",
@@ -57,17 +57,17 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antivn: true });
-    await m.reply(claraWrap("Antivn", `Anti VN diaktifkan`));
+    await m.reply(novaWrap("Antivn", `Anti VN diaktifkan`));
     return;
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antivn: false });
-    await m.reply(claraWrap("Antivn", `Anti VN dinonaktifkan`));
+    await m.reply(novaWrap("Antivn", `Anti VN dinonaktifkan`));
     return;
   }
 
-  await m.reply(claraWrap("Anti vn", `Gunakan \`${m.prefix}antivn on\` atau \`${m.prefix}antivn off\``, "info"));
+  await m.reply(novaWrap("Anti vn", `Gunakan \`${m.prefix}antivn on\` atau \`${m.prefix}antivn off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiVn };

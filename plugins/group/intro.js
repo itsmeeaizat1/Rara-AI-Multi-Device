@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 import moment from 'moment-timezone'
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     const introText = groupData.intro || DEFAULT_INTRO
     const parsed = parsePlaceholders(introText, m, groupMeta)
     
-    await m.reply(claraWrap("intro", parsed), { mentions: [m.sender] });
+    await m.reply(novaWrap("intro", parsed), { mentions: [m.sender] });
 }
 
 export { pluginConfig as config, handler, parsePlaceholders, DEFAULT_INTRO }

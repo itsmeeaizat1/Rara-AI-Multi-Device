@@ -2,7 +2,7 @@
 // pdftoimg.js — PDF ke gambar: reply PDF, tiap halaman jadi PNG
 // Fitur baru 9 Sep 2026 (request owner "fitur yg blm prnh ada di bot")
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { pdfToImages, MAX_PAGES, DEFAULT_PAGES } from "../../src/lib/nova-pdftoimg.js";
 
 const pluginConfig = {
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const isPdf = q && (q.mimetype === "application/pdf" || String(q.fileName || q.filename || "").toLowerCase().endsWith(".pdf"));
     if (!q || !isPdf) {
       await m.react("❌");
-      return m.reply(claraWrap("pdftoimg", `Reply dokumen PDF-nya dulu, terus ketik:\n\n${m.prefix}pdftoimg [jumlah|all]`, "error"));
+      return m.reply(novaWrap("pdftoimg", `Reply dokumen PDF-nya dulu, terus ketik:\n\n${m.prefix}pdftoimg [jumlah|all]`, "error"));
     }
 
     const pagesArg = m.args[0] || String(DEFAULT_PAGES);
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const buffer = q.buffer || (q.url ? await downloadFile(q.url) : null);
     if (!buffer) {
       await m.react("❌");
-      return m.reply(claraWrap("pdftoimg", "Dokumennya gak bisa diunduh — coba kirim ulang PDF-nya.", "error"));
+      return m.reply(novaWrap("pdftoimg", "Dokumennya gak bisa diunduh — coba kirim ulang PDF-nya.", "error"));
     }
 
     const res = await pdfToImages(buffer, { pagesArg });
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
         pdf_invalid: "File-nya gak valid / bukan PDF yang bisa dibaca.",
         render_failed: "Halaman-halamannya gagal dirender — PDF-nya mungkin rusak.",
       };
-      return m.reply(claraWrap("pdftoimg", msgs[res.error] || "Gagal render PDF.", "error"));
+      return m.reply(novaWrap("pdftoimg", msgs[res.error] || "Gagal render PDF.", "error"));
     }
 
     await m.react("🐣");
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     }
   } catch (e) {
     await m.react("❌");
-    m.reply(claraWrap("pdftoimg", "Gagal: " + (e?.message || e), "error"));
+    m.reply(novaWrap("pdftoimg", "Gagal: " + (e?.message || e), "error"));
   }
 }
 

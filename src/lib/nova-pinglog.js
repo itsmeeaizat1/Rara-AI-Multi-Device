@@ -125,7 +125,7 @@ async function checkRamAlert(print = () => {}) {
     const tgl = new Date(now).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "long", year: "numeric" });
     const cpu = getCpuLoadInfo();
     // rev owner 26 Sep: "pas dikirim ke chat jgn ada format ballpointnya" —
-    // DM alert dikirim PLAIN TEXT, tanpa bingkai kotak claraWrap.
+    // DM alert dikirim PLAIN TEXT, tanpa bingkai kotak novaWrap.
     const dmLines = [
       `🧠 RAM SISTEM TINGGI`,
       ``,

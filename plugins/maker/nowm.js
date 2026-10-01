@@ -2,7 +2,7 @@
 import sharp from "sharp";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nowm",
@@ -224,7 +224,7 @@ async function handler(m, { sock }) {
     qmsg.mimetype?.includes("image");
 
   if (!isImage) {
-    return m.reply(claraWrap("nowm", [
+    return m.reply(novaWrap("nowm", [
       "Hapus watermark, logo, teks, atau object dari gambar.",
       "",
       "📌 Format:",
@@ -247,7 +247,7 @@ async function handler(m, { sock }) {
   try {
     const imageBuffer = await qmsg.download();
     if (!imageBuffer) {
-      return m.reply(claraWrap("nowm", "Gagal download gambar. Coba lagi."));
+      return m.reply(novaWrap("nowm", "Gagal download gambar. Coba lagi."));
     }
 
     // Resize if too large (ClipDrop max 16MP, but keep small for speed)
@@ -279,7 +279,7 @@ async function handler(m, { sock }) {
           : status === 401
             ? "API key tidak valid. Fallback ke local mode."
             : "ClipDrop error (" + (apiErr.message || "unknown") + "). Fallback ke local mode.";
-        await m.reply(claraWrap("nowm", errMsg));
+        await m.reply(novaWrap("nowm", errMsg));
         resultBuffer = await localWatermarkRemove(processedBuffer, maskBuffer);
       }
     } else {
@@ -287,7 +287,7 @@ async function handler(m, { sock }) {
     }
 
     if (!resultBuffer) {
-      return m.reply(claraWrap("nowm", "Gagal memproses gambar. Coba gambar lain."));
+      return m.reply(novaWrap("nowm", "Gagal memproses gambar. Coba gambar lain."));
     }
     await m.react("🐣");
     await sock.sendMessage(
@@ -300,7 +300,7 @@ async function handler(m, { sock }) {
     );
   } catch (e) {
     await m.react("❌");
-    m.reply(claraWrap("nowm", "Gagal: " + e.message, "error"));
+    m.reply(novaWrap("nowm", "Gagal: " + e.message, "error"));
   }
 }
 

@@ -5,7 +5,7 @@
 // ═════════════════════════════════════════════
 
 import { searchApiEngine, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { sapiErrorMessage, renderNews, renderJobs, renderEvents, renderImages, renderVideos, renderOrganic } from "../../src/lib/nova-sapi-render.js";
 
 const CMDS = {
@@ -33,24 +33,24 @@ async function handler(m, { sock }) {
     const cmd = (m.command || "gnews").toLowerCase();
     const spec = CMDS[cmd];
     if (!spec) {
-      return m.reply(claraWrap("gnews", `💡 Command: .gnews .gjobs .gevents .gimages .sapiyts .sapireddit`));
+      return m.reply(novaWrap("gnews", `💡 Command: .gnews .gjobs .gevents .gimages .sapiyts .sapireddit`));
     }
     const q = (m.args || []).join(" ").trim();
     if (!q) {
-      return m.reply(claraWrap("gnews", `${spec.emoji} ${spec.label} — plain text lengkap.\n\nContoh: *.${cmd} ${spec.hint}*`));
+      return m.reply(novaWrap("gnews", `${spec.emoji} ${spec.label} — plain text lengkap.\n\nContoh: *.${cmd} ${spec.hint}*`));
     }
 
     await m.react("🧠");
     const r = await searchApiEngine(spec.engine, { q, ...(spec.extra || {}) });
-    if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("gnews", sapiErrorMessage(r.error))); }
+    if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("gnews", sapiErrorMessage(r.error))); }
     const body = spec.render(r.data);
-    if (!body) { await m.react("❌"); return m.reply(claraWrap("gnews", "⚠️ Gak ada hasil — coba kata kunci lain.")); }
+    if (!body) { await m.react("❌"); return m.reply(novaWrap("gnews", "⚠️ Gak ada hasil — coba kata kunci lain.")); }
     await m.react("🐣");
-    return m.reply(claraWrap("gnews", `${spec.emoji} *${spec.label} — ${q.toUpperCase().slice(0, 50)}*\n\n${body}`));
+    return m.reply(novaWrap("gnews", `${spec.emoji} *${spec.label} — ${q.toUpperCase().slice(0, 50)}*\n\n${body}`));
   } catch (err) {
     console.error("[sapimedia]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("gnews", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(novaWrap("gnews", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

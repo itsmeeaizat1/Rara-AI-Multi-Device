@@ -7,7 +7,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 import { updateAssetUrl } from "../../src/lib/nova-uploader.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setpayment",
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
       if (!data.cash) data.cash = { enabled: false, info: "" };
       data.cash.enabled = sub === "on";
       savePaymentData(data);
-      return m.reply(claraWrap("Info", "\u2705 Pembayaran cash: " + (sub === "on" ? "ON" : "OFF")));
+      return m.reply(novaWrap("Info", "\u2705 Pembayaran cash: " + (sub === "on" ? "ON" : "OFF")));
     }
 
     if (sub === "info" || sub === "set") {
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
       data.cash.info = info;
       data.cash.enabled = true;
       savePaymentData(data);
-      return m.reply(claraWrap("setpayment", "Info cash disimpan: " + info));
+      return m.reply(novaWrap("setpayment", "Info cash disimpan: " + info));
     }
 
     return m.reply(
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
         const data = getPaymentData();
         data.qrisUrl = url;
         savePaymentData(data);
-        return m.reply(claraWrap("setpayment", "QRIS diatur via URL: " + url));
+        return m.reply(novaWrap("setpayment", "QRIS diatur via URL: " + url));
       }
       return m.reply(
         "Cara set QRIS:\n\n" +
@@ -114,16 +114,16 @@ async function handler(m, { sock }) {
         buffer = await m.download();
       }
 
-      if (!buffer) return m.reply(claraWrap("setpayment", "Gagal download gambar QRIS"));
+      if (!buffer) return m.reply(novaWrap("setpayment", "Gagal download gambar QRIS"));
 
       const uploadResult = await updateAssetUrl(buffer, "toko-qris.jpg", "images");
       const data = getPaymentData();
       data.qrisUrl = uploadResult;
       savePaymentData(data);
 
-      return m.reply(claraWrap("Setpayment", "QRIS berhasil diatur dan disimpan."));
+      return m.reply(novaWrap("Setpayment", "QRIS berhasil diatur dan disimpan."));
     } catch (err) {
-      return m.reply(claraWrap("setpayment", "Gagal upload QRIS. Coba lagi.", "error"));
+      return m.reply(novaWrap("setpayment", "Gagal upload QRIS. Coba lagi.", "error"));
     }
   }
 
@@ -167,15 +167,15 @@ async function handler(m, { sock }) {
 
   if (action === "del" || action === "hapus") {
     const name = args.slice(1).join(" ").trim();
-    if (!name) return m.reply(claraWrap("Setpayment", "Format: .setpayment del <nama e-wallet>"));
+    if (!name) return m.reply(novaWrap("Setpayment", "Format: .setpayment del <nama e-wallet>"));
 
     const data = getPaymentData();
     const before = data.methods.length;
     data.methods = data.methods.filter((m) => m.name.toLowerCase() !== name.toLowerCase());
     savePaymentData(data);
 
-    if (data.methods.length === before) return m.reply(claraWrap("setpayment", "E-wallet tidak ditemukan: " + name));
-    return m.reply(claraWrap("setpayment", "E-wallet dihapus: " + name));
+    if (data.methods.length === before) return m.reply(novaWrap("setpayment", "E-wallet tidak ditemukan: " + name));
+    return m.reply(novaWrap("setpayment", "E-wallet dihapus: " + name));
   }
 
   // ── BANK / REKENING ──────────────────────────────────────────────────────────
@@ -220,18 +220,18 @@ async function handler(m, { sock }) {
 
     if (sub === "del" || sub === "hapus") {
       const name = args.slice(2).join(" ").trim();
-      if (!name) return m.reply(claraWrap("Setpayment", "Format: .setpayment bank del <nama bank>"));
+      if (!name) return m.reply(novaWrap("Setpayment", "Format: .setpayment bank del <nama bank>"));
 
       const data = getPaymentData();
       const before = data.banks.length;
       data.banks = data.banks.filter((b) => b.name.toLowerCase() !== name.toLowerCase());
       savePaymentData(data);
 
-      if (data.banks.length === before) return m.reply(claraWrap("setpayment", "Bank tidak ditemukan: " + name));
-      return m.reply(claraWrap("setpayment", "Rekening bank dihapus: " + name));
+      if (data.banks.length === before) return m.reply(novaWrap("setpayment", "Bank tidak ditemukan: " + name));
+      return m.reply(novaWrap("setpayment", "Rekening bank dihapus: " + name));
     }
 
-    return m.reply(claraWrap("Setpayment", "Format: .setpayment bank add <bank>|<rek>|<an> atau .setpayment bank del <nama>"));
+    return m.reply(novaWrap("Setpayment", "Format: .setpayment bank add <bank>|<rek>|<an> atau .setpayment bank del <nama>"));
   }
 
   // ── LIST / STATUS ─────────────────────────────────────────────────────────────
@@ -288,10 +288,10 @@ async function handler(m, { sock }) {
     txt += "6. .setpayment bank add <bank>|<rek>|<an>\n";
     txt += "7. .setpayment bank del <nama bank>";
 
-    return await m.reply(claraWrap("setpayment", txt));
+    return await m.reply(novaWrap("setpayment", txt));
   }
 
-  return m.reply(claraWrap("Setpayment", "Perintah tidak dikenal. Ketik .setpayment untuk lihat semua perintah."));
+  return m.reply(novaWrap("Setpayment", "Perintah tidak dikenal. Ketik .setpayment untuk lihat semua perintah."));
 }
 
 export { pluginConfig as config, handler };

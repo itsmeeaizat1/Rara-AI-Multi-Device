@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import {  novaWrap, novaLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "setaudioallmenu",
@@ -34,10 +34,10 @@ async function handler(m, { sock }) {
 
     const newStyle = parseInt(args);
     if (isNaN(newStyle) || newStyle < 1 || newStyle > 4) {
-        return m.reply(claraWrap("setaudioallmenu", `❌ *GAGAL*\n\nPilihan varian audio harus berupa angka 1 sampai 4.\n💡 *Contoh:* *${m.prefix}setaudioallmenu 2*`));
+        return m.reply(novaWrap("setaudioallmenu", `❌ *GAGAL*\n\nPilihan varian audio harus berupa angka 1 sampai 4.\n💡 *Contoh:* *${m.prefix}setaudioallmenu 2*`));
     }
     db.setting("allmenuAudioStyle", newStyle);
-    await m.reply(claraWrap("Setaudioallmenu", `✅ *BERHASIL*\n\nGaya audio All Menu telah sukses diubah menjadi *Varian ${newStyle}*. Silakan tes dengan mengetik *${m.prefix}allmenu*.`));
+    await m.reply(novaWrap("Setaudioallmenu", `✅ *BERHASIL*\n\nGaya audio All Menu telah sukses diubah menjadi *Varian ${newStyle}*. Silakan tes dengan mengetik *${m.prefix}allmenu*.`));
 }
 
 export { pluginConfig as config, handler };

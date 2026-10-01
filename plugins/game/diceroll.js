@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Dadu — Random dice sticker
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("dadu error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("dadu", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("dadu", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

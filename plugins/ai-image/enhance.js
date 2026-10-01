@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
     fs.writeFileSync(resultPath, resultBuffer);
 
     const caption =
-      claraWrap("Enhance", ["Status: *Berhasil*",
+      novaWrap("Enhance", ["Status: *Berhasil*",
         "Model: *AI Enhancement*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}enhance untuk enhance media lain`) +

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kampuskampus",
@@ -181,7 +181,7 @@ async function handler(m, { sock, args }) {
     await m.reply(`Istilah "${query}" tidak ditemukan!\n\nKetik \`${m.prefix}kamus list\` untuk daftar semua istilah.`);
   } catch (e) {
     console.error("[KAMUS] Error:", e.message);
-    await m.reply(claraWrap("kampuskampus", `Error: ${e.message}`));
+    await m.reply(novaWrap("kampuskampus", `Error: ${e.message}`));
   }
 }
 

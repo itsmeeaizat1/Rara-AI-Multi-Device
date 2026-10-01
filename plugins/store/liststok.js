@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
             txt += `${typeIcon} *${i + 1}.* ${p.name} — ${stockDisplay} ${icon}\n`
         }
         txt += `\nKetik \`${m.prefix}liststok <nomor>\` untuk melihat detail stok 📊`
-        return await m.reply(claraWrap("liststok", txt))
+        return await m.reply(novaWrap("liststok", txt))
     }
 
     const product = products[idx]
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     txt += `✏️ Edit: \`${m.prefix}editstok ${idx + 1} <nomor_item>|<detail_baru>\`\n`
     txt += `➕ Tambah: \`${m.prefix}addstok ${idx + 1}|<detail>\``
 
-    return await m.reply(claraWrap("liststok", txt))
+    return await m.reply(novaWrap("liststok", txt))
 }
 
 export { pluginConfig as config, handler }

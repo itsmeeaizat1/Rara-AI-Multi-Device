@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "breathing",
@@ -82,7 +82,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       steps.push("");
     }
 
-    await m.reply(claraWrap("Breathing Exercise", [
+    await m.reply(novaWrap("Breathing Exercise", [
       "Teknik: " + technique.name,
       technique.desc,
       "",
@@ -101,7 +101,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (sub === "stats" || sub === "cek" || sub === "statistik") {
-    await m.reply(claraWrap("Breathing Stats", [
+    await m.reply(novaWrap("Breathing Stats", [
       "@" + m.sender.split("@")[0],
       "Total sesi: " + udata.totalSessions,
       "Total menit: " + udata.totalMinutes,
@@ -113,11 +113,11 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "techniques" || sub === "teknik" || sub === "list") {
     const list = Object.entries(TECHNIQUES).map(([key, t]) => key + " - " + t.name + "\n   " + t.desc + "\n   Inhale:" + t.inhale + "s Hold:" + (t.hold || 0) + "s Exhale:" + t.exhale + "s" + (t.hold2 ? " Hold2:" + t.hold2 + "s" : "") + " | " + t.cycles + " cycles").join("\n\n");
-    await m.reply(claraWrap("Breathing Techniques", list + "\n\n" + prefix + "breathing start <teknik> untuk mulai"));
+    await m.reply(novaWrap("Breathing Techniques", list + "\n\n" + prefix + "breathing start <teknik> untuk mulai"));
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Breathing", [
+  await m.reply(novaWrap("Breathing", [
     "GUIDED BREATHING EXERCISE",
     "",
     prefix + "breathing start [teknik] - mulai sesi",

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ummah",
@@ -114,7 +114,7 @@ async function handler(m, { sock, args }) {
     // === HADITH BY TOPIC ===
     else if (cmd === "topic" || cmd === "t") {
       const topic = cmdArgs[0]?.toLowerCase();
-      if (!topic) return m.reply(claraWrap("Ummah", "Masukkan topik!\n\nKetik `.ummah topics` untuk daftar topik."));
+      if (!topic) return m.reply(novaWrap("Ummah", "Masukkan topik!\n\nKetik `.ummah topics` untuk daftar topik."));
 
       const keywords = TOPICS[topic];
       if (!keywords) return m.reply(`Topik "${topic}" tidak ditemukan.\n\nKetik \`${m.prefix}ummah topics\` untuk daftar topik.`);
@@ -174,7 +174,7 @@ async function handler(m, { sock, args }) {
     // === SEARCH ===
     else if (cmd === "search" || cmd === "cari" || cmd === "s") {
       const query = cmdArgs.join(" ").trim();
-      if (!query) return m.reply(claraWrap("Ummah", "Masukkan kata kunci!\n\n💡 *Contoh:* `.ummah search charity`"));
+      if (!query) return m.reply(novaWrap("Ummah", "Masukkan kata kunci!\n\n💡 *Contoh:* `.ummah search charity`"));
 
       const res = await apiGet(`/search?q=${encodeURIComponent(query)}`);
       if (res.status !== 200 || !res.data?.success) throw new Error("Search gagal");
@@ -271,7 +271,7 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[UMMAH] Error:", e.message);
-    await m.reply(claraWrap("ummah", `Gagal mengambil hadith!\n\nError: ${e.message}`));
+    await m.reply(novaWrap("ummah", `Gagal mengambil hadith!\n\nError: ${e.message}`));
   }
 }
 

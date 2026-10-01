@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import { enableAutoBackup, disableAutoBackup, getBackupStatus, triggerManualBackup, formatInterval } from '../../src/lib/nova-auto-backup.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
     txt += `*Contoh:*\n`;
     txt += `\`${m.prefix}autobackup on 6h\` - backup setiap 6 jam`;
 
-    return await m.reply(claraWrap("Autobackup", txt));
+    return await m.reply(novaWrap("Autobackup", txt));
   }
 
   switch (action) {
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
       const result = enableAutoBackup(interval, sock);
 
       if (!result.success) {
-        return m.reply(claraWrap("autobackup", `❌ *Gagal*\n\n${result.error}`));
+        return m.reply(novaWrap("autobackup", `❌ *Gagal*\n\n${result.error}`));
       }
 
       const ownerNum = config.owner?.number?.[0] || "Owner #1";
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
       txt += `📤 Target: ${ownerNum}\n`;
       txt += `---`;
 
-      return await m.reply(claraWrap("autobackup", txt));
+      return await m.reply(novaWrap("autobackup", txt));
     }
 
     case "now":
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
           `✅ *Backup sElesai*\n\nBackup telah dikirim ke owner!`,
         );
       } catch (error) {
-        await m.reply(claraWrap("autobackup", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(novaWrap("autobackup", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import fs from 'fs'
 import path from 'path'
@@ -180,7 +180,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
   } catch (e) {
     console.error("profilecard error:", e);
-    return m.reply(claraWrap("profilecard", "Gagal buat profile card. Coba lagi.", "error"));
+    return m.reply(novaWrap("profilecard", "Gagal buat profile card. Coba lagi.", "error"));
   }
 }
 

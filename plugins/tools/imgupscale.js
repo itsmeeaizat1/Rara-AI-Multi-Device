@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ImgUpscaler — Upscale & enhance gambar via imgupscaler.com API, no token needed
 // Supports scale 2x and 4x
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "imgupscale",
@@ -174,7 +174,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const q = m.quoted || m;
     const mime = (q.message?.[Object.keys(q.message)[0]]?.mimetype) || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(claraWrap("ImgUpscaler", [
+      return m.reply(novaWrap("ImgUpscaler", [
         "Upscale & enhance gambar via imgupscaler.com",
         "Gratis tanpa token, IP spoofing otomatis",
         "",
@@ -191,20 +191,20 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ]));
     }
 
-    m.reply(claraWrap("ImgUpscaler", "Sedang upscaling gambar...\nScale: " + scale + "x\nEstimasi: 10-60 detik."));
+    m.reply(novaWrap("ImgUpscaler", "Sedang upscaling gambar...\nScale: " + scale + "x\nEstimasi: 10-60 detik."));
 
     // Download image
     const imageBuffer = await q.download();
     if (!imageBuffer || imageBuffer.length === 0) {
-      return m.reply(claraWrap("ImgUpscaler", "Gagal download gambar. Coba lagi!"));
+      return m.reply(novaWrap("ImgUpscaler", "Gagal download gambar. Coba lagi!"));
     }
 
     // Validate size (min 5KB, max 10MB)
     if (imageBuffer.length < 5000) {
-      return m.reply(claraWrap("ImgUpscaler", "Gambar terlalu kecil (min 5KB)."));
+      return m.reply(novaWrap("ImgUpscaler", "Gambar terlalu kecil (min 5KB)."));
     }
     if (imageBuffer.length > 10 * 1024 * 1024) {
-      return m.reply(claraWrap("ImgUpscaler", "Gambar terlalu besar (max 10MB)."));
+      return m.reply(novaWrap("ImgUpscaler", "Gambar terlalu besar (max 10MB)."));
     }
 
     // Get filename
@@ -218,7 +218,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     try {
       await conn.sendMessage(m.key.remoteJid, {
         image: result.buffer,
-        caption: claraWrap("ImgUpscaler", [
+        caption: novaWrap("ImgUpscaler", [
           "UPSCALE BERHASIL",
           "",
           "Scale: " + scale + "x",
@@ -232,7 +232,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     } catch (sendErr) {
       // Fallback: send URL
       await m.react("🐣");
-      return m.reply(claraWrap("ImgUpscaler", [
+      return m.reply(novaWrap("ImgUpscaler", [
         "UPSCALE BERHASIL",
         "",
         "Scale: " + scale + "x",
@@ -244,7 +244,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[ImgUpscaler]", e);
-    m.reply(claraWrap("ImgUpscaler", [
+    m.reply(novaWrap("ImgUpscaler", [
       "Error: " + e.message,
       "",
       "Kemungkinan penyebab:",

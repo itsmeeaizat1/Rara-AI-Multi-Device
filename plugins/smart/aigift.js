@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  claraHeader, separator, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import {  novaHeader, separator, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Berikan 5 rekomendasi kado untuk: ${info}. Format: nama kado - singkat alasan. Bahasa Indonesia.`, {
       systemPrompt: "Kamu adalah ahli rekomendasi kado. Berikan jawaban singkat dan praktis.",
     });
-    await m.reply(claraWrap("AI Gift", "🎁") + "\n\n" + result );
+    await m.reply(novaWrap("AI Gift", "🎁") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

@@ -16,7 +16,7 @@ const FALLBACK_MODEL = {
   cloudflare: "gemini", jina: "gemini", stability: "gemini", ai21: "gemini",
   reka: "gemini", codestral: "gemini", kimicode: "gemini",
 };
-import { novaBox, claraWrap, novaAiUsage, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaWrap, novaAiUsage, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 // Command → providerKey mapping
 const PROVIDER_COMMANDS = {
@@ -112,7 +112,7 @@ async function handler(m, { sock, config, db, args, text }) {
     const providers = getAllProviders();
     const provider = providers[providerKey];
     if (!provider) {
-      await m.reply(claraWrap(cmdUsed, `Provider tidak ditemukan. Cek daftar provider: ${prefix}multi-ai list`, "error"));
+      await m.reply(novaWrap(cmdUsed, `Provider tidak ditemukan. Cek daftar provider: ${prefix}multi-ai list`, "error"));
       return { handled: true };
     }
 
@@ -157,7 +157,7 @@ async function handler(m, { sock, config, db, args, text }) {
     }
 
     if (!userMessage) {
-      await m.reply(claraWrap(cmdUsed, `Tulis pesan kamu setelah command.\n\n💡 Contoh: ${prefix}${cmdUsed} halo`));
+      await m.reply(novaWrap(cmdUsed, `Tulis pesan kamu setelah command.\n\n💡 Contoh: ${prefix}${cmdUsed} halo`));
       return { handled: true };
     }
 
@@ -348,7 +348,7 @@ async function handler(m, { sock, config, db, args, text }) {
   } catch (error) {
     console.error("[ai-providers.js]:", error.message);
     try { await m.react("❌"); } catch {}
-    await m.reply(claraWrap(cmdUsed, error.message || "Gagal proses, coba lagi ya", "error"));
+    await m.reply(novaWrap(cmdUsed, error.message || "Gagal proses, coba lagi ya", "error"));
     return { handled: true };
   }
 }

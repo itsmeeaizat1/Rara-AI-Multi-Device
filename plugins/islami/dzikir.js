@@ -6,7 +6,7 @@
 // GOTCHA: server baca header Accept-Language (Fastify request.languages()) — WAJIB "id" polos.
 // Data offline lama tetap ada sebagai FALLBACK kalau API down (arab kepotong "...").
 import axios from "axios";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const DZIKIR_API = "https://dua-dhikr.vercel.app";
 
@@ -80,7 +80,7 @@ const fallbackList = (key, judul) => {
     lines.push(`   Keutamaan: ${d.keutamaan}`);
     lines.push("");
   });
-  return claraWrap(judul, lines.join("\n"));
+  return novaWrap(judul, lines.join("\n"));
 };
 
 async function handler(m, { sock, db }) {
@@ -96,7 +96,7 @@ async function handler(m, { sock, db }) {
   }
 
   if (!input || input === "list") {
-    return m.reply(claraWrap("Dzikir & Doa", [
+    return m.reply(novaWrap("Dzikir & Doa", [
       "Kumpulan dzikir & doa dari sunnah (sumber hadis dicantumkan)",
       "",
       "Cara pakai:",
@@ -115,7 +115,7 @@ async function handler(m, { sock, db }) {
     : (input === "doaharian") ? "doa" : input;
   const kat = KATEGORI[katKey];
   if (!kat) {
-    return m.reply(claraWrap("Dzikir", "Pilihan: pagi · petang · doa · pilihan · shalat\n💡 Contoh: .dzikir pagi"));
+    return m.reply(novaWrap("Dzikir", "Pilihan: pagi · petang · doa · pilihan · shalat\n💡 Contoh: .dzikir pagi"));
   }
 
   // ── API dua-dhikr (teks arab lengkap) ──
@@ -124,7 +124,7 @@ async function handler(m, { sock, db }) {
       const { status, data } = await fetchJson(`${DZIKIR_API}/categories/${kat.slug}/${nomor}`);
       if (status === 200 && data?.data?.title) {
         const d = data.data;
-        return m.reply(claraWrap(d.title || kat.judul, [
+        return m.reply(novaWrap(d.title || kat.judul, [
           d.arabic || "",
           "",
           `"${d.latin || ""}"`,
@@ -145,10 +145,10 @@ async function handler(m, { sock, db }) {
         list.forEach((d, i) => lines.push(`${i + 1}. ${d.title}`));
         lines.push("");
         lines.push(`Detail: .dzikir ${katKey} <nomor>`);
-        return m.reply(claraWrap(kat.judul, lines.join("\n")));
+        return m.reply(novaWrap(kat.judul, lines.join("\n")));
       }
       const d = list[nomor - 1];
-      if (d) return m.reply(claraWrap(d.title || kat.judul, [
+      if (d) return m.reply(novaWrap(d.title || kat.judul, [
         d.arabic || "",
         "",
         `"${d.latin || ""}"`,
@@ -167,7 +167,7 @@ async function handler(m, { sock, db }) {
   if (kat.offline) {
     return m.reply(fallbackList(kat.offline, kat.judul));
   }
-  return m.reply(claraWrap("Dzikir", "❌ Server dzikir lagi gak bisa dihubungi. Coba lagi nanti.\n(Dzikir pagi & petang masih bisa via .dzikir pagi / .dzikir petang saat offline)"));
+  return m.reply(novaWrap("Dzikir", "❌ Server dzikir lagi gak bisa dihubungi. Coba lagi nanti.\n(Dzikir pagi & petang masih bisa via .dzikir pagi / .dzikir petang saat offline)"));
 }
 
 export { pluginConfig as config, handler };

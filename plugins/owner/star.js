@@ -1,4 +1,4 @@
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: ['star', 'bintang'],
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
                 ? '❌ *Bintang dihapus dari pesan*'
                 : '⭐ *Pesan ditandai bintang*')
     } catch (err) {
-        return m.reply(claraWrap("star", `❌ Gagal: ${err.message}`))
+        return m.reply(novaWrap("star", `❌ Gagal: ${err.message}`))
     }
 }
 

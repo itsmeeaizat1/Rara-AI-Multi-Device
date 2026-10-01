@@ -2,7 +2,7 @@
 import * as cheerio from 'cheerio'
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "quran",
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply(claraWrap("quran", [
+    return m.reply(novaWrap("quran", [
       "Bacaan Al-Quran per surah beserta terjemahan.",
       "",
       `📌 Format: ${m.prefix}quran <nama surah>`,
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
 
     if (!data.ayat?.length) {
       await m.react("❌");
-      return m.reply(claraWrap("quran", `❌ Surah *${query}* tidak ditemukan`));
+      return m.reply(novaWrap("quran", `❌ Surah *${query}* tidak ditemukan`));
     }
 
     let teks = `📖 *${data.surah}*\n${data.info}\n\n`;
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
     }
   } catch (e) {
     await m.react("❌");
-    m.reply(claraWrap("quran", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("quran", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

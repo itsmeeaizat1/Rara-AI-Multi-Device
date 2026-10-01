@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraHeader, separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaHeader, separator, tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { loadAlarms, saveAlarms } from "../../src/lib/nova-alarm.js";
 import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
 
@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
         await m.reply(novaError("Alarm", ["Tidak ada alarm aktif"].join("\n")));
         return { handled: true };
       }
-      let text = claraHeader("Alarm Aktif", "⏰") + "\n\n";
+      let text = novaHeader("Alarm Aktif", "⏰") + "\n\n";
       myAlarms.forEach((a, i) => { text += `${i+1}. *${a.time}* - ${a.message}\n`; });
       text += "\n" + tipText("Alarm bunyi tiap hari di jam WIB — tersimpan walau bot restart");
       await m.reply(text);
@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (diffSec <= 59) diffSec += 86400; // udah lewat / mepet banget → besok
     const targetTs = Date.now() + diffSec * 1000;
     const total = global.alarms[m.sender].length;
-    const card = (remainingMs, live = true) => claraWrap("Alarm Disetel", [
+    const card = (remainingMs, live = true) => novaWrap("Alarm Disetel", [
       `⏰ Waktu : *${time}* WIB`,
       `📝 Pesan : ${message}`,
       live
@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
     return { handled: true };
   } catch (e) {
-    await m.reply(claraWrap("Gagal nih", [`${e.message}`].join("\n")));
+    await m.reply(novaWrap("Gagal nih", [`${e.message}`].join("\n")));
   }
   return { handled: true };
 }

@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +35,7 @@ async function handler(m, { sock, config: botConfig }) {
     const media = extractImage(m);
     if (!media) {
       const text =
-        claraWrap("Upscaler", ["Kirim gambar + caption .upscaler",
+        novaWrap("Upscaler", ["Kirim gambar + caption .upscaler",
           "Atau reply gambar dengan .upscaler",
           "Format: PNG, JPG, WEBP"].join("\n")) +
         "\n" +
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     fs.writeFileSync(filePath, buffer);
 
     const text =
-      claraWrap("Upscaler", ["Efek: *HD/2x*",
+      novaWrap("Upscaler", ["Efek: *HD/2x*",
         "Status: *success*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);

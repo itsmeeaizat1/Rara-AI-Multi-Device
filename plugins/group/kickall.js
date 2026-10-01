@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kickall",
@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
 
     const text =
-      claraWrap("Kick All", ["Status: *berhasil*",
+      novaWrap("Kick All", ["Status: *berhasil*",
         "Semua member non-admin telah dikick."].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);

@@ -4,7 +4,7 @@ import * as timeHelper from "../../src/lib/nova-time.js";
 import { CronJob } from "cron";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { fetchGroupsSafe } from "../../src/lib/nova-jpm-helper.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 function generateGiveawayId() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -68,7 +68,7 @@ async function handleSession(m, sock) {
     session.winners = winners;
     session.step = "q2";
 
-    m.reply(claraWrap("Quick_reply", `Detail tersimpan!
+    m.reply(novaWrap("Quick_reply", `Detail tersimpan!
 │ 🎁 ${title}
 │ ⏱️ ${formatDuration(duration)}
 │ 👥 ${winners} pemenang\n\n_Mengambil daftar grup..._`, "success"));
@@ -408,10 +408,10 @@ async function handler(m, { sock }) {
 
   if (createCmds.includes(cmd)) {
     if (!m.isAdmin && !m.isOwner)
-      return m.reply(claraWrap("Quick_reply", "⚠️ Hanya admin yang bisa membuat giveaway!"));
-    if (!m.isGroup) return m.reply(claraWrap("Quick_reply", "⚠️ Gunakan di grup!"));
+      return m.reply(novaWrap("Quick_reply", "⚠️ Hanya admin yang bisa membuat giveaway!"));
+    if (!m.isGroup) return m.reply(novaWrap("Quick_reply", "⚠️ Gunakan di grup!"));
     if (createSessions.has(m.sender))
-      return m.reply(claraWrap("Quick_reply", "⚠️ Kamu masih punya sesi pembuatan aktif!"));
+      return m.reply(novaWrap("Quick_reply", "⚠️ Kamu masih punya sesi pembuatan aktif!"));
 
     createSessions.set(m.sender, {
       step: "q1",
@@ -459,10 +459,10 @@ async function handler(m, { sock }) {
 
     const giveaways = db.setting("giveaways") || {};
     const giveaway = giveaways[giveawayId];
-    if (!giveaway) return m.reply(claraWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
-    if (giveaway.ended) return m.reply(claraWrap("Quick_reply", "⚠️ Giveaway sudah berakhir!"));
+    if (!giveaway) return m.reply(novaWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
+    if (giveaway.ended) return m.reply(novaWrap("Quick_reply", "⚠️ Giveaway sudah berakhir!"));
     if (giveaway.participants.includes(m.sender))
-      return m.reply(claraWrap("Quick_reply", "⚠️ Kamu sudah join!"));
+      return m.reply(novaWrap("Quick_reply", "⚠️ Kamu sudah join!"));
 
     giveaway.participants.push(m.sender);
     db.setting("giveaways", giveaways);
@@ -473,10 +473,10 @@ async function handler(m, { sock }) {
   }
 
   if (listCmds.includes(cmd)) {
-    if (!m.isAdmin && !m.isOwner) return m.reply(claraWrap("Quick_reply", "⚠️ Hanya admin!"));
+    if (!m.isAdmin && !m.isOwner) return m.reply(novaWrap("Quick_reply", "⚠️ Hanya admin!"));
     const giveaways = db.setting("giveaways") || {};
     const entries = Object.values(giveaways);
-    if (entries.length === 0) return m.reply(claraWrap("Quick_reply", "📋 Tidak ada giveaway."));
+    if (entries.length === 0) return m.reply(novaWrap("Quick_reply", "📋 Tidak ada giveaway."));
 
     const active = entries.filter((g) => !g.ended);
     const ended = entries.filter((g) => g.ended);
@@ -497,35 +497,35 @@ async function handler(m, { sock }) {
       }
     }
 
-    await m.reply(claraWrap("Giveaway", text));
+    await m.reply(novaWrap("Giveaway", text));
     return;
   }
 
   if (deleteCmds.includes(cmd)) {
-    if (!m.isAdmin && !m.isOwner) return m.reply(claraWrap("Quick_reply", "⚠️ Hanya admin!"));
+    if (!m.isAdmin && !m.isOwner) return m.reply(novaWrap("Quick_reply", "⚠️ Hanya admin!"));
     const giveawayId = args[0];
-    if (!giveawayId) return m.reply(claraWrap("Quick_reply", `Format: ${prefix}${cmd} GA-XXXXXX`, "warn"));
+    if (!giveawayId) return m.reply(novaWrap("Quick_reply", `Format: ${prefix}${cmd} GA-XXXXXX`, "warn"));
 
     const giveaways = db.setting("giveaways") || {};
-    if (!giveaways[giveawayId]) return m.reply(claraWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
+    if (!giveaways[giveawayId]) return m.reply(novaWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
 
     delete giveaways[giveawayId];
     db.setting("giveaways", giveaways);
-    await m.reply(claraWrap("Quick_reply", `Giveaway \`${giveawayId}\` berhasil dihapus!`, "success"));
+    await m.reply(novaWrap("Quick_reply", `Giveaway \`${giveawayId}\` berhasil dihapus!`, "success"));
     return;
   }
 
   if (rerollCmds.includes(cmd)) {
-    if (!m.isAdmin && !m.isOwner) return m.reply(claraWrap("Quick_reply", "⚠️ Hanya admin!"));
+    if (!m.isAdmin && !m.isOwner) return m.reply(novaWrap("Quick_reply", "⚠️ Hanya admin!"));
     const giveawayId = args[0];
-    if (!giveawayId) return m.reply(claraWrap("Quick_reply", `Format: ${prefix}${cmd} GA-XXXXXX`, "warn"));
+    if (!giveawayId) return m.reply(novaWrap("Quick_reply", `Format: ${prefix}${cmd} GA-XXXXXX`, "warn"));
 
     const giveaways = db.setting("giveaways") || {};
     const giveaway = giveaways[giveawayId];
-    if (!giveaway) return m.reply(claraWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
-    if (!giveaway.ended) return m.reply(claraWrap("Giveaway", "⚠️ Giveaway belum berakhir!"));
+    if (!giveaway) return m.reply(novaWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
+    if (!giveaway.ended) return m.reply(novaWrap("Giveaway", "⚠️ Giveaway belum berakhir!"));
     if (giveaway.participants.length === 0)
-      return m.reply(claraWrap("Quick_reply", "⚠️ Tidak ada peserta!"));
+      return m.reply(novaWrap("Quick_reply", "⚠️ Tidak ada peserta!"));
 
     const winnerCount = Math.min(
       giveaway.winners,

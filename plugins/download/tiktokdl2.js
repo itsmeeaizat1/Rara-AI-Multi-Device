@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'nova'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -201,7 +201,7 @@ async function handler(m, { sock }) {
         }
 
         if (result.type === 'photo' && result.slides.length > 0) {
-            await m.reply(claraWrap("Tiktokdl2", `📸 *Mengirim ${result.slides.length} slide...*`))
+            await m.reply(novaWrap("Tiktokdl2", `📸 *Mengirim ${result.slides.length} slide...*`))
 
             const mediaList = []
             for (let i = 0; i < result.slides.length; i++) {
@@ -280,7 +280,7 @@ async function handler(m, { sock }) {
         }
 
         if (result.mp3.length > 0) {
-            m.reply(claraWrap("Tiktokdl2", `🍀 *note*\nKonten ini tidak memiliki video/slide, mengirim audio saja...`))
+            m.reply(novaWrap("Tiktokdl2", `🍀 *note*\nKonten ini tidak memiliki video/slide, mengirim audio saja...`))
             await sock.sendMessage(
                 m.chat,
                 {

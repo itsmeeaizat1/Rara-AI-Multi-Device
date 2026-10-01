@@ -11,7 +11,7 @@ import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const run = promisify(exec);
 const pluginConfig = {
   name: "playch",
@@ -159,10 +159,10 @@ async function handler(m, { sock }) {
       ptt: true,
       waveform: Array.from(waveform),
     });
-    { const __navText = claraWrap("${title}", `✅ *${title}* berhasil dikirim ke saluran`); await m.reply( __navText, "playch"); };
+    { const __navText = novaWrap("${title}", `✅ *${title}* berhasil dikirim ke saluran`); await m.reply( __navText, "playch"); };
   } catch (e) {
     console.error("[PlayCh]", e);
-    m.reply(claraWrap("playch", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("playch", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

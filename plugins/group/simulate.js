@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .simulate — simulasi event grup (port engine lama simulate.js, adaptasi via ev.emit)
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "simulate",
@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const mentioned = (raw.match(/@\d+/g) || []).map((x) => x.slice(1) + "@s.whatsapp.net");
     const participants = mentioned.length ? mentioned : [m.sender];
-    await m.reply(claraWrap("Simulate", "Simulasi *" + action + "* berjalan..."));
+    await m.reply(novaWrap("Simulate", "Simulasi *" + action + "* berjalan..."));
     sock.ev?.emit("group-participants.update", {
       id: m.chat,
       participants,

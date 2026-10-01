@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'setrulesgrup',
@@ -23,7 +23,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim() || (m.quoted?.body || m.quoted?.text || '')
 
     if (!text) {
-        return m.reply( claraWrap("sEt Grup Rules", 
+        return m.reply( novaWrap("sEt Grup Rules", 
             `Masukkan teks rules yang baru\n\n` +
             `\`Contoh:\`\n` +
             `\`${m.prefix}setrulesgrup 1. Jangan spam
@@ -32,7 +32,7 @@ function handler(m, { sock }) {
 
     db.setGroup(m.chat, { groupRules: text })
 
-    m.reply(claraWrap("Grup Rules Diupdate", 
+    m.reply(novaWrap("Grup Rules Diupdate", 
         `Rules grup berhasil diubah!\n` +
         `Ketik \`${m.prefix}rulesgrup\` untuk melihat.`))
 }

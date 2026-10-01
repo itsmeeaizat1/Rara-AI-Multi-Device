@@ -62,42 +62,42 @@ async function handler(m, { sock }) {
     if (subCmd === "setrule") {
       const gid = args[1], rule = args[2]?.toLowerCase(), toggle = args[3]?.toLowerCase()
       if (!cfg.groups[gid] || !DEFAULT_RULES.hasOwnProperty(rule)) {
-        return m.reply(claraWrap("automod", "❌ Grup belum terdaftar atau rule invalid.\nRules: antilink, antispam, antibadword, antisticker, antivoice")) }
+        return m.reply(novaWrap("automod", "❌ Grup belum terdaftar atau rule invalid.\nRules: antilink, antispam, antibadword, antisticker, antivoice")) }
       cfg.groups[gid].rules[rule] = toggle === "on"; save(db);
-      return m.reply(claraWrap("automod", rule + ": " + (toggle === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "..."))
+      return m.reply(novaWrap("automod", rule + ": " + (toggle === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "..."))
     }
 
     if (subCmd === "addword") {
       const gid = args[1], word = args.slice(2).join(" ").toLowerCase().trim()
-      if (!cfg.groups[gid] || !word) { return m.reply(claraWrap("automod", "❌ Format: .automod addword <groupId> <kata>")) }
+      if (!cfg.groups[gid] || !word) { return m.reply(novaWrap("automod", "❌ Format: .automod addword <groupId> <kata>")) }
       cfg.groups[gid].badwords.push(word); save(db);
-      return m.reply(claraWrap("automod", "Badword: " + word + " ditambah\nTotal: " + cfg.groups[gid].badwords.length))
+      return m.reply(novaWrap("automod", "Badword: " + word + " ditambah\nTotal: " + cfg.groups[gid].badwords.length))
     }
 
     if (subCmd === "delword") {
       const gid = args[1], word = args.slice(2).join(" ").toLowerCase().trim()
       if (cfg.groups[gid]) { cfg.groups[gid].badwords = cfg.groups[gid].badwords.filter(w => w !== word); save(db) }
-      return m.reply(claraWrap("automod", "Badword dihapus: " + word))
+      return m.reply(novaWrap("automod", "Badword dihapus: " + word))
     }
 
     if (subCmd === "on" || subCmd === "off") {
       const gid = args[1] || (m.isGroup ? m.chat : "")
-      if (!gid?.includes("@g.us")) { return m.reply(claraWrap("automod", "Gunakan di grup atau: .automod " + subCmd + " <groupId>", "error")) }
+      if (!gid?.includes("@g.us")) { return m.reply(novaWrap("automod", "Gunakan di grup atau: .automod " + subCmd + " <groupId>", "error")) }
       ensureGroup(cfg, gid); cfg.groups[gid].enabled = subCmd === "on"; save(db)
-      return m.reply(claraWrap("automod", "Status: " + (subCmd === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "..."))
+      return m.reply(novaWrap("automod", "Status: " + (subCmd === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "..."))
     }
 
     if (subCmd === "action") {
       const gid = args[1], action = args[2]?.toLowerCase()
       if (!cfg.groups[gid] || !["delete", "warn", "kick"].includes(action)) {
-        return m.reply(claraWrap("automod", "❌ Format: .automod action <groupId> delete/warn/kick")) }
+        return m.reply(novaWrap("automod", "❌ Format: .automod action <groupId> delete/warn/kick")) }
       cfg.groups[gid].action = action; save(db);
-      return m.reply(claraWrap("automod", "Action: " + action + "\nGrup: " + gid.slice(0, 20) + "..."))
+      return m.reply(novaWrap("automod", "Action: " + action + "\nGrup: " + gid.slice(0, 20) + "..."))
     }
 
     if (subCmd === "rules") {
       const gid = args[1]
-      if (!cfg.groups[gid]) { return m.reply(claraWrap("automod", "❌ Grup belum terdaftar.")) }
+      if (!cfg.groups[gid]) { return m.reply(novaWrap("automod", "❌ Grup belum terdaftar.")) }
       const g = cfg.groups[gid];
       let text = "*Auto Mod Rules*\n\nGrup: " + gid.slice(0, 25) + "...\nStatus: " + (g.enabled ? "ON" : "OFF") + "\nAction: " + g.action + "\n\nRules:\n"
       Object.entries(g.rules).forEach(([rule, on]) => { text += (on ? "✅ " : "❌ ") + rule + "\n" })
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
     // Default: list
     const gids = Object.keys(cfg.groups)
     if (!gids.length) {
-      return m.reply(claraWrap("automod", "Belum ada grup terdaftar.\n\n.automod addgc <groupId>\n.automod setrule <groupId> antilink on\n.automod action <groupId> delete/warn/kick\n.automod addword <groupId> <badword>"))
+      return m.reply(novaWrap("automod", "Belum ada grup terdaftar.\n\n.automod addgc <groupId>\n.automod setrule <groupId> antilink on\n.automod action <groupId> delete/warn/kick\n.automod addword <groupId> <badword>"))
     }
     let text = "*Auto Mod*\n\nGrup terdaftar: " + gids.length + "\n\n"
     gids.forEach((gid, i) => {
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
     return m.reply(text.trim())
   } catch (e) {
     console.error("[automod] error:", e.message)
-    return m.reply(claraWrap("automod", "Gagal proses. Coba lagi.", "error"))
+    return m.reply(novaWrap("automod", "Gagal proses. Coba lagi.", "error"))
   }
 }
 

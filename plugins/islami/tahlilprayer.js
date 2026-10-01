@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tahlilprayer.js — Doa Tahlil
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const DOA_TAHLIL = [
   { title: "Al-Fatihah", arabic: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ. الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", translation: "Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Segala puji bagi Allah, Tuhan semesta alam" },
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("doatahlil error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("doatahlil", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("doatahlil", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

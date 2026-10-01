@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.groupLeave(m.chat);
 
     const text =
-      claraWrap("Leave", [`Group: *${m.chat}*`,
+      novaWrap("Leave", [`Group: *${m.chat}*`,
         "Status: *Left*",
         `Executor: *${m.pushName || "Owner"}*`].join("\n")) +
       "\n" +

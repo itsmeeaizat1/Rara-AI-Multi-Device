@@ -2,7 +2,7 @@
 // viral.js — Berita Viral Indonesia
 import { fetchNewsList } from "../../src/lib/nova-rss-news.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "viral",
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const data = await fetchNewsList("https://news.google.com/rss/search?q=viral&hl=id&gl=ID&ceid=ID:id", 8);
     if (!Array.isArray(data) || data.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("viral", "Gagal mengambil berita!", "error"));
+      return m.reply(novaWrap("viral", "Gagal mengambil berita!", "error"));
     }
 
     let _lines = [];
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("viral error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("viral", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("viral", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

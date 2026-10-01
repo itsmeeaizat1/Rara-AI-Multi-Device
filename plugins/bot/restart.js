@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { spawn } from 'child_process'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
         }, 2000)
         
     } catch (error) {
-        await m.reply(claraWrap("restart", te(m.prefix, m.command, m.pushName), "error"))}
+        await m.reply(novaWrap("restart", te(m.prefix, m.command, m.pushName), "error"))}
 }
 
 export { pluginConfig as config, handler }

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
+import { novaWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -38,12 +38,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
     const imageMsg = quoted?.imageMessage;
     if (!imageMsg) {
-      return m.reply(claraWrap("watermark", "Reply gambar yang mau di-watermark."));
+      return m.reply(novaWrap("watermark", "Reply gambar yang mau di-watermark."));
     }
 
     const input = text.trim();
     if (!input) {
-      return m.reply(claraWrap("watermark", [
+      return m.reply(novaWrap("watermark", [
         "Tambah watermark teks ke gambar.",
         "",
         "📌 Format: " + usedPrefix + "watermark <teks>|<posisi>|<opacity>",
@@ -62,10 +62,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const opacity = parseFloat(parts[2]) || 0.7;
 
     if (!POSITIONS[posName]) {
-      return m.reply(claraWrap("watermark", "Posisi: " + Object.keys(POSITIONS).join(", ")));
+      return m.reply(novaWrap("watermark", "Posisi: " + Object.keys(POSITIONS).join(", ")));
     }
-    if (opacity < 0.1 || opacity > 1.0) return m.reply(claraWrap("watermark", "Opacity 0.1 - 1.0"));
-    if (wmText.length > 50) return m.reply(claraWrap("watermark", "Teks maksimal 50 karakter."));
+    if (opacity < 0.1 || opacity > 1.0) return m.reply(novaWrap("watermark", "Opacity 0.1 - 1.0"));
+    if (wmText.length > 50) return m.reply(novaWrap("watermark", "Teks maksimal 50 karakter."));
 
     const pos = POSITIONS[posName];
     const buffer = await conn.downloadMediaMessage({ key: { remoteJid: m.key.remoteJid, id: m.quoted && m.quoted.id }, message: quoted });
@@ -117,7 +117,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
   } catch (e) {
     console.error("watermark error:", e);
-    return m.reply(claraWrap("watermark", "Gagal pasang watermark. Coba lagi.", "error"));
+    return m.reply(novaWrap("watermark", "Gagal pasang watermark. Coba lagi.", "error"));
   }
 }
 

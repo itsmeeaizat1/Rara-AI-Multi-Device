@@ -7,7 +7,7 @@ import { novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-s
 const { createCanvas, loadImage } = canvasPkg;
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap } from "../../src/lib/nova-menu-style.js"
+import { novaWrap } from "../../src/lib/nova-menu-style.js"
 
 const pluginConfig = {
     name: 'qc',
@@ -211,7 +211,7 @@ async function handler(m, { sock }) {
     // Usage hanya muncul kalau .qc polos tanpa text dan tanpa reply
     if (args.length === 0 && !m.quoted) {
         const colorList = Object.keys(COLORS).join(', ')
-        return m.reply(claraWrap("qc", [
+        return m.reply(novaWrap("qc", [
             "📌 Format:",
             m.prefix + "qc <text> — background putih (default)",
             m.prefix + "qc <warna> <text> — background sesuai warna",
@@ -238,11 +238,11 @@ async function handler(m, { sock }) {
     }
 
     if (!message) {
-        return m.reply(claraWrap("qc", "Masukkan text untuk quote!", "error"))
+        return m.reply(novaWrap("qc", "Masukkan text untuk quote!", "error"))
     }
 
     if (message.length > 80) {
-        return m.reply(claraWrap("qc", `Maksimal 80 karakter! (Saat ini: ${message.length})`, "error"))
+        return m.reply(novaWrap("qc", `Maksimal 80 karakter! (Saat ini: ${message.length})`, "error"))
     }
 
     try {

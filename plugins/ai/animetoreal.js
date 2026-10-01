@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // animetoreal — gambar ANIME → versi REALISTIS (kebalikan .jadianime)
 // Engine: KuroNeko animetoreal (live3d.io). Key: apikeys.json kuroneko.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { animeToReal, uploadToUguu } from "../../src/scraper/kuroneko.js";
 
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted?.type === "imageMessage"));
 
   if (!isImage) {
-    return m.reply(claraWrap("animetoreal", `Reply/kirim gambar ANIME yang mau dijadiin versi realistis!\n\nContoh: ${m.prefix}animetoreal (reply gambar waifu)`, "guide"));
+    return m.reply(novaWrap("animetoreal", `Reply/kirim gambar ANIME yang mau dijadiin versi realistis!\n\nContoh: ${m.prefix}animetoreal (reply gambar waifu)`, "guide"));
   }
   try {
     await m.react("🕒");
@@ -45,12 +45,12 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: buf,
-      caption: claraWrap("animetoreal", `✨ Anime → versi realistis!\n\n⚙️ Engine: KuroNeko animetoreal (live3d)`),
+      caption: novaWrap("animetoreal", `✨ Anime → versi realistis!\n\n⚙️ Engine: KuroNeko animetoreal (live3d)`),
     }, { quoted: m });
   } catch (err) {
     console.error("animetoreal error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("animetoreal", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("animetoreal", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

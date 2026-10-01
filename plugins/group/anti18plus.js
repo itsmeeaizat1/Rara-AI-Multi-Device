@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaWarning } from "../../src/lib/nova-group-protection.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -460,7 +460,7 @@ async function handler(m, { sock }) {
         txt += '`' + m.prefix + 'anti18plus resetall`\n'
         txt += ''
 
-        return await m.reply(claraWrap("anti18plus", txt))
+        return await m.reply(novaWrap("anti18plus", txt))
     }
 
     if (sub === 'on') {

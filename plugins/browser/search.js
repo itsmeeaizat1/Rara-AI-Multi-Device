@@ -14,7 +14,7 @@ import {
   getSearchSession,
 } from "../../src/lib/nova-websearch.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "search",
@@ -39,7 +39,7 @@ function domainOf(url) {
 }
 
 function engineListText(prefix) {
-  return claraWrap("Google Search", [
+  return novaWrap("Google Search", [
     `🔍 *MESIN SEARCH TERSEDIA*`,
     ``,
     ...listEngines().map((e) => `• *${e.key}* — ${e.note}`),
@@ -57,7 +57,7 @@ async function handleSearch(m, sock, query, engine) {
   const r = await searchWeb(query, { engine });
   if (r.error || !r.items.length) {
     await m.react("❌");
-    return m.reply(claraWrap("Google Search", [
+    return m.reply(novaWrap("Google Search", [
       `❌ ${r.error || "hasil gak ketemu"}.`,
       ``,
       `💡 Coba kata kunci lain / mesin lain (${ENGINE_KEYS.join(", ")}).`,
@@ -72,7 +72,7 @@ async function handleSearch(m, sock, query, engine) {
     `${i + 1}. *${it.title.slice(0, 60)}*\n   🔗 ${domainOf(it.url)}` +
     (it.snippet ? `\n   💬 ${it.snippet.slice(0, 90)}` : "")
   );
-  const text = claraWrap("Google Search", [
+  const text = novaWrap("Google Search", [
     `🔎 *${query}*`,
     srcNote.trim(),
     ``,
@@ -112,7 +112,7 @@ async function handleOpen(m, sock, num) {
   const sess = getSearchSession(m.chat);
   if (!sess) {
     await m.react("❌");
-    return m.reply(claraWrap("Google Search", [
+    return m.reply(novaWrap("Google Search", [
       `❌ Belum ada hasil pencarian di chat ini (atau udah kedaluwarsa 15 menit).`,
       ``,
       `Cari dulu: *${m.prefix}search <engine> <query>*`,
@@ -122,7 +122,7 @@ async function handleOpen(m, sock, num) {
   const idx = num - 1;
   if (idx < 0 || idx >= sess.items.length) {
     await m.react("❌");
-    return m.reply(claraWrap("Google Search", [
+    return m.reply(novaWrap("Google Search", [
       `❌ Nomor ${num} gak ada — hasil cuma 1 s/d ${sess.items.length} buat pencarian "${sess.query}".`,
     ]));
   }
@@ -132,7 +132,7 @@ async function handleOpen(m, sock, num) {
   const p = await fetchPagePreview(item.url);
   if (p.error) {
     await m.react("❌");
-    return m.reply(claraWrap("Google Search", [
+    return m.reply(novaWrap("Google Search", [
       `❌ ${p.error}`,
       ``,
       `🔗 ${item.url}`,
@@ -183,7 +183,7 @@ async function handler(m, { sock }) {
   if (/^buka$/i.test(args[0])) {
     if (!args[1] || !/^\d+$/.test(args[1])) {
       await m.react("❌");
-      return m.reply(claraWrap("Google Search", [`Format: *${prefix}search buka <nomor>*`]));
+      return m.reply(novaWrap("Google Search", [`Format: *${prefix}search buka <nomor>*`]));
     }
     return handleOpen(m, sock, parseInt(args[1], 10));
   }

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Collage — Gabung 2-4 foto jadi satu grid (local via sharp, no API)
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photocollage",
@@ -130,12 +130,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("Contoh:");
       lines.push(usedPrefix + "photocollage 2h (butuh 2 foto)");
       lines.push(usedPrefix + "photocollage 4grid (butuh 4 foto)");
-      return m.reply(claraWrap("Photo Collage", lines, "info"));
+      return m.reply(novaWrap("Photo Collage", lines, "info"));
     }
 
     if (!LAYOUTS[layout]) {
       const available = Object.keys(LAYOUTS).join(", ");
-      return m.reply(claraWrap("Photo Collage", [
+      return m.reply(novaWrap("Photo Collage", [
         "Layout tidak ditemukan: " + layout,
         "",
         "Tersedia: " + available,
@@ -179,7 +179,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (images.length < needed) {
-      return m.reply(claraWrap("Photo Collage", [
+      return m.reply(novaWrap("Photo Collage", [
         "Butuh " + needed + " foto untuk layout " + layout,
         "Diterima: " + images.length + " foto",
         "",
@@ -195,14 +195,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const result = await makeCollage(images.slice(0, needed), layout);
 
     if (!result || result.length === 0) {
-      return m.reply(claraWrap("Photo Collage", "Gagal bikin nih collage.", "warn"));
+      return m.reply(novaWrap("Photo Collage", "Gagal bikin nih collage.", "warn"));
     }
 
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: claraWrap("Photo Collage", [
+        caption: novaWrap("Photo Collage", [
           "Layout: " + LAYOUTS[layout].label,
           "Foto: " + needed + " gambar",
           "Powered by sharp (local)",
@@ -212,7 +212,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     );
   } catch (e) {
     console.error("[PhotoCollage]", e);
-    m.reply(claraWrap("Photo Collage", [
+    m.reply(novaWrap("Photo Collage", [
       "Error: " + e.message,
       "",
       "Ketik " + usedPrefix + "photocollage list untuk bantuan",

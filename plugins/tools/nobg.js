@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { pixa } from "../../src/scraper/removebackground.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nobg",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage" || m.quoted.mtype === "imageMessage"));
     if (!isImage) {
-      return m.reply(claraWrap("nobg", "Reply atau kirim gambar dengan caption .nobg untuk menghapus background.", "guide"));
+      return m.reply(novaWrap("nobg", "Reply atau kirim gambar dengan caption .nobg untuk menghapus background.", "guide"));
     }
 
     await m.react("🕒");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       await m.react("❌");
-      return m.reply(claraWrap("nobg", "❌ Gagal mengunduh gambar."));
+      return m.reply(novaWrap("nobg", "❌ Gagal mengunduh gambar."));
     }
 
     const tempDir = path.join(process.cwd(), "tmp");
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
 
     if (!resultBuffer || !Buffer.isBuffer(resultBuffer) || resultBuffer.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("nobg", "❌ Gagal menghapus background gambar."));
+      return m.reply(novaWrap("nobg", "❌ Gagal menghapus background gambar."));
     }
 
     await m.react("🐣");
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("nobg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("nobg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("nobg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

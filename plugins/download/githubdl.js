@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import path from 'path'
 import fs from 'fs'
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
     }
     
     if (!username) {
-        return m.reply(claraWrap("githubdl", [
+        return m.reply(novaWrap("githubdl", [
             "Format: " + m.prefix + "githubdl <user> <repo> <branch>",
             "",
             "💡 Contoh:",
@@ -79,14 +79,14 @@ async function handler(m, { sock }) {
     }
     
     if (!repo) {
-        { const __navText = claraWrap("githubdl", `Masukkan nama repository.\n\n💡 Contoh: .githubdl Nova-AI-Whatsapp-Bot`); return await m.reply( __navText, "githubdl"); }
+        { const __navText = novaWrap("githubdl", `Masukkan nama repository.\n\n💡 Contoh: .githubdl Nova-AI-Whatsapp-Bot`); return await m.reply( __navText, "githubdl"); }
     }
     try {
         await m.react("🕒");
         const repoInfo = await fetch(`https://api.github.com/repos/${username}/${repo}`)
         
         if (!repoInfo.ok) {
-            return m.reply(claraWrap("githubdl", `Repo ${username}/${repo} tidak ditemukan`, "error"))
+            return m.reply(novaWrap("githubdl", `Repo ${username}/${repo} tidak ditemukan`, "error"))
         }
         
         const repoData = await repoInfo.json()
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
         
         const checkRes = await fetch(zipUrl, { method: 'HEAD' })
         if (!checkRes.ok) {
-            return m.reply(claraWrap("githubdl", `Branch ${branch} tidak ditemukan. Default: ${defaultBranch}`, "error"))
+            return m.reply(novaWrap("githubdl", `Branch ${branch} tidak ditemukan. Default: ${defaultBranch}`, "error"))
         }
         
         const _cap = mediaCaption({ platformIcon: "🐙", platformName: "GitHub", title: `${repo} (${branch})`, format: "ZIP Archive", method: "github" });

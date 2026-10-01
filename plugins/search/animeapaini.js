@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import axios from 'axios'
 import config from '../../config.js'
@@ -111,11 +111,11 @@ async function handler(m, { sock }) {
                 type: 'image'
             })
         } else {
-            await m.reply(claraWrap("animeapaini", caption))
+            await m.reply(novaWrap("animeapaini", caption))
         }
         
     } catch (error) {
-        m.reply(claraWrap("animeapaini", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("animeapaini", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
+import { novaWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -34,7 +34,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
   try {
     const input = text.trim();
     if (!input || !input.includes("|")) {
-      return m.reply(claraWrap("lyricscard", [
+      return m.reply(novaWrap("lyricscard", [
         "Buat card lirik lagu estetik.",
         "",
         "📌 Format: " + usedPrefix + "lyricscard <lirik>|<judul>|<artis>",
@@ -54,7 +54,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     const themeName = (parts[3] || "dark").toLowerCase();
     const theme = THEMES[themeName] || THEMES.dark;
 
-    if (lyrics.length > 300) return m.reply(claraWrap("lyricscard", "Lirik maksimal 300 karakter."));
+    if (lyrics.length > 300) return m.reply(novaWrap("lyricscard", "Lirik maksimal 300 karakter."));
 
     const canvas = await getCanvas();
     const W = 800, H = 600;
@@ -138,7 +138,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     });
   } catch (e) {
     console.error("lyricscard error:", e);
-    return m.reply(claraWrap("lyricscard", "Gagal buat lyrics card. Coba lagi.", "error"));
+    return m.reply(novaWrap("lyricscard", "Gagal buat lyrics card. Coba lagi.", "error"));
   }
 }
 

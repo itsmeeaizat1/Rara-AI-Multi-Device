@@ -2,7 +2,7 @@
 import fs from 'fs'
 import path from 'path'
 import gtts from 'gtts'
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cekkhodam',
     alias: ["cekkhodam"],

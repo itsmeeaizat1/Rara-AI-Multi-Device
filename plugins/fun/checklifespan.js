@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { cekFunAI } from "../../src/lib/nova-fun-ai.js";
 const pluginConfig = {
     name: "ceksisaumur",
@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
          `Sisa umur dia: ${tahun} Tahun ${bulan} Bulan ${hari} Hari`,
          `"${desc}"`].join("\n")
     
-    await m.reply(claraWrap("ceksisaumur", txt), { mentions: [mentioned] });
+    await m.reply(novaWrap("ceksisaumur", txt), { mentions: [mentioned] });
 }
 
 export { pluginConfig as config, handler }

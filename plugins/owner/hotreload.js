@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .hotreload — auto reload plugin pas file berubah TANPA restart bot. OWNER-ONLY.
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 import {
   enableHotreload, disableHotreload, hotreloadStatus, manualReload,
   startHotreload, setHotreloadNotifier
@@ -32,30 +32,30 @@ async function handler(m, params = {}) {
       const r = enableHotreload(m.sender);
       if (sock) setHotreloadNotifier(async (to, text) => { try { await sock.sendMessage(to, { text }); } catch {} });
       await m.react(r.ok ? "⚡" : "❌");
-      await m.reply(claraWrap("HotReload", r.ok
+      await m.reply(novaWrap("HotReload", r.ok
         ? "AUTO RELOAD AKTIF\n\nWatcher jalan di folder plugins/ — tiap file .js yang berubah/ditambah otomatis dimuat ulang tanpa restart. Notifikasi hasil reload dikirim ke chat kamu."
         : "Gagal: " + (r.error || "?")));
     } else if (first === "off") {
       disableHotreload();
       await m.react("⚡");
-      await m.reply(claraWrap("HotReload", "AUTO RELOAD MATI"));
+      await m.reply(novaWrap("HotReload", "AUTO RELOAD MATI"));
     } else if (first === "status") {
       const s = hotreloadStatus();
       await m.react("⚡");
-      await m.reply(claraWrap("HotReload", (s.active ? "NYALA" : "MATI") + "\nTotal file reload: " + s.count + "\nTerakhir: " + (s.lastReload ? s.lastReload.slice(0, 19).replace("T", " ") + " WIB" : "belum ada")));
+      await m.reply(novaWrap("HotReload", (s.active ? "NYALA" : "MATI") + "\nTotal file reload: " + s.count + "\nTerakhir: " + (s.lastReload ? s.lastReload.slice(0, 19).replace("T", " ") + " WIB" : "belum ada")));
     } else if (first === "log") {
       const s = hotreloadStatus();
       const lines = (s.log || []).map((e) => "⏱ " + String(e.when || "").slice(0, 19).replace("T", " ") + "\n" + (e.results || []).map((r) => (r.ok ? "✅ " : "❌ ") + r.file).join("\n")).join("\n\n");
       await m.react("🔍");
-      await m.reply(claraWrap("HotReload Log", lines || "belum ada aktivitas reload"));
+      await m.reply(novaWrap("HotReload Log", lines || "belum ada aktivitas reload"));
     } else if (first === "reload") {
       const target = rest.replace(/^reload\s*/i, "").trim();
       if (!target) {
-        await m.reply(claraWrap("HotReload", "Format: .hotreload reload plugins/main/menu.js"));
+        await m.reply(novaWrap("HotReload", "Format: .hotreload reload plugins/main/menu.js"));
       } else {
         const r = await manualReload(target);
         await m.react(r.ok ? "⚡" : "❌");
-        await m.reply(claraWrap("HotReload", r.ok ? "✅ " + target + " dimuat ulang → " + r.name : "❌ " + r.error));
+        await m.reply(novaWrap("HotReload", r.ok ? "✅ " + target + " dimuat ulang → " + r.name : "❌ " + r.error));
       }
     } else {
       await m.react("🐣");

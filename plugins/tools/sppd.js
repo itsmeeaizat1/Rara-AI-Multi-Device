@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const SPPD_PROMPT = `Kamu adalah asisten pembuat Surat Perintah Perjalanan Dinas (SPPD) resmi Indonesia. Buatkan SPPD berdasarkan informasi user.
 
@@ -110,7 +110,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   const prefix = botConfig?.command?.prefix || ".";
 
   if (!args || args.trim().length < 10) {
-    const help = claraWrap("SPPD", [
+    const help = novaWrap("SPPD", [
       `Generator Surat Perintah Perjalanan Dinas → PDF`,
       ``,
       `📌 Format:`,
@@ -129,7 +129,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const result = await UnlimitedAI(SPPD_PROMPT.replace("__INPUT__", args), "nova-ai");
 
     if (!result || result.trim().length < 20) {
-      return m.reply(claraWrap("SPPD", "❌ Gagal generate SPPD. Coba dengan detail yang lebih lengkap."));
+      return m.reply(novaWrap("SPPD", "❌ Gagal generate SPPD. Coba dengan detail yang lebih lengkap."));
     }
 
     const text = result.trim();
@@ -137,10 +137,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     // Text preview
     let preview = text;
     if (preview.length > 2000) preview = preview.substring(0, 2000) + "\n\n... (lihat PDF untuk lengkap)";
-    await m.reply(claraWrap("SPPD — Preview", preview));
+    await m.reply(novaWrap("SPPD — Preview", preview));
 
     // PDF
-    m.reply(claraWrap("SPPD", "Render SPPD ke PDF..."));
+    m.reply(novaWrap("SPPD", "Render SPPD ke PDF..."));
     const pdfBuffer = await renderSppdPDF(text);
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,
@@ -149,7 +149,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     }, { quoted: m });
   } catch (error) {
     console.error("sppd error:", error);
-    m.reply(claraWrap("SPPD", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
+    m.reply(novaWrap("SPPD", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }
 
   return { handled: true };

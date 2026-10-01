@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "qrcode",
@@ -52,7 +52,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const out =
-      claraWrap("QR Code", [`Text: *${text}*`,
+      novaWrap("QR Code", [`Text: *${text}*`,
         "Format: *png*",
         "Status: *berhasil*"].join("\n")) +
       "\n" +
@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       novaError("Tools", "Gagal nih, coba lagi ya");
 
-    await m.reply(claraWrap("qrcode", text));
+    await m.reply(novaWrap("qrcode", text));
   }
 
   return { handled: true };

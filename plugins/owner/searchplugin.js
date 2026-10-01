@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { getAllPlugins } from "../../src/lib/nova-plugins.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "searchplugin",
   alias: ["searchplugin", "splugin"],
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     console.log(error);
-    await m.reply(claraWrap("searchplugin", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(novaWrap("searchplugin", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

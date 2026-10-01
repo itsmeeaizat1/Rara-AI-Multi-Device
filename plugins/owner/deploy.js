@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import config from '../../config.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'deploy',
     alias: ["deploy"],
@@ -21,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const name = m.args[0]
     if (!name) {
-        return m.reply(claraWrap("Deploy", `│ Masukkan nama website
+        return m.reply(novaWrap("Deploy", `│ Masukkan nama website
 │ Reply kode HTML atau file .html
 
 💡 *Contoh:*
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
     const token = config.vercel?.token
     if (!token) {
-        { const __navText = claraWrap("Vercel token belum diset", "Owner belum mengatur token Vercel di config."); return await m.reply(__navText); }
+        { const __navText = novaWrap("Vercel token belum diset", "Owner belum mengatur token Vercel di config."); return await m.reply(__navText); }
     }
     let htmlContent
 
@@ -53,14 +53,14 @@ async function handler(m, { sock }) {
             const buffer = await m.quoted.download()
             htmlContent = buffer.toString()
         } else {
-            return m.reply(claraWrap("Deploy", `❌ *FORMAT TIDAK DIDUKUNG*
+            return m.reply(novaWrap("Deploy", `❌ *FORMAT TIDAK DIDUKUNG*
 
 │ Reply teks HTML
 │ atau file .html`))
         }
 
         if (!/<html|<!doctype html|<head|<body/i.test(htmlContent)) {
-            return m.reply(claraWrap("Deploy", `❌ *BUKAN HTML VALID*
+            return m.reply(novaWrap("Deploy", `❌ *BUKAN HTML VALID*
 
 │ Pastikan berisi struktur HTML`))
         }
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
         } catch {
             // fallback tetap ke default domain
         }
-        await m.reply(claraWrap("Deploy", `
+        await m.reply(novaWrap("Deploy", `
 │
 │ 🌐 Nama     : ${name}
 │ ☁️ Platform : Vercel

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // anime2real — Ubah gambar anime jadi realistik via IkyyXD API
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
       const msg = m.quoted?.message || m.message;
       const imageBuffer = await m.quoted?.download?.() || await m.download?.();
       if (!imageBuffer) {
-        return m.reply(claraWrap("Anime2Real", "Gagal mengunduh gambar. Coba kirim ulang."));
+        return m.reply(novaWrap("Anime2Real", "Gagal mengunduh gambar. Coba kirim ulang."));
       }
       // Upload ke Catbox untuk dapat URL
       const FormData = (await import("form-data")).default;
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(claraWrap("Anime2Real", [
+      return m.reply(novaWrap("Anime2Real", [
         "Ubah gambar anime menjadi versi realistik",
         "",
         "CARA PAKAI:",
@@ -69,16 +69,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: claraWrap("Anime2Real", "Berhasil mengubah anime menjadi realistik"),
+        caption: novaWrap("Anime2Real", "Berhasil mengubah anime menjadi realistik"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("Anime2Real", data?.error || data?.message || "Gagal memproses gambar. Coba gambar lain."));
+      await m.reply(novaWrap("Anime2Real", data?.error || data?.message || "Gagal memproses gambar. Coba gambar lain."));
     }
   } catch (e) {
     console.error("[anime2real.js]:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("Anime2Real", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("Anime2Real", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

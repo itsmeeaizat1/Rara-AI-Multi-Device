@@ -27,7 +27,7 @@ const TZ = "Asia/Jakarta";
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
-const norm = (s) => fromSC(String(s)).toLowerCase(); // GOTCHA: claraWrap = smallcaps
+const norm = (s) => fromSC(String(s)).toLowerCase(); // GOTCHA: novaWrap = smallcaps
 
 const SENDER = "62812@s.whatsapp.net";
 let sends = [];

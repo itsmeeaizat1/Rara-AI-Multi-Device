@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import axios from 'axios'
 import crypto from 'crypto'
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     } else {
       txt += `Isi di \`config.js\` bagian \`pterodactyl.server1\``;
     }
-    return await m.reply(claraWrap("Admin", txt));
+    return await m.reply(novaWrap("Admin", txt));
   }
 
   let targetUser = null;
@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetUser) {
-    return m.reply(claraWrap("Admin", `❌ Tidak dapat menentukan nomor target.`));
+    return m.reply(novaWrap("Admin", `❌ Tidak dapat menentukan nomor target.`));
   }
 
   try {
@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
       if (targetUser !== m.sender) {
         await sock.sendMessage(targetUser, { text: detailTxt })
       }
-      await m.reply(claraWrap("Admin", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
+      await m.reply(novaWrap("Admin", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
     }
     // Mode 2: Grup Only
     else if (deliveryMode === 2) {
@@ -234,7 +234,7 @@ async function handler(m, { sock }) {
       }
     }
   } catch (err) {
-    return m.reply(claraWrap("Admin", te(m.prefix, m.command, m.pushName), "error"))
+    return m.reply(novaWrap("Admin", te(m.prefix, m.command, m.pushName), "error"))
   }
 }
 

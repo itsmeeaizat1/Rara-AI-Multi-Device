@@ -5,7 +5,7 @@
 
 import { File as MegaFile } from "megajs";
 import {
-  novaError, novaCaption, claraWrap, tipText,
+  novaError, novaCaption, novaWrap, tipText,
 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
 
     if (/\/(folder|F)\//.test(link)) {
       const text =
-        claraWrap("Mega", [
+        novaWrap("Mega", [
           "Link folder MEGA belum didukung di versi ini 😊",
           "Solusi : *share link file langsung* dari folder",
           "",
@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     const size = Number(file.size || 0);
     if (size > MAX_SIZE) {
       const text =
-        claraWrap("Mega", [
+        novaWrap("Mega", [
           `File : *${file.name}*`,
           `Ukuran : *${fmtSize(size)}* — melebihi batas *100 MB* 😅`,
           "Solusi : kompres dulu atau pecah file, lalu unggah ulang",

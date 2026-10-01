@@ -4,7 +4,7 @@ import os from "os";
 import path from "path";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   let isDocumentMessage = (m.type === "documentMessage" && m.message?.documentMessage?.mimetype?.startsWith("video")) || (m.quoted && m.quoted.type === "documentMessage" && m.quoted.message?.documentMessage?.mimetype?.startsWith("video"));
 
   if (!isVideoMessage && !isDocumentMessage) {
-    return await m.reply(claraWrap("hdvid", [
+    return await m.reply(novaWrap("hdvid", [
       `Punya video yang buram? Aku bisa bantu bikin jadi HD.`,
       ``,
       `📌 Format: kirim video (atau document video) dengan caption ${m.prefix}hdvid`,
@@ -43,12 +43,12 @@ async function handler(m, { sock }) {
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());
 
     if (!videoBuffer || videoBuffer.length === 0) {
-      return m.reply(claraWrap("hdvid", `❌ *gagal*\n\nAduh kak, videonya gagal diunduh! Coba kirim ulang ya.`));
+      return m.reply(novaWrap("hdvid", `❌ *gagal*\n\nAduh kak, videonya gagal diunduh! Coba kirim ulang ya.`));
     }
 
     if (videoBuffer.length > 50 * 1024 * 1024) {
       await m.react("🐣");
-      return m.reply(claraWrap("hdvid", `❌ *file terlalu besar*\n\nMaaf kak, maksimal ukuran video cuma 50MB ya!`));
+      return m.reply(novaWrap("hdvid", `❌ *file terlalu besar*\n\nMaaf kak, maksimal ukuran video cuma 50MB ya!`));
     }
     const tempDir = os.tmpdir();
     const inputPath = path.join(tempDir, `input-hd-${Date.now()}.mp4`);
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     } catch (e) { console.error('[hdvid.js]:', e.message); }
   } catch (err) {
     await m.react("❌");
-    await m.reply(claraWrap("hdvid", `❌ Maaf kak, proses enhance videonya gagal! 😭\n\nDetail: ${err.message}`));
+    await m.reply(novaWrap("hdvid", `❌ Maaf kak, proses enhance videonya gagal! 😭\n\nDetail: ${err.message}`));
   }
 }
 

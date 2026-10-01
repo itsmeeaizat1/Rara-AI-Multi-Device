@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "procnotif",
@@ -28,22 +28,22 @@ async function handler(m, { sock, db }) {
 Kategori: ai, canvas, image, maker, sticker, convert, tools, download, tts, anime
 \`${prefix}procnotif on\` → aktifkan
 \`${prefix}procnotif off\` → nonaktifkan`;
-    return m.reply(claraWrap("procnotif", txt));
+    return m.reply(novaWrap("procnotif", txt));
   }
 
   if (args === "on") {
     db.setting("procNotif", true);
     await db.save();
-    return m.reply(claraWrap("procnotif", "Notifikasi proses media/tool diaktifkan. Saat fitur media/tool dijalankan, bot akan kirim react 🕒 saat proses dimulai dan 🐣 saat selesai."));
+    return m.reply(novaWrap("procnotif", "Notifikasi proses media/tool diaktifkan. Saat fitur media/tool dijalankan, bot akan kirim react 🕒 saat proses dimulai dan 🐣 saat selesai."));
   }
 
   if (args === "off") {
     db.setting("procNotif", false);
     await db.save();
-    return m.reply(claraWrap("procnotif", "Notifikasi proses media/tool dimatikan."));
+    return m.reply(novaWrap("procnotif", "Notifikasi proses media/tool dimatikan."));
   }
 
-  return m.reply(claraWrap("procnotif", `Gunakan \`${prefix}procnotif on\` atau \`${prefix}procnotif off\`.`));
+  return m.reply(novaWrap("procnotif", `Gunakan \`${prefix}procnotif on\` atau \`${prefix}procnotif off\`.`));
 }
 
 export default { config: pluginConfig, handler };

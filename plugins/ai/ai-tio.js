@@ -8,7 +8,7 @@
 //            .aitio qwen jelaskan kuantum
 // ═══════════════════════════════════════════════
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { getTioKey, getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -258,7 +258,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       text += `\nPakai: *${prefix}aitio <alias> <prompt>*`;
 
-      return m.reply(claraWrap("Daftar Model Tio AI" + (filterFree ? " (Free)" : ""), text), "ai-tio");
+      return m.reply(novaWrap("Daftar Model Tio AI" + (filterFree ? " (Free)" : ""), text), "ai-tio");
     }
 
     // ═══ Resolve model from first word ═══
@@ -268,7 +268,7 @@ async function handler(m, { sock, config: botConfig }) {
     // treat as error — user probably mistyped
     if (model.brand === "Unknown" && parts.length <= 1) {
       return m.reply(
-        claraWrap("Tio AI", [
+        novaWrap("Tio AI", [
           `Model *${firstWord}* tidak dikenal`,
           `Ketik *${prefix}aitio list* untuk lihat semua model`,
           `Atau: *${prefix}aitio deepseek <pesan>*`,
@@ -282,7 +282,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       return m.reply(
-        claraWrap("Tio AI", [
+        novaWrap("Tio AI", [
           `Model: *${model.label}*`,
           `Pesan kosong!`,
           `Contoh: *${prefix}aitio ${model.aliases[0] || model.id} halo*`,
@@ -327,7 +327,7 @@ async function handler(m, { sock, config: botConfig }) {
       : reply) + engineNote;
 
     const freeTag = model.free ? " (Free)" : "";
-    const response = claraWrap(
+    const response = novaWrap(
       `Tio AI — ${model.label}${freeTag}`,
       replyText
     );
@@ -337,7 +337,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
     return m.reply(
-      claraWrap("Tio AI Error", [
+      novaWrap("Tio AI Error", [
         `Status: *Gagal*`,
         `Error: *${error.message || "Unknown error"}*`,
       ].join("\n")),

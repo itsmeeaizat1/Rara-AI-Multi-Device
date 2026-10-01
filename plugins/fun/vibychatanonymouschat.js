@@ -9,7 +9,7 @@
 // Sesi nutup otomatis kalau gak ada yang balas selama 1 JAM.
 // Engine: src/lib/nova-anonchat.js (relay via answerHandler di handler.js).
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { startChat, skipChat, stopChat, relayMessage } from "../../src/lib/nova-anonchat.js";
 
 const pluginConfig = {
@@ -41,7 +41,7 @@ async function handler(m, { sock, db: _db }) {
 
   // fitur ini cuma jalan di DM (privasi: pesan anonim gak boleh nongol di grup)
   if (m.isGroup || (m.chat || "").endsWith("@g.us")) {
-    return m.reply(claraWrap("Chat Anonim", "Chat anonim cuma bisa dipakai di DM bot ya — chat pribadi bot biar privat."));
+    return m.reply(novaWrap("Chat Anonim", "Chat anonim cuma bisa dipakai di DM bot ya — chat pribadi bot biar privat."));
   }
 
   if (["vibychatskip", "chatibskip", "skipanon"].includes(cmd)) return skipChat(m, sock, db);

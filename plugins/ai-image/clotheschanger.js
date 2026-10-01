@@ -11,7 +11,7 @@ import { live3d } from "../../src/scraper/seaart.js";
 import { nanoBananaEdit, uploadToUguu } from "../../src/scraper/kuroneko.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { polishImage, upscaleImage } from "../../src/lib/nova-remini-ffmpeg.js";
-import { claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, toSC } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -415,7 +415,7 @@ async function handler(m, { sock }) {
       }
       if (!targetBuf || !faceBuf) {
         await m.react("❌");
-        return m.reply(claraWrap(typed,
+        return m.reply(novaWrap(typed,
           `Butuh 2 foto!\n\n` +
           `1. ${toSC("reply")} foto *${toSC("target")}* (orang yang mau diganti wajahnya)\n` +
           `2. ${toSC("kirim")} foto *${toSC("sumber wajah")}* sambil ketik ${prefix}${typed}\n\n` +
@@ -428,7 +428,7 @@ async function handler(m, { sock }) {
       const faceDesc = res?.status ? parseFaceDesc(res.text) : null;
       if (!faceDesc) {
         await m.react("❌");
-        return m.reply(claraWrap(typed,
+        return m.reply(novaWrap(typed,
           res?.status
             ? `${toSC("gambarnya gak kedeteksi ada wajah")} — ${toSC("kirim foto yang wajahnya jelas")}.`
             : `${toSC("gagal baca foto wajah, coba lagi")}.`, "error"));
@@ -501,10 +501,10 @@ async function handler(m, { sock }) {
 
       if (!editPrompt) {
         await m.react("❌");
-        return m.reply(claraWrap(typed, meta.guide, "guide"));
+        return m.reply(novaWrap(typed, meta.guide, "guide"));
       }
       if (!buf) {
-        return m.reply(claraWrap(typed, `Kirim/reply foto orangnya dulu!\n\n${meta.guide.split("\n").filter(l => l.startsWith("Contoh"))[0] || ""}`, "guide"));
+        return m.reply(novaWrap(typed, `Kirim/reply foto orangnya dulu!\n\n${meta.guide.split("\n").filter(l => l.startsWith("Contoh"))[0] || ""}`, "guide"));
       }
 
       await m.react("🧠");
@@ -582,7 +582,7 @@ async function handler(m, { sock }) {
     if (!prompt && !clothesBuf) {
       await m.react("❌");
       return m.reply(
-        claraWrap(cmd,
+        novaWrap(cmd,
           `Kasih *${toSC("prompt baju")}*, *${toSC("preset")}*, ATAU *${toSC("kirim gambar bajunya")}*!\n\n` +
           `${toSC("preset")}: formal, casual, party, street, sport, vacation, winter, korea, batik, kebaya\n` +
           `${toSC("contoh prompt")}: ${prefix}${cmd} change the shirt to red\n` +
@@ -604,7 +604,7 @@ async function handler(m, { sock }) {
       clothesDesc = res?.status ? parseClothesDesc(res.text) : null;
       if (!clothesDesc) {
         await m.react("❌");
-        return m.reply(claraWrap(cmd,
+        return m.reply(novaWrap(cmd,
           res?.status
             ? `${toSC("gambarnya gak kedeteksi sebagai baju")} — ${toSC("kirim foto baju yang jelas, atau pakai prompt")}.`
             : `${toSC("gagal baca gambar baju")} — ${toSC("pakai prompt aja")}: ${prefix}${cmd} change the shirt to red`, "error"));
@@ -633,11 +633,11 @@ async function handler(m, { sock }) {
   } catch (err) {
     if (err && err.message === "semua engine down") {
       await m.react("❌");
-      return m.reply(claraWrap((m.command || "aiclotheschanger").toLowerCase(), "Semua engine edit gambar lagi down. Coba lagi beberapa menit.", "error"));
+      return m.reply(novaWrap((m.command || "aiclotheschanger").toLowerCase(), "Semua engine edit gambar lagi down. Coba lagi beberapa menit.", "error"));
     }
     console.error("clotheschanger error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("aiclotheschanger", (te.novaError && te.novaError(err)) || "Gagal memproses, coba lagi.", "error"));
+    return m.reply(novaWrap("aiclotheschanger", (te.novaError && te.novaError(err)) || "Gagal memproses, coba lagi.", "error"));
   }
 }
 

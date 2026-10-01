@@ -3,7 +3,7 @@ import fs from 'fs'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap } from "../../src/lib/nova-menu-style.js"
+import { novaWrap } from "../../src/lib/nova-menu-style.js"
 
 const pluginConfig = {
     name: 'uploadgdrive',
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
         const folderId = args[1]
         if (!folderId) {
             const current = getStoredFolderId()
-            return m.reply(claraWrap("Upload GDrive",
+            return m.reply(novaWrap("Upload GDrive",
                 "*gdrive folder id*\n\n" +
                 "Current: `" + (current || 'none (root)') + "`\n\n" +
                 "Set folder: `.uploadgdrive setfolder <folderId>`\n" +
@@ -197,17 +197,17 @@ async function handler(m, { sock }) {
         }
         if (folderId.toLowerCase() === 'reset') {
             setStoredFolderId(null)
-            return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\nFolder ID di-reset ke root."))
+            return m.reply(novaWrap("Upload GDrive", "BERHASIL\n\nFolder ID di-reset ke root."))
         }
         setStoredFolderId(folderId)
-        return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\nFolder ID: `" + folderId + "`\nUpload selanjutnya akan masuk ke folder ini."))
+        return m.reply(novaWrap("Upload GDrive", "BERHASIL\n\nFolder ID: `" + folderId + "`\nUpload selanjutnya akan masuk ke folder ini."))
     }
 
     if (subCmd === 'list') {
         try {
             const files = await listDriveFiles(10)
             if (files.length === 0) {
-                return m.reply(claraWrap("Upload GDrive", "*gdrive files*\n\nBelum ada file di Drive."))
+                return m.reply(novaWrap("Upload GDrive", "*gdrive files*\n\nBelum ada file di Drive."))
             }
             let body = "*GDrive Files (" + files.length + ")*\n\n"
             files.forEach(function(f, i) {
@@ -215,16 +215,16 @@ async function handler(m, { sock }) {
                 body += "   Size: " + formatBytes(parseInt(f.size || 0)) + "\n"
                 body += "   Link: " + (f.webViewLink || 'N/A') + "\n\n"
             })
-            return m.reply(claraWrap("Upload GDrive", body))
+            return m.reply(novaWrap("Upload GDrive", body))
         } catch (err) {
-            return m.reply(claraWrap("Upload GDrive", "GAGAL\n\n" + err.message))
+            return m.reply(novaWrap("Upload GDrive", "GAGAL\n\n" + err.message))
         }
     }
 
     if (subCmd === 'delete' || subCmd === 'del') {
         const fileId = args[1]
         if (!fileId) {
-            return m.reply(claraWrap("Upload GDrive",
+            return m.reply(novaWrap("Upload GDrive",
                 "*delete gdrive file*\n\n" +
                 "📌 *Cara Pakai:* `.uploadgdrive delete <fileId>`\n" +
                 "Lihat fileId: `.uploadgdrive list`"
@@ -232,9 +232,9 @@ async function handler(m, { sock }) {
         }
         try {
             await deleteDriveFile(fileId)
-            return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\nFile `" + fileId + "` berhasil dihapus."))
+            return m.reply(novaWrap("Upload GDrive", "BERHASIL\n\nFile `" + fileId + "` berhasil dihapus."))
         } catch (err) {
-            return m.reply(claraWrap("Upload GDrive", "GAGAL\n\n" + err.message))
+            return m.reply(novaWrap("Upload GDrive", "GAGAL\n\n" + err.message))
         }
     }
 
@@ -247,7 +247,7 @@ async function handler(m, { sock }) {
                 credsInfo = "\nEmail: `" + (creds.client_email || '?') + "`"
             } catch (e) { console.error('[uploadgdrive.js]:', e.message); }
         }
-        return m.reply(claraWrap("Upload GDrive",
+        return m.reply(novaWrap("Upload GDrive",
             "*gdrive status*\n\n" +
             "Credentials: " + (hasCreds ? 'Terpasang' : 'Belum ada') + credsInfo + "\n" +
             "Folder ID: `" + (getStoredFolderId() || 'root') + "`\n\n" +
@@ -274,7 +274,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            return m.reply(claraWrap("Upload GDrive", "GAGAL\n\nTidak dapat mengunduh media."))
+            return m.reply(novaWrap("Upload GDrive", "GAGAL\n\nTidak dapat mengunduh media."))
         }
 
         const fileName = getFileNameFromMessage(m)
@@ -294,14 +294,14 @@ async function handler(m, { sock }) {
         body += "*link:*\n" + (result.webViewLink || 'N/A')
 
         await m.react("🐣");
-        return m.reply(claraWrap("Upload GDrive", body))
+        return m.reply(novaWrap("Upload GDrive", body))
 
     } catch (error) {
     await m.react("❌");
         console.error('[UploadGDrive] Error:', error.message)
 
         if (error.message === 'NO_CREDENTIALS') {
-            return m.reply(claraWrap("Upload GDrive",
+            return m.reply(novaWrap("Upload GDrive",
                 "GAGAL - Service Account belum di-setup\n\n" +
                 "*cara setup:*\n" +
                 "1. Buka https://console.cloud.google.com\n" +
@@ -315,12 +315,12 @@ async function handler(m, { sock }) {
         }
 
         if (error.message === 'INVALID_CREDENTIALS') {
-            return m.reply(claraWrap("Upload GDrive",
+            return m.reply(novaWrap("Upload GDrive",
                 "GAGAL\n\nFile JSON tidak valid. Pastikan format Service Account benar."
             ))
         }
 
-        return m.reply(claraWrap("uploadgdrive", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaWrap("uploadgdrive", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

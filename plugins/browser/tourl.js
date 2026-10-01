@@ -7,7 +7,7 @@ import { downloadMediaMessage, getContentType, generateWAMessageFromContent, pro
 import te from "../../src/lib/nova-error.js";
 import uploadImage from "../../src/scraper/imgdrop.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tourl",
@@ -523,7 +523,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (!type || type === "conversation" || type === "extendedTextMessage") {
-      return m.reply(claraWrap("Tourl", "⚠️ Kak, tolong reply ke file (gambar/video/audio/berkas) ya!"));
+      return m.reply(novaWrap("Tourl", "⚠️ Kak, tolong reply ke file (gambar/video/audio/berkas) ya!"));
     }
 
     try {
@@ -536,12 +536,12 @@ async function handler(m, { sock }) {
       mimetype = content?.mimetype || "application/octet-stream";
       filename = content?.fileName || `file.${getFileExtension(mimetype)}`;
     } catch (e) {
-      return m.reply(claraWrap("tourl", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(novaWrap("tourl", te(m.prefix, m.command, m.pushName), "error"));
     }
   } else if (m.message) {
     const type = getContentType(m.message);
     if (!type || type === "conversation" || type === "extendedTextMessage") {
-      return m.reply(claraWrap("tourl", [
+      return m.reply(novaWrap("tourl", [
         `Butuh link untuk media kamu? Aku bisa bantu uploadin ke berbagai server gratisan.`,
         ``,
         `📌 Format: kirim media dengan caption ${m.prefix}tourl`,
@@ -559,12 +559,12 @@ async function handler(m, { sock }) {
       mimetype = content?.mimetype || "application/octet-stream";
       filename = content?.fileName || `file.${getFileExtension(mimetype)}`;
     } catch (e) {
-      return m.reply(claraWrap("tourl", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(novaWrap("tourl", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
   if (!media || media.length === 0) {
-    return m.reply(claraWrap("Tourl", "❌ Waduh kak, medianya nggak kebaca. Coba kirim ulang deh!"));
+    return m.reply(novaWrap("Tourl", "❌ Waduh kak, medianya nggak kebaca. Coba kirim ulang deh!"));
   }
   const results = [];
   const failed = [];
@@ -579,7 +579,7 @@ async function handler(m, { sock }) {
   }
 
   if (results.length === 0) {
-    return m.reply(claraWrap("tourl", `❌ Aduh kak, semuanya pada error pas upload!\n\nGagal di server: ${failed.join(", ")}`));
+    return m.reply(novaWrap("tourl", `❌ Aduh kak, semuanya pada error pas upload!\n\nGagal di server: ${failed.join(", ")}`));
   }
 
   let text = `🚀 *UPLOAD BERHASIL!* 🚀\n\n`;
@@ -662,7 +662,7 @@ async function handler(m, { sock }) {
     await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
   } catch (err) {
     await m.react("❌");
-    await m.reply(claraWrap("tourl", text));
+    await m.reply(novaWrap("tourl", text));
   }
 }
 

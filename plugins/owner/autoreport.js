@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
 import {
   enableAutoReport,
   disableAutoReport,
@@ -75,13 +75,13 @@ async function handler(m, { sock }) {
       const [hour, minute] = timeArg.split(":").map(Number);
 
       if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        return m.reply(claraWrap("autoreport", toSC("Jam tidak valid! Gunakan format 24 jam (00:00 - 23:59)")));
+        return m.reply(novaWrap("autoreport", toSC("Jam tidak valid! Gunakan format 24 jam (00:00 - 23:59)")));
       }
 
       const result = enableAutoReport(hour, minute, sock);
 
       if (!result.success) {
-        return m.reply(claraWrap("autoreport", `❌ ${toSC(result.error || "Gagal mengaktifkan")}`));
+        return m.reply(novaWrap("autoreport", `❌ ${toSC(result.error || "Gagal mengaktifkan")}`));
       }
       return m.reply(
         bracketBox("✅", toSC("Auto Report Diaktifkan"), [
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableAutoReport();
-      return m.reply(claraWrap("autoreport", toSC("Auto Report dinonaktifkan")));
+      return m.reply(novaWrap("autoreport", toSC("Auto Report dinonaktifkan")));
     }
 
     case "status":
@@ -119,9 +119,9 @@ async function handler(m, { sock }) {
     case "trigger": {
       try {
         await triggerManualReport(sock);
-        return m.reply(claraWrap("autoreport", toSC("Report harian dikirim ke owner!")));
+        return m.reply(novaWrap("autoreport", toSC("Report harian dikirim ke owner!")));
       } catch (error) {
-        return m.reply(claraWrap("autoreport", te(m.prefix, m.command, m.pushName), "error"));
+        return m.reply(novaWrap("autoreport", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 

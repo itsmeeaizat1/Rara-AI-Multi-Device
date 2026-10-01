@@ -2,7 +2,7 @@
 // songs.js — Cari & play lagu (iTunes)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaBox, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBox, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -52,11 +52,11 @@ async function handler(m, { sock }) {
     const from = m.key.remoteJid;
     await m.react("🕒");
     const query = m.args?.join(" ").trim();
-    if (!query) return m.reply(claraWrap("songs", `Masukkan judul lagu!\n\nContoh: .songs Bohemian Rhapsody`, "guide"));
+    if (!query) return m.reply(novaWrap("songs", `Masukkan judul lagu!\n\nContoh: .songs Bohemian Rhapsody`, "guide"));
 
     const res = await axios.get(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&limit=5&media=music`);
     const results = res.data?.results || [];
-    if (!results.length) return m.reply(claraWrap("songs", "Lagu tidak ditemukan!", "error"));
+    if (!results.length) return m.reply(novaWrap("songs", "Lagu tidak ditemukan!", "error"));
 
     // Send first result preview
     const track = results[0];

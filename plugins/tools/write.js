@@ -8,7 +8,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import axios from "axios";
 import config from "../../config.js";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "nulis",
   alias: ["nulis"],
@@ -46,7 +46,7 @@ function wrapText(ctx, text, maxWidth) {
 async function handler(m, { sock }) {
   const text = m.args?.join(" ");
   if (!text) {
-    return m.reply(claraWrap("nulis", [
+    return m.reply(novaWrap("nulis", [
       `📌 Format: ${m.prefix}nulis <teks>`,
       `💡 Contoh: ${m.prefix}nulis Aku cinta kamu selamanya`
     ]));
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
   }
   const inputUrl = getAssetBuffer("nova-kertas");
   if (!inputUrl) {
-    return m.reply(claraWrap("Nulis", `❌ *template tidak ada*\n\nFile template kertas tidak ditemukan di config.assets`));
+    return m.reply(novaWrap("Nulis", `❌ *template tidak ada*\n\nFile template kertas tidak ditemukan di config.assets`));
   }
   await m.react("🕒");
   try {
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
       { type: "image", contextInfo: saluranCtx() },
     );
   } catch (error) {
-    m.reply(claraWrap("nulis", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("nulis", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

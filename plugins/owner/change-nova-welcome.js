@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
 import { updateAssetUrl } from '../../src/lib/nova-uploader.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-nova-welcome.jpg',
     alias: ["ganti-nova-welcome.jpg"],
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(claraWrap("Ganti-nova-welcome.jpg", `Kirim/reply gambar untuk mengganti\nFile: assets/image/welcome/wellcome.jpg`))
+        return m.reply(novaWrap("Ganti-nova-welcome.jpg", `Kirim/reply gambar untuk mengganti\nFile: assets/image/welcome/wellcome.jpg`))
     }
     
     try {
@@ -36,17 +36,17 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(claraWrap("Ganti-nova-welcome.jpg", `❌ Gagal mendownload gambar`))
+            return m.reply(novaWrap("Ganti-nova-welcome.jpg", `❌ Gagal mendownload gambar`))
         }
         
         try {
             const newUrl = await updateAssetUrl('nova-welcome', buffer, 'nova-welcome.jpg')
             { const __navText = `✅ *berhasil*\n\nGambar nova-welcome.jpg telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); }
         } catch (e) {
-            m.reply(claraWrap("ganti-nova-welcome.jpg", `❌ Gagal mengupload gambar: ${e.message}`))
+            m.reply(novaWrap("ganti-nova-welcome.jpg", `❌ Gagal mengupload gambar: ${e.message}`))
         }
     } catch (error) {
-        await m.reply(claraWrap("ganti-nova-welcome.jpg", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("ganti-nova-welcome.jpg", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 /**
  * @file plugins/owner/schedule.js
@@ -797,7 +797,7 @@ ${truncateText(parsed.customText, 180)}`);
       const taskId = args[1];
 
       if (!taskId) {
-        await m.reply(claraWrap("Schedule", "❌ Format: `.schedule edit <id> ...`"));
+        await m.reply(novaWrap("Schedule", "❌ Format: `.schedule edit <id> ...`"));
         return;
       }
 
@@ -902,7 +902,7 @@ ${truncateText(parsed.customText, 180)}`);
       const taskId = args[1];
 
       if (!taskId) {
-        await m.reply(claraWrap("Schedule", "❌ Format: `.schedule detail <id>`"));
+        await m.reply(novaWrap("Schedule", "❌ Format: `.schedule detail <id>`"));
         return;
       }
 
@@ -924,7 +924,7 @@ ${truncateText(parsed.customText, 180)}`);
       const taskId = args[1];
 
       if (!taskId) {
-        await m.reply(claraWrap("Schedule", "❌ Format: `.schedule del <id>`"));
+        await m.reply(novaWrap("Schedule", "❌ Format: `.schedule del <id>`"));
         return;
       }
 
@@ -958,7 +958,7 @@ ${truncateText(parsed.customText, 180)}`);
 
 Gunakan \`.schedule list\` untuk lihat semua jadwal aktif.`;
 
-      await m.reply(claraWrap("schedule", text));
+      await m.reply(novaWrap("schedule", text));
       break;
     }
 

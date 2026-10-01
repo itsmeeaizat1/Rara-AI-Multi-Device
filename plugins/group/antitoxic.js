@@ -2,7 +2,7 @@
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { gpMsg } from "../../src/lib/nova-group-protection.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'antitoxic',
     alias: ["antitoxic"],
@@ -127,43 +127,43 @@ async function handler(m, { sock }) {
         txt += `\`.deltoxic <kata>\`\n`
         txt += `\`.listtoxic\``
 
-        await m.reply(claraWrap("antitoxic", txt))
+        await m.reply(novaWrap("antitoxic", txt))
         return
     }
 
     if (subCommand === 'on') {
         db.setGroup(m.chat, { antitoxic: true })
-        await m.reply(claraWrap("Antitoxic", `antitoxic diaktifkan`, "success"))
+        await m.reply(novaWrap("Antitoxic", `antitoxic diaktifkan`, "success"))
         return
     }
 
     if (subCommand === 'off') {
         db.setGroup(m.chat, { antitoxic: false })
-        await m.reply(claraWrap("Antitoxic", `antitoxic dinonaktifkan`, "error"))
+        await m.reply(novaWrap("Antitoxic", `antitoxic dinonaktifkan`, "error"))
         return
     }
 
     if (subCommand === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) {
-            return m.reply(claraWrap("Anti toxic", `Masukkan angka 1-10\n💡 Contoh: \`.antitoxic warn 5\``, "error"))
+            return m.reply(novaWrap("Anti toxic", `Masukkan angka 1-10\n💡 Contoh: \`.antitoxic warn 5\``, "error"))
         }
         db.setGroup(m.chat, { toxicMaxWarn: count })
-        await m.reply(claraWrap("Antitoxic", `Max peringatan diubah ke ${count}`, "success"))
+        await m.reply(novaWrap("Antitoxic", `Max peringatan diubah ke ${count}`, "success"))
         return
     }
 
     if (subCommand === 'metode' || subCommand === 'method' || subCommand === 'mode') {
         const method = args[1]?.toLowerCase()
         if (!method || !['kick', 'delete'].includes(method)) {
-            return m.reply(claraWrap("Anti toxic", `Pilih metode: Kick atau Delete\n💡 Contoh: \`.antitoxic metode kick\``, "error"))
+            return m.reply(novaWrap("Anti toxic", `Pilih metode: Kick atau Delete\n💡 Contoh: \`.antitoxic metode kick\``, "error"))
         }
         db.setGroup(m.chat, { toxicMethod: method })
-        await m.reply(claraWrap("Antitoxic", `Metode diubah ke ${method}`, "success"))
+        await m.reply(novaWrap("Antitoxic", `Metode diubah ke ${method}`, "success"))
         return
     }
 
-    await m.reply(claraWrap("Anti toxic", `Sub-command tidak dikenal.\nKetik \`.antitoxic\` untuk melihat daftar command.`, "error"))
+    await m.reply(novaWrap("Anti toxic", `Sub-command tidak dikenal.\nKetik \`.antitoxic\` untuk melihat daftar command.`, "error"))
 }
 
 export { pluginConfig as config, handler, isToxic, handleToxicMessage, DEFAULT_TOXIC_WORDS }

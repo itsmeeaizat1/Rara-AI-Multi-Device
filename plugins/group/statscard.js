@@ -3,7 +3,7 @@
 // 12 Sep 2026 fix: dulu baca db.data.groupActivity yang GAK PERNAH ditulis (mati total)
 // + signature legacy (isGroupOnly gak dikenal handler, m.key.remoteJid, usedPrefix)
 // → sekarang live dari nova-activity-tracker + signature standar.
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
 import { getWeeklyStats, getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
 
 const pluginConfig = {
@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig, args }) {
     const activeMembers = stats.activeMembers;
 
     if (mode === "text" || mode === "txt") {
-      return m.reply(claraWrap("Group Stats Card", [
+      return m.reply(novaWrap("Group Stats Card", [
         `Nama: ${groupName}`,
         `Member: ${totalMembers}`,
         `Admin: ${admins}`,
@@ -107,10 +107,10 @@ async function handler(m, { sock, config: botConfig, args }) {
       ctx.fillText("Nova AI Bot | Generated " + new Date().toLocaleDateString("id-ID"), W / 2, H - 30);
 
       const buffer = canvas.toBuffer("image/png");
-      await sock.sendMessage(groupId, { image: buffer, caption: claraWrap("Group Stats Card", `Statistik ${groupName}`, "info") });
+      await sock.sendMessage(groupId, { image: buffer, caption: novaWrap("Group Stats Card", `Statistik ${groupName}`, "info") });
     } catch (canvasErr) {
       console.error("Canvas error:", canvasErr.message);
-      return m.reply(claraWrap("Group Stats Card", [
+      return m.reply(novaWrap("Group Stats Card", [
         `Nama: ${groupName}`,
         `Member: ${totalMembers}`,
         `Admin: ${admins}`,

@@ -2,7 +2,7 @@
 // fortuneprediction.js — Ramalan nasib
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ramalannasib",
@@ -19,13 +19,13 @@ async function handler(m, { sock }) {
   try {
     await m.react("\U0001F560");
     const text = m.args?.join(" ").trim();
-    if (!text) return m.reply(claraWrap("ramalannasib", "Contoh: .ramalannasib Aizat,7,7,2005", "guide"));
+    if (!text) return m.reply(novaWrap("ramalannasib", "Contoh: .ramalannasib Aizat,7,7,2005", "guide"));
     const [nama, tgl, bln, thn] = text.split(",");
-    if (!nama || !tgl || !bln || !thn) return m.reply(claraWrap("ramalannasib", "Format: nama,tgl,bln,thn", "guide"));
+    if (!nama || !tgl || !bln || !thn) return m.reply(novaWrap("ramalannasib", "Format: nama,tgl,bln,thn", "guide"));
 
     const res = await axios.get(`https://api.siputzx.my.id/api/primbon/ramalan-nasib?nama=${encodeURIComponent(nama)}&tgl=${tgl}&bln=${bln}&thn=${thn}`, { timeout: 15000 });
     const d = res.data?.data;
-    if (!d) return m.reply(claraWrap("ramalannasib", "Data tidak ditemukan!", "error"));
+    if (!d) return m.reply(novaWrap("ramalannasib", "Data tidak ditemukan!", "error"));
 
     let _lines = [];
     Object.entries(d).forEach(([k, v]) => {
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("ramalannasib error:", err);
     await m.react("\u274C");
-    return m.reply(claraWrap("ramalannasib", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("ramalannasib", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

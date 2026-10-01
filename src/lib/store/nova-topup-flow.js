@@ -5,7 +5,7 @@
 import fs from "fs";
 import config from "../../../config.js";
 import { getDatabase } from "../nova-database.js";
-import { claraWrap, bracketBox, tipText, toSC } from "../nova-menu-style.js";
+import { novaWrap, bracketBox, tipText, toSC } from "../nova-menu-style.js";
 import {
   TOPUP_ITEMS,
   calcTopupPrice,
@@ -93,11 +93,11 @@ export function buildTopupPlugin(opts) {
     if (["batal", "cancel"].includes((args[0] || "").toLowerCase())) {
       const pending = topups.pending[sender];
       if (!pending || pending.status !== "pending" || pending.type !== opts.key) {
-        return m.reply(claraWrap(cmd, `Tidak ada pesanan *${cmd}* yang pending.`));
+        return m.reply(novaWrap(cmd, `Tidak ada pesanan *${cmd}* yang pending.`));
       }
       delete topups.pending[sender];
       db.db.write();
-      return m.reply(claraWrap(cmd, "Pesanan dibatalkan."));
+      return m.reply(novaWrap(cmd, "Pesanan dibatalkan."));
     }
 
     // ── tanpa argumen: harga & cara pakai ──
@@ -128,7 +128,7 @@ export function buildTopupPlugin(opts) {
     // ── .buyxxx <jumlah> ──
     const parsed = validateTopupQty(opts.key, Number(args[0]));
     if (!parsed.ok) {
-      return m.reply(claraWrap(cmd,
+      return m.reply(novaWrap(cmd,
         `${parsed.error}\n\n📌 Ketik: *${prefix}${cmd} <jumlah>*\n💡 Contoh: *${prefix}${opts.example.replace(`.${cmd} `, "")}*`));
     }
 
@@ -136,7 +136,7 @@ export function buildTopupPlugin(opts) {
     const price = calcTopupPrice(opts.key, qty);
     const pending = topups.pending[sender];
     if (pending && pending.status === "pending" && pending.type !== opts.key) {
-      return m.reply(claraWrap(cmd,
+      return m.reply(novaWrap(cmd,
         `Masih ada pesanan *${pending.name}* pending\nSelesaikan / batal dulu: *.${topupCancelHint(pending.type)} batal*`));
     }
     const isReplace = pending && pending.status === "pending";

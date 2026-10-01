@@ -5,7 +5,7 @@ import path from "path";
 import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bratvideo",
@@ -26,10 +26,10 @@ const pluginConfig = {
 async function handler(m, { sock, text }) {
   try {
     if (!text) {
-      return m.reply(claraWrap("bratvideo", `Kirim teks untuk brat video.\n\nContoh: .${m.command} hai bang`, "guide"));
+      return m.reply(novaWrap("bratvideo", `Kirim teks untuk brat video.\n\nContoh: .${m.command} hai bang`, "guide"));
     }
     if (text.length > 250) {
-      return m.reply(claraWrap("bratvideo", "Karakter terbatas, max 250!", "info"));
+      return m.reply(novaWrap("bratvideo", "Karakter terbatas, max 250!", "info"));
     }
 
     await m.react("🕒");
@@ -64,7 +64,7 @@ async function handler(m, { sock, text }) {
   } catch (e) {
     console.error("[bratvideo] error:", e.message);
     await m.react("❌");
-    m.reply(claraWrap("bratvideo", "Gagal membuat brat video. Coba lagi ya.", "error"));
+    m.reply(novaWrap("bratvideo", "Gagal membuat brat video. Coba lagi ya.", "error"));
   }
 }
 

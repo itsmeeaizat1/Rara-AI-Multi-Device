@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo ASCII — Convert foto ke ASCII art (local via sharp, no API)
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photoascii",
@@ -65,7 +65,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
 
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(claraWrap("Photo ASCII", [
+      return m.reply(novaWrap("Photo ASCII", [
         "Reply gambar dulu, lalu ketik:",
         usedPrefix + "photoascii",
         "",
@@ -80,17 +80,17 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const detail = args[1] === "detail" || args[1] === "d";
 
-    m.reply(claraWrap("Photo ASCII", "Converting ke ASCII art..."));
+    m.reply(novaWrap("Photo ASCII", "Converting ke ASCII art..."));
 
     const imgBuffer = await q.download();
     if (!imgBuffer || imgBuffer.length === 0) {
-      return m.reply(claraWrap("Photo ASCII", "Gagal download gambar.", "warn"));
+      return m.reply(novaWrap("Photo ASCII", "Gagal download gambar.", "warn"));
     }
 
     const ascii = await imgToAscii(imgBuffer, width, detail);
 
     if (!ascii || ascii.length === 0) {
-      return m.reply(claraWrap("Photo ASCII", "Gagal convert ASCII.", "warn"));
+      return m.reply(novaWrap("Photo ASCII", "Gagal convert ASCII.", "warn"));
     }
 
     // Send as monospace text
@@ -101,7 +101,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     await m.react("🐣");
-    m.reply(claraWrap("Photo ASCII", [
+    m.reply(novaWrap("Photo ASCII", [
       "Width: " + width + " chars",
       detail ? "Mode: Detail" : "Mode: Standard",
       "Powered by sharp (local)",
@@ -111,7 +111,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[PhotoASCII]", e);
-    m.reply(claraWrap("Photo ASCII", [
+    m.reply(novaWrap("Photo ASCII", [
       "Error: " + e.message,
       "",
       "Kemungkinan:",

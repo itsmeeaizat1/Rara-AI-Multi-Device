@@ -9,7 +9,7 @@
 // ═════════════════════════════════════════════
 
 import { notrackChat } from "../../src/scraper/fazzcode-ai.js";
-import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "notrack",
@@ -39,15 +39,15 @@ async function handler(m, { sock }) {
     const r = await notrackChat(q);
     if (!r.ok) {
       await m.react("❌");
-      return m.reply(claraWrap("notrack", `⚠️ NoTrack AI lagi gak bisa merespon (${r.error === "API_KEY" ? "API key fazzcode belum di-set" : r.error}). Coba lagi nanti ya.`));
+      return m.reply(novaWrap("notrack", `⚠️ NoTrack AI lagi gak bisa merespon (${r.error === "API_KEY" ? "API key fazzcode belum di-set" : r.error}). Coba lagi nanti ya.`));
     }
 
     await m.react("🐣");
-    return m.reply(claraWrap("notrack", r.reply));
+    return m.reply(novaWrap("notrack", r.reply));
   } catch (err) {
     console.error("[notrack]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("notrack", "⚠️ Ada error pas chat. Coba lagi ya."));
+    return m.reply(novaWrap("notrack", "⚠️ Ada error pas chat. Coba lagi ya."));
   }
 }
 

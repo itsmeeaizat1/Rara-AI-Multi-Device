@@ -19,7 +19,7 @@ import {
   listActiveReminders,
 } from "../../src/lib/nova-reminder-engine.js";
 import { runLiveTicker } from "../../src/lib/nova-countdown.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const TZ = "Asia/Jakarta";
 
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
 
     // ═══ GUIDE ═══
     if (!sub || ["help", "bantuan"].includes(sub)) {
-      return m.reply(claraWrap("Pesan Terjadwal", [
+      return m.reply(novaWrap("Pesan Terjadwal", [
         "📋 *PESAN TERJADWAL — WAKTU ABSOLUT*",
         "",
         "Jadwalin pesan di jam/tanggal pasti — bot kirim tepat waktu, tahan restart.",
@@ -147,27 +147,27 @@ async function handler(m, { sock }) {
     if (["list", "daftar"].includes(sub)) {
       const mine = listActiveReminders(sender).filter((r) => r.kind === "pesanjadwal");
       if (!mine.length) {
-        return m.reply(claraWrap("Pesan Terjadwal", "Kamu gak punya pesan terjadwal aktif!\n\nKetik *.pesanjadwal help* untuk cara buat", "info"));
+        return m.reply(novaWrap("Pesan Terjadwal", "Kamu gak punya pesan terjadwal aktif!\n\nKetik *.pesanjadwal help* untuk cara buat", "info"));
       }
       const lines = mine.map((r, i) => {
         const sisa = Number(r.fireAt) - Date.now();
         const tag = sisa <= 0 ? "🔴" : sisa <= 86400000 ? "🕒" : "📅";
         return `${i + 1}. ${tag} ${r.id}\n   Pesan: ${r.message}\n   Kirim: ${formatWib(r.fireAt)} (${formatRemaining(sisa)} lagi)`;
       });
-      return m.reply(claraWrap(`Pesan Terjadwal Aktif (${mine.length})`, lines));
+      return m.reply(novaWrap(`Pesan Terjadwal Aktif (${mine.length})`, lines));
     }
 
     // ═══ DEL ═══
     if (["del", "hapus", "cancel", "batal"].includes(sub)) {
       const id = (args[1] || "").toUpperCase().trim();
       if (!id) {
-        return m.reply(claraWrap("Pesan Terjadwal", "Format: *.pesanjadwal del <id>*\n\nLihat ID di *.pesanjadwal list*", "error"));
+        return m.reply(novaWrap("Pesan Terjadwal", "Format: *.pesanjadwal del <id>*\n\nLihat ID di *.pesanjadwal list*", "error"));
       }
       const r = cancelReminder(id, sender);
       if (!r) {
-        return m.reply(claraWrap("Pesan Terjadwal", `Pesan terjadwal *${id}* gak ketemu (atau udah kekirim). Cek *.pesanjadwal list*`, "error"));
+        return m.reply(novaWrap("Pesan Terjadwal", `Pesan terjadwal *${id}* gak ketemu (atau udah kekirim). Cek *.pesanjadwal list*`, "error"));
       }
-      return m.reply(claraWrap("Pesan Terjadwal Dibatalkan", [
+      return m.reply(novaWrap("Pesan Terjadwal Dibatalkan", [
         `ID: ${r.id}`,
         `Pesan: ${r.message}`,
         `Jadwal: ${formatWib(r.fireAt)}`,
@@ -179,7 +179,7 @@ async function handler(m, { sock }) {
     if (sub === "status") {
       const mine = listActiveReminders(sender).filter((r) => r.kind === "pesanjadwal");
       const all = global.novaReminders?.filter((r) => r && !r.fired && r.kind === "pesanjadwal").length || 0;
-      return m.reply(claraWrap("Pesan Terjadwal", [
+      return m.reply(novaWrap("Pesan Terjadwal", [
         `Pesan terjadwal kamu: *${mine.length}* aktif`,
         `Total semua user: *${all}*`,
         "", "💡 *.pesanjadwal list* untuk detail",
@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
     // ═══ ADD: "<waktu> | <pesan>" ═══
     const pipeParts = raw.split("|");
     if (pipeParts.length < 2) {
-      return m.reply(claraWrap("Pesan Terjadwal", [
+      return m.reply(novaWrap("Pesan Terjadwal", [
         "Format: *.pesanjadwal <waktu> | <pesan>*",
         "",
         "Contoh: *.pesanjadwal besok 07:00 | jangan lupa rapat pagi*",
@@ -201,14 +201,14 @@ async function handler(m, { sock }) {
     const whenStr = (pipeParts[0] || "").trim();
     const message = pipeParts.slice(1).join("|").trim();
     if (!message) {
-      return m.reply(claraWrap("Pesan Terjadwal", "Pesannya gak boleh kosong!\n\nContoh: *.pesanjadwal besok 07:00 | jangan lupa rapat*", "error"));
+      return m.reply(novaWrap("Pesan Terjadwal", "Pesannya gak boleh kosong!\n\nContoh: *.pesanjadwal besok 07:00 | jangan lupa rapat*", "error"));
     }
     if (message.length > 200) {
-      return m.reply(claraWrap("Pesan Terjadwal", "Pesan terlalu panjang (max 200 karakter)", "error"));
+      return m.reply(novaWrap("Pesan Terjadwal", "Pesan terlalu panjang (max 200 karakter)", "error"));
     }
     const fireAt = parseWhen(whenStr);
     if (!fireAt) {
-      return m.reply(claraWrap("Pesan Terjadwal", [
+      return m.reply(novaWrap("Pesan Terjadwal", [
         `Waktu *"${whenStr}"* gak dikenali.`,
         "",
         "Format: HH:MM / besok HH:MM / lusa HH:MM / DD-MM[-YYYY] [HH:MM]",
@@ -218,15 +218,15 @@ async function handler(m, { sock }) {
     const minTs = Date.now() + 60000; // min 1 menit ke depan
     const maxTs = Date.now() + 365 * 86400000; // max 1 tahun
     if (fireAt < minTs) {
-      return m.reply(claraWrap("Pesan Terjadwal", "Waktunya kelewat deket banget (min 1 menit ke depan).\n\nUntuk hitungan detik pakai *.remind <durasi>*", "warn"));
+      return m.reply(novaWrap("Pesan Terjadwal", "Waktunya kelewat deket banget (min 1 menit ke depan).\n\nUntuk hitungan detik pakai *.remind <durasi>*", "warn"));
     }
     if (fireAt > maxTs) {
-      return m.reply(claraWrap("Pesan Terjadwal", "Jangkauan maksimal 1 tahun ke depan.", "warn"));
+      return m.reply(novaWrap("Pesan Terjadwal", "Jangkauan maksimal 1 tahun ke depan.", "warn"));
     }
 
     const mine = listActiveReminders(sender).filter((r) => r.kind === "pesanjadwal");
     if (mine.length >= MAX) {
-      return m.reply(claraWrap("Pesan Terjadwal", `Maksimal ${MAX} pesan terjadwal aktif per user!\n\n*.pesanjadwal list* untuk lihat, *.pesanjadwal del <id>* untuk hapus`, "warn"));
+      return m.reply(novaWrap("Pesan Terjadwal", `Maksimal ${MAX} pesan terjadwal aktif per user!\n\n*.pesanjadwal list* untuk lihat, *.pesanjadwal del <id>* untuk hapus`, "warn"));
     }
 
     // buat + arm via engine (persist biar tahan restart)
@@ -249,7 +249,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     // 🔹 LIVE COUNTDOWN 🕒 — sisa nge-tick sampai keping; del → isCancelled
     // → final closing "DIBATALKAN" (bukan "waktu habis")
-    const card = (remainingMs, live = true) => claraWrap("Pesan Terjadwal Dibuat", [
+    const card = (remainingMs, live = true) => novaWrap("Pesan Terjadwal Dibuat", [
       `ID: ${reminder.id}`,
       `Pesan: ${message}`,
       `Kirim dalam: ${formatRemaining(remainingMs)}${live ? " 🕒" : ""}`,
@@ -263,12 +263,12 @@ async function handler(m, { sock }) {
       initialCard: card(fireAt - Date.now()),
       tickCard: (st) => card(st.remainingMs, st.remainingMs > 0),
       finalCard: () => reminder.cancelled
-        ? claraWrap("Pesan Terjadwal Dibatalkan", [
+        ? novaWrap("Pesan Terjadwal Dibatalkan", [
             `ID: ${reminder.id}`,
             `Pesan: ${message}`,
             "", "✅ Pesan ini dibatalkan — gak akan dikirim",
           ], "warn")
-        : claraWrap("Pesan Terjadwal Terkirim", [
+        : novaWrap("Pesan Terjadwal Terkirim", [
             `ID: ${reminder.id}`,
             `Pesan: ${message}`,
             "", "📋 Waktunya tiba — pesan udah dikirim di atas 👆",
@@ -278,7 +278,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[pesanjadwal]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("Pesan Terjadwal", "⚠️ Ada error. Coba lagi ya."));
+    return m.reply(novaWrap("Pesan Terjadwal", "⚠️ Ada error. Coba lagi ya."));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import os from "os";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stats",
@@ -92,7 +92,7 @@ async function handler(m, { sock, db, uptime, config: botConfig }) {
       footer: botConfig?.bot?.name,
     });
   } catch (error) {
-    m.reply(claraWrap("stats", te(m.prefix, m.command, m.pushName), "error"))
+    m.reply(novaWrap("stats", te(m.prefix, m.command, m.pushName), "error"))
   }
 }
 

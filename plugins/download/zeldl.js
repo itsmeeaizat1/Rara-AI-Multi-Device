@@ -13,7 +13,7 @@ import {
   zeldlDownload, ZEL_DL_KINDS, detectZelDlKind, collectLinks, pickDirectLink, mediaTypeOf,
   _setZelDlHttpForTest, _setZelDlKeyForTest,
 } from "../../src/scraper/zeldl.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { fetchBuffer } from "../../src/lib/nova-utils.js";
 
 // seam test: mock unduh file
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
     else if (command === "zspotify") kind = "spotify";
     else if (command === "zalldl" || command === "zdownloader" || command === "zeldownload") kind = "all";
     if (!raw) {
-      await m.reply(claraWrap("zeldl", [
+      await m.reply(novaWrap("zeldl", [
         "📥 ZELAPI DOWNLOADER — 3 engine hidup:",
         "",
         "▸ .zeldl <url> — generic multi-platform (auto-detect)",
@@ -135,23 +135,23 @@ async function handler(m, { sock }) {
 
     await m.react("🧠");
     const r = await zeldlDownload(kind, raw);
-    if (!r.ok) { await m.react("❌"); await m.reply(claraWrap("zeldl", `Downloader ${ZEL_DL_KINDS[kind].label} bermasalah: ${r.error}`)); return; }
+    if (!r.ok) { await m.react("❌"); await m.reply(novaWrap("zeldl", `Downloader ${ZEL_DL_KINDS[kind].label} bermasalah: ${r.error}`)); return; }
 
     if (kind === "scribd") {
       const card = cardScribd(r.data);
       if (/client challenge/i.test(String(r.data?.document?.title))) {
         await m.react("❌");
-        await m.reply(claraWrap("zeldl", "Scribd nge-block scraper (Client Challenge) — coba dokumen lain"));
+        await m.reply(novaWrap("zeldl", "Scribd nge-block scraper (Client Challenge) — coba dokumen lain"));
         return;
       }
-      await m.reply(claraWrap("zeldl", card || "Data scribd kosong"));
+      await m.reply(novaWrap("zeldl", card || "Data scribd kosong"));
       await m.react("🐣");
       return;
     }
 
     if (kind === "spotify") {
       const card = cardSpotify(r.data);
-      await m.reply(claraWrap("zeldl", [
+      await m.reply(novaWrap("zeldl", [
         "✅ SPOTIFY (zelapi)",
         "",
         card,
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
     const card = cardAll(r.data, links);
     const direct = pickDirectLink(links);
     if (direct) {
-      await m.reply(claraWrap("zeldl", `${card}\n\n⏳ media nyusul, lagi diunduh…`));
+      await m.reply(novaWrap("zeldl", `${card}\n\n⏳ media nyusul, lagi diunduh…`));
       try {
         const buf = await getBuf(direct.url);
         if (!buf || buf.length < 1000) throw new Error("file kosong");
@@ -185,15 +185,15 @@ async function handler(m, { sock }) {
         return;
       } catch {
         await m.react("❌");
-        await m.reply(claraWrap("zeldl", "Media gagal diunduh dari server — link di atas masih bisa dipakai manual"));
+        await m.reply(novaWrap("zeldl", "Media gagal diunduh dari server — link di atas masih bisa dipakai manual"));
         return;
       }
     }
-    await m.reply(claraWrap("zeldl", card));
+    await m.reply(novaWrap("zeldl", card));
     await m.react(links.length ? "🐣" : "❌");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(claraWrap("zeldl", `fitur error: ${e?.message || e}`));
+    await m.reply(novaWrap("zeldl", `fitur error: ${e?.message || e}`));
   }
 }
 

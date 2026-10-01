@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ssweb",
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     });
   } catch (error) {
     await m.react("❌");
-    m.reply(claraWrap("ssweb", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("ssweb", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

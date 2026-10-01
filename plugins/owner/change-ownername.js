@@ -4,7 +4,7 @@ import path from "path";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getOwnerName } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ganti-namaowner",
   alias: ["ganti-namaowner"],
@@ -62,9 +62,9 @@ async function handler(m, { sock, config }) {
       );
       fs.writeFileSync(configPath, configContent);
       config.owner.name = newName;
-      return m.reply(claraWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner utama diganti ke: *${newName}*`));
+      return m.reply(novaWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner utama diganti ke: *${newName}*`));
     } catch (error) {
-      return m.reply(claraWrap("ganti-namaowner", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(novaWrap("ganti-namaowner", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
@@ -84,7 +84,7 @@ async function handler(m, { sock, config }) {
   nameMap[targetNumber] = newName;
   db.setting("ownerNames", nameMap);
 
-  return m.reply(claraWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner *${targetNumber}* diganti ke: *${newName}*`));
+  return m.reply(novaWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner *${targetNumber}* diganti ke: *${newName}*`));
 }
 
 export { pluginConfig as config, handler };

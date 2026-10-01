@@ -77,7 +77,7 @@ export function wantsVoice(db, chat, userText, key = VOICE_KEYS.novaagent) {
 // ═══════════ SUBCOMMAND SUARA BERSAMA ═══════════
 // `low` = teks perintah user (sudah lowercase, tanpa nama command).
 // return: array baris reply kalau `low` adalah subcommand suara
-// (pemanggil bungkus claraWrap sendiri); null kalau BUKAN → lanjut flow biasa.
+// (pemanggil bungkus novaWrap sendiri); null kalau BUKAN → lanjut flow biasa.
 // Daftar exact-match (sama kaya .novaagent) — pertanyaan biasa yang
 // kebetulan mengandung kata "suara" TIDAK ditelan subcommand.
 const VOICE_ON = ["pakai suara", "pake suara", "suara on", "suara aktif", "suara aktifkan", "suara nyala", "mode suara", "mode suara on", "mode suara aktif"];

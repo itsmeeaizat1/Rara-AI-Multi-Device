@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { novaWarning } from "../../src/lib/nova-group-protection.js";
 
 const pluginConfig = {
@@ -312,38 +312,38 @@ async function handler(m, { sock }) {
         txt += '│ `' + m.prefix + 'antikasar reset @user`\n'
         txt += '│ `' + m.prefix + 'antikasar resetall`\n'
         txt += ''
-        return await m.reply(claraWrap("antikasar", txt))
+        return await m.reply(novaWrap("antikasar", txt))
     }
 
     if (sub === 'on') {
         db.setGroup(m.chat, { antikasar: 'on' })
-        return m.reply(claraWrap("Antikasar", `
+        return m.reply(novaWrap("Antikasar", `
 │ Deteksi kata kasar diaktifkan
 │ Sistem: Warn 3x lalu kick
 `, "info"))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antikasar: 'off' })
-        return m.reply(claraWrap("Antikasar", `
+        return m.reply(novaWrap("Antikasar", `
 │ Deteksi kata kasar dinonaktifkan
 `, "info"))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
-        if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antikasar", '❌ Masukkan angka 1-10'))
+        if (!count || count < 1 || count > 10) return m.reply(novaWrap("Antikasar", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { kasarMaxWarn: count })
-        return m.reply(claraWrap("Antikasar", `Max peringatan: ${count}x`, "info"))
+        return m.reply(novaWrap("Antikasar", `Max peringatan: ${count}x`, "info"))
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
-        if (opt === 'on') { db.setGroup(m.chat, { kasarKickMode: 'on' }); m.react('✅'); return m.reply(claraWrap("Antikasar", '✅ Auto-kick anti-kasar ON')) }
-        if (opt === 'off') { db.setGroup(m.chat, { kasarKickMode: 'off' }); m.react('✅'); return m.reply(claraWrap("Antikasar", '⚠️ Auto-kick anti-kasar OFF, hanya warn')) }
+        if (opt === 'on') { db.setGroup(m.chat, { kasarKickMode: 'on' }); m.react('✅'); return m.reply(novaWrap("Antikasar", '✅ Auto-kick anti-kasar ON')) }
+        if (opt === 'off') { db.setGroup(m.chat, { kasarKickMode: 'off' }); m.react('✅'); return m.reply(novaWrap("Antikasar", '⚠️ Auto-kick anti-kasar OFF, hanya warn')) }
         return m.reply('❌ Gunakan: `' + m.prefix + 'antikasar kick on/off`')
     }
     if (sub === 'delete') {
         const opt = args[1]?.toLowerCase()
-        if (opt === 'on') { db.setGroup(m.chat, { kasarDeleteMode: 'on' }); m.react('✅'); return m.reply(claraWrap("Antikasar", '✅ Auto-delete anti-kasar ON')) }
-        if (opt === 'off') { db.setGroup(m.chat, { kasarDeleteMode: 'off' }); m.react('✅'); return m.reply(claraWrap("Antikasar", '⚠️ Auto-delete anti-kasar OFF')) }
+        if (opt === 'on') { db.setGroup(m.chat, { kasarDeleteMode: 'on' }); m.react('✅'); return m.reply(novaWrap("Antikasar", '✅ Auto-delete anti-kasar ON')) }
+        if (opt === 'off') { db.setGroup(m.chat, { kasarDeleteMode: 'off' }); m.react('✅'); return m.reply(novaWrap("Antikasar", '⚠️ Auto-delete anti-kasar OFF')) }
         return m.reply('❌ Gunakan: `' + m.prefix + 'antikasar delete on/off`')
     }
     if (sub === 'reset') {
@@ -352,13 +352,13 @@ async function handler(m, { sock }) {
         const updated = groupData
         if (updated.kasarWarns?.[target]) delete updated.kasarWarns[target]
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antikasar", `Warn warn kasar @${target.split('@')[0]} direset`, "info"), { mentions: [target] })
+        return m.reply(novaWrap("Antikasar", `Warn warn kasar @${target.split('@')[0]} direset`, "info"), { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.kasarWarns = {}
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antikasar", `Semua warn kasar direset`, "info"))
+        return m.reply(novaWrap("Antikasar", `Semua warn kasar direset`, "info"))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antikasar` untuk daftar command')
 }

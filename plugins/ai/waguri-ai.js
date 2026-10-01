@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "waguri-ai",
@@ -35,14 +35,14 @@ async function handler(m, { sock }) {
     const result = await UnlimitedAI(text, "waguri-ai");
 
     if (!result.status) {
-      { return await m.reply(claraWrap("waguri-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
+      { return await m.reply(novaWrap("waguri-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
     }
     const reply = result.answer;
     await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(claraWrap("waguri-ai", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("waguri-ai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

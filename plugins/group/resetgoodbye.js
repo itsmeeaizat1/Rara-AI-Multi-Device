@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'resetgoodbye',
     alias: ["resetgoodbye"],
@@ -23,12 +23,12 @@ async function handler(m, { sock }) {
     const groupData = db.getGroup(m.chat)
     
     if (!groupData?.goodbyeMsg) {
-        return m.reply(claraWrap("resetgoodbye", "Pesan goodbye masih default, gak ada yang perlu di-reset.", "info"))
+        return m.reply(novaWrap("resetgoodbye", "Pesan goodbye masih default, gak ada yang perlu di-reset.", "info"))
     }
 
     db.setGroup(m.chat, { goodbyeMsg: null })
     db.save()
-    await m.reply(claraWrap("resetgoodbye", [
+    await m.reply(novaWrap("resetgoodbye", [
         "Pesan goodbye berhasil di-reset ke default.",
         "",
         `💡 Custom lagi? Ketik ${m.prefix}setgoodbye <pesan>`,

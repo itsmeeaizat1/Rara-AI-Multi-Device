@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoholiday",
@@ -76,34 +76,34 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "on" || sub === "enable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Holiday", "Khusus owner."));
+      await m.reply(novaWrap("Auto Holiday", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = true;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Holiday", "AKTIF!\nBot akan kirim ucapan otomatis di hari besar.\nIslamic: " + (cfg.includeIslamic ? "ON" : "OFF")));
+    await m.reply(novaWrap("Auto Holiday", "AKTIF!\nBot akan kirim ucapan otomatis di hari besar.\nIslamic: " + (cfg.includeIslamic ? "ON" : "OFF")));
     return { handled: true };
   }
 
   if (sub === "off" || sub === "disable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Holiday", "Khusus owner."));
+      await m.reply(novaWrap("Auto Holiday", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = false;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Holiday", "Dimatikan."));
+    await m.reply(novaWrap("Auto Holiday", "Dimatikan."));
     return { handled: true };
   }
 
   if (sub === "islamic" || sub === "islami") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Holiday", "Khusus owner."));
+      await m.reply(novaWrap("Auto Holiday", "Khusus owner."));
       return { handled: true };
     }
     cfg.includeIslamic = !cfg.includeIslamic;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Holiday", "Islamic holidays: " + (cfg.includeIslamic ? "ON" : "OFF")));
+    await m.reply(novaWrap("Auto Holiday", "Islamic holidays: " + (cfg.includeIslamic ? "ON" : "OFF")));
     return { handled: true };
   }
 
@@ -111,7 +111,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const today = todayStr();
     const todayHoliday = HOLIDAYS.find(h => h.date === today);
     const list = HOLIDAYS.map(h => h.date + " - " + h.name + (h.date === today ? " (HARI INI)" : "")).join("\n");
-    await m.reply(claraWrap("Auto Holiday", [
+    await m.reply(novaWrap("Auto Holiday", [
       "Status: " + (cfg.enabled ? "AKTIF" : "MATI"),
       "Islamic: " + (cfg.includeIslamic ? "ON" : "OFF"),
       "",
@@ -125,24 +125,24 @@ async function handler(m, { sock, db, config: botConfig }) {
     const today = todayStr();
     const holiday = HOLIDAYS.find(h => h.date === today);
     if (holiday) {
-      await m.reply(claraWrap(holiday.name, holiday.greeting));
+      await m.reply(novaWrap(holiday.name, holiday.greeting));
     } else {
-      await m.reply(claraWrap("Auto Holiday", "Hari ini bukan hari besar."));
+      await m.reply(novaWrap("Auto Holiday", "Hari ini bukan hari besar."));
     }
     return { handled: true };
   }
 
   if (sub === "test") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Holiday", "Khusus owner."));
+      await m.reply(novaWrap("Auto Holiday", "Khusus owner."));
       return { handled: true };
     }
     const sample = HOLIDAYS[0];
-    await m.reply(claraWrap(sample.name, sample.greeting + "\n\n_(test preview)_"));
+    await m.reply(novaWrap(sample.name, sample.greeting + "\n\n_(test preview)_"));
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Auto Holiday", [
+  await m.reply(novaWrap("Auto Holiday", [
     "AUTO HOLIDAY GREETING",
     "",
     prefix + "autoholiday on/off",

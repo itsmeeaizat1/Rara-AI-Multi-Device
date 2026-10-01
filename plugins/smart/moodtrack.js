@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -66,7 +66,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const note = args.slice(3).join(" ").trim();
     if (score < 1 || score > 10 || isNaN(score)) {
       const scale = MOOD_EMOJIS.map(e => e.score + "=" + e.emoji + " " + e.label).join("\n");
-      await m.reply(claraWrap("Mood Track", "Catat mood: " + prefix + "moodtrack log <1-10> [catatan]\n\n" + scale));
+      await m.reply(novaWrap("Mood Track", "Catat mood: " + prefix + "moodtrack log <1-10> [catatan]\n\n" + scale));
       return { handled: true };
     }
     // Check if already logged today
@@ -81,7 +81,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     saveConfig(db, gid, cfg);
     const mood = MOOD_EMOJIS.find(e => e.score === score);
-    await m.reply(claraWrap("Mood Logged", [
+    await m.reply(novaWrap("Mood Logged", [
       "@" + m.sender.split("@")[0],
       "Mood: " + mood.emoji + " " + score + "/10 (" + mood.label + ")",
       note ? "Catatan: " + note : "",
@@ -97,20 +97,20 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "history" || sub === "riwayat") {
     const recent = udata.entries.slice(-7).reverse();
     if (recent.length === 0) {
-      await m.reply(claraWrap("Mood Track", "Belum ada data. Ketik " + prefix + "moodtrack log <1-10>"));
+      await m.reply(novaWrap("Mood Track", "Belum ada data. Ketik " + prefix + "moodtrack log <1-10>"));
       return { handled: true };
     }
     const list = recent.map(e => {
       const mood = MOOD_EMOJIS.find(m => m.score === e.score);
       return e.date + " | " + mood.emoji + " " + e.score + "/10" + (e.note ? " - " + e.note.slice(0, 40) : "");
     }).join("\n");
-    await m.reply(claraWrap("Mood History", "7 hari terakhir:\n" + list));
+    await m.reply(novaWrap("Mood History", "7 hari terakhir:\n" + list));
     return { handled: true };
   }
 
   if (sub === "insight" || sub === "analisis") {
     if (udata.entries.length < 3) {
-      await m.reply(claraWrap("Mood Track", "Butuh minimal 3 hari data untuk analisis. Kamu baru: " + udata.entries.length + " hari."));
+      await m.reply(novaWrap("Mood Track", "Butuh minimal 3 hari data untuk analisis. Kamu baru: " + udata.entries.length + " hari."));
       return { handled: true };
     }
     // Calculate stats
@@ -129,7 +129,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const result = await UnlimitedAI(prompt, "nova-ai");
       aiInsight = result?.success ? result.response : null;
     } catch (e) { console.error('[moodtrack.js]:', e.message); }
-    await m.reply(claraWrap("Mood Insight", [
+    await m.reply(novaWrap("Mood Insight", [
       "@" + m.sender.split("@")[0],
       "",
       "Statistik (" + udata.entries.length + " hari):",
@@ -147,7 +147,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "stats" || sub === "statistik" || sub === "cek" || !sub) {
     if (udata.entries.length === 0) {
       const scale = MOOD_EMOJIS.map(e => e.score + "=" + e.emoji).join("  ");
-      await m.reply(claraWrap("Mood Track", [
+      await m.reply(novaWrap("Mood Track", [
         "MOOD TRACKER",
         "",
         "Catat mood kamu tiap hari & track pola!",
@@ -164,7 +164,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const avg = (udata.entries.reduce((s, e) => s + e.score, 0) / udata.entries.length).toFixed(1);
     const todayEntry = udata.entries.find(e => e.date === today);
     const todayMood = todayEntry ? MOOD_EMOJIS.find(m => m.score === todayEntry.score) : null;
-    await m.reply(claraWrap("Mood Stats", [
+    await m.reply(novaWrap("Mood Stats", [
       "@" + m.sender.split("@")[0],
       "Total logged: " + udata.totalLogged + " hari",
       "Rata-rata: " + avg + "/10",
@@ -176,7 +176,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Mood Track", [
+  await m.reply(novaWrap("Mood Track", [
     "MOOD TRACKER",
     "",
     prefix + "moodtrack log <1-10> [catatan] - catat mood",

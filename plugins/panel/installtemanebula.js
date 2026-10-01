@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -102,18 +102,18 @@ function handler(m, { sock }) {
                         await execSSH(conn, CMD_BLUEPRINT)
 
                         await execSSH(conn, CMD_NEBULA)
-            await m.reply(claraWrap("installtemanebula", `
+            await m.reply(novaWrap("installtemanebula", `
 │ sTatus: *terinstall*
 │ Ip: ${ipvps}\n\n_Tema Nebula berhasil diinstall!_`))
         } catch (err) {
             console.error('[Nebula Install Error]', err)
-            m.reply(claraWrap("installtemanebula", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(novaWrap("installtemanebula", te(m.prefix, m.command, m.pushName), "error"))
         } finally {
             conn.end()
         }
     }).on('error', (err) => {
         console.error('[SSH Error]', err)
-        m.reply(claraWrap("installtemanebula", `❌ Koneksi gagal!\n\nIP atau Password tidak valid / VPS down.`))
+        m.reply(novaWrap("installtemanebula", `❌ Koneksi gagal!\n\nIP atau Password tidak valid / VPS down.`))
     }).connect(connSettings)
 }
 

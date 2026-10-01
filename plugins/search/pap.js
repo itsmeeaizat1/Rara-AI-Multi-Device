@@ -6,7 +6,7 @@ import {
 } from "nova";
 import te from "../../src/lib/nova-error.js";
 import { f } from "../../src/lib/nova-http.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pap",
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     const imageUrl = randomItem.image_url;
 
     if (!imageUrl) {
-      return m.reply(claraWrap("Pap", "⚠️ Gambar tidak tersedia."));
+      return m.reply(novaWrap("Pap", "⚠️ Gambar tidak tersedia."));
     }
 
     const mediaMessage = await prepareWAMessageMedia({

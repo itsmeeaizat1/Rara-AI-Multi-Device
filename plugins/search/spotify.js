@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotify",
@@ -21,7 +21,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, text }) {
   if (!text) {
-    return m.reply(claraWrap("spotify", [
+    return m.reply(novaWrap("spotify", [
       "Cari lagu di Spotify berdasarkan judul atau artis.",
       "",
       `📌 Format: ${m.prefix}spotify <judul/artis>`,
@@ -40,7 +40,7 @@ async function handler(m, { sock, text }) {
 
     if (!data?.status || !data?.data?.results || data.data.results.length === 0) {
       await m.react("❗");
-      return m.reply(claraWrap("spotify", "Lagu tidak ditemukan kak, coba kata kunci lain ya.", "error"));
+      return m.reply(novaWrap("spotify", "Lagu tidak ditemukan kak, coba kata kunci lain ya.", "error"));
     }
 
     const results = data.data.results;
@@ -59,7 +59,7 @@ async function handler(m, { sock, text }) {
   } catch (err) {
     console.error("[Spotify Search]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("spotify", "API Spotify lagi gangguan kak, coba lain waktu ya 😥", "error"));
+    return m.reply(novaWrap("spotify", "API Spotify lagi gangguan kak, coba lain waktu ya 😥", "error"));
   }
 }
 

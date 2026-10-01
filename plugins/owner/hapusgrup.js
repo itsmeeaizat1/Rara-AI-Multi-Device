@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['hapusgrup', 'deletegrup', 'delgrup'],
     alias: ["hapusgrup", "deletegrup", "delgrup"],
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
             `ID: ${targetJid}`
         )
     } catch (err) {
-        return m.reply(claraWrap("hapusgrup", `❌ Gagal keluar dari grup: ${err.message}`))
+        return m.reply(novaWrap("hapusgrup", `❌ Gagal keluar dari grup: ${err.message}`))
     }
 }
 

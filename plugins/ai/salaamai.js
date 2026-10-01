@@ -6,7 +6,7 @@
 // .salaamai reset                   — hapus memori obrolan chat ini
 
 import { askSalaam, resolveSalaamAssistant, SALAAM_ASSISTANTS } from "../../src/lib/nova-salaamai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -41,7 +41,7 @@ async function handler(m, {}) {
 
   // ── list ──
   if (sub === "list") {
-    return m.reply(claraWrap("salaamai",
+    return m.reply(novaWrap("salaamai",
       `🕌 ASISTEN ISLAMI SALAAM WORLD\n\n` +
       `${assistantList(prefix)}\n\n` +
       `Gratis tanpa api key • sumber: ai.salaam.world`, "guide"));
@@ -50,12 +50,12 @@ async function handler(m, {}) {
   // ── reset memori ──
   if (sub === "reset") {
     sessions.delete(m.chat);
-    return m.reply(claraWrap("salaamai", "🧹 Memori obrolan Salaam AI di chat ini udah dihapus.", "ok"));
+    return m.reply(novaWrap("salaamai", "🧹 Memori obrolan Salaam AI di chat ini udah dihapus.", "ok"));
   }
 
   // ── help ──
   if (!sub || sub === "help" || sub === "?") {
-    return m.reply(claraWrap("salaamai",
+    return m.reply(novaWrap("salaamai",
       `🕌 SALAAM AI — asisten edukasi Islami (ai.salaam.world)\n\n` +
       `💬 ${prefix}salaamai <pertanyaan>\nAsisten default: Brother Junaid.\n\n` +
       `👤 ${prefix}salaamai <asisten> <pertanyaan>\n${SALAAM_ASSISTANTS.map((a) => a.id).join(" | ")}\n\n` +
@@ -74,12 +74,12 @@ async function handler(m, {}) {
   // asisten doang tanpa pertanyaan → info asisten itu
   const solo = resolveSalaamAssistant(sub);
   if (solo && args.length === 1) {
-    return m.reply(claraWrap("salaamai",
+    return m.reply(novaWrap("salaamai",
       `👤 ${solo.name}\n\n${solo.desc}\nMaks ${solo.maxLen} karakter/pertanyaan.\n\n` +
       `Contoh: ${prefix}salaamai ${solo.id} <pertanyaan>`, "guide"));
   }
   if (!question) {
-    return m.reply(claraWrap("salaamai",
+    return m.reply(novaWrap("salaamai",
       `💬 Mau nanya apa? Contoh:\n\n${prefix}salaamai apa itu wudhu?\n${prefix}salaamai list — pilih asisten lain`, "guide"));
   }
 
@@ -95,14 +95,14 @@ async function handler(m, {}) {
     touch(sess);
 
     await m.react("🐣");
-    return m.reply(claraWrap("salaamai",
+    return m.reply(novaWrap("salaamai",
       `🕌 ${assistant.name} menjawab:\n\n${reply}\n\n` +
       `📚 sumber: ai.salaam.world • ${prefix}salaamai reset buat mulai topik baru`, "info"));
   } catch (err) {
     console.error("salaamai error:", err.message);
     await m.react("❌");
     const serverDown = /server salaam bermasalah|balasan kosong|start_session/i.test(err?.message || "");
-    return m.reply(claraWrap("salaamai", serverDown
+    return m.reply(novaWrap("salaamai", serverDown
       ? `😔 Server Salaam World lagi bermasalah (backend AI-nya down, bukan di sisi kita).\n\n` +
         `Coba lagi nanti ya — atau pake AI biasa: ${prefix}ai / ${prefix}novaagent buat pertanyaan agama.`
       : te(prefix, m.command, m.pushName), "error"));

@@ -6,7 +6,7 @@ import os from 'os'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 import util from 'util'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'exec',
     alias: ["exec"],
@@ -25,7 +25,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, store }) {
     if (!config.isOwner(m.sender)) {
-        return m.reply(claraWrap("exec", "Owner only!", "error")) }
+        return m.reply(novaWrap("exec", "Owner only!", "error")) }
 
     let code = null
 
@@ -38,7 +38,7 @@ async function handler(m, { sock, store }) {
     }
 
     if (!code) {
-        return m.reply(claraWrap("exec", [
+        return m.reply(novaWrap("exec", [
             "Reply pesan berisi kode JavaScript!",
             "",
             "*Atau:*",

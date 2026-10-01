@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getParticipantJid, getParticipantJids } from "../../src/lib/nova-lid.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { delay } from "../../src/lib/nova-utils.js";
 
 const pluginConfig = {
@@ -104,7 +104,7 @@ async function handler(m, { sock, text: args }) {
         }
         const picked = randomPick(lastPool, 1);
         await m.reply(
-          claraWrap("Pick Me - Reroll", 
+          novaWrap("Pick Me - Reroll", 
             `Pilihan ulang:\n\n@${picked[0].split("@")[0]}`,
             "success"),
           { mentions: picked }
@@ -167,7 +167,7 @@ async function handler(m, { sock, text: args }) {
         if (i < actualTeamCount - 1) teamText += "\n";
       }
 
-      await m.reply(claraWrap("Pick Me - Team", teamText, "success"), { mentions: allMentions });
+      await m.reply(novaWrap("Pick Me - Team", teamText, "success"), { mentions: allMentions });
       return { handled: true };
     }
 
@@ -185,7 +185,7 @@ async function handler(m, { sock, text: args }) {
 
     if (actualCount === 1) {
       // Single pick with suspense
-      await m.reply(claraWrap("Pick Me", suspense, "info"));
+      await m.reply(novaWrap("Pick Me", suspense, "info"));
       await delay(1500);
 
       const pickedJid = picked[0];
@@ -203,7 +203,7 @@ async function handler(m, { sock, text: args }) {
         "Selamat! Kamu ditunjuk untuk misi ini.",
       ].join("\n");
 
-      await m.reply(claraWrap("Pick Me", pickText, "success"), { mentions: picked });
+      await m.reply(novaWrap("Pick Me", pickText, "success"), { mentions: picked });
     } else {
       // Multi pick
       let pickText = `Pilihan Acak (${actualCount} orang):\n\n`;
@@ -212,7 +212,7 @@ async function handler(m, { sock, text: args }) {
       });
       pickText += "\nSelamat untuk yang terpilih!";
 
-      await m.reply(claraWrap("Pick Me", pickText, "success"), { mentions: picked });
+      await m.reply(novaWrap("Pick Me", pickText, "success"), { mentions: picked });
     }
     return { handled: true };
   } catch (error) {

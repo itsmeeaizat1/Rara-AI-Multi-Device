@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { live3d } from "../../src/scraper/seaart.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "novabanana",
   alias: ["novabanana"],
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
 
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
   if (!isImage) {
-    return m.reply( claraWrap("Novabanana", `🍌 *nano banana*\n\nReply atau kirim gambar dengan caption`), { commandName: "novabanana" });
+    return m.reply( novaWrap("Novabanana", `🍌 *nano banana*\n\nReply atau kirim gambar dengan caption`), { commandName: "novabanana" });
   }
   try {
   await m.react("🕒");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     }
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
-      return m.reply(claraWrap("Gagal", `Gagal mengunduh gambar`));
+      return m.reply(novaWrap("Gagal", `Gagal mengunduh gambar`));
     }
 
     const resultBuffer = await live3d(mediaBuffer, prompt).then(
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     console.log(error);
     await m.react("🐣");
-    m.reply(claraWrap("Novabanana", `🍀 *Waduhh, sepertinya ini ada kendala*
+    m.reply(novaWrap("Novabanana", `🍀 *Waduhh, sepertinya ini ada kendala*
 Silahkan coba lagi nanti, dimohon jangan spam`));
   }
 }

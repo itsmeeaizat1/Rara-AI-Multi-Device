@@ -2,7 +2,7 @@
 // AI Compliment — AI generates creative compliments
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -40,7 +40,7 @@ Gunakan bahasa Indonesia santai. Pujian harus bikin senyum, bukan cringe.`;
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("pujianai", "AI-nya lagi malu nih 😳", "error"));
+      return m.reply(novaWrap("pujianai", "AI-nya lagi malu nih 😳", "error"));
     }
 
     await m.react("🐣");
@@ -49,7 +49,7 @@ Gunakan bahasa Indonesia santai. Pujian harus bikin senyum, bukan cringe.`;
   } catch (err) {
     console.error("pujianai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("pujianai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("pujianai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooltextrepeat — ulang teks berkalang-kali (port altftool.com/tools/all/text-repeater)
 // Cap 20x + 3000 karakter biar gak jadi senjata spam.
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltextrepeat", alias: ["textrepeat", "repeattext", "ulangteks"], category: "tools",
@@ -48,10 +48,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (n > MAX_REPEAT) lines.push("", `⚠️ jumlah ${n} dibatasi jadi ${MAX_REPEAT}x`);
     if (cut) lines.push(`⚠️ hasil dipotong di ${MAX_CHARS} karakter`);
     await m.react("🐣");
-    await m.reply(claraWrap("Text Repeat", lines.join("\n")));
+    await m.reply(novaWrap("Text Repeat", lines.join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Text Repeat", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Text Repeat", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

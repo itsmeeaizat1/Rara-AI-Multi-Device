@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -103,15 +103,15 @@ async function handler(m, { sock }) {
     } else if (m.quoted && m.quoted.download) {
       mediaBuffer = await m.quoted.download();
     } else {
-      return m.reply(claraWrap("fotolive", "Gagal download video. Coba reply video yang valid."));
+      return m.reply(novaWrap("fotolive", "Gagal download video. Coba reply video yang valid."));
     }
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
-      return m.reply(claraWrap("fotolive", "Buffer video tidak valid."));
+      return m.reply(novaWrap("fotolive", "Buffer video tidak valid."));
     }
 
     if (mediaBuffer.length > MAX_VIDEO_SIZE) {
-      return m.reply(claraWrap("fotolive", `Video terlalu besar: ${formatSize(mediaBuffer.length)}\nMaksimal: 25 MB`));
+      return m.reply(novaWrap("fotolive", `Video terlalu besar: ${formatSize(mediaBuffer.length)}\nMaksimal: 25 MB`));
     }
 
     // Save video to temp untuk cek durasi
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
 
     if (srcDuration === 0) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
-      return m.reply(claraWrap("fotolive", "Tidak bisa membaca durasi video. Pastikan video valid."));
+      return m.reply(novaWrap("fotolive", "Tidak bisa membaca durasi video. Pastikan video valid."));
     }
 
     // Validasi durasi video sumber — MINIMAL

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // locationsearch.js — Apple Maps / Location Search (OpenStreetMap Nominatim)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "locationsearch",
@@ -18,7 +18,7 @@ async function handler(m, { sock }) {
   try {
     const query = m.args.join(" ").trim();
     if (!query) {
-      return m.reply(claraWrap("locationsearch", `Mau cari lokasi apa?\n\nContoh: ${m.prefix}locationsearch Monas Jakarta`, "guide"));
+      return m.reply(novaWrap("locationsearch", `Mau cari lokasi apa?\n\nContoh: ${m.prefix}locationsearch Monas Jakarta`, "guide"));
     }
 
     await m.react("🕒");
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
 
     if (!data || data.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("locationsearch", `Lokasi "${query}" tidak ditemukan.`, "error"));
+      return m.reply(novaWrap("locationsearch", `Lokasi "${query}" tidak ditemukan.`, "error"));
     }
 
     const place = data[0];
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("locationsearch error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("locationsearch", err.message || "Error", "error"));
+    return m.reply(novaWrap("locationsearch", err.message || "Error", "error"));
   }
 }
 

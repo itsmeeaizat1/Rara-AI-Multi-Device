@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -34,14 +34,14 @@ const FORMATS = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Video Convert", "Reply video yang mau di-convert."));
+    if (!quoted) return m.reply(novaWrap("Video Convert", "Reply video yang mau di-convert."));
     const videoMsg = quoted.videoMessage || quoted.documentMessage;
-    if (!videoMsg) return m.reply(claraWrap("Video Convert", "Reply harus video/document video!"));
+    if (!videoMsg) return m.reply(novaWrap("Video Convert", "Reply harus video/document video!"));
 
     const format = (args[0] || "").toLowerCase();
     if (!format || !FORMATS[format]) {
       const list = Object.entries(FORMATS).map(([k, v]) => k + " - " + v.desc).join("\n");
-      return m.reply(claraWrap("Video Convert", [
+      return m.reply(novaWrap("Video Convert", [
         "Format tujuan harus diisi!",
         "Format tersedia:",
         list,
@@ -81,7 +81,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await conn.sendMessage(m.key.remoteJid, {
         video: buf,
         gifPlayback: true,
-        caption: claraWrap("Video Convert", [
+        caption: novaWrap("Video Convert", [
           "Berhasil convert!",
           "Format: GIF (480px, 15fps)",
           "Size: " + (buf.length / 1024).toFixed(0) + " KB",
@@ -91,7 +91,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await conn.sendMessage(m.key.remoteJid, {
         video: buf,
         mimetype: fmt.mime,
-        caption: claraWrap("Video Convert", [
+        caption: novaWrap("Video Convert", [
           "Berhasil convert!",
           "Format: " + format.toUpperCase() + " (" + fmt.desc + ")",
           "Codec: " + fmt.codec,

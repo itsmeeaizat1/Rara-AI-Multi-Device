@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Gaple — Multiplayer Domino Game
-import { claraWrap , novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
@@ -60,13 +60,13 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     const game = games.get(chatId);
 
     if (sub === "join") {
-      if (game.players.find(p => p.id === sender)) return m.reply(claraWrap("gaple", "Sudah bergabung.", "info"));
+      if (game.players.find(p => p.id === sender)) return m.reply(novaWrap("gaple", "Sudah bergabung.", "info"));
       game.players.push({ id: sender, hand: [] });
       return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "🁣 *GABUNG!*", body: "@" + sender.split("@")[0] + " masuk meja!\nTotal: " + game.players.length + " pemain" }), { mentions: [sender] });
     }
 
     if (sub === "start") {
-      if (game.players.length < 2) return m.reply(claraWrap("gaple", "Minimal 2 pemain.", "info"));
+      if (game.players.length < 2) return m.reply(novaWrap("gaple", "Minimal 2 pemain.", "info"));
       game.deck = shuffle(createDeck());
       for (const p of game.players) {
         p.hand = [];
@@ -93,7 +93,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (sub === "hand") {
       const p = game.players.find(p => p.id === sender);
-      if (!p) return m.reply(claraWrap("gaple", "Belum bergabung.", "info"));
+      if (!p) return m.reply(novaWrap("gaple", "Belum bergabung.", "info"));
       const ht = p.hand.map((c, i) => i + ": [" + c[0] + "|" + c[1] + "]").join("\n");
       await sock.sendMessage(sender, { text: smallcapsText("🀱 *Kartu Gaple-mu:*\n\n" + ht) });
       return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "📩 *BATAU DIBAGI!*", body: "Cek DM kamu — kartu domino sudah dikirim rahasia." }));
@@ -101,12 +101,12 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (sub === "play") {
       const p = game.players[game.currentPlayer];
-      if (!p || p.id !== sender) return m.reply(claraWrap("gaple", "Bukan giliranmu!", "info"));
+      if (!p || p.id !== sender) return m.reply(novaWrap("gaple", "Bukan giliranmu!", "info"));
       const idx = parseInt(args[1]), side = (args[2] || "").toLowerCase();
-      if (isNaN(idx) || idx < 0 || idx >= p.hand.length) return m.reply(claraWrap("gaple", "Nomor kartu tidak valid.", "info"));
-      if (!["left","right"].includes(side)) return m.reply(claraWrap("gaple", "Pilih sisi: left atau right.", "guide"));
+      if (isNaN(idx) || idx < 0 || idx >= p.hand.length) return m.reply(novaWrap("gaple", "Nomor kartu tidak valid.", "info"));
+      if (!["left","right"].includes(side)) return m.reply(novaWrap("gaple", "Pilih sisi: left atau right.", "guide"));
       const card = p.hand[idx];
-      if (!tryPlace(game.table, card, side)) return m.reply(claraWrap("gaple", "Kartu tidak cocok dengan ujung meja.", "info"));
+      if (!tryPlace(game.table, card, side)) return m.reply(novaWrap("gaple", "Kartu tidak cocok dengan ujung meja.", "info"));
       p.hand.splice(idx, 1);
       if (p.hand.length === 0) { games.delete(chatId);
         // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
@@ -120,8 +120,8 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (sub === "draw") {
       const p = game.players[game.currentPlayer];
-      if (!p || p.id !== sender) return m.reply(claraWrap("gaple", "Bukan giliranmu!", "info"));
-      if (!game.deck.length) return m.reply(claraWrap("gaple", "Deck kosong.", "info"));
+      if (!p || p.id !== sender) return m.reply(novaWrap("gaple", "Bukan giliranmu!", "info"));
+      if (!game.deck.length) return m.reply(novaWrap("gaple", "Deck kosong.", "info"));
       const c = game.deck.pop(); p.hand.push(c);
       m.reply(novaGameBox({ title: "gaple", icon: "🁣", body: "📥 Ambil: [" + c[0] + "|" + c[1] + "]" }));
       game.currentPlayer = getNext(game);
@@ -130,25 +130,25 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (sub === "pass") {
       const p = game.players[game.currentPlayer];
-      if (!p || p.id !== sender) return m.reply(claraWrap("gaple", "Bukan giliranmu!", "info"));
+      if (!p || p.id !== sender) return m.reply(novaWrap("gaple", "Bukan giliranmu!", "info"));
       game.currentPlayer = getNext(game);
       return sendStatus(m, sock, game);
     }
 
     if (sub === "stop") {
       const p = game.players.find(p => p.id === sender);
-      if (!p) return m.reply(claraWrap("gaple", "Belum bergabung.", "info"));
+      if (!p) return m.reply(novaWrap("gaple", "Belum bergabung.", "info"));
       if (isAdmins || isOwner) { games.delete(chatId); return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "⏹️ *STOP!*", body: "Gaple dihentikan oleh admin.", cta: gameCTA("gaple") })); }
       if (!game.stopVotes.includes(sender)) game.stopVotes.push(sender);
       if (game.stopVotes.length === game.players.length) { games.delete(chatId); return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "⏹️ *STOP!*", body: "Gaple dihentikan — semua pemain setuju.", cta: gameCTA("gaple") })); }
       return m.reply(novaGameBox({ title: "gaple", icon: "🁣", body: "📢 Butuh " + (game.players.length - game.stopVotes.length) + " vote lagi buat stop." }));
     }
 
-    return m.reply(claraWrap("gaple", "Perintah tidak dikenali. .domino info untuk panduan.", "guide"));
+    return m.reply(novaWrap("gaple", "Perintah tidak dikenali. .domino info untuk panduan.", "guide"));
   } catch (e) {
     console.error("gaple error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("gaple", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("gaple", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

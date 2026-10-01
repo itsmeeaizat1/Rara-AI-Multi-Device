@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 // Reactions yang BELUM ada di anime-react.js (V1)
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
 
     if (!url) {
       await sock.sendMessage(from, { react: { text: "❌", key: m.key } });
-      return m.reply(claraWrap(cmd, te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(novaWrap(cmd, te(m.prefix, m.command, m.pushName), "error"));
     }
 
     // Cek jika disebut seseorang
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     const from = m.key.remoteJid;
     console.error("anime-react2 error:", err);
     await sock.sendMessage(from, { react: { text: "❌", key: m.key } });
-    return m.reply(claraWrap(m.command, te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap(m.command, te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

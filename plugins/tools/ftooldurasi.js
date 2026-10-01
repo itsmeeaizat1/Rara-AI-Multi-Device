@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooldurasi — selisih dua tanggal (port altftool.com/tools/all/date-duration-calculator)
 // Format: .ftooldurasi <tanggal1>|<tanggal2> — yyyy-mm-dd atau dd-mm-yyyy, opsional HH:mm (WIB).
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftooldurasi", alias: ["durasi", "selisihtanggal", "datediff"], category: "tools",
@@ -68,10 +68,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (diff % 86400) lines.push(`Detail: ${humanDur(diff)}`);
     lines.push(`Kalender: ±${Math.round(days / 30.44)} bulan`);
     await m.react("🐣");
-    await m.reply(claraWrap("Durasi Tanggal", lines.join("\n")));
+    await m.reply(novaWrap("Durasi Tanggal", lines.join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Durasi Tanggal", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Durasi Tanggal", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

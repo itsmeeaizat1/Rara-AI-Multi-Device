@@ -4,7 +4,7 @@
 // Key: apikeys.json novaai.sensenova (fallback env SENSENOVA_API_KEY).
 // Support: tanya teks biasa, ATAU reply/kirim foto + pertanyaan (vision asli).
 // Langsung ke sensenovaChat/sensenovaVision; mati → jatuh ke rantai fallback.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { sensenovaChat, sensenovaVision } from "../../src/scraper/sensenova.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted?.type === "imageMessage"));
 
   if (!text && !isImage) {
-    return m.reply(claraWrap("aisensenova", `Mau nanya apa?\n\nContoh teks: ${m.prefix}aisensenova apa itu AI multimodal?\nContoh gambar: reply foto + ${m.prefix}aisensenova apa di foto ini?`, "guide"));
+    return m.reply(novaWrap("aisensenova", `Mau nanya apa?\n\nContoh teks: ${m.prefix}aisensenova apa itu AI multimodal?\nContoh gambar: reply foto + ${m.prefix}aisensenova apa di foto ini?`, "guide"));
   }
   try {
     await m.react("🕒");
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
       else if (m.isMedia) buffer = await m.download();
       else {
         await m.react("❌");
-        return m.reply(claraWrap("aisensenova", "Gagal download gambar. Coba kirim ulang.", "error"));
+        return m.reply(novaWrap("aisensenova", "Gagal download gambar. Coba kirim ulang.", "error"));
       }
       const q = text || "Deskripsikan gambar ini secara detail dalam bahasa Indonesia.";
       const result = await visionScan({ imageBuffer: buffer, question: q, sessionKey: "satuan:" + m.sender })
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
         engine = result.engine;
       } else {
         await m.react("❌");
-        return m.reply(claraWrap("aisensenova", result?.error || "Gagal menganalisis gambar", "error"));
+        return m.reply(novaWrap("aisensenova", result?.error || "Gagal menganalisis gambar", "error"));
       }
     } else {
       // Chat teks: SenseNova utama, 9Router dipakai bila endpoint/key bermasalah.
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("aisensenova error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("aisensenova", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("aisensenova", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

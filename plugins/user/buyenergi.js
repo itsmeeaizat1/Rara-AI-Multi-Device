@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'buyenergi',
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     if (amount <= 0) {
         const user = db.getUser(m.sender) || db.setUser(m.sender)
         
-        return m.reply( claraWrap("Buy Energi", 
+        return m.reply( novaWrap("Buy Energi", 
             `💵 Harga: *${PRICE_PER_ENERGI}* koin/energi\n` +
             `💰 Koin Kamu: *${formatNumber(user.koin || 0)}*\n` +
             `\n` +
@@ -48,14 +48,14 @@ async function handler(m, { sock }) {
     db.updateKoin(m.sender, -totalPrice, sock, m.chat)
     
     if (user.energi === -1) {
-        return m.reply(claraWrap("Pembelian Berhasil", 
+        return m.reply(novaWrap("Pembelian Berhasil", 
             `Tapi kamu sudah punya unlimited energi!\n` +
             `Koin dikembalikan.`))
     }
     
     const newEnergi = db.updateEnergi(m.sender, amount)
     const newKoin = db.getUser(m.sender).koin
-    await m.reply( claraWrap("Pembelian Berhasil", 
+    await m.reply( novaWrap("Pembelian Berhasil", 
         `⚡ Energi: *+${formatNumber(amount)}*\n` +
         `💵 Harga: *-${formatNumber(totalPrice)}* koin\n` +
         `\n` +

@@ -3,7 +3,7 @@ import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, bracketBox, novaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, bracketBox, novaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const EFFECTS = {
     bass:      { emoji: '🔊', filter: 'bass=g=20:f=110:w=0.6', desc: 'Bass boost' },
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
     const fx = EFFECTS[effectName]
     if (!fx) {
         return m.reply(
-            claraWrap("Audiofun",
+            novaWrap("Audiofun",
                 'Efek *' + effectName + '* tidak ditemukan\n\n' +
                 'Ketik *' + prefix + 'audiofun list* untuk daftar efek'),
             "audiofun")
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     const media = getMediaSource(m)
     if (!media) {
         return m.reply(
-            claraWrap("Audiofun",
+            novaWrap("Audiofun",
                 fx.emoji + ' *' + effectName.toUpperCase() + '*\n\n' +
                 'Reply audio/video dengan command ini\n' +
                 'Contoh: reply audio lalu ketik *' + prefix + 'audiofun ' + effectName + '*'),

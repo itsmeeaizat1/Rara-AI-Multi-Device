@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pintereststalk",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const username = m.text?.trim() || m.args[0];
 
   if (!username) {
-    return m.reply(claraWrap("pintereststalk", "❌ *Waduh, username Pinterest-nya belum dimasukkan!*\n\nKamu harus mengetikkan username Pinterest yang ingin di-stalk. \n\n💡 *Contoh:* `.pintereststalk dims`"));
+    return m.reply(novaWrap("pintereststalk", "❌ *Waduh, username Pinterest-nya belum dimasukkan!*\n\nKamu harus mengetikkan username Pinterest yang ingin di-stalk. \n\n💡 *Contoh:* `.pintereststalk dims`"));
   }
   try {
     const res = await axios.get(`https://api.nexray.eu.cc/stalker/pinterest?username=${encodeURIComponent(username)}`, {
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const data = res.data;
 
     if (!data.status || !data.result) {
-      return m.reply(claraWrap("pintereststalk", `⚠️ *Pencarian Gagal!*\n\nUsername *${username}* tidak ditemukan di Pinterest. Pastikan penulisannya sudah benar ya.`));
+      return m.reply(novaWrap("pintereststalk", `⚠️ *Pencarian Gagal!*\n\nUsername *${username}* tidak ditemukan di Pinterest. Pastikan penulisannya sudah benar ya.`));
     }
 
     const r = data.result;
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[Pinterest Stalk]", error.message);
-    m.reply(claraWrap("pintereststalk", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Pinterest. Silakan coba beberapa saat lagi ya."));
+    m.reply(novaWrap("pintereststalk", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Pinterest. Silakan coba beberapa saat lagi ya."));
   }
 }
 

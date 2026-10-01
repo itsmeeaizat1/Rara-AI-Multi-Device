@@ -11,7 +11,7 @@
 
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
-import { claraWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { renderChart } from "../tools/chart.js";
 import te from "../../src/lib/nova-error.js";
@@ -107,32 +107,32 @@ async function handler(m, { sock, config: botConfig }) {
       const total = todayEntries.reduce((a, e) => a + e.total, 0);
       const remaining = store.target - total;
       if (!todayEntries.length) {
-        return m.reply(claraWrap("kalori", "Belum ada catatan makan hari ini.\n" + tipText(`Reply foto makanan + ${prefix}kalori, atau ketik ${prefix}kalori <makanan>`)));
+        return m.reply(novaWrap("kalori", "Belum ada catatan makan hari ini.\n" + tipText(`Reply foto makanan + ${prefix}kalori, atau ketik ${prefix}kalori <makanan>`)));
       }
       const list = todayEntries.map((e, i) => `${i + 1}. ${e.name} — ${e.total} kkal`).join("\n");
-      return m.reply(claraWrap("kalori",
+      return m.reply(novaWrap("kalori",
         `📋 *Log hari ini (${todayEntries.length}x makan)*\n\n${list}\n\n🔥 Total: ${total} kkal\n🎯 Target: ${store.target} kkal\n${remaining >= 0 ? "✅ Sisa jatah: " + remaining + " kkal" : "⚠ Lebih " + Math.abs(remaining) + " kkal dari target"}`));
     }
 
     if (sub === "target") {
       const n = parseInt(m.args?.[1] || "", 10);
       if (!Number.isFinite(n) || n < 500 || n > 10000) {
-        return m.reply(claraWrap("kalori", `Target sekarang: *${store.target} kkal/hari*\n\nFormat: ${prefix}kalori target 2000\n(500-10000 kkal, default 2000)`, "info"));
+        return m.reply(novaWrap("kalori", `Target sekarang: *${store.target} kkal/hari*\n\nFormat: ${prefix}kalori target 2000\n(500-10000 kkal, default 2000)`, "info"));
       }
       saveKaloriStore(m, store.db, { target: n, entries: store.entries });
-      return m.reply(claraWrap("kalori", `✅ Target kalori harian disimpan: *${n} kkal*`));
+      return m.reply(novaWrap("kalori", `✅ Target kalori harian disimpan: *${n} kkal*`));
     }
 
     if (sub === "hapus" || sub === "undo") {
-      if (!store.entries.length) return m.reply(claraWrap("kalori", "Log masih kosong, gak ada yang bisa dihapus.", "error"));
+      if (!store.entries.length) return m.reply(novaWrap("kalori", "Log masih kosong, gak ada yang bisa dihapus.", "error"));
       const last = store.entries.pop();
       saveKaloriStore(m, store.db, { target: store.target, entries: store.entries });
-      return m.reply(claraWrap("kalori", `🗑 Entri terakhir dihapus: *${last.name}* (${last.total} kkal)`));
+      return m.reply(novaWrap("kalori", `🗑 Entri terakhir dihapus: *${last.name}* (${last.total} kkal)`));
     }
 
     if (sub === "reset" || sub === "bersih") {
       saveKaloriStore(m, store.db, { target: store.target, entries: [] });
-      return m.reply(claraWrap("kalori", "✅ Log kalori dibersihkan. Target tetap: " + store.target + " kkal"));
+      return m.reply(novaWrap("kalori", "✅ Log kalori dibersihkan. Target tetap: " + store.target + " kkal"));
     }
 
     if (sub === "laporan" || sub === "rekap") {
@@ -163,7 +163,7 @@ async function handler(m, { sock, config: botConfig }) {
       const verdict = pct > 105 ? "⚠ Rata-rata di atas target — kurangi porsi atau tambah olahraga"
         : pct < 70 ? "📉 Rata-rata jauh di bawah target — jangan skip makan berlebihan"
         : "✅ Rata-rata pas di target, pertahankan";
-      return m.reply(claraWrap("kalori",
+      return m.reply(novaWrap("kalori",
         `📊 *Rekap 7 hari*\n\n🔥 Total: ${total7} kkal (${pct}% dari target 7 hari)\n📅 Hari tercatat: ${activeDays}/7\n⚖ Rata-rata: ${avg} kkal/hari\n\n${verdict}`));
     }
 
@@ -189,7 +189,7 @@ async function handler(m, { sock, config: botConfig }) {
       const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
       if (!buffer || !buffer.length) {
         await m.react("❌");
-        return m.reply(claraWrap("kalori", "Gagal download gambar. Coba kirim ulang.", "error"));
+        return m.reply(novaWrap("kalori", "Gagal download gambar. Coba kirim ulang.", "error"));
       }
       const res = await estimatorVision({
         imageBuffer: buffer,
@@ -198,7 +198,7 @@ async function handler(m, { sock, config: botConfig }) {
       }).catch((e) => ({ status: false, error: e.message }));
       if (!res?.status) {
         await m.react("❌");
-        return m.reply(claraWrap("kalori", res?.error || "Gagal menganalisis foto", "error"));
+        return m.reply(novaWrap("kalori", res?.error || "Gagal menganalisis foto", "error"));
       }
       est = parseEstimate(res.text);
       engineUsed = res.engine || "vision";
@@ -210,7 +210,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!est) {
       await m.react("❌");
-      return m.reply(claraWrap("kalori", "AI gak bisa estimasi itu. Coba foto lebih jelas atau tulis nama makanan yang lebih spesifik.", "error"));
+      return m.reply(novaWrap("kalori", "AI gak bisa estimasi itu. Coba foto lebih jelas atau tulis nama makanan yang lebih spesifik.", "error"));
     }
 
     // simpan log
@@ -231,7 +231,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (err) {
     console.error("kalori error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("kalori", te.novaError(err) || "Gagal memproses", "error"));
+    return m.reply(novaWrap("kalori", te.novaError(err) || "Gagal memproses", "error"));
   }
 }
 

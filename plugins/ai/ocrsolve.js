@@ -4,7 +4,7 @@
 //   One-shot (all users): .ocrsolve — reply ke foto, analisis sekali
 //   Persistent (owner): .toggleocrsolve on/off — auto detect tiap foto masuk
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaGuideV2, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaGuideV2, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -36,7 +36,7 @@ async function doOcrAnalysis(m, sock, mode) {
     const model = String(aiConfig.model || "gpt-4o-mini");
 
     if (!apiKey) {
-      await m.reply(claraWrap("OCR Solve", "API Key belum di-set. Owner: .setkey openai <key>"));
+      await m.reply(novaWrap("OCR Solve", "API Key belum di-set. Owner: .setkey openai <key>"));
       return { handled: true };
     }
 
@@ -59,7 +59,7 @@ async function doOcrAnalysis(m, sock, mode) {
 
     const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download(); // FIX 10 Sep
     if (!buffer || buffer.length < 500) {
-      await m.reply(claraWrap("OCR Solve", "Gagal download gambar."));
+      await m.reply(novaWrap("OCR Solve", "Gagal download gambar."));
       return { handled: true };
     }
 
@@ -146,17 +146,17 @@ async function doOcrAnalysis(m, sock, mode) {
 
     if (!aiResponse || aiResponse.length < 5) {
       await sock.sendReaction(m.key.remoteJid, "⚠️", m.key);
-      await m.reply(claraWrap("OCR Solve", "Gagal menganalisis gambar. Pastikan gambar jelas dan terbaca."));
+      await m.reply(novaWrap("OCR Solve", "Gagal menganalisis gambar. Pastikan gambar jelas dan terbaca."));
       return { handled: true };
     }
 
     const modeLabel = mode === "math" ? "Math Solver" : mode === "code" ? "Code Fixer" : "Auto Detect";
-    await m.reply(claraWrap("OCR Solve", ["Mode: " + modeLabel, "", aiResponse.slice(0, 3000)].join("\n")));
+    await m.reply(novaWrap("OCR Solve", ["Mode: " + modeLabel, "", aiResponse.slice(0, 3000)].join("\n")));
     try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[ocrsolve.js]:', e.message); }
     return { handled: true };
   } catch (e) {
     console.error("[OcrSolve] One-shot error:", e.message);
-    await m.reply(claraWrap("ocrsolve", e.message || "Ada yang error nih, coba lagi ya", "error"));
+    await m.reply(novaWrap("ocrsolve", e.message || "Ada yang error nih, coba lagi ya", "error"));
     return { handled: true };
   }
 }
@@ -186,7 +186,7 @@ async function handler(m, { sock, config: botConfig }) {
       // Owner-only toggle section
       if (!isOwner) {
         await m.react("🐣");
-        await m.reply( claraWrap("OCR Solve", [
+        await m.reply( novaWrap("OCR Solve", [
           "Toggle persistent hanya untuk owner.",
           "",
           "Kamu bisa pakai one-shot:",
@@ -200,7 +200,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (args[0] === "on" || (cmdName === "toggleocrsolve" && !args[0])) {
         cfg[gid] = { enabled: true, mode: cfg[gid]?.mode || "auto" };
         db.db.write();
-        const text = claraWrap("Auto OCR Solve", [
+        const text = novaWrap("Auto OCR Solve", [
           "Status: ON (persistent)",
           "Mode: " + (cfg[gid].mode || "auto"),
           "",
@@ -212,12 +212,12 @@ async function handler(m, { sock, config: botConfig }) {
       } else if (args[0] === "off") {
         if (cfg[gid]) cfg[gid].enabled = false;
         db.db.write();
-        await m.reply(claraWrap("Auto OCR Solve", "Status: OFF. Persistent mode dimatikan."), "ocrsolve");
+        await m.reply(novaWrap("Auto OCR Solve", "Status: OFF. Persistent mode dimatikan."), "ocrsolve");
         return { handled: true };
       } else if (args[0] === "mode") {
         const mode = args[1] || "auto";
         if (!["math", "code", "auto"].includes(mode)) {
-          await m.reply(claraWrap("Auto OCR Solve", "Mode tidak valid. Tersedia: math, code, auto"), "ocrsolve");
+          await m.reply(novaWrap("Auto OCR Solve", "Mode tidak valid. Tersedia: math, code, auto"), "ocrsolve");
           return { handled: true };
         }
         if (!cfg[gid]) cfg[gid] = {};
@@ -225,12 +225,12 @@ async function handler(m, { sock, config: botConfig }) {
         cfg[gid].enabled = cfg[gid].enabled ?? true;
         db.db.write();
         const modeDesc = { math: "Khusus soal matematika", code: "Khusus kode error/debugging", auto: "Deteksi otomatis" };
-        await m.reply(claraWrap("Auto OCR Solve", ["Mode: " + mode, "Desc: " + modeDesc[mode], "Status: " + (cfg[gid].enabled ? "ON" : "OFF")].join("\n")), "ocrsolve");
+        await m.reply(novaWrap("Auto OCR Solve", ["Mode: " + mode, "Desc: " + modeDesc[mode], "Status: " + (cfg[gid].enabled ? "ON" : "OFF")].join("\n")), "ocrsolve");
         return { handled: true };
       } else if (args[0] === "status") {
         const status = cfg[gid]?.enabled ? "ON" : "OFF";
         const mode = cfg[gid]?.mode || "auto";
-        await m.reply(claraWrap("Auto OCR Solve", ["Status: " + status, "Mode: " + mode, "", "Persistent: " + prefix + "toggleocrsolve on/off", "One-shot: " + prefix + "ocrsolve (reply foto)"].join("\n")), "ocrsolve");
+        await m.reply(novaWrap("Auto OCR Solve", ["Status: " + status, "Mode: " + mode, "", "Persistent: " + prefix + "toggleocrsolve on/off", "One-shot: " + prefix + "ocrsolve (reply foto)"].join("\n")), "ocrsolve");
         return { handled: true };
       }
     }
@@ -257,7 +257,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     return await doOcrAnalysis(m, sock, mode);
   } catch (e) {
-    await m.reply(claraWrap("ocrsolve", e.message || "Ada yang error nih, coba lagi ya", "error"));
+    await m.reply(novaWrap("ocrsolve", e.message || "Ada yang error nih, coba lagi ya", "error"));
   }
   return { handled: true };
 }
@@ -349,12 +349,12 @@ export async function handleAutoOcrSolve(m, sock) {
 
     if (!aiResponse || aiResponse.length < 5) {
       await sock.sendReaction(m.key.remoteJid, "⚠️", m.key);
-      await sock.sendMessage(m.key.remoteJid, { text: claraWrap("Auto OCR Solve", "Gagal menganalisis gambar. Pastikan gambar jelas.") }, { quoted: m });
+      await sock.sendMessage(m.key.remoteJid, { text: novaWrap("Auto OCR Solve", "Gagal menganalisis gambar. Pastikan gambar jelas.") }, { quoted: m });
       return true;
     }
 
     const modeLabel = mode === "math" ? "Math Solver" : mode === "code" ? "Code Fixer" : "Auto Detect";
-    await sock.sendMessage(m.key.remoteJid, { text: claraWrap("Auto OCR Solve", ["Mode: " + modeLabel, "", aiResponse.slice(0, 3000)].join("\n")) }, { quoted: m });
+    await sock.sendMessage(m.key.remoteJid, { text: novaWrap("Auto OCR Solve", ["Mode: " + modeLabel, "", aiResponse.slice(0, 3000)].join("\n")) }, { quoted: m });
     try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[ocrsolve.js]:', e.message); }
     return true;
   } catch (e) {

@@ -4,7 +4,7 @@
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 import { searchSongLyrics } from '../../src/scraper/genius-lyrics.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { lyricsCaption, enrichLyricsMeta } from "../../src/lib/nova-lyrics-format.js";
 
 async function fetchLyrics(judul) {
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
             } catch (fbErr) {
                 console.log("[lirik] fallback Genius juga gagal:", fbErr.message)
             }
-            return m.reply(claraWrap("Lirik", `Waduh, maaf banget kak 🥺 lirik lagu *${query}* nggak ketemu nih di database. Coba pakai kata kunci atau judul yang lebih spesifik ya! 💔`))
+            return m.reply(novaWrap("Lirik", `Waduh, maaf banget kak 🥺 lirik lagu *${query}* nggak ketemu nih di database. Coba pakai kata kunci atau judul yang lebih spesifik ya! 💔`))
         }
         
         const title = data.title || query

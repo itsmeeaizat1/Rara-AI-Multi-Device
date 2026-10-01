@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "urldiff",
@@ -77,7 +77,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const parts = text.split(/\s+/);
     if (parts.length < 2) {
-      return m.reply(claraWrap("URLDiff", "Butuh 2 URL!\n💡 *Contoh:* " + prefix + "urldiff site1.com site2.com"));
+      return m.reply(novaWrap("URLDiff", "Butuh 2 URL!\n💡 *Contoh:* " + prefix + "urldiff site1.com site2.com"));
     }
 
     const url1 = parts[0];
@@ -88,7 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
       const lines = [];
       if (r1.error) lines.push(url1 + ": Error - " + r1.error);
       if (r2.error) lines.push(url2 + ": Error - " + r2.error);
-      return m.reply(claraWrap("URLDiff Error", lines.join("\n")));
+      return m.reply(novaWrap("URLDiff Error", lines.join("\n")));
     }
 
     // Compare
@@ -155,11 +155,11 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("  Bigger body: " + (bigger === "TIE" ? "TIE" : bigger));
     }
     await m.react("🐣");
-    return m.reply(claraWrap("URL Diff: " + url1.replace(/^https?:\/\//, "") + " vs " + url2.replace(/^https?:\/\//, ""), lines.join("\n")));
+    return m.reply(novaWrap("URL Diff: " + url1.replace(/^https?:\/\//, "") + " vs " + url2.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("urldiff error:", e);
-    return m.reply(claraWrap("URLDiff", "Error: " + e.message));
+    return m.reply(novaWrap("URLDiff", "Error: " + e.message));
   }
 }
 

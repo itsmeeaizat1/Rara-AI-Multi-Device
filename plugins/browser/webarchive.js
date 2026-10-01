@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "webarchive",
@@ -95,7 +95,7 @@ async function handler(m, { sock, config: botConfig }) {
       const data = await checkArchive(url);
 
       if (!data.archived_snapshots || !data.archived_snapshots.closest) {
-        return m.reply(claraWrap("WebArchive: " + baseDomain, [
+        return m.reply(novaWrap("WebArchive: " + baseDomain, [
           "URL: " + url,
           "Status: No snapshots found",
           "Website ini belum pernah di-archive di Wayback Machine",
@@ -115,14 +115,14 @@ async function handler(m, { sock, config: botConfig }) {
         "Archive URL:",
         archiveUrl,
       ];
-      return m.reply(claraWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
+      return m.reply(novaWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
     }
 
     // List mode
     const snapshots = await listSnapshots(url);
 
     if (!snapshots || snapshots.length < 2) {
-      return m.reply(claraWrap("WebArchive: " + baseDomain, "Tidak ada snapshot ditemukan"));
+      return m.reply(novaWrap("WebArchive: " + baseDomain, "Tidak ada snapshot ditemukan"));
     }
 
     // First row is headers
@@ -150,11 +150,11 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push("");
     lines.push("Full archive: https://web.archive.org/web/*/" + url);
     await m.react("🐣");
-    return m.reply(claraWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
+    return m.reply(novaWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("webarchive error:", e);
-    return m.reply(claraWrap("WebArchive", "Error: " + e.message));
+    return m.reply(novaWrap("WebArchive", "Error: " + e.message));
   }
 }
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { sendStoreBackup, SCHEMA_VERSION } from '../../src/lib/nova-store-backup.js'
 const pluginConfig = {
     name: "backupdb",
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
             `Backup telah dikirim ke owner utama.`
         )
     } else {
-        { const __navText = claraWrap("backupdb", `❌ Backup gagal: ${result.error}`); await m.reply(__navText); }
+        { const __navText = novaWrap("backupdb", `❌ Backup gagal: ${result.error}`); await m.reply(__navText); }
     }
 }
 

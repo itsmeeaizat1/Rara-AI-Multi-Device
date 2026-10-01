@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, 
   separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+  tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -36,10 +36,10 @@ async function handler(m, { sock, config: botConfig }) {
       });
 
       const text =
-        claraWrap("AI Model", [...lines.flatMap((line, index) => [line, index < lines.length - 1 ? "" : null].join("\n")).filter(Boolean),
+        novaWrap("AI Model", [...lines.flatMap((line, index) => [line, index < lines.length - 1 ? "" : null].join("\n")).filter(Boolean),
         ]) +
         "\n\n" +
-        claraWrap("aichat-model", [
+        novaWrap("aichat-model", [
           `${prefix}aichat-model list — lihat daftar model`,
           `${prefix}aichat-model <provider> <model> — ganti model aktif`,
           "",
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     const provider = resolveProvider(providerArg, {});
     if (!provider) {
       const text =
-        claraWrap("Tidak Dikenal", [`Provider *${providerArg}* tidak dikenali.`,
+        novaWrap("Tidak Dikenal", [`Provider *${providerArg}* tidak dikenali.`,
           `Ketik *${prefix}aichat-model list* untuk lihat daftar.`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!modelArg || !(provider.models || []).includes(modelArg)) {
       const text =
-        claraWrap("Model Tidak Valid", [`Model *${modelArg || ""}* tidak tersedia untuk provider *${providerArg}*.`,
+        novaWrap("Model Tidak Valid", [`Model *${modelArg || ""}* tidak tersedia untuk provider *${providerArg}*.`,
           `Model tersedia: *${(provider.models || [].join("\n")).join(", ")}*`,
         ]) +
         "\n" +
@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!m.isOwner) {
       const text =
-        claraWrap("aichat-model", "Perintah ini khusus owner — hanya owner yang bisa mengganti model ai.", "error") +
+        novaWrap("aichat-model", "Perintah ini khusus owner — hanya owner yang bisa mengganti model ai.", "error") +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -94,7 +94,7 @@ async function handler(m, { sock, config: botConfig }) {
     botConfig.aiHelp.model = modelArg;
 
     const text =
-      claraWrap("AI Model", [`Provider: *${providerArg}*`,
+      novaWrap("AI Model", [`Provider: *${providerArg}*`,
         `Model: *${modelArg}*`,
         "Perubahan akan berlaku setelah config reload."].join("\n")) +
       "\n" +

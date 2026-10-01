@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
         lines.push(`Level: ${user.level ?? 1}`);
     }
 
-    await m.reply(claraWrap("Cek Owner", lines), { mentions: [targetJid] });
+    await m.reply(novaWrap("Cek Owner", lines), { mentions: [targetJid] });
 }
 
 export { pluginConfig as config, handler }

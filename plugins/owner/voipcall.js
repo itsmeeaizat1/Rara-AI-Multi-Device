@@ -9,7 +9,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import Voip from "../../src/lib/hivoip/index.js";
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "voipcall",
@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig }) {
       await voip.end(bodyArgs[0] === "force");
       activeCalls.delete(m.chat);
       await m.react("⚡");
-      await m.reply(claraWrap("VOIP", bodyArgs[0] === "force" ? "State VOIP di-force-reset." : "Hangup diminta..."));
+      await m.reply(novaWrap("VOIP", bodyArgs[0] === "force" ? "State VOIP di-force-reset." : "Hangup diminta..."));
       return { handled: true };
     }
 
@@ -123,7 +123,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       const nowSilenced = await entry.call.silent();
       await m.react("⚡");
-      await m.reply(claraWrap("VOIP", nowSilenced ? "Mic dimute, video dipause." : "Lanjut lagi."));
+      await m.reply(novaWrap("VOIP", nowSilenced ? "Mic dimute, video dipause." : "Lanjut lagi."));
       return { handled: true };
     }
 
@@ -178,7 +178,7 @@ async function handler(m, { sock, config: botConfig }) {
     // (video media nanti dimainkan audionya aja oleh engine).
     const willBeVideo = callType === "video";
 
-    const sent = await m.reply(claraWrap("VOIP", `Ngelpon ${phoneNumber}...${willBeVideo ? " (telepon video)" : " (telepon biasa)"} — akhiri ${prefix}voipend`));
+    const sent = await m.reply(novaWrap("VOIP", `Ngelpon ${phoneNumber}...${willBeVideo ? " (telepon video)" : " (telepon biasa)"} — akhiri ${prefix}voipend`));
     const key = sent?.key;
 
     const cleanupTempFiles = () => {
@@ -195,7 +195,7 @@ async function handler(m, { sock, config: botConfig }) {
     let connectedAtMs = null;
     let phase = 0; // 1=berdering 2=diangkat 3=terhubung 4=berakhir
     const editStatus = (text) => {
-      key && sock.sendMessage(m.chat, { text: claraWrap("VOIP", text), edit: key }).catch(() => {});
+      key && sock.sendMessage(m.chat, { text: novaWrap("VOIP", text), edit: key }).catch(() => {});
     };
 
     call.on("ringing", () => {
@@ -216,7 +216,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
     call.on("item", ({ index, kind }) => {
       if (index === 0) return;
-      sock.sendMessage(m.chat, { text: claraWrap("VOIP", `Putar item ${index + 1} (${kind})`) }).catch(() => {});
+      sock.sendMessage(m.chat, { text: novaWrap("VOIP", `Putar item ${index + 1} (${kind})`) }).catch(() => {});
     });
     call.on("ended", (reason) => {
       activeCalls.delete(m.chat);

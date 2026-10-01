@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "toptv",
@@ -17,10 +17,10 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const quoted = m.quoted;
-    if (!quoted) return m.reply(claraWrap("toptv", "Reply video dengan caption .toptv", "guide"));
+    if (!quoted) return m.reply(novaWrap("toptv", "Reply video dengan caption .toptv", "guide"));
 
     const isVideo = quoted.type === "videoMessage" || quoted.mtype === "videoMessage";
-    if (!isVideo) return m.reply(claraWrap("toptv", "Reply harus video!", "guide"));
+    if (!isVideo) return m.reply(novaWrap("toptv", "Reply harus video!", "guide"));
 
     await m.react("🕒");
 

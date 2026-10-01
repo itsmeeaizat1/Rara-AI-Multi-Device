@@ -10,7 +10,7 @@ import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio } from "../../src/scraper/nova-ytdlp.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const CUKI_APIKEY = config.APIkey?.cuki || "cuki-x";
 
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
   const match = rawText.match(/^(\d{3,4})?\s*(https?:\/\/\S+)/);
   if (!match) {
     return m.reply(
-      claraWrap("playaudio", `Contoh: ${m.prefix}playaudio320 https://youtube.com/watch?v=xxx`),
+      novaWrap("playaudio", `Contoh: ${m.prefix}playaudio320 https://youtube.com/watch?v=xxx`),
     );
   }
 
@@ -132,7 +132,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[PlayAudio]", err);
     m.reply(
-      claraWrap(
+      novaWrap(
         "playaudio",
         `Gagal download audio nih (${quality}kbps), coba lagi ya`,
       ),

@@ -6,7 +6,7 @@ import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
 import { grantSewaPremium } from "../../src/lib/nova-sewa-premium.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "renewsewa",
   alias: ["renewsewa"],
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
 
   const args = m.args;
   if (args.length < 2) {
-    return m.reply(claraWrap("renewsewa", `📝 *PERPANJANG SEWA*\n\n` +
+    return m.reply(novaWrap("renewsewa", `📝 *PERPANJANG SEWA*\n\n` +
         `Format: *${m.prefix}renewsewa <link/id> <durasi>*\n\n` +
         `*FORMAT DURASI:*\n` +
         `30i = 30 menit\n` +
@@ -126,11 +126,11 @@ async function handler(m, { sock }) {
   const durationMs = parseDurationMs(durationStr);
 
   if (!durationMs)
-    return m.reply(claraWrap("Renewsewa", `❌ Format durasi tidak valid\n💡 *Contoh:* 7d, 1m, 1y, lifetime`));
+    return m.reply(novaWrap("Renewsewa", `❌ Format durasi tidak valid\n💡 *Contoh:* 7d, 1m, 1y, lifetime`));
   try {
     const result = await resolveGroupId(sock, input);
     if (!result) {
-      return m.reply(claraWrap("renewsewa", `❌ Grup tidak ditemukan`));
+      return m.reply(novaWrap("renewsewa", `❌ Grup tidak ditemukan`));
     }
 
     const { id: groupId, inviteCode } = result;
@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
       existing.isLifetime = true;
     } else {
       if (existing.isLifetime) {
-        return m.reply(claraWrap("Renewsewa", `❌ Grup ini sudah Permanent, tidak perlu diperpanjang`));
+        return m.reply(novaWrap("Renewsewa", `❌ Grup ini sudah Permanent, tidak perlu diperpanjang`));
       }
       const baseTime =
         existing.expiredAt > Date.now() ? existing.expiredAt : Date.now();
@@ -218,9 +218,9 @@ async function handler(m, { sock }) {
       );
     } catch (e) { console.error('[renewsewa.js]:', e.message); }
 
-    return m.reply(claraWrap("renewsewa", text));
+    return m.reply(novaWrap("renewsewa", text));
   } catch (error) {
-    await m.reply(claraWrap("renewsewa", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(novaWrap("renewsewa", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

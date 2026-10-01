@@ -123,16 +123,16 @@ async function handler(m, { sock }) {
     if (action === "shakemap" || action === "peta") {
       const val = args[1];
       if (val !== "on" && val !== "off") {
-        return m.reply(claraWrap("autobmkg", "Format: .autobmkg shakemap <on/off>\nSaat ini: " + (getBmkgStatus().sendShakemap ? "ON" : "OFF")));
+        return m.reply(novaWrap("autobmkg", "Format: .autobmkg shakemap <on/off>\nSaat ini: " + (getBmkgStatus().sendShakemap ? "ON" : "OFF")));
       }
       const settings = updateBmkgSettings((cur) => ({ ...cur, sendShakemap: val === "on" }));
-      return m.reply(claraWrap("autobmkg", "Shakemap (peta gempa): " + (val === "on" ? "ON" : "OFF")));
+      return m.reply(novaWrap("autobmkg", "Shakemap (peta gempa): " + (val === "on" ? "ON" : "OFF")));
     }
 
     if (action === "minmag") {
       const val = parseFloat(args[1]);
       if (isNaN(val) || val < 0 || val > 10) {
-        return m.reply(claraWrap("autobmkg", "Format: .autobmkg minmag <0-10>\nSaat ini: M" + (getBmkgStatus().minMagnitude || 0)));
+        return m.reply(novaWrap("autobmkg", "Format: .autobmkg minmag <0-10>\nSaat ini: M" + (getBmkgStatus().minMagnitude || 0)));
       }
       const settings = updateBmkgSettings((cur) => ({ ...cur, minMagnitude: val }));
       return m.reply(
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
       return await m.reply(txt);
     }
   } catch (error) {
-    return m.reply(claraWrap("autobmkg", "Gagal proses. Coba lagi.", "error"));
+    return m.reply(novaWrap("autobmkg", "Gagal proses. Coba lagi.", "error"));
   }
 }
 

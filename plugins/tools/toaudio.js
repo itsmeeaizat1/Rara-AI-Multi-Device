@@ -2,7 +2,7 @@
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'toaudio',
     alias: ["toaudio"],
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
         await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -vn -ar 44100 -ac 2 -b:a 192k "${outputPath}"`)
 
         if (!fs.existsSync(outputPath)) {
-            await m.reply(claraWrap("toaudio", `❌ *konversi gagal*\n\n` +
+            await m.reply(novaWrap("toaudio", `❌ *konversi gagal*\n\n` +
                 `Gagal mengekstrak audio dari media.\n` +
                 `Pastikan ffmpeg terinstall dengan benar.`))
             return

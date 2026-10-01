@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Berita Lengkap — 10 sumber berita Indonesia via Andaraz API
 // Source: antaranews, bbc, beritajakarta, bola, cnn, detik, idx, kompas, okezone, sindonews
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "beritalengkap",
@@ -85,7 +85,7 @@ function formatBerita(sourceLabel, articles) {
   }
   lines.push("Source: " + sourceLabel + " via Andaraz API");
 
-  return claraWrap("Berita Lengkap", lines, "info");
+  return novaWrap("Berita Lengkap", lines, "info");
 }
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
@@ -93,7 +93,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = (args[0] || "").toLowerCase().trim();
 
     if (!input || input === "help" || input === "info") {
-      return m.reply(claraWrap("Berita Lengkap", [
+      return m.reply(novaWrap("Berita Lengkap", [
         "Berita terbaru dari 10 sumber Indonesia",
         "Source: Andaraz API",
         "",
@@ -133,13 +133,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
       lines.push("");
       lines.push("Ketik: " + usedPrefix + "beritalengkap <source>");
-      return m.reply(claraWrap("Berita Lengkap", lines, "info"));
+      return m.reply(novaWrap("Berita Lengkap", lines, "info"));
     }
 
     // Validate source
     if (!SOURCES[input]) {
       const available = Object.keys(SOURCES).join(", ");
-      return m.reply(claraWrap("Berita Lengkap", [
+      return m.reply(novaWrap("Berita Lengkap", [
         "Sumber tidak ditemukan: " + input,
         "",
         "Sumber tersedia: " + available,
@@ -148,7 +148,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "warn"));
     }
 
-    m.reply(claraWrap("Berita Lengkap", "Mengambil berita dari " + SOURCES[input].label + "..."));
+    m.reply(novaWrap("Berita Lengkap", "Mengambil berita dari " + SOURCES[input].label + "..."));
 
     await m.react("🕒");
     const result = await fetchBerita(input);
@@ -157,7 +157,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     console.error("[BeritaLengkap]", e);
     await m.react("❌");
-    m.reply(claraWrap("Berita Lengkap", [
+    m.reply(novaWrap("Berita Lengkap", [
       "Error: " + e.message,
       "",
       "Kemungkinan penyebab:",

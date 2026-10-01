@@ -3,7 +3,7 @@ import { normalizeNewsletterMeta } from "../../src/lib/nova-saluran.js";
 import config from "../../config.js";
 import fs from "fs";
 import sharp from "sharp";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getSupport } from "../../src/lib/support/support.js";
 
 const pluginConfig = {
@@ -255,7 +255,7 @@ async function handler(m, { sock, db }) {
     };
   }
 
-  await m.reply(claraWrap("Saluran Resmi", lines.join("\n")), { contextInfo });
+  await m.reply(novaWrap("Saluran Resmi", lines.join("\n")), { contextInfo });
 }
 
 export default { config: pluginConfig, handler };

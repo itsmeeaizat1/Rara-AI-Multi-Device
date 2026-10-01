@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "panduansholat",
@@ -126,7 +126,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("");
       lines.push("Cara: " + usedPrefix + "panduansholat <nomor>");
       lines.push("Contoh: " + usedPrefix + "panduansholat 4 (Al-Fatihah)");
-      return m.reply(claraWrap("Panduan Sholat", lines.join("\n")));
+      return m.reply(novaWrap("Panduan Sholat", lines.join("\n")));
     }
 
     const t = TAHAPAN[input - 1];
@@ -149,9 +149,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       t.no < TAHAPAN.length ? "Ketik " + usedPrefix + "panduansholat " + (t.no + 1) + " untuk tahap berikutnya" : "Selesai. Semoga sholat kita diterima Allah SWT.",
     ];
 
-    return m.reply(claraWrap("Panduan Sholat - Tahap " + t.no, lines.join("\n")));
+    return m.reply(novaWrap("Panduan Sholat - Tahap " + t.no, lines.join("\n")));
   } catch (e) {
-    return m.reply(claraWrap("Panduan Sholat", "Error: " + e.message));
+    return m.reply(novaWrap("Panduan Sholat", "Error: " + e.message));
   }
 }
 

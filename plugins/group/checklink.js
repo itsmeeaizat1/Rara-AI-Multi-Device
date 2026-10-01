@@ -8,7 +8,7 @@ import path from "path";
 import https from "https";
 import http from "http";
 import { URL } from "url";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const DB_FILE = path.join(process.cwd(), "src", "database", "group", "checklink.json");
 
@@ -422,7 +422,7 @@ function autoShieldCheck(msg, sock) {
     // Analyze the first URL found
     fullAnalysis(urls[0]).then((result) => {
       if (result.level === "BERBAHAYA") {
-        const warning = claraWrap(
+        const warning = novaWrap(
           "Link Shield - PERINGATAN",
           [
             `${result.emoji} Link terdeteksi: ${result.level}`,
@@ -461,7 +461,7 @@ async function handler(m, { sock }) {
       db.groups[groupId].autoShield = true;
       db.groups[groupId].enabledAt = Date.now();
       saveDB(db);
-      await m.reply(claraWrap("Link Shield", "Auto-Shield untuk grup ini sudah DINYALAKAN.\n\nBot otomatis scan setiap link yang dikirim anggota grup dan memberi peringatan kalau link berbahaya."));
+      await m.reply(novaWrap("Link Shield", "Auto-Shield untuk grup ini sudah DINYALAKAN.\n\nBot otomatis scan setiap link yang dikirim anggota grup dan memberi peringatan kalau link berbahaya."));
       return;
     }
 
@@ -475,7 +475,7 @@ async function handler(m, { sock }) {
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoShield = false;
       saveDB(db);
-      await m.reply(claraWrap("Link Shield", "Auto-Shield untuk grup ini sudah DIMATIKAN.\n\nBot berhenti auto-scan link. Manual check dengan .checklink tetap bisa dipakai."));
+      await m.reply(novaWrap("Link Shield", "Auto-Shield untuk grup ini sudah DIMATIKAN.\n\nBot berhenti auto-scan link. Manual check dengan .checklink tetap bisa dipakai."));
       return;
     }
 
@@ -490,7 +490,7 @@ async function handler(m, { sock }) {
       db.groups[groupId].autoDelete = true;
       db.groups[groupId].deleteEnabledAt = Date.now();
       saveDB(db);
-      await m.reply(claraWrap("Link Shield - Auto Delete", "Auto-Delete untuk grup ini sudah DINYALAKAN.\n\nBot otomatis hapus pesan yang berisi link berbahaya (skor 60%+) dan beri peringatan ke pengirim.\n\nPastikan bot adalah admin grup agar bisa hapus pesan."));
+      await m.reply(novaWrap("Link Shield - Auto Delete", "Auto-Delete untuk grup ini sudah DINYALAKAN.\n\nBot otomatis hapus pesan yang berisi link berbahaya (skor 60%+) dan beri peringatan ke pengirim.\n\nPastikan bot adalah admin grup agar bisa hapus pesan."));
       return;
     }
 
@@ -504,7 +504,7 @@ async function handler(m, { sock }) {
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoDelete = false;
       saveDB(db);
-      await m.reply(claraWrap("Link Shield - Auto Delete", "Auto-Delete untuk grup ini sudah DIMATIKAN.\n\nBot berhenti menghapus link berbahaya. Auto-Shield (warning) tetap aktif kalau dinyalakan."));
+      await m.reply(novaWrap("Link Shield - Auto Delete", "Auto-Delete untuk grup ini sudah DIMATIKAN.\n\nBot berhenti menghapus link berbahaya. Auto-Shield (warning) tetap aktif kalau dinyalakan."));
       return;
     }
 
@@ -535,7 +535,7 @@ async function handler(m, { sock }) {
         `5. .checklinkdeloff - Auto-delete off (owner)`,
         `6. .checklinkstatus - Lihat status`,
       ].join("\n");
-      await m.reply(claraWrap("Link Shield Status", statusBody));
+      await m.reply(novaWrap("Link Shield Status", statusBody));
       return;
     }
 
@@ -594,7 +594,7 @@ async function handler(m, { sock }) {
         reasonsText,
       ].join("\n");
 
-      await m.reply(claraWrap(`Link Shield - ${result.level}`, body));
+      await m.reply(novaWrap(`Link Shield - ${result.level}`, body));
     }
   } catch (e) {
     console.error("Checklink error:", e.message);

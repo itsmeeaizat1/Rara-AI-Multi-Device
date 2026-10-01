@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getQuotedStickerHash, deleteStickerCommand, listStickerCommands, findByCommand } from '../../src/lib/nova-sticker-command.js'
 
 const pluginConfig = {
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
         txt += `\`${pfx}delstickercmd <command>\`\n`
         txt += `atau reply sticker + \`${pfx}delstickercmd\``
         
-        return await m.reply(claraWrap("delstickercmd", txt))
+        return await m.reply(novaWrap("delstickercmd", txt))
     }
     
     let deleted = false

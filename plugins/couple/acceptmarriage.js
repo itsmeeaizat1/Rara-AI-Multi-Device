@@ -2,7 +2,7 @@
 // Sistem Nikah — Terima lamaran
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     }
 
     if (!proposerJid) {
-      return m.reply(claraWrap("terimanikah", [
+      return m.reply(novaWrap("terimanikah", [
         `Terima lamaran seseorang.`,
         ``,
         `📌 Format: reply pesan lamaran + ${m.prefix}terimanikah`,
@@ -55,14 +55,14 @@ async function handler(m, { sock }) {
     // Validasi: harus masih berpacaran
     if (propData.fun.pasangan !== m.sender || myData.fun.pasangan !== proposerJid) {
       return m.reply(
-        claraWrap("terimanikah", "Kalian tidak sedang berpacaran! 💔")
+        novaWrap("terimanikah", "Kalian tidak sedang berpacaran! 💔")
       );
     }
 
     // Validasi: belum nikah
     if (propData.fun.nikah || myData.fun.nikah) {
       return m.reply(
-        claraWrap("terimanikah", "Salah satu sudah menikah! 💍")
+        novaWrap("terimanikah", "Salah satu sudah menikah! 💍")
       );
     }
 

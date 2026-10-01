@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ptvsearch",
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       ptv: true,
     });
   } catch (error) {
-    m.reply(claraWrap("ptvsearch", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("ptvsearch", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

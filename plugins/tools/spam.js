@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spam",
@@ -49,7 +49,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Spam", [`Jumlah: *${count}x*`,
+      novaWrap("Spam", [`Jumlah: *${count}x*`,
         `Pesan: *${message}*`,
         "Status: *selesai*"].join("\n")) +
       "\n" +

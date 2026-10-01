@@ -4,7 +4,7 @@
 import { createCanvas } from "@napi-rs/canvas";
 import config from "../../config.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ttp",
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   const text = m.args?.join(" ") || m.text?.trim();
 
   if (!text) {
-    return m.reply(claraWrap("ttp", `Masukkan teks untuk sticker!\n\nContoh: ${m.prefix}ttp Hai Cantik`, "guide"));
+    return m.reply(novaWrap("ttp", `Masukkan teks untuk sticker!\n\nContoh: ${m.prefix}ttp Hai Cantik`, "guide"));
   }
 
   try {
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[TTP]", err);
     await m.react("❌");
-    m.reply(claraWrap("ttp", "Gagal membuat sticker. Coba lagi nanti!", "error"));
+    m.reply(novaWrap("ttp", "Gagal membuat sticker. Coba lagi nanti!", "error"));
   }
 }
 

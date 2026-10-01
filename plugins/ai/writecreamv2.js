@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // writecreamv2 — Writecream AI v2 (persona-based chat)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
@@ -14,9 +14,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("writecreamv2", `Format: ${m.prefix}writecreamv2 persona|pertanyaan\nContoh: ${m.prefix}writecreamv2 kamu psikolog|aku sering gelisah`, "guide"));
+    if (!text) return m.reply(novaWrap("writecreamv2", `Format: ${m.prefix}writecreamv2 persona|pertanyaan\nContoh: ${m.prefix}writecreamv2 kamu psikolog|aku sering gelisah`, "guide"));
     const [logic, question] = text.split("|").map(v => v.trim());
-    if (!logic || !question) return m.reply(claraWrap("writecreamv2", `Format salah!\nContoh: ${m.prefix}writecreamv2 kamu psikolog|aku sering gelisah`, "guide"));
+    if (!logic || !question) return m.reply(novaWrap("writecreamv2", `Format salah!\nContoh: ${m.prefix}writecreamv2 kamu psikolog|aku sering gelisah`, "guide"));
     await m.react("🕒");
     const query = JSON.stringify([{ role: "system", content: logic }, { role: "user", content: question }]);
     const url = `https://8pe3nv3qha.execute-api.us-east-1.amazonaws.com/default/llm_chat?query=${encodeURIComponent(query)}&link=writecream.com`;
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
 
     console.error("writecreamv2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("writecreamv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("writecreamv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "createchannel",
   alias: ["buatsaluran", "createsaluran", "createnewsletter"],
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
         `Subscribers: ${result?.subscribers || 0}\n\n` +
         `_Saluran ini bisa dikonfigurasi di config.saluran.id_`);
   } catch (err) {
-    return m.reply(claraWrap("createchannel", `❌ Gagal membuat saluran: ${err.message}`));
+    return m.reply(novaWrap("createchannel", `❌ Gagal membuat saluran: ${err.message}`));
   }
 }
 

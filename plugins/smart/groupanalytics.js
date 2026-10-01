@@ -2,7 +2,7 @@
 // groupanalytics — Analisis statistik grup (owner)
 // 12 Sep 2026 fix: dulu baca db.msgStats yang GAK PERNAH ditulis siapapun (mati total)
 // → sekarang live dari nova-activity-tracker (hook handler.js) + jam paling rame.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getWeeklyStats, getLeaderboard, getHourly } from "../../src/lib/nova-activity-tracker.js";
 
@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
       `Jam Paling Rame: *${peakVal > 0 ? peakIdx.toString().padStart(2, "0") + ":00 WIB (" + peakVal + " pesan)" : "-"}*`,
     ];
 
-    let msg = claraWrap("Group Analytics", lines.join("\n"));
+    let msg = novaWrap("Group Analytics", lines.join("\n"));
 
     if (board.length) {
       msg += "\n\n*top members (minggu ini):*\n";
@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply(msg);
   } catch (e) {
     console.error("groupanalytics error:", e);
-    return m.reply(claraWrap("Group Analytics", "Gagal membaca statistik: " + e.message, "error"));
+    return m.reply(novaWrap("Group Analytics", "Gagal membaca statistik: " + e.message, "error"));
   }
 }
 

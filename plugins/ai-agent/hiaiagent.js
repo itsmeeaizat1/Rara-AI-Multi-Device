@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .hiaiagent — AI agent framework MCP (engine src/lib/hiai/)
 // Nama cmd SENGAJA beda dari agent Nova (.novaagent/.mcp/.ai lain) biar gak bentrok.
-import { novaGuide, novaError, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { runAgent, resetSession, listTools, countTools, MODELS, getApiKeys, setContext } from "../../src/lib/hiai/mcp.js";
 import { AIRich } from "../../src/lib/nova-airich-hi.js";
 
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
       const tools = listTools();
       const lines = tools.slice(0, 40).map((t) => `- ${t.name}: ${String(t.description || "").slice(0, 80)}`);
       await m.react("⚡");
-      await m.reply(claraWrap("HIAIAGENT Tools Aktif", [
+      await m.reply(novaWrap("HIAIAGENT Tools Aktif", [
         `Total: *${countTools()}* tool`,
         "",
         ...lines,
@@ -57,14 +57,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (arg === "models") {
       const names = Object.keys(MODELS || {});
       await m.react("⚡");
-      await m.reply(claraWrap("HIAIAGENT Models", names.length ? names.map((n) => `- ${n}`).join("\n") : "MODELS kosong"));
+      await m.reply(novaWrap("HIAIAGENT Models", names.length ? names.map((n) => `- ${n}`).join("\n") : "MODELS kosong"));
       return { handled: true };
     }
 
     if (arg === "info") {
       const keys = getApiKeys();
       await m.react("⚡");
-      await m.reply(claraWrap("HIAIAGENT Status", [
+      await m.reply(novaWrap("HIAIAGENT Status", [
         `Engine: *MCP agent* (src/lib/hiai/)`,
         `Tools terpasang: *${countTools()}*`,
         `API keys (env AI_KEYS): *${keys.length}*`,
@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (arg === "reset") {
       resetSession(m.sender);
       await m.react("⚡");
-      await m.reply(claraWrap("HIAIAGENT Reset", "Sesi percakapan agent kamu sudah direset."));
+      await m.reply(novaWrap("HIAIAGENT Reset", "Sesi percakapan agent kamu sudah direset."));
       return { handled: true };
     }
 

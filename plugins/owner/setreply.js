@@ -3,7 +3,7 @@ import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import fs from "fs";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setreply",
   alias: ["setreply"],
@@ -35,14 +35,14 @@ async function handler(m, { sock, db }) {
   if (variant) {
     const selected = VARIANTS[variant];
     if (!selected) {
-      m.reply(claraWrap("Setreply", `❌ *VARIANT TIDAK VALID*\n\nSatu-satunya variant: *v1*`));
+      m.reply(novaWrap("Setreply", `❌ *VARIANT TIDAK VALID*\n\nSatu-satunya variant: *v1*`));
       return;
     }
 
     db.setting("replyVariant", selected.id);
     await db.save();
 
-    await m.reply(claraWrap("setreply", `✅ *REPLY VARIANT DIUBAH*\n\n` +
+    await m.reply(novaWrap("setreply", `✅ *REPLY VARIANT DIUBAH*\n\n` +
       `${selected.emoji} *V${selected.id} — ${selected.name}*\n` +
       `_${selected.desc}_`));
     return;

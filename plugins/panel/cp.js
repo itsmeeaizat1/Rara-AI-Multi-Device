@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from "nova";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import crypto from 'crypto'
 import config from '../../config.js'
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
   const numberInput = parts[4]
 
   if (!ramInput || !diskInput || !cpuInput || !usernameInput || !numberInput) {
-    return m.reply(claraWrap("Panel",
+    return m.reply(novaWrap("Panel",
       `Format tidak lengkap\n\n` +
       `Gunakan: ${prefix}cp <ram> <disk> <cpu> <nomor>\n` +
       `Contoh: ${prefix}cp 1gb 1gb 100 628311880113`
@@ -180,13 +180,13 @@ async function handler(m, { sock }) {
   const cpu = parseCpu(cpuInput)
 
   if (ramMb === null) {
-    return m.reply(claraWrap("Panel", `RAM tidak valid: ${ramInput}\nGunakan format: 1gb, 512mb, unli`))
+    return m.reply(novaWrap("Panel", `RAM tidak valid: ${ramInput}\nGunakan format: 1gb, 512mb, unli`))
   }
   if (diskMb === null) {
-    return m.reply(claraWrap("Panel", `Disk tidak valid: ${diskInput}\nGunakan format: 1gb, 512mb, unli`))
+    return m.reply(novaWrap("Panel", `Disk tidak valid: ${diskInput}\nGunakan format: 1gb, 512mb, unli`))
   }
   if (cpu === null) {
-    return m.reply(claraWrap("Panel", `CPU tidak valid: ${cpuInput}\nGunakan angka 1-400 (persen)`))
+    return m.reply(novaWrap("Panel", `CPU tidak valid: ${cpuInput}\nGunakan angka 1-400 (persen)`))
   }
 
   // Determine target user
@@ -202,17 +202,17 @@ async function handler(m, { sock }) {
   }
 
   if (!targetUser) {
-    return m.reply(claraWrap("Panel", `Tidak dapat menentukan nomor target.`))
+    return m.reply(novaWrap("Panel", `Tidak dapat menentukan nomor target.`))
   }
 
   // Validate WhatsApp number
   try {
     const [onWa] = await sock.onWhatsApp(targetUser.split("@")[0])
     if (!onWa?.exists) {
-      return m.reply(claraWrap("Panel", `Nomor ${targetUser.split("@")[0]} tidak terdaftar di WhatsApp!`))
+      return m.reply(novaWrap("Panel", `Nomor ${targetUser.split("@")[0]} tidak terdaftar di WhatsApp!`))
     }
   } catch (e) {
-    return m.reply(claraWrap("Panel", `Gagal validasi nomor WhatsApp.`))
+    return m.reply(novaWrap("Panel", `Gagal validasi nomor WhatsApp.`))
   }
 
   // Access control
@@ -240,7 +240,7 @@ async function handler(m, { sock }) {
 
   if (missingConfig.length > 0) {
     const available = getAvailableServers(pteroConfig)
-    return m.reply(claraWrap("Panel",
+    return m.reply(novaWrap("Panel",
       `Server ${serverVersion.toUpperCase()} belum dikonfigurasi\n` +
       `Missing: ${missingConfig.join(', ')}\n` +
       `Server tersedia: ${available.join(', ') || 'none'}`
@@ -257,7 +257,7 @@ async function handler(m, { sock }) {
   const ramLabel = ramMb === 0 ? "Unlimited" : `${ramMb / 1024} GB`
   const diskLabel = diskMb === 0 ? "Unlimited" : `${diskMb / 1024} GB`
 
-  await m.reply(claraWrap("Panel",
+  await m.reply(novaWrap("Panel",
     `Membuat panel ${serverLabel}\n\n` +
     `RAM: ${ramLabel}\n` +
     `Disk: ${diskLabel}\n` +
@@ -405,7 +405,7 @@ async function handler(m, { sock }) {
     if (deliveryMode === 1) {
       await sendDetailToChat(m.sender)
       if (targetUser !== m.sender) await sendDetailToChat(targetUser)
-      await m.reply(claraWrap("Panel", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
+      await m.reply(novaWrap("Panel", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
     } else if (deliveryMode === 2) {
       await sendDetailToChat(m.chat)
       if (targetUser !== m.sender && targetUser !== m.chat) await sendDetailToChat(targetUser)
@@ -425,7 +425,7 @@ async function handler(m, { sock }) {
       'unauthorized': 'API key tidak punya permission',
     }
     const friendly = Object.entries(errorMap).find(([k]) => rawMsg.toLowerCase().includes(k))
-    return m.reply(claraWrap("Panel", `GAGAL MEMBUAT PANEL\n\n${friendly ? friendly[1] : rawMsg}`))
+    return m.reply(novaWrap("Panel", `GAGAL MEMBUAT PANEL\n\n${friendly ? friendly[1] : rawMsg}`))
   }
 }
 

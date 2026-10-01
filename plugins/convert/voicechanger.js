@@ -5,7 +5,7 @@ import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "voicechanger",
@@ -210,7 +210,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("Contoh: " + usedPrefix + "vc anime raiden");
       lines.push("");
       lines.push("Note: RVC API butuh 5-15 detik untuk proses");
-      return m.reply(claraWrap("Voice Changer - Anime", lines.join("\n")));
+      return m.reply(novaWrap("Voice Changer - Anime", lines.join("\n")));
     }
 
     // === MENU: local list ===
@@ -237,25 +237,25 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("");
       lines.push("Cara: Reply audio/VN lalu ketik " + usedPrefix + "vc <model>");
       lines.push("Contoh: " + usedPrefix + "vc loli | " + usedPrefix + "vc anime raiden");
-      return m.reply(claraWrap("Voice Changer", lines.join("\n")));
+      return m.reply(novaWrap("Voice Changer", lines.join("\n")));
     }
 
     // === RVC ANIME MODE ===
     if (input === "anime" && subInput) {
       const char = ANIME_MODELS.find(c => c.id === subInput || c.name.toLowerCase() === subInput);
       if (!char) {
-        return m.reply(claraWrap("Voice Changer", [
+        return m.reply(novaWrap("Voice Changer", [
           "Karakter anime tidak ditemukan: " + subInput,
           "Ketik " + usedPrefix + "vc anime list untuk lihat semua.",
         ].join("\n")));
       }
 
       if (!hasAudio) {
-        return m.reply(claraWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu " + usedPrefix + "vc anime " + char.id));
+        return m.reply(novaWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu " + usedPrefix + "vc anime " + char.id));
       }
 
       const statusMsg = await conn.sendMessage(m.key.remoteJid, {
-        text: claraWrap("Voice Changer", "Memproses RVC AI: " + char.name + " (" + char.region + ")...\nEstimasi: 5-15 detik"),
+        text: novaWrap("Voice Changer", "Memproses RVC AI: " + char.name + " (" + char.region + ")...\nEstimasi: 5-15 detik"),
       });
 
       // Download audio
@@ -395,7 +395,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         audio: outputBuf,
         mimetype: 'audio/ogg; codecs=opus',
         ptt: true,
-        caption: claraWrap("Voice Changer - RVC Anime", [
+        caption: novaWrap("Voice Changer - RVC Anime", [
           char.name + " (" + char.region + ")",
           "AI Voice Conversion - Genshin Impact",
         ].join("\n")),
@@ -419,7 +419,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // === LOCAL FFMPEG MODE ===
     if (!LOCAL_MODELS[input]) {
-      return m.reply(claraWrap("Voice Changer", [
+      return m.reply(novaWrap("Voice Changer", [
         "Model tidak ditemukan: " + input,
         "Ketik " + usedPrefix + "vc list untuk model lokal",
         "Ketik " + usedPrefix + "vc anime list untuk karakter anime",
@@ -427,12 +427,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!hasAudio) {
-      return m.reply(claraWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu ketik " + usedPrefix + "vc " + input));
+      return m.reply(novaWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu ketik " + usedPrefix + "vc " + input));
     }
 
     const vm = LOCAL_MODELS[input];
     const statusMsg = await conn.sendMessage(m.key.remoteJid, {
-      text: claraWrap("Voice Changer", "Memproses: " + input + "..."),
+      text: novaWrap("Voice Changer", "Memproses: " + input + "..."),
     });
 
     let audioBuffer;
@@ -482,7 +482,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: outputBuf,
       mimetype: 'audio/ogg; codecs=opus',
       ptt: true,
-      caption: claraWrap("Voice Changer", [
+      caption: novaWrap("Voice Changer", [
         input.toUpperCase(),
         vm.desc,
       ].join("\n")),
@@ -496,7 +496,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await m.reply(novaBerhasil("voicechanger"));
   } catch (e) {
     console.error("voicechanger error:", e.message);
-    return m.reply(claraWrap("Voice Changer", "Error: " + e.message));
+    return m.reply(novaWrap("Voice Changer", "Error: " + e.message));
   }
 }
 

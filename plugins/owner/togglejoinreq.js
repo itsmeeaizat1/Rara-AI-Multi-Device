@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "togglejoinreq",
@@ -70,13 +70,13 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "on") {
       setEnabled(TOGGLE_KEYS.notifyOwner, true);
       setEnabled(TOGGLE_KEYS.notifyAdmin, true);
-      return m.reply(claraWrap("togglejoinreq", "Semua notifikasi join request *DINYALAKAN*\n\n1. Notify Owner: *ON*\n2. Notify Admin Grup: *ON*"));
+      return m.reply(novaWrap("togglejoinreq", "Semua notifikasi join request *DINYALAKAN*\n\n1. Notify Owner: *ON*\n2. Notify Admin Grup: *ON*"));
     } else if (action === "off") {
       setEnabled(TOGGLE_KEYS.notifyOwner, false);
       setEnabled(TOGGLE_KEYS.notifyAdmin, false);
-      return m.reply(claraWrap("togglejoinreq", "Semua notifikasi join request *DIMATIKAN*\n\n1. Notify Owner: *OFF*\n2. Notify Admin Grup: *OFF*"));
+      return m.reply(novaWrap("togglejoinreq", "Semua notifikasi join request *DIMATIKAN*\n\n1. Notify Owner: *OFF*\n2. Notify Admin Grup: *OFF*"));
     }
-    return m.reply(claraWrap("Usage", "Format: " + prefix + "togglejoinreq all on/off"));
+    return m.reply(novaWrap("Usage", "Format: " + prefix + "togglejoinreq all on/off"));
   }
 
   if (subCmd === "owner") {

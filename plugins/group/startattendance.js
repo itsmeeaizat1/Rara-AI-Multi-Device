@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 const pluginConfig = {
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const chatId = m.chat;
 
   if (global.absensi[chatId]) {
-    return m.reply(claraWrap("Masih Ada Absen", 
+    return m.reply(novaWrap("Masih Ada Absen", 
         `Masih ada sesi absen di grup ini!\n\n` +
         `Ketik *.hapusabsen* untuk menghapus\n` +
         `atau *.cekabsen* untuk melihat daftar`));
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
   // 🕒 sesi berjalan yang nge-tick tiap detik ±12 dtk lalu settle —
   // biar admin langsung keliatan sesinya hidup + lama sesi berjalan.
   const startedTs = Date.now();
-  const mulaiCard = (ms) => claraWrap("ABSEN UDAH JALAN NIHH",
+  const mulaiCard = (ms) => novaWrap("ABSEN UDAH JALAN NIHH",
       `「 📋 *InғO* 」\n` +
       `📝 ${keterangan}\n` +
       `👑 Dibuat oleh: @${m.sender.split("@")[0]}\n` +

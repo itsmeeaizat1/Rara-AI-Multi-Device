@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "typingracegroup",
@@ -53,14 +53,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const leaderboard = db.data.typingRace.leaderboard;
 
     if (sub === "start") {
-      if (game.active) return m.reply(claraWrap("Typing Race", "Sudah ada race berjalan."));
+      if (game.active) return m.reply(novaWrap("Typing Race", "Sudah ada race berjalan."));
       game.active = true;
       game.players = [];
       game.sentence = "";
       game.winner = null;
       game.phase = "join";
       await db.save();
-      return m.reply(claraWrap("Typing Race", [
+      return m.reply(novaWrap("Typing Race", [
         `Race dimulai!`,
         `Phase: Join`,
         "",
@@ -70,11 +70,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "join") {
-      if (!game.active || game.phase !== "join") return m.reply(claraWrap("Info", `Belum ada race. Ketik ${usedPrefix}typingrace start`, "info"));
-      if (game.players.includes(sender)) return m.reply(claraWrap("Info", "\u274c Sudah join!"));
+      if (!game.active || game.phase !== "join") return m.reply(novaWrap("Info", `Belum ada race. Ketik ${usedPrefix}typingrace start`, "info"));
+      if (game.players.includes(sender)) return m.reply(novaWrap("Info", "\u274c Sudah join!"));
       game.players.push(sender);
       await db.save();
-      return m.reply(claraWrap("Typing Race", [
+      return m.reply(novaWrap("Typing Race", [
         `@${sender.split("@")[0]} joined!`,
         `Total player: ${game.players.length}`,
         "",
@@ -83,14 +83,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "go") {
-      if (!game.active || game.phase !== "join") return m.reply(claraWrap("Info", "\u274c Tidak dalam fase join."));
-      if (game.players.length < 2) return m.reply(claraWrap("Info", "\u274c Minimal butuh 2 player."));
+      if (!game.active || game.phase !== "join") return m.reply(novaWrap("Info", "\u274c Tidak dalam fase join."));
+      if (game.players.length < 2) return m.reply(novaWrap("Info", "\u274c Minimal butuh 2 player."));
       game.sentence = SENTENCES[Math.floor(Math.random() * SENTENCES.length)];
       game.startedAt = Date.now();
       game.phase = "racing";
       game.winner = null;
       await db.save();
-      return m.reply(claraWrap("Typing Race", [
+      return m.reply(novaWrap("Typing Race", [
         `GO! Ketik kalimat ini persis sama:`,
         "",
         `"${game.sentence}"`,
@@ -101,10 +101,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "done") {
-      if (!game.active || game.phase !== "racing") return m.reply(claraWrap("Info", "\u274c Tidak ada race berjalan."));
-      if (game.winner) return m.reply(claraWrap("Info", `\U0001f3c6 Race sudah selesai! Pemenang: @${game.winner.split("@")[0]}`, "info"));
+      if (!game.active || game.phase !== "racing") return m.reply(novaWrap("Info", "\u274c Tidak ada race berjalan."));
+      if (game.winner) return m.reply(novaWrap("Info", `\U0001f3c6 Race sudah selesai! Pemenang: @${game.winner.split("@")[0]}`, "info"));
       const typed = text.split(" ").slice(1).join(" ").trim();
-      if (!typed) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}typingrace done <kalimat>`, "info"));
+      if (!typed) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}typingrace done <kalimat>`, "info"));
 
       if (typed === game.sentence) {
         const elapsed = (Date.now() - game.startedAt) / 1000;
@@ -120,7 +120,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         if (wpm > leaderboard[sender].bestWpm) leaderboard[sender].bestWpm = wpm;
         await db.save();
 
-        return m.reply(claraWrap("Typing Race", [
+        return m.reply(novaWrap("Typing Race", [
           `@${sender.split("@")[0]} MENANG!`,
           `Waktu: ${elapsed.toFixed(2)} detik`,
           `Speed: ${wpm} WPM`,
@@ -129,7 +129,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           `WPM terbaik: ${leaderboard[sender].bestWpm}`,
         ].join("\n")));
       } else {
-        return m.reply(claraWrap("Typing Race", [
+        return m.reply(novaWrap("Typing Race", [
           `SALAH! Ketik persis sama.`,
           `Yang kamu ketik: "${typed}"`,
           `Yang diminta: "${game.sentence}"`,
@@ -141,12 +141,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const sorted = Object.entries(leaderboard)
         .sort((a, b) => (b[1].wins || 0) - (a[1].wins || 0))
         .slice(0, 10);
-      if (sorted.length === 0) return m.reply(claraWrap("Typing Race", "Belum ada leaderboard."));
+      if (sorted.length === 0) return m.reply(novaWrap("Typing Race", "Belum ada leaderboard."));
       const lb = sorted.map(([jid, d], i) => {
         const medal = ["🥇", "🥈", "🥉"][i] || `${i + 1}.`;
         return `${medal} @${jid.split("@")[0]} - ${d.wins} win, best ${d.bestWpm} WPM`;
       }).join("\n");
-      return m.reply(claraWrap("Typing Race", `Leaderboard:\n\n${lb}`));
+      return m.reply(novaWrap("Typing Race", `Leaderboard:\n\n${lb}`));
     }
 
     if (sub === "stop") {
@@ -156,10 +156,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.winner = null;
       game.sentence = "";
       await db.save();
-      return m.reply(claraWrap("Typing Race", "Race dihentikan."));
+      return m.reply(novaWrap("Typing Race", "Race dihentikan."));
     }
 
-    return m.reply(claraWrap("Typing Race", [
+    return m.reply(novaWrap("Typing Race", [
       `Typing Race - Ketik cepat, siapa pertama menang`,
       "",
       `Command:`,

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ayatkursi.js — Ayat Kursi
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ayatkursi",
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("ayatkursi error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("ayatkursi", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("ayatkursi", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

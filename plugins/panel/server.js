@@ -9,7 +9,7 @@
 // Izin    : Owner bot / role Owner & CEO panel di server tsb (reseller TIDAK bisa).
 
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import {
   setPanelField,
   clearPanelField,
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
     txt += "- Angka terakhir = nomor server (1 = v1, sampai 100 = v100)\n";
     txt += "- PLTA & PTLC tidak bisa bersamaan di 1 server\n";
     txt += "- Mayoritas panel VPS dedicated pakai PTLA, tapi keduanya opsional";
-    return m.reply(claraWrap("server", txt));
+    return m.reply(novaWrap("server", txt));
   }
 
   // ── status semua server ──
@@ -88,12 +88,12 @@ async function handler(m, { sock }) {
     if (shown === 0) txt += "(belum ada key ter-set — pakai " + prefix + "server plta <apikey> 1)\n";
     const configured = listPanels().length;
     txt += "Server terkonfigurasi domain+key: " + configured + "/" + MAX_PANELS + " slot";
-    return m.reply(claraWrap("server", txt));
+    return m.reply(novaWrap("server", txt));
   }
 
   if (sub !== "plta" && sub !== "pltc") {
     return m.reply(
-      claraWrap("server", "Subcommand tidak dikenal: *" + (args[0] || "-") + "*\n\nGunakan:\n" +
+      novaWrap("server", "Subcommand tidak dikenal: *" + (args[0] || "-") + "*\n\nGunakan:\n" +
         "  " + prefix + "server plta <apikey> <server>\n" +
         "  " + prefix + "server pltc <apikey> <server>\n" +
         "  " + prefix + "server status")
@@ -104,14 +104,14 @@ async function handler(m, { sock }) {
   const key = args[1];
   if (!key) {
     return m.reply(
-      claraWrap("server", "API key tidak boleh kosong.\n\n💡 *Contoh:* " + prefix + "server " + sub + " ptla_xxxx 1")
+      novaWrap("server", "API key tidak boleh kosong.\n\n💡 *Contoh:* " + prefix + "server " + sub + " ptla_xxxx 1")
     );
   }
 
   const serverNum = parseServerNum(args[2]);
   if (!serverNum) {
     return m.reply(
-      claraWrap("server", "Nomor server wajib diisi (1-100).\n\n💡 *Contoh:* " + prefix + "server " + sub + " " + key.substring(0, 6) + "**** 1\n(1 = server pertama v1)")
+      novaWrap("server", "Nomor server wajib diisi (1-100).\n\n💡 *Contoh:* " + prefix + "server " + sub + " " + key.substring(0, 6) + "**** 1\n(1 = server pertama v1)")
     );
   }
 
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
   if (!m.isOwner && !hasFullAccess(m.sender, "v" + serverNum, false)) {
     const userRole = getUserRole(m.sender, "v" + serverNum);
     return m.reply(
-      claraWrap("server", "❌ *akses ditolak*\n\n" +
+      novaWrap("server", "❌ *akses ditolak*\n\n" +
         "Set key server hanya untuk *Owner bot* & *Owner/CEO panel* server " + serverLabel + "\n" +
         "Role kamu: *" + (userRole ? userRole.toUpperCase() : "Tidak ada") + "*\n\n" +
         "Hirarki: Owner > CEO > Reseller")
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
 
   const result = setPanelField(serverNum, field, key);
   if (!result.success) {
-    return m.reply(claraWrap("server", "❌ Gagal set " + label + ": " + result.error));
+    return m.reply(novaWrap("server", "❌ Gagal set " + label + ": " + result.error));
   }
 
   // ATURAN EKSKLUSIF: set PLTA → PTLC dihapus sistem, begitu juga sebaliknya
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
   txt += "Server: *" + serverLabel + "*\n\n";
   txt += "⚠️ " + otherLabel + " dihapus otomatis — satu server hanya boleh satu jenis key.\n";
   txt += "Perubahan langsung aktif, tidak perlu restart.";
-  return m.reply(claraWrap("server", txt));
+  return m.reply(novaWrap("server", txt));
 }
 
 export { pluginConfig as config, handler };

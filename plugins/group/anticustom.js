@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "anticustom",
@@ -220,19 +220,19 @@ async function handler(m, { sock }) {
       return;
     }
     clearSession(sessionKey);
-    await m.reply(claraWrap("Anticustom", "✅ Sesi AntiCustom dibatalkan."));
+    await m.reply(novaWrap("Anticustom", "✅ Sesi AntiCustom dibatalkan."));
     return;
   }
 
   if (sub === "on") {
     db.setGroup(m.chat, { anticustom: "on" });
-    await m.reply(claraWrap("Anticustom", "✅ *anticustom diaktifkan*"));
+    await m.reply(novaWrap("Anticustom", "✅ *anticustom diaktifkan*"));
     return;
   }
 
   if (sub === "off") {
     db.setGroup(m.chat, { anticustom: "off" });
-    await m.reply(claraWrap("Anticustom", "❌ *anticustom dinonaktifkan*"));
+    await m.reply(novaWrap("Anticustom", "❌ *anticustom dinonaktifkan*"));
     return;
   }
 
@@ -254,7 +254,7 @@ async function handler(m, { sock }) {
       await m.reply(novaEmpty("Anticustom List", "Belum ada rule AntiCustom di grup ini."));
       return;
     }
-    await m.reply(claraWrap("Anticustom", `📋 list anticustom\n\n${rules.map(formatRule).join("\n\n")}`, "info"));
+    await m.reply(novaWrap("Anticustom", `📋 list anticustom\n\n${rules.map(formatRule).join("\n\n")}`, "info"));
     return;
   }
 
@@ -281,7 +281,7 @@ async function handler(m, { sock }) {
     }
 
     db.setGroup(m.chat, { anticustomRules: nextRules });
-    await m.reply(claraWrap("Anti custom", `Rule dengan judul \`${name}\` berhasil dihapus.`, "success"));
+    await m.reply(novaWrap("Anti custom", `Rule dengan judul \`${name}\` berhasil dihapus.`, "success"));
     return;
   }
 
@@ -378,7 +378,7 @@ async function replyHandler(m, { sock }) {
   if (session.step === "confirm") {
     if (/^(batal|cancel|tidak|nggak|ga|gak|no)$/i.test(text)) {
       clearSession(sessionKey);
-      await m.reply(claraWrap("Anticustom", `Oke, sesi AntiCustom dibatalkan. Kalau mau mulai lagi, ketik \`${m.prefix || "."}anticustom add\`.`, "success"));
+      await m.reply(novaWrap("Anticustom", `Oke, sesi AntiCustom dibatalkan. Kalau mau mulai lagi, ketik \`${m.prefix || "."}anticustom add\`.`, "success"));
       return true;
     }
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
 import {
   enableHealthCheck,
   disableHealthCheck,
@@ -63,13 +63,13 @@ async function handler(m, { sock }) {
       const interval = parseInt(args[1]) || 30;
 
       if (interval < 5) {
-        return m.reply(claraWrap("autohealth", toSC("Interval minimal 5 menit!")));
+        return m.reply(novaWrap("autohealth", toSC("Interval minimal 5 menit!")));
       }
 
       const result = enableHealthCheck(interval, sock);
 
       if (!result.success) {
-        return m.reply(claraWrap("autohealth", `❌ ${toSC(result.error)}`));
+        return m.reply(novaWrap("autohealth", `❌ ${toSC(result.error)}`));
       }
       return m.reply(
         bracketBox("✅", toSC("API Health Check Diaktifkan"), [
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableHealthCheck();
-      return m.reply(claraWrap("autohealth", toSC("API Health Check dinonaktifkan")));
+      return m.reply(novaWrap("autohealth", toSC("API Health Check dinonaktifkan")));
     }
 
     case "status":
@@ -118,9 +118,9 @@ async function handler(m, { sock }) {
     case "trigger": {
       try {
         await triggerManualCheck(sock);
-        return m.reply(claraWrap("autohealth", toSC("Health check selesai! Lihat notif di DM owner.")));
+        return m.reply(novaWrap("autohealth", toSC("Health check selesai! Lihat notif di DM owner.")));
       } catch (error) {
-        return m.reply(claraWrap("autohealth", te(m.prefix, m.command, m.pushName), "error"));
+        return m.reply(novaWrap("autohealth", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 

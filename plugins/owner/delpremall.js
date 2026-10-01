@@ -2,7 +2,7 @@
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delpremall',
     alias: ["delpremall"],
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         const participants = groupMeta.participants || []
         
         if (participants.length === 0) {
-            return m.reply(claraWrap("Delpremall", `❌ *Gagal*\n\nTidak ada member di grup ini`))
+            return m.reply(novaWrap("Delpremall", `❌ *Gagal*\n\nTidak ada member di grup ini`))
         }
         const db = getDatabase()
         if (!db.data.premium) db.data.premium = []
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
             `Grup: ${groupMeta.subject}`)
         
     } catch (error) {
-        await m.reply(claraWrap("delpremall", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("delpremall", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

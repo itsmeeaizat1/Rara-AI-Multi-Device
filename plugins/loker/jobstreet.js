@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // JobStreet — Cari lowongan kerja & lihat detail via Andaraz JobStreet API
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jobstreet",
@@ -62,7 +62,7 @@ async function getJobDetail(jobId) {
 function formatSearchResults(data, keyword, page) {
   const jobs = data.jobs || data.results || data.data || [];
   if (!Array.isArray(jobs) || jobs.length === 0) {
-    return claraWrap("JobStreet", [
+    return novaWrap("JobStreet", [
       "Tidak ada lowongan ditemukan untuk: " + keyword,
       "",
       "Coba keyword lain seperti:",
@@ -101,7 +101,7 @@ function formatSearchResults(data, keyword, page) {
   lines.push("Ketik .jobstreet detail <ID> untuk lihat detail lowongan");
   lines.push("Source: JobStreet Indonesia via Andaraz API");
 
-  return claraWrap("JobStreet", lines, "info");
+  return novaWrap("JobStreet", lines, "info");
 }
 
 // ─── Format job detail ─────────────────────────────────────────────
@@ -139,7 +139,7 @@ function formatJobDetail(data) {
   lines.push("");
   lines.push("Source: JobStreet Indonesia via Andaraz API");
 
-  return claraWrap("JobStreet", lines, "info");
+  return novaWrap("JobStreet", lines, "info");
 }
 
 // ─── Handler ──────────────────────────────────────────────────────
@@ -149,7 +149,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await m.react("🕒");
 
     if (!input) {
-      return m.reply(claraWrap("JobStreet", [
+      return m.reply(novaWrap("JobStreet", [
         "Cari lowongan kerja dari JobStreet Indonesia",
         "Source: Andaraz API",
         "",
@@ -172,10 +172,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "detail" || sub === "d") {
       const jobId = parts[1];
       if (!jobId) {
-        return m.reply(claraWrap("JobStreet", "ID lowongan wajib!\n💡 *Contoh:* " + usedPrefix + "jobstreet detail 93291047"));
+        return m.reply(novaWrap("JobStreet", "ID lowongan wajib!\n💡 *Contoh:* " + usedPrefix + "jobstreet detail 93291047"));
       }
 
-      m.reply(claraWrap("JobStreet", "Mengambil detail lowongan...\nID: " + jobId));
+      m.reply(novaWrap("JobStreet", "Mengambil detail lowongan...\nID: " + jobId));
 
       const data = await getJobDetail(jobId);
       await m.react("🐣");
@@ -193,10 +193,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!keyword) {
-      return m.reply(claraWrap("JobStreet", "Keyword pencarian wajib!\n💡 *Contoh:* " + usedPrefix + "jobstreet developer"));
+      return m.reply(novaWrap("JobStreet", "Keyword pencarian wajib!\n💡 *Contoh:* " + usedPrefix + "jobstreet developer"));
     }
 
-    m.reply(claraWrap("JobStreet", "Mencari lowongan...\nKeyword: " + keyword + "\nHalaman: " + page));
+    m.reply(novaWrap("JobStreet", "Mencari lowongan...\nKeyword: " + keyword + "\nHalaman: " + page));
 
     const data = await searchJobs(keyword, page);
     await m.react("🐣");
@@ -211,7 +211,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       errMsg = "JobStreet lagi blokir nih. Coba lagi nanti atau pakai .jobstreet detail <id>";
     }
 
-    m.reply(claraWrap("JobStreet", [
+    m.reply(novaWrap("JobStreet", [
       "Error: " + errMsg,
       "",
       "Kemungkinan penyebab:",

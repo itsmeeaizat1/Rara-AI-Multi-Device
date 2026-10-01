@@ -9,7 +9,7 @@
 import fs from "fs";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import { generateWAMessageFromContent } from "nova";
 import axios from "axios";
 
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
   // Cancel
   if (args === "batal" || args === "cancel") {
     buySessions.delete(sender);
-    return m.reply(claraWrap("buyprem", "Pembelian premium dibatalkan."));
+    return m.reply(novaWrap("buyprem", "Pembelian premium dibatalkan."));
   }
 
   // Kalau ada argumen durasi langsung → cari paket matching

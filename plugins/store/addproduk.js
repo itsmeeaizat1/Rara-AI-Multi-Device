@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 import axios from 'axios'
@@ -83,10 +83,10 @@ async function handler(m, { sock }) {
     const kategori = (parts[5] || 'umum').toLowerCase().trim()
 
     if (!name || name.length < 2) {
-        return m.reply(claraWrap("addproduk", `❌ *nama produk terlalu pendek.*\n\nMinimal 2 karakter diperlukan agar mudah dikenali pelanggan 📝`))
+        return m.reply(novaWrap("addproduk", `❌ *nama produk terlalu pendek.*\n\nMinimal 2 karakter diperlukan agar mudah dikenali pelanggan 📝`))
     }
     if (isNaN(price) || price < 1000) {
-        return m.reply(claraWrap("addproduk", `❌ *harga tidak valid.*\n\nHarga minimal *Rp 1.000* 💰 Pastikan Anda memasukkan angka yang benar.`))
+        return m.reply(novaWrap("addproduk", `❌ *harga tidak valid.*\n\nHarga minimal *Rp 1.000* 💰 Pastikan Anda memasukkan angka yang benar.`))
     }
 
     const type = typeStr === 'fisik' || typeStr === 'physical' ? 'fisik' : 'digital'
@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
     reply += `3️⃣ Lihat produk: \`${m.prefix}listproduk\` 🛍️\n\n`
     reply += `_Produk ini akan terlihat oleh pelanggan melalui \`${m.prefix}listproduk\`_ 🎉`
 
-    return await m.reply(claraWrap("addproduk", reply))
+    return await m.reply(novaWrap("addproduk", reply))
 }
 
 export { pluginConfig as config, handler }

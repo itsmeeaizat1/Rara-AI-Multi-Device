@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'readmore',
     alias: ["readmore"],
@@ -19,7 +19,7 @@ function handler(m, { sock }) {
     const text = m.text;
     
     if (!text) {
-        return m.reply( claraWrap("readmore", `⚠️ Masukan text!\n💡 *Contoh:* \`${m.prefix}${m.command} Halo|Ini teks tersembunyi\``), "readmore");
+        return m.reply( novaWrap("readmore", `⚠️ Masukan text!\n💡 *Contoh:* \`${m.prefix}${m.command} Halo|Ini teks tersembunyi\``), "readmore");
     }
     
     let [l, r] = text.split('|');
@@ -28,7 +28,7 @@ function handler(m, { sock }) {
     
     const readmore = String.fromCharCode(8206).repeat(4001);
     
-    m.reply(claraWrap("readmore", l + readmore + r));
+    m.reply(novaWrap("readmore", l + readmore + r));
 }
 
 export { pluginConfig as config, handler }

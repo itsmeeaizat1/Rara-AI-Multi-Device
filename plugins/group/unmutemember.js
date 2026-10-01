@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'unmutemember',
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
 
     if (m.command === 'listmutemember' || m.command === 'listmute') {
         if (mutedMembers.length === 0) {
-            return m.reply(claraWrap("Unmutemember", `Tidak ada member yang dimute di grup ini`, "info"))
+            return m.reply(novaWrap("Unmutemember", `Tidak ada member yang dimute di grup ini`, "info"))
         }
 
         let txt = `🔇 *List Muted Members*\n\n`
@@ -79,13 +79,13 @@ async function handler(m, { sock }) {
     })
 
     if (index === -1) {
-        return m.reply(claraWrap("Unmutemember", `gagal\n\nMember @${targetNumber} tidak sedang dimute`, "error"))
+        return m.reply(novaWrap("Unmutemember", `gagal\n\nMember @${targetNumber} tidak sedang dimute`, "error"))
     }
 
     mutedMembers.splice(index, 1)
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
-    await m.reply(claraWrap("Unmutemember", `Member: @${targetNumber}\nStatus: Unmuted\nSisa mute: ${mutedMembers.length} member`, "success"))
+    await m.reply(novaWrap("Unmutemember", `Member: @${targetNumber}\nStatus: Unmuted\nSisa mute: ${mutedMembers.length} member`, "success"))
 }
 
 export { pluginConfig as config, handler }

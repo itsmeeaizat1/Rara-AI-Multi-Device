@@ -2,7 +2,7 @@
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setmenucat",
@@ -54,14 +54,14 @@ async function handler(m, { sock, db }) {
   if (variant) {
     const selected = VARIANTS[variant];
     if (!selected) {
-      m.reply(claraWrap("Setmenucat", `❌ *VARIANT TIDAK VALID*\n\nGunakan: *v1*, *v2*, *v5*, atau *v6*`));
+      m.reply(novaWrap("Setmenucat", `❌ *VARIANT TIDAK VALID*\n\nGunakan: *v1*, *v2*, *v5*, atau *v6*`));
       return;
     }
 
     db.setting("menucatVariant", selected.id);
     await db.save();
 
-    await m.reply(claraWrap("setmenucat", `✅ *MENUCAT VARIANT DIUBAH*\n\n` +
+    await m.reply(novaWrap("setmenucat", `✅ *MENUCAT VARIANT DIUBAH*\n\n` +
         `${selected.emoji} *V${selected.id} — ${selected.name}*\n` +
         `${selected.desc}`));
     return;

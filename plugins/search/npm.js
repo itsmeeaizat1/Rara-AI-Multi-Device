@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "npm",
   alias: ["npm"],
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ");
 
   if (!query) {
-    return m.reply(claraWrap("npm", [
+    return m.reply(novaWrap("npm", [
       "Cari package di npm registry.",
       "",
       `📌 Format: ${m.prefix}npm <query>`,
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     if (!data.objects || data.objects.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("npm", `Package "${query}" tidak ditemukan kak, coba kata kunci lain.`, "error"));
+      return m.reply(novaWrap("npm", `Package "${query}" tidak ditemukan kak, coba kata kunci lain.`, "error"));
     }
 
     let text = `NPM Search\n\n`;
@@ -61,10 +61,10 @@ async function handler(m, { sock }) {
       text += `⭐ Score: ${score}%`;
     });
     await m.react("🐣");
-    await m.reply(claraWrap("npm", text));
+    await m.reply(novaWrap("npm", text));
   } catch (e) {
     await m.react("❌");
-    m.reply(claraWrap("npm", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("npm", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

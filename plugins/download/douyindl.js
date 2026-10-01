@@ -23,7 +23,7 @@ import {
 } from "../../src/lib/nova-playdouyin.js";
 import { haidarDouyin, sylvaticaDouyin } from "../../src/lib/nova-douyin-dl.js";
 import axios from "axios";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -86,7 +86,7 @@ async function handleKeywordSearch(m, sock, keyword) {
   const r = await searchPlayDouyin(keyword);
   if (r.error || !r.items.length) {
     await m.react("❌");
-    return m.reply(claraWrap("Douyin", [
+    return m.reply(novaWrap("Douyin", [
       `❌ ${r.error}`,
       ``,
       `💡 Douyin = TikTok China, sering ngeblok pencarian beberapa menit.`,
@@ -124,7 +124,7 @@ async function handleKeywordSearch(m, sock, keyword) {
   const videoUrl = pickBestVideoUrl(item);
   if (!videoUrl) {
     await m.react("❌");
-    return m.reply(claraWrap("Douyin", [`❌ Link media gak ketemu.`]));
+    return m.reply(novaWrap("Douyin", [`❌ Link media gak ketemu.`]));
   }
   const cap =
     `🎬 Video Douyin\n\n` +
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
   // link TikTok → DITOLAK (douyin murni, gak nyampur tiktok)
   if (isTikTokLink(text)) {
     await m.react("❌");
-    return m.reply(claraWrap("Douyin", [
+    return m.reply(novaWrap("Douyin", [
       `❗ Ini link TikTok — douyin hanya untuk Douyin (TikTok China).`,
       ``,
       `TikTok → pakai ${m.prefix}playtiktok atau ${m.prefix}tiktok`,
@@ -178,7 +178,7 @@ async function handler(m, { sock }) {
   if (!/https?:\/\//i.test(text)) {
     if (text.length < 2) {
       await m.react("❌");
-      return m.reply(claraWrap("Douyin", [`Keyword minimal 2 huruf.`]));
+      return m.reply(novaWrap("Douyin", [`Keyword minimal 2 huruf.`]));
     }
     try {
       return await handleKeywordSearch(m, sock, text);

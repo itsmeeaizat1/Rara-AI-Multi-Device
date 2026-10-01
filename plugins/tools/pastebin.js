@@ -2,7 +2,7 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { sendToolsPreview } from "../../src/lib/nova-context.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "pastebin",
   alias: ["pastebin"],
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   }
 
   if (!text) {
-    return m.reply(claraWrap("pastebin", [
+    return m.reply(novaWrap("pastebin", [
       `📋 *pastebin upload*`,
       `Kirim teks untuk di-upload ke Pastebin.`,
       ``,
@@ -85,7 +85,7 @@ return await m.reply(__navText); };
     );
   } catch (e) {
     await m.react("❌");
-    m.reply(claraWrap("pastebin", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("pastebin", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

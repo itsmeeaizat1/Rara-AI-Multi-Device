@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: "botmodegc",
@@ -74,7 +74,7 @@ function handler(m, { sock }) {
             modeList.push(`${val.desc}`)
         }
 
-        return m.reply(claraWrap("Bot Mode", [`Mode saat ini: *${currentMode.toUpperCase()}* (${MODES[currentMode]?.name || 'Unknown'})`,
+        return m.reply(novaWrap("Bot Mode", [`Mode saat ini: *${currentMode.toUpperCase()}* (${MODES[currentMode]?.name || 'Unknown'})`,
             "",
             "Pilihan:",
             ...modeList,
@@ -86,7 +86,7 @@ function handler(m, { sock }) {
     }
 
     if (!Object.keys(MODES).includes(mode)) {
-        return m.reply(claraWrap("botmodegc", `Mode tidak valid. Pilihan: \`${Object.keys(MODES).join(', ')}\``, "error"))
+        return m.reply(novaWrap("botmodegc", `Mode tidak valid. Pilihan: \`${Object.keys(MODES).join(', ')}\``, "error"))
     }
 
 
@@ -115,7 +115,7 @@ function handler(m, { sock }) {
             `\`${m.prefix}listprod\` - Lihat produk`
     }
 
-    return m.reply(claraWrap("Mode Diubah", 
+    return m.reply(novaWrap("Mode Diubah", 
         `Mode: *${mode.toUpperCase()}* (${MODES[mode].name})\n` +
         `Grup: *${m.chat.split('@')[0]}*\n` +
         extraInfo +

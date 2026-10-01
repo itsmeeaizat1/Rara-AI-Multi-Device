@@ -3,7 +3,7 @@
 // diteruskan ke DM owner seketika (fitur langka bot MD luar sana).
 //   .swsave on/off/status — toggle + status
 // Dilengkapi dedupe: satu status cuma diteruskan sekali.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   if (action === "on" || action === "aktif" || action === "aktifkan") {
     db.setting("autoStatusDownload", { ...cur, enabled: true });
     return m.reply(
-      claraWrap("Auto Download Status", [
+      novaWrap("Auto Download Status", [
         "AKTIF — semua status kontak otomatis diteruskan ke DM kamu.",
         "Status media (gambar/video/audio) dan teks dua-duanya.",
         "Satu status cuma sekali (dedupe), jadi gak nge-spam.",
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   if (action === "off" || action === "mati" || action === "matikan") {
     db.setting("autoStatusDownload", { ...cur, enabled: false });
     return m.reply(
-      claraWrap("Auto Download Status", [
+      novaWrap("Auto Download Status", [
         "MATI — status kontak gak diteruskan lagi.",
         "Aktifin lagi kapan aja: .swsave on",
       ])
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   if (action === "clear" || action === "reset") {
     db.setting("statusDownloadSeen", []);
     return m.reply(
-      claraWrap("Auto Download Status", [
+      novaWrap("Auto Download Status", [
         "Riwayat dedupe dibersihin — semua status berikutnya diteruskan lagi walau pernah muncul.",
       ])
     );
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
 
   const total = (db.setting("statusDownloadSeen") || []).length;
   return m.reply(
-    claraWrap("Auto Download Status", [
+    novaWrap("Auto Download Status", [
       `Mode: ${cur.enabled ? "AKTIF" : "MATI"}`,
       `Riwayat dedupe tersimpan: ${total} status`,
       "",

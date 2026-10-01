@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // typingrace.js — Ketik cepat / Typing speed test via Quotable API (no API key)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { formatRp } from "../../src/lib/nova-rpg-service.js";
 import { rollBonus } from "../../src/lib/nova-game-rewards.js";
@@ -62,7 +62,7 @@ async function handler(m, { sock, config, db }) {
     const input = (m.args?.[0] || "").toLowerCase();
 
     if (!input || input === "help") {
-      return m.reply(claraWrap("Typing Race", [
+      return m.reply(novaWrap("Typing Race", [
         "Tes kecepatan mengetik (WPM)",
         "",
         "📌 *Cara Pakai:*",
@@ -79,9 +79,9 @@ async function handler(m, { sock, config, db }) {
     if (input === "end" || input === "stop") {
       if (sessions.has(m.chat)) {
         sessions.delete(m.chat);
-        return m.reply(claraWrap("Typing Race", "Sesi diakhiri."));
+        return m.reply(novaWrap("Typing Race", "Sesi diakhiri."));
       }
-      return m.reply(claraWrap("Typing Race", "Tidak ada sesi aktif."));
+      return m.reply(novaWrap("Typing Race", "Tidak ada sesi aktif."));
     }
 
     if (input === "start" || input === "easy" || input === "medium" || input === "hard" || input === "new") {
@@ -111,7 +111,7 @@ async function handler(m, { sock, config, db }) {
         }
       }, 120000);
       await m.react("🐣");
-      return m.reply(claraWrap("Typing Race", [
+      return m.reply(novaWrap("Typing Race", [
         `Level: ${DIFFICULTY[difficulty].label}`,
         `Penulis: ${quote.author}`,
         "",
@@ -126,7 +126,7 @@ async function handler(m, { sock, config, db }) {
     // Check if there's an active session and user typed something
     const session = sessions.get(m.chat);
     if (!session || !session.active) {
-      return m.reply(claraWrap("Typing Race", `Belum ada sesi aktif. Ketik "${m.prefix}typingrace start" untuk mulai.`));
+      return m.reply(novaWrap("Typing Race", `Belum ada sesi aktif. Ketik "${m.prefix}typingrace start" untuk mulai.`));
     }
 
     // User is trying to type the quote — compare
@@ -143,7 +143,7 @@ async function handler(m, { sock, config, db }) {
       // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
       let trCash = { gain: 0, saldo: 0 };
       try { trCash = rollBonus(m, "typingrace"); } catch {}
-      return m.reply(claraWrap("Typing Race", [
+      return m.reply(novaWrap("Typing Race", [
         "🎉 Sempurna!",
         `💵 Uang: +${formatRp(trCash.gain)} (saldo ${formatRp(trCash.saldo)})`,
         ...(trCash.jackpot ? ["🎰 JACKPOT! Bonus 3x uang!"] : []),
@@ -168,7 +168,7 @@ async function handler(m, { sock, config, db }) {
       const wpm = Math.round((words / elapsed) * 60);
 
       sessions.delete(m.chat);
-      return m.reply(claraWrap("Typing Race", [
+      return m.reply(novaWrap("Typing Race", [
         "Hasil typing:",
         `WPM: ${wpm}`,
         `Akurasi: ${accuracy}%`,

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolroman — konversi angka Arab ↔ angka Romawi (port altftool.com/tools/all/roman-numeral-converter)
 // Auto-detect: angka → Romawi, huruf romawi → angka. Range standar 1-3999.
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolroman", alias: ["roman", "romannumeral", "romawi"], category: "tools",
@@ -72,12 +72,12 @@ async function handler(m, { sock, config: botConfig }) {
       }), "ftoolroman");
     }
     await m.react("🐣");
-    await m.reply(claraWrap("Roman Numeral", ["KONVERSI BERHASIL",
+    await m.reply(novaWrap("Roman Numeral", ["KONVERSI BERHASIL",
       "",
       "```" + label + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Roman Numeral", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Roman Numeral", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

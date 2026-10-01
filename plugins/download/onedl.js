@@ -11,7 +11,7 @@
 // .aio/.alldl yang udah ada; jadi alternatif kalau downloader lain down.
 import axios from "axios";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { youtubeDownload, tiktokDownload, douyinDownload, instaDownload, facebookDownload, snackvideoDownload } from "../../src/lib/nova-onepunya.js";
 
 const pluginConfig = {
@@ -48,11 +48,11 @@ async function handler(m, { sock }) {
   const args = m.args || [];
   const url = (args[0] || "").trim();
   if (!url || !/^https?:\/\//.test(url)) {
-    return m.reply(claraWrap("Onepunya Downloader", `Kirim link yang valid!\n\nContoh: .onedl https://youtube.com/watch?v=xxx 720p\nOpsional: mp3 | ${QUALITIES.join(" | ")}`));
+    return m.reply(novaWrap("Onepunya Downloader", `Kirim link yang valid!\n\nContoh: .onedl https://youtube.com/watch?v=xxx 720p\nOpsional: mp3 | ${QUALITIES.join(" | ")}`));
   }
   const platform = detectPlatform(url);
   if (!platform) {
-    return m.reply(claraWrap("Onepunya Downloader", "Platform link gak dikenal. Didukung: YouTube, Facebook, Instagram, TikTok, SnackVideo, Douyin."));
+    return m.reply(novaWrap("Onepunya Downloader", "Platform link gak dikenal. Didukung: YouTube, Facebook, Instagram, TikTok, SnackVideo, Douyin."));
   }
   const opt = (args[1] || "").toLowerCase();
   const wantMp3 = opt === "mp3" || opt === "audio";
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
       detail = `📸 Instagram (${found.ext})`;
     }
 
-    await m.reply(claraWrap("Onepunya Downloader", `${detail}\n\n⬇️ File lagi dikirim...`));
+    await m.reply(novaWrap("Onepunya Downloader", `${detail}\n\n⬇️ File lagi dikirim...`));
 
     // kirim: coba buffer dulu, fallback document URL
     try {
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
       await sock.sendMessage(m.chat, { document: { url: media.url }, fileName: media.filename, mimetype: media.mimetype }, { quoted: m });
     }
   } catch (e) {
-    return m.reply(claraWrap("Onepunya Downloader", `Gagal: ${String(e.message || e).slice(0, 200)}`));
+    return m.reply(novaWrap("Onepunya Downloader", `Gagal: ${String(e.message || e).slice(0, 200)}`));
   }
 }
 

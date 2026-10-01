@@ -8,7 +8,7 @@
 // countdown live 🕒 H-2 hari ke deadline + reminder H-7/3/1/0
 // masing-masing bisa kick ticker H-1/H-0.
 // ═══════════════════════════════════════════════════════════════════
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { getDatabase } from "./nova-database.js";
 import { runLiveTicker, formatRemaining } from "./nova-countdown.js";
 
@@ -71,7 +71,7 @@ export function formatRupiah(n) {
 // sampai akhir hari deadline. Guard per sender anti stack.
 // ═══════════════════════════════════════════════════════════════════
 function buildTickCard(record, remMs) {
-  return claraWrap("Pengingat UKT", [
+  return novaWrap("Pengingat UKT", [
     "💰 *BAYAR UKT/SPP!*",
     "",
     `📅 Deadline: ${formatDate(record.deadline)}`,
@@ -85,7 +85,7 @@ function buildTickCard(record, remMs) {
 }
 
 function buildFinalCard(record) {
-  return claraWrap("Pengingat UKT", [
+  return novaWrap("Pengingat UKT", [
     "⌛ *DEADLINE UKT TIBA!*",
     "",
     `📅 Deadline: ${formatDate(record.deadline)}`,
@@ -96,7 +96,7 @@ function buildFinalCard(record) {
 }
 
 function buildCancelledCard() {
-  return claraWrap("Pengingat UKT", [
+  return novaWrap("Pengingat UKT", [
     "✅ *COUNTDOWN DIBATALKAN*",
     "",
     "_pengingat udah dihapus/diganti — countdown mati sendiri_ ✨",
@@ -158,7 +158,7 @@ export async function checkUktOnce(sock) {
       else if (daysLeft === 3) urgency = "🟡 3 hari lagi";
       else urgency = "🟢 7 hari lagi";
 
-      const msg = claraWrap("Pengingat UKT/SPP", [
+      const msg = novaWrap("Pengingat UKT/SPP", [
         `📅 Deadline: ${formatDate(new Date(record.deadline))}`,
         `💵 Jumlah: ${formatRupiah(record.amount)}`,
         `Status: ${urgency}`,

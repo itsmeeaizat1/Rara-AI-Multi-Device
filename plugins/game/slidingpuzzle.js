@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .slidingpuzzle — puzzle geser angka 15/8 (port altftool.com "Sliding Puzzle")
 // Reply w/a/s/d = tile dari arah itu digeser ke lubang. ANIMASI KHAS: tile angka meluncur ke slot kosong.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
 
 const pluginConfig = {
@@ -60,10 +60,10 @@ async function handler(m, { sock, config }) {
   if (sessions.has(k)) {
     if ((m.text || "").trim().toLowerCase() === "stop") {
       sessions.delete(k);
-      return m.reply(claraWrap("Sliding Puzzle", ["Sesi diakhiri."].join("\n")));
+      return m.reply(novaWrap("Sliding Puzzle", ["Sesi diakhiri."].join("\n")));
     }
     const s = sessions.get(k);
-    return m.reply(claraWrap("Sliding Puzzle", ["MASIH ADA SESI AKTIF — " + s.moves + " langkah",
+    return m.reply(novaWrap("Sliding Puzzle", ["MASIH ADA SESI AKTIF — " + s.moves + " langkah",
       "",
       "```" + render(s.tiles) + "```",
       "",
@@ -75,7 +75,7 @@ async function handler(m, { sock, config }) {
   resetT(s);
   sessions.set(k, s);
   await animasiMulai(sock, m.chat, n);
-  return m.reply(claraWrap("Sliding Puzzle", [`PUZZLE ${n}×${n} — URUTKAN 1 SAMPAI ${n * n - 1}`,
+  return m.reply(novaWrap("Sliding Puzzle", [`PUZZLE ${n}×${n} — URUTKAN 1 SAMPAI ${n * n - 1}`,
     "",
     "```" + render(tiles) + "```",
     "",
@@ -101,7 +101,7 @@ export async function answerHandler(m, sock) {
   const nr = br - dr, nc = bc - dc; // tile dari aras raw → berpindah ke lubang
   if (nr < 0 || nr >= n || nc < 0 || nc >= n) {
     resetT(s);
-    await m.reply(claraWrap("Sliding Puzzle", ["Gak ada tile di " + LETTER[raw] + " lubang",
+    await m.reply(novaWrap("Sliding Puzzle", ["Gak ada tile di " + LETTER[raw] + " lubang",
       "",
       "```" + render(s.tiles) + "```"].join("\n")));
     return true;
@@ -111,7 +111,7 @@ export async function answerHandler(m, sock) {
   if (isSolved(s.tiles)) {
     const moves = s.moves, nn = s.n;
     sessions.delete(k);
-    await m.reply(claraWrap("Sliding Puzzle", ["🎉 BERHASIL! PAPAAN TERURUT",
+    await m.reply(novaWrap("Sliding Puzzle", ["🎉 BERHASIL! PAPAAN TERURUT",
       "",
       "```" + render(solved(nn)) + "```",
       "",
@@ -120,7 +120,7 @@ export async function answerHandler(m, sock) {
     return true;
   }
   resetT(s);
-  await m.reply(claraWrap("Sliding Puzzle", [`${s.moves} langkah`,
+  await m.reply(novaWrap("Sliding Puzzle", [`${s.moves} langkah`,
     "",
     "```" + render(s.tiles) + "```",
     "",

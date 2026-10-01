@@ -1,5 +1,5 @@
 import { setNotifTidur, toggleNotif, getNotif, deleteNotif, parseJadwal } from '../../src/lib/nova-notif-scheduler.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "notiftidurutil",
@@ -50,7 +50,7 @@ function handler(m, { sock }) {
 
     if (sub === 'off') {
         if (!existing) {
-            return m.reply(claraWrap("Notiftidur", `❌ *belum ada pengingat tidur* yang aktif di chat ini`))
+            return m.reply(novaWrap("Notiftidur", `❌ *belum ada pengingat tidur* yang aktif di chat ini`))
         }
         toggleNotif('tidur', sender, chatJid, false)
         return m.reply(`✅ *Pengingat Tidur Dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`)

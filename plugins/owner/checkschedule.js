@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import { getFullSchedulerStatus, formatTimeRemaining, getMsUntilTime } from '../../src/lib/nova-scheduler.js'
 import { initSholatScheduler, stopSholatScheduler } from '../../src/lib/nova-sholat-scheduler.js'
@@ -95,10 +95,10 @@ async function handler(m, { sock }) {
         text += `Gunakan \`.stopschedule <key>\` untuk stop\n`;
         text += `Gunakan \`.startschedule <key>\` untuk start`;
 
-        await m.reply(claraWrap("cekschedule", text));
+        await m.reply(novaWrap("cekschedule", text));
     } catch (error) {
         console.error('[CekSchedule Error]', error);
-        await m.reply(claraWrap("cekschedule", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(novaWrap("cekschedule", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 

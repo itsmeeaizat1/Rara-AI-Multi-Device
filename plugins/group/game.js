@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "game",
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   const isEnable = args === "on";
 
   if (group.game === isEnable) {
-    return m.reply(claraWrap("Game", `🎮 Fitur game sudah ${isEnable ? "AKTIF" : "NONAKTIF"} di grup ini.`, "info"));
+    return m.reply(novaWrap("Game", `🎮 Fitur game sudah ${isEnable ? "AKTIF" : "NONAKTIF"} di grup ini.`, "info"));
   }
 
   group.game = isEnable;

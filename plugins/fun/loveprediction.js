@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 
 const pluginConfig = {
@@ -53,7 +53,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await m.react("🕒");
     const input = text.trim()
     if (!input || !input.includes("&")) {
-      return m.reply(claraWrap("Ramalan Cinta", [
+      return m.reply(novaWrap("Ramalan Cinta", [
         "Ramalan masa depan hubungan cintamu.",
         "",
         "Cara: " + usedPrefix + "ramalancinta <nama1> & <nama2>",
@@ -63,7 +63,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const parts = input.split("&").map(s => s.trim())
     if (parts.length < 2 || !parts[0] || !parts[1]) {
-      return m.reply(claraWrap("Ramalan Cinta", "Format salah. Gunakan: " + usedPrefix + "ramalancinta Nama1 & Nama2"))
+      return m.reply(novaWrap("Ramalan Cinta", "Format salah. Gunakan: " + usedPrefix + "ramalancinta Nama1 & Nama2"))
     }
 
     const name1 = parts[0]
@@ -96,7 +96,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }))
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Ramalan Cinta", "Error: " + e.message))
+    return m.reply(novaWrap("Ramalan Cinta", "Error: " + e.message))
   }
 }
 

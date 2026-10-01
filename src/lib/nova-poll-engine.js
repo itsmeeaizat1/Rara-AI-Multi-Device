@@ -4,7 +4,7 @@
 // votes lenyap, timer mati. Pola: nova-ram-persist + restore ala pomodoro.)
 import { persistLoad } from "./nova-ram-persist.js";
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { runLiveTicker } from "./nova-countdown.js";
 
 const KEY = "novaPolls";
@@ -79,7 +79,7 @@ export async function closePollNow(sock, chatId, pollId, reason = "waktu habis",
   pollPersist();
   if (!opts.silent) {
     try {
-      await sock.sendMessage(chatId, { text: claraWrap("Poll Berakhir", [
+      await sock.sendMessage(chatId, { text: novaWrap("Poll Berakhir", [
         `Poll ${pollId} ditutup (${reason})`,
         `Pertanyaan: ${poll.question}`,
         "",
@@ -116,7 +116,7 @@ export function firePollTicker(sock, chatId, m, poll) {
     if (mn > 0) return `${mn} mnt ${sc} dtk`;
     return `${sc} dtk`;
   };
-  const card = (remainingMs, live = true) => claraWrap("Poll Dibuat", [
+  const card = (remainingMs, live = true) => novaWrap("Poll Dibuat", [
     `ID: ${poll.id}`,
     `Pertanyaan: ${poll.question}`,
     `Mode: ${poll.isMultiple ? "Pilihan Ganda" : "Pilihan Tunggal"}`,
@@ -134,10 +134,10 @@ export function firePollTicker(sock, chatId, m, poll) {
     tickCard: (st) => card(st.remainingMs, st.remainingMs > 0),
     finalCard: () => {
       if (poll.deleted) {
-        return claraWrap("Poll Dihapus", `ID: ${poll.id}`, "warn");
+        return novaWrap("Poll Dihapus", `ID: ${poll.id}`, "warn");
       }
       if (poll.closed) {
-        return claraWrap("Poll Ditutup", [
+        return novaWrap("Poll Ditutup", [
           `ID: ${poll.id}`,
           `Pertanyaan: ${poll.question}`,
           "", "✅ Poll ditutup — hasil dikirim di atas/bawah",

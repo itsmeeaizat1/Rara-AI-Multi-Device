@@ -6,7 +6,7 @@
 // "hari ini libur" + ticker live < 24 jam menuju libur.
 // ═══════════════════════════════════════════════════════════════════
 import moment from "moment-timezone";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { formatRemaining } from "./nova-countdown.js";
 
 /** Epoch tengah malam WIB berikutnya (awal besok). */
@@ -42,7 +42,7 @@ export function buildLiburHeader(hariIni, terdekat) {
 export function buildLiburCard(event, remainingMs) {
   const done = Number(remainingMs) <= 0;
   if (done) {
-    return claraWrap("Libur Tiba", [
+    return novaWrap("Libur Tiba", [
       `🎉 *LIBUR TIBA!*`,
       "",
       `✨ ${event}`,
@@ -50,7 +50,7 @@ export function buildLiburCard(event, remainingMs) {
       "Selamat menikmati liburnya — jangan lupa istirahat 😌",
     ].join("\n"));
   }
-  return claraWrap("Menuju Libur", [
+  return novaWrap("Menuju Libur", [
     `🕒 *${formatRemaining(remainingMs)}* lagi menuju libur`,
     "",
     `✨ ${event}`,

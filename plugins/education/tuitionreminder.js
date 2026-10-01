@@ -5,7 +5,7 @@
  *        countdown live 🕒 pas ≤48 jam (engine: nova-ukt-reminder.js —
  *        checker nyala dari startup, persist, tahan restart)
  */
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import {
   getRecord, setRecord, deleteRecord,
@@ -67,7 +67,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     const amount = parseInt(args[2]) || 0;
 
     if (!dateStr) {
-      return m.reply( claraWrap("Pengingat UKT", [
+      return m.reply( novaWrap("Pengingat UKT", [
         `Format: ${prefix}pengingatukt set <DD/MM/YYYY> [jumlah]`,
         ``,
         `Contoh:`,
@@ -78,7 +78,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
     const deadline = parseDate(dateStr);
     if (!deadline) {
-      return m.reply( claraWrap("Pengingat UKT", "Format tanggal salah. Gunakan DD/MM/YYYY"), { commandName: "pengingatukt" });
+      return m.reply( novaWrap("Pengingat UKT", "Format tanggal salah. Gunakan DD/MM/YYYY"), { commandName: "pengingatukt" });
     }
 
     const record = {
@@ -109,7 +109,7 @@ async function handler(m, { sock, args, config: botConfig }) {
       "Bot akan kasih pengingat di H-7, H-3, H-1, dan H-0.",
     ];
     if (days >= 0 && sisa <= 48 * 3600000) lines.push("", "🕒 *Countdown live menyusul di bawah* 👇");
-    return m.reply( claraWrap("Pengingat UKT", lines.join("\n")) + "\n" + tipText(`Ketik ${prefix}pengingatukt cek untuk lihat`), { commandName: "pengingatukt" })
+    return m.reply( novaWrap("Pengingat UKT", lines.join("\n")) + "\n" + tipText(`Ketik ${prefix}pengingatukt cek untuk lihat`), { commandName: "pengingatukt" })
       .then(() => {
         if (days >= 0 && sisa > 0 && sisa <= 48 * 3600000) fireUktTicker(sock, sender, record);
       });
@@ -119,7 +119,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   if (sub === "cek" || sub === "status" || sub === "lihat") {
     const record = getRecord(sender, db);
     if (!record) {
-      return m.reply( claraWrap("Pengingat UKT", [
+      return m.reply( novaWrap("Pengingat UKT", [
         `Belum ada pengingat UKT terpasang.`,
         `Ketik ${prefix}pengingatukt set <tanggal> untuk mulai`,
       ].join("\n")), { commandName: "pengingatukt" });
@@ -133,7 +133,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     else if (days <= 7) status = `🟠 ${days} hari lagi - SEGERA BAYAR`;
     else status = `🟢 ${days} hari lagi`;
 
-    return m.reply( claraWrap("Pengingat UKT - Status", [
+    return m.reply( novaWrap("Pengingat UKT - Status", [
       `📅 Deadline: ${formatDate(deadline)}`,
       `💵 Jumlah: ${formatRupiah(record.amount)}`,
       `📚 ${record.semester || "Semester ini"}`,
@@ -150,11 +150,11 @@ async function handler(m, { sock, args, config: botConfig }) {
   // .pengingatukt hapus
   if (sub === "hapus" || sub === "stop" || sub === "cancel") {
     const ok = deleteRecord(db, sender); // ticker aktif otomatis batal (isCancelled)
-    return m.reply( claraWrap("Pengingat UKT", ok ? "✅ Pengingat dihapus — countdown ikut mati." : "Tidak ada pengingat aktif."), { commandName: "pengingatukt" });
+    return m.reply( novaWrap("Pengingat UKT", ok ? "✅ Pengingat dihapus — countdown ikut mati." : "Tidak ada pengingat aktif."), { commandName: "pengingatukt" });
   }
 
   // Default: help
-  const txt = claraWrap("Pengingat UKT/SPP", [
+  const txt = novaWrap("Pengingat UKT/SPP", [
     `Pengingat pembayaran UKT/SPP untuk mahasiswa.`,
     ``,
     `Perintah:`,

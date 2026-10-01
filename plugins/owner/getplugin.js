@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import config from "../../config.js";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
  name: "getplugin",
  alias: ["getplugin"],
@@ -98,13 +98,13 @@ function getSimilarPlugins(name, pluginsDir) {
 
 async function handler(m, { sock }) {
  if (!config.isOwner(m.sender)) {
- return m.reply(claraWrap("Getplugin", "❌ *Owner Only!*"));
+ return m.reply(novaWrap("Getplugin", "❌ *Owner Only!*"));
  }
 
  const pluginName = m.args?.[0]?.trim();
 
  if (!pluginName) {
- return m.reply(claraWrap("Getplugin", 
+ return m.reply(novaWrap("Getplugin", 
  `Dapatkan source code plugin\n\n` +
  "" +
  `.getplugin <nama>\n` +
@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
  });
  }
 
- return m.reply(claraWrap("Getplugin", text));
+ return m.reply(novaWrap("Getplugin", text));
  }
 
  const code = fs.readFileSync(pluginInfo.path);

@@ -5,7 +5,7 @@ import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "soundboard",
@@ -67,16 +67,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("");
       lines.push("Cara: " + usedPrefix + "sfx <nama>");
       lines.push("Contoh: " + usedPrefix + "sfx bruh");
-      return m.reply(claraWrap("Sound Board", lines.join("\n")));
+      return m.reply(novaWrap("Sound Board", lines.join("\n")));
     }
 
     if (!SOUNDS[input]) {
-      return m.reply(claraWrap("Sound Board", "Sound tidak ditemukan: " + input + "\nKetik " + usedPrefix + "sfx list untuk lihat semua."));
+      return m.reply(novaWrap("Sound Board", "Sound tidak ditemukan: " + input + "\nKetik " + usedPrefix + "sfx list untuk lihat semua."));
     }
 
     const sound = SOUNDS[input];
     const statusMsg = await conn.sendMessage(m.key.remoteJid, {
-      text: claraWrap("Sound Board", "Mengirim: " + sound.emoji + " " + input + "..."),
+      text: novaWrap("Sound Board", "Mengirim: " + sound.emoji + " " + input + "..."),
     });
 
     // Download sound
@@ -87,7 +87,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
 
     if (!res.data || res.data.length < 100) {
-      return m.reply(claraWrap("Sound Board", "Gagal download sound. Coba lagi."));
+      return m.reply(novaWrap("Sound Board", "Gagal download sound. Coba lagi."));
     }
 
     // Save and send as voice note
@@ -101,7 +101,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: await toVoiceNote(audioBuf),
       mimetype: 'audio/ogg; codecs=opus',
       ptt: true,
-      caption: claraWrap("Sound Board", sound.emoji + " " + input),
+      caption: novaWrap("Sound Board", sound.emoji + " " + input),
     });
 
     try { fs.unlinkSync(outPath); } catch (e) { console.error('[soundboard.js]:', e.message); }
@@ -110,7 +110,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     } catch (e) { console.error('[soundboard.js]:', e.message); }
   } catch (e) {
     console.error("soundboard error:", e.message);
-    return m.reply(claraWrap("Sound Board", "Error: " + e.message));
+    return m.reply(novaWrap("Sound Board", "Error: " + e.message));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Kill-switch global: .bot off → bot TOTAL silent (gak ada reply/react/fitur), cuma .bot yang diproses.
 // Intercept-nya ada di paling awal src/handler.js — sebelum semua fitur, anti, auto, dan statistik.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getSaluranChannel } from "../../src/lib/nova-saluran.js";
 import { sendSaluranSafe } from "../../src/lib/nova-saluran-safe.js";
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
             : db.setting('onlyPc') ? 'pc (cuma chat pribadi)'
             : 'all (semua chat)'
         const curStatus = isOff ? 'off (sunyi total)' : isMute ? 'mute (dijeda)' : 'on (aktif)'
-        return m.reply(claraWrap('Status Bot', [
+        return m.reply(novaWrap('Status Bot', [
             `Status : ${curStatus}`,
             `Mode : ${curMode}`,
             '',
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
     if (['off', 'mati', 'stop'].includes(act)) {
         if (db.setting('botPower') === false) {
             await m.react("🐣")
-            return m.reply(claraWrap('Status Bot', 'Bot udah off dari tadi kak.\nKetik *.bot on* buat nyalain.'))
+            return m.reply(novaWrap('Status Bot', 'Bot udah off dari tadi kak.\nKetik *.bot on* buat nyalain.'))
         }
         db.setting('botPower', false)
         db.setting('botMute', false) // off menimpa mute — level paling dalam
@@ -202,7 +202,7 @@ async function handler(m, { sock }) {
         // langsung liat status saluran di reply ini, gak senyap lagi
         const saluran = await waitSaluran(sock, db, 'off')
 
-        return m.reply(claraWrap('Bot Dimatikan', [
+        return m.reply(novaWrap('Bot Dimatikan', [
             'Bot sekarang *off* — sunyi total.',
             '',
             'Bot gak akan merespon fitur apa pun',
@@ -223,7 +223,7 @@ async function handler(m, { sock }) {
     if (['mute', 'jeda', 'pause'].includes(act)) {
         if (db.setting('botPower') === false) {
             await m.react("❗")
-            return m.reply(claraWrap('Status Bot', [
+            return m.reply(novaWrap('Status Bot', [
                 'Bot lagi *off* (sunyi total) — lebih dalam dari mute.',
                 '',
                 'Mute cuma bisa dipasang pas bot *on*.',
@@ -233,7 +233,7 @@ async function handler(m, { sock }) {
         }
         if (db.setting('botMute') === true) {
             await m.react("🐣")
-            return m.reply(claraWrap('Status Bot', 'Bot udah *mute* (dijeda) dari tadi kak.\nKetik *.bot on* buat nyalain.'))
+            return m.reply(novaWrap('Status Bot', 'Bot udah *mute* (dijeda) dari tadi kak.\nKetik *.bot on* buat nyalain.'))
         }
         db.setting('botMute', true)
         await m.react("🐣")
@@ -243,7 +243,7 @@ async function handler(m, { sock }) {
 
         const saluran = await waitSaluran(sock, db, 'mute')
 
-        return m.reply(claraWrap('Bot Dijeda', [
+        return m.reply(novaWrap('Bot Dijeda', [
             'Bot sekarang *mute* — sedang dijeda.',
             '',
             'Semua command gak bisa diakses.',
@@ -265,7 +265,7 @@ async function handler(m, { sock }) {
     if (['on', 'nyala', 'start', 'hidup'].includes(act)) {
         if (db.setting('botPower') !== false && db.setting('botMute') !== true) {
             await m.react("🐣")
-            return m.reply(claraWrap('Status Bot', 'Bot udah *on* kok, jalan normal.'))
+            return m.reply(novaWrap('Status Bot', 'Bot udah *on* kok, jalan normal.'))
         }
         db.setting('botPower', true)
         db.setting('botMute', false)
@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
 
         const saluran = await waitSaluran(sock, db, 'on')
 
-        return m.reply(claraWrap('Bot Dinyalakan', [
+        return m.reply(novaWrap('Bot Dinyalakan', [
             'Bot kembali *on* — semua fitur aktif lagi.',
             '',
             `Notifikasi dikirim ke *${grupCount}* grup`,
@@ -298,7 +298,7 @@ async function handler(m, { sock }) {
                 : db.setting('onlyPc') ? 'pc (cuma chat pribadi)'
                 : 'all (semua chat)'
             await m.react("🐣")
-            return m.reply(claraWrap('Mode Bot', [
+            return m.reply(novaWrap('Mode Bot', [
                 `Mode sekarang : ${curMode}`,
                 '',
                 '*.bot mode gc on* → bot cuma respon di grup',
@@ -315,7 +315,7 @@ async function handler(m, { sock }) {
                 db.setting('onlyGc', false)
                 db.setting('onlyPc', false)
                 await m.react("🐣")
-                return m.reply(claraWrap('Mode Bot', [
+                return m.reply(novaWrap('Mode Bot', [
                     'Mode *gc* dimatikan — bot respon di semua chat lagi.',
                     '',
                     `Matikan bot total: *.bot off*`,
@@ -324,7 +324,7 @@ async function handler(m, { sock }) {
             db.setting('onlyGc', true)
             db.setting('onlyPc', false)
             await m.react("🐣")
-            return m.reply(claraWrap('Mode Bot', [
+            return m.reply(novaWrap('Mode Bot', [
                 'Mode diubah ke *gc* — bot cuma respon di grup.',
                 '',
                 'Chat pribadi (PC) di-diamin.',
@@ -339,7 +339,7 @@ async function handler(m, { sock }) {
                 db.setting('onlyPc', false)
                 db.setting('onlyGc', false)
                 await m.react("🐣")
-                return m.reply(claraWrap('Mode Bot', [
+                return m.reply(novaWrap('Mode Bot', [
                     'Mode *pc* dimatikan — bot respon di semua chat lagi.',
                     '',
                     `Matikan bot total: *.bot off*`,
@@ -348,7 +348,7 @@ async function handler(m, { sock }) {
             db.setting('onlyPc', true)
             db.setting('onlyGc', false)
             await m.react("🐣")
-            return m.reply(claraWrap('Mode Bot', [
+            return m.reply(novaWrap('Mode Bot', [
                 'Mode diubah ke *pc* — bot cuma respon di chat pribadi.',
                 '',
                 'Grup di-diamin.',
@@ -362,14 +362,14 @@ async function handler(m, { sock }) {
             db.setting('onlyGc', false)
             db.setting('onlyPc', false)
             await m.react("🐣")
-            return m.reply(claraWrap('Mode Bot', [
+            return m.reply(novaWrap('Mode Bot', [
                 'Mode diubah ke *all* — bot respon di semua chat.',
                 'Grup + chat pribadi aktif lagi.',
             ].join('\n')))
         }
 
         await m.react("❗")
-        return m.reply(claraWrap('Mode Bot', [
+        return m.reply(novaWrap('Mode Bot', [
             `Mode *${sub}* gak dikenal.`,
             '',
             'Pilihan: *gc* (cuma grup), *pc* (cuma chat pribadi), *all* (semua)',
@@ -378,7 +378,7 @@ async function handler(m, { sock }) {
 
     // ── argumen gak dikenal ──
     await m.react("❗")
-    return m.reply(claraWrap('Status Bot', [
+    return m.reply(novaWrap('Status Bot', [
         `Argumen *${act}* gak dikenal.`,
         '',
         '📌 Ketik *.bot off* buat matiin bot (sunyi total)',

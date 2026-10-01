@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 import mime from "mime-types";
 import { downloadMediaMessage, getContentType } from "nova";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/tools/uploadtmpfilesxemoz.js
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (!type || type === "conversation" || type === "extendedTextMessage") {
-      return m.reply(claraWrap("UploadTmpFiles", "Reply ke file (gambar/video/audio/berkas) ya!"));
+      return m.reply(novaWrap("UploadTmpFiles", "Reply ke file (gambar/video/audio/berkas) ya!"));
     }
 
     try {
@@ -87,13 +87,13 @@ async function handler(m, { sock }) {
       filename = content?.fileName || `file.${getFileExtension(mimetype)}`;
     } catch {
     await m.react("❌");
-      return m.reply(claraWrap("uploadtmpfilesxemoz", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(novaWrap("uploadtmpfilesxemoz", te(m.prefix, m.command, m.pushName), "error"));
     }
   } else if (m.message) {
     const type = getContentType(m.message);
     if (!type || type === "conversation" || type === "extendedTextMessage") {
       const help = `Cara pakai:\n1. Kirim media dengan caption ${m.prefix}uploadtmpfilesxemoz\n2. Atau reply media dengan ${m.prefix}uploadtmpfilesxemoz`;
-      return m.reply( claraWrap("UploadTmpFiles", help));
+      return m.reply( novaWrap("UploadTmpFiles", help));
     }
 
     try {
@@ -106,20 +106,20 @@ async function handler(m, { sock }) {
       mimetype = content?.mimetype || "application/octet-stream";
       filename = content?.fileName || `file.${getFileExtension(mimetype)}`;
     } catch {
-      return m.reply(claraWrap("uploadtmpfilesxemoz", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(novaWrap("uploadtmpfilesxemoz", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
   if (!media || media.length === 0) {
-    return m.reply(claraWrap("UploadTmpFiles", "Media tidak terbaca. Coba kirim ulang."));
+    return m.reply(novaWrap("UploadTmpFiles", "Media tidak terbaca. Coba kirim ulang."));
   }
   try {
     const result = await uploadToXemoz(media, filename);
     const response = `*upload tmpfiles*\n\nFile: ${filename}\nSize: ${formatBytes(media.length)}\nURL: ${result.url}`;
-    return m.reply(claraWrap("UploadTmpFiles", response));
+    return m.reply(novaWrap("UploadTmpFiles", response));
   } catch (error) {
     await m.react("🐣");
-    return m.reply(claraWrap("UploadTmpFiles Error", error.message || "Gagal upload file."));
+    return m.reply(novaWrap("UploadTmpFiles Error", error.message || "Gagal upload file."));
   }
 }
 

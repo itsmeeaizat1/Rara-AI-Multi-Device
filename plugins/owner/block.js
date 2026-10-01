@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { notifyUserBlocked } from "../../src/lib/nova-saluran-broadcast.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        claraWrap("Block User", [
+        novaWrap("Block User", [
           `Penggunaan: ${prefix}block <@target / nomor>`,
           `Contoh: ${prefix}block @username`,
           `Contoh: ${prefix}block 6281234567890`,
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!targetJid) {
-      return m.reply( claraWrap("Block User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "block");
+      return m.reply( novaWrap("Block User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "block");
     }
 
     // Eksekusi block via Baileys
@@ -70,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
     }).catch((e) => { console.error('[block.js]:', e.message); });
 
     const text =
-      claraWrap("Block User", [
+      novaWrap("Block User", [
         `Target: ${targetDisplay}`,
         "Status: Berhasil diblokir",
       ].join("\n")) +

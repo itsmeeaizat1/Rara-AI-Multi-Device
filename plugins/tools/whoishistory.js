@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "whoishistory",
@@ -149,12 +149,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     const domain = text.replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "").trim();
     if (!domain) {
-      return m.reply(claraWrap("WhoisHistory", "Domain tidak boleh kosong!"));
+      return m.reply(novaWrap("WhoisHistory", "Domain tidak boleh kosong!"));
     }
     const raw = await getWhois(domain);
 
     if (raw.error) {
-      return m.reply(claraWrap("WhoisHistory", raw.error));
+      return m.reply(novaWrap("WhoisHistory", raw.error));
     }
 
     const info = raw.fallback ? raw.data : parseRdap(raw.data);
@@ -222,11 +222,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     await m.react("🐣");
-    return m.reply(claraWrap("WHOIS: " + domain, lines.join("\n")));
+    return m.reply(novaWrap("WHOIS: " + domain, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("whoishistory error:", e);
-    return m.reply(claraWrap("WhoisHistory", "Error: " + e.message));
+    return m.reply(novaWrap("WhoisHistory", "Error: " + e.message));
   }
 }
 

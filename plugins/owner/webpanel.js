@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .webpanel — start/stop WEB DASHBOARD (port website engine lama utuh)
 // Engine: src/lib/hiweb/ — server HTTP standalone + halaman login + panel. OWNER-ONLY.
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "webpanel",
@@ -28,11 +28,11 @@ function getPort() {
 
 async function start(m, sock) {
   if (state.server?.listening) {
-    await m.reply(claraWrap("WebPanel", "Dashboard udah jalan di port " + getPort()));
+    await m.reply(novaWrap("WebPanel", "Dashboard udah jalan di port " + getPort()));
     return;
   }
   if (state.starting) {
-    await m.reply(claraWrap("WebPanel", "Lagi nyala... sabar ya"));
+    await m.reply(novaWrap("WebPanel", "Lagi nyala... sabar ya"));
     return;
   }
   state.starting = true;
@@ -47,7 +47,7 @@ async function start(m, sock) {
     }
     if (!srv?.listening) throw new Error("server gak mau listening — port kepake?");
     state.server = srv;
-    await m.reply(claraWrap("WebPanel", [
+    await m.reply(novaWrap("WebPanel", [
       "Dashboard NYALA!",
       "",
       "Buka: http://<ip-vps>:" + getPort(),
@@ -66,13 +66,13 @@ async function start(m, sock) {
 
 async function stop(m) {
   if (!state.server?.listening) {
-    await m.reply(claraWrap("WebPanel", "Dashboard lagi mati"));
+    await m.reply(novaWrap("WebPanel", "Dashboard lagi mati"));
     return;
   }
   const srv = state.server;
   state.server = null;
   await new Promise((r) => srv.close(r));
-  await m.reply(claraWrap("WebPanel", "Dashboard dimatiin"));
+  await m.reply(novaWrap("WebPanel", "Dashboard dimatiin"));
 }
 
 async function handler(m, { sock, config: botConfig }) {
@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig }) {
       await stop(m);
     } else if (arg === "status") {
       await m.react("⚡");
-      await m.reply(claraWrap("WebPanel", state.server?.listening
+      await m.reply(novaWrap("WebPanel", state.server?.listening
         ? "NYALA — port " + getPort()
         : "MATI"));
     } else {

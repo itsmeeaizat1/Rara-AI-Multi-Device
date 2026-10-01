@@ -3,7 +3,7 @@
 // Reminder yang waktunya KELEWATAN pas bot mati → dikirim notif "terlewat"
 // begitu bot nyala, biar user tetep dapet kabar.
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { formatDuration } from "./nova-afk.js";
 
 const KEY = "novaReminders";
@@ -42,7 +42,7 @@ export async function fireReminder(sock, reminder, missed = false) {
           : "⏰ Waktunya udah lewat pas bot lagi mati — tapi tetep aku ingetin!")
       : (isSched ? "📋 Pesan terjadwal kamu — tepat waktu!" : "Sudah waktunya!"),
   ];
-  const text = claraWrap(
+  const text = novaWrap(
     isSched ? (missed ? "Pesan Terjadwal Terlewat" : "Pesan Terjadwal Tiba") : (missed ? "Reminder Terlewat" : "Reminder Berbunyi"),
     lines
   );

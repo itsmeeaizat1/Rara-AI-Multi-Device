@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
     const cdCard = (remainingMs, live = true) => {
       const days = Math.floor(Math.max(0, remainingMs) / 86400000);
       const hms = formatRemaining(Math.max(0, remainingMs) % 86400000);
-      return claraWrap("Countdown", [
+      return novaWrap("Countdown", [
         `Target: *${target.toLocaleDateString("id-ID")}*`,
         live
           ? `🕒 *${days} hari ${hms}* lagi 🕒`
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
       finalCard: (st) => cdCard(st.remainingMs, false),
     });
   } catch (e) {
-    await m.reply(claraWrap("Gagal nih", [`${e.message}`].join("\n")));
+    await m.reply(novaWrap("Gagal nih", [`${e.message}`].join("\n")));
   }
   return { handled: true };
 }

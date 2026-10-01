@@ -2,7 +2,7 @@
 // aimathv2 — AI Math solver v2 (nexray API + fallback)
 import { aimath as nexrayAimath } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("aimathv2", `Mau selesaikan soal apa?\n\nContoh: ${m.prefix}aimathv2 integral dari x^2 dx\n${m.prefix}aimathv2 2x + 5 = 15, cari x`, "guide"));
+      return m.reply(novaWrap("aimathv2", `Mau selesaikan soal apa?\n\nContoh: ${m.prefix}aimathv2 integral dari x^2 dx\n${m.prefix}aimathv2 2x + 5 = 15, cari x`, "guide"));
     }
 
     await m.react("🕒");
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("aimathv2", "AI Math lagi offline 🧮", "error"));
+      return m.reply(novaWrap("aimathv2", "AI Math lagi offline 🧮", "error"));
     }
 
     await m.react("🐣");
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("aimathv2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("aimathv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("aimathv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

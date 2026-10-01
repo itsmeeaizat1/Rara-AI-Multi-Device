@@ -6,7 +6,7 @@
 // .nexai list = daftar model LIVE dari katalog publik APInex (free ditandain).
 // .nexai model <id|alias> = ganti model persist per user (pola min1aiModel).
 // STRICT SATU RUTE (pola satuan owner): down → error jelas, gak nyamber.
-import { claraWrap, novaAiUsage, novaInfoSections } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaAiUsage, novaInfoSections } from "../../src/lib/nova-menu-style.js";
 import { clearSession as clearAiSession } from "../../src/lib/nova-ai-session.js";
 import {
   nexaiChat, nexaiModels, normNexaiModel,
@@ -107,7 +107,7 @@ async function handler(m, { sock, db } = {}) {
     const known = models.some((m) => m.id === picked) || NEXAI_FALLBACK_MODELS.some((m) => m.id === picked);
     if (!known) {
       await m.react("❌");
-      return m.reply(claraWrap("nexai", `model "${picked}" gak ada di APInex — ketik ${m.prefix}nexai list buat daftar model`, "error"));
+      return m.reply(novaWrap("nexai", `model "${picked}" gak ada di APInex — ketik ${m.prefix}nexai list buat daftar model`, "error"));
     }
     saveModel(db, m.sender, picked);
     await m.react("🐣");
@@ -153,7 +153,7 @@ async function handler(m, { sock, db } = {}) {
   } catch (err) {
     console.error("[NexAI]", err.message || err);
     await m.react("❌");
-    return m.reply(claraWrap("nexai", err.message || "NexAI lagi gangguan, coba lagi ya", "error"));
+    return m.reply(novaWrap("nexai", err.message || "NexAI lagi gangguan, coba lagi ya", "error"));
   }
 }
 

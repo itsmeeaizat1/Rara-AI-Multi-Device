@@ -2,7 +2,7 @@
 // okezone.js — Berita Okezone
 import { fetchNewsList } from "../../src/lib/nova-rss-news.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "okezone",
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const data = await fetchNewsList("https://www.okezone.com/rss", 8);
     if (!Array.isArray(data) || data.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("okezone", "Gagal mengambil berita!", "error"));
+      return m.reply(novaWrap("okezone", "Gagal mengambil berita!", "error"));
     }
 
     let _lines = [];
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("okezone error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("okezone", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("okezone", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

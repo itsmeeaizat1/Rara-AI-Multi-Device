@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { stopJadibot, getAllJadibotSessions } from '../../src/lib/nova-jadibot-manager.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'stopdandeletejadibot',
     alias: ["stopdandeletejadibot"],
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
         const sessions = getAllJadibotSessions()
 
         if (sessions.length === 0) {
-            return m.reply(claraWrap("Stopdandeletejadibot", `❌ Tidak ada session jadibot tersimpan`))
+            return m.reply(novaWrap("Stopdandeletejadibot", `❌ Tidak ada session jadibot tersimpan`))
         }
 
         let txt = ` *sTop & Delete Jadibot*\n\n`
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     const session = sessions.find(s => s.id === id)
 
     if (!session) {
-        { const __navText = claraWrap("@${id}", `❌ Session jadibot untuk *@${id}* tidak ditemukan`); return await m.reply(__navText); }
+        { const __navText = novaWrap("@${id}", `❌ Session jadibot untuk *@${id}* tidak ditemukan`); return await m.reply(__navText); }
     }
     try {
         await stopJadibot(target, true)
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
             mentions: [target]
         }, { quoted: m })
     } catch (error) {
-        await m.reply(claraWrap("stopdandeletejadibot", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("stopdandeletejadibot", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

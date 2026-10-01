@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "passwordgen",
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
 
   // Jika gak ada args, generate default
   if (!args[0] || args[0] === "help" || args[0] === "menu") {
-    return m.reply( claraWrap("Password Generator", [
+    return m.reply( novaWrap("Password Generator", [
       "Generate password kuat secara lokal (no API, no internet)",
       "",
       "CARA PAKAI:",
@@ -132,11 +132,11 @@ async function handler(m, { sock }) {
     ];
 
     await m.react("🐣");
-    return m.reply(claraWrap("Password Generator", lines, "success"));
+    return m.reply(novaWrap("Password Generator", lines, "success"));
   } catch (e) {
     await m.react("❌");
     console.error("[Password Gen]", e);
-    return m.reply(claraWrap("Password Generator", "Error: " + e.message));
+    return m.reply(novaWrap("Password Generator", "Error: " + e.message));
   }
 }
 

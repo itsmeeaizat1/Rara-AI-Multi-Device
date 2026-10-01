@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo, tiktokSearchWilz } from "../../src/scraper/tiktoksearch.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import {  } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply(claraWrap("PlayTikTok", [
+    return m.reply(novaWrap("PlayTikTok", [
       `📌 Cari dan kirim satu video TikTok dari keyword:`,
       ``,
       `💡 Contoh:`,
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
     });
   } catch (error) {
     console.log(error);
-    m.reply(claraWrap("playtiktok", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("playtiktok", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

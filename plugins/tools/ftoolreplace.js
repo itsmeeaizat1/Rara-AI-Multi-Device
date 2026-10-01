@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolreplace — ganti potongan teks massal (port altftool.com/tools/all/find-and-replace)
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolreplace", alias: ["replace", "gantiteks", "findreplace"], category: "tools",
@@ -39,12 +39,12 @@ async function handler(m, { sock, config: botConfig }) {
     const count = teks.split(from).length - 1;
     const out = count ? teks.split(from).join(to) : teks;
     await m.react("🐣");
-    await m.reply(claraWrap("Find & Replace", [`"${from}" → "${to}" (${count}x diganti)`,
+    await m.reply(novaWrap("Find & Replace", [`"${from}" → "${to}" (${count}x diganti)`,
       "",
       "```" + (out.length > 800 ? out.substring(0, 800) + "…" : out) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Find & Replace", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Find & Replace", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

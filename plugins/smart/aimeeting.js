@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -40,12 +40,12 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== START
   if (sub === "start" || sub === "mulai") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("AI Meeting", "Khusus admin/owner."));
+      await m.reply(novaWrap("AI Meeting", "Khusus admin/owner."));
       return { handled: true };
     }
     const durasi = parseInt(args[2] || "10", 10);
     if (isNaN(durasi) || durasi < 1 || durasi > 60) {
-      await m.reply(claraWrap("AI Meeting", "Format: " + prefix + "aimeeting start <durasi menit>\n💡 *Contoh:* " + prefix + "aimeeting start 10"));
+      await m.reply(novaWrap("AI Meeting", "Format: " + prefix + "aimeeting start <durasi menit>\n💡 *Contoh:* " + prefix + "aimeeting start 10"));
       return { handled: true };
     }
     saveMeeting(db, gid, {
@@ -56,7 +56,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       startedBy: m.sender,
       topic: args.slice(3).join(" ") || "Meeting",
     });
-    await m.reply(claraWrap("AI Meeting", [
+    await m.reply(novaWrap("AI Meeting", [
       "Mode rapat AKTIF!",
       "Durasi: " + durasi + " menit",
       "Bot merekam semua pesan teks.",
@@ -70,15 +70,15 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "stop" || sub === "selesai") {
     const meeting = getMeeting(db, gid);
     if (!meeting || !meeting.active) {
-      await m.reply(claraWrap("AI Meeting", "Tidak ada rapat aktif."));
+      await m.reply(novaWrap("AI Meeting", "Tidak ada rapat aktif."));
       return { handled: true };
     }
 
     if (meeting.messages.length < 3) {
-      await m.reply(claraWrap("AI Meeting", "Terlalu sedikit pesan untuk dibuat notulen. Minimal 3 pesan."));
+      await m.reply(novaWrap("AI Meeting", "Terlalu sedikit pesan untuk dibuat notulen. Minimal 3 pesan."));
       return { handled: true };
     }
-    await m.reply(claraWrap("AI Meeting", "Menggenerate notulen dari " + meeting.messages.length + " pesan..."));
+    await m.reply(novaWrap("AI Meeting", "Menggenerate notulen dari " + meeting.messages.length + " pesan..."));
 
     try {
       const chatLog = meeting.messages.map(msg =>
@@ -97,9 +97,9 @@ async function handler(m, { sock, db, config: botConfig }) {
       meeting.notulen = notulen;
       meeting.endTime = Date.now();
       saveMeeting(db, gid, meeting);
-      await m.reply(claraWrap("AI Meeting Notulen", "Topik: " + meeting.topic + "\nPesan: " + meeting.messages.length + "\n\n" + notulen));
+      await m.reply(novaWrap("AI Meeting Notulen", "Topik: " + meeting.topic + "\nPesan: " + meeting.messages.length + "\n\n" + notulen));
     } catch {
-      await m.reply(claraWrap("AI Meeting", "Gagal generate notulen nih"));
+      await m.reply(novaWrap("AI Meeting", "Gagal generate notulen nih"));
     }
     return { handled: true };
   }
@@ -108,13 +108,13 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "status" || sub === "cek") {
     const meeting = getMeeting(db, gid);
     if (!meeting) {
-      await m.reply(claraWrap("AI Meeting", "Belum ada rapat. Ketik " + prefix + "aimeeting start <menit>."));
+      await m.reply(novaWrap("AI Meeting", "Belum ada rapat. Ketik " + prefix + "aimeeting start <menit>."));
       return { handled: true };
     }
     if (meeting.active) {
       const elapsed = Math.floor((Date.now() - meeting.startTime) / 60000);
       const remaining = meeting.duration - elapsed;
-      await m.reply(claraWrap("AI Meeting Status", [
+      await m.reply(novaWrap("AI Meeting Status", [
         "Status: AKTIF",
         "Topik: " + meeting.topic,
         "Pesan terkumpul: " + meeting.messages.length,
@@ -124,7 +124,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         "Ketik " + prefix + "aimeeting stop untuk generate notulen.",
       ].join("\n")));
     } else if (meeting.notulen) {
-      await m.reply(claraWrap("AI Meeting Status", [
+      await m.reply(novaWrap("AI Meeting Status", [
         "Status: Selesai",
         "Topik: " + meeting.topic,
         "Pesan: " + meeting.messages.length,
@@ -139,15 +139,15 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "show" || sub === "lihat") {
     const meeting = getMeeting(db, gid);
     if (!meeting || !meeting.notulen) {
-      await m.reply(claraWrap("AI Meeting", "Tidak ada notulen. Jalankan rapat dulu."));
+      await m.reply(novaWrap("AI Meeting", "Tidak ada notulen. Jalankan rapat dulu."));
       return { handled: true };
     }
-    await m.reply(claraWrap("AI Meeting Notulen", "Topik: " + meeting.topic + "\n\n" + meeting.notulen));
+    await m.reply(novaWrap("AI Meeting Notulen", "Topik: " + meeting.topic + "\n\n" + meeting.notulen));
     return { handled: true };
   }
 
   // ==================== HELP
-  await m.reply(claraWrap("AI Meeting", [
+  await m.reply(novaWrap("AI Meeting", [
     "AI MEETING MINUTES",
     "",
     "Cara pakai:",

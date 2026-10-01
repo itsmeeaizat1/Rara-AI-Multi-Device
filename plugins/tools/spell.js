@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -27,14 +27,14 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const { data } = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`, { timeout: 10000 });
     if (Array.isArray(data) && data.length > 0) {
-      await m.reply(claraWrap("Spell Check", [`Kata: *${word}*`, `Ejaan benar!`].join("\n")));
+      await m.reply(novaWrap("Spell Check", [`Kata: *${word}*`, `Ejaan benar!`].join("\n")));
     } else {
       await m.react("🐣");
-      await m.reply(claraWrap("Spell Check", [`Kata: *${word}*`, "Kata tidak ditemukan dalam kamus"].join("\n")));
+      await m.reply(novaWrap("Spell Check", [`Kata: *${word}*`, "Kata tidak ditemukan dalam kamus"].join("\n")));
     }
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Spell Check", [`Kata: *${m.text?.trim()}*`, "Tidak ditemukan di kamus"].join("\n")));
+    await m.reply(novaWrap("Spell Check", [`Kata: *${m.text?.trim()}*`, "Tidak ditemukan di kamus"].join("\n")));
   }
   return { handled: true };
 }

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'setlimitdefault',
     alias: ["setlimitdefault"],
@@ -35,13 +35,13 @@ async function handler(m, { sock }) {
     }
     
     if (newLimit < 1 || newLimit > 1000) {
-        { const __navText = `❌ *Gagal*\n\nLimit harus antara 1 - 1000`; return await m.reply(claraWrap("setlimitdefault", __navText)); }
+        { const __navText = `❌ *Gagal*\n\nLimit harus antara 1 - 1000`; return await m.reply(novaWrap("setlimitdefault", __navText)); }
     }
     
     const db = getDatabase()
     db.setting('defaultLimit', newLimit)
     
-    await m.reply(claraWrap("Berhasil", 
+    await m.reply(novaWrap("Berhasil", 
         `Default limit diubah menjadi: \`${newLimit}\`\n` +
         `User baru akan mendapat limit ini`))
 }

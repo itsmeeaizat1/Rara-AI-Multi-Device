@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['autodl', 'autodownload'],
     alias: ["autodl", "autodownload"],
@@ -40,17 +40,17 @@ function handler(m, { sock }) {
     
     if (args === 'on') {
         db.setGroup(m.chat, { ...groupData, autodl: true })
-        return m.reply(claraWrap("autodl", `✅ *auto download aktif*\n\n` +
+        return m.reply(novaWrap("autodl", `✅ *auto download aktif*\n\n` +
             `Kirim link sosmed dan bot akan auto download!\n` +
             `Support: TikTok, IG, FB, YouTube, Twitter/X`))
     }
     
     if (args === 'off') {
         db.setGroup(m.chat, { ...groupData, autodl: false })
-        return m.reply(claraWrap("Autodl", `auto download nonaktif`, "error"))
+        return m.reply(novaWrap("Autodl", `auto download nonaktif`, "error"))
     }
     
-    return m.reply(claraWrap("Auto dl", `Argumen Tidak Valid\n\nGunakan: \`on\` atau \`off\``, "error"))
+    return m.reply(novaWrap("Auto dl", `Argumen Tidak Valid\n\nGunakan: \`on\` atau \`off\``, "error"))
 }
 
 export { pluginConfig as config, handler }

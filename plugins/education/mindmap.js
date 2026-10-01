@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -23,7 +23,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   const input = args.join(" ").trim();
 
   if (!input) {
-    return m.reply( claraWrap("Mindmap - Peta Pikiran", [
+    return m.reply( novaWrap("Mindmap - Peta Pikiran", [
       `Generate mind map dari topik atau teks menggunakan AI.`,
       ``,
       `Cara pakai:`,
@@ -81,7 +81,7 @@ Pilih 4-6 konsep utama yang paling penting, masing-masing dengan 2-3 sub-konsep.
     // Wrap dalam code block agar monospace dan alignment rapi
     const mindmapText = "```" + result + "```";
 
-    return m.reply( claraWrap("Mindmap", `${input.substring(0, 50)}${input.length > 50 ? "..." : ""}\n\n${mindmapText}`), { commandName: "mindmap" });
+    return m.reply( novaWrap("Mindmap", `${input.substring(0, 50)}${input.length > 50 ? "..." : ""}\n\n${mindmapText}`), { commandName: "mindmap" });
   } catch (e) {
     return m.reply( novaError("MindMap", `Gagal generate nih: ${e.message}`), { commandName: "mindmap" });
   }

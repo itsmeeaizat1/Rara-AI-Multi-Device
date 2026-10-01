@@ -3,7 +3,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ampro",
@@ -184,7 +184,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       saveSession(email, { ...sess, ref: r.newRef || sess.ref });
       await m.react("⚡");
-      await m.reply(claraWrap("AM Premium", ["Premium " + email + " ke-update!", "Order: " + r.orderId].join("\n")));
+      await m.reply(novaWrap("AM Premium", ["Premium " + email + " ke-update!", "Order: " + r.orderId].join("\n")));
       return { handled: true };
     }
 
@@ -198,7 +198,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     savePending(m.sender, { email, at: Date.now(), chat: m.chat });
     await m.react("⚡");
-    await m.reply(claraWrap("Ampro", [
+    await m.reply(novaWrap("Ampro", [
       "Magic link ke " + email + " udah dikirim!",
       "",
       "Buka email kamu, copy link dari AlightMotion,",
@@ -252,7 +252,7 @@ export async function answerHandler(m, { sock }) {
     }
     saveSession(st.email, { id: v.id, ref: v.ref, uid: v.uid });
     await m.react("⚡");
-    await m.reply(claraWrap("AM Premium Aktif!", [
+    await m.reply(novaWrap("AM Premium Aktif!", [
       "Email: " + st.email,
       "Order: " + p.orderId,
       v.new ? "Akun baru dibuat" : "Akun lama di-update",

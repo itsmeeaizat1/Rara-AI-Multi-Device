@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraHeader,  separator, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaHeader,  separator, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import https from "node:https";
 import http from "node:http";
 
@@ -29,7 +29,7 @@ async function handler(m, { sock, config: botConfig }) {
     const mod = url.startsWith("https") ? https : http;
     await new Promise((resolve, reject) => {
       mod.request(url, { method: "HEAD", timeout: 10000 }, (res) => {
-        let text = claraWrap("Header Scan", "🔍") + "\n\n" + claraWrap(url, [
+        let text = novaWrap("Header Scan", "🔍") + "\n\n" + novaWrap(url, [
           `Status: *${res.statusCode} ${res.statusMessage}*`,
           ...Object.entries(res.headers).slice(0, 12).map(([k,v]) => `${k}: ${v}`),
         ]);

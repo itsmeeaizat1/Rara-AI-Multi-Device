@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooltextfreq — kata paling sering muncul (port altftool.com/tools/all/word-frequency-counter)
-import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltextfreq", alias: ["textfreq", "wordfreq", "frekuensikata"], category: "tools",
@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     const words = (text.toLowerCase().match(/[\p{L}\p{N}']+/gu) || []);
     if (!words.length) {
       await m.react("❌");
-      return m.reply(claraWrap("Text Freq", ["ERROR: gak ada kata yang bisa dihitung"].join("\n")));
+      return m.reply(novaWrap("Text Freq", ["ERROR: gak ada kata yang bisa dihitung"].join("\n")));
     }
     const freq = new Map();
     for (const w of words) freq.set(w, (freq.get(w) || 0) + 1);
@@ -43,10 +43,10 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push(`${m} ${w} ×${c}`);
     });
     await m.react("🐣");
-    await m.reply(claraWrap("Text Freq", lines.join("\n")));
+    await m.reply(novaWrap("Text Freq", lines.join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Text Freq", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Text Freq", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

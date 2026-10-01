@@ -2,7 +2,7 @@
 // AI Dream — AI interprets dreams
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("mimpiai", `Ceritakan mimpimu!\n\nContoh: ${m.prefix}mimpiai saya bermimpi terbang di atas lautan biru\n${m.prefix}mimpiai mimpi ketemu almarhum nenek`, "guide"));
+      return m.reply(novaWrap("mimpiai", `Ceritakan mimpimu!\n\nContoh: ${m.prefix}mimpiai saya bermimpi terbang di atas lautan biru\n${m.prefix}mimpiai mimpi ketemu almarhum nenek`, "guide"));
     }
 
     await m.react("🕒");
@@ -44,7 +44,7 @@ Gunakan bahasa Indonesia, tafsir dengan bijak dan positif. Jangan menakut-nakuti
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("mimpiai", "AI-nya lagi tidur nih 😴", "error"));
+      return m.reply(novaWrap("mimpiai", "AI-nya lagi tidur nih 😴", "error"));
     }
 
     const lines = result.answer.trim().split("\n");
@@ -99,7 +99,7 @@ Gunakan bahasa Indonesia, tafsir dengan bijak dan positif. Jangan menakut-nakuti
   } catch (err) {
     console.error("mimpiai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("mimpiai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("mimpiai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

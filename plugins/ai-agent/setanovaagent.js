@@ -5,7 +5,7 @@
 // Flow AI-nya reuse createRule dari autonovaai.js (status 1 pesan edit-in-place ala agent).
 
 import { createRule } from "../ai/autonovaai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setanovaagent",
@@ -34,7 +34,7 @@ async function handler(m, { sock, conn, db }) {
     // tanpa teks → bantuan
     if (!body) {
       return m.reply(
-        claraWrap("setanovaagent", [
+        novaWrap("setanovaagent", [
           "💡 Contoh:",
           ".setanovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
           ".setanovaagent setiap jam 05:00 ingatin sholat subuh",
@@ -50,7 +50,7 @@ async function handler(m, { sock, conn, db }) {
     const parts = body.split(/\s+/);
     if (/^(list|del|on|off|reset)\b/i.test(body)) {
       return m.reply(
-        claraWrap("setanovaagent", "💡 Kelola rule pakai .anovaagent — contoh: .anovaagent " + parts[0].toLowerCase() + (parts[1] ? " " + parts[1].toUpperCase() : ""), "error"),
+        novaWrap("setanovaagent", "💡 Kelola rule pakai .anovaagent — contoh: .anovaagent " + parts[0].toLowerCase() + (parts[1] ? " " + parts[1].toUpperCase() : ""), "error"),
       );
     }
 
@@ -60,7 +60,7 @@ async function handler(m, { sock, conn, db }) {
   } catch (e) {
     console.error("[setanovaagent] error:", e.message);
     try { await m.react("❌"); } catch {}
-    return m.reply(claraWrap("setanovaagent", e.message || "Ada yang error nih, coba lagi ya", "error"));
+    return m.reply(novaWrap("setanovaagent", e.message || "Ada yang error nih, coba lagi ya", "error"));
   }
 }
 

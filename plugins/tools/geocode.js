@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraHeader,  separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaHeader,  separator, tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -30,12 +30,12 @@ async function handler(m, { sock, config: botConfig }) {
       headers: { "User-Agent": "NovaBot/1.0" },
     });
     if (!data?.length) {
-      await m.reply(claraWrap("Geocode", [`Tempat: *${query}*`].join("\n")));
+      await m.reply(novaWrap("Geocode", [`Tempat: *${query}*`].join("\n")));
       return { handled: true };
     }
-    let text = claraWrap("Geocode", "📍") + "\n\n";
+    let text = novaWrap("Geocode", "📍") + "\n\n";
     data.forEach((r, i) => {
-      text += claraWrap(`HAsIL ${i+1}`, [
+      text += novaWrap(`HAsIL ${i+1}`, [
         `Nama: *${r.display_name.substring(0,60)}*`,
         `Lat: *${r.lat}*`, `Lon: *${r.lon}*`,
         `Peta: https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lon}`,

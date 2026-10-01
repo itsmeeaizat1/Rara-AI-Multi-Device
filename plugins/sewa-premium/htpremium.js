@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getParticipantJids } from '../../src/lib/nova-lid.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['htpremium', 'hidetagpremium', 'htprem'],
     alias: ["htpremium", "hidetagpremium", "htprem"],
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
             const finalText = text || quotedText
 
             if (!finalText) {
-                return m.reply(claraWrap("Htpremium", '❌ *pesan kosong*'))
+                return m.reply(novaWrap("Htpremium", '❌ *pesan kosong*'))
             }
 
             return sock.sendMessage(m.chat, {
@@ -137,7 +137,7 @@ async function handler(m, { sock }) {
         }, { quoted: m })
 
     } catch (err) {
-        m.reply(claraWrap("htpremium", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("htpremium", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -13,7 +13,7 @@ import {
   getBootDoctorStatus,
   setBootDoctorEnabled,
 } from "../../src/lib/nova-boot-doctor.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bootdoctor",
@@ -56,14 +56,14 @@ async function handler(m, { config: botConfig }) {
       }
       lines.push("");
       lines.push("💡 Ketik " + prefix + "bootdoctor buat cek ulang sekarang");
-      return m.reply(claraWrap("Boot Doctor", lines));
+      return m.reply(novaWrap("Boot Doctor", lines));
     }
 
     // ── toggle ──
     if (sub === "on" || sub === "off" || sub === "aktif" || sub === "matikan") {
       const on = sub === "on" || sub === "aktif";
       const now = setBootDoctorEnabled(on);
-      return m.reply(claraWrap("Boot Doctor", [
+      return m.reply(novaWrap("Boot Doctor", [
         (on ? "✅" : "❌") + " Laporan otomatis pas boot: " + (now ? "AKTIF" : "MATI"),
         "",
         on ? "Tiap bot nyala/restart, hasil cek kesehatan fitur otomatis ke DM kamu" : "Cek tetap jalan pas boot, cuma DM-nya dimatiin",
@@ -77,12 +77,12 @@ async function handler(m, { config: botConfig }) {
     await m.react("✅");
     const bad = results.filter(r => r.status !== "ok" && r.status !== "nokey").length;
     if (!bad) return;
-    return m.reply(claraWrap("Boot Doctor", [
+    return m.reply(novaWrap("Boot Doctor", [
       "Ada " + bad + " fitur bermasalah — ganti key di src/lib/apikey/apikeys.json lalu ketik " + prefix + "reloadkey",
     ]));
   } catch (e) {
     console.error("[bootdoctor] Error:", e.message);
-    return m.reply(claraWrap("Boot Doctor", ["❌ Gagal cek fitur: " + (e.message || e)]));
+    return m.reply(novaWrap("Boot Doctor", ["❌ Gagal cek fitur: " + (e.message || e)]));
   }
 }
 

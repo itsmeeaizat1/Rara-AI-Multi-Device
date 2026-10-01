@@ -15,7 +15,7 @@ excluded = {
     "plugins/sticker/sticker.js"
 }
 
-helper_keywords = ["claraWrap", "novaError", "novaEmpty", "novaGuide", "novaNoInput", "bracketBox", "novaCaption", "novaReply", "novaBox", "claraLine", "novaSuccess", "novaUsage"]
+helper_keywords = ["novaWrap", "novaError", "novaEmpty", "novaGuide", "novaNoInput", "bracketBox", "novaCaption", "novaReply", "novaBox", "novaLine", "novaSuccess", "novaUsage"]
 
 no_helper_files = []
 raw_reply_files = []

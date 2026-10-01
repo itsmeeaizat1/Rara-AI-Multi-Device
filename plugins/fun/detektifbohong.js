@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "detektifbohong",
@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   if (!statement || statement.trim().length < 3) {
-    const help = claraWrap("DetektifBohong", [
+    const help = novaWrap("DetektifBohong", [
       `Simulator lie detector dramatis`,
       ``,
       `📌 Format:`,
@@ -105,7 +105,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     `_Hasil random, bukan kebenaran absolut ya_`,
   ].join("\n");
 
-  await m.reply(claraWrap("DetektifBohong", result));
+  await m.reply(novaWrap("DetektifBohong", result));
   return { handled: true };
 }
 

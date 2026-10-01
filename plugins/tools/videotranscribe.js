@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import crypto from "crypto";
 import te from "../../src/lib/nova-error.js";
 
@@ -115,13 +115,13 @@ async function handler(m, { sock,  args }) {
       transcript += `... (teks terlalu panjang)`;
     }
 
-    const info = claraWrap("Video Transcribe", [`*title:* ${result.title}`, `*language:* ${lang.toUpperCase()}`, `*segments:* ${result.total}`, ``, `*transcript:*`, transcript].join("\n"));
+    const info = novaWrap("Video Transcribe", [`*title:* ${result.title}`, `*language:* ${lang.toUpperCase()}`, `*segments:* ${result.total}`, ``, `*transcript:*`, transcript].join("\n"));
     await m.react("🐣");
     await m.reply(info);
   } catch (err) {
     await m.react("❌");
     console.error("[VideoTranscribe]", err.message);
-    m.reply(claraWrap("videotranscribe", `❌ *gagal:* ${err.message || "Gagal proses nih video"}`));
+    m.reply(novaWrap("videotranscribe", `❌ *gagal:* ${err.message || "Gagal proses nih video"}`));
   }
 }
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 /**
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     
     if (!text || !text.includes('|')) {
         return m.reply(
-            claraWrap("soulmate", [
+            novaWrap("soulmate", [
               `Cek kecocokan jiwa 2 orang.`,
               ``,
               `📌 Format: ${m.prefix}soulmatch <nama1>|<nama2>`,
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     const [nama1, nama2] = text.split('|').map(n => n.trim())
     
     if (!nama1 || !nama2) {
-        return m.reply(claraWrap("soulmate", [
+        return m.reply(novaWrap("soulmate", [
             `Masukkan 2 nama dengan format yang benar.`,
             ``,
             `💡 Contoh: ${m.prefix}soulmatch Raiden|Mei`,

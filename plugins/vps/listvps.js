@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -37,9 +37,9 @@ async function handler(m, { sock }) {
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
-        return m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Fitur ini hanya untuk Owner/Seller."))
+        return m.reply(novaWrap("Akses Ditolak", "\U0001f6ab Fitur ini hanya untuk Owner/Seller."))
     }
-    await m.reply(claraWrap("VPS", "\u23f3 Mengambil data VPS..."))
+    await m.reply(novaWrap("VPS", "\u23f3 Mengambil data VPS..."))
     
     try {
         const response = await axios.get('https://api.digitalocean.com/v2/droplets', {

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "animehappy",
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
 
     if (!url) {
       await sock.sendMessage(from, { react: { text: "❌", key: m.key } });
-      return m.reply(claraWrap("animehappy", "Gagal mengambil anime GIF. Coba lagi nanti.", "error"));
+      return m.reply(novaWrap("animehappy", "Gagal mengambil anime GIF. Coba lagi nanti.", "error"));
     }
 
     const senderJid = m.sender || m.key.participant || from;
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     const from = m.key.remoteJid;
     console.error("animehappy error:", err);
     await sock.sendMessage(from, { react: { text: "❌", key: m.key } });
-    return m.reply(claraWrap("animehappy", err.message || "Terjadi kesalahan", "error"));
+    return m.reply(novaWrap("animehappy", err.message || "Terjadi kesalahan", "error"));
   }
 }
 

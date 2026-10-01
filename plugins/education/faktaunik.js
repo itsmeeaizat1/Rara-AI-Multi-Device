@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "faktaunik",
@@ -109,12 +109,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Kategori tersedia: " + KATEGORI_LIST.join(", "))
       lines.push("Cara: " + usedPrefix + "faktaunik <kategori>")
-      return m.reply(claraWrap("Fakta Unik", lines.join("\n")))
+      return m.reply(novaWrap("Fakta Unik", lines.join("\n")))
     }
 
     const kat = KATEGORI_LIST.find(k => k.includes(input) || k === input)
     if (!kat) {
-      return m.reply(claraWrap("Fakta Unik", "Kategori tidak ditemukan: " + input + "\nTersedia: " + KATEGORI_LIST.join(", ")))
+      return m.reply(novaWrap("Fakta Unik", "Kategori tidak ditemukan: " + input + "\nTersedia: " + KATEGORI_LIST.join(", ")))
     }
 
     const fakta = FAKTA[kat][Math.floor(Math.random() * FAKTA[kat].length)]
@@ -123,9 +123,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("")
     lines.push(fakta)
 
-    return m.reply(claraWrap("Fakta " + kat, lines.join("\n")))
+    return m.reply(novaWrap("Fakta " + kat, lines.join("\n")))
   } catch (e) {
-    return m.reply(claraWrap("Fakta Unik", "Error: " + e.message))
+    return m.reply(novaWrap("Fakta Unik", "Error: " + e.message))
   }
 }
 

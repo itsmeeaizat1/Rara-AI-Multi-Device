@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { DaFont } from "../../src/scraper/dafont.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 if (!global.dafontSessions) global.dafontSessions = {};
 
@@ -56,7 +56,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("dafont", [
+    return m.reply(novaWrap("dafont", [
       `Cari font dari DaFont, lalu reply nomor buat download.`,
       ``,
       `📌 Format: ${m.prefix}dafont <nama font>`,
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
     const result = await DaFont(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("dafont", `❌ *dafont gagal*\n\n${result.error}`));
+      return m.reply(novaWrap("dafont", `❌ *dafont gagal*\n\n${result.error}`));
     }
 
     const items = result.results.slice(0, 10);
@@ -91,11 +91,11 @@ async function handler(m, { sock }) {
     session.chat = m.chat;
 
     await m.react("🐣");
-    await m.reply(claraWrap("dafont", txt));
+    await m.reply(novaWrap("dafont", txt));
   } catch (e) {
     await m.react("❌");
     console.error(e);
-    m.reply(claraWrap("dafont", "❌ Gagal mencari font, coba lagi nanti"));
+    m.reply(novaWrap("dafont", "❌ Gagal mencari font, coba lagi nanti"));
   }
 }
 

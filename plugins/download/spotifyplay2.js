@@ -11,7 +11,7 @@
 // Format TETAP "MP3 320kbps" — bukan ngarang, spotifydown.org emang fixed
 // rip 320kbps (klaim lama di kode ini valid).
 import axios from "axios";
-import { claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotifyplay2",
@@ -93,7 +93,7 @@ export function buildSpotifyPlay2Card({ title, album, genre, duration, artist, u
 async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
   if (!query) {
-    return m.reply(claraWrap("spotifyplay2", `Masukkan judul lagu!\n\nContoh: .spotifyplay2 faded alan walker`, "guide"));
+    return m.reply(novaWrap("spotifyplay2", `Masukkan judul lagu!\n\nContoh: .spotifyplay2 faded alan walker`, "guide"));
   }
 
   try {
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
     const tracks = await searchSpotify(query);
     if (!tracks.length) {
       await m.react("❌");
-      return m.reply(claraWrap("spotifyplay2", `Lagu tidak ditemukan untuk: *${query}*`, "error"));
+      return m.reply(novaWrap("spotifyplay2", `Lagu tidak ditemukan untuk: *${query}*`, "error"));
     }
 
     const track = tracks[0];
@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[spotifyplay2]", err);
     await m.react("❌");
-    m.reply(claraWrap("spotifyplay2", "Gagal download lagu. Coba lagi nanti!", "error"));
+    m.reply(novaWrap("spotifyplay2", "Gagal download lagu. Coba lagi nanti!", "error"));
   }
 }
 

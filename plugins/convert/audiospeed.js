@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,13 +19,13 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Audio Speed", "Reply audio yang mau diubah kecepatannya."));
+    if (!quoted) return m.reply(novaWrap("Audio Speed", "Reply audio yang mau diubah kecepatannya."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(claraWrap("Audio Speed", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(novaWrap("Audio Speed", "Reply harus audio/voice note!"));
 
     const speed = parseFloat(args[0]);
     if (!speed || speed < 0.25 || speed > 4.0) {
-      return m.reply(claraWrap("Audio Speed", [
+      return m.reply(novaWrap("Audio Speed", [
         "Kecepatan 0.25 - 4.0x",
         "1.0 = normal, 2.0 = 2x cepat, 0.5 = 2x lambat",
         "",
@@ -64,7 +64,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: claraWrap("Audio Speed", [
+      caption: novaWrap("Audio Speed", [
         "Berhasil!",
         "Kecepatan: " + descSpeed,
         "Filter: " + filter,

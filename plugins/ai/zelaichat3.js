@@ -6,7 +6,7 @@
 // ═════════════════════════════════════════════
 
 import { zelAiChat, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { sendImage } from "../../src/lib/nova-message.js";
 import { fetchBuffer } from "../../src/lib/nova-utils.js";
 
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
       } catch {}
       if (!imageUrl) {
         await m.react("❌");
-        return m.reply(claraWrap("zelai", "⚠️ Gagal upload foto — coba kirim ulang."));
+        return m.reply(novaWrap("zelai", "⚠️ Gagal upload foto — coba kirim ulang."));
       }
     }
 
@@ -66,22 +66,22 @@ async function handler(m, { sock }) {
         VISION_NOIMAGE: "⚠️ AI ini mode vision — reply foto + pertanyaan.\n\nContoh: reply foto terus ketik *.${cmd} ini gambar apa*",
         TEXT_KOSONG: "⚠️ Pesan kosong.",
       };
-      return m.reply(claraWrap("zelai", map[r.error] || `⚠️ *${cmd.toUpperCase()} MATI:* ${r.error}`));
+      return m.reply(novaWrap("zelai", map[r.error] || `⚠️ *${cmd.toUpperCase()} MATI:* ${r.error}`));
     }
     await m.react("🐣");
     if (r.images?.length) {
       // AI balikin gambar juga (misal zcici) → kirim teks dulu, gambar nyusul
-      await m.reply(claraWrap("zelai", `⚡ *${cmd.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
+      await m.reply(novaWrap("zelai", `⚡ *${cmd.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
       for (const u of r.images.slice(0, 2)) {
         try { await sendImage(sock, m.chat, await getBuf(u), "", { quoted: m }); } catch {}
       }
       return;
     }
-    return m.reply(claraWrap("zelai", `⚡ *${cmd.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
+    return m.reply(novaWrap("zelai", `⚡ *${cmd.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
   } catch (err) {
     console.error("[zelaichat]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("zelai", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(novaWrap("zelai", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
       apiEndpoint: (botConfig.aiHelp || {}).apiEndpoint,
     });
 
-    const text = claraWrap("AI Copilot",
+    const text = novaWrap("AI Copilot",
       `Mode: *${selectedMode}*\n` +
       `Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`
     );

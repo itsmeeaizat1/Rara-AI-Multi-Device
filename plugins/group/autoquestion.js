@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoquestion",
@@ -81,7 +81,7 @@ export function startAutoQuestion(groupId, sock, db) {
       const question = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
       g.lastQuestion = question; g.lastSent = Date.now(); g.totalSent = (g.totalSent || 0) + 1;
       await db2.save();
-      await sock.sendMessage(groupId, { text: claraWrap("Auto Question", "Pertanyaan Grup:\n\n" + question + "\n\nJawab di grup, siapa tahu ada yang sepemikiran!\n\nMode: Otomatis tiap " + g.interval + " menit", "info") });
+      await sock.sendMessage(groupId, { text: novaWrap("Auto Question", "Pertanyaan Grup:\n\n" + question + "\n\nJawab di grup, siapa tahu ada yang sepemikiran!\n\nMode: Otomatis tiap " + g.interval + " menit", "info") });
     } catch (e) { console.error("[AutoQuestion interval]", e); }
   }, intervalMs);
 }
@@ -109,23 +109,23 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const interval = intervalArg && intervalArg >= MIN_INTERVAL && intervalArg <= MAX_INTERVAL ? intervalArg : DEFAULT_INTERVAL;
       cfg.enabled = true; cfg.interval = interval; cfg.activatedBy = sender; cfg.activatedAt = Date.now();
       await db.save(); startAutoQuestion(groupId, conn, db);
-      return m.reply(claraWrap("Auto Question", ["Pertanyaan otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "Total pertanyaan: " + QUESTIONS.length, "", "Ketik .autoquestion off untuk matikan.", "Ketik .autoquestion now untuk kirim sekarang."], "success"));
+      return m.reply(novaWrap("Auto Question", ["Pertanyaan otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "Total pertanyaan: " + QUESTIONS.length, "", "Ketik .autoquestion off untuk matikan.", "Ketik .autoquestion now untuk kirim sekarang."], "success"));
     }
     if (sub === "off" || sub === "mati" || sub === "nonaktif") {
       cfg.enabled = false; await db.save(); stopAutoQuestion(groupId);
-      return m.reply(claraWrap("Auto Question", "Pertanyaan otomatis DIMATIKAN.\nKetik .autoquestion on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Auto Question", "Pertanyaan otomatis DIMATIKAN.\nKetik .autoquestion on untuk aktifkan lagi."));
     }
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
-      return m.reply(claraWrap("Auto Question", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Pertanyaan tersedia: " + QUESTIONS.length]));
+      return m.reply(novaWrap("Auto Question", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Pertanyaan tersedia: " + QUESTIONS.length]));
     }
     if (sub === "now" || sub === "sekarang") {
       const question = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
       cfg.lastQuestion = question; cfg.lastSent = Date.now(); cfg.totalSent = (cfg.totalSent || 0) + 1; await db.save();
-      return m.reply(claraWrap("Auto Question", ["Pertanyaan Grup:", "", question, "", "Jawab di grup, siapa tahu ada yang sepemikiran!", "", "Total terkirim: " + cfg.totalSent]));
+      return m.reply(novaWrap("Auto Question", ["Pertanyaan Grup:", "", question, "", "Jawab di grup, siapa tahu ada yang sepemikiran!", "", "Total terkirim: " + cfg.totalSent]));
     }
-    return m.reply(claraWrap("Auto Question", ["Kirim pertanyaan seru random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "autoquestion on [menit] — Aktifkan (default 30, min 10, max 180)", usedPrefix + "autoquestion off — Matikan", usedPrefix + "autoquestion status — Lihat status", usedPrefix + "autoquestion now — Kirim sekarang", "", "CONTOH:", usedPrefix + "autoquestion on 15", usedPrefix + "autoquestion off"]));
-  } catch (e) { console.error("[Auto Question]", e); m.reply(claraWrap("Auto Question", "Error: " + e.message)); }
+    return m.reply(novaWrap("Auto Question", ["Kirim pertanyaan seru random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "autoquestion on [menit] — Aktifkan (default 30, min 10, max 180)", usedPrefix + "autoquestion off — Matikan", usedPrefix + "autoquestion status — Lihat status", usedPrefix + "autoquestion now — Kirim sekarang", "", "CONTOH:", usedPrefix + "autoquestion on 15", usedPrefix + "autoquestion off"]));
+  } catch (e) { console.error("[Auto Question]", e); m.reply(novaWrap("Auto Question", "Error: " + e.message)); }
 }
 
 export { pluginConfig as config, handler };

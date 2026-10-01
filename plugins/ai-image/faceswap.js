@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // faceswap — Tukar wajah antara dua foto via IkyyXD API
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     const hasThisImage = m.message?.imageMessage;
 
     if (!hasReplyImage && !hasThisImage) {
-      return m.reply(claraWrap("FaceSwap", [
+      return m.reply(novaWrap("FaceSwap", [
         "Tukar wajah antara dua foto",
         "",
         "CARA PAKAI:",
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     // Jika hanya ada 1 foto, minta foto kedua
     if (!url1 || !url2) {
       await m.react("❌");
-      return m.reply(claraWrap("FaceSwap", "Butuh 2 foto! Reply foto pertama, lalu kirim foto kedua dengan .faceswap"));
+      return m.reply(novaWrap("FaceSwap", "Butuh 2 foto! Reply foto pertama, lalu kirim foto kedua dengan .faceswap"));
     }
 
     const res = await axios.get(`${IKYY_BASE}/edit/faceswap`, {
@@ -86,16 +86,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: claraWrap("FaceSwap", "Berhasil menukar wajah!"),
+        caption: novaWrap("FaceSwap", "Berhasil menukar wajah!"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("FaceSwap", data?.error || data?.message || "Gagal memproses face swap. Pastikan kedua foto jelas."));
+      await m.reply(novaWrap("FaceSwap", data?.error || data?.message || "Gagal memproses face swap. Pastikan kedua foto jelas."));
     }
   } catch (e) {
     console.error("[faceswap.js]:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("FaceSwap", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("FaceSwap", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

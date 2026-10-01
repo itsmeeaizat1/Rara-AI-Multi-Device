@@ -6,7 +6,7 @@
 // KONTEN DEWASA 🔞 — fitur nsfw, key .setkey onepunya. Beda dari .nhentai
 // (engine lama) — ini numpang engine Onepunya.
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { hentaiSearch, hentaiEpisode, hentaiDownload } from "../../src/lib/nova-onepunya.js";
 
 const pluginConfig = {
@@ -33,22 +33,22 @@ async function handler(m, { sock }) {
   try {
     if (cmd === "hentaisearch" || cmd === "onehentaisearch") {
       const q = args.join(" ").trim();
-      if (!q) return m.reply(claraWrap("Onepunya Hentai", `Masukkan kata kunci!\n\nContoh: .hentaisearch ${"query"}`));
+      if (!q) return m.reply(novaWrap("Onepunya Hentai", `Masukkan kata kunci!\n\nContoh: .hentaisearch ${"query"}`));
       const res = await hentaiSearch(apiKey, q);
       const list = res?.data || (Array.isArray(res) ? res : []);
-      if (!list.length) return m.reply(claraWrap("Onepunya Hentai", `Gak ada hasil untuk: ${q}`));
+      if (!list.length) return m.reply(novaWrap("Onepunya Hentai", `Gak ada hasil untuk: ${q}`));
       let text = `🔞 nhentai search — "${q}" (${res?.total ?? list.length})\n\n`;
       list.slice(0, 10).forEach((d, i) => {
         const title = d.title || d.fullTitle || d.title_english || `#${d.id}`;
         text += `${i + 1}. ${String(title).slice(0, 60)}\n   #${d.id} · ${d.page_count || d.pages || "?"} halaman · ${d.tags ? String(d.tags).slice(0, 0) : ""}\n`;
       });
       text += `\nLink: https://nhentai.net/g/<id>\nDetail: .hentaiep <url>`;
-      return m.reply(claraWrap("Onepunya Hentai", text));
+      return m.reply(novaWrap("Onepunya Hentai", text));
     }
 
     if (cmd === "hentaiep") {
       const url = (args[0] || "").trim();
-      if (!/^https?:\/\//.test(url)) return m.reply(claraWrap("Onepunya Hentai", "Kirim URL nhentai yang valid.\n\nContoh: .hentaiep https://nhentai.net/g/177013/"));
+      if (!/^https?:\/\//.test(url)) return m.reply(novaWrap("Onepunya Hentai", "Kirim URL nhentai yang valid.\n\nContoh: .hentaiep https://nhentai.net/g/177013/"));
       const res = await hentaiEpisode(apiKey, url);
       const list = Array.isArray(res) ? res : [res];
       let text = `📚 Hasil untuk: ${url}\n\n`;
@@ -61,12 +61,12 @@ async function handler(m, { sock }) {
         }
         text += "\n";
       });
-      return m.reply(claraWrap("Onepunya Hentai", text.slice(0, 3000)));
+      return m.reply(novaWrap("Onepunya Hentai", text.slice(0, 3000)));
     }
 
     if (cmd === "hentaidl") {
       const url = (args[0] || "").trim();
-      if (!/^https?:\/\//.test(url)) return m.reply(claraWrap("Onepunya Hentai", "Kirim URL nhentai yang valid.\n\nContoh: .hentaidl https://nhentai.net/g/177013/"));
+      if (!/^https?:\/\//.test(url)) return m.reply(novaWrap("Onepunya Hentai", "Kirim URL nhentai yang valid.\n\nContoh: .hentaidl https://nhentai.net/g/177013/"));
       const res = await hentaiDownload(apiKey, url);
       const list = Array.isArray(res) ? res : [res];
       let text = `⬇️ Link download — ${url}\n\n`;
@@ -75,10 +75,10 @@ async function handler(m, { sock }) {
         const dlUrl = d.url || d.link || d.download_url || "";
         if (dlUrl) text += `   ${dlUrl}\n`;
       });
-      return m.reply(claraWrap("Onepunya Hentai", text.slice(0, 3000)));
+      return m.reply(novaWrap("Onepunya Hentai", text.slice(0, 3000)));
     }
   } catch (e) {
-    return m.reply(claraWrap("Onepunya Hentai", `Gagal: ${String(e.message || e).slice(0, 200)}`));
+    return m.reply(novaWrap("Onepunya Hentai", `Gagal: ${String(e.message || e).slice(0, 200)}`));
   }
 }
 

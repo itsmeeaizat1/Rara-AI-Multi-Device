@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     ress.on('ready', () => {
         ress.exec(command, (err, stream) => {
             if (err) {
-                return m.reply(claraWrap("root", te(m.prefix, m.command, m.pushName), "error"))
+                return m.reply(novaWrap("root", te(m.prefix, m.command, m.pushName), "error"))
             }
             
             stream.on('close', async () => {
@@ -75,7 +75,7 @@ Tema berhasil diuninstall!`)
         })
     }).on('error', (err) => {
         console.log('[SSH Error]', err)
-        m.reply(claraWrap("root", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
+        m.reply(novaWrap("root", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
     }).connect(connSettings)
 }
 

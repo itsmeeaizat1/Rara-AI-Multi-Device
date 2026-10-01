@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 
 const pluginConfig = {
@@ -50,7 +50,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       // Check if user has santet
       const activeSantet = global.santetDB?.[m.sender];
       if (!activeSantet) {
-        return m.reply(claraWrap("Tawa Santet", "Kamu gak kena santet! Aman 👍", "info"));
+        return m.reply(novaWrap("Tawa Santet", "Kamu gak kena santet! Aman 👍", "info"));
       }
 
       const result = TAWA_RESULT[Math.floor(Math.random() * TAWA_RESULT.length)];
@@ -78,9 +78,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           persistSave("santetDB");
         }
 
-        return m.reply(claraWrap("Tawa Santet", lines, "info"));
+        return m.reply(novaWrap("Tawa Santet", lines, "info"));
       } else {
-        return m.reply(claraWrap("Tawa Santet", [
+        return m.reply(novaWrap("Tawa Santet", [
           "TAWA SANTET!",
           result.text,
           "",
@@ -111,16 +111,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("Santet: Bersih, gak kena apa-apa");
       }
 
-      return m.reply(claraWrap("Santet", lines, "info"));
+      return m.reply(novaWrap("Santet", lines, "info"));
     }
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender;
     if (!target) {
-      return m.reply(claraWrap("Santet", "Tag target yang mau disantet!\n\n💡 *Contoh:* " + usedPrefix + "santet @target", "warn"));
+      return m.reply(novaWrap("Santet", "Tag target yang mau disantet!\n\n💡 *Contoh:* " + usedPrefix + "santet @target", "warn"));
     }
 
     if (target === m.sender) {
-      return m.reply(claraWrap("Santet", "Ngapain santet diri sendiri? 🤨", "warn"));
+      return m.reply(novaWrap("Santet", "Ngapain santet diri sendiri? 🤨", "warn"));
     }
 
     const efek = EFEK_SANTET[Math.floor(Math.random() * EFEK_SANTET.length)];
@@ -137,7 +137,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     global.santetStats[target].terima++;
 
     await m.react("🐣");
-    return m.reply(claraWrap("Santet", [
+    return m.reply(novaWrap("Santet", [
       "SANTEt TERKIRIM!",
       "",
       "Dari: @" + m.sender.split("@")[0],
@@ -151,7 +151,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ], "info"));
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Santet", "Error: " + e.message, "error"));
+    return m.reply(novaWrap("Santet", "Error: " + e.message, "error"));
   }
 }
 

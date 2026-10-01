@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,9 +19,9 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Audio Split", `Reply audio yang mau dipotong.`));
+    if (!quoted) return m.reply(novaWrap("Audio Split", `Reply audio yang mau dipotong.`));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(claraWrap("Audio Split", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(novaWrap("Audio Split", "Reply harus audio/voice note!"));
 
     const sub = (args[0] || "").toLowerCase();
     const tmpDir = path.join(os.tmpdir(), 'nova-split');
@@ -35,7 +35,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const start = args[1];
       const end = args[2];
       if (!start || !end) {
-        return m.reply(claraWrap("Audio Split", [
+        return m.reply(novaWrap("Audio Split", [
           `Cara: ${usedPrefix}audiosplit trim <start> <end>`,
           `Format: HH:MM:SS atau detik`,
           `Contoh: ${usedPrefix}audiosplit trim 00:05 00:15`,
@@ -44,7 +44,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
       const startSec = parseTime(start);
       const endSec = parseTime(end);
-      if (startSec >= endSec) return m.reply(claraWrap("Info", "Start harus lebih kecil dari end!"));
+      if (startSec >= endSec) return m.reply(novaWrap("Info", "Start harus lebih kecil dari end!"));
 
       const duration = endSec - startSec;
       const outputPath = path.join(tmpDir, `trimmed_${Date.now()}.mp3`);
@@ -54,7 +54,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const buf = fs.readFileSync(outputPath);
       await conn.sendMessage(m.key.remoteJid, {
         audio: buf, mimetype: "audio/ogg; codecs=opus", ptt: false,
-        caption: claraWrap("Audio Split", `Trimmed: ${start} - ${end} (${duration} detik)`),
+        caption: novaWrap("Audio Split", `Trimmed: ${start} - ${end} (${duration} detik)`),
       });
       fs.unlinkSync(inputPath);
       fs.unlinkSync(outputPath);
@@ -78,11 +78,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (fs.existsSync(out1) && fs.existsSync(out2)) {
         await conn.sendMessage(m.key.remoteJid, {
           audio: fs.readFileSync(out1), mimetype: "audio/ogg; codecs=opus", ptt: false,
-          caption: claraWrap("Audio Split", `Bagian 1 (0 - ${halfSec} detik)`),
+          caption: novaWrap("Audio Split", `Bagian 1 (0 - ${halfSec} detik)`),
         });
         await conn.sendMessage(m.key.remoteJid, {
           audio: fs.readFileSync(out2), mimetype: "audio/ogg; codecs=opus", ptt: false,
-          caption: claraWrap("Audio Split", `Bagian 2 (${halfSec} - ${totalSec} detik)`),
+          caption: novaWrap("Audio Split", `Bagian 2 (${halfSec} - ${totalSec} detik)`),
         });
         fs.unlinkSync(out1);
         fs.unlinkSync(out2);
@@ -96,7 +96,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     else if (sub === "parts") {
       const parts = parseInt(args[1]);
       if (!parts || parts < 2 || parts > 10) {
-        return m.reply(claraWrap("Audio Split", [`Parts 2-10. Contoh: ${usedPrefix}audiosplit parts 3`].join("\n")));
+        return m.reply(novaWrap("Audio Split", [`Parts 2-10. Contoh: ${usedPrefix}audiosplit parts 3`].join("\n")));
       }
 
       const probePath = path.join(tmpDir, `probe_${Date.now()}.txt`);
@@ -114,7 +114,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         if (fs.existsSync(outPath)) {
           await conn.sendMessage(m.key.remoteJid, {
             audio: fs.readFileSync(outPath), mimetype: "audio/ogg; codecs=opus", ptt: false,
-            caption: claraWrap("Audio Split", `Part ${i + 1}/${parts} (${start} - ${start + partDur} detik)`),
+            caption: novaWrap("Audio Split", `Part ${i + 1}/${parts} (${start} - ${start + partDur} detik)`),
           });
           fs.unlinkSync(outPath);
         }
@@ -125,7 +125,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     else {
       fs.unlinkSync(inputPath);
-      return m.reply(claraWrap("Audio Split", [
+      return m.reply(novaWrap("Audio Split", [
         `Audio Split - Potong/split audio`,
         "",
         `Command:`,

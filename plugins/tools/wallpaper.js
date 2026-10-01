@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/tools/wallpaper.js
@@ -102,7 +102,7 @@ async function handler(m, { sock, config: botConfig }) {
   // Validasi input
   if (!text) {
     const help = `Unduh Wallpaper HD\n\nCara pakai:\n.wallpaper <kata kunci> — Cari wallpaper\n.wallpaper random — Wallpaper acak\n.wallpaper <kata kunci> hd — HD 1920x1080+\n.wallpaper <kata kunci> 2k — 2K 2560x1440+\n.wallpaper <kata kunci> 4k — 4K 3840x2160+\n.wallpaper <kata kunci> mobile — Untuk HP (portrait)\n\nContoh:\n.wallpaper mekkah hd\n.wallpaper mosque\n.wallpaper nature 4k\n.wallpaper anime mobile\n\nKata kunci populer:\nmosque, mecca, islamic, nature, mountain, space, galaxy, ocean, city, sunset, anime, gaming, cyberpunk, minimalist, flowers, ramadan, masjid, kaaba`;
-    return m.reply( claraWrap("Wallpaper", help));
+    return m.reply( novaWrap("Wallpaper", help));
   }
   try {
     await m.react("🕒");
@@ -132,7 +132,7 @@ async function handler(m, { sock, config: botConfig }) {
     const wallpapers = data.data;
 
     if (wallpapers.length === 0) {
-      return m.reply(claraWrap("Wallpaper", `Tidak ada wallpaper untuk "${query}".\n\nCoba kata kunci lain:\nmosque, nature, space, anime, city`));
+      return m.reply(novaWrap("Wallpaper", `Tidak ada wallpaper untuk "${query}".\n\nCoba kata kunci lain:\nmosque, nature, space, anime, city`));
     }
 
     // Pilih 1 random dari hasil
@@ -149,7 +149,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: imageBuffer,
-      caption: claraWrap("Wallpaper HD", caption),
+      caption: novaWrap("Wallpaper HD", caption),
     }, { quoted: m });
   } catch (error) {
     await m.react("❌");
@@ -159,7 +159,7 @@ async function handler(m, { sock, config: botConfig }) {
       errMsg += "\n\nCoba kata kunci Inggris:\nmosque, nature, space, anime, city";
     }
 
-    return m.reply(claraWrap("Wallpaper Error", errMsg));
+    return m.reply(novaWrap("Wallpaper Error", errMsg));
   }
 }
 

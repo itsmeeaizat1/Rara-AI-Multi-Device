@@ -2,7 +2,7 @@
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { sendToolsPreview } from "../../src/lib/nova-context.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "lookup",
   alias: ["lookup"],
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   let domain = m.args?.[0];
 
   if (!domain) {
-    return m.reply(claraWrap("lookup", [
+    return m.reply(novaWrap("lookup", [
       `📌 Format:`,
       `${m.prefix}lookup <domain>`,
       `💡 Contoh:`,
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     const whoisData = whoisRes.status === "fulfilled" ? whoisRes.value : null;
 
     if (!dnsData && !whoisData) {
-      return m.reply(claraWrap("Lookup", `❌ *gagal*\n\nTidak dapat memproses domain`));
+      return m.reply(novaWrap("Lookup", `❌ *gagal*\n\nTidak dapat memproses domain`));
     }
 
     let text = `🔍 *dns lookup*\n\n`;
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
       quoted: m,
     });
   } catch (e) {
-    m.reply(claraWrap("lookup", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("lookup", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooltextreverse — balik urutan teks (port altftool.com/tools/all/text-reverser)
 // Pakai spread [...str] biar emoji/surrogate pair gak rusak.
-import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltextreverse", alias: ["textreverse", "reversetext", "balikteks"], category: "tools",
@@ -27,12 +27,12 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const out = [...text].reverse().join("");
     await m.react("🐣");
-    await m.reply(claraWrap("Text Reverse", ["TEKS DIBALIK",
+    await m.reply(novaWrap("Text Reverse", ["TEKS DIBALIK",
       "",
       "```" + out + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Text Reverse", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Text Reverse", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

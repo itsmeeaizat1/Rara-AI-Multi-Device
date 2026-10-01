@@ -7,7 +7,7 @@
 // terpakai + ticker live menuju reset (ala .afk/.jadwalsholat).
 // ═══════════════════════════════════════════════════════════════════
 import moment from "moment-timezone";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { formatRemaining } from "./nova-countdown.js";
 import { cekMeterBar } from "./nova-cek-anim.js";
 
@@ -64,5 +64,5 @@ export function buildLimitCard(d) {
     lines.push("");
     lines.push(footer);
   }
-  return claraWrap(title, lines.join("\n"));
+  return novaWrap(title, lines.join("\n"));
 }

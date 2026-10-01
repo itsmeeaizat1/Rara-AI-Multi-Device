@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Tools — Kompres, konversi, resize, crop, border, mirror (all local via sharp)
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "phototools",
@@ -75,12 +75,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push(usedPrefix + "phototools convert webp");
       lines.push(usedPrefix + "phototools resize 512");
       lines.push(usedPrefix + "phototools crop 1:1");
-      return m.reply(claraWrap("Photo Tools", lines, "info"));
+      return m.reply(novaWrap("Photo Tools", lines, "info"));
     }
 
     if (!COMMANDS[cmd]) {
       const available = Object.keys(COMMANDS).join(", ");
-      return m.reply(claraWrap("Photo Tools", [
+      return m.reply(novaWrap("Photo Tools", [
         "Command tidak ditemukan: " + cmd,
         "",
         "Tersedia: " + available,
@@ -93,7 +93,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const q = m.quoted || m;
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(claraWrap("Photo Tools", [
+      return m.reply(novaWrap("Photo Tools", [
         "Reply gambar dulu, lalu ketik:",
         usedPrefix + "phototools " + cmd,
         "",
@@ -101,11 +101,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "warn"));
     }
 
-    m.reply(claraWrap("Photo Tools", "Processing: " + cmd + "..."));
+    m.reply(novaWrap("Photo Tools", "Processing: " + cmd + "..."));
 
     const imgBuffer = await q.download();
     if (!imgBuffer || imgBuffer.length === 0) {
-      return m.reply(claraWrap("Photo Tools", "Gagal download gambar.", "warn"));
+      return m.reply(novaWrap("Photo Tools", "Gagal download gambar.", "warn"));
     }
 
     const originalSize = imgBuffer.length;
@@ -300,20 +300,20 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (!result || result.length === 0) {
       await m.react("🐣");
-      return m.reply(claraWrap("Photo Tools", "Gagal processing. Coba gambar lain.", "warn"));
+      return m.reply(novaWrap("Photo Tools", "Gagal processing. Coba gambar lain.", "warn"));
     }
 
     caption += "\nPowered by sharp (local, no API)";
 
     await conn.sendMessage(
       m.key.remoteJid,
-      { image: result, caption: claraWrap("Photo Tools", caption, "info") },
+      { image: result, caption: novaWrap("Photo Tools", caption, "info") },
       { quoted: m }
     );
   } catch (e) {
     await m.react("❌");
     console.error("[PhotoTools]", e);
-    m.reply(claraWrap("Photo Tools", [
+    m.reply(novaWrap("Photo Tools", [
       "Error: " + e.message,
       "",
       "Ketik " + usedPrefix + "phototools list untuk bantuan",

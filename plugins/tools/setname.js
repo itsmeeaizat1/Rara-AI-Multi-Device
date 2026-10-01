@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "setname",
     alias: ["setname"],
@@ -20,7 +20,7 @@ async function handler(m, { sock }) {
     const newName = m.text?.trim()
     
     if (!newName) {
-        await m.reply(claraWrap("setname", [
+        await m.reply(novaWrap("setname", [
             `Ubah nama profil bot.`,
             ``,
             `📌 Format: ${m.prefix}setname <nama bot baru>`,
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     }
     
     if (newName.length < 1 || newName.length > 25) {
-        await m.reply(claraWrap("setname", `⚠️ *validasi*\n\n` +
+        await m.reply(novaWrap("setname", `⚠️ *validasi*\n\n` +
             `Nama bot harus 1-25 karakter.`))
         return
     }
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
         await sock.updateProfileName(newName)
         
         await m.react("🐣");
-        await m.reply(claraWrap("setname", `✅ *nama bot diubah*\n\n` +
+        await m.reply(novaWrap("setname", `✅ *nama bot diubah*\n\n` +
             `Nama bot sekarang: *${newName}*`))
     } catch (error) {
     await m.react("❌");

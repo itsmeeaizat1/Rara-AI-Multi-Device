@@ -5,7 +5,7 @@
 
 import fs from "fs";
 import path from "path";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const DB_FILE = path.join(process.cwd(), "src", "database", "user", "chat_dna.json");
 
@@ -452,7 +452,7 @@ async function handler(m, { sock }) {
     // ─── Toggle commands (owner only) ───
     if (command === "chatdnaon") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
+        await m.reply(novaWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const db = loadDB();
@@ -460,20 +460,20 @@ async function handler(m, { sock }) {
       db.settings.groups[groupId] = true;
       db.settings.globalEnabled = true;
       saveDB(db);
-      await m.reply(claraWrap("Chat DNA", "Tracking Chat DNA untuk grup ini sudah DINYALAKAN.\n\nBot akan mulai merekam pola chat di grup ini."));
+      await m.reply(novaWrap("Chat DNA", "Tracking Chat DNA untuk grup ini sudah DINYALAKAN.\n\nBot akan mulai merekam pola chat di grup ini."));
       return;
     }
 
     if (command === "chatdnaoff") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
+        await m.reply(novaWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       db.settings.groups[groupId] = false;
       saveDB(db);
-      await m.reply(claraWrap("Chat DNA", "Tracking Chat DNA untuk grup ini sudah DIMATIKAN.\n\nBot berhenti merekam pola chat di grup ini. Data yang sudah terkumpul tetap tersimpan."));
+      await m.reply(novaWrap("Chat DNA", "Tracking Chat DNA untuk grup ini sudah DIMATIKAN.\n\nBot berhenti merekam pola chat di grup ini. Data yang sudah terkumpul tetap tersimpan."));
       return;
     }
 
@@ -504,13 +504,13 @@ async function handler(m, { sock }) {
         `.chatdna - Lihat DNA profile kamu`,
         `.dnamatch @user1 @user2 - Match DNA`,
       ].join("\n");
-      await m.reply(claraWrap("Chat DNA Status", statusBody));
+      await m.reply(novaWrap("Chat DNA Status", statusBody));
       return;
     }
 
     // ─── Check if tracking is enabled for this group ───
     if (!isTrackingEnabled(groupId)) {
-      await m.reply(claraWrap("Chat DNA", "Tracking Chat DNA sedang DIMATIKAN untuk grup ini.\n\nMinta owner untuk menyalakan dengan .chatdnaon"));
+      await m.reply(novaWrap("Chat DNA", "Tracking Chat DNA sedang DIMATIKAN untuk grup ini.\n\nMinta owner untuk menyalakan dengan .chatdnaon"));
       return;
     }
     const mentioned =
@@ -527,7 +527,7 @@ async function handler(m, { sock }) {
 
       const profile = generateDNA(target);
       if (!profile) {
-        const msg = claraWrap(
+        const msg = novaWrap(
           "Chat DNA",
           `Data belum cukup untuk ${targetName}. Minimal 5 pesan di grup untuk mulai tracking DNA. Tetap aktif chat!`
         );
@@ -535,14 +535,14 @@ async function handler(m, { sock }) {
         return;
       }
 
-      const result = claraWrap(`Chat DNA - ${targetName}`, profile);
+      const result = novaWrap(`Chat DNA - ${targetName}`, profile);
       await m.reply(result);
     }
 
     // ─── .dnamatch command ───
     else if (command === "dnamatch") {
       if (mentioned.length < 2) {
-        const help = claraWrap(
+        const help = novaWrap(
           "DNA Match",
           [
             "Cara pakai:",
@@ -559,7 +559,7 @@ async function handler(m, { sock }) {
 
       const result = dnaMatch(mentioned[0], mentioned[1]);
       if (!result) {
-        const fail = claraWrap(
+        const fail = novaWrap(
           "DNA Match",
           "Salah satu user belum cukup data chat nih (minimal 5 pesan). Coba lagi setelah mereka lebih aktif ya"
         );
@@ -581,7 +581,7 @@ async function handler(m, { sock }) {
       ].join("\n");
 
       await m.react("🐣");
-      await m.reply(claraWrap("DNA Match", body));
+      await m.reply(novaWrap("DNA Match", body));
     }
   } catch (e) {
     await m.react("❌");

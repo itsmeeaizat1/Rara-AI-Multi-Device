@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import moment from "moment-timezone";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "anniversary",
@@ -174,7 +174,7 @@ async function handler(m, { sock }) {
     txt += "Countdown: " + countdown + "\n";
     txt += "\n\"" + quote + "\"";
 
-    return m.reply(claraWrap("anniversary", txt));
+    return m.reply(novaWrap("anniversary", txt));
   }
 
   // === SET ANNIVERSARY DATE ===
@@ -182,13 +182,13 @@ async function handler(m, { sock }) {
     const dateStr = m.args?.[1] || "";
 
     if (!dateStr) {
-      return m.reply(claraWrap("Anniversary", "Cara set anniversary:\n.anniversary set DD/MM/YYYY\n\nContoh:\n.anniversary set 14/02/2024\n.anniversary set 01/01/2023"));
+      return m.reply(novaWrap("Anniversary", "Cara set anniversary:\n.anniversary set DD/MM/YYYY\n\nContoh:\n.anniversary set 14/02/2024\n.anniversary set 01/01/2023"));
     }
 
     // Parse DD/MM/YYYY
     const parts = dateStr.split(/[\/\-.]/);
     if (parts.length !== 3) {
-      return m.reply(claraWrap("anniversary", "Format tanggal salah. Gunakan: DD/MM/YYYY\n\n💡 *Contoh:* .anniversary set 14/02/2024"));
+      return m.reply(novaWrap("anniversary", "Format tanggal salah. Gunakan: DD/MM/YYYY\n\n💡 *Contoh:* .anniversary set 14/02/2024"));
     }
 
     const day = parseInt(parts[0]);
@@ -206,7 +206,7 @@ async function handler(m, { sock }) {
     }
 
     if (anniDate.isAfter(moment().tz(TZ), "day")) {
-      return m.reply(claraWrap("anniversary", "Tanggal anniversary tidak bisa di masa depan!"));
+      return m.reply(novaWrap("anniversary", "Tanggal anniversary tidak bisa di masa depan!"));
     }
 
     const userData = db.getUser(m.sender) || {};
@@ -229,7 +229,7 @@ async function handler(m, { sock }) {
     txt += "Anniversary ke-1: " + anniDate.clone().add(1, "year").format("DD MMMM YYYY") + "\n";
     txt += "\nCek kapan saja dengan .anniversary";
 
-    return m.reply(claraWrap("anniversary", txt));
+    return m.reply(novaWrap("anniversary", txt));
   }
 
   // === LIST ANNIVERSARIES IN GROUP ===
@@ -254,7 +254,7 @@ async function handler(m, { sock }) {
       }
 
       if (anniList.length === 0) {
-        return m.reply(claraWrap("anniversary", "Belum ada member di grup ini yang punya data anniversary."));
+        return m.reply(novaWrap("anniversary", "Belum ada member di grup ini yang punya data anniversary."));
       }
 
       // Sort by days descending (longest relationship first)
@@ -275,7 +275,7 @@ async function handler(m, { sock }) {
         txt += "\n... dan " + (anniList.length - 15) + " lainnya";
       }
 
-      return m.reply(claraWrap("anniversary", txt));
+      return m.reply(novaWrap("anniversary", txt));
     } catch (e) {
     await m.react("❌");
       return m.reply(novaError("Anniversary", "Gagal ambil data nih: " + e.message));
@@ -288,7 +288,7 @@ async function handler(m, { sock }) {
     const fun = userData.fun || {};
 
     if (!fun.jadiPacar && !fun.anniversaryDate) {
-      return m.reply(claraWrap("anniversary", "Kamu belum punya data anniversary untuk dihapus."));
+      return m.reply(novaWrap("anniversary", "Kamu belum punya data anniversary untuk dihapus."));
     }
 
     // Only delete custom anniversary date, keep jadiPacar from terima
@@ -303,7 +303,7 @@ async function handler(m, { sock }) {
     db.setUser(m.sender, userData);
     db.save();
 
-    return m.reply(claraWrap("Anniversary", "Data anniversary kamu telah dihapus."));
+    return m.reply(novaWrap("Anniversary", "Data anniversary kamu telah dihapus."));
   }
 
   // === HELP ===

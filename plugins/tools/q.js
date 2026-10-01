@@ -1,6 +1,6 @@
 import util from 'util'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "q",
     alias: ["q"],
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
 
         await m.reply(JSON.stringify(quoted, null, 2))
     } catch (err) {
-        await m.reply(claraWrap("q", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("q", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -9,7 +9,7 @@
 import fs from "fs";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
 import { sewaPrice } from "../../src/lib/sewa/sewa.js";
 
@@ -204,7 +204,7 @@ async function handler(m, { sock }) {
   // Cancel
   if (rawText === "batal" || rawText === "cancel") {
     buySewaSessions.delete(sender);
-    return m.reply(claraWrap("buysewa", "Pembelian sewa dibatalkan."));
+    return m.reply(novaWrap("buysewa", "Pembelian sewa dibatalkan."));
   }
 
   // Parse: .buysewa <durasi> [link-grup]
@@ -221,13 +221,13 @@ async function handler(m, { sock }) {
       const reg = await recordRegistration(sock, m, pkg, groupLink);
 
       if (reg.reason === "already") {
-        return m.reply(claraWrap("buysewa", `Grup ${reg.groupName} sudah terdaftar di sistem sewa\nTidak perlu daftar lagi`, "info"));
+        return m.reply(novaWrap("buysewa", `Grup ${reg.groupName} sudah terdaftar di sistem sewa\nTidak perlu daftar lagi`, "info"));
       }
       if (reg.reason === "pending") {
-        return m.reply(claraWrap("buysewa", `Grup ${reg.groupName} sudah ada pendaftar\nStatus: menunggu approve owner`, "info"));
+        return m.reply(novaWrap("buysewa", `Grup ${reg.groupName} sudah ada pendaftar\nStatus: menunggu approve owner`, "info"));
       }
       if (reg.reason === "invalid") {
-        return m.reply(claraWrap("buysewa", `Link grup tidak valid / tidak bisa diakses\n\nPastikan link undangan masih aktif\nFormat: https://chat.whatsapp.com/xxx`, "info"));
+        return m.reply(novaWrap("buysewa", `Link grup tidak valid / tidak bisa diakses\n\nPastikan link undangan masih aktif\nFormat: https://chat.whatsapp.com/xxx`, "info"));
       }
 
       await m.react("🕒");

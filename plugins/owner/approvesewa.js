@@ -5,7 +5,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { notifySewaApproved, notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
 import { grantSewaPremium } from "../../src/lib/nova-sewa-premium.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "approvesewa",
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
   const phoneNum = inputParts[0].replace(/\D/g, "");
   const customPrice = inputParts.slice(1).join(" ") || ""; // Optional: owner set harga manual
   if (!phoneNum) {
-    return m.reply(claraWrap("Approvesewa", "Format: *.approvesewa <nomor> [harga]*\n\nContoh:\n.approvesewa 628xxx\n.approvesewa 628xxx \"Rp 25.000\""));
+    return m.reply(novaWrap("Approvesewa", "Format: *.approvesewa <nomor> [harga]*\n\nContoh:\n.approvesewa 628xxx\n.approvesewa 628xxx \"Rp 25.000\""));
   }
 
   // Find registration by phone number
@@ -228,7 +228,7 @@ async function handler(m, { sock }) {
 
     return m.reply(ownerText);
   } catch (error) {
-    return m.reply(claraWrap("Error", "\u274c Gagal approve sewa: " + (error.message || "Unknown error")));
+    return m.reply(novaWrap("Error", "\u274c Gagal approve sewa: " + (error.message || "Unknown error")));
   }
 }
 

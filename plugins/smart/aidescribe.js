@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaHeader, separator, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -14,7 +14,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
-      await m.reply( claraWrap("AI Describe", ["Reply gambar dengan command ini",
+      await m.reply( novaWrap("AI Describe", ["Reply gambar dengan command ini",
         "AI akan mendeskripsikan isinya"].join("\n")), "aidescribe");
       return { handled: true };
     }
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
       systemPrompt: "Kamu adalah AI vision yang mendeskripsikan gambar.",
       image: base64,
     });
-    await m.reply(claraWrap("AI Describe", "👁️") + "\n\n" + result );
+    await m.reply(novaWrap("AI Describe", "👁️") + "\n\n" + result );
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

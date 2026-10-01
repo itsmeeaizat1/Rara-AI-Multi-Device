@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "roastbattle",
@@ -29,9 +29,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "challenge") {
       const target = m.mentionedJid?.[0];
-      if (!target) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}roastbattle challenge @user`, "info"));
-      if (target === sender) return m.reply(claraWrap("Info", "\u274c Tidak bisa challenge diri sendiri!"));
-      if (game.active) return m.reply(claraWrap("Roast Battle", "Sudah ada battle berjalan."));
+      if (!target) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}roastbattle challenge @user`, "info"));
+      if (target === sender) return m.reply(novaWrap("Info", "\u274c Tidak bisa challenge diri sendiri!"));
+      if (game.active) return m.reply(novaWrap("Roast Battle", "Sudah ada battle berjalan."));
       game.active = true;
       game.p1 = sender;
       game.p2 = target;
@@ -41,7 +41,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.scores = { [sender]: 0, [target]: 0 };
       game.state = "p1_turn";
       await db.save();
-      return m.reply(claraWrap("Roast Battle", [
+      return m.reply(novaWrap("Roast Battle", [
         `Roast Battle dimulai!`,
         `P1: @${sender.split("@")[0]}`,
         `P2: @${target.split("@")[0]}`,
@@ -52,11 +52,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "accept") {
-      if (!game.active || game.p2 !== sender) return m.reply(claraWrap("Roast Battle", "Kamu tidak di-challenge."));
-      if (game.state !== "p1_turn") return m.reply(claraWrap("Info", "\u23f3 Belum giliranmu."));
+      if (!game.active || game.p2 !== sender) return m.reply(novaWrap("Roast Battle", "Kamu tidak di-challenge."));
+      if (game.state !== "p1_turn") return m.reply(novaWrap("Info", "\u23f3 Belum giliranmu."));
       game.state = "p1_submit";
       await db.save();
-      return m.reply(claraWrap("Roast Battle", [
+      return m.reply(novaWrap("Roast Battle", [
         `Battle diterima!`,
         `@${game.p1.split("@")[0]}, kirim roast kamu!`,
         `Ketik: ${usedPrefix}roastbattle submit <roast kamu>`,
@@ -65,14 +65,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "submit") {
       const roastText = text.split(" ").slice(1).join(" ").trim();
-      if (!roastText) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}roastbattle submit <roast kamu>`, "info"));
-      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada battle aktif."));
+      if (!roastText) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}roastbattle submit <roast kamu>`, "info"));
+      if (!game.active) return m.reply(novaWrap("Info", "\u274c Tidak ada battle aktif."));
 
       if (game.state === "p1_submit") {
         game.roasts[game.p1].push(roastText);
         game.state = "p2_submit";
         await db.save();
-        return m.reply(claraWrap("Roast Battle", [
+        return m.reply(novaWrap("Roast Battle", [
           `Ronde ${game.round}: P1 sudah submit!`,
           `@${game.p2.split("@")[0]}, giliranmu!`,
           `Ketik: ${usedPrefix}roastbattle submit <roast kamu>`,
@@ -119,21 +119,21 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           game.active = false;
           game.state = "idle";
           await db.save();
-          return m.reply(claraWrap("Roast Battle", `${roundResult}\n\n${winner}`, "info"));
+          return m.reply(novaWrap("Roast Battle", `${roundResult}\n\n${winner}`, "info"));
         }
 
         game.round++;
         game.state = "p1_submit";
         await db.save();
-        return m.reply(claraWrap("Roast Battle", `${roundResult}\n\nRonde ${game.round} mulai!\n@${game.p1.split("@")[0]}, ketik ${usedPrefix}roastbattle submit <roast>`, "info"));
+        return m.reply(novaWrap("Roast Battle", `${roundResult}\n\nRonde ${game.round} mulai!\n@${game.p1.split("@")[0]}, ketik ${usedPrefix}roastbattle submit <roast>`, "info"));
       }
 
-      return m.reply(claraWrap("Roast Battle", "Tidak dalam fase submit."));
+      return m.reply(novaWrap("Roast Battle", "Tidak dalam fase submit."));
     }
 
     if (sub === "result" || sub === "score") {
-      if (!game.active && game.scores[game.p1] === undefined) return m.reply(claraWrap("Info", "\u274c Belum ada battle."));
-      return m.reply(claraWrap("Roast Battle", [
+      if (!game.active && game.scores[game.p1] === undefined) return m.reply(novaWrap("Info", "\u274c Belum ada battle."));
+      return m.reply(novaWrap("Roast Battle", [
         `Score saat ini:`,
         `P1 (@${game.p1?.split("@")[0] || "?"}): ${game.scores[game.p1] || 0}`,
         `P2 (@${game.p2?.split("@")[0] || "?"}): ${game.scores[game.p2] || 0}`,
@@ -150,10 +150,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.roasts = {};
       game.scores = {};
       await db.save();
-      return m.reply(claraWrap("Roast Battle", "Battle dihentikan."));
+      return m.reply(novaWrap("Roast Battle", "Battle dihentikan."));
     }
 
-    return m.reply(claraWrap("Roast Battle", [
+    return m.reply(novaWrap("Roast Battle", [
       `Roast Battle - 2 player saling roast, AI juri`,
       "",
       `Command:`,

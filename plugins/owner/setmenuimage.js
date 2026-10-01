@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import { setMenuImageMode, getMenuImage } from "../../src/lib/nova-asset-manager.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setmenuimage",
@@ -33,7 +33,7 @@ URL: *${current.url || "(kosong)"}*
  1. \`${prefix}setmenuimage asset\` → pakai gambar lokal
  2. \`${prefix}setmenuimage asset nova2\` → ganti key asset
  3. \`${prefix}setmenuimage url https://link-gambar.jpg\` → pakai URL`;
-    await m.reply(claraWrap("setmenuimage", txt));
+    await m.reply(novaWrap("setmenuimage", txt));
     return;
   }
 

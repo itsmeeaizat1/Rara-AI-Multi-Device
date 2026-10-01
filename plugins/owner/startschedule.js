@@ -3,7 +3,7 @@ import { startSchedulerByName, getFullSchedulerStatus } from '../../src/lib/nova
 import { initSholatScheduler } from '../../src/lib/nova-sholat-scheduler.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'startschedule',
     alias: ["startschedule"],
@@ -51,14 +51,14 @@ async function handler(m, { sock, args }) {
             const wasEnabled = db.setting('autoSholat');
             
             if (wasEnabled) {
-                await m.reply(claraWrap("Startschedule", `ℹ️ Sholat Scheduler sudah dalam keadaan aktif`));
+                await m.reply(novaWrap("Startschedule", `ℹ️ Sholat Scheduler sudah dalam keadaan aktif`));
                 return;
             }
             
             initSholatScheduler(sock);
             db.setting('autoSholat', true);
             
-            await m.reply(claraWrap("Startschedule", `▶️ *sCheduler Dimulai*
+            await m.reply(novaWrap("Startschedule", `▶️ *sCheduler Dimulai*
 
 │ Scheduler: *Sholat Scheduler*
 │ Status: ✅ Aktif
@@ -76,7 +76,7 @@ _Notifikasi waktu sholat akan dikirim ke grup yang mengaktifkan fitur ini_`));
         const result = startSchedulerByName(target, sock);
         
         if (result.started) {
-            await m.reply(claraWrap("Startschedule", `▶️ *sCheduler Dimulai*
+            await m.reply(novaWrap("Startschedule", `▶️ *sCheduler Dimulai*
 
 │ Scheduler: *${result.name}*
 │ Status: ✅ Aktif
@@ -89,7 +89,7 @@ Gunakan \`.startschedule\` untuk melihat daftar scheduler`; await m.reply(__navT
         }
     } catch (error) {
         console.error('[StartSchedule Error]', error);
-        await m.reply(claraWrap("startschedule", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(novaWrap("startschedule", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 

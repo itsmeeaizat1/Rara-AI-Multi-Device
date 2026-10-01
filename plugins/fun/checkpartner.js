@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cekpartner',
     alias: ["cekpartner"],
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     const jid = targetNumber + '@s.whatsapp.net'
 
     if (!info) {
-        return m.reply(claraWrap("Cekpartner", `❌ @${targetNumber} bukan partner`))
+        return m.reply(novaWrap("Cekpartner", `❌ @${targetNumber} bukan partner`))
     }
 
     const now = Date.now()
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
         lines.push(`Koin: ${user.koin === -1 ? '∞' : (user.koin ?? 0).toLocaleString('id-ID')}`);
     }
 
-    await m.reply(claraWrap("Cek Partner", lines), { mentions: [jid] });
+    await m.reply(novaWrap("Cek Partner", lines), { mentions: [jid] });
 }
 
 export { pluginConfig as config, handler }

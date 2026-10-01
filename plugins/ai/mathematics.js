@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 import te from '../../src/lib/nova-error.js'
 import axios from 'axios'
 import config from '../../config.js'
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       console.error("[mathematics.js] IkyyXD fallback failed:", ikyyErr.message);
     }
 
-        m.reply(claraWrap("matematika", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("matematika", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

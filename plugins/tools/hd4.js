@@ -5,7 +5,7 @@ import axios from "axios";
 import FormData from "form-data";
 import sharp from "sharp";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "reminiv2",
@@ -147,7 +147,7 @@ async function handler(m, { sock, args }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!isImage) {
-    return m.reply( claraWrap("Remini V2", [
+    return m.reply( novaWrap("Remini V2", [
       "All-in-one image enhancer: remini, recolor, unblur, upscale.",
       "",
       "CARA PAKAI (reply gambar):",
@@ -225,7 +225,7 @@ async function handler(m, { sock, args }) {
     if (useFx) modeLabel.push("Face FX");
     if (!wantEnhance && !wantRecolor && !wantUnblur) modeLabel.push("Enhance " + scale + "x");
 
-    await m.reply(claraWrap("Remini V2", [
+    await m.reply(novaWrap("Remini V2", [
       "Status: Memproses gambar...",
       "Mode: " + modeLabel.join(" + "),
       "Scale: " + scale + "x",
@@ -271,7 +271,7 @@ async function handler(m, { sock, args }) {
     const sizeMB = (processedBuffer.length / (1024 * 1024)).toFixed(2);
     const sizeLabel = sizeKB > 1024 ? sizeMB + "MB" : sizeKB + "KB";
 
-    let caption = claraWrap("Remini V2 - Done", [
+    let caption = novaWrap("Remini V2 - Done", [
       "Mode: " + modeLabel.join(" + "),
       "Scale: " + scale + "x",
       "Model: " + model,
@@ -303,7 +303,7 @@ async function handler(m, { sock, args }) {
   } catch (e) {
     await m.react("❌");
     console.error("[ReminiV2] Error:", e.message);
-    m.reply(claraWrap("Remini V2", [
+    m.reply(novaWrap("Remini V2", [
       "Gagal: " + e.message,
       "",
       "Coba: " + m.prefix + "remini | " + m.prefix + "hd | " + m.prefix + "reminiv3",

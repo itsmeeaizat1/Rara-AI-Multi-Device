@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import tls from "tls";
 
 const pluginConfig = {
@@ -77,7 +77,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const parts = text.split(/\s+/);
     if (parts.length < 2) {
-      return m.reply(claraWrap("CertCompare", "Butuh 2 domain!\n💡 *Contoh:* " + prefix + "certcompare google.com cloudflare.com"));
+      return m.reply(novaWrap("CertCompare", "Butuh 2 domain!\n💡 *Contoh:* " + prefix + "certcompare google.com cloudflare.com"));
     }
 
     const domain1 = parts[0].replace(/^https?:\/\//, "").replace(/\/.*$/, "");
@@ -88,7 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
       const lines = [];
       if (cert1.error) lines.push(domain1 + ": Error - " + cert1.error);
       if (cert2.error) lines.push(domain2 + ": Error - " + cert2.error);
-      return m.reply(claraWrap("CertCompare Error", lines.join("\n")));
+      return m.reply(novaWrap("CertCompare Error", lines.join("\n")));
     }
 
     // Comparison logic
@@ -147,11 +147,11 @@ async function handler(m, { sock, config: botConfig }) {
     if (!sameSelfSigned) diffs.push("self-signed");
     lines.push(diffs.length === 0 ? "Summary: Identical certificate properties" : "Differences: " + diffs.join(", "));
     await m.react("🐣");
-    return m.reply(claraWrap("CertCompare: " + domain1 + " vs " + domain2, lines.join("\n")));
+    return m.reply(novaWrap("CertCompare: " + domain1 + " vs " + domain2, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("certcompare error:", e);
-    return m.reply(claraWrap("CertCompare", "Error: " + e.message));
+    return m.reply(novaWrap("CertCompare", "Error: " + e.message));
   }
 }
 

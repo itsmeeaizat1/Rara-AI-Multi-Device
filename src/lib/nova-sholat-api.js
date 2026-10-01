@@ -2,7 +2,7 @@
 import axios from 'axios'
 import NodeCache from 'node-cache'
 import moment from 'moment-timezone'
-import { claraWrap } from './nova-menu-style.js'
+import { novaWrap } from './nova-menu-style.js'
 import { formatRemaining } from './nova-countdown.js'
 const BASE_URL = 'https://api.myquran.com/v2/sholat';
 const cache = new NodeCache({ stdTTL: 86400 });
@@ -113,13 +113,13 @@ function buildSholatCountdownCard(next, remainingMs, lokasi) {
     const besok = next.isTomorrow ? ' (besok)' : ''
     const lok = lokasi ? `📍 ${lokasi}\n` : ''
     if (done) {
-        return claraWrap(`Waktunya ${next.name}`,
+        return novaWrap(`Waktunya ${next.name}`,
             `🕌 *SUDAH WAKTU ${next.name.toUpperCase()}*\n` +
             `🕘 pukul ${next.timeStr} WIB${besok}\n` +
             lok +
             `\n_yuk sholat dulu, jangan ditunda! 🤲_`)
     }
-    return claraWrap(`Menuju ${next.name}`,
+    return novaWrap(`Menuju ${next.name}`,
         `🕒 *${formatRemaining(remainingMs)}* lagi\n` +
         `🕘 pukul ${next.timeStr} WIB${besok}\n` +
         lok +

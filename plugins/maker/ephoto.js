@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import FormData from 'form-data'
 import * as cheerio from 'cheerio'
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (command === 'ephoto') {
-        return m.reply(claraWrap("ephoto", [
+        return m.reply(novaWrap("ephoto", [
             "Buat efek text keren!",
             "",
             "Daftar efek:",
@@ -128,12 +128,12 @@ async function handler(m, { sock }) {
     }
     
     if (!text) {
-        return m.reply(claraWrap("ephoto", "Masukkan text!\n💡 Contoh: " + m.prefix + command + " Nova-AI"))
+        return m.reply(novaWrap("ephoto", "Masukkan text!\n💡 Contoh: " + m.prefix + command + " Nova-AI"))
     }
     
     const effectUrl = EFFECT_URLS[command]
     if (!effectUrl) {
-        return m.reply(claraWrap("ephoto", "Efek tidak ditemukan"))
+        return m.reply(novaWrap("ephoto", "Efek tidak ditemukan"))
     }
     try {
         await m.react("🕒");
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
         })
     } catch (error) {
         await m.react("❌");
-        m.reply(claraWrap("ephoto", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("ephoto", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

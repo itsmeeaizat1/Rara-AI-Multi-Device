@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "urlshortener",
@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[urlshortener.js]:', e.message); }
 
     const text =
-      claraWrap("URL Shortener", [`Original: *${url}*`,
+      novaWrap("URL Shortener", [`Original: *${url}*`,
         `Short: *${short}*`,
         "Status: *berhasil*"].join("\n")) +
       "\n" +

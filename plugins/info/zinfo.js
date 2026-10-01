@@ -15,7 +15,7 @@ import {
   infoTokengratis, infoGold, infoMountain, infoCrypto, infoGfinance, infoOngkir,
   ZEL_CRYPTO_COINS, _setZelInfoHttpForTest, _setZelInfoKeyForTest,
 } from "../../src/scraper/zelinfo.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "zinfo",
@@ -33,7 +33,7 @@ const fmt = (n) => { const x = Number(n); return (x === null || x === undefined 
 const short = (s, n = 120) => { const t = String(s || "").replace(/\s+/g, " ").trim(); return t.length > n ? t.slice(0, n) + "…" : t; };
 
 function usageCard() {
-  return claraWrap("zinfo", [
+  return novaWrap("zinfo", [
     "ℹ️ INFO SUITE (zelapi):",
     "",
     "▸ .ztokengratis — direktori provider AI gratis",
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
 
     if (command === "ztokengratis") {
       const r = await infoTokengratis();
-      if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("zinfo", `Tokengratis bermasalah: ${r.error}`)); }
+      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zinfo", `Tokengratis bermasalah: ${r.error}`)); }
       const lines = [`✅ PROVIDER AI GRATIS — ${r.total} direktori (tokengratis.id)`, ""];
       r.list.slice(0, 10).forEach((p, i) => {
         const row = [`${i + 1}. ${p.name}`];
@@ -67,11 +67,11 @@ async function handler(m, { sock }) {
         if (Array.isArray(p.modalities) && p.modalities.length) lines.push(`   🎛️ ${p.modalities.join("/")}`);
       });
       if (r.list.length > 10) lines.push("", `…+${r.list.length - 10} lagi — cek tokengratis.id`);
-      await m.reply(claraWrap("zinfo", lines.join("\n")));
+      await m.reply(novaWrap("zinfo", lines.join("\n")));
 
     } else if (command === "zgold") {
       const r = await infoGold();
-      if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("zinfo", `Gold bermasalah: ${r.error}`)); }
+      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zinfo", `Gold bermasalah: ${r.error}`)); }
       const g = r.gold;
       const last = Array.isArray(g.prices) ? g.prices[g.prices.length - 1] : null;
       const lines = ["✅ EMAS TREASURY (zelapi)", ""];
@@ -79,21 +79,21 @@ async function handler(m, { sock }) {
       if (mv) lines.push(`📈 ${mv.toUpperCase()} ${v(g.percentage) ? g.percentage + "%" : ""}`);
       if (v(g.price)) lines.push(`💰 ${fmt(g.price)}`);
       if (last && v(last.buy_price)) lines.push(`🟡 beli ${fmt(last.buy_price)} · jual ${fmt(last.sell_price)}`, `🕒 ${v(last.datetime) || ""}`);
-      await m.reply(claraWrap("zinfo", lines.join("\n")));
+      await m.reply(novaWrap("zinfo", lines.join("\n")));
 
     } else if (command === "zgunung") {
       const r = await infoMountain();
-      if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("zinfo", `Info gunung bermasalah: ${r.error}`)); }
+      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zinfo", `Info gunung bermasalah: ${r.error}`)); }
       const lines = ["✅ GUNUNG API AKTIF (magma.esdm.go.id)", ""];
       r.list.slice(0, 10).forEach((g, i) => {
         lines.push(`${i + 1}. 🌋 ${g.name} — ${g.level || "?"}`);
         if (v(g.description)) lines.push(`   ${short(g.description, 100)}`);
       });
-      await m.reply(claraWrap("zinfo", lines.join("\n")));
+      await m.reply(novaWrap("zinfo", lines.join("\n")));
 
     } else if (command === "zcrypto" || command === "zkrypto") {
       const r = await infoCrypto(args[0] || "btc");
-      if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("zinfo", `Crypto bermasalah: ${r.error}`)); }
+      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zinfo", `Crypto bermasalah: ${r.error}`)); }
       const c = r.crypto;
       const lines = [`✅ ${String(c.coin).toUpperCase()} (zelapi)`, ""];
       if (v(c.price)) lines.push(`💰 Rp ${fmt(c.price)}`);
@@ -101,11 +101,11 @@ async function handler(m, { sock }) {
       if (v(c.rsi)) lines.push(`📈 RSI ${c.rsi}`);
       if (v(c.signal)) lines.push(`🎯 Signal: ${c.signal}`);
       if (v(c.update)) lines.push("", `🕒 ${c.update}`);
-      await m.reply(claraWrap("zinfo", lines.join("\n")));
+      await m.reply(novaWrap("zinfo", lines.join("\n")));
 
     } else if (command === "zsaham") {
       const r = await infoGfinance(args.join(" "));
-      if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("zinfo", `Saham bermasalah: ${r.error}`)); }
+      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zinfo", `Saham bermasalah: ${r.error}`)); }
       const q = r.quote;
       const chg = Number(q.change);
       const pct = Number(q.change_percent);
@@ -116,13 +116,13 @@ async function handler(m, { sock }) {
       if (v(q.price)) lines.push(`💰 ${fmt(q.price)} ${q.currency || ""}`);
       if (!isNaN(chg)) lines.push(`${arrow}${fmt(chg)} (${!isNaN(pct) ? pct.toFixed(2) + "%" : ""}) hari ini`);
       if (v(q.previous_close)) lines.push(`⏮️ close kemarin ${fmt(q.previous_close)}`);
-      await m.reply(claraWrap("zinfo", lines.join("\n")));
+      await m.reply(novaWrap("zinfo", lines.join("\n")));
 
     } else if (command === "zongkir") {
       const parts = text.split("|").map((s) => s.trim());
-      if (parts.length < 2) { await m.react("❌"); return m.reply(claraWrap("zinfo", "Format: .zongkir <asal> | <tujuan> | <berat kg>")); }
+      if (parts.length < 2) { await m.react("❌"); return m.reply(novaWrap("zinfo", "Format: .zongkir <asal> | <tujuan> | <berat kg>")); }
       const r = await infoOngkir(parts[0], parts[1], parts[2] || "1");
-      if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("zinfo", `Ongkir bermasalah: ${r.error}`)); }
+      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zinfo", `Ongkir bermasalah: ${r.error}`)); }
       const lines = [`✅ ONGKIR ${r.weight} Kg (zelapi)`, "", `📍 ${r.route.origin || parts[0]}`, `🎯 ${r.route.destination || parts[1]}`, ""];
       r.couriers.slice(0, 6).forEach((c) => {
         lines.push(`🚚 ${c.name}`);
@@ -130,14 +130,14 @@ async function handler(m, { sock }) {
           lines.push(`   ▸ ${s.code || s.description} — ${s.price || "?"}${v(s.estimate) ? " · " + s.estimate.replace("Estimasi Tiba", "±") : ""}`);
         });
       });
-      await m.reply(claraWrap("zinfo", lines.join("\n")));
+      await m.reply(novaWrap("zinfo", lines.join("\n")));
     } else {
       return m.reply(usageCard());
     }
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(claraWrap("zinfo", `fitur error: ${e?.message || e}`));
+    await m.reply(novaWrap("zinfo", `fitur error: ${e?.message || e}`));
   }
 }
 

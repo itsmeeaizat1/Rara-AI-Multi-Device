@@ -18,7 +18,7 @@
 // URL aneh ditolak JELAS, file lama gak ketimpa.
 import fs from "fs";
 import path from "path";
-import { novaError, novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getYtProxyArgs } from "../../src/scraper/nova-ytdlp.js";
 
 const PROXY_PATH = path.join(process.cwd(), "data", "yt-proxy.txt");
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     const st = proxyStatus();
     if (!st) {
       return m.reply(
-        claraWrap("Yt Proxy", [
+        novaWrap("Yt Proxy", [
           "🔴 *tidak ada proxy terpasang*",
           "",
           "yt-dlp nyambung langsung dari IP server.",
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
       );
     }
     return m.reply(
-      claraWrap("Yt Proxy", [
+      novaWrap("Yt Proxy", [
         "🟢 *proxy aktif*",
         `• adres : ${maskProxy(st.url)}`,
         `• sumber : ${st.source}`,
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
   if (sub === "clear" || sub === "off") {
     if (process.env.NOVA_YTDLP_PROXY) {
       return m.reply(
-        claraWrap("Yt Proxy", [
+        novaWrap("Yt Proxy", [
           "🟡 ada proxy dari env *NOVA_YTDLP_PROXY* — env ini gak bisa dihapus dari chat.",
           "Hapus lewat file .env / konfigurasi VPS lalu restart bot.",
         ].join("\n")),
@@ -113,9 +113,9 @@ async function handler(m, { sock }) {
     }
     if (fs.existsSync(PROXY_PATH)) {
       fs.unlinkSync(PROXY_PATH);
-      return m.reply(claraWrap("Yt Proxy", ["🟡 *proxy dihapus* — yt-dlp balik nyambung langsung dari IP server."].join("\n")));
+      return m.reply(novaWrap("Yt Proxy", ["🟡 *proxy dihapus* — yt-dlp balik nyambung langsung dari IP server."].join("\n")));
     }
-    return m.reply(claraWrap("Yt Proxy", ["Tidak ada proxy tersimpan — sudah bersih dari awal."].join("\n")));
+    return m.reply(novaWrap("Yt Proxy", ["Tidak ada proxy tersimpan — sudah bersih dari awal."].join("\n")));
   }
 
   // ── Jalur utama: URL proxy ──────────────────────────────────
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
 
   await m.react("🐣");
   return m.reply(
-    claraWrap("Yt Proxy", [
+    novaWrap("Yt Proxy", [
       "🟢 *proxy youtube terpasang* 🎉",
       `• adres : ${maskProxy(res.url)}`,
       "• tersimpan : data/yt-proxy.txt",

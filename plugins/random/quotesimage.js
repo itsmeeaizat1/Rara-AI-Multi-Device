@@ -3,7 +3,7 @@ import axios from 'axios'
 import config from '../../config.js'
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
@@ -27,14 +27,14 @@ async function handler(m, { sock }) {
         const res = await f(`https://api.neoxr.eu/api/quotesimage?apikey=${NEOXR_APIKEY}`)
         
         if (!res.status || !res.data?.url) {
-            return m.reply(claraWrap("quotesimage", `Gagal mengambil quotes image`))
+            return m.reply(novaWrap("quotesimage", `Gagal mengambil quotes image`))
         }
         
         await sock.sendMedia(m.chat, res.data.url, null, m, {
             type: 'image'
         })
     } catch (err) {
-        return m.reply(claraWrap("quotesimage", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaWrap("quotesimage", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

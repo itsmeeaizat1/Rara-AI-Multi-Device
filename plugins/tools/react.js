@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .linkreact — react emoji ke pesan WA manapun via link (port engine lama reaction.js)
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "react",
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
       await m.react("⚡");
-      await m.reply(claraWrap("React", "Reaksi " + emoji + " udah dikirim ke link pesan itu."));
+      await m.reply(novaWrap("React", "Reaksi " + emoji + " udah dikirim ke link pesan itu."));
     } else {
       await m.react("❌");
       await m.reply(novaError("React", "Gagal: " + JSON.stringify(data).slice(0, 120)));

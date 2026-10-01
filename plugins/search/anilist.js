@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // anilist.js — AniList GraphQL: search, seasonal, top, detail (no API key)
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -47,7 +47,7 @@ async function handler(m, { sock, config, db }) {
     const query = m.args?.slice(1).join(" ") || "";
 
     if (!sub || sub === "help") {
-      return m.reply(claraWrap("AniList", [
+      return m.reply(novaWrap("AniList", [
         "Cari anime dari AniList database",
         "",
         "📌 *Cara Pakai:*",
@@ -82,7 +82,7 @@ async function handler(m, { sock, config, db }) {
       );
       const list = data?.Page?.media || [];
       if (!list.length) {
-        return m.reply(claraWrap("AniList", "Tidak ada anime musim ini."));
+        return m.reply(novaWrap("AniList", "Tidak ada anime musim ini."));
       }
       text = `Anime Musim ${season} ${year}\n\n` + list.map(fmtAnime).join("\n\n");
     }
@@ -104,7 +104,7 @@ async function handler(m, { sock, config, db }) {
       );
       const a = data?.Media;
       if (!a) {
-        return m.reply(claraWrap("AniList", `Anime dengan ID ${id} tidak ditemukan.`));
+        return m.reply(novaWrap("AniList", `Anime dengan ID ${id} tidak ditemukan.`));
       }
       const title = a.title?.romaji || a.title?.english || "Unknown";
       const desc = (a.description || "No description").replace(/<[^>]+>/g, "").slice(0, 300);
@@ -113,13 +113,13 @@ async function handler(m, { sock, config, db }) {
       text = `${title}\n\n★ ${a.averageScore || "N/A"}/100\n${a.format || "?"} | ${a.episodes || "?"} eps | ${a.duration || "?"} min/eps\nStatus: ${a.status || "?"}\nGenre: ${genres}\nStudio: ${studio}\n\n${desc}...`;
     }
     else {
-      return m.reply(claraWrap("AniList", [
+      return m.reply(novaWrap("AniList", [
         "Command tidak dikenal.",
         `Lihat: ${m.prefix}anilist help`,
       ]));
     }
     await m.react("🐣");
-    return m.reply(claraWrap("AniList", text));
+    return m.reply(novaWrap("AniList", text));
   } catch (e) {
     console.error("[anilist] error:", e.message);
     await m.react("❌");

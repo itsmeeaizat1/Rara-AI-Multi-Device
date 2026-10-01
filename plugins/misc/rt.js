@@ -2,7 +2,7 @@
 // rt.js — Bot runtime info
 import os from "os";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const startTime = Date.now();
 
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("rt error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("rt", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("rt", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

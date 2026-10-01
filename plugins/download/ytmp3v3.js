@@ -2,7 +2,7 @@
 // ytmp3v3.js — YouTube MP3 v3 (@distube/ytdl-core, direct engine)
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
   try {
     const url = m.args.join(" ").trim();
     if (!url || !url.match(/youtu\.?be/i)) {
-      return m.reply(claraWrap("ytmp3v3", `Kirim URL YouTube yang valid.\n\nContoh: ${m.prefix}ytmp3v3 https://youtu.be/dQw4w9WgXcQ`, "guide"));
+      return m.reply(novaWrap("ytmp3v3", `Kirim URL YouTube yang valid.\n\nContoh: ${m.prefix}ytmp3v3 https://youtu.be/dQw4w9WgXcQ`, "guide"));
     }
 
     await m.react("🕒");
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     const audioFormat = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" });
     if (!audioFormat) {
       await m.react("❌");
-      return m.reply(claraWrap("ytmp3v3", "Gagal mendapatkan audio stream.", "error"));
+      return m.reply(novaWrap("ytmp3v3", "Gagal mendapatkan audio stream.", "error"));
     }
 
     // Download to buffer
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("ytmp3v3 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("ytmp3v3", err.message || "Error. Mungkin video private/age-restricted.", "error"));
+    return m.reply(novaWrap("ytmp3v3", err.message || "Error. Mungkin video private/age-restricted.", "error"));
   }
 }
 

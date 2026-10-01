@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // jadigta — Ubah foto menjadi karakter GTA via Gemini Flash (IkyyXD)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(claraWrap("JadiGTA", [
+      return m.reply(novaWrap("JadiGTA", [
         "Ubah foto menjadi karakter GTA style",
         "",
         "CARA PAKAI:",
@@ -59,16 +59,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: claraWrap("JadiGTA", "Berhasil mengubah foto ke GTA style"),
+        caption: novaWrap("JadiGTA", "Berhasil mengubah foto ke GTA style"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("JadiGTA", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
+      await m.reply(novaWrap("JadiGTA", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
     }
   } catch (e) {
     console.error("[gtastyle.js]:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("JadiGTA", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("JadiGTA", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

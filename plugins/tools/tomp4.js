@@ -5,7 +5,7 @@ import path from "path";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import ffmpeg from "fluent-ffmpeg";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
     }
 
     if (!downloadFn) {
-      return m.reply(claraWrap("tomp4", "Reply atau kirim stiker animasi untuk diubah menjadi MP4.", "guide"));
+      return m.reply(novaWrap("tomp4", "Reply atau kirim stiker animasi untuk diubah menjadi MP4.", "guide"));
     }
 
     await m.react("🕒");
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     const buffer = await downloadFn();
     if (!buffer || buffer.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("tomp4", "❌ Gagal mengunduh stiker."));
+      return m.reply(novaWrap("tomp4", "❌ Gagal mengunduh stiker."));
     }
 
     const animated = isAnimatedWebp(buffer);
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
     const gifBuffer = await webpToGif(buffer);
     if (!gifBuffer) {
       await m.react("❌");
-      return m.reply(claraWrap("tomp4", "❌ Stiker tidak dapat dikonversi."));
+      return m.reply(novaWrap("tomp4", "❌ Stiker tidak dapat dikonversi."));
     }
 
     const mp4Buffer = await gifToMp4(gifBuffer);
@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("tomp4 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("tomp4", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("tomp4", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

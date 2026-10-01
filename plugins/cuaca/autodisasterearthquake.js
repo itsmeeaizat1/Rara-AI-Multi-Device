@@ -5,7 +5,7 @@
  *        .gempa dirasakan, .gempa list. Data resmi BMKG.
  *        FIX: branch dirasakan/terkini yang dulu crash (gempaList undefined).
  */
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gempa",
@@ -60,7 +60,7 @@ function buildGempaCard(g) {
   ];
   if (g.Potensi) lines.push(`⚡ Potensi: ${g.Potensi}`);
   if (g.Dirasakan) lines.push(`🏠 Dirasakan: ${g.Dirasakan}`);
-  return claraWrap("Gempa", lines.join("\n"));
+  return novaWrap("Gempa", lines.join("\n"));
 }
 
 async function handler(m, { sock }) {
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
       if (!settled) await m.reply(card);
 
       if (shakemapUrl) {
-        try { await sock.sendMedia(m.chat, { url: shakemapUrl }, claraWrap("Gempa", "🗺 Shakemap — area guncangan gempa"), m, { type: "image" }); } catch {}
+        try { await sock.sendMedia(m.chat, { url: shakemapUrl }, novaWrap("Gempa", "🗺 Shakemap — area guncangan gempa"), m, { type: "image" }); } catch {}
       }
       await m.react("🐣");
       return;
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       await m.react("🧠");
       const data = await fetchJson(API_BASE + "/gempadirasakan.json");
       const gempaList = (data.Infogempa || {}).gempa || [];
-      if (!gempaList.length) return m.reply(claraWrap("Gempa", "Gak ada data gempa dirasakan saat ini."));
+      if (!gempaList.length) return m.reply(novaWrap("Gempa", "Gak ada data gempa dirasakan saat ini."));
       const limit = Math.min(10, gempaList.length);
       const lines = [`🌍 *${limit} GEMPA DIRASAKAN TERBARU*`, ""];
       for (let i = 0; i < limit; i++) {
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
         lines.push("");
       }
       lines.push("Sumber: BMKG (data.bmkg.go.id)");
-      await m.reply(claraWrap("Gempa", lines.join("\n")));
+      await m.reply(novaWrap("Gempa", lines.join("\n")));
       await m.react("🐣");
       return;
     }
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
       await m.react("🧠");
       const data = await fetchJson(API_BASE + "/gempaterkini.json");
       const gempaList = (data.Infogempa || {}).gempa || [];
-      if (!gempaList.length) return m.reply(claraWrap("Gempa", "Gak ada data gempa terkini saat ini."));
+      if (!gempaList.length) return m.reply(novaWrap("Gempa", "Gak ada data gempa terkini saat ini."));
       const limit = Math.min(15, gempaList.length);
       const lines = [`🌍 *${limit} GEMPA M 5.0+ TERBARU*`, ""];
       for (let i = 0; i < limit; i++) {
@@ -139,13 +139,13 @@ async function handler(m, { sock }) {
         lines.push("");
       }
       lines.push("Sumber: BMKG (data.bmkg.go.id)");
-      await m.reply(claraWrap("Gempa", lines.join("\n")));
+      await m.reply(novaWrap("Gempa", lines.join("\n")));
       await m.react("🐣");
       return;
     }
 
     // ── HELP ──
-    return m.reply(claraWrap("Gempa", [
+    return m.reply(novaWrap("Gempa", [
       "🌍 Data gempa langsung dari BMKG Indonesia.",
       "",
       "Perintah:",
@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     console.error("[gempa]", error.message || error);
     await m.react("❌");
-    return m.reply(claraWrap("Gempa", "Ada error nih, coba lagi ya — BMKG lagi sibuk atau koneksinya gangguan."));
+    return m.reply(novaWrap("Gempa", "Ada error nih, coba lagi ya — BMKG lagi sibuk atau koneksinya gangguan."));
   }
 }
 

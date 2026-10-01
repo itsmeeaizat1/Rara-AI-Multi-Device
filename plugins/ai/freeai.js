@@ -5,7 +5,7 @@
 // .freeaiimage <ratio> <prompt> — rasio 1:1 | 9:16 | 16:9 | 4:3 | 3:4 | 3:2 | 2:3 | 21:9
 
 import { freeAIChat, freeAIImage, FREEAI_RATIOS } from "../../src/scraper/freeai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const DEFAULT_SYSTEM = "Kamu adalah Nova AI, asisten yang ramah dan menjawab dengan singkat, padat, dan akurat. Balas dalam bahasa yang dipakai user (default bahasa Indonesia).";
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
 
     // help
     if (!image && (sub === "help" || sub === "?")) {
-      return m.reply(claraWrap("freeai",
+      return m.reply(novaWrap("freeai",
         `🆓 FREE AI — gratis tanpa API key\n\n` +
         `💬 CHAT\n.freeai <pesan>\n\n` +
         `🎨 BUAT GAMBAR\n.freeaiimage <prompt>\n.freeaiimage <ratio> <prompt>\n\n` +
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
         const r = tokens[ratioIdx];
         if (!FREEAI_RATIOS.includes(r)) {
           await m.react("❌");
-          return m.reply(claraWrap("freeai",
+          return m.reply(novaWrap("freeai",
             `📐 Ratio *${r}* gak dikenal.\n\nPilihan: ${ratioHelp()}`, "warn"));
         }
         ratio = r;
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     }
 
     if (!prompt) {
-      return m.reply(claraWrap("freeai",
+      return m.reply(novaWrap("freeai",
         image
           ? `🎨 Mau bikin gambar apa?\n\n.freeaiimage <prompt>\n.freeaiimage <ratio> <prompt>\n\n📐 Ratio: ${ratioHelp()}\n\nContoh: ${m.prefix}freeaiimage 9:16 naga kartun`
           : `💬 Mau nanya apa?\n\n.freeai <pesan>\n\nContoh: ${m.prefix}freeai apa itu AI?`, "guide"));
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("freeai error:", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("freeai",
+    return m.reply(novaWrap("freeai",
       /balasan AI kosong|gambar gak terkirim/.test(err?.message || "")
         ? te(m.prefix, m.command, m.pushName)
         : `free.ai lagi bermasalah: ${err.message}\n\nCoba lagi sebentar ya.`,

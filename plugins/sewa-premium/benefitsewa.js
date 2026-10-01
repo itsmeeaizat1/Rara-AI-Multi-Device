@@ -4,7 +4,7 @@
 // Sistem sewa: sewaChecker (nova-scheduler.js) cek tiap 10 mnt — expired → bot auto keluar grup
 import config from '../../config.js'
 import { sewaPrice } from '../../src/lib/sewa/sewa.js'
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: 'benefitsewa',
@@ -64,7 +64,7 @@ async function handler(m) {
     `---\n\n` +
     `Mau sewa? bayar langsung via .buysewa atau hubungi owner\n${config.owner.number.map(num => `- wa.me/${num}`).join('\n')}`
 
-  await m.reply(claraWrap("benefitsewa", message))
+  await m.reply(novaWrap("benefitsewa", message))
 }
 
 export { pluginConfig as config, handler }

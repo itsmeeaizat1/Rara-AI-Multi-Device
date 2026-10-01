@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tribe",
@@ -53,16 +53,16 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "create" || sub === "buat") {
     if (findUserTribe()) {
-      await m.reply(claraWrap("Tribe", "Kamu sudah di tribe. Keluar dulu: " + prefix + "tribe leave."));
+      await m.reply(novaWrap("Tribe", "Kamu sudah di tribe. Keluar dulu: " + prefix + "tribe leave."));
       return { handled: true };
     }
     const name = args.slice(2).join(" ").trim();
     if (!name || name.length > 20) {
-      await m.reply(claraWrap("Tribe", "Format: " + prefix + "tribe create <nama max 20 huruf>"));
+      await m.reply(novaWrap("Tribe", "Format: " + prefix + "tribe create <nama max 20 huruf>"));
       return { handled: true };
     }
     if (Object.keys(cfg.tribes).some(t => t.toLowerCase() === name.toLowerCase())) {
-      await m.reply(claraWrap("Tribe", "Nama tribe sudah dipakai."));
+      await m.reply(novaWrap("Tribe", "Nama tribe sudah dipakai."));
       return { handled: true };
     }
     cfg.counter++;
@@ -80,41 +80,41 @@ async function handler(m, { sock, db, config: botConfig }) {
       createdAt: Date.now(),
     };
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Tribe", "Tribe \"" + name + "\" dibuat!\nLeader: @" + m.sender.split("@")[0] + "\nTerritory: 3 | Resources: 100\nKetik " + prefix + "tribe info untuk cek."), { mentions: [m.sender] });
+    await m.reply(novaWrap("Tribe", "Tribe \"" + name + "\" dibuat!\nLeader: @" + m.sender.split("@")[0] + "\nTerritory: 3 | Resources: 100\nKetik " + prefix + "tribe info untuk cek."), { mentions: [m.sender] });
     return { handled: true };
   }
 
   if (sub === "join" || sub === "gabung") {
     if (findUserTribe()) {
-      await m.reply(claraWrap("Tribe", "Kamu sudah di tribe. Keluar dulu: " + prefix + "tribe leave."));
+      await m.reply(novaWrap("Tribe", "Kamu sudah di tribe. Keluar dulu: " + prefix + "tribe leave."));
       return { handled: true };
     }
     const name = args.slice(2).join(" ").trim();
     if (!name) {
-      await m.reply(claraWrap("Tribe", "Format: " + prefix + "tribe join <nama tribe>"));
+      await m.reply(novaWrap("Tribe", "Format: " + prefix + "tribe join <nama tribe>"));
       return { handled: true };
     }
     const tribe = cfg.tribes[name];
     if (!tribe) {
-      await m.reply(claraWrap("Tribe", "Tribe tidak ditemukan. Ketik " + prefix + "tribe list."));
+      await m.reply(novaWrap("Tribe", "Tribe tidak ditemukan. Ketik " + prefix + "tribe list."));
       return { handled: true };
     }
     if (tribe.members.length >= MAX_MEMBERS) {
-      await m.reply(claraWrap("Tribe", "Tribe penuh (max " + MAX_MEMBERS + " member)."));
+      await m.reply(novaWrap("Tribe", "Tribe penuh (max " + MAX_MEMBERS + " member)."));
       return { handled: true };
     }
     tribe.members.push(m.sender);
     tribe.attackPower += 5;
     tribe.defensePower += 5;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Tribe", "Bergabung dengan \"" + name + "\"!\nMembers: " + tribe.members.length + "/" + MAX_MEMBERS + "\nAttack: " + tribe.attackPower + " | Defense: " + tribe.defensePower));
+    await m.reply(novaWrap("Tribe", "Bergabung dengan \"" + name + "\"!\nMembers: " + tribe.members.length + "/" + MAX_MEMBERS + "\nAttack: " + tribe.attackPower + " | Defense: " + tribe.defensePower));
     return { handled: true };
   }
 
   if (sub === "leave" || sub === "keluar") {
     const my = findUserTribe();
     if (!my) {
-      await m.reply(claraWrap("Tribe", "Kamu tidak di tribe manapun."));
+      await m.reply(novaWrap("Tribe", "Kamu tidak di tribe manapun."));
       return { handled: true };
     }
     my.tribe.members = my.tribe.members.filter(jid => jid !== m.sender);
@@ -123,11 +123,11 @@ async function handler(m, { sock, db, config: botConfig }) {
     if (my.tribe.members.length === 0) {
       delete cfg.tribes[my.name];
       saveConfig(db, gid, cfg);
-      await m.reply(claraWrap("Tribe", "Keluar dari \"" + my.name + "\". Tribe bubar (0 member)."));
+      await m.reply(novaWrap("Tribe", "Keluar dari \"" + my.name + "\". Tribe bubar (0 member)."));
     } else {
       if (my.tribe.leader === m.sender) my.tribe.leader = my.tribe.members[0];
       saveConfig(db, gid, cfg);
-      await m.reply(claraWrap("Tribe", "Keluar dari \"" + my.name + "\". Leader baru: @" + my.tribe.leader.split("@")[0]), { mentions: [my.tribe.leader] });
+      await m.reply(novaWrap("Tribe", "Keluar dari \"" + my.name + "\". Leader baru: @" + my.tribe.leader.split("@")[0]), { mentions: [my.tribe.leader] });
     }
     return { handled: true };
   }
@@ -135,22 +135,22 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "attack" || sub === "serang") {
     const my = findUserTribe();
     if (!my) {
-      await m.reply(claraWrap("Tribe", "Kamu tidak di tribe. Ketik " + prefix + "tribe create/join."));
+      await m.reply(novaWrap("Tribe", "Kamu tidak di tribe. Ketik " + prefix + "tribe create/join."));
       return { handled: true };
     }
     const targetName = args.slice(2).join(" ").trim();
     if (!targetName) {
-      await m.reply(claraWrap("Tribe", "Format: " + prefix + "tribe attack <nama tribe musuh>"));
+      await m.reply(novaWrap("Tribe", "Format: " + prefix + "tribe attack <nama tribe musuh>"));
       return { handled: true };
     }
     const target = cfg.tribes[targetName];
     if (!target || targetName === my.name) {
-      await m.reply(claraWrap("Tribe", "Tribe target tidak ditemukan atau itu tribe sendiri."));
+      await m.reply(novaWrap("Tribe", "Tribe target tidak ditemukan atau itu tribe sendiri."));
       return { handled: true };
     }
     const cost = 20;
     if (my.tribe.resources < cost) {
-      await m.reply(claraWrap("Tribe", "Resources tidak cukup! Butuh " + cost + ", punya " + my.tribe.resources + "."));
+      await m.reply(novaWrap("Tribe", "Resources tidak cukup! Butuh " + cost + ", punya " + my.tribe.resources + "."));
       return { handled: true };
     }
     my.tribe.resources -= cost;
@@ -178,7 +178,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     cfg.warHistory.push({ attacker: my.name, defender: targetName, win, ts: Date.now() });
     saveConfig(db, gid, cfg);
 
-    await m.reply(claraWrap("Tribe War", [
+    await m.reply(novaWrap("Tribe War", [
       "ATTACK: " + my.name + " VS " + targetName,
       "",
       "Attack Power: " + my.tribe.attackPower + " (roll: " + Math.floor(attackRoll) + ")",
@@ -195,40 +195,40 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "gather" || sub === "kumpul") {
     const my = findUserTribe();
     if (!my) {
-      await m.reply(claraWrap("Tribe", "Kamu tidak di tribe."));
+      await m.reply(novaWrap("Tribe", "Kamu tidak di tribe."));
       return { handled: true };
     }
     const gain = Math.floor(Math.random() * 20) + 10;
     my.tribe.resources += gain;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Tribe", "Kumpul resources! +" + gain + "\nTotal resources: " + my.tribe.resources));
+    await m.reply(novaWrap("Tribe", "Kumpul resources! +" + gain + "\nTotal resources: " + my.tribe.resources));
     return { handled: true };
   }
 
   if (sub === "upgrade" || sub === "tingkatkan") {
     const my = findUserTribe();
     if (!my) {
-      await m.reply(claraWrap("Tribe", "Kamu tidak di tribe."));
+      await m.reply(novaWrap("Tribe", "Kamu tidak di tribe."));
       return { handled: true };
     }
     const type = (args[2] || "").toLowerCase();
     const cost = 50;
     if (my.tribe.resources < cost) {
-      await m.reply(claraWrap("Tribe", "Resources tidak cukup! Butuh " + cost + ", punya " + my.tribe.resources + "."));
+      await m.reply(novaWrap("Tribe", "Resources tidak cukup! Butuh " + cost + ", punya " + my.tribe.resources + "."));
       return { handled: true };
     }
     if (type === "attack" || type === "serang") {
       my.tribe.resources -= cost;
       my.tribe.attackPower += 10;
       saveConfig(db, gid, cfg);
-      await m.reply(claraWrap("Tribe", "Attack power naik! +10\nAttack: " + my.tribe.attackPower + " | Resources: " + my.tribe.resources));
+      await m.reply(novaWrap("Tribe", "Attack power naik! +10\nAttack: " + my.tribe.attackPower + " | Resources: " + my.tribe.resources));
     } else if (type === "defense" || type === "pertahanan") {
       my.tribe.resources -= cost;
       my.tribe.defensePower += 10;
       saveConfig(db, gid, cfg);
-      await m.reply(claraWrap("Tribe", "Defense power naik! +10\nDefense: " + my.tribe.defensePower + " | Resources: " + my.tribe.resources));
+      await m.reply(novaWrap("Tribe", "Defense power naik! +10\nDefense: " + my.tribe.defensePower + " | Resources: " + my.tribe.resources));
     } else {
-      await m.reply(claraWrap("Tribe", "Type: attack atau defense\n💡 *Contoh:* " + prefix + "tribe upgrade attack\nCost: " + cost + " resources"));
+      await m.reply(novaWrap("Tribe", "Type: attack atau defense\n💡 *Contoh:* " + prefix + "tribe upgrade attack\nCost: " + cost + " resources"));
     }
     return { handled: true };
   }
@@ -236,11 +236,11 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "info" || sub === "cek") {
     const my = findUserTribe();
     if (!my) {
-      await m.reply(claraWrap("Tribe", "Kamu tidak di tribe. Ketik " + prefix + "tribe create/join."));
+      await m.reply(novaWrap("Tribe", "Kamu tidak di tribe. Ketik " + prefix + "tribe create/join."));
       return { handled: true };
     }
     const memberList = my.tribe.members.map(jid => "@" + jid.split("@")[0]).join(", ");
-    await m.reply(claraWrap("Tribe: " + my.name, [
+    await m.reply(novaWrap("Tribe: " + my.name, [
       "Leader: @" + my.tribe.leader.split("@")[0],
       "Members: " + my.tribe.members.length + "/" + MAX_MEMBERS,
       "Territory: " + my.tribe.territory,
@@ -256,26 +256,26 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "list" || sub === "daftar" || !sub) {
     const tribes = Object.values(cfg.tribes);
     if (tribes.length === 0) {
-      await m.reply(claraWrap("Tribe", "Belum ada tribe.\n" + prefix + "tribe create <nama> untuk buat."));
+      await m.reply(novaWrap("Tribe", "Belum ada tribe.\n" + prefix + "tribe create <nama> untuk buat."));
       return { handled: true };
     }
     const list = tribes.sort((a, b) => b.territory - a.territory).map((t, i) => (i + 1) + ". " + t.name + " - Territory: " + t.territory + ", Members: " + t.members.length + ", W/L: " + t.wins + "/" + t.losses).join("\n");
-    await m.reply(claraWrap("Tribe List", "Ranking:\n" + list));
+    await m.reply(novaWrap("Tribe List", "Ranking:\n" + list));
     return { handled: true };
   }
 
   if (sub === "warhistory" || sub === "riwayat") {
     const recent = cfg.warHistory.slice(-5).reverse();
     if (recent.length === 0) {
-      await m.reply(claraWrap("Tribe", "Belum ada perang."));
+      await m.reply(novaWrap("Tribe", "Belum ada perang."));
       return { handled: true };
     }
     const list = recent.map(w => (w.win ? "WON" : "LOST") + " - " + w.attacker + " vs " + w.defender + " (" + new Date(w.ts).toLocaleDateString("id-ID") + ")").join("\n");
-    await m.reply(claraWrap("Tribe War History", "Perang terakhir:\n" + list));
+    await m.reply(novaWrap("Tribe War History", "Perang terakhir:\n" + list));
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Tribe", [
+  await m.reply(novaWrap("Tribe", [
     "TRIBE WAR - MINI STRATEGY",
     "",
     prefix + "tribe create <nama> - buat tribe",

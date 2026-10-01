@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     const isChristmasSeason = month === 12;
 
     const text =
-      claraWrap("Christmas", [`Hai *${userName}*!`,
+      novaWrap("Christmas", [`Hai *${userName}*!`,
         isChristmasSeason ? "Musim Natal aktif! 🎅" : "Khusus hari Natal!",
         "Selamat Natal! 🎄",
         "Damai dan bahagia selalu."].join("\n")) +

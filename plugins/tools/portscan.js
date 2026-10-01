@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import net from "net";
 
 const pluginConfig = {
@@ -96,7 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
     const parts = text.split(/\s+/);
     const host = parts[0].replace(/^https?:\/\//, "").replace(/\/.*$/, "").trim();
     if (!host) {
-      return m.reply(claraWrap("PortScan", "Host tidak boleh kosong!"));
+      return m.reply(novaWrap("PortScan", "Host tidak boleh kosong!"));
     }
 
     let portsToScan;
@@ -110,11 +110,11 @@ async function handler(m, { sock, config: botConfig }) {
       if (portStr.includes("-")) {
         const [start, end] = portStr.split("-").map((n) => parseInt(n));
         if (isNaN(start) || isNaN(end) || start < 1 || end > 65535 || start > end) {
-          return m.reply(claraWrap("PortScan", "Range port invalid!\n💡 *Contoh:* 1-100"));
+          return m.reply(novaWrap("PortScan", "Range port invalid!\n💡 *Contoh:* 1-100"));
         }
         const range = end - start + 1;
         if (range > 50) {
-          return m.reply(claraWrap("PortScan", "Maksimal 50 port dalam satu scan!"));
+          return m.reply(novaWrap("PortScan", "Maksimal 50 port dalam satu scan!"));
         }
         portsToScan = [];
         for (let p = start; p <= end; p++) portsToScan.push(p);
@@ -122,10 +122,10 @@ async function handler(m, { sock, config: botConfig }) {
         // Comma separated
         const portList = portStr.split(",").map((n) => parseInt(n.trim())).filter((n) => !isNaN(n) && n > 0 && n <= 65535);
         if (portList.length === 0) {
-          return m.reply(claraWrap("PortScan", "Port tidak valid!"));
+          return m.reply(novaWrap("PortScan", "Port tidak valid!"));
         }
         if (portList.length > 20) {
-          return m.reply(claraWrap("PortScan", "Maksimal 20 port custom!"));
+          return m.reply(novaWrap("PortScan", "Maksimal 20 port custom!"));
         }
         portsToScan = [...new Set(portList)];
       }
@@ -164,11 +164,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     await m.react("🐣");
-    return m.reply(claraWrap("Port Scan: " + host, lines.join("\n")));
+    return m.reply(novaWrap("Port Scan: " + host, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("portscan error:", e);
-    return m.reply(claraWrap("PortScan", "Error: " + e.message));
+    return m.reply(novaWrap("PortScan", "Error: " + e.message));
   }
 }
 

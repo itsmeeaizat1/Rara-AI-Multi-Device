@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "alquran",
@@ -77,14 +77,14 @@ async function handler(m, { sock }) {
     if (subCmd === "setqari") {
       const qariKey = args[1];
       if (!qariKey || !QARIS[qariKey]) {
-        return m.reply(claraWrap("alquran", "Qari tidak ditemukan!\nLihat: .alquran qari"));
+        return m.reply(novaWrap("alquran", "Qari tidak ditemukan!\nLihat: .alquran qari"));
       }
       const db = getDatabase();
       const user = db.getUser(m.sender);
       if (!user.settings) user.settings = {};
       user.settings.qari = qariKey;
       db.save();
-      return m.reply(claraWrap("Info", "✅ Qari diset ke: *" + QARIS[qariKey].name + "*\nAudio sekarang pakai qari ini."));
+      return m.reply(novaWrap("Info", "✅ Qari diset ke: *" + QARIS[qariKey].name + "*\nAudio sekarang pakai qari ini."));
     }
 
     // AUDIO MODE
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
       const ayatNum = args[2] ? parseInt(args[2]) : null;
 
       if (!suratNum || suratNum < 1 || suratNum > 114) {
-        return m.reply(claraWrap("Alquran", "Format: .alquran audio <surat> [ayat]\n💡 *Contoh:* .alquran audio 1 1"));
+        return m.reply(novaWrap("Alquran", "Format: .alquran audio <surat> [ayat]\n💡 *Contoh:* .alquran audio 1 1"));
       }
 
       const surah = await getSurah(suratNum);
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
 
       if (ayatNum) {
         if (ayatNum < 1 || ayatNum > surah.numberOfAyahs) {
-          return m.reply(claraWrap("Info", "❌ Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
+          return m.reply(novaWrap("Info", "❌ Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
         }
 
         const [audioRes, indoRes] = await Promise.all([
@@ -132,7 +132,7 @@ async function handler(m, { sock }) {
         }
 
         if (surah.numberOfAyahs > 5) {
-          await m.reply(claraWrap("Info", "ℹ️ Hanya 5 ayat pertama dikirim.\nAyat spesifik: .alquran audio " + suratNum + " <ayat>"));
+          await m.reply(novaWrap("Info", "ℹ️ Hanya 5 ayat pertama dikirim.\nAyat spesifik: .alquran audio " + suratNum + " <ayat>"));
         }
         return;
       }
@@ -143,14 +143,14 @@ async function handler(m, { sock }) {
     const ayatNum = args[1] ? parseInt(args[1]) : null;
 
     if (!suratNum || suratNum < 1 || suratNum > 114) {
-      return m.reply(claraWrap("Alquran", "Format tidak valid!\n\nKetik .alquran help buat lihat cara pakai."));
+      return m.reply(novaWrap("Alquran", "Format tidak valid!\n\nKetik .alquran help buat lihat cara pakai."));
     }
 
     const surah = await getSurah(suratNum);
 
     if (ayatNum) {
       if (ayatNum < 1 || ayatNum > surah.numberOfAyahs) {
-        return m.reply(claraWrap("Info", "❌ Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
+        return m.reply(novaWrap("Info", "❌ Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
       }
 
       // Fetch Arabic + Indonesian + audio
@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     await m.react("❌");
-    return m.reply(claraWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));
+    return m.reply(novaWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));
   }
 }
 

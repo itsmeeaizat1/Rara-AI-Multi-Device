@@ -3,7 +3,7 @@ import fs from 'fs'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap } from "../../src/lib/nova-menu-style.js"
+import { novaWrap } from "../../src/lib/nova-menu-style.js"
 
 const pluginConfig = {
     name: 'uploadsftp',
@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
                 configInfo = '\nConfig: INVALID'
             }
         }
-        return m.reply(claraWrap("Upload SFTP",
+        return m.reply(novaWrap("Upload SFTP",
             "*sftp status*\n\n" +
             "Config: " + (hasConfig ? 'Terpasang' : 'Belum ada') + configInfo + "\n\n" +
             "Setup: Taruh `sftp-config.json` di folder `config/`"
@@ -185,7 +185,7 @@ async function handler(m, { sock }) {
                 const cfg = loadSFTPConfig()
                 current = cfg.remotePath || '/'
             } catch (e) { console.error('[uploadsftp.js]:', e.message); }
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "*remote directory*\n\n" +
                 "Current: `" + current + "`\n\n" +
                 "Set path: `.uploadsftp setpath /remote/folder`\n" +
@@ -197,11 +197,11 @@ async function handler(m, { sock }) {
             const cfg = loadSFTPConfig()
             cfg.remotePath = sanitizeRemotePath(remotePath)
             fs.writeFileSync(SFTP_CONFIG_PATH, JSON.stringify(cfg, null, 2))
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "BERHASIL\n\nRemote path: `" + cfg.remotePath + "`"
             ))
         } catch (err) {
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "GAGAL\n\n" + err.message
             ))
         }
@@ -217,7 +217,7 @@ async function handler(m, { sock }) {
 
             if (list.length === 0) {
                 await sftp.end()
-                return m.reply(claraWrap("Upload SFTP",
+                return m.reply(novaWrap("Upload SFTP",
                     "*sftp files*\n\nFolder `" + remotePath + "` kosong."
                 ))
             }
@@ -230,9 +230,9 @@ async function handler(m, { sock }) {
             })
 
             await sftp.end()
-            return m.reply(claraWrap("Upload SFTP", body))
+            return m.reply(novaWrap("Upload SFTP", body))
         } catch (err) {
-            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n" + err.message))
+            return m.reply(novaWrap("Upload SFTP", "GAGAL\n\n" + err.message))
         }
     }
 
@@ -240,7 +240,7 @@ async function handler(m, { sock }) {
     if (subCmd === 'mkdir') {
         const dirName = args[1]
         if (!dirName) {
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "*create remote directory*\n\nUsage: `.uploadsftp mkdir /path/to/dir`"
             ))
         }
@@ -252,11 +252,11 @@ async function handler(m, { sock }) {
             await ensureRemoteDir(sftp, fullPath)
 
             await sftp.end()
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "BERHASIL\n\nDirectory dibuat: `" + fullPath + "`"
             ))
         } catch (err) {
-            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n" + err.message))
+            return m.reply(novaWrap("Upload SFTP", "GAGAL\n\n" + err.message))
         }
     }
 
@@ -264,7 +264,7 @@ async function handler(m, { sock }) {
     if (subCmd === 'delete' || subCmd === 'del') {
         const fileName = args[1]
         if (!fileName) {
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "*delete remote file*\n\nUsage: `.uploadsftp delete <filename>`"
             ))
         }
@@ -276,11 +276,11 @@ async function handler(m, { sock }) {
             await sftp.delete(fullPath)
 
             await sftp.end()
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "BERHASIL\n\nFile `" + fileName + "` dihapus."
             ))
         } catch (err) {
-            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n" + err.message))
+            return m.reply(novaWrap("Upload SFTP", "GAGAL\n\n" + err.message))
         }
     }
 
@@ -304,7 +304,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\nTidak dapat mengunduh media."))
+            return m.reply(novaWrap("Upload SFTP", "GAGAL\n\nTidak dapat mengunduh media."))
         }
 
         const fileName = getFileNameFromMessage(m)
@@ -344,14 +344,14 @@ async function handler(m, { sock }) {
         body += "Verified: " + (remoteSize === buffer.length ? 'YES' : 'CHECK') + " (" + formatBytes(remoteSize) + ")"
 
         await m.react("🐣");
-        return m.reply(claraWrap("Upload SFTP", body))
+        return m.reply(novaWrap("Upload SFTP", body))
 
     } catch (error) {
     await m.react("❌");
         console.error('[UploadSFTP] Error:', error.message)
 
         if (error.message === 'NO_CONFIG') {
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "GAGAL - Config belum di-setup\n\n" +
                 "*cara setup:*\n" +
                 "1. Buat file `sftp-config.json` di folder `config/`\n" +
@@ -381,18 +381,18 @@ async function handler(m, { sock }) {
         }
 
         if (error.message === 'INVALID_CONFIG') {
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "GAGAL\n\nFile config tidak valid. Pastikan format JSON benar."
             ))
         }
 
         if (error.message === 'NO_AUTH') {
-            return m.reply(claraWrap("Upload SFTP",
+            return m.reply(novaWrap("Upload SFTP",
                 "GAGAL\n\nTidak ada metode auth. Isi `password` atau `privateKey` di config."
             ))
         }
 
-        return m.reply(claraWrap("uploadsftp", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaWrap("uploadsftp", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

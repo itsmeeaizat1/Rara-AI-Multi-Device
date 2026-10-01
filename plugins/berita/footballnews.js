@@ -2,7 +2,7 @@
 // footballnews.js — Berita Bola
 import { fetchNewsList } from "../../src/lib/nova-rss-news.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "beritabola",
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const data = await fetchNewsList("https://news.google.com/rss/search?q=sepak%20bola&hl=id&gl=ID&ceid=ID:id", 8);
     if (!Array.isArray(data) || data.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("beritabola", "Gagal mengambil berita!", "error"));
+      return m.reply(novaWrap("beritabola", "Gagal mengambil berita!", "error"));
     }
 
     let _lines = [];
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("beritabola error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("beritabola", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("beritabola", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

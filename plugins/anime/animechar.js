@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animechar",
@@ -49,11 +49,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "animechar <nomor>")
       lines.push("Contoh: " + usedPrefix + "animechar 5")
-      return m.reply(claraWrap("Karakter Anime", lines.join("\n")))
+      return m.reply(novaWrap("Karakter Anime", lines.join("\n")))
     }
 
     const c = CHARS[input - 1]
-    return m.reply(claraWrap("Karakter: " + c.nama, [
+    return m.reply(novaWrap("Karakter: " + c.nama, [
       "Anime: " + c.anime,
       "Role: " + c.role,
       "Voice Actor: " + c.voice,
@@ -69,7 +69,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       c.trivia,
     ].join("\n")))
   } catch (e) {
-    return m.reply(claraWrap("Karakter Anime", "Error: " + e.message))
+    return m.reply(novaWrap("Karakter Anime", "Error: " + e.message))
   }
 }
 

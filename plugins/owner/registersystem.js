@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 function getRegistrationContextInfo() {
   const saluranId = config.saluran?.id || "@newsletter";
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   const stats = getRegistrationStats(db);
 
   if (!normalizedArgs) {
-    return m.reply( claraWrap("sIstem Daftar", 
+    return m.reply( novaWrap("sIstem Daftar", 
         `Status: ${currentStatus ? "✅ ON (Wajib Daftar)" : "❌ OFF"}\n\n` +
         `*Statistik:*\n` +
         `Total registered: *${stats.totalRegistered}*\n` +
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
     return;
   }
 
-  return m.reply(claraWrap("sistemdaftar", `❌ Option tidak valid!\n\nGunakan: \`on\`, \`off\`, atau \`stats\``,));
+  return m.reply(novaWrap("sistemdaftar", `❌ Option tidak valid!\n\nGunakan: \`on\`, \`off\`, atau \`stats\``,));
 }
 
 export { pluginConfig as config, handler };

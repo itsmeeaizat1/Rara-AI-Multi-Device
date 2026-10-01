@@ -2,7 +2,7 @@
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -47,7 +47,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const content = args.slice(1).join(" ").trim();
 
     if (!lang || lang === "list" || !content) {
-      return m.reply(claraWrap("TTS Voice", [
+      return m.reply(novaWrap("TTS Voice", [
         "Text To Speech dengan pilihan bahasa.",
         "",
         "Format: " + usedPrefix + "ttsvoice <lang> <teks>",
@@ -64,14 +64,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!VOICES[lang]) {
-      return m.reply(claraWrap("TTS Voice", [
+      return m.reply(novaWrap("TTS Voice", [
         "Bahasa tidak tersedia: " + lang,
         "Daftar: " + Object.keys(VOICES).join(", "),
       ].join("\n")));
     }
 
     if (content.length > 500) {
-      return m.reply(claraWrap("TTS Voice", "Teks maksimal 500 karakter."));
+      return m.reply(novaWrap("TTS Voice", "Teks maksimal 500 karakter."));
     }
 
     const voiceCode = VOICES[lang].code;
@@ -84,7 +84,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
 
     if (!res.data || res.data.length < 100) {
-      return m.reply(claraWrap("TTS Voice", "Gagal generate audio. Coba lagi."));
+      return m.reply(novaWrap("TTS Voice", "Gagal generate audio. Coba lagi."));
     }
 
     const tmpDir = path.join(os.tmpdir(), 'nova-ttsvoice');
@@ -97,7 +97,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: await toVoiceNote(audioBuf),
       mimetype: "audio/ogg; codecs=opus",
       ptt: true,
-      caption: claraWrap("TTS Voice", [
+      caption: novaWrap("TTS Voice", [
         "Berhasil!",
         "Bahasa: " + VOICES[lang].name + " (" + lang + ")",
         "Teks: " + content.slice(0, 50) + (content.length > 50 ? "..." : ""),
@@ -107,7 +107,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     fs.unlinkSync(outPath);
   } catch (e) {
     console.error("ttsvoice error:", e.message);
-    return m.reply(claraWrap("TTS Voice", "Error: " + e.message));
+    return m.reply(novaWrap("TTS Voice", "Error: " + e.message));
   }
 }
 

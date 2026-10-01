@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autodoa",
@@ -62,7 +62,7 @@ export function startAutoDoa(groupId, sock, db) {
       g.lastDoa = doa.title; g.lastSent = Date.now(); g.totalSent = (g.totalSent || 0) + 1;
       await db2.save();
       const msg = doa.title + "\n\n" + doa.arabic + "\n\n" + doa.latin + "\n\n" + doa.indo + "\n\nMode: Otomatis tiap " + g.interval + " menit";
-      await sock.sendMessage(groupId, { text: claraWrap("Auto Doa", msg, "info") });
+      await sock.sendMessage(groupId, { text: novaWrap("Auto Doa", msg, "info") });
     } catch (e) { console.error("[AutoDoa interval]", e); }
   }, intervalMs);
 }
@@ -90,23 +90,23 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const interval = intervalArg && intervalArg >= MIN_INTERVAL && intervalArg <= MAX_INTERVAL ? intervalArg : DEFAULT_INTERVAL;
       cfg.enabled = true; cfg.interval = interval; cfg.activatedBy = sender; cfg.activatedAt = Date.now();
       await db.save(); startAutoDoa(groupId, conn, db);
-      return m.reply(claraWrap("Auto Doa", ["Doa otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "Total doa: " + DOAS.length, "", "Ketik .autodoa off untuk matikan.", "Ketik .autodoa now untuk kirim sekarang."], "success"));
+      return m.reply(novaWrap("Auto Doa", ["Doa otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "Total doa: " + DOAS.length, "", "Ketik .autodoa off untuk matikan.", "Ketik .autodoa now untuk kirim sekarang."], "success"));
     }
     if (sub === "off" || sub === "mati" || sub === "nonaktif") {
       cfg.enabled = false; await db.save(); stopAutoDoa(groupId);
-      return m.reply(claraWrap("Auto Doa", "Doa otomatis DIMATIKAN.\nKetik .autodoa on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Auto Doa", "Doa otomatis DIMATIKAN.\nKetik .autodoa on untuk aktifkan lagi."));
     }
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
-      return m.reply(claraWrap("Auto Doa", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Doa terakhir: " + (cfg.lastDoa || "Belum ada")]));
+      return m.reply(novaWrap("Auto Doa", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Doa terakhir: " + (cfg.lastDoa || "Belum ada")]));
     }
     if (sub === "now" || sub === "sekarang") {
       const doa = DOAS[Math.floor(Math.random() * DOAS.length)];
       cfg.lastDoa = doa.title; cfg.lastSent = Date.now(); cfg.totalSent = (cfg.totalSent || 0) + 1; await db.save();
-      return m.reply(claraWrap("Auto Doa", [doa.title, "", doa.arabic, "", doa.latin, "", doa.indo, "", "Total terkirim: " + cfg.totalSent]));
+      return m.reply(novaWrap("Auto Doa", [doa.title, "", doa.arabic, "", doa.latin, "", doa.indo, "", "Total terkirim: " + cfg.totalSent]));
     }
-    return m.reply(claraWrap("Auto Doa", ["Kirim doa harian random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "autodoa on [menit] — Aktifkan (default 120, min 30, max 720)", usedPrefix + "autodoa off — Matikan", usedPrefix + "autodoa status — Lihat status", usedPrefix + "autodoa now — Kirim sekarang", "", "CONTOH:", usedPrefix + "autodoa on 60", usedPrefix + "autodoa off"]));
-  } catch (e) { console.error("[Auto Doa]", e); m.reply(claraWrap("Auto Doa", "Error: " + e.message)); }
+    return m.reply(novaWrap("Auto Doa", ["Kirim doa harian random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "autodoa on [menit] — Aktifkan (default 120, min 30, max 720)", usedPrefix + "autodoa off — Matikan", usedPrefix + "autodoa status — Lihat status", usedPrefix + "autodoa now — Kirim sekarang", "", "CONTOH:", usedPrefix + "autodoa on 60", usedPrefix + "autodoa off"]));
+  } catch (e) { console.error("[Auto Doa]", e); m.reply(novaWrap("Auto Doa", "Error: " + e.message)); }
 }
 
 export { pluginConfig as config, handler };

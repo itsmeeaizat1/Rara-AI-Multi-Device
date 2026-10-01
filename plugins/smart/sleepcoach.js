@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sleepcoach", alias: ["sleepcoach"], category: "smart",
@@ -18,7 +18,7 @@ async function handler(m, { sock, config: botConfig }) {
     else if (hour >= 9 && hour < 17) { status = "☀️ Aktif"; advice = "Jam aktif normal. Tetap produktif!"; }
     else if (hour >= 17 && hour < 22) { status = "🌇 Sore"; advice = "Saatnya winding down. Kurangi screen time."; }
     else { status = "🌙 Malam"; advice = "Sudah jam tidur. Idealnya tidur sebelum 23:00."; }
-    { const __navText = (claraWrap("Sleep Coach", [`Jam sekarang: *${hour}:00*`, `Status: *${status}*`,
+    { const __navText = (novaWrap("Sleep Coach", [`Jam sekarang: *${hour}:00*`, `Status: *${status}*`,
       `Saran: ${advice}`].join("\n"))); await m.reply(__navText); };
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };

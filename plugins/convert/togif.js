@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption, fmtBytes } from "../../src/lib/nova-media-info.js";
 
 const pluginConfig = {
@@ -21,15 +21,15 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const quoted = m.quoted;
-    if (!quoted) return m.reply(claraWrap("togif", "Reply sticker atau video dengan caption .togif", "guide"));
+    if (!quoted) return m.reply(novaWrap("togif", "Reply sticker atau video dengan caption .togif", "guide"));
 
     const isMedia = quoted.type === "stickerMessage" || quoted.type === "videoMessage" || quoted.mtype === "stickerMessage" || quoted.mtype === "videoMessage";
-    if (!isMedia) return m.reply(claraWrap("togif", "Reply harus sticker atau video!", "guide"));
+    if (!isMedia) return m.reply(novaWrap("togif", "Reply harus sticker atau video!", "guide"));
 
     await m.react("🕒");
 
     const mediaBuffer = await quoted.download();
-    if (!mediaBuffer) { await m.react("❌"); return m.reply(claraWrap("togif", "Gagal mengunduh media.")); }
+    if (!mediaBuffer) { await m.react("❌"); return m.reply(novaWrap("togif", "Gagal mengunduh media.")); }
 
     // Coba kirim langsung sebagai video dengan gifPlayback
     try {

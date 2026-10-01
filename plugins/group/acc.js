@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'acc',
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
             text += `Gunakan \`${m.prefix}acc approve all\` atau \`${m.prefix}acc reject all\``
 
             const mentions = pendingList.map(r => r.jid)
-            return m.reply(claraWrap("acc", text))
+            return m.reply(novaWrap("acc", text))
         }
 
         const action = sub
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
             const failed = results.length - success
 
             const label = action === 'approve' ? 'Diterima' : 'Ditolak'
-            return m.reply(claraWrap(`${label.toUpperCase()} SEMUA`, 
+            return m.reply(novaWrap(`${label.toUpperCase()} SEMUA`, 
                 `✅ Berhasil: ${success}\n` +
                 `❌ Gagal: ${failed}\n` +
                 `📊 Total: ${results.length}`))

@@ -5,7 +5,7 @@ import {
   getParticipantJid,
 } from "../../src/lib/nova-lid.js";
 import { gpMsg } from "../../src/lib/nova-group-protection.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: ["antibot", "botdetect"],
   alias: ["antibot", "botdetect"],
@@ -153,16 +153,16 @@ function handler(m, { sock }) {
   if (args === "on") {
     db.setGroup(m.chat, { ...groupData, antibot: true });
     db.save();
-    return m.reply(claraWrap("Antibot", `antibot diaktifkan`, "success"));
+    return m.reply(novaWrap("Antibot", `antibot diaktifkan`, "success"));
   }
 
   if (args === "off") {
     db.setGroup(m.chat, { ...groupData, antibot: false });
     db.save();
-    return m.reply(claraWrap("Antibot", `antibot dinonaktifkan`, "error"));
+    return m.reply(novaWrap("Antibot", `antibot dinonaktifkan`, "error"));
   }
 
-  return m.reply(claraWrap("Anti bot", `Gunakan \`.antibot on\` atau \`.antibot off\``, "error"));
+  return m.reply(novaWrap("Anti bot", `Gunakan \`.antibot on\` atau \`.antibot off\``, "error"));
 }
 
 function isBotMessage(m) {

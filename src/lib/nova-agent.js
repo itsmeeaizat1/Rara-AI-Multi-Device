@@ -617,7 +617,7 @@ function wrapPluginCode(name, desc, body) {
   return `// NOVA AI WHATSAPP BOT — plugin dibuat otomatis oleh AI Agent (.agent create)
 // Fitur: ${desc} | dibuat ${d}
 // Template agent — self-contained, murni logika lokal, tanpa akses sistem.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "${name}",

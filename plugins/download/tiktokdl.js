@@ -2,7 +2,7 @@
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { novaGuideV2, novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, toSC, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine, toSC, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
@@ -193,7 +193,7 @@ async function handler(m, { sock }) {
       const video = sesi.videos[idx - 1];
       if (!video) {
         await m.react("❗");
-        return m.reply(claraWrap("TikTok Search", `Nomor ${idx} gak ada di hasil pencarian (1-${sesi.videos.length}). Ketik ulang keyword-nya ya!`));
+        return m.reply(novaWrap("TikTok Search", `Nomor ${idx} gak ada di hasil pencarian (1-${sesi.videos.length}). Ketik ulang keyword-nya ya!`));
       }
       try {
         await m.react("🕒");
@@ -243,7 +243,7 @@ async function handler(m, { sock }) {
       }
       if (!videos || videos.length === 0) {
         await m.react("❗");
-        return m.reply(claraWrap("TikTok Search", `Gak nemu video untuk keyword: ${text}`));
+        return m.reply(novaWrap("TikTok Search", `Gak nemu video untuk keyword: ${text}`));
       }
 
       // Simpan sesi biar bisa dipilih nomornya
@@ -263,7 +263,7 @@ async function handler(m, { sock }) {
         return `│ ${i + 1}. ${String(v.title).slice(0, 45)}${String(v.title).length > 45 ? "..." : ""}\n│    🕒 ${dur}${v.createdAt ? ` · ${new Date(v.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}` : ""}`;
       });
       await m.react("🐣");
-      return m.reply(claraWrap(`TikTok Search — ${source}`, [
+      return m.reply(novaWrap(`TikTok Search — ${source}`, [
         `📌 Hasil pencarian untuk: ${text}`,
         ``,
         ...listLines,

@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "caribug",
@@ -20,7 +20,7 @@ async function handler(m, { sock,  args }) {
   let code = m.quoted?.text || args.join(" ");
 
   if (!code) {
-    return m.reply(claraWrap("caribug", [
+    return m.reply(novaWrap("caribug", [
       "Cari bug di kode program lewat AI.",
       "",
       `📌 Format: ${m.prefix}caribug <kode> (atau reply pesan kode)`,
@@ -73,7 +73,7 @@ async function handler(m, { sock,  args }) {
   } catch (err) {
     await m.react("❌");
     console.error("[CariBug]", err.message);
-    m.reply(claraWrap("caribug", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("caribug", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

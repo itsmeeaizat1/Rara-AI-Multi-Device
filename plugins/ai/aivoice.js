@@ -7,7 +7,7 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 const execAsync = promisify(exec);
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const out =
-      claraWrap("AI Voice", [`Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
+      novaWrap("AI Voice", [`Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
         "Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aivoice <teks> untuk suara lain`) +

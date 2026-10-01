@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // bomb.js — Game jinakkan bom (potong kabel yang benar)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { formatRp } from "../../src/lib/nova-rpg-service.js";
 import { rollBonus } from "../../src/lib/nova-game-rewards.js";
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
 
     if (!action || action === "start") {
       if (games.has(from)) {
-        return m.reply(claraWrap("bomb", `Bomb masih aktif! Gunakan .bomb potong <nomor>`, "guide"));
+        return m.reply(novaWrap("bomb", `Bomb masih aktif! Gunakan .bomb potong <nomor>`, "guide"));
       }
       const game = new BombGame();
       const colors = game.start();
@@ -73,9 +73,9 @@ async function handler(m, { sock }) {
 
     if (action === "potong" || action === "cut") {
       const game = games.get(from);
-      if (!game) return m.reply(claraWrap("bomb", "Belum ada bom aktif! Ketik .bomb start", "guide"));
+      if (!game) return m.reply(novaWrap("bomb", "Belum ada bom aktif! Ketik .bomb start", "guide"));
       const choice = parseInt(args[1]);
-      if (isNaN(choice) || choice < 1 || choice > 5) return m.reply(claraWrap("bomb", "Pilih nomor 1-5!", "guide"));
+      if (isNaN(choice) || choice < 1 || choice > 5) return m.reply(novaWrap("bomb", "Pilih nomor 1-5!", "guide"));
 
       await m.react("🕒");
       const result = game.cut(choice);
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("bomb error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("bomb", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("bomb", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

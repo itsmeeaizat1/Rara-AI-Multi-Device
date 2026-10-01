@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autosurvey",
@@ -46,56 +46,56 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "on" || sub === "enable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Survey", "Khusus owner."));
+      await m.reply(novaWrap("Auto Survey", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = true;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Survey", "AKTIF!\nHari: " + DAYS[cfg.day] + "\nBot kirim survey otomatis tiap minggu."));
+    await m.reply(novaWrap("Auto Survey", "AKTIF!\nHari: " + DAYS[cfg.day] + "\nBot kirim survey otomatis tiap minggu."));
     return { handled: true };
   }
 
   if (sub === "off" || sub === "disable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Survey", "Khusus owner."));
+      await m.reply(novaWrap("Auto Survey", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = false;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Survey", "Dimatikan."));
+    await m.reply(novaWrap("Auto Survey", "Dimatikan."));
     return { handled: true };
   }
 
   if (sub === "add" || sub === "tambah") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Survey", "Khusus owner."));
+      await m.reply(novaWrap("Auto Survey", "Khusus owner."));
       return { handled: true };
     }
     const question = args.slice(2).join(" ").trim();
     if (!question) {
-      await m.reply(claraWrap("Auto Survey", "Format: " + prefix + "autosurvey add <pertanyaan>\n💡 *Contoh:* " + prefix + "autosurvey add Rate aktivitas grup minggu ini 1-10"));
+      await m.reply(novaWrap("Auto Survey", "Format: " + prefix + "autosurvey add <pertanyaan>\n💡 *Contoh:* " + prefix + "autosurvey add Rate aktivitas grup minggu ini 1-10"));
       return { handled: true };
     }
     cfg.surveys.push({ question, id: Date.now(), responses: {} });
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Survey", "Survey ditambah: " + question));
+    await m.reply(novaWrap("Auto Survey", "Survey ditambah: " + question));
     return { handled: true };
   }
 
   if (sub === "send" || sub === "kirim") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Survey", "Khusus owner."));
+      await m.reply(novaWrap("Auto Survey", "Khusus owner."));
       return { handled: true };
     }
     if (cfg.surveys.length === 0) {
-      await m.reply(claraWrap("Auto Survey", "Belum ada survey. Ketik " + prefix + "autosurvey add <pertanyaan>."));
+      await m.reply(novaWrap("Auto Survey", "Belum ada survey. Ketik " + prefix + "autosurvey add <pertanyaan>."));
       return { handled: true };
     }
     const survey = cfg.surveys[cfg.surveys.length - 1];
     cfg.currentSurvey = survey.id;
     cfg.lastSent = Date.now();
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Survey Mingguan", [
+    await m.reply(novaWrap("Auto Survey Mingguan", [
       survey.question,
       "",
       "Ketik jawaban kamu: " + prefix + "autosurvey answer <jawaban>",
@@ -107,43 +107,43 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "answer" || sub === "jawab") {
     if (!cfg.currentSurvey) {
-      await m.reply(claraWrap("Auto Survey", "Tidak ada survey aktif."));
+      await m.reply(novaWrap("Auto Survey", "Tidak ada survey aktif."));
       return { handled: true };
     }
     const answer = args.slice(2).join(" ").trim();
     if (!answer) {
-      await m.reply(claraWrap("Auto Survey", "Ketik jawaban: " + prefix + "autosurvey answer <jawaban>"));
+      await m.reply(novaWrap("Auto Survey", "Ketik jawaban: " + prefix + "autosurvey answer <jawaban>"));
       return { handled: true };
     }
     const survey = cfg.surveys.find(s => s.id === cfg.currentSurvey);
     if (!survey) {
-      await m.reply(claraWrap("Auto Survey", "Survey tidak ditemukan."));
+      await m.reply(novaWrap("Auto Survey", "Survey tidak ditemukan."));
       return { handled: true };
     }
     if (!survey.responses) survey.responses = {};
     survey.responses[m.sender] = { answer, ts: Date.now() };
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Survey", "Jawaban tersimpan! Total: " + Object.keys(survey.responses).length));
+    await m.reply(novaWrap("Auto Survey", "Jawaban tersimpan! Total: " + Object.keys(survey.responses).length));
     return { handled: true };
   }
 
   if (sub === "result" || sub === "hasil") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Survey", "Khusus owner."));
+      await m.reply(novaWrap("Auto Survey", "Khusus owner."));
       return { handled: true };
     }
     if (cfg.surveys.length === 0) {
-      await m.reply(claraWrap("Auto Survey", "Belum ada survey."));
+      await m.reply(novaWrap("Auto Survey", "Belum ada survey."));
       return { handled: true };
     }
     const survey = cfg.surveys[cfg.surveys.length - 1];
     const responses = Object.entries(survey.responses || {});
     if (responses.length === 0) {
-      await m.reply(claraWrap("Auto Survey", "Belum ada respons."));
+      await m.reply(novaWrap("Auto Survey", "Belum ada respons."));
       return { handled: true };
     }
     const list = responses.map(([jid, r], i) => (i + 1) + ". @" + jid.split("@")[0] + ": " + r.answer).join("\n");
-    await m.reply(claraWrap("Auto Survey Result", [
+    await m.reply(novaWrap("Auto Survey Result", [
       "Pertanyaan: " + survey.question,
       "Total respons: " + responses.length,
       "",
@@ -154,22 +154,22 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "day" || sub === "hari") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Survey", "Khusus owner."));
+      await m.reply(novaWrap("Auto Survey", "Khusus owner."));
       return { handled: true };
     }
     const day = parseInt(args[2] || "-1", 10);
     if (isNaN(day) || day < 0 || day > 6) {
-      await m.reply(claraWrap("Auto Survey", "0=Minggu s/d 6=Sabtu"));
+      await m.reply(novaWrap("Auto Survey", "0=Minggu s/d 6=Sabtu"));
       return { handled: true };
     }
     cfg.day = day;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Survey", "Hari diset: " + DAYS[day]));
+    await m.reply(novaWrap("Auto Survey", "Hari diset: " + DAYS[day]));
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek" || !sub) {
-    await m.reply(claraWrap("Auto Survey", [
+    await m.reply(novaWrap("Auto Survey", [
       "Status: " + (cfg.enabled ? "AKTIF" : "MATI"),
       "Hari: " + DAYS[cfg.day],
       "Total survey: " + cfg.surveys.length,
@@ -178,7 +178,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Auto Survey", [
+  await m.reply(novaWrap("Auto Survey", [
     "AUTO SURVEY",
     "",
     prefix + "autosurvey on/off",

@@ -2,7 +2,7 @@
 // Sistem Pacaran — Tembak seseorang untuk diajak pacaran
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-      return m.reply(claraWrap("jadian", [
+      return m.reply(novaWrap("jadian", [
         `Nembak user lain biar jadian.`,
         ``,
         `📌 Format: ${m.prefix}jadian @tag`,
@@ -60,10 +60,10 @@ async function handler(m, { sock }) {
     }
 
     if (targetJid === m.sender) {
-      return m.reply(claraWrap("jadian", "Tidak bisa menembak diri sendiri! 😅"));
+      return m.reply(novaWrap("jadian", "Tidak bisa menembak diri sendiri! 😅"));
     }
     if (targetJid === m.botNumber) {
-      return m.reply(claraWrap("jadian", "Bot tidak bisa pacaran! 🤖"));
+      return m.reply(novaWrap("jadian", "Bot tidak bisa pacaran! 🤖"));
     }
 
     let senderData = db.getUser(m.sender) || {};
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
       const partner = db.getUser(senderData.fun.pasangan);
       if (partner?.fun?.pasangan === m.sender) {
         return m.reply(
-          claraWrap("jadian",
+          novaWrap("jadian",
             `Sudah punya pasangan: @${senderData.fun.pasangan.split("@")[0]}\n` +
             `Putus dulu dengan \`${m.prefix}putus\``
           )
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
       const tPartner = db.getUser(targetData.fun.pasangan);
       if (tPartner?.fun?.pasangan === targetJid) {
         return m.reply(
-          claraWrap("jadian",
+          novaWrap("jadian",
             `💔 @${targetJid.split("@")[0]} sudah punya pasangan`
           )
         );

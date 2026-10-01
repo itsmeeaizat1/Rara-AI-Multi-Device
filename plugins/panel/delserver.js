@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
 import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("delserver", `❌ *akses ditolak*\n\n` +
+        return m.reply(novaWrap("delserver", `❌ *akses ditolak*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
         } else {
             txt += `Isi config pterodactyl di \`config.js\``
         }
-        return m.reply(claraWrap("delserver", txt))
+        return m.reply(novaWrap("delserver", txt))
     }
     
     if (!serverId || isNaN(serverId)) {
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
             `Nama: \`${server.name}\``)
         
     } catch (err) {
-        return m.reply(claraWrap("delserver", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaWrap("delserver", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

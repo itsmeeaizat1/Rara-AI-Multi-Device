@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "speedurl",
@@ -100,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await measureLoad(text);
 
     if (result.error) {
-      return m.reply(claraWrap("SpeedURL Error", [
+      return m.reply(novaWrap("SpeedURL Error", [
         "URL: " + result.url,
         "Error: " + result.error,
         "Time: " + result.phases.total + "ms",
@@ -131,11 +131,11 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("Cache-Control: " + (result.cacheControl.length > 40 ? result.cacheControl.substring(0, 40) + "..." : result.cacheControl));
     }
     await m.react("🐣");
-    return m.reply(claraWrap("SpeedURL: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
+    return m.reply(novaWrap("SpeedURL: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("speedurl error:", e);
-    return m.reply(claraWrap("SpeedURL", "Error: " + e.message));
+    return m.reply(novaWrap("SpeedURL", "Error: " + e.message));
   }
 }
 

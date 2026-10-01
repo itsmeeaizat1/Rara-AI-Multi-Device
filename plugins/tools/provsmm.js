@@ -2,7 +2,7 @@
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
 // ProviderSMM - Social Media Services (Indonesia Focused)
@@ -137,57 +137,57 @@ async function handler(m, { sock }) {
 
   // SETKEY
   if (sub === "setkey" || sub === "setapi") {
-    if (!isOwner) return m.reply(claraWrap("provsmm", "Khusus owner!"));
+    if (!isOwner) return m.reply(novaWrap("provsmm", "Khusus owner!"));
     const key = arg1;
     if (!key) {
-      return m.reply( claraWrap("ProviderSMM", "Set API Key (Owner)\n\n.prov setkey <api_key>\n\nDaftar & dapatkan API key:\nhttps://providersmm.id"), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Set API Key (Owner)\n\n.prov setkey <api_key>\n\nDaftar & dapatkan API key:\nhttps://providersmm.id"), "provsmm");
     }
     data.apiKey = key; saveData(data);
-    return m.reply( claraWrap("ProviderSMM", "API Key tersimpan!\nKey: " + key.slice(0,6) + "..." + key.slice(-4)), "provsmm");
+    return m.reply( novaWrap("ProviderSMM", "API Key tersimpan!\nKey: " + key.slice(0,6) + "..." + key.slice(-4)), "provsmm");
   }
 
   // SETMARKUP
   if (sub === "setmarkup" || sub === "markup") {
-    if (!isOwner) return m.reply(claraWrap("provsmm", "Khusus owner!"));
+    if (!isOwner) return m.reply(novaWrap("provsmm", "Khusus owner!"));
     const pct = parseInt(arg1);
     if (isNaN(pct) || pct < 0 || pct > 500) {
-      return m.reply( claraWrap("ProviderSMM", "Set Markup (Owner)\n\n.prov setmarkup <persen>\n\nContoh:\n.prov setmarkup 20 (tambah 20%)\n.prov setmarkup 0 (no profit)\n\nMarkup aktif: " + markup + "%"), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Set Markup (Owner)\n\n.prov setmarkup <persen>\n\nContoh:\n.prov setmarkup 20 (tambah 20%)\n.prov setmarkup 0 (no profit)\n\nMarkup aktif: " + markup + "%"), "provsmm");
     }
     data.markup = pct; saveData(data);
-    return m.reply( claraWrap("ProviderSMM", "Markup: " + pct + "%\n\nHarga API $1/1000 qty 1000\nHarga jual: Rp" + Math.round(USD_RATE * (1 + pct/100)).toLocaleString("id-ID")), "provsmm");
+    return m.reply( novaWrap("ProviderSMM", "Markup: " + pct + "%\n\nHarga API $1/1000 qty 1000\nHarga jual: Rp" + Math.round(USD_RATE * (1 + pct/100)).toLocaleString("id-ID")), "provsmm");
   }
 
   // TOPUP
   if (sub === "topup") {
-    if (!isOwner) return m.reply(claraWrap("provsmm", "Khusus owner!"));
+    if (!isOwner) return m.reply(novaWrap("provsmm", "Khusus owner!"));
     const target = (arg1 || "").replace(/[^0-9]/g, "");
     const amount = parseInt(arg2) || 0;
     if (!target || amount < 100) {
-      return m.reply( claraWrap("ProviderSMM", "Topup Saldo (Owner)\n\n.prov topup <nomor> <jumlah>\n💡 *Contoh:* .prov topup 628123456789 50000\nMin: Rp100"), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Topup Saldo (Owner)\n\n.prov topup <nomor> <jumlah>\n💡 *Contoh:* .prov topup 628123456789 50000\nMin: Rp100"), "provsmm");
     }
     const targetUser = getUser(data, target + "@s.whatsapp.net");
     targetUser.balance += amount; saveData(data);
-    return m.reply( claraWrap("ProviderSMM", "Topup Berhasil!\nUser: " + target + "\nJumlah: " + formatRupiah(amount) + "\nSaldo: " + formatRupiah(targetUser.balance)), "provsmm");
+    return m.reply( novaWrap("ProviderSMM", "Topup Berhasil!\nUser: " + target + "\nJumlah: " + formatRupiah(amount) + "\nSaldo: " + formatRupiah(targetUser.balance)), "provsmm");
   }
 
   // SALDO
   if (sub === "saldo" || sub === "balance") {
-    if (!data.apiKey) return m.reply( claraWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>\n\nDaftar: https://providersmm.id"), "provsmm");
+    if (!data.apiKey) return m.reply( novaWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>\n\nDaftar: https://providersmm.id"), "provsmm");
     try {
       const bal = await getBalance(data);
       let body = "Saldo ProviderSMM\n\n";
       body += "Saldo API: $" + (parseFloat(bal.balance) || 0).toFixed(2) + " (" + formatRupiah((parseFloat(bal.balance) || 0) * USD_RATE) + ")\n";
       body += "Saldo Bot: " + formatRupiah(user.balance) + "\n";
       body += "Markup: " + markup + "%";
-      return m.reply( claraWrap("ProviderSMM", body), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", body), "provsmm");
     } catch (err) {
-      return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
 
   // KATEGORI
   if (sub === "kategori" || sub === "category") {
-    if (!data.apiKey) return m.reply( claraWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>"), "provsmm");
+    if (!data.apiKey) return m.reply( novaWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>"), "provsmm");
     try {
       const services = await getServices(data);
       const categories = {};
@@ -197,19 +197,19 @@ async function handler(m, { sock }) {
         body += cat + " (" + count + ")\n";
       });
       body += "\nCari layanan:\n.prov cari <keyword>";
-      return m.reply( claraWrap("ProviderSMM", body), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", body), "provsmm");
     } catch (err) {
-      return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
 
   // CARI
   if (sub === "cari" || sub === "search" || sub === "carijasa") {
-    if (!data.apiKey) return m.reply( claraWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>"), "provsmm");
+    if (!data.apiKey) return m.reply( novaWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>"), "provsmm");
     const keyword = (arg1 || "").toLowerCase();
     const catFilter = arg2 ? arg2.toLowerCase() : "";
     if (!keyword) {
-      return m.reply( claraWrap("ProviderSMM", "Cari Layanan SMM\n\n.prov cari <keyword> [kategori]\n\nContoh:\n.prov cari instagram indonesia\n.prov cari tiktok followers\n.prov cari facebook\n.prov cari threads\n.prov cari twitter\n.prov cari roblox\n\nLihat semua: .prov kategori"), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Cari Layanan SMM\n\n.prov cari <keyword> [kategori]\n\nContoh:\n.prov cari instagram indonesia\n.prov cari tiktok followers\n.prov cari facebook\n.prov cari threads\n.prov cari twitter\n.prov cari roblox\n\nLihat semua: .prov kategori"), "provsmm");
     }
     try {
       const services = await getServices(data);
@@ -219,7 +219,7 @@ async function handler(m, { sock }) {
       );
       if (catFilter) filtered = filtered.filter(s => (s.category || "").toLowerCase().includes(catFilter));
       if (filtered.length === 0) {
-        return m.reply( claraWrap("ProviderSMM", "Tidak ada: " + keyword + "\n\nCoba:\n.prov cari instagram\n.prov cari tiktok\n.prov cari facebook\n.prov cari threads\n.prov cari roblox"), "provsmm");
+        return m.reply( novaWrap("ProviderSMM", "Tidak ada: " + keyword + "\n\nCoba:\n.prov cari instagram\n.prov cari tiktok\n.prov cari facebook\n.prov cari threads\n.prov cari roblox"), "provsmm");
       }
       filtered.sort((a, b) => parseFloat(a.rate) - parseFloat(b.rate));
       let body = "ProviderSMM - " + keyword + (catFilter ? " (" + catFilter + ")" : "") + "\n" + filtered.length + " layanan\n\n";
@@ -237,36 +237,36 @@ async function handler(m, { sock }) {
       });
       if (filtered.length > 15) body += "... dan " + (filtered.length - 15) + " layanan lain\n";
       body += "\nBeli: .prov beli <service_id> <link> <qty>\n💡 *Contoh:* .prov beli " + filtered[0].service + " https://... 100";
-      return m.reply( claraWrap("ProviderSMM", body), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", body), "provsmm");
     } catch (err) {
-      return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
 
   // BELI
   if (sub === "beli" || sub === "buy" || sub === "pesan") {
-    if (!data.apiKey) return m.reply( claraWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>"), "provsmm");
+    if (!data.apiKey) return m.reply( novaWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>"), "provsmm");
     const serviceId = arg1;
     const link = arg2;
     const quantity = parseInt(arg3) || 0;
     if (!serviceId || !link || !quantity) {
-      return m.reply( claraWrap("ProviderSMM", "Format Beli\n\n.prov beli <service_id> <link> <qty>\n\nContoh:\n.prov beli 87 https://instagram.com/p/xxx 100\n.prov beli 116 https://tiktok.com/@xxx 500\n.prov beli 60 https://facebook.com/xxx 200\n\nCari service_id:\n.prov cari instagram"), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Format Beli\n\n.prov beli <service_id> <link> <qty>\n\nContoh:\n.prov beli 87 https://instagram.com/p/xxx 100\n.prov beli 116 https://tiktok.com/@xxx 500\n.prov beli 60 https://facebook.com/xxx 200\n\nCari service_id:\n.prov cari instagram"), "provsmm");
     }
     try {
     await m.react("🕒");
       const services = await getServices(data);
       const svc = services.find(s => String(s.service) === String(serviceId));
       if (!svc) {
-        return m.reply( claraWrap("ProviderSMM", "Service ID tidak ditemukan: " + serviceId + "\n\nCari: .prov cari <keyword>"), "provsmm");
+        return m.reply( novaWrap("ProviderSMM", "Service ID tidak ditemukan: " + serviceId + "\n\nCari: .prov cari <keyword>"), "provsmm");
       }
       const minQ = parseInt(svc.min) || 1;
       const maxQ = parseInt(svc.max) || 999999999;
       if (quantity < minQ || quantity > maxQ) {
-        return m.reply( claraWrap("ProviderSMM", "Quantity tidak valid!\n\nMin: " + minQ + "\nMax: " + maxQ.toLocaleString("id-ID") + "\nInput: " + quantity), "provsmm");
+        return m.reply( novaWrap("ProviderSMM", "Quantity tidak valid!\n\nMin: " + minQ + "\nMax: " + maxQ.toLocaleString("id-ID") + "\nInput: " + quantity), "provsmm");
       }
       const price = calcPrice(svc.rate, quantity, markup);
       if (user.balance < price) {
-        return m.reply( claraWrap("ProviderSMM", "Saldo tidak cukup!\n\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nKurang: " + formatRupiah(price - user.balance) + "\n\nMinta topup:\n.prov topup " + sender.split("@")[0] + " <jumlah>"), "provsmm");
+        return m.reply( novaWrap("ProviderSMM", "Saldo tidak cukup!\n\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nKurang: " + formatRupiah(price - user.balance) + "\n\nMinta topup:\n.prov topup " + sender.split("@")[0] + " <jumlah>"), "provsmm");
       }
       const token = genToken();
       data.pendingPayments[token] = {
@@ -289,23 +289,23 @@ async function handler(m, { sock }) {
       body += "Sisa: " + formatRupiah(user.balance - price) + "\n";
       if (svc.refill) body += "Refill: Tersedia (.prov refill <id>)\n";
       body += "\nToken: " + token + "\n\nBayar: .prov bayar " + token + "\nExpired: 5 menit";
-      return m.reply( claraWrap("ProviderSMM", body), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", body), "provsmm");
     } catch (err) {
     await m.react("❌");
-      return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
 
   // BAYAR
   if (sub === "bayar" || sub === "pay" || sub === "confirm") {
     const token = arg1 ? arg1.toUpperCase() : "";
-    if (!token) return m.reply( claraWrap("ProviderSMM", "Masukkan token!\n💡 *Contoh:* .prov bayar ABC123"), "provsmm");
+    if (!token) return m.reply( novaWrap("ProviderSMM", "Masukkan token!\n💡 *Contoh:* .prov bayar ABC123"), "provsmm");
     const pending = data.pendingPayments[token];
-    if (!pending) return m.reply( claraWrap("ProviderSMM", "Token tidak ditemukan!"), "provsmm");
-    if (pending.sender !== sender) return m.reply( claraWrap("ProviderSMM", "Bukan token kamu!"), "provsmm");
-    if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("ProviderSMM", "Token expired!"), "provsmm"); }
+    if (!pending) return m.reply( novaWrap("ProviderSMM", "Token tidak ditemukan!"), "provsmm");
+    if (pending.sender !== sender) return m.reply( novaWrap("ProviderSMM", "Bukan token kamu!"), "provsmm");
+    if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( novaWrap("ProviderSMM", "Token expired!"), "provsmm"); }
     const u = getUser(data, sender);
-    if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("ProviderSMM", "Saldo tidak cukup!"), "provsmm"); }
+    if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( novaWrap("ProviderSMM", "Saldo tidak cukup!"), "provsmm"); }
     try {
       u.balance -= pending.price;
       u.totalSpent += pending.price;
@@ -330,22 +330,22 @@ async function handler(m, { sock }) {
       body += "Cek status:\n.prov cek " + order.id + "\n";
       if (pending.refill) body += "Refill:\n.prov refill " + order.id + "\n";
       body += "Batal:\n.prov batal " + order.id;
-      return m.reply( claraWrap("ProviderSMM", body), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", body), "provsmm");
     } catch (err) {
       u.balance += pending.price;
       u.totalSpent -= pending.price;
       delete data.pendingPayments[token];
       saveData(data);
-      return m.reply( claraWrap("ProviderSMM", "Gagal order! Saldo di-refund.\n\nError: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Gagal order! Saldo di-refund.\n\nError: " + err.message), "provsmm");
     }
   }
 
   // CEK
   if (sub === "cek" || sub === "check" || sub === "status") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\n💡 *Contoh:* .prov cek 23501"), "provsmm");
+    if (!orderId) return m.reply( novaWrap("ProviderSMM", "Masukkan Order ID!\n💡 *Contoh:* .prov cek 23501"), "provsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
-    if (!order && !isOwner) return m.reply( claraWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
+    if (!order && !isOwner) return m.reply( novaWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
     try {
       const result = await orderStatus(data, orderId);
       let body = "Order #" + orderId + "\n\n";
@@ -360,45 +360,45 @@ async function handler(m, { sock }) {
       else if (result.status === "In progress") body += "\nOrder masih berjalan...";
       else if (result.status === "Partial") body += "\nPartial - sebagian terkirim";
       else if (result.status === "Canceled" || result.status === "Cancelled") body += "\nOrder dibatalkan";
-      return m.reply( claraWrap("ProviderSMM", body), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", body), "provsmm");
     } catch (err) {
-      return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
 
   // REFILL
   if (sub === "refill" || sub === "isiulang") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\n💡 *Contoh:* .prov refill 23501"), "provsmm");
+    if (!orderId) return m.reply( novaWrap("ProviderSMM", "Masukkan Order ID!\n💡 *Contoh:* .prov refill 23501"), "provsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
-    if (!order && !isOwner) return m.reply( claraWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
-    if (order && !order.refill) return m.reply( claraWrap("ProviderSMM", "Layanan ini tidak support refill!"), "provsmm");
+    if (!order && !isOwner) return m.reply( novaWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
+    if (order && !order.refill) return m.reply( novaWrap("ProviderSMM", "Layanan ini tidak support refill!"), "provsmm");
     try {
       const result = await createRefill(data, orderId);
-      return m.reply( claraWrap("ProviderSMM", "Refill dibuat!\n\nOrder ID: " + orderId + "\nRefill ID: " + result.id + "\n\nCek:\n.prov refillstatus " + result.id), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Refill dibuat!\n\nOrder ID: " + orderId + "\nRefill ID: " + result.id + "\n\nCek:\n.prov refillstatus " + result.id), "provsmm");
     } catch (err) {
-      return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
 
   // REFILL STATUS
   if (sub === "refillstatus" || sub === "cekrefill") {
     const refillId = arg1;
-    if (!refillId) return m.reply( claraWrap("ProviderSMM", "Masukkan Refill ID!\n💡 *Contoh:* .prov refillstatus 123"), "provsmm");
+    if (!refillId) return m.reply( novaWrap("ProviderSMM", "Masukkan Refill ID!\n💡 *Contoh:* .prov refillstatus 123"), "provsmm");
     try {
       const result = await refillStatus(data, refillId);
-      return m.reply( claraWrap("ProviderSMM", "Refill #" + refillId + "\n\nStatus: " + (result.status || "Unknown")), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Refill #" + refillId + "\n\nStatus: " + (result.status || "Unknown")), "provsmm");
     } catch (err) {
-      return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
 
   // BATAL
   if (sub === "batal" || sub === "cancel") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\n💡 *Contoh:* .prov batal 23501"), "provsmm");
+    if (!orderId) return m.reply( novaWrap("ProviderSMM", "Masukkan Order ID!\n💡 *Contoh:* .prov batal 23501"), "provsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
-    if (!order && !isOwner) return m.reply( claraWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
+    if (!order && !isOwner) return m.reply( novaWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
     try {
       const result = await cancelOrders(data, [orderId]);
       if (Array.isArray(result)) {
@@ -408,37 +408,37 @@ async function handler(m, { sock }) {
           const refund = Math.floor((order ? order.price : 0) * 0.5);
           if (order && refund > 0) { const u = getUser(data, sender); u.balance += refund; }
           saveData(data);
-          return m.reply( claraWrap("ProviderSMM", "Order #" + orderId + " dibatalkan.\nRefund 50%: " + formatRupiah(refund) + "\nSaldo: " + formatRupiah(user.balance + refund)), "provsmm");
+          return m.reply( novaWrap("ProviderSMM", "Order #" + orderId + " dibatalkan.\nRefund 50%: " + formatRupiah(refund) + "\nSaldo: " + formatRupiah(user.balance + refund)), "provsmm");
         }
-        return m.reply( claraWrap("ProviderSMM", "Gagal batalkan. Mungkin sudah dalam proses.\n\nResponse: " + JSON.stringify(item || result)), "provsmm");
+        return m.reply( novaWrap("ProviderSMM", "Gagal batalkan. Mungkin sudah dalam proses.\n\nResponse: " + JSON.stringify(item || result)), "provsmm");
       }
-      return m.reply( claraWrap("ProviderSMM", "Response: " + JSON.stringify(result)), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Response: " + JSON.stringify(result)), "provsmm");
     } catch (err) {
-      return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
 
   // LIST
   if (sub === "list" || sub === "riwayat" || sub === "history") {
     const myOrders = data.orders.filter(o => o.sender === sender);
-    if (myOrders.length === 0) return m.reply( claraWrap("ProviderSMM", "Belum ada order.\nCari: .prov cari <keyword>\nBeli: .prov beli <id> <link> <qty>"), "provsmm");
+    if (myOrders.length === 0) return m.reply( novaWrap("ProviderSMM", "Belum ada order.\nCari: .prov cari <keyword>\nBeli: .prov beli <id> <link> <qty>"), "provsmm");
     let body = "Riwayat Order (" + myOrders.length + ")\n\n";
     myOrders.slice(-10).reverse().forEach((o, i) => {
       body += (i+1) + ". ID: " + o.id + "\n   " + (o.serviceName || "?").substring(0, 50) + "\n   Qty: " + o.quantity.toLocaleString("id-ID") + " | " + formatRupiah(o.price) + "\n   " + o.status + "\n";
     });
     body += "\n.prov cek <id> - cek status\n.prov refill <id> - refill\n.prov batal <id> - batal";
-    return m.reply( claraWrap("ProviderSMM", body), "provsmm");
+    return m.reply( novaWrap("ProviderSMM", body), "provsmm");
   }
 
   // REFRESH
   if (sub === "refresh" || sub === "sync") {
-    if (!isOwner) return m.reply(claraWrap("provsmm", "Khusus owner!"));
-    if (!data.apiKey) return m.reply( claraWrap("ProviderSMM", "Belum setup!"), "provsmm");
+    if (!isOwner) return m.reply(novaWrap("provsmm", "Khusus owner!"));
+    if (!data.apiKey) return m.reply( novaWrap("ProviderSMM", "Belum setup!"), "provsmm");
     try {
       const services = await getServices(data, true);
-      return m.reply( claraWrap("ProviderSMM", "Cache di-refresh!\nTotal layanan: " + services.length), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Cache di-refresh!\nTotal layanan: " + services.length), "provsmm");
     } catch (err) {
-      return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
+      return m.reply( novaWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
 
@@ -461,7 +461,7 @@ async function handler(m, { sock }) {
     body += "\n\n--- Owner ---\n.prov setkey <key>\n.prov setmarkup <persen>\n.prov topup <nomor> <jumlah>\n.prov refresh\nAPI: https://providersmm.id/api/v2";
   }
   await m.react("🐣");
-  return m.reply( claraWrap("ProviderSMM", body), "provsmm");
+  return m.reply( novaWrap("ProviderSMM", body), "provsmm");
 }
 
 export { pluginConfig as config, handler };

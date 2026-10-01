@@ -18,7 +18,7 @@ import {
 } from "../../src/lib/nova-loker-scheduler.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "loker",
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
   // ── AKTIF (menu pilihan mode) ─────────────────────────────────────────
   if (action === "aktif" || action === "on" || action === "enable") {
     if (!m.isGroup) {
-      return m.reply(claraWrap("Loker", "⚠️ Command ini hanya bisa dipakai di dalam grup."));
+      return m.reply(novaWrap("Loker", "⚠️ Command ini hanya bisa dipakai di dalam grup."));
     }
 
     const prompt = [
@@ -153,7 +153,7 @@ async function handler(m, { sock }) {
     const choice = (args[0] || "").toLowerCase();
     const valid = ["group", "group_channel", "groupchannel", "private", "1", "2", "3"];
     if (!valid.includes(choice) && !["group","group_channel","private"].includes(choice)) {
-      return m.reply(claraWrap("Loker", "❌ Opsi tidak dikenali. Gunakan: group | group_channel | private"));
+      return m.reply(novaWrap("Loker", "❌ Opsi tidak dikenali. Gunakan: group | group_channel | private"));
     }
 
     let mode = choice;
@@ -187,23 +187,23 @@ async function handler(m, { sock }) {
     startLokerJobs(settings);
 
     if (mode === "group") {
-      return m.reply(claraWrap("Loker", `✅ Loker otomatis diaktifkan (mode: Grup). Broadcast akan dikirim ke grup ini (${jid}).\nJadwal: ${formatSchedule(settings.schedules)} WIB`));
+      return m.reply(novaWrap("Loker", `✅ Loker otomatis diaktifkan (mode: Grup). Broadcast akan dikirim ke grup ini (${jid}).\nJadwal: ${formatSchedule(settings.schedules)} WIB`));
     }
 
     if (mode === "group_channel") {
       const channelId = config.saluran?.id || "(tidak disetel)";
-      return m.reply(claraWrap("Loker", `✅ Loker otomatis diaktifkan (mode: Grup & Saluran).\nGrup: ${jid}\nSaluran: ${channelId}\nJadwal: ${formatSchedule(settings.schedules)} WIB`));
+      return m.reply(novaWrap("Loker", `✅ Loker otomatis diaktifkan (mode: Grup & Saluran).\nGrup: ${jid}\nSaluran: ${channelId}\nJadwal: ${formatSchedule(settings.schedules)} WIB`));
     }
 
     if (mode === "private") {
-      return m.reply(claraWrap("Loker", `✅ Loker otomatis diaktifkan (mode: Pesan Privat). Kamu (${sender}) akan menerima notifikasi loker via DM.`));
+      return m.reply(novaWrap("Loker", `✅ Loker otomatis diaktifkan (mode: Pesan Privat). Kamu (${sender}) akan menerima notifikasi loker via DM.`));
     }
   }
 
   // ── NONAKTIF ──────────────────────────────────────────────────────────
   if (action === "nonaktif" || action === "off" || action === "disable") {
     if (!m.isGroup) {
-      return m.reply(claraWrap("Loker", "⚠️ Command ini hanya bisa dipakai di dalam grup."));
+      return m.reply(novaWrap("Loker", "⚠️ Command ini hanya bisa dipakai di dalam grup."));
     }
     const jid = m.chat;
     const settings = updateLokerSettings((cur) => {
@@ -236,29 +236,29 @@ async function handler(m, { sock }) {
   if (action === "kategori" || action === "category") {
     const choice = (args[0] || "").toLowerCase();
     if (!choice) {
-      return m.reply(claraWrap("Loker", `🔎 Opsi kategori: ${CATEGORY_OPTIONS.join(', ')}`));
+      return m.reply(novaWrap("Loker", `🔎 Opsi kategori: ${CATEGORY_OPTIONS.join(', ')}`));
     }
     if (!CATEGORY_OPTIONS.includes(choice)) {
-      return m.reply(claraWrap("Loker", `❌ Kategori tidak dikenal. Opsi: ${CATEGORY_OPTIONS.join(', ')}`));
+      return m.reply(novaWrap("Loker", `❌ Kategori tidak dikenal. Opsi: ${CATEGORY_OPTIONS.join(', ')}`));
     }
     const settings = updateLokerSettings((cur) => ({ ...cur, category: choice }));
-    return m.reply(claraWrap("Loker", `✅ Kategori loker diset: ${choice}`));
+    return m.reply(novaWrap("Loker", `✅ Kategori loker diset: ${choice}`));
   }
 
   // ── JADWAL ──────────────────────────────────────────────────────────
   if (action === "jadwal" || action === "schedule") {
     const schedules = buildSchedules(args);
-    if (!schedules) return m.reply(claraWrap("loker", "❌ Format jadwal salah. Contoh: .loker jadwal 08:00 13:00 20:00"));
+    if (!schedules) return m.reply(novaWrap("loker", "❌ Format jadwal salah. Contoh: .loker jadwal 08:00 13:00 20:00"));
     const settings = updateLokerSettings((cur) => ({ ...cur, schedules }));
-    return m.reply(claraWrap("Loker", `✅ Jadwal disimpan: ${formatSchedule(schedules)} WIB`));
+    return m.reply(novaWrap("Loker", `✅ Jadwal disimpan: ${formatSchedule(schedules)} WIB`));
   }
 
   // ── JUMLAH ──────────────────────────────────────────────────────────
   if (action === "jumlah" || action === "count" || action === "number") {
     const n = parseInt(args[0]);
-    if (isNaN(n) || n < 1 || n > 10) return m.reply(claraWrap("Loker", "❌ Jumlah harus angka antara 1-10"));
+    if (isNaN(n) || n < 1 || n > 10) return m.reply(novaWrap("Loker", "❌ Jumlah harus angka antara 1-10"));
     const settings = updateLokerSettings((cur) => ({ ...cur, maxPerBroadcast: n }));
-    return m.reply(claraWrap("Loker", `✅ Jumlah loker per broadcast diset: ${n}`));
+    return m.reply(novaWrap("Loker", `✅ Jumlah loker per broadcast diset: ${n}`));
   }
 
   // ── TEST (kirim preview) ──────────────────────────────────────────────
@@ -274,14 +274,14 @@ async function handler(m, { sock }) {
         limit: settings.maxPerBroadcast || 3,
         sentIds,
       });
-      if (!jobs || !jobs.length) return m.reply(claraWrap("Loker", "Tidak ada loker baru ditemukan saat ini."));
+      if (!jobs || !jobs.length) return m.reply(novaWrap("Loker", "Tidak ada loker baru ditemukan saat ini."));
       const msg = formatLokerMessage(jobs, { label: "Preview", keywords: settings.keywords });
-      if (!msg) return m.reply(claraWrap("Loker", "Tidak ada loker yang bisa ditampilkan."));
+      if (!msg) return m.reply(novaWrap("Loker", "Tidak ada loker yang bisa ditampilkan."));
       await m.react("🐣");
       return await m.reply( msg, "loker");
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("loker", `Gagal kirim preview: ${e.message}`, "error"));
+      return m.reply(novaWrap("loker", `Gagal kirim preview: ${e.message}`, "error"));
     }
   }
 
@@ -305,11 +305,11 @@ async function handler(m, { sock }) {
 
     if (choice === "reset" || choice === "all") {
       const settings = updateLokerSettings((cur) => ({ ...cur, sources: AVAILABLE }));
-      return m.reply(claraWrap("Info", "\u2705 Semua sumber loker diaktifkan: " + AVAILABLE.join(", ")));
+      return m.reply(novaWrap("Info", "\u2705 Semua sumber loker diaktifkan: " + AVAILABLE.join(", ")));
     }
 
     if (!AVAILABLE.includes(choice)) {
-      return m.reply(claraWrap("Loker", `Sumber tidak dikenal. Tersedia: ${AVAILABLE.join(", ")}`));
+      return m.reply(novaWrap("Loker", `Sumber tidak dikenal. Tersedia: ${AVAILABLE.join(", ")}`));
     }
 
     const settings = updateLokerSettings((cur) => {
@@ -324,7 +324,7 @@ async function handler(m, { sock }) {
     });
 
     const isActive = settings.sources.includes(choice);
-    return m.reply(claraWrap("Loker", `Sumber *${choice}* ${isActive ? "diaktifkan" : "dinonaktifkan"}.
+    return m.reply(novaWrap("Loker", `Sumber *${choice}* ${isActive ? "diaktifkan" : "dinonaktifkan"}.
 Sumber aktif: ${settings.sources.join(", ") || "(kosong)"}`));
   }
 
@@ -359,9 +359,9 @@ Sumber aktif: ${settings.sources.join(", ") || "(kosong)"}`));
     try {
       const db = getDatabase();
       db.setting("lokerSentIds", {});
-      return m.reply(claraWrap("Loker", "✅ Cache loker (sentIds) berhasil di-reset."));
+      return m.reply(novaWrap("Loker", "✅ Cache loker (sentIds) berhasil di-reset."));
     } catch (e) {
-      return m.reply(claraWrap("loker", `❌ Gagal reset: ${e.message}`));
+      return m.reply(novaWrap("loker", `❌ Gagal reset: ${e.message}`));
     }
   }
 

@@ -1,10 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput,
-  claraHeader,
+  novaHeader,
   separator,
   tipText,
-  claraWrap,
-  claraLine,
+  novaWrap,
+  novaLine,
 } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getMin1aiKey } from "../../src/scraper/min1ai.js";
@@ -85,13 +85,13 @@ async function handleSessionAigrup(m, ctx, prefix) {
 
   if (subcmd === "on" || subcmd === "aktif") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Ditolak", "Hanya owner session ini yang bisa menyalakan AI Grup."));
+      await m.reply(novaWrap("Ditolak", "Hanya owner session ini yang bisa menyalakan AI Grup."));
       return { handled: true };
     }
     st.enabled = true;
     setJadibotSetting(jadibotId, "aigrup", st);
     await m.react("🐣");
-    await m.reply(claraWrap("AI Group Chat Aktif (Session Ini)", [
+    await m.reply(novaWrap("AI Group Chat Aktif (Session Ini)", [
       `Status: *ON*`,
       `Berlaku: *hanya nomor bot ini*`,
       `Probability: *${st.probability}%*`,
@@ -103,13 +103,13 @@ async function handleSessionAigrup(m, ctx, prefix) {
 
   if (subcmd === "off" || subcmd === "mati") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Ditolak", "Hanya owner session ini yang bisa mematikan AI Grup."));
+      await m.reply(novaWrap("Ditolak", "Hanya owner session ini yang bisa mematikan AI Grup."));
       return { handled: true };
     }
     st.enabled = false;
     setJadibotSetting(jadibotId, "aigrup", st);
     await m.react("🐣");
-    await m.reply(claraWrap("AI Group Chat Nonaktif (Session Ini)", [
+    await m.reply(novaWrap("AI Group Chat Nonaktif (Session Ini)", [
       `Status: *OFF*`,
       `Bot ini tidak nimbrung lagi`,
       `Command biasa tetap jalan`,
@@ -120,19 +120,19 @@ async function handleSessionAigrup(m, ctx, prefix) {
   if (subcmd === "prob" || subcmd === "probability") {
     const prob = parseInt(args[1] || "0", 10);
     if (isNaN(prob) || prob < 0 || prob > 100) {
-      await m.reply(claraWrap("Probability", [`*${prefix}aigroupchat prob 30* \u2014 30% chance`, `Saat ini: *${st.probability}%*`].join("\n")));
+      await m.reply(novaWrap("Probability", [`*${prefix}aigroupchat prob 30* \u2014 30% chance`, `Saat ini: *${st.probability}%*`].join("\n")));
       return { handled: true };
     }
     st.probability = prob;
     setJadibotSetting(jadibotId, "aigrup", st);
     await m.react("🐣");
-    await m.reply(claraWrap("AI Group Chat", `\u2705 Probability session ini diatur ke *${prob}%*`));
+    await m.reply(novaWrap("AI Group Chat", `\u2705 Probability session ini diatur ke *${prob}%*`));
     return { handled: true };
   }
 
   await m.react("🐣");
   // status / default
-  await m.reply(claraWrap("AI Group Chat Status (Session Ini)", [
+  await m.reply(novaWrap("AI Group Chat Status (Session Ini)", [
     `Status: *${isOn}*`,
     `Probability: *${st.probability}%*`,
     `Default nomor baru: *OFF* (harus ON manual)`,
@@ -170,7 +170,7 @@ async function handler(m, ctx) {
       if (m.isGroup) {
         await m.react("🐣");
         await m.reply(
-          claraWrap("Ditolak", [`${action} hanya bisa dari *chat pribadi*`,
+          novaWrap("Ditolak", [`${action} hanya bisa dari *chat pribadi*`,
             `Bukan dari dalam grup`,
             `Alasan: keamanan`].join("\n"))
         );
@@ -185,14 +185,14 @@ async function handler(m, ctx) {
       const enabledGroups = Object.entries(aigrup.groups || {}).filter(([, v]) => v).map(([k]) => k);
       const freeModels = TIO_MODELS.filter((mdl) => mdl.free);
       const text =
-        claraWrap("AI Grup Status", [`Global: *${aigrup.enabled ? "ON ✅" : "OFF ❌"}*`,
+        novaWrap("AI Grup Status", [`Global: *${aigrup.enabled ? "ON ✅" : "OFF ❌"}*`,
           `Format: *${fmtInfo ? fmtInfo.label : currentFmt}* ${fmtInfo ? fmtInfo.emoji : ""}`,
           `Model: *${currentModel}*`,
           `API Key: *${currentKey ? "Terpasang ✅" : "Belum ❌"}*`,
           `Probability: *${aigrup.probability}%*`,
           `Proactive: *${aigrup.proactiveInterval || 10} menit*`,
           `Grup aktif: *${enabledGroups.length}*`].join("\n")) +
-        claraWrap("Command", [`*${prefix}aigroupchat glm <model> on* — set model GLM, ON`, `*${prefix}aigroupchat glm on* — pakai model default (glm-5.3), ON`, `*${prefix}aigroupchat on* — pakai model saat ini, ON`, `*${prefix}aigroupchat off* — matikan`, `*${prefix}aigroupchat prob <0-100>* — atur probability respon`, `*${prefix}aigroupchat spam on/off* — toggle proactive`, `*${prefix}aigroupchat interval <menit>* — atur jeda ngomong`, `*${prefix}aigroupchat model* — lihat semua model`, `*${prefix}aigroupchat list* — lihat grup aktif`].join("\n")) +
+        novaWrap("Command", [`*${prefix}aigroupchat glm <model> on* — set model GLM, ON`, `*${prefix}aigroupchat glm on* — pakai model default (glm-5.3), ON`, `*${prefix}aigroupchat on* — pakai model saat ini, ON`, `*${prefix}aigroupchat off* — matikan`, `*${prefix}aigroupchat prob <0-100>* — atur probability respon`, `*${prefix}aigroupchat spam on/off* — toggle proactive`, `*${prefix}aigroupchat interval <menit>* — atur jeda ngomong`, `*${prefix}aigroupchat model* — lihat semua model`, `*${prefix}aigroupchat list* — lihat grup aktif`].join("\n")) +
         
         "\n" ;
       await m.reply(text);
@@ -221,7 +221,7 @@ async function handler(m, ctx) {
         "SenseTime", "Cohere", "InclusionAI", "Poolside", "Coding",
       ];
 
-      let text = claraWrap("Daftar Model Tio AI", "🤖") + "\n\n";
+      let text = novaWrap("Daftar Model Tio AI", "🤖") + "\n\n";
       const freeCount = TIO_MODELS.filter(m => m.free).length;
       const premCount = TIO_MODELS.filter(m => !m.free).length;
       text += `Total: *${TIO_MODELS.length} model* | Free: *${freeCount}* | Premium: *${premCount}*\n\n`;
@@ -248,7 +248,7 @@ async function handler(m, ctx) {
       const prob = parseInt(args[1] || "0", 10);
       if (isNaN(prob) || prob < 0 || prob > 100) {
         await m.reply(
-          claraWrap("Probability", [`*${prefix}aigroupchat prob 30* — 30% chance`,
+          novaWrap("Probability", [`*${prefix}aigroupchat prob 30* — 30% chance`,
             `Range: 0-100`,
             `Saat ini: *${aigrup.probability}%*`].join("\n"))
         );
@@ -256,7 +256,7 @@ async function handler(m, ctx) {
       }
       aigrup.probability = prob;
       db.save();
-      await m.reply(claraWrap("AI Group Chat", `✅ Probability diatur ke *${prob}%*`));
+      await m.reply(novaWrap("AI Group Chat", `✅ Probability diatur ke *${prob}%*`));
       return { handled: true };
     }
 
@@ -264,7 +264,7 @@ async function handler(m, ctx) {
     if (subcmd === "list") {
       const groups = Object.entries(aigrup.groups || {}).filter(([, v]) => v);
       await m.reply(
-        claraWrap("Grup AI Aktif", [`Global: *${aigrup.enabled ? "ON" : "OFF"}*`,
+        novaWrap("Grup AI Aktif", [`Global: *${aigrup.enabled ? "ON" : "OFF"}*`,
           `Grup terdaftar: *${groups.length}*`,
           `Proactive: *${aigrup.proactiveInterval || 10} menit*`,
           ...(groups.length ? groups.map(([gid]) => `${gid}`) : ["(kosong)"]),
@@ -276,7 +276,7 @@ async function handler(m, ctx) {
     // ═══ spam toggle (proactive messaging on/off) ═══
     if (subcmd === "spam" || subcmd === "proactive") {
       if (!m.isOwner) {
-        await m.reply(claraWrap("Ditolak", ["Hanya owner yang bisa toggle proactive AI Grup."].join("\n")));
+        await m.reply(novaWrap("Ditolak", ["Hanya owner yang bisa toggle proactive AI Grup."].join("\n")));
         return { handled: true };
       }
       if (await blockFromGroup("Toggle proactive")) return { handled: true };
@@ -292,7 +292,7 @@ async function handler(m, ctx) {
           if (sock) restartProactiveTimer(sock);
         } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
-          claraWrap("Proactive ON", [`Proactive: *ON*`,
+          novaWrap("Proactive ON", [`Proactive: *ON*`,
             `Interval: *${aigrup.proactiveInterval || 10} menit*`,
             `Bot ngomong sendiri tiap interval`,
             `Jam aktif: 08:00-22:00`,
@@ -309,7 +309,7 @@ async function handler(m, ctx) {
           stopProactiveTimer();
         } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
-          claraWrap("Proactive OFF", [`Proactive: *OFF*`,
+          novaWrap("Proactive OFF", [`Proactive: *OFF*`,
             `Bot tidak ngomong sendiri`,
             `Bot tetap respon kalau di-tag/reply`,
             `Nimbrung random tetap jalan`].join("\n")) + "\n" 
@@ -319,7 +319,7 @@ async function handler(m, ctx) {
 
       // Status spam
       await m.reply(
-        claraWrap("Proactive Status",
+        novaWrap("Proactive Status",
         `Proactive: *${aigrup.proactiveEnabled !== false ? "ON ✅" : "OFF ❌"}*\n` +
         `Interval: *${aigrup.proactiveInterval || 10} menit*\n` +
         `Jam aktif: 08:00-22:00\n` +
@@ -339,7 +339,7 @@ async function handler(m, ctx) {
       const minutes = parseInt(args[1] || "0", 10);
       if (isNaN(minutes) || minutes < 1 || minutes > 1440) {
         await m.reply(
-          claraWrap("Interval Proactive", [`*${prefix}aigroupchat interval 5* — tiap 5 menit (⚠️ beresiko)`,
+          novaWrap("Interval Proactive", [`*${prefix}aigroupchat interval 5* — tiap 5 menit (⚠️ beresiko)`,
             `*${prefix}aigroupchat interval 15* — tiap 15 menit`,
             `*${prefix}aigroupchat interval 10* — tiap 10 menit (default)`,
             `*${prefix}aigroupchat interval 60* — tiap 1 jam`,
@@ -362,7 +362,7 @@ async function handler(m, ctx) {
           if (sock) restartProactiveTimer(sock);
         } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
-          claraWrap("Interval Diubah", [`Interval: *${minutes} menit*`,
+          novaWrap("Interval Diubah", [`Interval: *${minutes} menit*`,
             `⚠️ Di bawah 10 menit BERESIKO BAN WA`,
             `Bot bisa kena banned oleh WhatsApp`,
             `Disarankan min 30-60 menit`].join("\n")) + "\n" 
@@ -378,7 +378,7 @@ async function handler(m, ctx) {
         const sock = getSocket();
         if (sock) restartProactiveTimer(sock);
       } catch (e) { console.error('[aigrup.js]:', e.message); }
-      await m.reply(claraWrap("AI Group Chat", `✅ Proactive interval diatur ke *${minutes} menit*
+      await m.reply(novaWrap("AI Group Chat", `✅ Proactive interval diatur ke *${minutes} menit*
 
 Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       return { handled: true };
@@ -387,13 +387,13 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
     // ═══ on (simple, pakai format saat ini) ═══
     if (subcmd === "on") {
       if (!m.isOwner) {
-        await m.reply(claraWrap("Ditolak", ["Hanya owner yang bisa toggle AI Grup."].join("\n")));
+        await m.reply(novaWrap("Ditolak", ["Hanya owner yang bisa toggle AI Grup."].join("\n")));
         return { handled: true };
       }
       if (await blockFromGroup("Toggle AI Grup")) return { handled: true };
       if (!currentKey) {
         await m.reply(
-          claraWrap("API Key Belum Diisi", [`API Key Min1AI (1min.ai) belum di-set`,
+          novaWrap("API Key Belum Diisi", [`API Key Min1AI (1min.ai) belum di-set`,
             `Set: .setkey min1ai <key> (atau apikeys.json aiSatuan.min1ai)`].join("\n"))
         );
         return { handled: true };
@@ -401,7 +401,7 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       aigrup.enabled = true;
       db.save();
       await m.reply(
-        claraWrap("AI Grup Aktif", [`Status: *ON*`,
+        novaWrap("AI Grup Aktif", [`Status: *ON*`,
           `Format: *${TIO_FORMATS[currentFmt]?.label || currentFmt}*`,
           `Model: *${currentModel}*`,
           `Probability: *${aigrup.probability}%*`,
@@ -414,14 +414,14 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
     // ═══ off ═══
     if (subcmd === "off") {
       if (!m.isOwner) {
-        await m.reply(claraWrap("Ditolak", ["Hanya owner yang bisa toggle AI Grup."].join("\n")));
+        await m.reply(novaWrap("Ditolak", ["Hanya owner yang bisa toggle AI Grup."].join("\n")));
         return { handled: true };
       }
       if (await blockFromGroup("Toggle AI Grup")) return { handled: true };
       aigrup.enabled = false;
       db.save();
       await m.reply(
-        claraWrap("AI Grup Nonaktif", [`Status: *OFF*`,
+        novaWrap("AI Grup Nonaktif", [`Status: *OFF*`,
           `Bot tidak nimbrung lagi`,
           `Command biasa tetap jalan`].join("\n")) + "\n" 
       );
@@ -456,7 +456,7 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
           "InclusionAI": "🤝", "Poolside": "🏖️", "Coding": "💻",
         };
         let text2 = "";
-        text2 += claraWrap(`${fmt.label.toUpperCase()} Format`, [
+        text2 += novaWrap(`${fmt.label.toUpperCase()} Format`, [
           `API Key: *${apiKey ? "Terpasang ✅" : "Belum ❌"}*`,
           `Model saat ini: *${aigrup.format === fmtKey ? currentModel : fmt.defaultModel}*`,
           `Semua model support format ini`,
@@ -466,7 +466,7 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
           const lines = models.map((mdl) =>
             `  ${mdl.free ? "🆓" : "💎"} *${mdl.label}* (${mdl.id})`
           ).join("\n");
-          text2 += claraWrap(brand.toUpperCase(), lines);
+          text2 += novaWrap(brand.toUpperCase(), lines);
         }
         
         await m.reply(text2);
@@ -483,7 +483,7 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       if (!modelInput && turnOn) {
         if (!apiKey) {
           await m.reply(
-            claraWrap("API Key Belum Diisi", [`API Key Min1AI (1min.ai) belum di-set`,
+            novaWrap("API Key Belum Diisi", [`API Key Min1AI (1min.ai) belum di-set`,
             `Set: .setkey min1ai <key> (atau apikeys.json aiSatuan.min1ai)`].join("\n"))
           );
           return { handled: true };
@@ -493,7 +493,7 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
         aigrup.enabled = true;
         db.save();
         await m.reply(
-          claraWrap("AI Grup Aktif",
+          novaWrap("AI Grup Aktif",
             `Status: *ON*\n` +
             `Format: *${fmt.label}*\n` +
             `Model: *${fmt.defaultModel}* (default)\n` +
@@ -510,7 +510,7 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
 
       if (!foundModel) {
         await m.reply(
-          claraWrap("Model Tidak Ditemukan", [`Model *${modelInput}* tidak ada`,
+          novaWrap("Model Tidak Ditemukan", [`Model *${modelInput}* tidak ada`,
             `Ketik *${prefix}aigroupchat model* untuk lihat semua`].join("\n"))
         );
         return { handled: true };
@@ -523,7 +523,7 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       if (turnOn) {
         if (!apiKey) {
           await m.reply(
-            claraWrap("API Key Belum Diisi", [`API Key Min1AI (1min.ai) belum di-set`,
+            novaWrap("API Key Belum Diisi", [`API Key Min1AI (1min.ai) belum di-set`,
               `Set: .setkey min1ai <key>`,
               `Model sudah disimpan, tapi bot belum ON`].join("\n"))
           );
@@ -536,7 +536,7 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       db.save();
 
       await m.reply(
-        claraWrap("AI Grup Update",
+        novaWrap("AI Grup Update",
           `Format: *${fmt.label}*\n` +
           `Model: *${foundModel.label}*\n` +
           `ID: *${foundModel.id}*\n` +
@@ -550,11 +550,11 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
     }
 
     // Unknown
-    await m.reply(claraWrap("AI Group Chat", `❌ Command tidak dikenal.\n\nKetik *${prefix}aigroupchat status* untuk lihat panduan.`));
+    await m.reply(novaWrap("AI Group Chat", `❌ Command tidak dikenal.\n\nKetik *${prefix}aigroupchat status* untuk lihat panduan.`));
     return { handled: true };
   } catch (error) {
     console.error("[aigrup]", error);
-    await m.reply(claraWrap("aigroupchat", `❌ Error: ${error.message || "Unknown"}`));
+    await m.reply(novaWrap("aigroupchat", `❌ Error: ${error.message || "Unknown"}`));
   }
 
   return { handled: true };

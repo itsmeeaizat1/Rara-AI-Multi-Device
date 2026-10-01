@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "morse",
@@ -94,23 +94,23 @@ async function handler(m, { sock, config: botConfig }) {
       mode = "decode";
       const morse = text.substring(7).trim();
       if (!morse) {
-        return m.reply(claraWrap("Morse", "Input morse kosong!"));
+        return m.reply(novaWrap("Morse", "Input morse kosong!"));
       }
       result = morseToText(morse);
       if (!result) {
-        return m.reply(claraWrap("Morse", "Tidak bisa decode. Pastikan format morse valid."));
+        return m.reply(novaWrap("Morse", "Tidak bisa decode. Pastikan format morse valid."));
       }
-      return m.reply(claraWrap("Morse Decode", [
+      return m.reply(novaWrap("Morse Decode", [
         "Input: " + (morse.length > 60 ? morse.substring(0, 60) + "..." : morse),
         "Hasil: " + result,
       ].join("\n")));
     } else {
       result = textToMorse(text);
       if (!result) {
-        return m.reply(claraWrap("Morse", "Tidak ada karakter yg bisa di-encode!"));
+        return m.reply(novaWrap("Morse", "Tidak ada karakter yg bisa di-encode!"));
       }
       await m.react("🐣");
-      return m.reply(claraWrap("Morse Encode", [
+      return m.reply(novaWrap("Morse Encode", [
         "Input: " + (text.length > 60 ? text.substring(0, 60) + "..." : text),
         "Hasil: " + result,
       ].join("\n")));
@@ -118,7 +118,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (e) {
     await m.react("❌");
     console.error("morse error:", e);
-    return m.reply(claraWrap("Morse", "Error: " + e.message));
+    return m.reply(novaWrap("Morse", "Error: " + e.message));
   }
 }
 

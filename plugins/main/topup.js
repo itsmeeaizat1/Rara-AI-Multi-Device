@@ -5,7 +5,7 @@
 // Sub: .topup status (cek pesanan pending), .topup <akun|rpg|item|cinta> (filter jalur)
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { toSC, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { toSC, novaWrap } from "../../src/lib/nova-menu-style.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
@@ -85,9 +85,9 @@ async function handler(m, { sock }) {
     const sender = m.key.participant || m.key.remoteJid;
     const pending = topups.pending[sender];
     if (!pending || pending.status !== "pending") {
-      return m.reply(claraWrap("topup", "Gak ada pesanan topup yang pending.\nKetik .topup buat lihat katalog."));
+      return m.reply(novaWrap("topup", "Gak ada pesanan topup yang pending.\nKetik .topup buat lihat katalog."));
     }
-    return m.reply(claraWrap("topup", [
+    return m.reply(novaWrap("topup", [
       `${toSC("Pesanan kamu masih menunggu pembayaran")} —`,
       "",
       `${toSC("Item")} : *${pending.name}*`,

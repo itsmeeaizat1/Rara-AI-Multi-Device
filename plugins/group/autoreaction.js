@@ -1,4 +1,4 @@
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
     db.setGroup(m.chat, { autoreaction: args === "on" });
 
     const text =
-      claraWrap("Autoreaction", ["Fitur: *auto reaction*",
+      novaWrap("Autoreaction", ["Fitur: *auto reaction*",
         `Status: *${args === "on" ? "ON" : "OFF"}*`,
         `Group: *${m.chat}*`].join("\n")) +
       "\n" +

@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { claraWrap, tipText, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, tipText, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -282,7 +282,7 @@ export default {
         return { handled: true };
       }
       toggleOn(groupId);
-      await m.reply(claraWrap("Truth or Dare", [
+      await m.reply(novaWrap("Truth or Dare", [
         `Status: *Aktif*`,
         ``,
         `Truth or Dare dinyalakan di grup ini.`,
@@ -297,7 +297,7 @@ export default {
         return { handled: true };
       }
       toggleOff(groupId);
-      await m.reply(claraWrap("Truth or Dare", [
+      await m.reply(novaWrap("Truth or Dare", [
         `Status: *Nonaktif*`,
         ``,
         `Truth or Dare dimatikan.`,
@@ -318,7 +318,7 @@ export default {
         ``,
         `Status: *${isTodOn(groupId) ? "Aktif" : "Nonaktif"}*`,
       ];
-      await m.reply(claraWrap("Tod - Statistik", lines.join("\n")));
+      await m.reply(novaWrap("Tod - Statistik", lines.join("\n")));
       return { handled: true };
     }
 
@@ -347,7 +347,7 @@ export default {
 
     // ─── Help ───
     if (subCmd === "help" || subCmd === "bantu") {
-      await m.reply(claraWrap("Tod - Bantuan", [
+      await m.reply(novaWrap("Tod - Bantuan", [
         `Cara Pakai Truth or Dare:`,
         ``,
         `1. *${prefix}tod* - Random truth atau dare`,
@@ -401,7 +401,7 @@ export default {
         `${chosen === "truth" ? "Jujur ya, jangan diplomasi!" : "Lakuin ya, jangan kabur!"}`,
       ];
 
-      const text = claraWrap("Tod - Target", lines.join("\n")) +
+      const text = novaWrap("Tod - Target", lines.join("\n")) +
         "\n" +
         tipText(`Kalau skip, wajib kasih 1 dare ke ${displayName(target)}`);
 
@@ -480,7 +480,7 @@ export default {
       lines.push(`${displayName(targetMember)} wajib respon ya!`);
     }
 
-    let text = claraWrap(`Tod - ${label}`, lines.join("\n"));
+    let text = novaWrap(`Tod - ${label}`, lines.join("\n"));
 
     if (type === "truth") {
       text += "\n" + tipText("Skip? Wajib kasih 1 truth ke member lain");

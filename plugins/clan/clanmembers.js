@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'clanmembers',
     alias: ["clanmembers"],
@@ -21,11 +21,11 @@ async function handler(m, { sock }) {
     const db = getDatabase()
     const user = db.getUser(m.sender)
 
-    if (!user?.clanId) return m.reply(claraWrap("clanmembers", `❌ Kamu belum punya clan`))
+    if (!user?.clanId) return m.reply(novaWrap("clanmembers", `❌ Kamu belum punya clan`))
     if (!db.db.data.clans) db.db.data.clans = {}
 
     const clan = db.db.data.clans[user.clanId]
-    if (!clan) return m.reply(claraWrap("Clanmembers", `❌ Clan tidak ditemukan`))
+    if (!clan) return m.reply(novaWrap("Clanmembers", `❌ Clan tidak ditemukan`))
 
     const emblem = clan.emblem || '🏰'
     const mentions = []

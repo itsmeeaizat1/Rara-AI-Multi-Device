@@ -9,7 +9,7 @@ import { promisify } from "util";
 import fetch from "node-fetch";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -434,7 +434,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     await m.react("❌");
-    m.reply(claraWrap("bratlocal", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("bratlocal", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

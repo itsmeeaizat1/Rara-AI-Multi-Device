@@ -2,7 +2,7 @@
 // Sistem Nikah — Cerai
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cerainikah",
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
     if (!myData.fun.nikah) {
       return m.reply(
-        claraWrap("cerainikah", "Kamu tidak sedang menikah! 💔")
+        novaWrap("cerainikah", "Kamu tidak sedang menikah! 💔")
       );
     }
 

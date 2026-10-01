@@ -3,7 +3,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { generateWAMessageFromContent } from "nova";
 import config from "../../config.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tam",
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     .slice(0, limit);
 
   if (!sorted.length) {
-    return m.reply(claraWrap("Top Active Member", `` + `- Belum ada data aktivitas di grup ini`));
+    return m.reply(novaWrap("Top Active Member", `` + `- Belum ada data aktivitas di grup ini`));
   }
 
   const pollVotes = sorted.map((u, i) => {

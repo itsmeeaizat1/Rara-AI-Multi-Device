@@ -5,7 +5,7 @@
 // .setkey <nama> — Hapus API key (kosongkan)
 // .setkey list — Sama dengan .setkey (lihat semua)
 import { API_KEYS, getApiKey, hasApiKey, setApiKey, getAllKeyStatus, getMaskedKey } from "../../src/lib/nova-api-keys.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setkey",
@@ -70,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       lines.push("PUSAT FILE: src/lib/apikey/apikeys.json — semua key (AI, scraper, fitur) satu file, tiap key ada komentar fiturnya. .setkey simpan di db & menimpa file itu.");;
 
-      const text = claraWrap("API Keys", lines.join("\n"));
+      const text = novaWrap("API Keys", lines.join("\n"));
       await m.reply( text, "setkey");
       return { handled: true };
     }
@@ -78,7 +78,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Check if key name is valid
     if (!API_KEYS[keyName]) {
       const validNames = Object.keys(API_KEYS).join(", ");
-      const text = claraWrap("API Keys", [
+      const text = novaWrap("API Keys", [
         "Nama key tidak dikenal: " + keyName,
         "",
         "Key tersedia:",
@@ -95,7 +95,7 @@ async function handler(m, { sock, config: botConfig }) {
     // No value -> delete key
     if (!keyValue) {
       setApiKey(keyName, "");
-      const text = claraWrap("API Keys", [
+      const text = novaWrap("API Keys", [
         "Key dihapus: " + keyDef.label,
         "",
         "Key " + keyName + " berhasil dihapus dari runtime DB",
@@ -108,7 +108,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Set key
     setApiKey(keyName, keyValue);
 
-    const text = claraWrap("API Keys", [
+    const text = novaWrap("API Keys", [
       "Key disimpan: " + keyDef.label,
       "",
       "Nama: " + keyName,
@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply( text, "setkey");
   } catch (e) {
-    await m.reply(claraWrap("setkey", "Gagal proses. Coba lagi.", "error"));
+    await m.reply(novaWrap("setkey", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }

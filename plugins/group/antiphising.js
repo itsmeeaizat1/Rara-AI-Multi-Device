@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antiphising',
@@ -33,35 +33,35 @@ function handler(m, { sock }) {
 
     if (option === 'on') {
         db.setGroup(m.chat, { antiphising: 'on' })
-        return m.reply(claraWrap("Antiphising", '✅ *AntiPhising diaktifkan*'))
+        return m.reply(novaWrap("Antiphising", '✅ *AntiPhising diaktifkan*'))
     }
 
     if (option === 'off') {
         db.setGroup(m.chat, { antiphising: 'off' })
-        return m.reply(claraWrap("Antiphising", '❌ *AntiPhising dinonaktifkan*'))
+        return m.reply(novaWrap("Antiphising", '❌ *AntiPhising dinonaktifkan*'))
     }
 
     if (option.startsWith('metode')) {
         const method = m.args?.[1]?.toLowerCase()
         if (method === 'kick') {
             db.setGroup(m.chat, { antiphising: 'on', antiphisingMode: 'kick' })
-            return m.reply(claraWrap("Antiphising", '✅ *AntiPhising mode KICK diaktifkan*'))
+            return m.reply(novaWrap("Antiphising", '✅ *AntiPhising mode KICK diaktifkan*'))
         }
         if (method === 'remove' || method === 'delete') {
             db.setGroup(m.chat, { antiphising: 'on', antiphisingMode: 'remove' })
-            return m.reply(claraWrap("Antiphising", '✅ *AntiPhising mode DELETE diaktifkan*'))
+            return m.reply(novaWrap("Antiphising", '✅ *AntiPhising mode DELETE diaktifkan*'))
         }
         return m.reply(novaError("Anti-Phishing", "Metode penanganan tidak valid! Gunakan: kick atau remove"))
     }
 
     if (option === 'kick') {
         db.setGroup(m.chat, { antiphising: 'on', antiphisingMode: 'kick' })
-        return m.reply(claraWrap("Antiphising", '✅ *AntiPhising mode KICK diaktifkan*'))
+        return m.reply(novaWrap("Antiphising", '✅ *AntiPhising mode KICK diaktifkan*'))
     }
 
     if (option === 'remove' || option === 'delete') {
         db.setGroup(m.chat, { antiphising: 'on', antiphisingMode: 'remove' })
-        return m.reply(claraWrap("Antiphising", '✅ *AntiPhising mode DELETE diaktifkan*'))
+        return m.reply(novaWrap("Antiphising", '✅ *AntiPhising mode DELETE diaktifkan*'))
     }
 
     return m.reply(novaError("Anti-Phishing", "Opsi tidak valid nih! Gunakan: on, off, metode kick, atau metode remove"))

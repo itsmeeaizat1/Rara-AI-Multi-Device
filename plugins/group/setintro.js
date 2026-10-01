@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'setintro',
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     db.setGroup(m.chat, groupData)
     db.save()
     
-    await m.reply(claraWrap("setintro", `✅ *Intro Disave!*\n` +
+    await m.reply(novaWrap("setintro", `✅ *Intro Disave!*\n` +
         `Pesan intro grup berhasil diubah.\n` +
         `Ketik *${m.prefix}intro* untuk melihat hasilnya.`))
 }

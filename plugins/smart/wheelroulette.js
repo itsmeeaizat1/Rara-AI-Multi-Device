@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wheelroulette",
@@ -66,7 +66,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "spin" || sub === "putar" || !sub) {
     if (user.coin < SPIN_COST) {
-      await m.reply(claraWrap("Wheel Roulette", "Coin tidak cukup!\nButuh: " + SPIN_COST + " coins\nCoin kamu: " + (user.coin || 0)));
+      await m.reply(novaWrap("Wheel Roulette", "Coin tidak cukup!\nButuh: " + SPIN_COST + " coins\nCoin kamu: " + (user.coin || 0)));
       return { handled: true };
     }
     let cfg = getConfig(db, gid);
@@ -110,7 +110,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       resultMsg = "Dapat: " + result.name + "!";
     }
 
-    await m.reply(claraWrap("Wheel Roulette", [
+    await m.reply(novaWrap("Wheel Roulette", [
       "Wheel berputar... (-" + SPIN_COST + " coins)",
       "",
       resultMsg,
@@ -129,7 +129,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       saveConfig(db, gid, cfg);
     }
     const list = cfg.segments.map(s => s.name + ": " + s.weight + "%").join("\n");
-    await m.reply(claraWrap("Wheel Roulette Rates", [
+    await m.reply(novaWrap("Wheel Roulette Rates", [
       "Cost: " + SPIN_COST + " coins/spin",
       "",
       list,
@@ -144,7 +144,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       saveConfig(db, gid, cfg);
     }
     const lastJackpot = cfg.jackpotWinners.length > 0 ? "@" + cfg.jackpotWinners[cfg.jackpotWinners.length - 1].user.split("@")[0] : "(belum ada)";
-    await m.reply(claraWrap("Wheel Roulette Stats", [
+    await m.reply(novaWrap("Wheel Roulette Stats", [
       "Total spins (grup): " + cfg.spins,
       "Total coins spent: " + cfg.totalCoinsSpent,
       "Jackpot winners: " + cfg.jackpotWinners.length,
@@ -156,15 +156,15 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "jackpot" || sub === "winner") {
     let cfg = getConfig(db, gid);
     if (!cfg || cfg.jackpotWinners.length === 0) {
-      await m.reply(claraWrap("Wheel Roulette", "Belum ada jackpot winner."));
+      await m.reply(novaWrap("Wheel Roulette", "Belum ada jackpot winner."));
       return { handled: true };
     }
     const list = cfg.jackpotWinners.slice(-5).reverse().map((w, i) => (i + 1) + ". @" + w.user.split("@")[0] + " - " + w.amount + " coins (" + new Date(w.ts).toLocaleDateString("id-ID") + ")").join("\n");
-    await m.reply(claraWrap("Wheel Roulette - Jackpot Winners", list), { mentions: cfg.jackpotWinners.slice(-5).map(w => w.user) });
+    await m.reply(novaWrap("Wheel Roulette - Jackpot Winners", list), { mentions: cfg.jackpotWinners.slice(-5).map(w => w.user) });
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Wheel Roulette", [
+  await m.reply(novaWrap("Wheel Roulette", [
     "WHEEL ROULETTE",
     "",
     prefix + "wheelroulette spin - spin wheel (" + SPIN_COST + " coins)",

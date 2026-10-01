@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "remote",
@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
 
     const text =
-      claraWrap("Remote", ["Fitur remote control aktif.",
+      novaWrap("Remote", ["Fitur remote control aktif.",
         "Gunakan perintah yang valid."].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);

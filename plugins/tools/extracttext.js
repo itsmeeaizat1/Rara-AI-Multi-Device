@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "node:fs";
 import path from "node:path";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 // pdf-parse lazy loader (avoid crash if not installed)
 let _PDFParse = null;
@@ -329,7 +329,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   const pdfMime = m.quoted?.msg?.mimetype || m.msg?.mimetype || "";
 
   if (!isImage && !isPdf) {
-    const helpText = claraWrap("Extract Text", [
+    const helpText = novaWrap("Extract Text", [
       `Ekstrak teks dari *pdf* atau *gambar* dengan format rapi`,
       ``,
       `📌 Format:`,
@@ -358,7 +358,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     }
 
     if (!buffer || buffer.length === 0) {
-      return m.reply(claraWrap("Extract Text", "❌ Gagal download media. Coba reply ulang pesannya."));
+      return m.reply(novaWrap("Extract Text", "❌ Gagal download media. Coba reply ulang pesannya."));
     }
 
     let extractedText = "";
@@ -369,26 +369,26 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     } else if (isPdf || pdfMime.includes("pdf")) {
       if (useAI) {
         modeLabel = "AI Vision";
-        m.reply(claraWrap("Extract Text", "Rendering halaman PDF & ekstrak dengan AI vision..."));
+        m.reply(novaWrap("Extract Text", "Rendering halaman PDF & ekstrak dengan AI vision..."));
         try {
           extractedText = await extractPdfViaAI(buffer, botConfig);
         } catch (aiErr) {
           // Fallback to pdf-parse if AI mode fails
-          m.reply(claraWrap("Extract Text", "AI mode gagal, fallback ke pdf-parse..."));
+          m.reply(novaWrap("Extract Text", "AI mode gagal, fallback ke pdf-parse..."));
           extractedText = await extractPdfText(buffer);
           modeLabel = "PDF Parse (fallback)";
         }
       } else {
         modeLabel = "PDF Parse";
-        m.reply(claraWrap("Extract Text", "Mengekstrak teks dari PDF dengan struktur..."));
+        m.reply(novaWrap("Extract Text", "Mengekstrak teks dari PDF dengan struktur..."));
         extractedText = await extractPdfText(buffer);
       }
     } else {
-      return m.reply(claraWrap("Extract Text", "❌ Media tidak didukung. Kirim PDF atau gambar."));
+      return m.reply(novaWrap("Extract Text", "❌ Media tidak didukung. Kirim PDF atau gambar."));
     }
 
     if (!extractedText || extractedText.trim().length === 0) {
-      return m.reply(claraWrap("Extract Text", "❌ Tidak ada teks yang bisa diekstrak dari media ini."));
+      return m.reply(novaWrap("Extract Text", "❌ Tidak ada teks yang bisa diekstrak dari media ini."));
     }
 
     // Split into chunks for WhatsApp
@@ -397,7 +397,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     for (let i = 0; i < chunks.length; i++) {
       const chunkNum = totalChunks > 1 ? ` (${i + 1}/${totalChunks})` : "";
-      const header = claraWrap(`Extract Text — ${modeLabel}${chunkNum}`, chunks[i]);
+      const header = novaWrap(`Extract Text — ${modeLabel}${chunkNum}`, chunks[i]);
       const footer = i === chunks.length - 1
         ? "\n" + tipText(`Ketik ${prefix}extracttext untuk ekstrak lagi`)
         : "";
@@ -407,7 +407,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   } catch (error) {
     await m.react("❌");
     console.error("extracttext error:", error);
-    await m.reply(claraWrap("Extract Text", [
+    await m.reply(novaWrap("Extract Text", [
       `❌ *gagal*`,
       ``,
       `${error.message || "Ada error nih"}`,

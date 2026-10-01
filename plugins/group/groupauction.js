@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
@@ -217,7 +217,7 @@ async function handler(m, { sock, config: botConfig }) {
       );
       const isOwner = m.sender === botConfig.owner?.[0] || m.isOwner;
       if (!isGroupAdmin && !isOwner) {
-        return m.reply(claraWrap("Lelang", "Hanya admin grup yg bisa membuat lelang!"));
+        return m.reply(novaWrap("Lelang", "Hanya admin grup yg bisa membuat lelang!"));
       }
 
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
@@ -233,12 +233,12 @@ async function handler(m, { sock, config: botConfig }) {
       const [title, priceStr, durStr] = parts;
       const startPrice = parseInt(priceStr.replace(/[^\d]/g, ""));
       if (isNaN(startPrice) || startPrice < 100) {
-        return m.reply(claraWrap("Lelang", "Harga awal minimal Rp100"));
+        return m.reply(novaWrap("Lelang", "Harga awal minimal Rp100"));
       }
 
       const duration = parseDuration(durStr);
       if (!duration || duration < 10000) {
-        return m.reply(claraWrap("Lelang", "Durasi minimal 10 detik (10s)"));
+        return m.reply(novaWrap("Lelang", "Durasi minimal 10 detik (10s)"));
       }
 
       const auctionId = generateAuctionId();
@@ -280,30 +280,30 @@ async function handler(m, { sock, config: botConfig }) {
       const bidAmount = parseInt((args[2] || "").replace(/[^\d]/g, ""));
 
       if (!auctionId || isNaN(bidAmount)) {
-        return m.reply(claraWrap("Lelang", "Format: " + prefix + "lelang bid <ID> <harga>\n💡 *Contoh:* " + prefix + "lelang bid LNG-ABC12 60000"));
+        return m.reply(novaWrap("Lelang", "Format: " + prefix + "lelang bid <ID> <harga>\n💡 *Contoh:* " + prefix + "lelang bid LNG-ABC12 60000"));
       }
 
       const all = db.setting("auctions") || {};
       const auction = all[auctionId];
       if (!auction) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` tidak ditemukan"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` tidak ditemukan"));
       }
       if (auction.ended) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` sudah berakhir"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` sudah berakhir"));
       }
       if (auction.cancelled) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` sudah dibatalkan"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` sudah dibatalkan"));
       }
       if (auction.chatId !== gid) {
-        return m.reply(claraWrap("Lelang", "Lelang ini bukan di grup ini"));
+        return m.reply(novaWrap("Lelang", "Lelang ini bukan di grup ini"));
       }
       if (auction.createdBy === m.sender) {
-        return m.reply(claraWrap("Lelang", "Kamu tidak bisa bid di lelang sendiri"));
+        return m.reply(novaWrap("Lelang", "Kamu tidak bisa bid di lelang sendiri"));
       }
 
       const remaining = auction.endTime - Date.now();
       if (remaining <= 0) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` sudah berakhir"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` sudah berakhir"));
       }
 
       const currentHighest = auction.bids.length > 0
@@ -311,7 +311,7 @@ async function handler(m, { sock, config: botConfig }) {
         : auction.startPrice;
 
       if (bidAmount < currentHighest + auction.minIncrement) {
-        return m.reply(claraWrap("Lelang",
+        return m.reply(novaWrap("Lelang",
           "Bid terlalu rendah!\n" +
           "Bid saat ini: *" + formatRupiah(currentHighest) + "*\n" +
           "Min bid: *" + formatRupiah(currentHighest + auction.minIncrement) + "*"
@@ -322,7 +322,7 @@ async function handler(m, { sock, config: botConfig }) {
         ? auction.bids[auction.bids.length - 1].bidder
         : null;
       if (lastBidder === m.sender) {
-        return m.reply(claraWrap("Lelang", "Kamu sudah bid tertinggi. Tunggu orang lain bid."));
+        return m.reply(novaWrap("Lelang", "Kamu sudah bid tertinggi. Tunggu orang lain bid."));
       }
 
       // Anti-snipe: extend by 30s if bid in last 30s
@@ -343,7 +343,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.save();
 
       const newRemaining = formatCountdown(auction.endTime - Date.now());
-      return m.reply(claraWrap("Lelang",
+      return m.reply(novaWrap("Lelang",
         "Bid diterima!\n" +
         "Item: *" + auction.title + "*\n" +
         "Bid: *" + formatRupiah(bidAmount) + "*\n" +
@@ -359,7 +359,7 @@ async function handler(m, { sock, config: botConfig }) {
       const ids = Object.keys(groupAuctions);
 
       if (ids.length === 0) {
-        return m.reply(claraWrap("Lelang", "Belum ada lelang aktif di grup ini.\nBuat: " + prefix + "lelang create <judul> | <harga> | <durasi>"));
+        return m.reply(novaWrap("Lelang", "Belum ada lelang aktif di grup ini.\nBuat: " + prefix + "lelang create <judul> | <harga> | <durasi>"));
       }
 
       let lines = [];
@@ -371,20 +371,20 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(id + " | " + auction.title + " | " + highest + " | " + remaining + " | " + auction.bids.length + " bid");
       }
 
-      return m.reply(claraWrap("Lelang Aktif", lines.join("\n")));
+      return m.reply(novaWrap("Lelang Aktif", lines.join("\n")));
     }
 
     // --- INFO ---
     if (action === "info") {
       const auctionId = args[1]?.toUpperCase();
       if (!auctionId) {
-        return m.reply(claraWrap("Lelang", "Format: " + prefix + "lelang info <ID>"));
+        return m.reply(novaWrap("Lelang", "Format: " + prefix + "lelang info <ID>"));
       }
 
       const all = db.setting("auctions") || {};
       const auction = all[auctionId];
       if (!auction) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` tidak ditemukan"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` tidak ditemukan"));
       }
 
       const remaining = formatCountdown(auction.endTime - Date.now());
@@ -428,14 +428,14 @@ async function handler(m, { sock, config: botConfig }) {
         });
       }
 
-      return m.reply(claraWrap("Lelang Info", lines.join("\n")));
+      return m.reply(novaWrap("Lelang Info", lines.join("\n")));
     }
 
     // --- CLOSE (manual close by admin) ---
     if (action === "close") {
       const auctionId = args[1]?.toUpperCase();
       if (!auctionId) {
-        return m.reply(claraWrap("Lelang", "Format: " + prefix + "lelang close <ID>"));
+        return m.reply(novaWrap("Lelang", "Format: " + prefix + "lelang close <ID>"));
       }
 
       const groupMeta = await sock.groupMetadata(gid).catch(() => null);
@@ -444,19 +444,19 @@ async function handler(m, { sock, config: botConfig }) {
       );
       const isOwner = m.sender === botConfig.owner?.[0] || m.isOwner;
       if (!isGroupAdmin && !isOwner) {
-        return m.reply(claraWrap("Lelang", "Hanya admin yg bisa menutup lelang"));
+        return m.reply(novaWrap("Lelang", "Hanya admin yg bisa menutup lelang"));
       }
 
       const all = db.setting("auctions") || {};
       const auction = all[auctionId];
       if (!auction) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` tidak ditemukan"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` tidak ditemukan"));
       }
       if (auction.ended) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` sudah berakhir"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` sudah berakhir"));
       }
       if (auction.cancelled) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` sudah dibatalkan"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` sudah dibatalkan"));
       }
 
       auction.ended = true;
@@ -468,7 +468,7 @@ async function handler(m, { sock, config: botConfig }) {
         all[auctionId] = auction;
         db.setting("auctions", all);
         db.save();
-        return m.reply(claraWrap("Lelang Ditutup",
+        return m.reply(novaWrap("Lelang Ditutup",
           "Lelang *" + auction.title + "* ditutup!\n" +
           "Pemenang: @" + winner.bidder.split("@")[0] + "\n" +
           "Bid Menang: *" + formatRupiah(winner.amount) + "*\n" +
@@ -478,7 +478,7 @@ async function handler(m, { sock, config: botConfig }) {
         all[auctionId] = auction;
         db.setting("auctions", all);
         db.save();
-        return m.reply(claraWrap("Lelang Ditutup",
+        return m.reply(novaWrap("Lelang Ditutup",
           "Lelang *" + auction.title + "* ditutup tanpa pemenang (0 bid)"
         ));
       }
@@ -488,7 +488,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "cancel") {
       const auctionId = args[1]?.toUpperCase();
       if (!auctionId) {
-        return m.reply(claraWrap("Lelang", "Format: " + prefix + "lelang cancel <ID>"));
+        return m.reply(novaWrap("Lelang", "Format: " + prefix + "lelang cancel <ID>"));
       }
 
       const groupMeta = await sock.groupMetadata(gid).catch(() => null);
@@ -497,16 +497,16 @@ async function handler(m, { sock, config: botConfig }) {
       );
       const isOwner = m.sender === botConfig.owner?.[0] || m.isOwner;
       if (!isGroupAdmin && !isOwner) {
-        return m.reply(claraWrap("Lelang", "Hanya admin yg bisa membatalkan lelang"));
+        return m.reply(novaWrap("Lelang", "Hanya admin yg bisa membatalkan lelang"));
       }
 
       const all = db.setting("auctions") || {};
       const auction = all[auctionId];
       if (!auction) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` tidak ditemukan"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` tidak ditemukan"));
       }
       if (auction.ended) {
-        return m.reply(claraWrap("Lelang", "Lelang `" + auctionId + "` sudah berakhir, tidak bisa dibatalkan"));
+        return m.reply(novaWrap("Lelang", "Lelang `" + auctionId + "` sudah berakhir, tidak bisa dibatalkan"));
       }
 
       auction.cancelled = true;
@@ -514,7 +514,7 @@ async function handler(m, { sock, config: botConfig }) {
       all[auctionId] = auction;
       db.setting("auctions", all);
       db.save();
-      return m.reply(claraWrap("Lelang", "Lelang *" + auction.title + "* (`" + auctionId + "`) dibatalkan"));
+      return m.reply(novaWrap("Lelang", "Lelang *" + auction.title + "* (`" + auctionId + "`) dibatalkan"));
     }
 
     // --- HISTORY ---
@@ -530,7 +530,7 @@ async function handler(m, { sock, config: botConfig }) {
         .slice(0, 10);
 
       if (groupHistory.length === 0) {
-        return m.reply(claraWrap("Lelang", "Belum ada riwayat lelang di grup ini"));
+        return m.reply(novaWrap("Lelang", "Belum ada riwayat lelang di grup ini"));
       }
 
       let lines = [];
@@ -540,7 +540,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(id + " | " + a.title + " | " + finalPrice + " | " + status);
       });
 
-      return m.reply(claraWrap("Riwayat Lelang", lines.join("\n")));
+      return m.reply(novaWrap("Riwayat Lelang", lines.join("\n")));
     }
 
     // --- HELP / default ---
@@ -558,7 +558,7 @@ async function handler(m, { sock, config: botConfig }) {
     );
   } catch (e) {
     console.error("lelang error:", e);
-    return m.reply(claraWrap("Lelang", "Error: " + e.message));
+    return m.reply(novaWrap("Lelang", "Error: " + e.message));
   }
 }
 

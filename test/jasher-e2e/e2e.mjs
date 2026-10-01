@@ -27,7 +27,7 @@ await db.save()
 const { checkPermission } = await import(R + "/src/lib/nova-middleware.js")
 const { handler, config: plug } = await import(R + "/plugins/promotion/jasher.js")
 const { fromSC } = await import(R + "/src/lib/styler.js")
-// GOTCHA: claraWrap merender smallcaps → asersi WAJIB dinormalisasi fromSC
+// GOTCHA: novaWrap merender smallcaps → asersi WAJIB dinormalisasi fromSC
 const sc = (s) => fromSC(String(s || "")).toLowerCase()
 const config = (await import(R + "/config.js")).default
 

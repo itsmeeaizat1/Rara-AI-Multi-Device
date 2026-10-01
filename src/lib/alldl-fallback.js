@@ -4,7 +4,7 @@
 // tapi kalau versi itu gagal, otomatis nyoba versi berikutnya.
 // Sukses via fallback → notice singkat versi mana yang down tadi.
 
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 
 const VERSIONS = {
   v1: { label: ".alldl (V1)", file: "../../plugins/download/alldl.js" },
@@ -132,7 +132,7 @@ export async function runAllDlFallback(selfKey, m, ctx = {}) {
       if (fails.length) {
         try {
           await m.reply(
-            claraWrap(
+            novaWrap(
               "All Downloader",
               `Engine ${VERSIONS[selfKey].label} lagi down:\n` +
                 fails.map((f) => `• ${f}`).join("\n") +
@@ -149,7 +149,7 @@ export async function runAllDlFallback(selfKey, m, ctx = {}) {
 
   try {
     await m.reply(
-      claraWrap(
+      novaWrap(
         "All Downloader",
         "Semua engine downloader gagal memproses link ini:\n\n" +
           fails.map((f) => `• ${f}`).join("\n") +

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Stamp — Tambah timestamp/date stamp ke foto (local via sharp + SVG, no API)
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photostamp",
@@ -136,7 +136,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         usedPrefix + "photostamp bottom-left | neon | full",
         usedPrefix + "photostamp custom Nova AI - 20 Agu 2026",
       ];
-      return m.reply(claraWrap("Photo Stamp", lines, "info"));
+      return m.reply(novaWrap("Photo Stamp", lines, "info"));
     }
 
     // Parse input
@@ -148,7 +148,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (input.toLowerCase().startsWith("custom ")) {
       customText = input.substring(7).trim();
       if (!customText) {
-        return m.reply(claraWrap("Photo Stamp", "Text custom tidak boleh kosong", "warn"));
+        return m.reply(novaWrap("Photo Stamp", "Text custom tidak boleh kosong", "warn"));
       }
     } else if (input) {
       const parts = input.split("|").map((s) => s.trim());
@@ -161,24 +161,24 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const stampText = customText || formatDate(new Date(), format);
 
     if (stampText.length > 80) {
-      return m.reply(claraWrap("Photo Stamp", "Text terlalu panjang (max 80 karakter)", "warn"));
+      return m.reply(novaWrap("Photo Stamp", "Text terlalu panjang (max 80 karakter)", "warn"));
     }
 
     // Get image
     const q = m.quoted || m;
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(claraWrap("Photo Stamp", [
+      return m.reply(novaWrap("Photo Stamp", [
         "Reply gambar dulu, lalu ketik:",
         usedPrefix + "photostamp",
       ], "warn"));
     }
 
-    m.reply(claraWrap("Photo Stamp", "Menambahkan timestamp..."));
+    m.reply(novaWrap("Photo Stamp", "Menambahkan timestamp..."));
 
     const imgBuffer = await q.download();
     if (!imgBuffer || imgBuffer.length === 0) {
-      return m.reply(claraWrap("Photo Stamp", "Gagal download gambar.", "warn"));
+      return m.reply(novaWrap("Photo Stamp", "Gagal download gambar.", "warn"));
     }
 
     const meta = await sharp(imgBuffer).metadata();
@@ -194,14 +194,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (!result || result.length === 0) {
       await m.react("🐣");
-      return m.reply(claraWrap("Photo Stamp", "Gagal processing stamp.", "warn"));
+      return m.reply(novaWrap("Photo Stamp", "Gagal processing stamp.", "warn"));
     }
 
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: claraWrap("Photo Stamp", [
+        caption: novaWrap("Photo Stamp", [
           "Stamp: " + stampText,
           "Posisi: " + position,
           "Style: " + style,
@@ -213,7 +213,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[PhotoStamp]", e);
-    m.reply(claraWrap("Photo Stamp", [
+    m.reply(novaWrap("Photo Stamp", [
       "Error: " + e.message,
       "",
       "Ketik " + usedPrefix + "photostamp list untuk bantuan",

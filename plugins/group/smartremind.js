@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "smartremind",
@@ -76,31 +76,31 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "auto") {
       const toggle = (args[1] || "").toLowerCase();
-      if (!["on", "off"].includes(toggle)) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}smartremind auto on|off`, "info"));
+      if (!["on", "off"].includes(toggle)) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}smartremind auto on|off`, "info"));
       data.autoDetect = toggle === "on";
       await db.save();
-      return m.reply(claraWrap("Smart Remind", `Auto-detect ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan scan pesan untuk jadwal otomatis.`, "info"));
+      return m.reply(novaWrap("Smart Remind", `Auto-detect ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan scan pesan untuk jadwal otomatis.`, "info"));
     }
 
     if (sub === "list") {
       const active = data.reminders.filter(r => !r.done);
-      if (active.length === 0) return m.reply(claraWrap("Smart Remind", "Belum ada reminder aktif."));
+      if (active.length === 0) return m.reply(novaWrap("Smart Remind", "Belum ada reminder aktif."));
       const list = active.map(r => `${r.id}. ${r.text} - ${new Date(r.time).toLocaleString("id-ID")}`).join("\n");
-      return m.reply(claraWrap("Smart Remind", `Reminder Aktif:\n\n${list}`, "info"));
+      return m.reply(novaWrap("Smart Remind", `Reminder Aktif:\n\n${list}`, "info"));
     }
 
     if (sub === "del" || sub === "remove") {
       const id = parseInt(args[1]);
-      if (!id) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}smartremind del <id>`, "info"));
+      if (!id) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}smartremind del <id>`, "info"));
       const idx = data.reminders.findIndex(r => r.id === id);
-      if (idx === -1) return m.reply(claraWrap("Info", `\u274c Reminder ID ${id} tidak ditemukan.`));
+      if (idx === -1) return m.reply(novaWrap("Info", `\u274c Reminder ID ${id} tidak ditemukan.`));
       data.reminders.splice(idx, 1);
       await db.save();
-      return m.reply(claraWrap("Smart Remind", `Reminder ID ${id} dihapus.`, "info"));
+      return m.reply(novaWrap("Smart Remind", `Reminder ID ${id} dihapus.`, "info"));
     }
 
     if (!text) {
-      return m.reply(claraWrap("Smart Remind", [
+      return m.reply(novaWrap("Smart Remind", [
         `Smart Remind - AI-powered reminder dari pesan alami`,
         "",
         `Contoh:`,
@@ -118,7 +118,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const targetTime = parseNaturalTime(text);
     if (!targetTime) {
-      return m.reply(claraWrap("Smart Remind", [
+      return m.reply(novaWrap("Smart Remind", [
         `Tidak bisa mendeteksi waktu dari pesan.`,
         `Coba format: jam, besok jam, hari jam, tanggal/bulan jam`,
         `Contoh: ${usedPrefix}smartremind besok jam 14:00 gathering`,
@@ -139,7 +139,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const timeStr = targetTime.toLocaleString("id-ID", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
 
-    return m.reply(claraWrap("Smart Remind", [
+    return m.reply(novaWrap("Smart Remind", [
       `Reminder berhasil diset!`,
       `Pesan: ${remindText}`,
       `Waktu: ${timeStr}`,

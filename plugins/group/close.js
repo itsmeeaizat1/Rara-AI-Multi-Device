@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getAiGroupAnnounce, buildFallbackAnnounce } from "../../src/lib/nova-group-announce-ai.js";
 const pluginConfig = {
     name: 'close',
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
         const groupMeta = m.groupMetadata;
         
         if (groupMeta.announce) {
-            await m.reply(claraWrap("Validasi Gagal", ["Grup sudah dalam keadaan `tertutup`.", "Hanya admin yang bisa mengirim pesan."].join("\n")));
+            await m.reply(novaWrap("Validasi Gagal", ["Grup sudah dalam keadaan `tertutup`.", "Hanya admin yang bisa mengirim pesan."].join("\n")));
             return;
         }
         
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
         await m.reply(successMsg, { mentions: [m.sender] });
         
     } catch (error) {
-        await m.reply(claraWrap("Error", ["Gagal menutup grup.", `_${error.message}_`].join("\n")));
+        await m.reply(novaWrap("Error", ["Gagal menutup grup.", `_${error.message}_`].join("\n")));
     }
 }
 

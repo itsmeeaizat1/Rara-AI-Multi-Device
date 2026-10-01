@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,9 +19,9 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Audio 8D", "Reply audio yang mau dijadikan 8D."));
+    if (!quoted) return m.reply(novaWrap("Audio 8D", "Reply audio yang mau dijadikan 8D."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(claraWrap("Audio 8D", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(novaWrap("Audio 8D", "Reply harus audio/voice note!"));
 
     const isPtt = !!quoted.pttMessage;
     const tmpDir = path.join(os.tmpdir(), 'nova-8d');
@@ -39,12 +39,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "speed" || sub === "s") {
       rotationSpeed = parseFloat(args[1]) || 0.2;
-      if (rotationSpeed < 0.05 || rotationSpeed > 2.0) return m.reply(claraWrap("Info", "Speed 0.05-2.0. Contoh: .audio8d speed 0.5"));
+      if (rotationSpeed < 0.05 || rotationSpeed > 2.0) return m.reply(novaWrap("Info", "Speed 0.05-2.0. Contoh: .audio8d speed 0.5"));
     }
 
     if (sub === "depth" || sub === "d") {
       depth = parseFloat(args[1]) || 0.8;
-      if (depth < 0.1 || depth > 1.0) return m.reply(claraWrap("Info", "Depth 0.1-1.0. Contoh: .audio8d depth 0.9"));
+      if (depth < 0.1 || depth > 1.0) return m.reply(novaWrap("Info", "Depth 0.1-1.0. Contoh: .audio8d depth 0.9"));
     }
 
     if (!isNaN(parseFloat(sub)) && sub !== "") {
@@ -71,7 +71,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: claraWrap("Audio 8D", [
+      caption: novaWrap("Audio 8D", [
         "Berhasil! Pakai headphone untuk efek maksimal",
         "Rotation speed: " + rotationSpeed,
         "Depth: " + depth,

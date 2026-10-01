@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 
@@ -26,14 +26,14 @@ async function handler(m, { sock }) {
   const groupData = db.getGroup(m.chat) || {};
 
   if (groupData.mutegc) {
-    return m.reply( claraWrap("Mute GC Sudah Aktif", ["Member tidak bisa menggunakan command bot di grup ini", "Hanya admin grup dan owner bot yang bisa akses", "", `_Ketik *${m.prefix}unmutegc* untuk membuka_`].join("\n")), "mutegc");
+    return m.reply( novaWrap("Mute GC Sudah Aktif", ["Member tidak bisa menggunakan command bot di grup ini", "Hanya admin grup dan owner bot yang bisa akses", "", `_Ketik *${m.prefix}unmutegc* untuk membuka_`].join("\n")), "mutegc");
   }
 
   db.setGroup(m.chat, { mutegc: true });
   const ctx = saluranCtx();
   const groupName = m.groupMetadata?.subject || "grup ini";
 
-  return m.reply( claraWrap("Mute GC Aktif", [`Grup: *${groupName}*`, "Member tidak bisa menggunakan command bot", "Admin grup dan owner bot tetap bisa akses", "", `_Ketik *${m.prefix}unmutegc* untuk membuka_`].join("\n")), "mutegc");
+  return m.reply( novaWrap("Mute GC Aktif", [`Grup: *${groupName}*`, "Member tidak bisa menggunakan command bot", "Admin grup dan owner bot tetap bisa akses", "", `_Ketik *${m.prefix}unmutegc* untuk membuka_`].join("\n")), "mutegc");
 }
 
 function isMutegc(groupJid, db) {

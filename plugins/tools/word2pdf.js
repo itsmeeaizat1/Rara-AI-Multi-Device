@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import mammoth from "mammoth";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 function wrapText(text, font, size, maxWidth) {
   const words = text.split(" ");
@@ -111,7 +111,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   const isDocxFile = docMime.includes("word") || docMime.includes("officedocument") || docMime.includes("msword");
 
   if (!isDocx && !isDocxFile) {
-    const help = claraWrap("Word2Pdf", [
+    const help = novaWrap("Word2Pdf", [
       `Converter .docx ke PDF`,
       ``,
       `📌 Format:`,
@@ -126,7 +126,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "word2pdf");
   }
-  m.reply(claraWrap("Word2Pdf", "Konversi .docx ke PDF..."));
+  m.reply(novaWrap("Word2Pdf", "Konversi .docx ke PDF..."));
 
   try {
     await m.react("🕒");
@@ -135,7 +135,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     else buffer = await m.download();
 
     if (!buffer || buffer.length === 0) {
-      return m.reply(claraWrap("Word2Pdf", "❌ Gagal download file .docx"));
+      return m.reply(novaWrap("Word2Pdf", "❌ Gagal download file .docx"));
     }
 
     const { pdfBuffer, textPreview } = await convertDocxToPdf(buffer);
@@ -151,11 +151,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     let preview = textPreview.trim();
     if (preview.length > 1500) preview = preview.substring(0, 1500) + "\n\n... (lihat PDF untuk lengkap)";
     await m.react("🐣");
-    await m.reply(claraWrap("Word2Pdf — Preview", preview));
+    await m.reply(novaWrap("Word2Pdf — Preview", preview));
   } catch (error) {
     await m.react("❌");
     console.error("word2pdf error:", error);
-    m.reply(claraWrap("Word2Pdf", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
+    m.reply(novaWrap("Word2Pdf", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }
 
   return { handled: true };

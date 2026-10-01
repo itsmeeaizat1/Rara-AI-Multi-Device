@@ -6,7 +6,7 @@ import path from "path";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const pluginConfig = {
@@ -250,7 +250,7 @@ async function handler(m, { sock }) {
       },
     );
   } catch (error) {
-    m.reply(claraWrap("carifitur", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("carifitur", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

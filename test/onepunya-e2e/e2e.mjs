@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT — E2E: ONEPUNYA API (31 endpoint, 8 plugin, 34 command)
 // Cover: lib dasar (auth error, struktur respon, seam http), resolve command
 // via loader, handler happy/sad path tiap plugin, deteksi platform onedl,
-// format teks smallcaps-aware (claraWrap output).
+// format teks smallcaps-aware (novaWrap output).
 // Jalankan dari repo root: node test/onepunya-e2e/e2e.mjs
 import fs from "node:fs";
 import os from "node:os";

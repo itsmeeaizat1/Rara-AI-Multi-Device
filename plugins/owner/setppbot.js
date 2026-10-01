@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
     const media = extractImage(m);
     if (!media) {
       const text =
-        claraWrap("Set PP Bot", ["Cara 1: *Kirim gambar + caption .setppbot*",
+        novaWrap("Set PP Bot", ["Cara 1: *Kirim gambar + caption .setppbot*",
           "Cara 2: *Reply gambar dengan .setppbot*",
           "Format: *JPG, PNG, WEBP*"].join("\n")) +
         "\n" +
@@ -52,7 +52,7 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.updateProfilePicture(buffer);
 
     const text =
-      claraWrap("Set PP Bot", ["Status: *SUCCESS*"].join("\n")) +
+      novaWrap("Set PP Bot", ["Status: *SUCCESS*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['buatgrup', 'creategroup', 'newgroup'],
     alias: ["buatgrup", "creategroup", "newgroup"],
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         txt += `\`${m.prefix}buatgrup Tim Alpha | 628123,628456\`\n\n`
         txt += `*Contoh Dengan Durasi (Masa Aktif 60 Menit):*\n`
         txt += `\`${m.prefix}buatgrup Tim Beta | 628123,628456 | 60\``
-        return m.reply(claraWrap("buatgrup", txt))
+        return m.reply(novaWrap("buatgrup", txt))
     }
 
     const name = args[0].trim()
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const durationStr = args[2] ? args[2].trim() : ''
 
     if (!name || name.length < 2) {
-        return m.reply(claraWrap("Buatgrup", '❌ Waduh kak, nama grupnya kependekan! Minimal 2 karakter ya.'))
+        return m.reply(novaWrap("Buatgrup", '❌ Waduh kak, nama grupnya kependekan! Minimal 2 karakter ya.'))
     }
 
     const participants = participantsStr
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
         .map(n => n + '@s.whatsapp.net')
 
     if (participants.length === 0) {
-        return m.reply(claraWrap("Buatgrup", '❌ Lho kak, nomor pesertanya mana? Masukkan minimal 1 nomor ya.'))
+        return m.reply(novaWrap("Buatgrup", '❌ Lho kak, nomor pesertanya mana? Masukkan minimal 1 nomor ya.'))
     }
 
     let durationMs = 0
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
             }, durationMs)
         }
     } catch (err) {
-        return m.reply(claraWrap("buatgrup", `❌ Maaf kak, gagal membuat grup! 😭\nError: ${err.message}`))
+        return m.reply(novaWrap("buatgrup", `❌ Maaf kak, gagal membuat grup! 😭\nError: ${err.message}`))
     }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "anticulik",
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
   if (!option) {
     const status = db.setting("anticulik") || "off";
 
-    return m.reply(claraWrap("Anti Culik", 
+    return m.reply(novaWrap("Anti Culik", 
         `Bot akan otomatis keluar dari grup jika ditambah oleh orang yang tidak dikenal tanpa izin.\n\n` +
         `*status:*\n` +
         `Mode: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
   if (option === "on") {
     db.setting("anticulik", "on");
     const ctx = saluranCtx();
-    return m.reply(claraWrap("anticulik", `🛡️ *anti culik aktif*\n\n` +
+    return m.reply(novaWrap("anticulik", `🛡️ *anti culik aktif*\n\n` +
         `Bot akan keluar otomatis jika ditambah tanpa izin\n` +
         `Satu-satunya cara bot bisa join: *${m.prefix}join* oleh owner\n\n` +
         `_Member yang menambah bot akan diberi peringatan_`));
@@ -47,12 +47,12 @@ async function handler(m, { sock }) {
 
   if (option === "off") {
     db.setting("anticulik", "off");
-    return m.reply(claraWrap("anticulik", `🛡️ *anti culik nonaktif*\n\n` +
+    return m.reply(novaWrap("anticulik", `🛡️ *anti culik nonaktif*\n\n` +
         `Bot tidak akan keluar otomatis jika ditambah ke grup\n` +
         `Siapapun bisa menambahkan bot ke grup`));
   }
 
-  return m.reply(claraWrap("Anticulik", `opsi tidak valid\n\nGunakan ${m.prefix}anticulik on atau ${m.prefix}anticulik off`, "error"));
+  return m.reply(novaWrap("Anticulik", `opsi tidak valid\n\nGunakan ${m.prefix}anticulik on atau ${m.prefix}anticulik off`, "error"));
 }
 
 async function handleAntiCulik(event, sock, db) {

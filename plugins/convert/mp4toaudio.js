@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -32,14 +32,14 @@ const AUDIO_FORMATS = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("MP4 to Audio", "Reply video yang mau di-extract audionya."));
+    if (!quoted) return m.reply(novaWrap("MP4 to Audio", "Reply video yang mau di-extract audionya."));
     const videoMsg = quoted.videoMessage || quoted.documentMessage;
-    if (!videoMsg) return m.reply(claraWrap("MP4 to Audio", "Reply harus video/document video!"));
+    if (!videoMsg) return m.reply(novaWrap("MP4 to Audio", "Reply harus video/document video!"));
 
     const format = (args[0] || "mp3").toLowerCase();
     if (!AUDIO_FORMATS[format]) {
       const list = Object.entries(AUDIO_FORMATS).map(([k, v]) => k + " - " + v.desc).join("\n");
-      return m.reply(claraWrap("MP4 to Audio", [
+      return m.reply(novaWrap("MP4 to Audio", [
         "Format tidak didukung!",
         "Format tersedia:",
         list,
@@ -75,7 +75,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: fmt.mime,
       ptt: isPtt,
-      caption: claraWrap("MP4 to Audio", [
+      caption: novaWrap("MP4 to Audio", [
         "Berhasil extract audio!",
         "Format: " + format.toUpperCase() + " (" + fmt.desc + ")",
         "Codec: " + fmt.codec,

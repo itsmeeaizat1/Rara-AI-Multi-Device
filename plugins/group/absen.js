@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import moment from 'moment-timezone'
 import config from '../../config.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 import { buildAbsenMeter, countGroupMembers } from "../../src/lib/nova-absen-meter.js";
 const pluginConfig = {
@@ -24,14 +24,14 @@ async function handler(m, { sock }) {
   persistLoad("absensi"); // restore sesi absen dari db (anti hilang pas restart)
     const chatId = m.chat
     if (!global.absensi[chatId]) {
-        return m.reply(claraWrap("Tidak Ada Absen", 
+        return m.reply(novaWrap("Tidak Ada Absen", 
             `Belum ada sesi absen di grup ini!\n\n` +
             `Admin dapat memulai dengan\n` +
             `*.mulaiabsen [keterangan]*`))
     }
     const absen = global.absensi[chatId]
     if (absen.peserta.includes(m.sender)) {
-        return m.reply(claraWrap("Absen", `Kamu sudah absen!`, "error"))
+        return m.reply(novaWrap("Absen", `Kamu sudah absen!`, "error"))
     }
     absen.peserta.push(m.sender)
     persistSave("absensi")
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     // 📊 METER KEHADIRAN (13 Sep 2026): progress bar peserta/anggota grup
     const totalMembers = await countGroupMembers(sock, chatId)
     const meter = totalMembers ? buildAbsenMeter(absen.peserta.length, totalMembers) : null
-    await m.reply(claraWrap(`MANTAP, @${m.sender.split('@')[0]} HADIRR`, `✅ *MANTAP, @${m.sender.split('@')[0]} HADIRR*\n` +
+    await m.reply(novaWrap(`MANTAP, @${m.sender.split('@')[0]} HADIRR`, `✅ *MANTAP, @${m.sender.split('@')[0]} HADIRR*\n` +
             `TUJUAN ABSEN: ${absen.keterangan}\n` +
             "" +
             `📅 ${dateStr}\n` +

@@ -9,7 +9,7 @@
 import { aioDl, teraboxDl } from "../../src/scraper/nexray-dl.js";
 import { registerChoice } from "../../src/lib/nova-aio2-session.js";
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
-import { toSC, claraWrap, novaGuide, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
+import { toSC, novaWrap, novaGuide, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -157,7 +157,7 @@ async function sendSingle(m, sock, media, meta) {
     }, { quoted: m });
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("AIO v2", `Gagal unduh file: ${e?.message || e}`, "error"));
+    await m.reply(novaWrap("AIO v2", `Gagal unduh file: ${e?.message || e}`, "error"));
   }
   return true;
 }
@@ -220,7 +220,7 @@ async function handler(m, { sock, config: botConfig }) {
     const { sections, statsText } = buildPickerSections(res.medias, { source: res.source, statistics: res.statistics });
     if (!sections.length) {
       await m.react("❌");
-      return m.reply(claraWrap("AIO v2", `Link-nya gak punya media yang bisa diunduh (sumber: ${res.source}).`, "error"));
+      return m.reply(novaWrap("AIO v2", `Link-nya gak punya media yang bisa diunduh (sumber: ${res.source}).`, "error"));
     }
     registerChoice(m.chat, res.medias.map((x) => x.url));
 
@@ -243,7 +243,7 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("AIO v2", `${e?.message || e} — coba link lain, atau pakai downloader spesifik platform (.tiktok/.ytmp4/.teraboxv2).`, "error"));
+    return m.reply(novaWrap("AIO v2", `${e?.message || e} — coba link lain, atau pakai downloader spesifik platform (.tiktok/.ytmp4/.teraboxv2).`, "error"));
   }
 }
 

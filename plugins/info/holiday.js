@@ -4,7 +4,7 @@
 // PACKAGE date-holidays via lib nova-haribesar (satu sumber lokal, tahan lama).
 // Fitur lama dipertahankan: header "hari ini libur" / libur terdekat +
 // ticker live < 24 jam menuju libur.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 import { computeNextMidnightWib, buildLiburHeader, buildLiburCard } from "../../src/lib/nova-libur-card.js";
 import { getHariBesar, getLiburOn, nextLibur, listLiburMendatang } from "../../src/lib/nova-haribesar.js";
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
       caption += `Tidak ada hari libur nasional dalam 120 hari ke depan.`;
     }
 
-    const __navText = claraWrap(caption.trim().split("\n"));
+    const __navText = novaWrap(caption.trim().split("\n"));
     await m.reply(__navText);
 
     // libur besok (diff <= 1) → ticker live sampai tengah malam D-day
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[HariLibur]", error.message);
-    m.reply(claraWrap("HariLibur", `Ada error nih, coba lagi ya`));
+    m.reply(novaWrap("HariLibur", `Ada error nih, coba lagi ya`));
   }
 }
 

@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ttselon",
   alias: ["ttselon"],
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     );
     const voice = res.data?.result?.find((v) => v.elon_musk && !v.error);
     if (!voice) {
-      return m.reply(claraWrap("ttselon", `❌ Elon voice error. Coba TTS lain.`));
+      return m.reply(novaWrap("ttselon", `❌ Elon voice error. Coba TTS lain.`));
     }
 
     const tempDir = path.join(process.cwd(), "temp");
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     fs.unlinkSync(wavPath);
     fs.unlinkSync(opusPath);
   } catch (err) {
-    m.reply(claraWrap("ttselon", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("ttselon", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

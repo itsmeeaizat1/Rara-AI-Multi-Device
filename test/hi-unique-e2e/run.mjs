@@ -7,7 +7,7 @@ function ok(name, cond, detail = "") {
 }
 console.log("─── HIRO UNIQUE PORTS e2e ───");
 
-// smallcaps helper (claraWrap → asersi wajib through this)
+// smallcaps helper (novaWrap → asersi wajib through this)
 const toSC = (x) => String(x || '').replace(/[a-z]/g, (c) => ({ a: '\u1D00', b: '\u1D04', c: '\u1D05', d: '\u1D07', e: '\u1D07', f: '\u1D0A', g: '\u0262', h: '\u029C', i: '\u026A', j: '\u1D0C', k: '\u1D0B', l: '\u029F', m: '\u1D0D', n: '\u0274', o: '\u1D0F', p: '\u1D18', q: '\u01EB', r: '\u0280', s: '\uA731', t: '\u1D1B', u: '\u1D1C', v: '\u1D20', w: '\u1D21', x: '\u02E3', y: '\u028F', z: '\u1D22' })[c] || c);
 
 const files = {

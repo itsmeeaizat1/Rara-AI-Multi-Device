@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -29,7 +29,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const isVideo = m.isVideo || (m.quoted && m.quoted.isVideo) || (m.quoted && m.quoted.type === 'videoMessage')
     if (!isVideo) {
-        return m.reply(claraWrap("smemevid", [
+        return m.reply(novaWrap("smemevid", [
         "Reply atau kirim video dengan caption",
         "",
         "💡 Contoh: " + m.prefix + "smemevid Top|Bottom",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     const input = m.args.join(' ')
     if (!input || !input.includes('|')) {
-        { return await m.reply(claraWrap("smemevid", [
+        { return await m.reply(novaWrap("smemevid", [
             "📌 Format: top|bottom",
             "",
             "💡 Contoh: " + m.prefix + "smemevid WIDTH OR HEIGHT|WHY NOT BOTH?",

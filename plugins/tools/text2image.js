@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "text2image",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   try {
     const prompt = m.args?.join(" ").trim() || (m.quoted && (m.quoted.text || m.quoted.caption));
     if (!prompt) {
-      return m.reply(claraWrap("text2image", `Masukkan deskripsi gambar yang ingin dibuat!\n\nContoh: ${m.prefix}text2image a cute cat playing guitar`, "guide"));
+      return m.reply(novaWrap("text2image", `Masukkan deskripsi gambar yang ingin dibuat!\n\nContoh: ${m.prefix}text2image a cute cat playing guitar`, "guide"));
     }
 
     await m.react("🕒");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
     if (!buffer || buffer.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("text2image", "❌ Gagal menghasilkan gambar dari prompt."));
+      return m.reply(novaWrap("text2image", "❌ Gagal menghasilkan gambar dari prompt."));
     }
 
     await m.react("🐣");
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("text2image error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("text2image", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("text2image", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

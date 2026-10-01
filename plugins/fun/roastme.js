@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const MODES = {
   mild: "Roasting ringan, santai, masih sopan dan bisa diterima semua orang.",
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   if (!args && !m.quoted) {
-    const help = claraWrap("RoastMe", [
+    const help = novaWrap("RoastMe", [
       `AI roasting pedas tapi lucu`,
       ``,
       `📌 Format:`,
@@ -72,7 +72,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     if (m.quoted) header += ` - Target: ${targetName}`;
 
     await m.react("🐣");
-    await m.reply(claraWrap(header, result.trim()));
+    await m.reply(novaWrap(header, result.trim()));
   } catch (error) {
     await m.react("❌");
     console.error("roastme error:", error);

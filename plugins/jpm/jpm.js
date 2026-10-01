@@ -24,7 +24,7 @@ import axios from "axios";
 import path from "path";
 import fs from "fs";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jpm",
@@ -396,7 +396,7 @@ async function runBroadcast(
   const _bcType = mode === "channel" ? "channel" : "group";
   const broadcastText = broadcastFormat({ botName: _botName, senderName: _senderName, message: text, type: _bcType });
 
-  await m.reply(claraWrap(`JPM ${modeLabel} Dimulai`, `📝 Pesan: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}\n📷 Media: ${mediaBuffer ? mediaType : "Tidak ada"}\n👥 Target: ${groupIds.length} ${mode === "channel" ? "channel" : "grup"}\n⏱️ Jeda: ${(jedaJpm / 1000).toFixed(1)} detik\n📊 Estimasi: ${Math.ceil((groupIds.length * jedaJpm) / 60000)} menit\n\nSedang mengirim ke semua target...`));
+  await m.reply(novaWrap(`JPM ${modeLabel} Dimulai`, `📝 Pesan: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}\n📷 Media: ${mediaBuffer ? mediaType : "Tidak ada"}\n👥 Target: ${groupIds.length} ${mode === "channel" ? "channel" : "grup"}\n⏱️ Jeda: ${(jedaJpm / 1000).toFixed(1)} detik\n📊 Estimasi: ${Math.ceil((groupIds.length * jedaJpm) / 60000)} menit\n\nSedang mengirim ke semua target...`));
 
   global.statusjpm = true;
   let successCount = 0;
@@ -406,7 +406,7 @@ async function runBroadcast(
     if (global.stopjpm) {
       delete global.stopjpm;
       delete global.statusjpm;
-      await m.reply(claraWrap("JPM Dihentikan", `✅ Berhasil: ${successCount}\nGagal: ${failedCount}\n⏸️ Sisa: ${groupIds.length - successCount - failedCount}`));
+      await m.reply(novaWrap("JPM Dihentikan", `✅ Berhasil: ${successCount}\nGagal: ${failedCount}\n⏸️ Sisa: ${groupIds.length - successCount - failedCount}`));
       return;
     }
 
@@ -449,12 +449,12 @@ async function runBroadcast(
   }
 
   delete global.statusjpm;
-  await m.reply(claraWrap(`JPM ${modeLabel} Selesai`, `✅ Berhasil: ${successCount}\nGagal: ${failedCount}\n📊 Total: ${groupIds.length}`));
+  await m.reply(novaWrap(`JPM ${modeLabel} Selesai`, `✅ Berhasil: ${successCount}\nGagal: ${failedCount}\n📊 Total: ${groupIds.length}`));
 }
 
 function showHelp(m) {
   const p = m.prefix;
-  return m.reply(claraWrap("JPM — Sistem Broadcast Massal", `Sistem lengkap untuk mengirim pesan ke seluruh grup, channel, atau target tertentu secara otomatis maupun manual.\n\nCARA PAKAI:\nKetik *${p}jpm* untuk membuka menu interaktif\nBisa reply/kirim teks, foto, audio, atau video lalu ketik *${p}jpm*\nPilih mode pengiriman dari tombol yang muncul\n\nMODE BROADCAST:\n📢 JPM Basic — Kirim pesan ke semua grup tanpa tag\n👁️ JPM Hidetag — Kirim pesan ke semua grup, tag tersembunyi\n📺 JPM Channel — Kirim pesan ke semua channel newsletter\n🚀 JPM Update — Broadcast changelog/update ke semua grup\n🔄 Auto JPM — Atur jadwal siaran otomatis berdasar interval\n\nPENGATURAN:\n⏱️ Atur Delay — Jeda antar pengiriman per grup\n🚫 Blacklist JPM — Kelola grup yang dikecualikan dari JPM\n🚫 Blacklist AutoJPM — Kelola grup yang dikecualikan dari AutoJPM\n⏹️ Stop JPM — Hentikan JPM yang sedang berjalan\n\nFORMAT INTERVAL:\n10m (10 menit) • 1h (1 jam) • 2h30m (2 jam 30 menit) • 1d (1 hari)`));
+  return m.reply(novaWrap("JPM — Sistem Broadcast Massal", `Sistem lengkap untuk mengirim pesan ke seluruh grup, channel, atau target tertentu secara otomatis maupun manual.\n\nCARA PAKAI:\nKetik *${p}jpm* untuk membuka menu interaktif\nBisa reply/kirim teks, foto, audio, atau video lalu ketik *${p}jpm*\nPilih mode pengiriman dari tombol yang muncul\n\nMODE BROADCAST:\n📢 JPM Basic — Kirim pesan ke semua grup tanpa tag\n👁️ JPM Hidetag — Kirim pesan ke semua grup, tag tersembunyi\n📺 JPM Channel — Kirim pesan ke semua channel newsletter\n🚀 JPM Update — Broadcast changelog/update ke semua grup\n🔄 Auto JPM — Atur jadwal siaran otomatis berdasar interval\n\nPENGATURAN:\n⏱️ Atur Delay — Jeda antar pengiriman per grup\n🚫 Blacklist JPM — Kelola grup yang dikecualikan dari JPM\n🚫 Blacklist AutoJPM — Kelola grup yang dikecualikan dari AutoJPM\n⏹️ Stop JPM — Hentikan JPM yang sedang berjalan\n\nFORMAT INTERVAL:\n10m (10 menit) • 1h (1 jam) • 2h30m (2 jam 30 menit) • 1d (1 hari)`));
 }
 
 async function handler(m, { sock }) {
@@ -465,9 +465,9 @@ async function handler(m, { sock }) {
 
   if (command === "stopjpm" || command === "stopjasher") {
     if (!global.statusjpm)
-      return m.reply(claraWrap("jpm", `❌ Tidak ada JPM yang sedang berjalan.`));
+      return m.reply(novaWrap("jpm", `❌ Tidak ada JPM yang sedang berjalan.`));
     global.stopjpm = true;
-    return m.reply(claraWrap("jpm", `⏹️ *jpm dihentikan*\n\nProses JPM sedang dihentikan...`));
+    return m.reply(novaWrap("jpm", `⏹️ *jpm dihentikan*\n\nProses JPM sedang dihentikan...`));
   }
 
   if (
@@ -600,9 +600,9 @@ async function handleInternalCommand(m, sock, db, fullInput) {
 
   if (cmd === "_stop") {
     if (!global.statusjpm)
-      return m.reply(claraWrap("jpm", `❌ Tidak ada JPM yang sedang berjalan.`));
+      return m.reply(novaWrap("jpm", `❌ Tidak ada JPM yang sedang berjalan.`));
     global.stopjpm = true;
-    return m.reply(claraWrap("jpm", `⏹️ *jpm dihentikan*\n\nProses JPM sedang dihentikan...`));
+    return m.reply(novaWrap("jpm", `⏹️ *jpm dihentikan*\n\nProses JPM sedang dihentikan...`));
   }
 
   if (cmd === "_help") return showHelp(m);
@@ -619,7 +619,7 @@ async function handleInternalCommand(m, sock, db, fullInput) {
     }
   }
 
-  return m.reply(claraWrap("JPM", `❌ Perintah tidak dikenali. Ketik *${prefix}jpm* untuk membuka menu.`));
+  return m.reply(novaWrap("JPM", `❌ Perintah tidak dikenali. Ketik *${prefix}jpm* untuk membuka menu.`));
 }
 
 async function executeJpmWithSession(m, sock, db, mode) {
@@ -649,7 +649,7 @@ async function executeJpmWithSession(m, sock, db, mode) {
     );
 
   if (global.statusjpm) {
-    return m.reply(claraWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan terlebih dahulu.`));
+    return m.reply(novaWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan terlebih dahulu.`));
   }
 
 
@@ -659,7 +659,7 @@ async function executeJpmWithSession(m, sock, db, mode) {
       db,
     );
     if (groupIds.length === 0) {
-      return m.reply(claraWrap("JPM", `❌ Tidak ada grup\n\nBot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`));
+      return m.reply(novaWrap("JPM", `❌ Tidak ada grup\n\nBot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`));
     }
     await runBroadcast(sock, m, db, {
       groupIds,
@@ -671,7 +671,7 @@ async function executeJpmWithSession(m, sock, db, mode) {
     });
   } catch (error) {
     delete global.statusjpm;
-    m.reply(claraWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
   } finally {
     delete jpmSessions[m.sender];
   }
@@ -694,7 +694,7 @@ async function handleJpmDirect(m, sock, db, text, mode) {
   }
 
   if (global.statusjpm) {
-    return m.reply(claraWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan.`));
+    return m.reply(novaWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan.`));
   }
 
 
@@ -719,7 +719,7 @@ async function handleJpmDirect(m, sock, db, text, mode) {
       db,
     );
     if (groupIds.length === 0) {
-      return m.reply(claraWrap("JPM", `❌ Tidak ada grup\n\nBot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`));
+      return m.reply(novaWrap("JPM", `❌ Tidak ada grup\n\nBot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`));
     }
 
     await runBroadcast(sock, m, db, {
@@ -732,7 +732,7 @@ async function handleJpmDirect(m, sock, db, text, mode) {
     });
   } catch (error) {
     delete global.statusjpm;
-    m.reply(claraWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 
@@ -762,7 +762,7 @@ async function handleJpmChannelWithContent(
   mediaType,
 ) {
   if (global.statusjpm) {
-    return m.reply(claraWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan.`));
+    return m.reply(novaWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan.`));
   }
 
 
@@ -785,13 +785,13 @@ async function handleJpmChannelWithContent(
     const channels = await fetchAllSubscribedChannels(sock);
     const channelIds = Object.keys(channels);
     if (channelIds.length === 0) {
-      return m.reply(claraWrap("JPM", "❌ Tidak ada channel\n\nBot belum subscribe channel apapun"));
+      return m.reply(novaWrap("JPM", "❌ Tidak ada channel\n\nBot belum subscribe channel apapun"));
     }
 
     const jedaJpm = db.setting("jedaJpm") || 5000;
     const ctx = saluranCtx();
 
-    await m.reply(claraWrap("JPM Channel Dimulai", `📝 Pesan: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}\n📷 Media: ${mediaBuffer ? mediaType : "Tidak ada"}\n📺 Target: ${channelIds.length} channel\n⏱️ Jeda: ${(jedaJpm / 1000).toFixed(1)} detik\n\nSedang mengirim ke semua channel...`));
+    await m.reply(novaWrap("JPM Channel Dimulai", `📝 Pesan: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}\n📷 Media: ${mediaBuffer ? mediaType : "Tidak ada"}\n📺 Target: ${channelIds.length} channel\n⏱️ Jeda: ${(jedaJpm / 1000).toFixed(1)} detik\n\nSedang mengirim ke semua channel...`));
 
     global.statusjpm = true;
     let successCount = 0;
@@ -805,7 +805,7 @@ async function handleJpmChannelWithContent(
       if (global.stopjpm) {
         delete global.stopjpm;
         delete global.statusjpm;
-        await m.reply(claraWrap("JPM Channel Dihentikan", `✅ Berhasil: ${successCount}\nGagal: ${failedCount}`));
+        await m.reply(novaWrap("JPM Channel Dihentikan", `✅ Berhasil: ${successCount}\nGagal: ${failedCount}`));
         return;
       }
       try {
@@ -826,10 +826,10 @@ async function handleJpmChannelWithContent(
     }
 
     delete global.statusjpm;
-    await m.reply(claraWrap("JPM Channel Selesai", `✅ Berhasil: ${successCount}\nGagal: ${failedCount}\n📊 Total: ${channelIds.length}`));
+    await m.reply(novaWrap("JPM Channel Selesai", `✅ Berhasil: ${successCount}\nGagal: ${failedCount}\n📊 Total: ${channelIds.length}`));
   } catch (error) {
     delete global.statusjpm;
-    m.reply(claraWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 
@@ -851,7 +851,7 @@ async function handleJpmUpdate(m, sock, db, input) {
 
 async function handleJpmUpdateWithContent(m, sock, db, input) {
   if (global.statusjpm) {
-    return m.reply(claraWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan.`));
+    return m.reply(novaWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan.`));
   }
 
   let version = config.bot?.version || "v1.0";
@@ -919,7 +919,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
         `📊 Total: *${groupIds.length}*`, "jpm");
   } catch (error) {
     delete global.statusjpm;
-    m.reply(claraWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 
@@ -1044,9 +1044,9 @@ async function startAutoJpmSession(m, sock, db) {
 async function completeAutoJpmSetup(m, sock, db, intervalStr) {
   const intervalMs = parseInterval(intervalStr);
   if (!intervalMs)
-    return m.reply(claraWrap("Auto JPM", "❌ Interval tidak valid. Contoh: 15m, 1h, 2h30m, 1d"));
+    return m.reply(novaWrap("Auto JPM", "❌ Interval tidak valid. Contoh: 15m, 1h, 2h30m, 1d"));
   if (intervalMs < 15 * 60 * 1000)
-    return m.reply(claraWrap("jpm", `❌ Interval minimal *15 menit* untuk mencegah spam.`));
+    return m.reply(novaWrap("jpm", `❌ Interval minimal *15 menit* untuk mencegah spam.`));
 
   const session = jpmSessions[m.sender];
   const existing = getAutoJpmConfig();
@@ -1103,7 +1103,7 @@ async function completeAutoJpmSetup(m, sock, db, intervalStr) {
   startAutoJpmScheduler(sock);
   delete jpmSessions[m.sender];
 
-  return m.reply(claraWrap("Auto JPM Aktif", `⏱️ Interval: ${formatInterval(intervalMs)}\n🕒 Pertama kali: ${timeHelper.fromTimestamp(updatedConfig.nextRun)}\n📷 Media: ${updatedConfig.message.media?.type || "Tidak ada"}\n📝 Pesan: ${previewText(updatedConfig.message.text)}\n\nAutoJPM akan berjalan secara otomatis sesuai jadwal.`));
+  return m.reply(novaWrap("Auto JPM Aktif", `⏱️ Interval: ${formatInterval(intervalMs)}\n🕒 Pertama kali: ${timeHelper.fromTimestamp(updatedConfig.nextRun)}\n📷 Media: ${updatedConfig.message.media?.type || "Tidak ada"}\n📝 Pesan: ${previewText(updatedConfig.message.text)}\n\nAutoJPM akan berjalan secara otomatis sesuai jadwal.`));
 }
 
 async function handleAutoJpm(m, sock, db, input, fullInput) {
@@ -1126,16 +1126,16 @@ async function handleAutoJpm(m, sock, db, input, fullInput) {
   if (["status", "info"].includes(action)) return showAutoJpmStatus(m);
 
   if (!["on", "start", "enable"].includes(action)) {
-    return m.reply(claraWrap("Auto JPM", `❌ Format salah. Gunakan *${prefix}autojpm on/off/status*.`));
+    return m.reply(novaWrap("Auto JPM", `❌ Format salah. Gunakan *${prefix}autojpm on/off/status*.`));
   }
 
   if (!intervalRaw) return startAutoJpmSession(m, sock, db);
 
   const intervalMs = parseInterval(intervalRaw);
   if (!intervalMs)
-    return m.reply(claraWrap("Auto JPM", "❌ Interval tidak valid. Contoh: 10m, 1h, 2h30m, 1d."));
+    return m.reply(novaWrap("Auto JPM", "❌ Interval tidak valid. Contoh: 10m, 1h, 2h30m, 1d."));
   if (intervalMs < 15 * 60 * 1000)
-    return m.reply(claraWrap("jpm", `❌ Interval minimal *15 menit* untuk mencegah spam.`));
+    return m.reply(novaWrap("jpm", `❌ Interval minimal *15 menit* untuk mencegah spam.`));
 
   const existing = getAutoJpmConfig();
   const quoted = m.quoted || m;
@@ -1198,14 +1198,14 @@ async function handleAutoJpm(m, sock, db, input, fullInput) {
   setAutoJpmConfig(updatedConfig);
   startAutoJpmScheduler(sock);
 
-  return m.reply(claraWrap("Auto JPM Aktif", `⏱️ Interval: ${formatInterval(intervalMs)}\n🕒 Pertama kali: ${timeHelper.fromTimestamp(updatedConfig.nextRun)}\n📷 Media: ${updatedConfig.message.media?.type || "Tidak ada"}\n📝 Pesan: ${previewText(updatedConfig.message.text)}`));
+  return m.reply(novaWrap("Auto JPM Aktif", `⏱️ Interval: ${formatInterval(intervalMs)}\n🕒 Pertama kali: ${timeHelper.fromTimestamp(updatedConfig.nextRun)}\n📷 Media: ${updatedConfig.message.media?.type || "Tidak ada"}\n📝 Pesan: ${previewText(updatedConfig.message.text)}`));
 }
 
 function showAutoJpmStatus(m) {
   const current = getAutoJpmConfig();
   if (!current?.message)
-    return m.reply(claraWrap("Auto JPM", `ℹ️ AutoJPM belum dikonfigurasi. Ketik *${m.prefix}jpm* untuk mengatur.`));
-  return m.reply(claraWrap("Status Auto JPM", `Status: ${current.enabled ? "✅ Aktif" : "❌ Nonaktif"}\nInterval: ${formatInterval(current.intervalMs || 0)}\n\nJadwal:\nTerakhir: ${current.lastRun ? timeHelper.fromTimestamp(current.lastRun) : "Belum pernah"}\nBerikutnya: ${current.nextRun ? timeHelper.fromTimestamp(current.nextRun) : "Belum dijadwalkan"}\n\nPesan:\nTeks: ${previewText(current.message?.text)}\nMedia: ${current.message?.media?.type ? current.message.media.type.toUpperCase() : "Tidak ada"}`));
+    return m.reply(novaWrap("Auto JPM", `ℹ️ AutoJPM belum dikonfigurasi. Ketik *${m.prefix}jpm* untuk mengatur.`));
+  return m.reply(novaWrap("Status Auto JPM", `Status: ${current.enabled ? "✅ Aktif" : "❌ Nonaktif"}\nInterval: ${formatInterval(current.intervalMs || 0)}\n\nJadwal:\nTerakhir: ${current.lastRun ? timeHelper.fromTimestamp(current.lastRun) : "Belum pernah"}\nBerikutnya: ${current.nextRun ? timeHelper.fromTimestamp(current.nextRun) : "Belum dijadwalkan"}\n\nPesan:\nTeks: ${previewText(current.message?.text)}\nMedia: ${current.message?.media?.type ? current.message.media.type.toUpperCase() : "Tidak ada"}`));
 }
 
 async function handleSetDelay(m, sock, db, input) {
@@ -1213,7 +1213,7 @@ async function handleSetDelay(m, sock, db, input) {
   const prefix = m.prefix;
 
   if (!input) {
-    const body = claraWrap("JPM Delay", `Atur jeda waktu antar pengiriman pesan ke setiap grup.\nSemakin lama delay, semakin aman dari spam detection.\n\nDelay saat ini: ${current}ms (${(current / 1000).toFixed(1)} detik)\n\nPilih delay di bawah:`);
+    const body = novaWrap("JPM Delay", `Atur jeda waktu antar pengiriman pesan ke setiap grup.\nSemakin lama delay, semakin aman dari spam detection.\n\nDelay saat ini: ${current}ms (${(current / 1000).toFixed(1)} detik)\n\nPilih delay di bawah:`);
 
     const buttons = [
       {
@@ -1298,10 +1298,10 @@ async function handleSetDelay(m, sock, db, input) {
 
   const ms = parseInt(input);
   if (isNaN(ms) || ms < 1000 || ms > 30000) {
-    return m.reply(claraWrap("JPM Delay", "❌ Delay harus antara 1000ms (1 detik) sampai 30000ms (30 detik)"));
+    return m.reply(novaWrap("JPM Delay", "❌ Delay harus antara 1000ms (1 detik) sampai 30000ms (30 detik)"));
   }
   db.setting("jedaJpm", ms);
-  return m.reply(claraWrap("JPM Delay", `✅ Delay JPM diubah\n\nSebelumnya: ${current}ms (${(current / 1000).toFixed(1)} detik)\nSekarang: ${ms}ms (${(ms / 1000).toFixed(1)} detik)\n\nEstimasi 100 grup: ${Math.ceil((100 * ms) / 60000)} menit`));
+  return m.reply(novaWrap("JPM Delay", `✅ Delay JPM diubah\n\nSebelumnya: ${current}ms (${(current / 1000).toFixed(1)} detik)\nSekarang: ${ms}ms (${(ms / 1000).toFixed(1)} detik)\n\nEstimasi 100 grup: ${Math.ceil((100 * ms) / 60000)} menit`));
 }
 
 async function handleBlacklist(m, sock, db, settingKey, label) {
@@ -1313,7 +1313,7 @@ async function handleBlacklist(m, sock, db, settingKey, label) {
 
   if (!m.text || m.text.trim().startsWith("_")) {
     if (groups.length === 0)
-      return m.reply(claraWrap("jpm", `❌ Bot belum tergabung di grup mana pun.`));
+      return m.reply(novaWrap("jpm", `❌ Bot belum tergabung di grup mana pun.`));
     let listText =
       `📋 *Daftar Grup & ${label} Blacklist*\n\n` +
       `Berikut *${groups.length} grup* yang diikuti bot *${config.bot?.name}*\n` +
@@ -1327,7 +1327,7 @@ async function handleBlacklist(m, sock, db, settingKey, label) {
       `Ketik command diikuti nomor grup (bisa lebih dari satu, pisahkan spasi).\n\n` +
       `*contoh:*\n` +
       `*${m.prefix}${settingKey === "autoJpmBlacklist" ? "blautojpm" : "bljpm"} 2 3 7*`;
-    return m.reply(claraWrap("JPM Blacklist", listText));
+    return m.reply(novaWrap("JPM Blacklist", listText));
   }
 
   const args = m.text.trim().split(/\s+/);
@@ -1347,11 +1347,11 @@ async function handleBlacklist(m, sock, db, settingKey, label) {
   }
 
   if (toggled.length === 0) {
-    return m.reply(claraWrap("JPM Blacklist", `❌ Tidak ada nomor grup yang valid.\n\nKetik *${m.prefix}${settingKey === "autoJpmBlacklist" ? "blautojpm" : "bljpm"}* untuk melihat daftar nomor.`));
+    return m.reply(novaWrap("JPM Blacklist", `❌ Tidak ada nomor grup yang valid.\n\nKetik *${m.prefix}${settingKey === "autoJpmBlacklist" ? "blautojpm" : "bljpm"}* untuk melihat daftar nomor.`));
   }
 
   db.setting(settingKey, blacklist);
-  return m.reply(claraWrap("jpm", `📢 *${label} Blacklist Diperbarui*\n\n${toggled.join("\n")}`));
+  return m.reply(novaWrap("jpm", `📢 *${label} Blacklist Diperbarui*\n\n${toggled.join("\n")}`));
 }
 
 export { pluginConfig as config, handler };

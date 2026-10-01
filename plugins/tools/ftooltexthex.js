@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooltexthex — teks ↔ heksadesimal (port altftool.com/tools/all/text-to-hex)
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltexthex", alias: ["texthex", "hex", "texttohex"], category: "tools",
@@ -49,12 +49,12 @@ async function handler(m, { sock, config: botConfig }) {
       }), "ftooltexthex");
     }
     await m.react("🐣");
-    await m.reply(claraWrap("Text Hex", [`Hasil (${action === "enc" || action === "encode" ? "teks→hex" : "hex→teks"}):`,
+    await m.reply(novaWrap("Text Hex", [`Hasil (${action === "enc" || action === "encode" ? "teks→hex" : "hex→teks"}):`,
       "",
       "```" + (result.length > 800 ? result.substring(0, 800) + "…" : result) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Text Hex", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Text Hex", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

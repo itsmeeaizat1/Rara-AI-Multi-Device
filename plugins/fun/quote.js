@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
     const displayQuote = author ? `${quote}\n
 — ${author}` : quote;
     const text =
-      claraWrap("Quote", [`*${displayQuote}*`,
+      novaWrap("Quote", [`*${displayQuote}*`,
         `Sumber: *${source}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}quote untuk quote lain`) +

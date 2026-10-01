@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "storybuild",
@@ -39,7 +39,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const story = db.data.storyBuild[groupId];
 
     if (sub === "start") {
-      if (story.active) return m.reply(claraWrap("Story Build", "Sudang ada cerita berjalan."));
+      if (story.active) return m.reply(novaWrap("Story Build", "Sudang ada cerita berjalan."));
       const theme = text.split(" ").slice(1).join(" ").trim() || "Bebas";
       story.active = true;
       story.theme = theme;
@@ -51,7 +51,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       story.sentences.push({ author: "bot", text: story.starter });
       await db.save();
 
-      return m.reply(claraWrap("Story Build", [
+      return m.reply(novaWrap("Story Build", [
         `Cerita dimulai! Tema: ${theme}`,
         `Max putaran: ${story.maxRounds}`,
         "",
@@ -65,13 +65,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "add") {
-      if (!story.active) return m.reply(claraWrap("Story Build", `Belum ada cerita. Mulai: ${usedPrefix}storybuild start <tema>`, "info"));
+      if (!story.active) return m.reply(novaWrap("Story Build", `Belum ada cerita. Mulai: ${usedPrefix}storybuild start <tema>`, "info"));
       const sentence = text.split(" ").slice(1).join(" ").trim();
-      if (!sentence) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}storybuild add <kalimat kamu>`, "info"));
-      if (story.currentRound >= story.maxRounds) return m.reply(claraWrap("Story Build", `Maksimal ${story.maxRounds} putaran. Ketik ${usedPrefix}storybuild end untuk rangkum.`, "info"));
+      if (!sentence) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}storybuild add <kalimat kamu>`, "info"));
+      if (story.currentRound >= story.maxRounds) return m.reply(novaWrap("Story Build", `Maksimal ${story.maxRounds} putaran. Ketik ${usedPrefix}storybuild end untuk rangkum.`, "info"));
 
       const lastAuthor = story.sentences[story.sentences.length - 1]?.author;
-      if (lastAuthor === sender) return m.reply(claraWrap("Story Build", "Tunggu giliran orang lain dulu!"));
+      if (lastAuthor === sender) return m.reply(novaWrap("Story Build", "Tunggu giliran orang lain dulu!"));
 
       story.sentences.push({ author: sender, text: sentence });
       if (!story.contributors.includes(sender)) story.contributors.push(sender);
@@ -85,17 +85,17 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         story.active = false;
         await db.save();
       }
-      return m.reply(claraWrap("Story Build", msg));
+      return m.reply(novaWrap("Story Build", msg));
     }
 
     if (sub === "read") {
-      if (story.sentences.length === 0) return m.reply(claraWrap("Story Build", "Belum ada cerita."));
+      if (story.sentences.length === 0) return m.reply(novaWrap("Story Build", "Belum ada cerita."));
       const fullStory = story.sentences.map((s, i) => {
         if (i === 0) return `"${s.text}"`;
         const authorName = s.author === "bot" ? "[Bot]" : "@" + s.author.split("@")[0];
         return `"${s.text}" - ${authorName}`;
       }).join("\n\n");
-      return m.reply(claraWrap("Story Build", [
+      return m.reply(novaWrap("Story Build", [
         `Tema: ${story.theme}`,
         `Putaran: ${story.currentRound}/${story.maxRounds}`,
         `Kontributor: ${story.contributors.length}`,
@@ -105,7 +105,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "summary" || sub === "end") {
-      if (story.sentences.length === 0) return m.reply(claraWrap("Story Build", "Belum ada cerita."));
+      if (story.sentences.length === 0) return m.reply(novaWrap("Story Build", "Belum ada cerita."));
       story.active = false;
       await db.save();
 
@@ -115,7 +115,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         : fullText;
       const contributorList = story.contributors.map(c => "@" + c.split("@")[0]).join(", ");
 
-      return m.reply(claraWrap("Story Build", [
+      return m.reply(novaWrap("Story Build", [
         `Cerita Selesai!`,
         `Tema: ${story.theme}`,
         `Total kalimat: ${story.sentences.length}`,
@@ -132,10 +132,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       story.contributors = [];
       story.currentRound = 0;
       await db.save();
-      return m.reply(claraWrap("Story Build", "Cerita dihentikan dan direset."));
+      return m.reply(novaWrap("Story Build", "Cerita dihentikan dan direset."));
     }
 
-    return m.reply(claraWrap("Story Build", [
+    return m.reply(novaWrap("Story Build", [
       `Story Build - Collab cerita bareng grup`,
       "",
       `Command:`,

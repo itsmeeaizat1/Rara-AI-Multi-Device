@@ -2,7 +2,7 @@
 // stickerfilter.js — Apply filter ke sticker (local @napi-rs/canvas, no API)
 import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { claraWrap, novaError, novaGuide, novaNoQuoted, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaGuide, novaNoQuoted, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stickerfilter",
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
   const filter = m.args?.[0]?.toLowerCase();
 
   if (!filter) {
-    return m.reply(claraWrap("Sticker Filter", `Filter tersedia: ${FILTERS.join(", ")}\n\nReply sticker dulu lalu ketik .stickerfilter <filter>`, "guide"));
+    return m.reply(novaWrap("Sticker Filter", `Filter tersedia: ${FILTERS.join(", ")}\n\nReply sticker dulu lalu ketik .stickerfilter <filter>`, "guide"));
   }
 
   if (!FILTERS.includes(filter)) {
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[StickerFilter]", err);
     await m.react("❌");
-    m.reply(claraWrap("stickerfilter", "Gagal apply filter ke sticker. Coba lagi!", "error"));
+    m.reply(novaWrap("stickerfilter", "Gagal apply filter ke sticker. Coba lagi!", "error"));
   }
 }
 

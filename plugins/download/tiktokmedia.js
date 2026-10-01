@@ -6,7 +6,7 @@
 // Source: tikwm challenge pipeline (src/scraper/tiktoksearch.js)
 
 import { offerConvert } from "../../src/lib/nova-convert.js";
-import { claraWrap, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
@@ -66,7 +66,7 @@ function fmtDuration(seconds) {
 
 function usageReply(m) {
   const p = m.prefix;
-  return m.reply(claraWrap("TikTok Search", [
+  return m.reply(novaWrap("TikTok Search", [
     `📌 Cari TikTok dari keyword, kirim sesuai formatnya:`,
     ``,
     `💡 Contoh:`,
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
 
     if (!videos || videos.length === 0) {
       await m.react("❗");
-      return m.reply(claraWrap("TikTok Search", `Gak nemu hasil untuk keyword: ${query}`));
+      return m.reply(novaWrap("TikTok Search", `Gak nemu hasil untuk keyword: ${query}`));
     }
 
     // ─── .ttvideo → video random (no watermark) ───
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
       const pool = videos.filter((v) => v.download);
       if (!pool.length) {
         await m.react("❗");
-        return m.reply(claraWrap("TikTok Search", `Semua hasil untuk "${query}" berupa foto, bukan video.\nCoba .ttimage ${query}`));
+        return m.reply(novaWrap("TikTok Search", `Semua hasil untuk "${query}" berupa foto, bukan video.\nCoba .ttimage ${query}`));
       }
       const video = pool[Math.floor(Math.random() * pool.length)];
       // format owner 19 Sep (search engine kasih video HD no watermark)
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
       const pool = videos.filter((v) => v.music);
       if (!pool.length) {
         await m.react("❗");
-        return m.reply(claraWrap("TikTok Search", `Gak nemu sound buat keyword: ${query}`));
+        return m.reply(novaWrap("TikTok Search", `Gak nemu sound buat keyword: ${query}`));
       }
       const video = pool[Math.floor(Math.random() * pool.length)];
       const musicTitle = video.musicInfo?.title || "Original Sound";
@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
       const pool = videos.filter((v) => v.images.length > 0);
       if (!pool.length) {
         await m.react("❗");
-        return m.reply(claraWrap("TikTok Search", `Hasil untuk "${query}" gak ada post foto, semuanya video.\nCoba .ttvideo ${query}`));
+        return m.reply(novaWrap("TikTok Search", `Hasil untuk "${query}" gak ada post foto, semuanya video.\nCoba .ttvideo ${query}`));
       }
       const post = pool[Math.floor(Math.random() * pool.length)];
       const images = post.images.slice(0, 5); // max 5 foto per post biar gak banjir

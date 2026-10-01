@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'rules',
@@ -75,7 +75,7 @@ async function handler(m, { sock, config: botConfig }) {
             '',
             'Pelanggaran dapat mengakibatkan banned / kick!',
         ]
-        await m.reply(claraWrap('Peraturan Penggunaan Bot', lines))
+        await m.reply(novaWrap('Peraturan Penggunaan Bot', lines))
     } catch (e) {
         m.reply(novaError("Rules", "Ada error nih saat ambil rules"))
     }

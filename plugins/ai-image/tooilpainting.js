@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 import { live3d } from '../../src/scraper/seaart.js'
 import te from '../../src/lib/nova-error.js'
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(claraWrap("tooilpainting", `❌ Gagal mendownload gambar`))
+            return m.reply(novaWrap("tooilpainting", `❌ Gagal mendownload gambar`))
         }
         
         const result = await live3d(buffer, PROMPT)
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
         ] }))
         
     } catch (error) {
-        m.reply(claraWrap("tooilpainting", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("tooilpainting", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

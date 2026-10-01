@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import fs from "fs";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setmenuvideo",
@@ -51,7 +51,7 @@ async function handler(m, { sock, db }) {
       `${prefix}setmenuvideo allmenu local - Allmenu pakai local`,
     ];
 
-    await m.reply(claraWrap("SetMenuVideo", lines.join("\n")));
+    await m.reply(novaWrap("SetMenuVideo", lines.join("\n")));
     return;
   }
 
@@ -60,35 +60,35 @@ async function handler(m, { sock, db }) {
     const value = args[1]?.toLowerCase();
     if (!value || value === "local") {
       config.ui.allmenuVideoUrl = "";
-      await m.reply(claraWrap("SetMenuVideo", `✅ AllMenu video diubah ke *LOCAL* (${config.assets?.["nova-mp4"] || "assets/video/nova-mp4.mp4"})`));
+      await m.reply(novaWrap("SetMenuVideo", `✅ AllMenu video diubah ke *LOCAL* (${config.assets?.["nova-mp4"] || "assets/video/nova-mp4.mp4"})`));
       return;
     }
     const url = args[1];
     if (!/^https?:\/\//i.test(url)) {
-      await m.reply(claraWrap("SetMenuVideo", `❌ URL tidak valid. Pastikan dimulai dengan http:// atau https://`));
+      await m.reply(novaWrap("SetMenuVideo", `❌ URL tidak valid. Pastikan dimulai dengan http:// atau https://`));
       return;
     }
     config.ui.allmenuVideoUrl = url;
-    await m.reply(claraWrap("SetMenuVideo", `✅ AllMenu video diubah ke URL:\n${url}`));
+    await m.reply(novaWrap("SetMenuVideo", `✅ AllMenu video diubah ke URL:\n${url}`));
     return;
   }
 
   // ─── Set menu video source to local ───
   if (subCmd === "local") {
     config.ui.menuVideoUrl = "";
-    await m.reply(claraWrap("SetMenuVideo", `✅ Menu video diubah ke *LOCAL* (${config.assets?.["nova-mp4"] || "assets/video/nova-mp4.mp4"})`));
+    await m.reply(novaWrap("SetMenuVideo", `✅ Menu video diubah ke *LOCAL* (${config.assets?.["nova-mp4"] || "assets/video/nova-mp4.mp4"})`));
     return;
   }
 
   // ─── Set menu video URL ───
   const url = args[0];
   if (!/^https?:\/\//i.test(url)) {
-    await m.reply(claraWrap("SetMenuVideo", `❌ URL tidak valid. Pastikan dimulai dengan http:// atau https://`));
+    await m.reply(novaWrap("SetMenuVideo", `❌ URL tidak valid. Pastikan dimulai dengan http:// atau https://`));
     return;
   }
 
   config.ui.menuVideoUrl = url;
-  await m.reply(claraWrap("SetMenuVideo", `✅ Menu video diubah ke URL:\n${url}\n\nGunakan ${prefix}setmenuvideo allmenu <url> untuk set allmenu juga`));
+  await m.reply(novaWrap("SetMenuVideo", `✅ Menu video diubah ke URL:\n${url}\n\nGunakan ${prefix}setmenuvideo allmenu <url> untuk set allmenu juga`));
 }
 
 export default { config: pluginConfig, handler };

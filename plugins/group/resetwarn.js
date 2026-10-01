@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'resetwarn',
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     }
     
     if (!targetUser) {
-        await m.reply(claraWrap("Cara Pakai", 
+        await m.reply(novaWrap("Cara Pakai", 
             `Reply pesan user + \`${m.prefix}resetwarn\`\n` +
             `Atau: \`${m.prefix}resetwarn @user\``))
         return
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const targetName = targetUser.split('@')[0]
     
     if (!warnings[targetUser] || warnings[targetUser].length === 0) {
-        { const __navText = `✅ @${targetName} tidak memiliki warning.`; await m.reply(claraWrap("resetwarn", __navText)); }
+        { const __navText = `✅ @${targetName} tidak memiliki warning.`; await m.reply(novaWrap("resetwarn", __navText)); }
         return
     }
     
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     delete warnings[targetUser]
     db.setGroup(m.chat, { ...groupData, warnings: warnings })
     
-    await m.reply(claraWrap("Warning Direset", 
+    await m.reply(novaWrap("Warning Direset", 
         `Warning @${targetName} berhasil direset!\n` +
         `Sebelumnya: *${prevCount}/${maxWarns}*\n` +
         `Sekarang: *0/${maxWarns}*`,

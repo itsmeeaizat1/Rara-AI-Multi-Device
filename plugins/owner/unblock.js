@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "unblock",
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        claraWrap("Unblock User", [
+        novaWrap("Unblock User", [
           `Penggunaan: ${prefix}unblock <@target / nomor>`,
           `Contoh: ${prefix}unblock @username`,
           `Contoh: ${prefix}unblock 6281234567890`,
@@ -55,14 +55,14 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!targetJid) {
-      return m.reply( claraWrap("Unblock User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "unblock");
+      return m.reply( novaWrap("Unblock User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "unblock");
     }
 
     // Eksekusi unblock via Baileys
     await sock.updateBlockStatus(targetJid, "unblock");
 
     const text =
-      claraWrap("Unblock User", [
+      novaWrap("Unblock User", [
         `Target: ${targetDisplay}`,
         "Status: Berhasil di-unblock",
       ].join("\n")) +

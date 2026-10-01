@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "detective",
@@ -97,7 +97,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "start" || sub === "mulai") {
     if (game && game.status === "active") {
-      await m.reply(claraWrap("Detective", "Kasus masih aktif. Ketik " + prefix + "detective stop."));
+      await m.reply(novaWrap("Detective", "Kasus masih aktif. Ketik " + prefix + "detective stop."));
       return { handled: true };
     }
     const caseData = CASES[Math.floor(Math.random() * CASES.length)];
@@ -112,7 +112,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       attempts: 0,
     };
     saveConfig(db, gid, data);
-    await m.reply(claraWrap("Detective: " + caseData.title, [
+    await m.reply(novaWrap("Detective: " + caseData.title, [
       "KORBAN: " + caseData.victim,
       "",
       "TKP:",
@@ -132,7 +132,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "interrogate" || sub === "periksa" || sub === "tanya") {
     if (!game || game.status !== "active") {
-      await m.reply(claraWrap("Detective", "Belum ada kasus. Ketik " + prefix + "detective start."));
+      await m.reply(novaWrap("Detective", "Belum ada kasus. Ketik " + prefix + "detective start."));
       return { handled: true };
     }
     const num = parseInt(args[2] || "0", 10) - 1;
@@ -143,7 +143,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const suspect = game.caseData.suspects[num];
     if (!game.askedSuspects.includes(num)) game.askedSuspects.push(num);
     saveConfig(db, gid, game);
-    await m.reply(claraWrap("Interrogasi: " + suspect.name, [
+    await m.reply(novaWrap("Interrogasi: " + suspect.name, [
       "Role: " + suspect.role,
       "",
       "Alibi: " + suspect.alibi,
@@ -155,23 +155,23 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "hint" || sub === "petunjuk") {
     if (!game || game.status !== "active") {
-      await m.reply(claraWrap("Detective", "Belum ada kasus."));
+      await m.reply(novaWrap("Detective", "Belum ada kasus."));
       return { handled: true };
     }
     if (game.hintsUsed >= game.maxHints) {
-      await m.reply(claraWrap("Detective", "Petunjuk habis! (max " + game.maxHints + ")"));
+      await m.reply(novaWrap("Detective", "Petunjuk habis! (max " + game.maxHints + ")"));
       return { handled: true };
     }
     const hint = game.caseData.hints[game.hintsUsed];
     game.hintsUsed++;
     saveConfig(db, gid, game);
-    await m.reply(claraWrap("Detective Hint", "Petunjuk " + game.hintsUsed + "/" + game.maxHints + ":\n" + hint));
+    await m.reply(novaWrap("Detective Hint", "Petunjuk " + game.hintsUsed + "/" + game.maxHints + ":\n" + hint));
     return { handled: true };
   }
 
   if (sub === "accuse" || sub === "tuduh") {
     if (!game || game.status !== "active") {
-      await m.reply(claraWrap("Detective", "Belum ada kasus."));
+      await m.reply(novaWrap("Detective", "Belum ada kasus."));
       return { handled: true };
     }
     const num = parseInt(args[2] || "0", 10) - 1;
@@ -186,7 +186,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       game.status = "solved";
       const time = Math.floor((Date.now() - game.startedAt) / 1000);
       saveConfig(db, gid, game);
-      await m.reply(claraWrap("Detective - CASE SOLVED!", [
+      await m.reply(novaWrap("Detective - CASE SOLVED!", [
         "BENAR! Pembunuhnya adalah " + suspect.name + " (" + suspect.role + ")",
         "",
         "Penjelasan: " + game.caseData.answer,
@@ -200,7 +200,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       if (game.attempts >= 3) {
         game.status = "failed";
         saveConfig(db, gid, game);
-        await m.reply(claraWrap("Detective - CASE FAILED", [
+        await m.reply(novaWrap("Detective - CASE FAILED", [
           "Salah! Kesempatan habis (3 attempts).",
           "",
           "Jawaban: " + game.caseData.answer,
@@ -208,7 +208,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         delConfig(db, gid);
       } else {
         saveConfig(db, gid, game);
-        await m.reply(claraWrap("Detective", "Salah! " + suspect.name + " bukan pembunuh.\nSisa kesempatan: " + (3 - game.attempts) + "x"));
+        await m.reply(novaWrap("Detective", "Salah! " + suspect.name + " bukan pembunuh.\nSisa kesempatan: " + (3 - game.attempts) + "x"));
       }
     }
     return { handled: true };
@@ -216,20 +216,20 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "stop" || sub === "batal") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(claraWrap("Detective", "Khusus admin/owner."));
+      await m.reply(novaWrap("Detective", "Khusus admin/owner."));
       return { handled: true };
     }
     delConfig(db, gid);
-    await m.reply(claraWrap("Detective", "Kasus dibatalkan."));
+    await m.reply(novaWrap("Detective", "Kasus dibatalkan."));
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek" || !sub) {
     if (!game) {
-      await m.reply(claraWrap("Detective", "Belum ada kasus.\n" + prefix + "detective start untuk mulai."));
+      await m.reply(novaWrap("Detective", "Belum ada kasus.\n" + prefix + "detective start untuk mulai."));
       return { handled: true };
     }
-    await m.reply(claraWrap("Detective", [
+    await m.reply(novaWrap("Detective", [
       "Kasus: " + game.caseData.title,
       "Status: " + game.status,
       "Tersangka diperiksa: " + game.askedSuspects.length + "/" + game.caseData.suspects.length,
@@ -239,7 +239,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Detective", [
+  await m.reply(novaWrap("Detective", [
     "DETECTIVE MYSTERY GAME",
     "",
     prefix + "detective start - mulai kasus baru",

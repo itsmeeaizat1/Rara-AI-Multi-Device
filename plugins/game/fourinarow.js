@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .fourinarow — Connect Four vs AI (port altftool.com "Four in a Row")
 // Reply angka 1-7 buat drop disc. ANIMASI KHAS: disc 🔵 jatuh ke bawah kolom frame demi frame.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
 
 const pluginConfig = {
@@ -70,9 +70,9 @@ async function handler(m, { sock, config }) {
   if (sessions.has(k)) {
     if ((m.text || "").trim().toLowerCase() === "stop") {
       sessions.delete(k);
-      return m.reply(claraWrap("Four in a Row", ["Sesi diakhiri."].join("\n")));
+      return m.reply(novaWrap("Four in a Row", ["Sesi diakhiri."].join("\n")));
     }
-    return m.reply(claraWrap("Four in a Row", ["MASIH ADA SESI AKTIF",
+    return m.reply(novaWrap("Four in a Row", ["MASIH ADA SESI AKTIF",
       "",
       "```" + render(sessions.get(k).board) + "```",
       "",
@@ -82,7 +82,7 @@ async function handler(m, { sock, config }) {
   resetT(s);
   sessions.set(k, s);
   await animasiMulai(sock, m.chat);
-  return m.reply(claraWrap("Four in a Row", ["KAMU 🔵 VS AI 🔴 — SUSUN 4 SEJAJAR",
+  return m.reply(novaWrap("Four in a Row", ["KAMU 🔵 VS AI 🔴 — SUSUN 4 SEJAJAR",
     "",
     "```" + render(s.board) + "```",
     "",
@@ -102,7 +102,7 @@ export async function answerHandler(m, sock) {
   const r = drop(s.board, col);
   if (r < 0) {
     resetT(s);
-    await m.reply(claraWrap("Four in a Row", ["Kolom " + (col + 1) + " penuh, pilih kolom lain",
+    await m.reply(novaWrap("Four in a Row", ["Kolom " + (col + 1) + " penuh, pilih kolom lain",
       "",
       "```" + render(s.board) + "```"].join("\n")));
     return true;
@@ -110,7 +110,7 @@ export async function answerHandler(m, sock) {
   s.board[r * W + col] = 1;
   if (checkWin(s.board, 1)) {
     sessions.delete(k);
-    await m.reply(claraWrap("Four in a Row", ["🏆 KAMU MENANG!",
+    await m.reply(novaWrap("Four in a Row", ["🏆 KAMU MENANG!",
       "",
       "```" + render(s.board) + "```",
       "",
@@ -119,7 +119,7 @@ export async function answerHandler(m, sock) {
   }
   if (full(s.board)) {
     sessions.delete(k);
-    await m.reply(claraWrap("Four in a Row", ["🤝 SERI — papan penuh",
+    await m.reply(novaWrap("Four in a Row", ["🤝 SERI — papan penuh",
       "",
       "```" + render(s.board) + "```",
       "",
@@ -131,7 +131,7 @@ export async function answerHandler(m, sock) {
   s.board[aiRow * W + aiCol] = 2;
   if (checkWin(s.board, 2)) {
     sessions.delete(k);
-    await m.reply(claraWrap("Four in a Row", ["💀 AI MENANG — coba lagi ya",
+    await m.reply(novaWrap("Four in a Row", ["💀 AI MENANG — coba lagi ya",
       "",
       "```" + render(s.board) + "```",
       "",
@@ -140,7 +140,7 @@ export async function answerHandler(m, sock) {
   }
   if (full(s.board)) {
     sessions.delete(k);
-    await m.reply(claraWrap("Four in a Row", ["🤝 SERI — papan penuh",
+    await m.reply(novaWrap("Four in a Row", ["🤝 SERI — papan penuh",
       "",
       "```" + render(s.board) + "```",
       "",
@@ -148,7 +148,7 @@ export async function answerHandler(m, sock) {
     return true;
   }
   resetT(s);
-  await m.reply(claraWrap("Four in a Row", ["AI drop di kolom " + (aiCol + 1),
+  await m.reply(novaWrap("Four in a Row", ["AI drop di kolom " + (aiCol + 1),
     "",
     "```" + render(s.board) + "```",
     "",

@@ -2,7 +2,7 @@
 // cnn.js — Berita CNN Indonesia
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cnn",
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const data = res.data?.data || res.data || [];
     if (!Array.isArray(data) || data.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("cnn", "Gagal mengambil berita!", "error"));
+      return m.reply(novaWrap("cnn", "Gagal mengambil berita!", "error"));
     }
 
     let _lines = [];
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("cnn error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("cnn", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("cnn", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

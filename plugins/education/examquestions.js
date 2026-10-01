@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "soalujian",
@@ -433,7 +433,7 @@ async function handler(m, { sock, args }) {
     const _regDb = getDatabase();
     if (!_regDb.db.data.eduRegistered || !_regDb.db.data.eduRegistered[sender]) {
       quizSessions.delete(sender);
-      return m.reply(claraWrap('Info', '\u2705 Pendaftaran kamu telah dihapus! Quiz dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>'));
+      return m.reply(novaWrap('Info', '\u2705 Pendaftaran kamu telah dihapus! Quiz dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>'));
     }
 
 
@@ -444,17 +444,17 @@ async function handler(m, { sock, args }) {
       if (warnings >= MAX_SPAM_WARNINGS) {
         quizSessions.delete(sender);
         resetSpamWarnings(sender);
-        return m.reply(claraWrap("Soalujian", "Quiz dibatalkan karena spam!\n\nJangan asal jawab cepat-cepat. Baca soalnya dulu.\n\nKetik .soal untuk mulai lagi."));
+        return m.reply(novaWrap("Soalujian", "Quiz dibatalkan karena spam!\n\nJangan asal jawab cepat-cepat. Baca soalnya dulu.\n\nKetik .soal untuk mulai lagi."));
       }
       const waitSec = Math.ceil(rateCheck.waitMs / 1000);
-      return m.reply(claraWrap("Soalujian", `Terlalu cepat! Tunggu ${waitSec} detik.\n\nPeringatan ${warnings}/${MAX_SPAM_WARNINGS} - jangan spam jawaban!`));
+      return m.reply(novaWrap("Soalujian", `Terlalu cepat! Tunggu ${waitSec} detik.\n\nPeringatan ${warnings}/${MAX_SPAM_WARNINGS} - jangan spam jawaban!`));
     }
     resetSpamWarnings(sender);
     if (q.type === "mc") {
       // MC answer
       const answer = jenjang.toUpperCase();
       if (!["A", "B", "C", "D"].includes(answer)) {
-        return m.reply(claraWrap("Soalujian", "Pilih *A*, *B*, *C*, atau *D*!\n\nAtau ketik *skip* / *stop*."));
+        return m.reply(novaWrap("Soalujian", "Pilih *A*, *B*, *C*, atau *D*!\n\nAtau ketik *skip* / *stop*."));
       }
       const isCorrect = answer === q.correctLetter;
       session.answers.push({ question: q.question, given: answer, correct: q.correctLetter, isCorrect, type: "mc" });
@@ -464,7 +464,7 @@ async function handler(m, { sock, args }) {
       // Essay answer
       const userAnswer = args.join(" ");
       if (userAnswer.length < 5) {
-        return m.reply(claraWrap("Soalujian", "Jawaban terlalu pendek! Min 5 karakter.\n\nKetik *skip* untuk lewati soal ini."));
+        return m.reply(novaWrap("Soalujian", "Jawaban terlalu pendek! Min 5 karakter.\n\nKetik *skip* untuk lewati soal ini."));
       }
       const check = checkKeywords(userAnswer, q.keywords);
       session.answers.push({
@@ -584,9 +584,9 @@ async function handler(m, { sock, args }) {
   if (["stop", "batal", "cancel"].includes(jenjang)) {
     if (session) {
       quizSessions.delete(sender);
-      return m.reply(claraWrap("Soalujian", "Quiz dibatalkan."));
+      return m.reply(novaWrap("Soalujian", "Quiz dibatalkan."));
     }
-    return m.reply(claraWrap("Soalujian", "Tidak ada quiz berjalan."));
+    return m.reply(novaWrap("Soalujian", "Tidak ada quiz berjalan."));
   }
 
   // Help
@@ -624,7 +624,7 @@ async function handler(m, { sock, args }) {
     return m.reply(novaError("SoalUjian", "Jenjang gak valid nih! Pilih: sd, smp, sma, smk"));
   }
   if (jumlah < 1 || jumlah > 20) {
-    return m.reply(claraWrap("Soalujian", "Jumlah soal 1-20."));
+    return m.reply(novaWrap("Soalujian", "Jumlah soal 1-20."));
   }
 
   // Check registration
@@ -637,7 +637,7 @@ async function handler(m, { sock, args }) {
   // Check daily quiz limit
   const dailyCheck = checkDailyLimit(sender);
   if (!dailyCheck.allowed) {
-    return m.reply(claraWrap("Info", "\u23f3 Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\nKetik .edulb untuk lihat ranking"));
+    return m.reply(novaWrap("Info", "\u23f3 Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\nKetik .edulb untuk lihat ranking"));
   }
   try {
     let questions = [];
@@ -683,12 +683,12 @@ async function handler(m, { sock, args }) {
 
     // If only essay requested but no bank
     if (mode === "essay" && (!essayBank || essayBank.length === 0)) {
-      return m.reply(claraWrap("Soalujian", `Soal essay untuk ${mapel} (${JENJANG_NAMES[jenjang]}) tidak tersedia!\n\nTersedia: ${getAvailableSubjects(jenjang).join(", ")}`));
+      return m.reply(novaWrap("Soalujian", `Soal essay untuk ${mapel} (${JENJANG_NAMES[jenjang]}) tidak tersedia!\n\nTersedia: ${getAvailableSubjects(jenjang).join(", ")}`));
     }
 
     // If nothing found
     if (questions.length === 0) {
-      return m.reply(claraWrap("soalujian", `Mapel "${mapel}" tidak ditemukan untuk ${JENJANG_NAMES[jenjang]}!\n\nTersedia: ${getAvailableSubjects(jenjang).join(", ")}`));
+      return m.reply(novaWrap("soalujian", `Mapel "${mapel}" tidak ditemukan untuk ${JENJANG_NAMES[jenjang]}!\n\nTersedia: ${getAvailableSubjects(jenjang).join(", ")}`));
     }
 
     // Shuffle mixed questions

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import config from "../../config.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setallmenu",
   alias: ["setallmenu", "varianmenu", "variantmenu", "menuthumbvarian"],
@@ -56,7 +56,7 @@ async function applyMenuVariant(m, db, selected, cmdLabel) {
   db.setting("menuThumbVariant", selected.id);
   await db.save();
 
-  await m.reply(claraWrap(cmdLabel || "setallmenu", `✅ *varian thumbnail menu diubah*\n\n` +
+  await m.reply(novaWrap(cmdLabel || "setallmenu", `✅ *varian thumbnail menu diubah*\n\n` +
     `${selected.emoji} *V${selected.id} — ${selected.name}*\n\n` +
     `${selected.asset}`));
 }
@@ -68,7 +68,7 @@ async function handler(m, { sock, db }) {
   const variant = parseVariantKey(args[0]);
 
   if (args[0] && !variant) {
-    m.reply(claraWrap("Setallmenu", `❗ *varian tidak valid*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
+    m.reply(novaWrap("Setallmenu", `❗ *varian tidak valid*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
     return;
   }
 

@@ -75,7 +75,7 @@ t("toggle ON + lang en → butuh translate", needsTranslation(SENDER) === true);
 t("lang gak diset → gak butuh", !needsTranslation("6289990000@s.whatsapp.net"), "val=" + needsTranslation("6289990000@s.whatsapp.net"));
 
 w("\n— translateUI: teks SMALLCAPS (akar bug menu-gak-keubah) —");
-// AKAR: claraWrap nge-smallcaps teks SEBELUM m.reply → Google gak kenali
+// AKAR: novaWrap nge-smallcaps teks SEBELUM m.reply → Google gak kenali
 // glyph ꜰɪᴛᴜʀ → translate gagal senyap. Fix: un-smallcaps dulu.
 const menuSC = "ᴍᴇɴᴜ ᴜᴛᴀᴍᴀ ʙᴏᴛ — ᴘɪʟɪʜ ꜰɪᴛᴜʀ";
 const out1 = await translateUI(menuSC, SENDER);

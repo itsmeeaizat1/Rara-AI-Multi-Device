@@ -1,4 +1,4 @@
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: 'delppgc',
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     try {
         await sock.removeProfilePicture(m.chat)
         
-        await m.reply(claraWrap("Delppgc", `PP Grup sekarang sudah botak`, "success"))
+        await m.reply(novaWrap("Delppgc", `PP Grup sekarang sudah botak`, "success"))
     } catch (error) {
         await m.reply(
             `❌ *gagal*\n\n` +

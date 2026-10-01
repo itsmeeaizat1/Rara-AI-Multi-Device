@@ -2,7 +2,7 @@
 // powerbrain — PowerBrain AI chat
 import { powerbrain } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("powerbrain", `Mau nanya apa ke PowerBrain?\n\nContoh: ${m.prefix}powerbrain jelaskan teori relativitas`, "guide"));
+      return m.reply(novaWrap("powerbrain", `Mau nanya apa ke PowerBrain?\n\nContoh: ${m.prefix}powerbrain jelaskan teori relativitas`, "guide"));
     }
 
     await m.react("🕒");
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("powerbrain", "PowerBrain lagi offline 🧠", "error"));
+      return m.reply(novaWrap("powerbrain", "PowerBrain lagi offline 🧠", "error"));
     }
 
     await m.react("🐣");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("powerbrain error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("powerbrain", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("powerbrain", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

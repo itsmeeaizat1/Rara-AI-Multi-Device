@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fontstyle",
@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
       list += String(i + 1).padStart(2, "0") + ". " + key + " (" + label + ")\n";
       list += "   " + sample + "\n";
     });
-    return m.reply(claraWrap("Font Style", [
+    return m.reply(novaWrap("Font Style", [
       "Konversi teks ke " + keys.length + " font aesthetic",
       "",
       list.trim(),
@@ -213,7 +213,7 @@ async function handler(m, { sock }) {
   const inputText = text.substring(text.indexOf(" ") + 1).trim();
 
   if (!FONTS[style]) {
-    return m.reply(claraWrap("Font Style", [
+    return m.reply(novaWrap("Font Style", [
       "Style " + style + " tidak ditemukan",
       "",
       "Tersedia: " + Object.keys(FONTS).join(", "),
@@ -223,7 +223,7 @@ async function handler(m, { sock }) {
   }
 
   if (!inputText) {
-    return m.reply(claraWrap(FONTS[style].label || style, [
+    return m.reply(novaWrap(FONTS[style].label || style, [
       "Kirim teks yang mau dikonversi",
       "Contoh: " + prefix + "font " + style + " hallo dunia",
     ].join("\n")));
@@ -231,11 +231,11 @@ async function handler(m, { sock }) {
 
   const converted = convertFont(inputText, style);
   if (!converted) {
-    return m.reply(claraWrap("Font Style", "Gagal konversi ke style " + style));
+    return m.reply(novaWrap("Font Style", "Gagal konversi ke style " + style));
   }
 
   await m.react("\u2705");
-  return m.reply(claraWrap(FONTS[style].label || style, [
+  return m.reply(novaWrap(FONTS[style].label || style, [
     "Original: " + inputText,
     "",
     converted,

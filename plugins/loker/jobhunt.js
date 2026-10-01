@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/loker/jobhunt.js
@@ -112,9 +112,9 @@ async function handler(m, { sock }) {
 
     const msg = formatLokerMessage(jobs, { label: "Hasil Pencarian", keywords: mergedKeywords });
     if (!msg) {
-      return m.reply(claraWrap("Ayokerja", "Tidak ada loker yang bisa ditampilkan."));
+      return m.reply(novaWrap("Ayokerja", "Tidak ada loker yang bisa ditampilkan."));
     }
-    return await m.reply(claraWrap("ayokerja", msg));
+    return await m.reply(novaWrap("ayokerja", msg));
   } catch (e) {
     return m.reply(novaError("AyoKerja", `Ada error nih: ${e?.message || String(e)}`));
   }

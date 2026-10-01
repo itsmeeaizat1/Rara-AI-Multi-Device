@@ -5,7 +5,7 @@
 // popup tombol Support menu card (nova-menu-card.js supportRows), diklik →
 // popup pilihan rating ala bot populer (⭐⭐⭐⭐⭐ Puas Banget dst).
 // Rating tersimpan db.data.penilaian + notif DM ke owner (pola feedback.js).
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { toSC } from "../../src/lib/styler.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
@@ -84,7 +84,7 @@ async function sendRatingCard(m, sock, botConfig) {
       ]
     : ["📊 Belum ada yang kasih penilaian — jadi yang pertama!"];
 
-  const body = claraWrap("Beri Penilaian Bot", [
+  const body = novaWrap("Beri Penilaian Bot", [
     `Sampaikan pengalaman kamu pakai *${botName}* ${botConfig.bot?.version ? `v${botConfig.bot.version}` : ""}`.trim(),
     "",
     "Tap tombol *⭐ Beri Penilaian* lalu pilih yang paling pas:",
@@ -133,10 +133,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (/^\.?(penilaian|rating|rate|nilaibot)\s+(stats?|statistik|hasil)$/i.test(raw)) {
       const { total, avg, breakdown, list } = ratingStats(getDatabase());
       if (!total) {
-        return m.reply(claraWrap("Statistik Penilaian", ["Belum ada penilaian masuk.", "", `Ajak teman kasih nilai lewat *${prefix}penilaian* 🙏`]));
+        return m.reply(novaWrap("Statistik Penilaian", ["Belum ada penilaian masuk.", "", `Ajak teman kasih nilai lewat *${prefix}penilaian* 🙏`]));
       }
       const bar = (n) => "█".repeat(Math.max(1, Math.round((n / total) * 10))) + "░".repeat(10 - Math.max(1, Math.round((n / total) * 10)));
-      return m.reply(claraWrap("Statistik Penilaian", [
+      return m.reply(novaWrap("Statistik Penilaian", [
         `⭐ Rata-rata: *${avg.toFixed(1)}/5* (${total} penilai)`,
         "",
         `⭐⭐⭐⭐⭐  ${String(breakdown[5]).padStart(3)}  ${bar(breakdown[5])}`,
@@ -184,7 +184,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!/^\d+@s\.whatsapp\.net$/.test(ownerJid)) continue;
       const time = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" });
       try {
-        await sock.sendMessage(ownerJid, { text: claraWrap("Penilaian Masuk", [
+        await sock.sendMessage(ownerJid, { text: novaWrap("Penilaian Masuk", [
           `Penilaian: *${opt.stars} ${opt.label}* (${value}/5)`,
           "",
           `Dari: ${senderName} (${senderNum})`,
@@ -200,7 +200,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    await m.reply(claraWrap("Terima Kasih! 🙏", [
+    await m.reply(novaWrap("Terima Kasih! 🙏", [
       `Penilaian kamu: *${opt.stars} ${opt.label}*`,
       "",
       `📊 Rata-rata bot sekarang: *${avg.toFixed(1)}/5* dari ${total} penilai`,

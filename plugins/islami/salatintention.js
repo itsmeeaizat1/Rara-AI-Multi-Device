@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // salatintention.js — Niat sholat 5 waktu
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const NIAT = [
   { name: "Subuh", arabic: "أُصَلِّي فَرْضَ الصُّبْحِ رَكْعَتَيْنِ مُسْتَقِبِلَ الْقِبْلَةِ لِلَّهِ تَعَالَى", latin: "Usholli fardhol subhi rak'ataini mustaqbilal qiblati lillaahi ta'aalaa", arti: "Aku berniat sholat fardu Subuh 2 rakaat menghadap qiblat karena Allah Ta'ala" },
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("niatsholat error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("niatsholat", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("niatsholat", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

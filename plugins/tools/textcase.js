@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "textcase",
@@ -59,7 +59,7 @@ async function handler(m, { sock, config: botConfig }) {
     const inputText = text.substring(parts[0].length).trim();
 
     if (!inputText) {
-      return m.reply(claraWrap("TextCase", "Teks tidak boleh kosong!"));
+      return m.reply(novaWrap("TextCase", "Teks tidak boleh kosong!"));
     }
 
     // "all" mode: show all conversions
@@ -69,16 +69,16 @@ async function handler(m, { sock, config: botConfig }) {
         const result = v.fn(inputText);
         lines.push(v.desc + ": " + (result.length > 60 ? result.substring(0, 60) + "..." : result));
       }
-      return m.reply(claraWrap("Text Case (All Modes)", lines.join("\n")));
+      return m.reply(novaWrap("Text Case (All Modes)", lines.join("\n")));
     }
 
     if (!MODES[mode]) {
-      return m.reply(claraWrap("TextCase", "Mode tidak dikenal!\nKetik " + prefix + "textcase untuk lihat daftar mode"));
+      return m.reply(novaWrap("TextCase", "Mode tidak dikenal!\nKetik " + prefix + "textcase untuk lihat daftar mode"));
     }
 
     const result = MODES[mode].fn(inputText);
     await m.react("🐣");
-    return m.reply(claraWrap("Text Case Convert", [
+    return m.reply(novaWrap("Text Case Convert", [
       "Mode: " + MODES[mode].desc,
       "Input: " + (inputText.length > 60 ? inputText.substring(0, 60) + "..." : inputText),
       "Hasil: " + (result.length > 80 ? result.substring(0, 80) + "..." : result),
@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (e) {
     await m.react("❌");
     console.error("textcase error:", e);
-    return m.reply(claraWrap("TextCase", "Error: " + e.message));
+    return m.reply(novaWrap("TextCase", "Error: " + e.message));
   }
 }
 

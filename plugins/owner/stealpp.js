@@ -5,7 +5,7 @@ import axios from "axios";
 
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "colongpp",
   alias: ["colongpp"],
@@ -34,7 +34,7 @@ async function resizeForPP(buffer) {
 async function handler(m, { sock }) {
   const targetJid = m.quoted?.sender || m.mentions?.[0];
   if (!targetJid) {
-    return m.reply(claraWrap("colongpp", [
+    return m.reply(novaWrap("colongpp", [
       "Colong foto profil target dan pasang jadi PP bot.",
       "",
       `📌 Format: reply pesan target, lalu ketik ${m.prefix}colongpp`,
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     await sock.updateProfilePicture(botJid, processed);
     await m.react("🐣");
     const targetNumber = targetJid.split("@")[0];
-    return m.reply(claraWrap("colongpp", [
+    return m.reply(novaWrap("colongpp", [
       "PP berhasil dicolong!",
       "",
       `Target: @${targetNumber}`,
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[ColongPP] Error:", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("colongpp", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("colongpp", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

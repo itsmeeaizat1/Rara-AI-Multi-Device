@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "doh",
@@ -101,7 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
     domain = parts.join(" ").trim();
 
     if (!domain) {
-      return m.reply(claraWrap("DoH", "Domain tidak boleh kosong!"));
+      return m.reply(novaWrap("DoH", "Domain tidak boleh kosong!"));
     }
 
     // Clean domain
@@ -138,11 +138,11 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("Note: " + data.Comment);
     }
     await m.react("🐣");
-    return m.reply(claraWrap("DoH Query: " + domain, lines.join("\n")));
+    return m.reply(novaWrap("DoH Query: " + domain, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("doh error:", e);
-    return m.reply(claraWrap("DoH", "Error: " + e.message));
+    return m.reply(novaWrap("DoH", "Error: " + e.message));
   }
 }
 

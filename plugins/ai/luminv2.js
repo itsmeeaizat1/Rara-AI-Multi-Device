@@ -2,7 +2,7 @@
 // luminv2 — Lumin AI
 // API asli (luminai.my.id) udah mati → sekarang lewat rantai fallback multi-API
 // (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
@@ -15,7 +15,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
-  if (!text) return m.reply(claraWrap("luminv2", `Ada yang bisa dibantu?\nContoh: ${m.prefix}luminv2 apa itu quantum`, "guide"));
+  if (!text) return m.reply(novaWrap("luminv2", `Ada yang bisa dibantu?\nContoh: ${m.prefix}luminv2 apa itu quantum`, "guide"));
   try {
     await m.react("🕒");
     const reply = await aiFallbackChat(text, { persona: "Lumin AI", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("luminv2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("luminv2", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(novaWrap("luminv2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

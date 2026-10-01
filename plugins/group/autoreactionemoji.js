@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
     db.setGroup(m.chat, { autoreaction: args === "on" });
 
     const text =
-      claraWrap("Autoreaction", ["Fitur: *auto reaction*",
+      novaWrap("Autoreaction", ["Fitur: *auto reaction*",
         `Status: *${args === "on" ? "ON" : "OFF"}*`,
         `Group: *${m.chat}*`].join("\n")) +
       "\n" +

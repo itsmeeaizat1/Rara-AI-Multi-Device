@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // conciseaiv2 — ConciseAI v2 (toki heroku, HMAC)
 import crypto from "crypto";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
@@ -15,7 +15,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = (m.args || []).join(" ").trim();
   try {
-    if (!text) return m.reply(claraWrap("conciseaiv2", `Mau nanya apa?\nContoh: ${m.prefix}conciseaiv2 apa itu fotosintesis`, "guide"));
+    if (!text) return m.reply(novaWrap("conciseaiv2", `Mau nanya apa?\nContoh: ${m.prefix}conciseaiv2 apa itu fotosintesis`, "guide"));
     await m.react("🕒");
     const user_id = crypto.randomUUID().replace(/-/g, "");
     const lastMsg = `USER: ${text}`;
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
 
     console.error("conciseaiv2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("conciseaiv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("conciseaiv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

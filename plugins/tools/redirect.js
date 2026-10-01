@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "redirect",
@@ -103,7 +103,7 @@ async function handler(m, { sock, config: botConfig }) {
     const hops = await traceRedirects(text);
 
     if (hops.length === 0) {
-      return m.reply(claraWrap("Redirect", "Tidak ada response"));
+      return m.reply(novaWrap("Redirect", "Tidak ada response"));
     }
 
     const lines = [
@@ -143,11 +143,11 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push("");
     lines.push("Total time: " + totalTime + "ms");
     await m.react("🐣");
-    return m.reply(claraWrap("Redirect Trace: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
+    return m.reply(novaWrap("Redirect Trace: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("redirect error:", e);
-    return m.reply(claraWrap("Redirect", "Error: " + e.message));
+    return m.reply(novaWrap("Redirect", "Error: " + e.message));
   }
 }
 

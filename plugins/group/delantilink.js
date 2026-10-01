@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delantilink',
     alias: ["delantilink"],
@@ -52,7 +52,7 @@ function handler(m, { sock }) {
     antilinkList.splice(index, 1)
     db.setGroup(m.chat, { antilinkList })
     
-    m.reply(claraWrap("Delantilink", `Link: \`${link}\`\nSisa: ${antilinkList.length} link`, "success"))
+    m.reply(novaWrap("Delantilink", `Link: \`${link}\`\nSisa: ${antilinkList.length} link`, "success"))
 }
 
 export { pluginConfig as config, handler }

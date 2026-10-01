@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rizzmeter",
@@ -88,7 +88,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (cfg[mentioned].checkedToday) {
     const tier = RIZZ_TIERS.find(t => cfg[mentioned].score >= t.min && cfg[mentioned].score <= t.max);
-    await m.reply(claraWrap("Rizz Meter", [
+    await m.reply(novaWrap("Rizz Meter", [
       (isSelf ? "Kamu" : "@" + mentioned.split("@")[0]) + " udah dicek hari ini!",
       "Score: " + cfg[mentioned].score + "/100",
       "Tier: " + (tier?.emoji || "") + " " + (tier?.title || "?"),
@@ -124,7 +124,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   cfg[mentioned].tier = tier.title;
   saveConfig(db, gid, cfg);
 
-  await m.reply(claraWrap("Rizz Meter", [
+  await m.reply(novaWrap("Rizz Meter", [
     (isSelf ? "" : "@" + mentioned.split("@")[0] + " - "),
     "Score: " + score + "/100",
     "[" + bar + "]",

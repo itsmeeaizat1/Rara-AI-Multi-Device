@@ -59,7 +59,7 @@ function mkMock(args) {
   return { m, sock: {}, sends };
 }
 const { fromSC } = await import(R + "/src/lib/styler.js");
-// GOTCHA (ke-6x): claraWrap = smallcaps — asersi WAJIB lewat fromSC
+// GOTCHA (ke-6x): novaWrap = smallcaps — asersi WAJIB lewat fromSC
 const out = (mk) => fromSC(mk.sends.join("\n──\n"));
 
 // ═══════════════════════════════════════════════════════════════

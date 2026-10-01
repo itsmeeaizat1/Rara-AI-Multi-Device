@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   }
 
   if (!hasAccess(m.sender, m.isOwner)) {
-    return m.reply(claraWrap("Akses Ditolak", "🚫 Fitur ini hanya untuk Owner/Seller."));
+    return m.reply(novaWrap("Akses Ditolak", "🚫 Fitur ini hanya untuk Owner/Seller."));
   }
 
   const dropletId = m.text?.trim();

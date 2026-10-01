@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // characterai — Chat dengan AI dengan persona/karakter tertentu
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const CHARACTERS = {
@@ -63,11 +63,11 @@ async function handler(m, { sock }) {
     }
 
     if (!charKey) {
-      return m.reply(claraWrap("characterai", `Karakter "${charName}" tidak ditemukan.\nKetik ${m.prefix}characterai list untuk lihat semua karakter.`, "guide"));
+      return m.reply(novaWrap("characterai", `Karakter "${charName}" tidak ditemukan.\nKetik ${m.prefix}characterai list untuk lihat semua karakter.`, "guide"));
     }
 
     if (!message) {
-      return m.reply(claraWrap("characterai", `Mau ngomong apa sama ${CHARACTERS[charKey].name}?\nContoh: ${m.prefix}characterai ${charKey} halo!`, "guide"));
+      return m.reply(novaWrap("characterai", `Mau ngomong apa sama ${CHARACTERS[charKey].name}?\nContoh: ${m.prefix}characterai ${charKey} halo!`, "guide"));
     }
 
     await m.react("🕒");
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("characterai", `${CHARACTERS[charKey].name} lagi offline 😅`, "error"));
+      return m.reply(novaWrap("characterai", `${CHARACTERS[charKey].name} lagi offline 😅`, "error"));
     }
 
     await m.react("🐣");
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("characterai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("characterai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("characterai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

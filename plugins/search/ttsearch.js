@@ -8,7 +8,7 @@ import {
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 import { getdlTikTokSearch } from "../../src/scraper/getdl-tiktok.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ttsearch",
   alias: ["ttsearch"],
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply(claraWrap("TTSearch", [
+    return m.reply(novaWrap("TTSearch", [
       `📌 Cari video TikTok dari keyword:`,
       ``,
       `💡 Contoh:`,
@@ -142,7 +142,7 @@ ${video.author?.nickname ? `Author: ${video.author.nickname}\n` : ""}${video.sta
       }
     }
   } catch (error) {
-    m.reply(claraWrap("ttsearch", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("ttsearch", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

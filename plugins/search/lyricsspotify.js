@@ -5,7 +5,7 @@
 // input judul ATAU link track spotify, exact match dulu → fuzzy search.
 // Lirik plain diprioritasin; kalau cuma ada synced (LRC), timestamp-nya
 // dibersihin biar enak dibaca di chat.
-import { claraWrap, novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
 import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
 import { lyricsCaption } from "../../src/lib/nova-lyrics-format.js";
 
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
 
   if (!input) {
     return m.reply(
-      claraWrap("LirikSpotify", [
+      novaWrap("LirikSpotify", [
         `📌 Cari lirik lagu versi Spotify:`,
         ``,
         `💡 Contoh:`,

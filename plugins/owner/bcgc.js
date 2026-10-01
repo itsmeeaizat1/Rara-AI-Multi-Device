@@ -4,7 +4,7 @@ import { fetchGroupsSafe } from "../../src/lib/nova-jpm-helper.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, broadcastFormat, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, broadcastFormat, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bcgc",
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
       return m.reply(novaBox("Broadcast Grup", ["Tidak ada broadcast yang sedang berjalan"]));
     }
     global.stopBcgc = true;
-    return m.reply(claraWrap("bcgc", "Sedang dihentikan..."));
+    return m.reply(novaWrap("bcgc", "Sedang dihentikan..."));
   }
 
   if (
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
 
   if (input.toLowerCase() === "off") {
     db.setting("bcgcEnabled", false);
-    return m.reply(claraWrap("bcgc", "Berhasil dinonaktifkan"));
+    return m.reply(novaWrap("bcgc", "Berhasil dinonaktifkan"));
   }
 
   if (!input && !m.quoted) {
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     const groupCount = Object.keys(groups).length;
     const blacklist = db.setting("jpmBlacklist") || [];
     return m.reply(
-      claraWrap("bcgc", [
+      novaWrap("bcgc", [
         "Broadcast pesan + media ke semua grup",
         "",
         "Target: " + groupCount + " grup" + (blacklist.length ? " (" + blacklist.length + " blacklist)" : ""),
@@ -106,12 +106,12 @@ async function handler(m, { sock }) {
   }
 
   if (global.statusBcgc) {
-    return m.reply(claraWrap("bcgc", "Sedang berjalan.\nKetik *" + m.prefix + "stopbcgc* untuk hentikan"));
+    return m.reply(novaWrap("bcgc", "Sedang berjalan.\nKetik *" + m.prefix + "stopbcgc* untuk hentikan"));
   }
 
   const enabled = db.setting("bcgcEnabled");
   if (!enabled) {
-    return m.reply(claraWrap("bcgc", "Belum aktif.\nKetik *" + m.prefix + "bcgc on* untuk mengaktifkan"));
+    return m.reply(novaWrap("bcgc", "Belum aktif.\nKetik *" + m.prefix + "bcgc on* untuk mengaktifkan"));
   }
 
   try {
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
 
     if (!text && !mediaBuffer) {
       return m.reply(
-        claraWrap("bcgc", [
+        novaWrap("bcgc", [
           "Tidak ada konten terdeteksi",
           "",
           `📌 Format: kirim teks/foto/video/audio, lalu reply dengan ${m.prefix}bcgc`,
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
 
     if (groupIds.length === 0) {
       return m.reply(
-        claraWrap("bcgc", "Tidak ada grup yang bisa dituju" + (blCount > 0 ? " (" + blCount + " grup di-blacklist)" : ""), "error")
+        novaWrap("bcgc", "Tidak ada grup yang bisa dituju" + (blCount > 0 ? " (" + blCount + " grup di-blacklist)" : ""), "error")
       );
     }
 
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
     // Status report ke owner
     await m.react("🕒");
     await m.reply(
-      claraWrap("bcgc", [
+      novaWrap("bcgc", [
         "Broadcast Grup Dimulai",
         "",
         "Pesan: " + text.substring(0, 50) + (text.length > 50 ? "..." : ""),
@@ -201,7 +201,7 @@ async function handler(m, { sock }) {
         delete global.statusBcgc;
         await m.react("❌");
         await m.reply(
-          claraWrap("bcgc", [
+          novaWrap("bcgc", [
             "Broadcast Grup Dihentikan",
             "",
             `Berhasil: ${success}`,
@@ -256,7 +256,7 @@ async function handler(m, { sock }) {
     delete global.statusBcgc;
     await m.react("🐣");
     await m.reply(
-      claraWrap("bcgc", [
+      novaWrap("bcgc", [
         "Broadcast Grup Selesai",
         "",
         `Berhasil: ${success}`,
@@ -269,7 +269,7 @@ async function handler(m, { sock }) {
     delete global.statusBcgc;
     await m.react("❌");
     m.reply(
-      claraWrap("bcgc", "Terjadi kesalahan saat broadcast\n" + te(m.prefix, m.command, m.pushName), "error")
+      novaWrap("bcgc", "Terjadi kesalahan saat broadcast\n" + te(m.prefix, m.command, m.pushName), "error")
     );
   }
 }
@@ -296,7 +296,7 @@ async function handleSetDelay(m, db, input) {
 
   const ms = parseDelay(input);
   if (!ms || ms < 1000) {
-    return m.reply(claraWrap("bcgc", "Format salah.\n💡 Contoh: 5s, 2m, 1h, 1d"));
+    return m.reply(novaWrap("bcgc", "Format salah.\n💡 Contoh: 5s, 2m, 1h, 1d"));
   }
 
   db.setting("jedaBcgc", ms);

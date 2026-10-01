@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaHeader, separator, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -26,14 +26,14 @@ async function handler(m, { sock, config: botConfig }) {
       if (!date || !name) throw new Error("Format: .calendar add DD-MM-YYYY nama_event");
       db.calendar[gid].push({ date, name, created: Date.now() });
       db.write();
-      await m.reply(claraWrap("Kalender", [`Tanggal: *${date}*`, `Event: *${name}*`].join("\n")));
+      await m.reply(novaWrap("Kalender", [`Tanggal: *${date}*`, `Event: *${name}*`].join("\n")));
     } else if (action === "del") {
       const idx = parseInt(args[1]) - 1;
       db.calendar[gid].splice(idx, 1); db.write();
-      await m.reply(claraWrap("Kalender", [`Event #${idx+1} dihapus`].join("\n")));
+      await m.reply(novaWrap("Kalender", [`Event #${idx+1} dihapus`].join("\n")));
     } else {
       if (!db.calendar[gid].length) {
-        await m.reply(claraWrap("Kalender", ["Belum ada event", `Ketik: *${prefix}calendar add <tgl> <nama>*`].join("\n")));
+        await m.reply(novaWrap("Kalender", ["Belum ada event", `Ketik: *${prefix}calendar add <tgl> <nama>*`].join("\n")));
         return { handled: true };
       }
       db.calendar[gid].sort((a,b) => {
@@ -41,13 +41,13 @@ async function handler(m, { sock, config: botConfig }) {
         const [db2,mb,yb] = b.date.split("-").map(Number);
         return new Date(ya,ma-1,da) - new Date(yb,mb-1,db2);
       });
-      let text = claraHeader("Kalender Event", "📅") + "\n\n";
+      let text = novaHeader("Kalender Event", "📅") + "\n\n";
       db.calendar[gid].forEach((e, i) => { text += `${i+1}. 📅 *${e.date}* - ${e.name}\n`; });
       text += "\n" + tipText(`${prefix}calendar del <nomor> untuk hapus`);
       await m.reply(text);
     }
   } catch (e) {
-    await m.reply(claraWrap("Gagal nih", [`${e.message}`].join("\n")));
+    await m.reply(novaWrap("Gagal nih", [`${e.message}`].join("\n")));
   }
   return { handled: true };
 }

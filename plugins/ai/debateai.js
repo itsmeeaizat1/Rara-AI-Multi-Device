@@ -2,7 +2,7 @@
 // AI Debate — Two AI characters debate a topic
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("debateai", `Topik apa yang mau diperdebatkan?\n\nContoh: ${m.prefix}debateai nasi goreng vs mie goreng`, "guide"));
+      return m.reply(novaWrap("debateai", `Topik apa yang mau diperdebatkan?\n\nContoh: ${m.prefix}debateai nasi goreng vs mie goreng`, "guide"));
     }
 
     await m.react("🕒");
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("debateai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("debateai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("debateai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

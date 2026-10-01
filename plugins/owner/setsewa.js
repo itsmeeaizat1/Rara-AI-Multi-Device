@@ -2,7 +2,7 @@
 // setsewa.js — Owner: ubah harga sewa bot & premium LIVE dari WhatsApp
 // Harga persist di DB (settings.sewaOverrides), menimpa default
 // src/lib/sewa/sewa.js tanpa edit file / restart.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import {
   sewaPrice,
   premiumPrice,
@@ -60,7 +60,7 @@ async function handler(m, { config: botConfig }) {
 
     // Tanpa argumen → tampil harga sekarang + usage
     if (!key) {
-      return m.reply(claraWrap("Set Sewa", [
+      return m.reply(novaWrap("Set Sewa", [
         "Harga sewa & premium saat ini:",
         "",
         ...currentView(),
@@ -83,14 +83,14 @@ async function handler(m, { config: botConfig }) {
 
     if (k === "reset") {
       resetSewaPrices();
-      return m.reply(claraWrap("Set Sewa", [
+      return m.reply(novaWrap("Set Sewa", [
         "Status: *berhasil*",
         "Semua harga direset ke default file src/lib/sewa/sewa.js",
       ]));
     }
 
     if (!value) {
-      return m.reply(claraWrap("Set Sewa", [
+      return m.reply(novaWrap("Set Sewa", [
         `Nilai untuk *${key}* kosong`,
         "",
         `📌 Ketik: ${prefix}setsewa ${key} <nilai>`,
@@ -102,7 +102,7 @@ async function handler(m, { config: botConfig }) {
       const [dur, ...priceRest] = rest;
       const priceVal = priceRest.join(" ").trim();
       if (!dur || !priceVal) {
-        return m.reply(claraWrap("Set Sewa", [
+        return m.reply(novaWrap("Set Sewa", [
           "Format premium salah",
           "",
           `📌 Ketik: ${prefix}setsewa premium <durasi> <harga>`,
@@ -113,7 +113,7 @@ async function handler(m, { config: botConfig }) {
       }
       try {
         const pkg = setPremiumPrice(dur, { price: priceVal });
-        return m.reply(claraWrap("Set Sewa", [
+        return m.reply(novaWrap("Set Sewa", [
           "Status: *berhasil*",
           `Paket: *${pkg.label} (${pkg.duration})*`,
           `Harga baru: *${pkg.price}*`,
@@ -121,7 +121,7 @@ async function handler(m, { config: botConfig }) {
           "Harga sudah aktif di semua fitur (sewa, premium, payment, buyprem)",
         ]));
       } catch (e) {
-        return m.reply(claraWrap("Set Sewa", [
+        return m.reply(novaWrap("Set Sewa", [
           "Status: *gagal*",
           `Alasan: *${e.message}*`,
           "",
@@ -133,7 +133,7 @@ async function handler(m, { config: botConfig }) {
     if (SEWA_KEYS.includes(k)) {
       try {
         setSewaPrice(k === "qris" ? "qrisUrl" : k, value);
-        return m.reply(claraWrap("Set Sewa", [
+        return m.reply(novaWrap("Set Sewa", [
           "Status: *berhasil*",
           `Field: *${k}*`,
           `Nilai baru: *${value}*`,
@@ -141,21 +141,21 @@ async function handler(m, { config: botConfig }) {
           "Harga sudah aktif di semua fitur (sewa, premium, payment, buysewa)",
         ]));
       } catch (e) {
-        return m.reply(claraWrap("Set Sewa", [
+        return m.reply(novaWrap("Set Sewa", [
           "Status: *gagal*",
           `Alasan: *${e.message}*`,
         ]));
       }
     }
 
-    return m.reply(claraWrap("Set Sewa", [
+    return m.reply(novaWrap("Set Sewa", [
       `Key *${key}* tidak dikenal`,
       "",
       "📌 *Key yang tersedia:* daily, weekly, monthly, yearly, lifetime, custom, qris, premium, reset",
     ]));
   } catch (error) {
     console.error("[setsewa] error:", error.message);
-    return m.reply(claraWrap("Set Sewa", [
+    return m.reply(novaWrap("Set Sewa", [
       "Status: *gagal*",
       `Alasan: *${error.message}*`,
     ]));

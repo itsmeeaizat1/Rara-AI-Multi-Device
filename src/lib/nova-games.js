@@ -653,7 +653,7 @@ export function psStat(icon, label, cur, max, width = 10) {
 // ─── novaRpgBox — REDESIGN OWNER 2026-09-07: SEMUA game RPG + RPG cinta ───
 // Request owner: "itu tampilan yang diganti jangan cuma family100 tapi
 // semua game rpg, rpg cinta — garis di kiri dihapus juga".
-// Signature 100% kompatibel dengan claraWrap(title, body, type) /
+// Signature 100% kompatibel dengan novaWrap(title, body, type) /
 // novaBox(header, lines, opts) biar bisa drop-in di 159 plugin RPG —
 // tapi render-nya dashboard PS-style novaGameBox: TANPA box-drawing
 // (╭╰│), TANPA garis kiri. Status icon (❗/✅/❌) tetap sesuai aturan owner.
@@ -676,7 +676,7 @@ export function novaRpgBox(title, body, type = "info", _opts = {}) {
   }
   lines = collapsed;
 
-  // status icon di baris pertama — sama kayak claraWrap (aturan owner)
+  // status icon di baris pertama — sama kayak novaWrap (aturan owner)
   if (type === "error" && lines.length) {
     lines[0] = lines[0].startsWith("❌") ? lines[0] : `❌ ${lines[0]}`;
   } else if (type === "success" && lines.length) {

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bcpcjeda",
@@ -35,18 +35,18 @@ async function handler(m, { sock }) {
   const current = db.setting("jedaBcpc") || 5000;
 
   if (!input) {
-    return m.reply(claraWrap("Jeda Broadcast", `Jeda saat ini: ${formatDelay(current)} (${current}ms)\n\nCara pakai: ${m.prefix}bcpcjeda <angka><satuan>\nSatuan: s(detik) m(menit) h(jam) d(hari)\nContoh: ${m.prefix}bcpcjeda 5s`));
+    return m.reply(novaWrap("Jeda Broadcast", `Jeda saat ini: ${formatDelay(current)} (${current}ms)\n\nCara pakai: ${m.prefix}bcpcjeda <angka><satuan>\nSatuan: s(detik) m(menit) h(jam) d(hari)\nContoh: ${m.prefix}bcpcjeda 5s`));
   }
 
   const ms = parseDelay(input);
   if (!ms || ms < 1000) {
-    return m.reply(claraWrap("Jeda Broadcast", `Format salah. Contoh: 5s, 2m, 1h, 1d`));
+    return m.reply(novaWrap("Jeda Broadcast", `Format salah. Contoh: 5s, 2m, 1h, 1d`));
   }
 
   const prev = current;
   db.setting("jedaBcpc", ms);
 
-  return m.reply(claraWrap("Jeda Broadcast", `Jeda berhasil diubah.\nSebelumnya: ${formatDelay(prev)}\nSekarang: ${formatDelay(ms)}\nEstimasi 100 kontak: ${Math.ceil((100 * ms) / 60000)} menit`));
+  return m.reply(novaWrap("Jeda Broadcast", `Jeda berhasil diubah.\nSebelumnya: ${formatDelay(prev)}\nSekarang: ${formatDelay(ms)}\nEstimasi 100 kontak: ${Math.ceil((100 * ms) / 60000)} menit`));
 }
 
 export { pluginConfig as config, handler };

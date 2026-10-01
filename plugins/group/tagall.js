@@ -4,7 +4,7 @@ import {
   getParticipantJids,
 } from "../../src/lib/nova-lid.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "tagall",
   alias: ["tagall"],
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     const participants = groupMeta.participants || [];
 
     if (participants.length === 0) {
-      await m.reply(claraWrap("Tagall", `gagal\n\nTidak ada member di grup ini.`, "error"));
+      await m.reply(novaWrap("Tagall", `gagal\n\nTidak ada member di grup ini.`, "error"));
       return;
     }
 
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     });
 
     if (targetParticipants.length === 0) {
-      await m.reply(claraWrap("Tagall", `gagal\n\nTidak ada member lain yang bisa di-tag.`, "error"));
+      await m.reply(novaWrap("Tagall", `gagal\n\nTidak ada member lain yang bisa di-tag.`, "error"));
       return;
     }
 
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
         `Total: ${targetParticipants.length} member\n\n` +
         memberList);
   } catch (error) {
-    m.reply(claraWrap("tagall", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("tagall", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

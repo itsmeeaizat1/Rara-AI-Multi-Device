@@ -18,7 +18,7 @@ import os from "os";
 import path from "path";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { getDatabase } from "./nova-database.js";
 
 const VT_GUI = "https://www.virustotal.com/gui";
@@ -277,8 +277,8 @@ function verdictBox(fileName, fileSize, v) {
   const tail = `\n\nSHA-256: ${v.sha256}\nLaporan lengkap: ${link}`;
 
   if (v.verdict === "bahaya") {
-    // claraWrap type error otomatis kasih prefix ❌ — jangan dobel ikon
-    return claraWrap("scan virus", [
+    // novaWrap type error otomatis kasih prefix ❌ — jangan dobel ikon
+    return novaWrap("scan virus", [
       `FILE TERDETEKSI BERBAHAYA!`,
       "",
       ...rows,
@@ -287,7 +287,7 @@ function verdictBox(fileName, fileSize, v) {
     ].join("\n"), "error") + tail;
   }
   if (v.verdict === "mencurigakan") {
-    return claraWrap("scan virus", [
+    return novaWrap("scan virus", [
       `File ditandai mencurigakan oleh ${v.suspicious} engine`,
       "",
       ...rows,
@@ -295,7 +295,7 @@ function verdictBox(fileName, fileSize, v) {
       "Hati-hati — file ini berpotensi berbahaya.",
     ].join("\n"), "warn") + tail;
   }
-  return claraWrap("scan virus", [
+  return novaWrap("scan virus", [
     `File aman — tidak ada engine yang menandain`,
     "",
     ...rows,
@@ -323,7 +323,7 @@ async function _scanJob(m, sock) {
 
   // notif "sedang di-scan" — status box + react loading
   await m.react("🔍");
-  await m.reply(claraWrap("scan virus", [
+  await m.reply(novaWrap("scan virus", [
     `File : ${fileName}`,
     `Pengirim : @${senderNum}`,
     "",
@@ -339,7 +339,7 @@ async function _scanJob(m, sock) {
     await fs.writeFile(tmp, buffer);
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("scan virus", `Gagal mengunduh file untuk di-scan: ${e.message}`, "error"));
+    await m.reply(novaWrap("scan virus", `Gagal mengunduh file untuk di-scan: ${e.message}`, "error"));
     return;
   }
 
@@ -386,7 +386,7 @@ async function _scanJob(m, sock) {
     if (!vtData) {
       await m.react("❌");
       await m.reply(
-        claraWrap("scan virus", [
+        novaWrap("scan virus", [
           note || "Scan gagal.",
           "",
           `File : ${fileName}`,
@@ -399,7 +399,7 @@ async function _scanJob(m, sock) {
     const verdict = buildVerdict(vtData);
     if (!verdict) {
       await m.react("❌");
-      await m.reply(claraWrap("scan virus", "Hasil dari VirusTotal tidak bisa dibaca. Coba lagi nanti.", "error"));
+      await m.reply(novaWrap("scan virus", "Hasil dari VirusTotal tidak bisa dibaca. Coba lagi nanti.", "error"));
       return;
     }
 
@@ -409,7 +409,7 @@ async function _scanJob(m, sock) {
     await m.reply(verdictBox(fileName, fileSize, verdict));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("scan virus", `Scan gagal: ${e.message}`, "error"));
+    await m.reply(novaWrap("scan virus", `Scan gagal: ${e.message}`, "error"));
   } finally {
     await fs.unlink(tmp).catch(() => {});
   }

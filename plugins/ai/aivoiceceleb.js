@@ -3,7 +3,7 @@
 // 12 voice: nahida, nami, ana, taylor_swift, elon_musk, angela_adkinsh,
 // eminem, miku, optimus_prime, goku, mickey_mouse, kendrick_lamar
 // Key: apikeys.json kuroneko.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { celebTTS, celebVoiceList } from "../../src/scraper/kuroneko.js";
 
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
       } catch {
         voices = ["• gagal ambil daftar — coba lagi nanti"];
       }
-      return m.reply(claraWrap("aivoiceceleb",
+      return m.reply(novaWrap("aivoiceceleb",
         `Suara AI selebritas & karakter!\n\nCARA PAKAI:\n${m.prefix}aivoiceceleb <voice> <teks>\n\nDAFTAR VOICE (${voices.length}):\n${voices.join("\n")}\n\nContoh: ${m.prefix}aivoiceceleb taylor_swift halo apa kabar semua?`, "guide"));
     }
 
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     const text = args.slice(1).join(" ").trim();
     if (!text) {
       await m.react("❌");
-      return m.reply(claraWrap("aivoiceceleb", `Kasih teksnya!\n\nContoh: ${m.prefix}aivoiceceleb ${voice} halo semuanya apa kabar\n\nKetik ${m.prefix}aivoiceceleb list buat daftar voice`, "guide"));
+      return m.reply(novaWrap("aivoiceceleb", `Kasih teksnya!\n\nContoh: ${m.prefix}aivoiceceleb ${voice} halo semuanya apa kabar\n\nKetik ${m.prefix}aivoiceceleb list buat daftar voice`, "guide"));
     }
 
     const audioUrl = await celebTTS(text, voice);
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("aivoiceceleb error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("aivoiceceleb", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("aivoiceceleb", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

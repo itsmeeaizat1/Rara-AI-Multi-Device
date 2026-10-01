@@ -3,7 +3,7 @@ import axios from "axios";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
 // PPOB - Pembayaran & Pengisian Online Terintegrasi
@@ -589,13 +589,13 @@ async function handler(m, { sock }) {
     });
     body += "Switch: .ppob setprovider <nama>\n";
     body += "Set key: .ppob setkey <user>:<key>";
-    return m.reply( claraWrap("PPOB", body), "ppob");
+    return m.reply( novaWrap("PPOB", body), "ppob");
   }
 
   // === SET PROVIDER ===
   if (sub === "setprovider" || sub === "switch") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     const target = (arg1 || "").toLowerCase();
     if (!PROVIDERS[target]) {
       let body = "Provider tidak ditemukan: " + arg1 + "\n\nTersedia:\n";
@@ -603,11 +603,11 @@ async function handler(m, { sock }) {
         (k) => (body += "  " + PROVIDERS[k].name + " (" + k + ")\n")
       );
       body += "\n💡 *Contoh:* .ppob setprovider digiflazz";
-      return m.reply( claraWrap("PPOB", body), "ppob");
+      return m.reply( novaWrap("PPOB", body), "ppob");
     }
     data.activeProvider = target;
     saveData(data);
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
         "PPOB",
         "Provider aktif: " +
           PROVIDERS[target].name +
@@ -622,10 +622,10 @@ async function handler(m, { sock }) {
   // === SETKEY ===
   if (sub === "setkey" || sub === "setapi") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     const credInput = arg1;
     if (!credInput || !credInput.includes(":")) {
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
           "PPOB",
           "Set API - Provider: " +
             provider.name +
@@ -638,12 +638,12 @@ async function handler(m, { sock }) {
     }
     const parsed = provider.parseKey(credInput);
     if (!parsed) {
-    await m.reply(claraWrap("PPOB", "Format salah! Gunakan: <user>:<apiKey>"));
+    await m.reply(novaWrap("PPOB", "Format salah! Gunakan: <user>:<apiKey>"));
     }
     data.credentials[data.activeProvider] = parsed;
     data.priceCache[data.activeProvider] = null;
     saveData(data);
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
         "PPOB",
         "Credentials tersimpan!\n" +
           "Provider: " + provider.name + "\n" +
@@ -655,10 +655,10 @@ async function handler(m, { sock }) {
   // === SETMARKUP ===
   if (sub === "setmarkup" || sub === "markup") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     const pct = parseInt(arg1);
     if (isNaN(pct) || pct < 0 || pct > 100) {
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
           "PPOB",
           "Set Markup (Owner)\n\n" +
             ".ppob setmarkup <persen>\n\n" +
@@ -670,7 +670,7 @@ async function handler(m, { sock }) {
     }
     data.markup = pct;
     saveData(data);
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
         "PPOB",
         "Markup: " + pct + "%\n\n" +
           "Contoh: Pulsa 50k harga API Rp49.000\n" +
@@ -681,7 +681,7 @@ async function handler(m, { sock }) {
   // === SALDO ===
   if (sub === "saldo" || sub === "balance") {
     if (!provider.isSetup(cred))
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
           "PPOB",
           "Provider belum setup!\nOwner: .ppob setkey <user>:<key>\n\n" +
             provider.setupHint
@@ -690,7 +690,7 @@ async function handler(m, { sock }) {
       await m.react("🕒");
       const saldo = await provider.cekSaldo(cred);
       await m.react("🐣");
-      await m.reply(claraWrap(
+      await m.reply(novaWrap(
           "PPOB",
           "Saldo " + provider.name + "\n\n" +
             "Saldo: " + formatRupiah(saldo) + "\n" +
@@ -698,14 +698,14 @@ async function handler(m, { sock }) {
         ));
     } catch (err) {
       await m.react("❌");
-      await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.reply(novaWrap("PPOB", "Error: " + err.message));
     }
   }
 
   // === KATEGORI ===
   if (sub === "kategori" || sub === "category" || sub === "menu") {
     if (!provider.isSetup(cred))
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
           "PPOB",
           "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"
         ));
@@ -735,20 +735,20 @@ async function handler(m, { sock }) {
       body += "  .ppob cari dana\n";
       body += "  .ppob cari wifi";
       await m.react("🐣");
-      return m.reply( claraWrap("PPOB", body), "ppob");
+      return m.reply( novaWrap("PPOB", body), "ppob");
     } catch (err) {
       await m.react("❌");
-      await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.reply(novaWrap("PPOB", "Error: " + err.message));
     }
   }
 
   // === CARI ===
   if (sub === "cari" || sub === "search") {
     if (!provider.isSetup(cred))
-    await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
+    await m.reply(novaWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
     const keyword = (arg1 || "").toLowerCase();
     if (!keyword) {
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
           "PPOB",
           "Cari Produk\n\n" +
             ".ppob cari <keyword>\n\n" +
@@ -779,7 +779,7 @@ async function handler(m, { sock }) {
         .sort((a, b) => a.price - b.price);
 
       if (filtered.length === 0) {
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
             "PPOB",
             "Tidak ada produk: " + keyword + "\n\nCoba:\n" +
               ".ppob cari telkomsel\n" +
@@ -800,21 +800,21 @@ async function handler(m, { sock }) {
       body += "\nBeli: .ppob beli <sku> <nomor>\n";
       body += "Contoh: .ppob beli " + filtered[0].sku + " 08123456789";
       await m.react("🐣");
-      return m.reply( claraWrap("PPOB", body), "ppob");
+      return m.reply( novaWrap("PPOB", body), "ppob");
     } catch (err) {
       await m.react("❌");
-      await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.reply(novaWrap("PPOB", "Error: " + err.message));
     }
   }
 
   // === BELI ===
   if (sub === "beli" || sub === "buy" || sub === "pesan") {
     if (!provider.isSetup(cred))
-    await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
+    await m.reply(novaWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
     const sku = (arg1 || "").toUpperCase();
     const customerNo = (arg2 || "").replace(/[^0-9]/g, "");
     if (!sku || !customerNo) {
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
           "PPOB",
           "Format Beli\n\n" +
             ".ppob beli <sku_code> <nomor_tujuan>\n\n" +
@@ -831,10 +831,10 @@ async function handler(m, { sock }) {
       const products = await getCachedPriceList(data);
       const prod = products.find((p) => p.sku === sku);
       if (!prod) {
-    await m.reply(claraWrap("PPOB", "SKU tidak ditemukan: " + sku + "\nCari: .ppob cari <keyword>"));
+    await m.reply(novaWrap("PPOB", "SKU tidak ditemukan: " + sku + "\nCari: .ppob cari <keyword>"));
       }
       if (!prod.buyerStatus || !prod.sellerStatus) {
-    await m.reply(claraWrap("PPOB", "Produk sedang gangguan/tidak tersedia: " + prod.name));
+    await m.reply(novaWrap("PPOB", "Produk sedang gangguan/tidak tersedia: " + prod.name));
       }
 
       const price = calcPrice(prod.price, markup);
@@ -871,14 +871,14 @@ async function handler(m, { sock }) {
         );
         if (imgKeys.length > 0) {
           // Kirim text info dulu
-          await m.reply( claraWrap("PPOB", body), "ppob");
+          await m.reply( novaWrap("PPOB", body), "ppob");
           // Kirim setiap QR image
           for (const key of imgKeys) {
             await sendQrImage(
               sock,
               m.chat,
               imgs[key],
-              claraWrap("PPOB", "QR " + key.toUpperCase() + "\nScan untuk bayar"),
+              novaWrap("PPOB", "QR " + key.toUpperCase() + "\nScan untuk bayar"),
               m
             );
           }
@@ -892,26 +892,26 @@ async function handler(m, { sock }) {
         sock,
         m.chat,
         data.payment?.qrisUrl || "",
-        claraWrap("PPOB - QRIS", body),
+        novaWrap("PPOB - QRIS", body),
         m
       );
       if (!sent) {
-        return m.reply( claraWrap("PPOB", body), "ppob");
+        return m.reply( novaWrap("PPOB", body), "ppob");
       }
       return;
     } catch (err) {
       await m.react("❌");
-      await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.reply(novaWrap("PPOB", "Error: " + err.message));
     }
   }
 
   // === SETMODE (Owner only) ===
   if (sub === "setmode" || sub === "paymode") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     const mode = (arg1 || "").toLowerCase();
     if (mode !== "text" && mode !== "image") {
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
           "PPOB",
           "Set Mode Payment (Owner)\n\n" +
             ".ppob setmode <text|image>\n\n" +
@@ -922,7 +922,7 @@ async function handler(m, { sock }) {
     }
     data.paymentMode = mode;
     saveData(data);
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
         "PPOB",
         "Mode payment: " + mode + "\n\n" +
           (mode === "image"
@@ -935,7 +935,7 @@ async function handler(m, { sock }) {
   // === SETQRIMG (Owner only) ===
   if (sub === "setqrimg" || sub === "setqrimage") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     const key = (arg1 || "").toLowerCase();
     const url = arg2 || "";
     if (!data.paymentImages) data.paymentImages = {};
@@ -959,21 +959,21 @@ async function handler(m, { sock }) {
       body += "  .ppob setqrimg dana https://i.ibb.co.com/yyy.png\n";
       body += "  .ppob setqrimg gopay https://i.ibb.co.com/zzz.png\n\n";
       body += "Hapus: .ppob setqrimg <nama> off";
-      return m.reply( claraWrap("PPOB", body), "ppob");
+      return m.reply( novaWrap("PPOB", body), "ppob");
     }
     if (url === "off" || url === "delete") {
       delete data.paymentImages[key];
       saveData(data);
-    await m.reply(claraWrap("PPOB", "QR image '" + key + "' dihapus"));
+    await m.reply(novaWrap("PPOB", "QR image '" + key + "' dihapus"));
     }
     // Preserve existing enabled state or default true
     const wasEnabled = data.paymentImages[key]?.enabled !== false;
     data.paymentImages[key] = { url, enabled: wasEnabled };
     saveData(data);
     // Kirim preview gambar ke owner
-    const sent = await sendQrImage(sock, m.chat, url, claraWrap("PPOB", "QR " + key + " disimpan!\nStatus: " + (wasEnabled ? "ON" : "OFF") + "\nPreview:"), m);
+    const sent = await sendQrImage(sock, m.chat, url, novaWrap("PPOB", "QR " + key + " disimpan!\nStatus: " + (wasEnabled ? "ON" : "OFF") + "\nPreview:"), m);
     if (!sent) {
-    await m.reply(claraWrap("PPOB", "QR " + key + " disimpan!\nURL: " + url + "\n\n(Gagal preview, cek URL)"));
+    await m.reply(novaWrap("PPOB", "QR " + key + " disimpan!\nURL: " + url + "\n\n(Gagal preview, cek URL)"));
     }
     return;
   }
@@ -981,7 +981,7 @@ async function handler(m, { sock }) {
   // === TOGGLEQRIMG (Owner only) ===
   if (sub === "toggleqrimg" || sub === "toggleqr") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     const key = (arg1 || "").toLowerCase();
     if (!key) {
       let body = "Toggle QR Image (Owner)\n\n";
@@ -997,14 +997,14 @@ async function handler(m, { sock }) {
         body += "Contoh: .ppob toggleqrimg qris\n";
         body += "Contoh: .ppob toggleqrimg dana";
       }
-      return m.reply( claraWrap("PPOB", body), "ppob");
+      return m.reply( novaWrap("PPOB", body), "ppob");
     }
     if (!data.paymentImages[key]) {
-    await m.reply(claraWrap("PPOB", "QR image '" + key + "' tidak ada\nTambah: .ppob setqrimg " + key + " <url>"));
+    await m.reply(novaWrap("PPOB", "QR image '" + key + "' tidak ada\nTambah: .ppob setqrimg " + key + " <url>"));
     }
     data.paymentImages[key].enabled = !data.paymentImages[key].enabled;
     saveData(data);
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
         "PPOB",
         "QR " + key + ": " + (data.paymentImages[key].enabled ? "ON" : "OFF") + "\n\n" +
           (data.paymentImages[key].enabled
@@ -1016,10 +1016,10 @@ async function handler(m, { sock }) {
   // === SETQRIS (Owner only) ===
   if (sub === "setqris" || sub === "setqrisurl") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     const qrisUrl = arg1 || "";
     if (!qrisUrl) {
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
           "PPOB",
           "Set QRIS untuk PPOB (Owner)\n\n" +
             ".ppob setqris <path atau URL>\n\n" +
@@ -1034,7 +1034,7 @@ async function handler(m, { sock }) {
     if (!data.payment) data.payment = {};
     data.payment.qrisUrl = (qrisUrl === "off" || qrisUrl === "false") ? "" : qrisUrl;
     saveData(data);
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
         "PPOB",
         "QRIS PPOB: " +
           (data.payment.qrisUrl ? "Diatur (" + data.payment.qrisUrl + ")" : "Nonaktif")
@@ -1044,7 +1044,7 @@ async function handler(m, { sock }) {
   // === SETPAYMENT (Owner only) ===
   if (sub === "setpayment" || sub === "setwallet" || sub === "setbank") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     if (!data.payment) data.payment = { qrisUrl: "", methods: [], banks: [] };
     
     // .ppob setwallet <index> <number> <holder>
@@ -1057,14 +1057,14 @@ async function handler(m, { sock }) {
         });
         body += "\n.ppob setwallet <nomor> <number> <holder>\n";
         body += "Contoh: .ppob setwallet 1 08123456789 Aizat";
-        return m.reply( claraWrap("PPOB", body), "ppob");
+        return m.reply( novaWrap("PPOB", body), "ppob");
       }
       const number = arg2 || "";
       const holder = args.slice(3).join(" ") || "";
       data.payment.methods[idx].number = number;
       data.payment.methods[idx].holder = holder;
       saveData(data);
-    await m.reply(claraWrap("PPOB", data.payment.methods[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"));
+    await m.reply(novaWrap("PPOB", data.payment.methods[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"));
     }
     
     // .ppob setbank <index> <number> <holder>
@@ -1077,14 +1077,14 @@ async function handler(m, { sock }) {
         });
         body += "\n.ppob setbank <nomor> <number> <holder>\n";
         body += "Contoh: .ppob setbank 1 1234567890 Aizat";
-        return m.reply( claraWrap("PPOB", body), "ppob");
+        return m.reply( novaWrap("PPOB", body), "ppob");
       }
       const number = arg2 || "";
       const holder = args.slice(3).join(" ") || "";
       data.payment.banks[idx].number = number;
       data.payment.banks[idx].holder = holder;
       saveData(data);
-    await m.reply(claraWrap("PPOB", data.payment.banks[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"));
+    await m.reply(novaWrap("PPOB", data.payment.banks[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"));
     }
     
     // .ppob setpayment (show all)
@@ -1101,16 +1101,16 @@ async function handler(m, { sock }) {
       body += (i + 1) + ". " + b.name + ": " + (b.number || "-") + (b.holder ? " a/n " + b.holder : "") + "\n";
     });
     body += "\nSet: .ppob setbank <no> <number> <holder>";
-    return m.reply( claraWrap("PPOB", body), "ppob");
+    return m.reply( novaWrap("PPOB", body), "ppob");
   }
 
   // === KONFIRMASI (Owner only) ===
   if (sub === "konfirmasi" || sub === "confirm") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     const orderId = (arg1 || "").toUpperCase();
     if (!orderId) {
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
           "PPOB",
           "Konfirmasi Pembayaran (Owner)\n\n" +
             ".ppob konfirmasi <orderId>\n\n" +
@@ -1119,10 +1119,10 @@ async function handler(m, { sock }) {
     }
     const order = data.pendingOrders[orderId];
     if (!order) {
-    await m.reply(claraWrap("PPOB", "Order tidak ditemukan: " + orderId));
+    await m.reply(novaWrap("PPOB", "Order tidak ditemukan: " + orderId));
     }
     if (order.status !== "menunggu_pembayaran") {
-    await m.reply(claraWrap("PPOB", "Status: " + order.status + "\nTidak bisa dikonfirmasi"));
+    await m.reply(novaWrap("PPOB", "Status: " + order.status + "\nTidak bisa dikonfirmasi"));
     }
     try {
       const orderProvider = PROVIDERS[order.provider] || provider;
@@ -1166,23 +1166,23 @@ async function handler(m, { sock }) {
         successBody += "Produk sudah masuk ke nomor tujuan.\nTerima kasih!";
         try {
           await sock.sendMessage(order.sender, {
-            text: claraWrap("PPOB - Sukses", successBody),
+            text: novaWrap("PPOB - Sukses", successBody),
           });
         } catch (e) { console.error('[ppob.js]:', e.message); }
       } else if (order.sender && order.sender !== sender) {
         try {
           await sock.sendMessage(order.sender, {
-            text: claraWrap("PPOB", body),
+            text: novaWrap("PPOB", body),
           });
         } catch (e) { console.error('[ppob.js]:', e.message); }
       }
 
-      return m.reply( claraWrap("PPOB", body), "ppob");
+      return m.reply( novaWrap("PPOB", body), "ppob");
     } catch (err) {
       order.status = "error";
       order.error = err.message;
       saveData(data);
-    await m.reply(claraWrap("PPOB", "Error proses: " + err.message));
+    await m.reply(novaWrap("PPOB", "Error proses: " + err.message));
     }
   }
 
@@ -1190,7 +1190,7 @@ async function handler(m, { sock }) {
   if (sub === "cek" || sub === "status") {
     const orderId = (arg1 || "").toUpperCase();
     if (!orderId) {
-    await m.reply(claraWrap("PPOB", "Cek Status Order\n\n.ppob cek <orderId>"));
+    await m.reply(novaWrap("PPOB", "Cek Status Order\n\n.ppob cek <orderId>"));
     }
 
     let order = data.pendingOrders[orderId];
@@ -1200,7 +1200,7 @@ async function handler(m, { sock }) {
       isPending = false;
     }
     if (!order) {
-    await m.reply(claraWrap("PPOB", "Order tidak ditemukan: " + orderId));
+    await m.reply(novaWrap("PPOB", "Order tidak ditemukan: " + orderId));
     }
 
     let body = "Status Order\n\n";
@@ -1254,7 +1254,7 @@ async function handler(m, { sock }) {
               sucBody += "Status: Sukses\n\nTerima kasih!";
               try {
                 await sock.sendMessage(order.sender, {
-                  text: claraWrap("PPOB - Sukses", sucBody),
+                  text: novaWrap("PPOB - Sukses", sucBody),
                 });
               } catch (e) { console.error('[ppob.js]:', e.message); }
             }
@@ -1263,18 +1263,18 @@ async function handler(m, { sock }) {
       }
     }
 
-    return m.reply( claraWrap("PPOB", body), "ppob");
+    return m.reply( novaWrap("PPOB", body), "ppob");
   }
 
   // === PENDING (Owner only) ===
   if (sub === "pending" || sub === "listpending") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     const pending = Object.entries(data.pendingOrders).filter(
       ([, o]) => o.status === "menunggu_pembayaran"
     );
     if (pending.length === 0) {
-    await m.reply(claraWrap("PPOB", "Tidak ada order pending"));
+    await m.reply(novaWrap("PPOB", "Tidak ada order pending"));
     }
     let body = "Order Pending (" + pending.length + ")\n\n";
     pending.forEach(([id, o], i) => {
@@ -1288,42 +1288,42 @@ async function handler(m, { sock }) {
       body += "   Sisa: " + remaining + " menit\n";
       body += "   Konfirmasi: .ppob konfirmasi " + id + "\n";
     });
-    return m.reply( claraWrap("PPOB", body), "ppob");
+    return m.reply( novaWrap("PPOB", body), "ppob");
   }
 
   // === BATAL ===
   if (sub === "batal" || sub === "cancel") {
     const orderId = (arg1 || "").toUpperCase();
     if (!orderId) {
-    await m.reply(claraWrap("PPOB", "Batalkan Order\n\n.ppob batal <orderId>"));
+    await m.reply(novaWrap("PPOB", "Batalkan Order\n\n.ppob batal <orderId>"));
     }
     const order = data.pendingOrders[orderId];
     if (!order) {
-    await m.reply(claraWrap("PPOB", "Order tidak ditemukan atau sudah diproses"));
+    await m.reply(novaWrap("PPOB", "Order tidak ditemukan atau sudah diproses"));
     }
     if (!isOwner && order.sender !== sender) {
-      return m.reply(claraWrap("PPOB", "Bukan order kamu!"));
+      return m.reply(novaWrap("PPOB", "Bukan order kamu!"));
     }
     if (order.status !== "menunggu_pembayaran") {
-    await m.reply(claraWrap("PPOB", "Status: " + order.status + "\nTidak bisa dibatalkan"));
+    await m.reply(novaWrap("PPOB", "Status: " + order.status + "\nTidak bisa dibatalkan"));
     }
     delete data.pendingOrders[orderId];
     saveData(data);
-    await m.reply(claraWrap("PPOB", "Order dibatalkan: " + orderId));
+    await m.reply(novaWrap("PPOB", "Order dibatalkan: " + orderId));
   }
 
   // === REFRESH ===
   if (sub === "refresh" || sub === "reload") {
     if (!isOwner)
-      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+      return m.reply(novaWrap("PPOB", "Khusus owner!"));
     if (!provider.isSetup(cred))
-    await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
+    await m.reply(novaWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
     try {
       await m.react("🕒");
       data.priceCache[data.activeProvider] = null;
       const products = await getCachedPriceList(data, true);
       await m.react("🐣");
-      await m.reply(claraWrap(
+      await m.reply(novaWrap(
           "PPOB",
           "Daftar harga di-refresh!\n" +
             "Provider: " + provider.name + "\n" +
@@ -1332,14 +1332,14 @@ async function handler(m, { sock }) {
         ));
     } catch (err) {
       await m.react("❌");
-      await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.reply(novaWrap("PPOB", "Error: " + err.message));
     }
   }
 
   // === PREMIUM (curated app premium listings) ===
   if (sub === "premium" || sub === "apppremium" || sub === "langganan") {
     if (!provider.isSetup(cred))
-    await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
+    await m.reply(novaWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
     try {
       const products = await getCachedPriceList(data);
       // Keyword filter untuk app premium populer
@@ -1365,7 +1365,7 @@ async function handler(m, { sock }) {
         .sort((a, b) => a.price - b.price);
 
       if (filtered.length === 0) {
-    await m.reply(claraWrap("PPOB", "Tidak ada produk premium di katalog " + provider.name + "\n\nCoba cari manual:\n.ppob cari netflix\n.ppob cari spotify\n.ppob cari disney"));
+    await m.reply(novaWrap("PPOB", "Tidak ada produk premium di katalog " + provider.name + "\n\nCoba cari manual:\n.ppob cari netflix\n.ppob cari spotify\n.ppob cari disney"));
       }
 
       // Group by brand/app
@@ -1394,9 +1394,9 @@ async function handler(m, { sock }) {
         });
       body += "Beli: .ppob beli <sku> <nomor/email>\n";
       body += "Cari: .ppob cari <keyword>";
-      return m.reply( claraWrap("PPOB", body), "ppob");
+      return m.reply( novaWrap("PPOB", body), "ppob");
     } catch (err) {
-    await m.reply(claraWrap("PPOB", "Error: " + err.message));
+    await m.reply(novaWrap("PPOB", "Error: " + err.message));
     }
   }
 
@@ -1404,7 +1404,7 @@ async function handler(m, { sock }) {
   if (sub === "riwayat" || sub === "history" || sub === "list") {
     const userOrders = data.orders.filter((o) => o.sender === sender);
     if (userOrders.length === 0) {
-    await m.reply(claraWrap("PPOB", "Belum ada riwayat order"));
+    await m.reply(novaWrap("PPOB", "Belum ada riwayat order"));
     }
     let body = "Riwayat Order (" + userOrders.length + ")\n\n";
     userOrders
@@ -1417,12 +1417,12 @@ async function handler(m, { sock }) {
         if (o.digiflazzRef)
           body += "   ID: " + o.digiflazzRef + "\n";
       });
-    return m.reply( claraWrap("PPOB", body), "ppob");
+    return m.reply( novaWrap("PPOB", body), "ppob");
   }
 
   // === HELP / DEFAULT ===
   if (!provider.isSetup(cred)) {
-    await m.reply(claraWrap(
+    await m.reply(novaWrap(
         "PPOB",
         "Belum setup!\n\n" +
           "Provider aktif: " + provider.name + "\n" +
@@ -1456,7 +1456,7 @@ async function handler(m, { sock }) {
     body += "Set QR Image: .ppob setqrimg <nama> <url>\n";
     body += "Toggle QR: .ppob toggleqrimg <nama>";
   }
-  return m.reply( claraWrap("PPOB", body), "ppob");
+  return m.reply( novaWrap("PPOB", body), "ppob");
 }
 
 export { pluginConfig as config, handler };

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  novaWrap } from "../../src/lib/nova-menu-style.js";
 import fetch from "node-fetch";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
@@ -22,7 +22,7 @@ const pluginConfig = {
 
 async function handler(m, { args, sock }) {
   if (!args[0]) {
-    return await m.reply(claraWrap("izen", [
+    return await m.reply(novaWrap("izen", [
       `Bypass link yang ribet ngelewatin iklan, biar langsung ke tujuan akhir.`,
       ``,
       `📌 Format: ${m.prefix}izen <link>`,
@@ -35,10 +35,10 @@ async function handler(m, { args, sock }) {
     const json = await res.json();
     
     if (!json.data?.result?.result) {
-       return m.reply(claraWrap("izen", "❌ Waduh kak, gagal ngelewatin link-nya nih! Coba link lain ya."));
+       return m.reply(novaWrap("izen", "❌ Waduh kak, gagal ngelewatin link-nya nih! Coba link lain ya."));
     }
     
-    const txt = claraWrap("Bypass Link", [
+    const txt = novaWrap("Bypass Link", [
       `*link asli:*`,
       `🔗 ${args[0]}`,
       `*hasil bypass:*`,
@@ -49,7 +49,7 @@ async function handler(m, { args, sock }) {
     await m.reply(txt, "izen");
   } catch (e) {
     await m.react("❌");
-    m.reply(claraWrap("izen", `❌ Maaf kak, terjadi kesalahan sistem! 😭\nError: ${e.message}`));
+    m.reply(novaWrap("izen", `❌ Maaf kak, terjadi kesalahan sistem! 😭\nError: ${e.message}`));
   }
 }
 

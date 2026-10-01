@@ -1,4 +1,4 @@
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getRandomItem } from '../../src/lib/nova-game-engine.js'
 const pluginConfig = {
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const quote = getRandomItem('bucin.json');
     
     if (!quote) {
-        { const __navText = claraWrap("bucin", '❌ Data tidak tersedia!'); await m.reply(__navText); };
+        { const __navText = novaWrap("bucin", '❌ Data tidak tersedia!'); await m.reply(__navText); };
         return;
     }
     

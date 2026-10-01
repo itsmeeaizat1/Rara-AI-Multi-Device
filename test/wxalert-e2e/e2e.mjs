@@ -22,7 +22,7 @@ const { toSC } = await import(R + "/src/lib/nova-menu-style.js");
 const plug = await import(R + "/plugins/cuaca/wxalert.js");
 const handler = plug.handler;
 
-// claraWrap output kecil-semua (smallcaps) — bandingkan pakai toSC biar gak gotcha
+// novaWrap output kecil-semua (smallcaps) — bandingkan pakai toSC biar gak gotcha
 const has = (s, x) => {
   const l = String(s).toLowerCase();
   const e = String(x).toLowerCase();

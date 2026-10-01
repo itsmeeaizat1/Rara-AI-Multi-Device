@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import axios from 'axios'
 import config from '../../config.js'
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
   }
 
   if (!/^\d+$/.test(userId)) {
-    return m.reply(claraWrap("discordstalk", `❌ User ID harus berupa angka. Contoh: 297574907510784000`));
+    return m.reply(novaWrap("discordstalk", `❌ User ID harus berupa angka. Contoh: 297574907510784000`));
   }
   try {
     const res = await axios.get(
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data) {
-      return m.reply(claraWrap("discordstalk", `❌ User ID *${userId}* tidak ditemukan`));
+      return m.reply(novaWrap("discordstalk", `❌ User ID *${userId}* tidak ditemukan`));
     }
 
     const d = res.data.data;
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
       await m.reply(caption);
     }
   } catch (error) {
-    m.reply(claraWrap("discordstalk", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("discordstalk", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

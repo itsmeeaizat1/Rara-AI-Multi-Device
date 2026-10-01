@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "secretmsg",
@@ -40,22 +40,22 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "send" || sub === "kirim" || sub === "whisper") {
     const mentioned = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid[0] : null;
     if (!mentioned) {
-      await m.reply(claraWrap("SecretMsg", "Format: " + prefix + "secretmsg send @target <pesan>\n💡 *Contoh:* " + prefix + "secretmsg send @user kamu keren hari ini"));
+      await m.reply(novaWrap("SecretMsg", "Format: " + prefix + "secretmsg send @target <pesan>\n💡 *Contoh:* " + prefix + "secretmsg send @user kamu keren hari ini"));
       return { handled: true };
     }
     if (mentioned === m.sender) {
-      await m.reply(claraWrap("SecretMsg", "Tidak bisa kirim ke diri sendiri!"));
+      await m.reply(novaWrap("SecretMsg", "Tidak bisa kirim ke diri sendiri!"));
       return { handled: true };
     }
     const text = args.slice(2).join(" ").trim();
     // Remove the mentioned jid from text
     const cleanText = text.replace(/@\d+/g, "").trim();
     if (!cleanText || cleanText.length < 3) {
-      await m.reply(claraWrap("SecretMsg", "Pesan minimal 3 karakter."));
+      await m.reply(novaWrap("SecretMsg", "Pesan minimal 3 karakter."));
       return { handled: true };
     }
     if (cleanText.length > 300) {
-      await m.reply(claraWrap("SecretMsg", "Maksimal 300 karakter."));
+      await m.reply(novaWrap("SecretMsg", "Maksimal 300 karakter."));
       return { handled: true };
     }
 
@@ -69,7 +69,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     } else if (lower.includes("keren") || lower.includes("hebat") || lower.includes("bagus") || lower.includes("pintar") || lower.includes("cantik") || lower.includes("ganteng")) {
       type = "compliment";
     } else if (lower.includes("jelek") || lower.includes("bego") || lower.includes("goblok") || lower.includes("tolol")) {
-      await m.reply(claraWrap("SecretMsg", "Pesan mengandung kata kasar. Tidak dikirim."));
+      await m.reply(novaWrap("SecretMsg", "Pesan mengandung kata kasar. Tidak dikirim."));
       return { handled: true };
     }
 
@@ -88,11 +88,11 @@ async function handler(m, { sock, db, config: botConfig }) {
     saveConfig(db, gid, cfg);
 
     // Notify sender
-    await m.reply(claraWrap("SecretMsg", "Pesan anonim terkirim ke @" + mentioned.split("@")[0] + "!\nType: " + type + "\n\nPenerima bisa cek dengan: " + prefix + "secretmsg inbox"), { mentions: [mentioned] });
+    await m.reply(novaWrap("SecretMsg", "Pesan anonim terkirim ke @" + mentioned.split("@")[0] + "!\nType: " + type + "\n\nPenerima bisa cek dengan: " + prefix + "secretmsg inbox"), { mentions: [mentioned] });
 
     // DM the recipient
     try {
-      await sock.sendMessage(mentioned, { text: claraWrap("SecretMsg", [
+      await sock.sendMessage(mentioned, { text: novaWrap("SecretMsg", [
         "Kamu dapat pesan anonim baru!",
         "Type: " + type,
         "Ketik di grup: " + prefix + "secretmsg inbox",
@@ -110,7 +110,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const unread = cfg.inbox[m.sender].filter(msg => !msg.read);
     const total = cfg.inbox[m.sender].length;
     const list = cfg.inbox[m.sender].slice(-5).map(msg => "#" + msg.id + " [" + msg.type + "] " + (msg.read ? "✓" : "●") + " " + msg.text.slice(0, 50) + (msg.text.length > 50 ? "..." : "") + " (" + new Date(msg.timestamp).toLocaleDateString("id-ID") + ")").join("\n");
-    await m.reply(claraWrap("SecretMsg Inbox", [
+    await m.reply(novaWrap("SecretMsg Inbox", [
       "Total: " + total + " | Unread: " + unread.length,
       "",
       list,
@@ -129,12 +129,12 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const msg = cfg.inbox[m.sender].find(mm => mm.id === id);
     if (!msg) {
-      await m.reply(claraWrap("SecretMsg", "Pesan tidak ditemukan."));
+      await m.reply(novaWrap("SecretMsg", "Pesan tidak ditemukan."));
       return { handled: true };
     }
     msg.read = true;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("SecretMsg #" + msg.id, [
+    await m.reply(novaWrap("SecretMsg #" + msg.id, [
       "Type: " + msg.type,
       "Tanggal: " + new Date(msg.timestamp).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" }),
       "",
@@ -150,7 +150,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const id = parseInt(args[2] || "0", 10);
     const mentioned = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid[0] : null;
     if (!id || !mentioned) {
-      await m.reply(claraWrap("SecretMsg", "Format: " + prefix + "secretmsg guess <id> @target"));
+      await m.reply(novaWrap("SecretMsg", "Format: " + prefix + "secretmsg guess <id> @target"));
       return { handled: true };
     }
     if (!cfg.inbox || !cfg.inbox[m.sender]) {
@@ -159,41 +159,41 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const msg = cfg.inbox[m.sender].find(mm => mm.id === id);
     if (!msg) {
-      await m.reply(claraWrap("SecretMsg", "Pesan tidak ditemukan."));
+      await m.reply(novaWrap("SecretMsg", "Pesan tidak ditemukan."));
       return { handled: true };
     }
     if (msg.guessed) {
-      await m.reply(claraWrap("SecretMsg", "Pesan ini sudah di-tebak! Pengirim: @" + msg.from.split("@")[0]), { mentions: [msg.from] });
+      await m.reply(novaWrap("SecretMsg", "Pesan ini sudah di-tebak! Pengirim: @" + msg.from.split("@")[0]), { mentions: [msg.from] });
       return { handled: true };
     }
     if (mentioned === msg.from) {
       msg.guessed = true;
       saveConfig(db, gid, cfg);
-      await m.reply(claraWrap("SecretMsg - BENAR!", "Pengirim pesan #" + id + " adalah @" + msg.from.split("@")[0] + "!\nIdentitas terbongkar!"), { mentions: [msg.from] });
+      await m.reply(novaWrap("SecretMsg - BENAR!", "Pengirim pesan #" + id + " adalah @" + msg.from.split("@")[0] + "!\nIdentitas terbongkar!"), { mentions: [msg.from] });
     } else {
       if (!msg.guessCount) msg.guessCount = 0;
       msg.guessCount++;
       saveConfig(db, gid, cfg);
-      await m.reply(claraWrap("SecretMsg", "Salah! @" + mentioned.split("@")[0] + " bukan pengirimnya.\nTebakan: " + msg.guessCount + "/3"), { mentions: [mentioned] });
+      await m.reply(novaWrap("SecretMsg", "Salah! @" + mentioned.split("@")[0] + " bukan pengirimnya.\nTebakan: " + msg.guessCount + "/3"), { mentions: [mentioned] });
     }
     return { handled: true };
   }
 
   if (sub === "clear" || sub === "hapus") {
     if (!cfg.inbox || !cfg.inbox[m.sender]) {
-      await m.reply(claraWrap("SecretMsg", "Inbox sudah kosong."));
+      await m.reply(novaWrap("SecretMsg", "Inbox sudah kosong."));
       return { handled: true };
     }
     cfg.inbox[m.sender] = [];
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("SecretMsg", "Inbox dibersihkan."));
+    await m.reply(novaWrap("SecretMsg", "Inbox dibersihkan."));
     return { handled: true };
   }
 
   if (sub === "stats" || sub === "cek" || !sub) {
     const total = cfg.inbox?.[m.sender]?.length || 0;
     const unread = cfg.inbox?.[m.sender]?.filter(msg => !msg.read).length || 0;
-    await m.reply(claraWrap("SecretMsg", [
+    await m.reply(novaWrap("SecretMsg", [
       "ANONYMOUS WHISPER",
       "",
       "Inbox: " + total + " pesan (" + unread + " unread)",
@@ -209,7 +209,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(claraWrap("SecretMsg", [
+  await m.reply(novaWrap("SecretMsg", [
     "ANONYMOUS WHISPER",
     "",
     prefix + "secretmsg send @target <pesan> - kirim anonim",

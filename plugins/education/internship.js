@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "magang",
@@ -150,7 +150,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   // .magang help
   if (input === "" || (args[0] || "").toLowerCase() === "help" || (args[0] || "").toLowerCase() === "bantuan") {
-    const txt = claraWrap("Magang - Pencari Lowongan Internship", [
+    const txt = novaWrap("Magang - Pencari Lowongan Internship", [
       `Cari lowongan magang/internship dari berbagai sumber online.`,
       ``,
       `Perintah:`,
@@ -191,7 +191,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
     const results = await fetchMagang(keyword, location);
     if (results.length === 0) {
-      return m.reply( claraWrap("Magang", [
+      return m.reply( novaWrap("Magang", [
         "Tidak ada hasil ditemukan.",
         "Coba kata kunci lain atau cek:",
         "https://www.magang.id",

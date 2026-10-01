@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .email — kirim & baca email langsung dari WhatsApp (SMTP + IMAP). OWNER-ONLY.
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { setEmailConfig, setEmailHosts, getEmailConfig, clearEmailConfig, sendEmail, readEmails, validateEmailAddr } from "../../src/lib/nova-emailbot.js";
 
 const pluginConfig = {
@@ -29,44 +29,44 @@ async function handler(m) {
       const [address, password] = [parts[0], parts[1]];
       const r = setEmailConfig(address, password, parts[2], parts[3]);
       await m.react(r.ok ? "⚡" : "❌");
-      await m.reply(claraWrap("Email", r.ok
+      await m.reply(novaWrap("Email", r.ok
         ? "✅ Email siap: " + r.config.address + "\nSMTP: " + r.config.smtpHost + " · IMAP: " + r.config.imapHost + "\n\nCatatan Gmail: wajib pakai App Password (myaccount.google.com → Security → App passwords), bukan password biasa."
         : r.error));
     } else if (first === "host") {
       const parts = rest.replace(/^host\s*/i, "").split(/\s+/);
       const r = setEmailHosts(parts[0], parts[1]);
       await m.react(r.ok ? "⚡" : "❌");
-      await m.reply(claraWrap("Email", r.ok ? "✅ Host SMTP/IMAP diubah" : r.error));
+      await m.reply(novaWrap("Email", r.ok ? "✅ Host SMTP/IMAP diubah" : r.error));
     } else if (first === "send") {
       const payload = rest.replace(/^send\s*/i, "").trim();
       const parts = payload.split("|");
       const [to, subject, ...bodyArr] = [parts[0]?.trim(), parts[1]?.trim(), parts.slice(2).join("|").trim()];
       if (!to || !validateEmailAddr(to) || bodyArr.length === 0 || !bodyArr) {
         await m.react("❌");
-        await m.reply(claraWrap("Email", "Format: .email send <tujuan>|<subjek>|<isi pesan>"));
+        await m.reply(novaWrap("Email", "Format: .email send <tujuan>|<subjek>|<isi pesan>"));
         return { handled: true };
       }
       await m.react("🧠");
       const r = await sendEmail(to, subject, bodyArr);
       await m.react(r.ok ? "⚡" : "❌");
-      await m.reply(claraWrap("Email", r.ok ? "✅ Email terkirim ke " + to + (r.id ? "\nID: " + r.id : "") : "Gagal kirim: " + r.error));
+      await m.reply(novaWrap("Email", r.ok ? "✅ Email terkirim ke " + to + (r.id ? "\nID: " + r.id : "") : "Gagal kirim: " + r.error));
     } else if (first === "read") {
       const n = parseInt(rest.replace(/^read\s*/i, "").trim(), 10) || 5;
       await m.react("🧠");
       const r = await readEmails(n);
-      if (!r.ok) { await m.react("❌"); await m.reply(claraWrap("Email", r.error)); return { handled: true }; }
+      if (!r.ok) { await m.react("❌"); await m.reply(novaWrap("Email", r.error)); return { handled: true }; }
       await m.react("⚡");
-      await m.reply(claraWrap("Inbox " + (getEmailConfig()?.address || ""), r.mails.length
+      await m.reply(novaWrap("Inbox " + (getEmailConfig()?.address || ""), r.mails.length
         ? r.mails.map((x, i) => "【" + (i + 1) + "】 " + x.subject + "\nDari: " + x.from + " · " + x.date + "\n" + (x.snippet || "(kosong)")).join("\n\n")
         : "Inbox kosong atau gak ada email yang kebaca"));
     } else if (first === "off") {
       clearEmailConfig();
       await m.react("⚡");
-      await m.reply(claraWrap("Email", "Konfigurasi email dihapus"));
+      await m.reply(novaWrap("Email", "Konfigurasi email dihapus"));
     } else if (first === "status") {
       const cfg = getEmailConfig();
       await m.react("🔍");
-      await m.reply(claraWrap("Email", cfg
+      await m.reply(novaWrap("Email", cfg
         ? "Terhubung: " + cfg.address + "\nSMTP: " + cfg.smtpHost + ":" + cfg.smtpPort + "\nIMAP: " + cfg.imapHost + ":" + cfg.imapPort + "\nDiatur: " + String(cfg.setAt || "").slice(0, 19).replace("T", " ")
         : "Belum diatur. Mulai: .email set <alamat> <app-password>"));
     } else {

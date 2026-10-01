@@ -2,7 +2,7 @@
 // aipr — Foto soal/PR/tugas → AI baca + jawab
 import { GeminiVision } from "../../src/scraper/geminiVision.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
 
     if (!buffer) {
       await m.react("❌");
-      return m.reply(claraWrap("aipr", "Gagal download foto. Coba kirim ulang.", "error"));
+      return m.reply(novaWrap("aipr", "Gagal download foto. Coba kirim ulang.", "error"));
     }
 
     // Get subject jika ada
@@ -90,7 +90,7 @@ Jika gambar bukan soal, jelaskan apa isi gambar.`;
         );
       }
       await m.react("❌");
-      return m.reply(claraWrap("aipr", visionResult.error || "Gagal membaca foto", "error"));
+      return m.reply(novaWrap("aipr", visionResult.error || "Gagal membaca foto", "error"));
     }
 
     // Step 2: AI jawab soal berdasarkan transkrip
@@ -133,7 +133,7 @@ Gunakan bahasa Indonesia.`;
   } catch (err) {
     console.error("aipr error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("aipr", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("aipr", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

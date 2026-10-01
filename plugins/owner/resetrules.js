@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'resetrules',
@@ -22,7 +22,7 @@ function handler(m, { sock }) {
     
     db.setting('botRules', null)
     
-    m.reply(claraWrap("Bot Rules Direset", 
+    m.reply(novaWrap("Bot Rules Direset", 
         `Rules bot berhasil direset ke default!\n` +
         `Ketik \`${m.prefix}rules\` untuk melihat.`))
 }

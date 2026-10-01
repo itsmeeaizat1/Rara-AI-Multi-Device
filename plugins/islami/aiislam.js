@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/islami/aiislam.js
@@ -236,10 +236,10 @@ async function handler(m, { sock, config: botConfig }) {
       await m.react("🕒");
       const surahs = await fetchSurahList();
       await m.react("🐣");
-      return m.reply( claraWrap("Daftar Surat", formatSurahList(surahs)));
+      return m.reply( novaWrap("Daftar Surat", formatSurahList(surahs)));
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("Error", e.message));
+      return m.reply(novaWrap("Error", e.message));
     }
   }
 
@@ -248,16 +248,16 @@ async function handler(m, { sock, config: botConfig }) {
     const raw = text.split(/\s+/)[1] || "";
     const num = parseInt(raw);
     if (!num || num < 1 || num > 114) {
-      return m.reply(claraWrap("AI Islam", "Nomor surat tidak valid.\nKetik .aiislam list untuk daftar surat."));
+      return m.reply(novaWrap("AI Islam", "Nomor surat tidak valid.\nKetik .aiislam list untuk daftar surat."));
     }
     try {
       await m.react("🕒");
       const surah = await fetchSurahDetail(num);
       await m.react("🐣");
-      return m.reply( claraWrap(`${surah.namaLatin}`, formatSurahContent(surah)));
+      return m.reply( novaWrap(`${surah.namaLatin}`, formatSurahContent(surah)));
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("Error", e.message));
+      return m.reply(novaWrap("Error", e.message));
     }
   }
 
@@ -265,22 +265,22 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase().startsWith("ayah ")) {
     const ref = text.slice(5).trim();
     if (!ref.includes(":")) {
-      return m.reply(claraWrap("AI Islam", "Format: .aiislam ayah <surah>:<ayah>\n💡 *Contoh:* .aiislam ayah 2:255"));
+      return m.reply(novaWrap("AI Islam", "Format: .aiislam ayah <surah>:<ayah>\n💡 *Contoh:* .aiislam ayah 2:255"));
     }
     const [surahNum, ayahNum] = ref.split(":").map(n => parseInt(n.trim()));
     if (!surahNum || surahNum < 1 || surahNum > 114 || !ayahNum) {
-      return m.reply(claraWrap("AI Islam", "Format tidak valid. Contoh: .aiislam ayah 2:255"));
+      return m.reply(novaWrap("AI Islam", "Format tidak valid. Contoh: .aiislam ayah 2:255"));
     }
     try {
       const surah = await fetchSurahDetail(surahNum);
       const formatted = formatAyahContent(surah, ayahNum);
       if (!formatted) {
-        return m.reply(claraWrap("AI Islam", `Ayat ${ayahNum} tidak ditemukan di ${surah.namaLatin}. Surat ini punya ${surah.jumlahAyat} ayat.`));
+        return m.reply(novaWrap("AI Islam", `Ayat ${ayahNum} tidak ditemukan di ${surah.namaLatin}. Surat ini punya ${surah.jumlahAyat} ayat.`));
       }
-      return m.reply( claraWrap(`${surah.namaLatin}:${ayahNum}`, formatted));
+      return m.reply( novaWrap(`${surah.namaLatin}:${ayahNum}`, formatted));
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("Error", e.message));
+      return m.reply(novaWrap("Error", e.message));
     }
   }
 
@@ -288,24 +288,24 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase().startsWith("tafsir ")) {
     const ref = text.slice(7).trim();
     if (!ref.includes(":")) {
-      return m.reply(claraWrap("AI Islam", "Format: .aiislam tafsir <surah>:<ayah>\n💡 *Contoh:* .aiislam tafsir 1:1"));
+      return m.reply(novaWrap("AI Islam", "Format: .aiislam tafsir <surah>:<ayah>\n💡 *Contoh:* .aiislam tafsir 1:1"));
     }
     const [surahNum, ayahNum] = ref.split(":").map(n => parseInt(n.trim()));
     if (!surahNum || !ayahNum) {
-      return m.reply(claraWrap("AI Islam", "Format tidak valid. Contoh: .aiislam tafsir 1:1"));
+      return m.reply(novaWrap("AI Islam", "Format tidak valid. Contoh: .aiislam tafsir 1:1"));
     }
     try {
       await m.react("🕒");
       const tafsirData = await fetchTafsir(surahNum);
       const formatted = formatTafsirContent(tafsirData, ayahNum);
       if (!formatted) {
-        return m.reply(claraWrap("AI Islam", `Tafsir ayat ${ayahNum} tidak ditemukan di ${tafsirData.namaLatin}.`));
+        return m.reply(novaWrap("AI Islam", `Tafsir ayat ${ayahNum} tidak ditemukan di ${tafsirData.namaLatin}.`));
       }
       await m.react("🐣");
-      return m.reply( claraWrap(`Tafsir ${tafsirData.namaLatin}:${ayahNum}`, formatted));
+      return m.reply( novaWrap(`Tafsir ${tafsirData.namaLatin}:${ayahNum}`, formatted));
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("Error", e.message));
+      return m.reply(novaWrap("Error", e.message));
     }
   }
 
@@ -313,14 +313,14 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase().startsWith("asktafsir ")) {
     const ref = text.slice(10).trim();
     if (!ref.includes(":")) {
-      return m.reply(claraWrap("AI Islam", "Format: .aiislam asktafsir <surah>:<ayah>\n💡 *Contoh:* .aiislam asktafsir 1:1"));
+      return m.reply(novaWrap("AI Islam", "Format: .aiislam asktafsir <surah>:<ayah>\n💡 *Contoh:* .aiislam asktafsir 1:1"));
     }
     const [surahNum, ayahNum] = ref.split(":").map(n => parseInt(n.trim()));
     if (!surahNum || !ayahNum) {
-      return m.reply(claraWrap("AI Islam", "Format tidak valid."));
+      return m.reply(novaWrap("AI Islam", "Format tidak valid."));
     }
     if (!token) {
-      return m.reply(claraWrap("AI Islam", "AI butuh token Puter. Set: .puter setkey <token>"));
+      return m.reply(novaWrap("AI Islam", "AI butuh token Puter. Set: .puter setkey <token>"));
     }
     try {
       // Ambil ayat + tafsir Kemenag
@@ -331,7 +331,7 @@ async function handler(m, { sock, config: botConfig }) {
       const ayah = surah.ayat.find(a => a.nomorAyat === ayahNum);
       const tafsir = tafsirData.tafsir.find(t => t.ayat === ayahNum);
       if (!ayah) {
-        return m.reply(claraWrap("AI Islam", `Ayat ${ayahNum} tidak ditemukan di ${surah.namaLatin}.`));
+        return m.reply(novaWrap("AI Islam", `Ayat ${ayahNum} tidak ditemukan di ${surah.namaLatin}.`));
       }
 
       // Buat prompt dengan data Quran + tafsir Kemenag
@@ -341,10 +341,10 @@ async function handler(m, { sock, config: botConfig }) {
       await m.react("🕒");
       const reply = await callPuterAI(token, [{ role: "user", content: prompt }]);
       await m.react("🐣");
-      return m.reply(claraWrap(`AI Tafsir ${surah.namaLatin}:${ayahNum}`, reply));
+      return m.reply(novaWrap(`AI Tafsir ${surah.namaLatin}:${ayahNum}`, reply));
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("Error", e.message));
+      return m.reply(novaWrap("Error", e.message));
     }
   }
 
@@ -354,14 +354,14 @@ async function handler(m, { sock, config: botConfig }) {
     const surahNum = parseInt(parts[0]);
     const qariId = parts[1] || "05"; // Default: Mishary Rashid Alafasy
     if (!surahNum || surahNum < 1 || surahNum > 114) {
-      return m.reply(claraWrap("AI Islam", "Format: .aiislam audio <surah> <qari>\nQari: 01-06\n💡 *Contoh:* .aiislam audio 1 05"));
+      return m.reply(novaWrap("AI Islam", "Format: .aiislam audio <surah> <qari>\nQari: 01-06\n💡 *Contoh:* .aiislam audio 1 05"));
     }
     try {
       const surah = await fetchSurahDetail(surahNum);
       const qariName = QARI_LIST[qariId] || QARI_LIST["05"];
       const audioFull = surah.audioFull?.[qariId] || surah.audioFull?.["05"];
       if (!audioFull) {
-        return m.reply(claraWrap("AI Islam", "Audio tidak ditemukan."));
+        return m.reply(novaWrap("AI Islam", "Audio tidak ditemukan."));
       }
       // Kirim audio
       const audioRes = await fetch(audioFull, { signal: AbortSignal.timeout(30000) });
@@ -374,30 +374,30 @@ async function handler(m, { sock, config: botConfig }) {
           ptt: false,
         }, { quoted: m });
         await m.react("🐣");
-        return m.reply(claraWrap(`${surah.namaLatin}`, `Qari: ${qariName}`));
+        return m.reply(novaWrap(`${surah.namaLatin}`, `Qari: ${qariName}`));
       }
-      return m.reply(claraWrap("AI Islam", `Audio: ${audioFull}\nQari: ${qariName}`));
+      return m.reply(novaWrap("AI Islam", `Audio: ${audioFull}\nQari: ${qariName}`));
     } catch (e) {
-      return m.reply(claraWrap("Error", e.message));
+      return m.reply(novaWrap("Error", e.message));
     }
   }
 
   // Sub-command: reset
   if (text.toLowerCase() === "reset") {
     session.messages = [];
-    return m.reply(claraWrap("AI Islam", "Sesi percakapan direset."));
+    return m.reply(novaWrap("AI Islam", "Sesi percakapan direset."));
   }
 
   // Validasi token untuk chat AI
   if (!token) {
     const help = `AI Islam menggunakan Puter, cuma harus login.\n\n1. Daftar gratis di https://puter.com/dashboard\n2. Klik Create token\n3. Set token: .puter setkey <token>\n\nSetelah itu bisa langsung tanya: .aiislam <pertanyaan>`;
-    return m.reply( claraWrap("AI Islam Setup", help));
+    return m.reply( novaWrap("AI Islam Setup", help));
   }
 
   // Validasi pesan
   if (!text) {
     const help = `AI Islamic Scholar — eQuran.id\n\nCara pakai:\n.aiislam <pertanyaan> — Tanya soal Islam\n.aiislam surah <nomor> — Baca surat\n.aiislam ayah <surah>:<ayah> — Baca ayat\n.aiislam tafsir <surah>:<ayah> — Tafsir Kemenag\n.aiislam asktafsir <surah>:<ayah> — AI jelaskan tafsir\n.aiislam audio <surah> <qari> — Audio murottal\n.aiislam list — Daftar 114 surat\n.aiislam reset — Reset sesi\n\nContoh:\n.aiislam jelaskan rukun iman\n.aiislam surah 1\n.aiislam ayah 2:255\n.aiislam tafsir 1:1\n.aiislam asktafsir 1:1\n.aiislam audio 112 05`;
-    return m.reply( claraWrap("AI Islam", help));
+    return m.reply( novaWrap("AI Islam", help));
   }
 
   // Chat AI
@@ -413,7 +413,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     session.messages.push({ role: "assistant", content: reply });
     await m.react("🐣");
-    return m.reply(claraWrap("AI Islam", reply));
+    return m.reply(novaWrap("AI Islam", reply));
   } catch (error) {
     session.messages.pop();
 
@@ -421,7 +421,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (errMsg.includes("401") || errMsg.includes("token") || errMsg.includes("auth")) {
       errMsg += "\n\nToken tidak valid. Set ulang: .puter setkey <token>";
     }
-    return m.reply(claraWrap("AI Islam Error", errMsg));
+    return m.reply(novaWrap("AI Islam Error", errMsg));
   }
 }
 

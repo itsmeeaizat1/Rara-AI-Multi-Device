@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'hapusdata',
     alias: ["hapusdata"],
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
     }
 
     if (existing.length === 0) {
-        return m.reply(claraWrap("Hapusdata", `❌ Tidak ada data database yang ditemukan`))
+        return m.reply(novaWrap("Hapusdata", `❌ Tidak ada data database yang ditemukan`))
     }
 
     pendingReset.set(m.sender, Date.now())
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
 
   } catch (e) {
     console.error("[deletedata.js]:", e.message);
-    try { await m.reply(claraWrap("hapusdata", "Terjadi error saat hapus data.", "error")); } catch {}
+    try { await m.reply(novaWrap("hapusdata", "Terjadi error saat hapus data.", "error")); } catch {}
   }
 }
 

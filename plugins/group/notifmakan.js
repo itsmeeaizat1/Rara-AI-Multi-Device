@@ -1,5 +1,5 @@
 import { setNotifMakan, toggleNotif, getNotif, deleteNotif, parseJadwal } from '../../src/lib/nova-notif-scheduler.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "notifmakanutil",
@@ -51,7 +51,7 @@ function handler(m, { sock }) {
 
     if (sub === 'off') {
         if (!existing) {
-            return m.reply(claraWrap("Notifmakan", `❌ *belum ada pengingat makan* yang aktif di chat ini`))
+            return m.reply(novaWrap("Notifmakan", `❌ *belum ada pengingat makan* yang aktif di chat ini`))
         }
         toggleNotif('makan', sender, chatJid, false)
         return m.reply(`✅ *Pengingat Makan Dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notifmakan on\` untuk mengaktifkan kembali`)

@@ -7,7 +7,7 @@
 // Data tersimpan di db.setting("menfess") — persisten via nova-database.
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { fromSC } from "../../src/lib/styler.js";
 
 const pluginConfig = {
@@ -142,7 +142,7 @@ function buildChannelReply(post, reply) {
 async function sendMenfess(m, sock, db, mf, target, message, anonymous) {
   if (!target || !message) {
     await m.react("❗");
-    return m.reply(claraWrap("menfess", [
+    return m.reply(novaWrap("menfess", [
       anonymous
         ? `Format: ${m.prefix}menfess @target <pesan>`
         : `Format: ${m.prefix}menfess say @target <pesan>`,
@@ -152,18 +152,18 @@ async function sendMenfess(m, sock, db, mf, target, message, anonymous) {
   }
   if (message.length < MIN_LEN) {
     await m.react("❗");
-    return m.reply(claraWrap("menfess", `Pesan kependekan! Minimal ${MIN_LEN} karakter.`, "error"));
+    return m.reply(novaWrap("menfess", `Pesan kependekan! Minimal ${MIN_LEN} karakter.`, "error"));
   }
   if (message.length > MAX_LEN) {
     await m.react("❗");
-    return m.reply(claraWrap("menfess", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+    return m.reply(novaWrap("menfess", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
   }
 
   // limit harian per user
   const todayCount = getUserTodayCount(mf, m.sender);
   if (todayCount >= mf.dailyLimit) {
     await m.react("❗");
-    return m.reply(claraWrap("menfess", [
+    return m.reply(novaWrap("menfess", [
       `⚠️ Kamu sudah mencapai batas harian (*${mf.dailyLimit} menfess*).`,
       ``,
       `Coba lagi besok! 🌙`,
@@ -196,7 +196,7 @@ async function sendMenfess(m, sock, db, mf, target, message, anonymous) {
       console.error("[menfess] kirim ke channel gagal:", e.message);
     }
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", [
+    return m.reply(novaWrap("menfess", [
       `✅ Menfess ${anonymous ? "anonim" : "dari *" + post.senderName + "*"} untuk *@${post.target}* terkirim!`,
       ``,
       `🆔 ID: *${post.id}* (simpan buat di-reply)`,
@@ -204,7 +204,7 @@ async function sendMenfess(m, sock, db, mf, target, message, anonymous) {
     ].join("\n")));
   }
   await m.react("🐣");
-  return m.reply(claraWrap("menfess", [
+  return m.reply(novaWrap("menfess", [
     `✅ Menfess *#${post.number}* tersimpan!`,
     ``,
     `📌 Belum ada channel menfess diatur.`,
@@ -221,7 +221,7 @@ async function handler(m, { sock }) {
   // ─── HELP / no-arg ───
   if (!sub || sub === "help" || sub === "bantuan" || sub === "menu") {
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", [
+    return m.reply(novaWrap("menfess", [
       `Menfess ke @target via channel terpusat — 2 versi: anonim & non-anonim.`,
       ``,
       `💌 KIRIM MENFESS`,
@@ -261,7 +261,7 @@ async function handler(m, { sock }) {
 
     if (!key || !replyMsg) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", [
+      return m.reply(novaWrap("menfess", [
         `Format: ${m.prefix}menfess reply <id/nomor> <pesan>`,
         ``,
         `💡 Contoh: ${m.prefix}menfess reply ${mf.posts.at(-1)?.id || "abc12"} aku setuju!`,
@@ -269,11 +269,11 @@ async function handler(m, { sock }) {
     }
     if (!post) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", `Menfess dengan id/nomor *${key}* gak ditemukan!`, "error"));
+      return m.reply(novaWrap("menfess", `Menfess dengan id/nomor *${key}* gak ditemukan!`, "error"));
     }
     if (replyMsg.length > MAX_LEN) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", `Balasan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+      return m.reply(novaWrap("menfess", `Balasan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
     }
 
     await m.react("🕒");
@@ -297,7 +297,7 @@ async function handler(m, { sock }) {
       }
     }
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", [
+    return m.reply(novaWrap("menfess", [
       `✅ Balasan untuk menfess *#${post.number}* terkirim!`,
       `🔒 Identitas kamu: ${mf.anonymousMode ? "anonim" : "kelihatan (" + reply.senderName + ")"}`,
     ].join("\n")));
@@ -310,18 +310,18 @@ async function handler(m, { sock }) {
 
     if (!post) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", `Menfess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
+      return m.reply(novaWrap("menfess", `Menfess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
     }
 
     post.likes = post.likes || [];
     if (post.likes.includes(m.sender)) {
       await m.react("🐣");
-      return m.reply(claraWrap("menfess", `❤️ Kamu sudah menyukai menfess *#${post.number}*!`));
+      return m.reply(novaWrap("menfess", `❤️ Kamu sudah menyukai menfess *#${post.number}*!`));
     }
     post.likes.push(m.sender);
     saveMf(db, mf);
     await m.react("❤️");
-    return m.reply(claraWrap("menfess", [
+    return m.reply(novaWrap("menfess", [
       `❤️ Kamu menyukai menfess *#${post.number}*!`,
       `Total suka: *${post.likes.length}*`,
     ].join("\n")));
@@ -331,7 +331,7 @@ async function handler(m, { sock }) {
   if (sub === "list" || sub === "daftar") {
     if (mf.posts.length === 0) {
       await m.react("🐣");
-      return m.reply(claraWrap("menfess", [
+      return m.reply(novaWrap("menfess", [
         `📭 Belum ada menfess.`,
         ``,
         `💡 Mulai: ${m.prefix}menfess @target <pesan>`,
@@ -348,7 +348,7 @@ async function handler(m, { sock }) {
       msg += `❤️ ${p.likes?.length || 0} | 💬 ${(p.replies || []).length} | 🆔 ${p.id}\n\n`;
     });
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", msg));
+    return m.reply(novaWrap("menfess", msg));
   }
 
   // ─── READ / DETAIL ───
@@ -358,7 +358,7 @@ async function handler(m, { sock }) {
 
     if (!post) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", `Menfess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
+      return m.reply(novaWrap("menfess", `Menfess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
     }
 
     let msg = `📨 MENFESS #${post.number}\n\n`;
@@ -380,18 +380,18 @@ async function handler(m, { sock }) {
       msg += `📩 Belum ada balasan.\n`;
     }
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", msg));
+    return m.reply(novaWrap("menfess", msg));
   }
 
   // ─── SETCHANNEL (owner, di grup target — ala !setmenfesschannel) ───
   if (sub === "setchannel" || sub === "setgrup" || sub === "set") {
     if (!m.isOwner) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", "⛔ Cuma owner yang bisa atur channel menfess!", "error"));
+      return m.reply(novaWrap("menfess", "⛔ Cuma owner yang bisa atur channel menfess!", "error"));
     }
     if (!m.isGroup) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", [
+      return m.reply(novaWrap("menfess", [
         `Command ini harus dipakai DI GRUP yang mau dijadiin channel.`,
         ``,
         `💡 Join bot ke grupnya → ketik ${m.prefix}menfess setchannel di sana.`,
@@ -402,7 +402,7 @@ async function handler(m, { sock }) {
     mf.channel = m.chat;
     saveMf(db, mf);
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", [
+    return m.reply(novaWrap("menfess", [
       `✅ Channel menfess diatur ke grup ini!`,
       ``,
       `📌 Semua menfess baru bakal dikirim ke sini.`,
@@ -414,35 +414,35 @@ async function handler(m, { sock }) {
   if (sub === "delchannel" || sub === "resetchannel") {
     if (!m.isOwner) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", "⛔ Cuma owner yang bisa reset channel menfess!", "error"));
+      return m.reply(novaWrap("menfess", "⛔ Cuma owner yang bisa reset channel menfess!", "error"));
     }
     mf.channel = null;
     saveMf(db, mf);
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", "✅ Channel menfess direset. Menfess baru cuma tersimpan di database."));
+    return m.reply(novaWrap("menfess", "✅ Channel menfess direset. Menfess baru cuma tersimpan di database."));
   }
 
   // ─── MODE (owner) — reply anon atau non-anon ───
   if (sub === "mode") {
     if (!m.isOwner) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", "⛔ Cuma owner yang bisa atur mode menfess!", "error"));
+      return m.reply(novaWrap("menfess", "⛔ Cuma owner yang bisa atur mode menfess!", "error"));
     }
     const mode = (args[1] || "").toLowerCase();
     if (mode === "anon" || mode === "anonymous" || mode === "anonim") {
       mf.anonymousMode = true;
       saveMf(db, mf);
       await m.react("🐣");
-      return m.reply(claraWrap("menfess", "🔒 Mode reply: ANONIM — identitas yang balas gak kelihatan."));
+      return m.reply(novaWrap("menfess", "🔒 Mode reply: ANONIM — identitas yang balas gak kelihatan."));
     }
     if (mode === "nonanon" || mode === "non-anon" || mode === "non" || mode === "nonanonim") {
       mf.anonymousMode = false;
       saveMf(db, mf);
       await m.react("🐣");
-      return m.reply(claraWrap("menfess", "👤 Mode reply: NON-ANONIM — nama yang balas kelihatan."));
+      return m.reply(novaWrap("menfess", "👤 Mode reply: NON-ANONIM — nama yang balas kelihatan."));
     }
     await m.react("❗");
-    return m.reply(claraWrap("menfess", [
+    return m.reply(novaWrap("menfess", [
       `Mode sekarang: ${mf.anonymousMode ? "🔒 ANONIM" : "👤 NON-ANONIM"} (khusus reply)`,
       ``,
       `💡 Pilihan: ${m.prefix}menfess mode anon | nonanon`,
@@ -453,12 +453,12 @@ async function handler(m, { sock }) {
   if (sub === "limit") {
     if (!m.isOwner) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", "⛔ Cuma owner yang bisa atur limit menfess!", "error"));
+      return m.reply(novaWrap("menfess", "⛔ Cuma owner yang bisa atur limit menfess!", "error"));
     }
     const limit = parseInt(args[1] || "", 10);
     if (Number.isNaN(limit) || limit < 1 || limit > 20) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", [
+      return m.reply(novaWrap("menfess", [
         `Masukkan angka *1-20*!`,
         ``,
         `💡 Contoh: ${m.prefix}menfess limit 5`,
@@ -468,25 +468,25 @@ async function handler(m, { sock }) {
     mf.dailyLimit = limit;
     saveMf(db, mf);
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", `✅ Batas harian diubah jadi *${limit}* menfess per user per hari!`));
+    return m.reply(novaWrap("menfess", `✅ Batas harian diubah jadi *${limit}* menfess per user per hari!`));
   }
 
   // ─── DEL (owner) — hapus menfess ───
   if (sub === "del" || sub === "hapus" || sub === "delete") {
     if (!m.isOwner) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", "⛔ Cuma owner yang bisa hapus menfess!", "error"));
+      return m.reply(novaWrap("menfess", "⛔ Cuma owner yang bisa hapus menfess!", "error"));
     }
     const key = fromSC(args[1] || "").trim();
     const idx = mf.posts.findIndex((p) => p.id === key || (key && p.number === parseInt(key, 10)));
     if (idx === -1) {
       await m.react("❗");
-      return m.reply(claraWrap("menfess", `Menfess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
+      return m.reply(novaWrap("menfess", `Menfess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
     }
     const deleted = mf.posts.splice(idx, 1)[0];
     saveMf(db, mf);
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", `🗑️ Menfess *#${deleted.number}* berhasil dihapus!`));
+    return m.reply(novaWrap("menfess", `🗑️ Menfess *#${deleted.number}* berhasil dihapus!`));
   }
 
   // ─── STATS ───
@@ -499,7 +499,7 @@ async function handler(m, { sock }) {
     const todayCount = mf.posts.filter((p) => sameDay(p.timestamp)).length;
 
     await m.react("🐣");
-    return m.reply(claraWrap("menfess", [
+    return m.reply(novaWrap("menfess", [
       `📊 STATISTIK MENFESS`,
       ``,
       `📨 Total menfess: *${total}*`,
@@ -523,7 +523,7 @@ async function handler(m, { sock }) {
 
   // sub dikenal tapi gak kepakai (gak akan sampai sini — safety)
   await m.react("❗");
-  return m.reply(claraWrap("menfess", `💡 Ketik ${m.prefix}menfess help buat lihat semua cara pakai`));
+  return m.reply(novaWrap("menfess", `💡 Ketik ${m.prefix}menfess help buat lihat semua cara pakai`));
 }
 
 export { pluginConfig as config, handler };

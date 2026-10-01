@@ -4,7 +4,7 @@
 // key mati / kredit kurang → error jelas, GAK nyamber ke brand lain.
 // Model default: qwen3-vl-8b-thinking (FREE — kata owner "qwen thinking").
 // Ganti model: .min1ai model <id> (persist per user, db.setting min1aiModel).
-import { novaGuideV2, novaInfoSections, novaGuide, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaInfoSections, novaGuide, novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { min1aiChat, MIN1AI_MODEL_GROUPS, MIN1AI_MODELS, MIN1AI_DEFAULT_MODEL } from "../../src/scraper/min1ai.js";
 
@@ -105,7 +105,7 @@ async function handler(m, { sock, db } = {}) {
       ]) + "\nBerhasil kak 🥳");
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("min1ai", e.message || "Gagal simpan model", "error"));
+      return m.reply(novaWrap("min1ai", e.message || "Gagal simpan model", "error"));
     }
   }
 
@@ -144,7 +144,7 @@ async function handler(m, { sock, db } = {}) {
   } catch (err) {
     console.error("min1ai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("min1ai", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("min1ai", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

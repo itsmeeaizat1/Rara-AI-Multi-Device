@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // zerogptv2 — ZeroGPT AI v2 (zerogptai.org)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
@@ -14,7 +14,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("zerogptv2", `Mau nanya apa?\nContoh: ${m.prefix}zerogptv2 jelaskan quantum mechanics`, "guide"));
+    if (!text) return m.reply(novaWrap("zerogptv2", `Mau nanya apa?\nContoh: ${m.prefix}zerogptv2 jelaskan quantum mechanics`, "guide"));
     await m.react("🕒");
     // IkyyXD zerogpt (primary) — AI detector
     let usedDetector = false;
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
       });
       if (detectRes) {
         await m.react("🐣");
-        await m.reply(claraWrap("ZeroGPT Detector", detectRes));
+        await m.reply(novaWrap("ZeroGPT Detector", detectRes));
         return;
       }
     } catch (ikyyErr) {
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
 
     console.error("zerogptv2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("zerogptv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("zerogptv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

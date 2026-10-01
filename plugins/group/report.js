@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // report.js — Laporkan masalah ke owner (kirim langsung ke WA owner + simpan DB)
-import { claraWrap, novaCaption, tipText, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaCaption, tipText, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
         timeStyle: "short",
       });
 
-      const ownerMsg = claraWrap("Report Masuk", [
+      const ownerMsg = novaWrap("Report Masuk", [
         `Pesan: *${message.slice(0, 1000)}${message.length > 1000 ? "..." : ""}*`,
         "",
         `Dari: ${reporterName} (${reporterNum})`,
@@ -92,12 +92,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Reply ke pengirim
     if (ownerNotified) {
-      await m.reply(claraWrap("Report", [
+      await m.reply(novaWrap("Report", [
         `Pesan: *${message.slice(0, 500)}${message.length > 500 ? "..." : ""}*`,
         `Status: Terkirim ke owner`,
       ]));
     } else {
-      await m.reply(claraWrap("Report", [
+      await m.reply(novaWrap("Report", [
         `Pesan: *${message.slice(0, 500)}${message.length > 500 ? "..." : ""}*`,
         `Status: Tersimpan (owner tidak terjangkau)`,
       ]));

@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "pixiv",
   alias: ["pixiv"],
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const query = m.args?.join(" ")?.trim();
 
     if (!query) {
-      return m.reply( claraWrap("Pixiv", `❌ *Masukkan kata kunci pencarian!*\n\n💡 *Contoh:* .pixiv rem`), { commandName: "pixiv" });
+      return m.reply( novaWrap("Pixiv", `❌ *Masukkan kata kunci pencarian!*\n\n💡 *Contoh:* .pixiv rem`), { commandName: "pixiv" });
     }
     const apikey = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
     const url = `https://api.neoxr.eu/api/pixiv-search?q=${encodeURIComponent(query)}&apikey=${apikey}`;
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const data = response.data;
 
     if (!data.status || !data.data || data.data.length === 0) {
-      return m.reply(claraWrap("pixiv", `❌ *tidak ditemukan hasil untuk:* ${query}`));
+      return m.reply(novaWrap("pixiv", `❌ *tidak ditemukan hasil untuk:* ${query}`));
     }
 
     const results = data.data.slice(0, 10);
@@ -76,9 +76,9 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     if (error.response?.status === 403) {
-      return m.reply(claraWrap("Pixiv", `❌ *api key tidak valid atau limit tercapai*`));
+      return m.reply(novaWrap("Pixiv", `❌ *api key tidak valid atau limit tercapai*`));
     }
-    m.reply(claraWrap("pixiv", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("pixiv", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

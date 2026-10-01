@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import fs from "fs"
 import path from "path"
 import axios from "axios"
@@ -358,14 +358,14 @@ async function handler(m, { sock }) {
 
   if (m.isGroup) {
     return m.reply(
-      claraWrap("daftarotomatis", "Fitur ini cuma bisa dipakai lewat chat pribadi (DM) ke bot ya, bukan di grup.")
+      novaWrap("daftarotomatis", "Fitur ini cuma bisa dipakai lewat chat pribadi (DM) ke bot ya, bukan di grup.")
     )
   }
 
   // Generate captcha (API -> Canvas -> Math fallback)
   const captcha = await generateCaptcha()
   if (!captcha) {
-    return m.reply(claraWrap("daftarotomatis", "Gagal membuat captcha. Coba lagi ya."))
+    return m.reply(novaWrap("daftarotomatis", "Gagal membuat captcha. Coba lagi ya."))
   }
 
   // Create session
@@ -377,7 +377,7 @@ async function handler(m, { sock }) {
   if (captcha.type === "image" && captcha.imageBuffer) {
     sentCaptcha = await sock.sendMessage(m.chat, {
       image: captcha.imageBuffer,
-      caption: claraWrap("daftarotomatis", [
+      caption: novaWrap("daftarotomatis", [
         "Selesaikan captcha di atas",
         "Reply pesan ini dengan jawabanmu",
         "",
@@ -386,7 +386,7 @@ async function handler(m, { sock }) {
     }, { quoted: m })
   } else if (captcha.type === "text-api" && captcha.textCaptcha) {
     sentCaptcha = await sock.sendMessage(m.chat, {
-      text: claraWrap("daftarotomatis", [
+      text: novaWrap("daftarotomatis", [
         captcha.textCaptcha,
         "",
         "Reply pesan ini dengan jawabanmu",
@@ -395,7 +395,7 @@ async function handler(m, { sock }) {
     }, { quoted: m })
   } else if (captcha.type === "math") {
     sentCaptcha = await sock.sendMessage(m.chat, {
-      text: claraWrap("daftarotomatis", [
+      text: novaWrap("daftarotomatis", [
         captcha.question,
         "",
         "Reply pesan ini dengan jawabanmu",
@@ -529,7 +529,7 @@ async function captchaAnswerHandler(m, sock) {
     // Ask for name
     session.step = "name"
     var sentName = await sock.sendMessage(m.chat, {
-      text: claraWrap("daftarotomatis", [
+      text: novaWrap("daftarotomatis", [
         "Captcha benar!",
         "",
         "Pertanyaan 1/3",
@@ -553,7 +553,7 @@ async function captchaAnswerHandler(m, sock) {
     session.name = name
     session.step = "age"
     var sentAge = await sock.sendMessage(m.chat, {
-      text: claraWrap("daftarotomatis", [
+      text: novaWrap("daftarotomatis", [
         "Halo " + name + "!",
         "",
         "Pertanyaan 2/3",

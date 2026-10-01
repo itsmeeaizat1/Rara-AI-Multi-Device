@@ -6,7 +6,7 @@
 // lokal (gak ada ketergantungan API luar): kertas usang + bingkai + foto
 // desaturasi sepia + judul "WANTED" + "DEAD OR ALIVE" + reward acak.
 import { createCanvas, loadImage } from "@napi-rs/canvas";
-import { novaError, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wanted",
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
   try {
     const media = extractImage(m);
     if (!media) {
-      return m.reply(claraWrap("wanted",
+      return m.reply(novaWrap("wanted",
         `🎨 *WANTED POSTER*\n\nKirim/reply foto buat dijadiin poster wanted ala koboi.\n\n${tipText(`Ketik ${m.prefix}wanted (kirim/reply gambar)`)}`));
     }
 
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, {
       image: poster,
-      caption: claraWrap("wanted", "🤠 *WANTED POSTER JADI!*"),
+      caption: novaWrap("wanted", "🤠 *WANTED POSTER JADI!*"),
     }, { quoted: m });
   } catch (error) {
     console.error("[wanted]", error.message);

@@ -4,7 +4,7 @@ import axios from "axios";
 import { haidarTextpro } from "../../src/lib/nova-haidar.js";
 import * as cheerio from "cheerio";
 import FormData from "form-data";
-import { claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "textpro",
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
   const content = args.slice(1).join(" ");
 
   if (!style || style === "list") {
-    return m.reply(claraWrap("textpro", [
+    return m.reply(novaWrap("textpro", [
       "Daftar style tersedia:",
       "",
       ...Object.entries(STYLES).map(([k, v]) => `${v.emoji} ${k} — ${v.desc}`),
@@ -112,11 +112,11 @@ async function handler(m, { sock }) {
   }
 
   if (!STYLES[style]) {
-    return m.reply(claraWrap("textpro", `Style tidak ditemukan: ${style}\nKetik ${m.prefix}textpro list`));
+    return m.reply(novaWrap("textpro", `Style tidak ditemukan: ${style}\nKetik ${m.prefix}textpro list`));
   }
 
   if (!content) {
-    return m.reply(claraWrap("textpro", `Masukkan teks!\n💡 Contoh: ${m.prefix}textpro ${style} Halo Dunia`));
+    return m.reply(novaWrap("textpro", `Masukkan teks!\n💡 Contoh: ${m.prefix}textpro ${style} Halo Dunia`));
   }
 
   try {
@@ -152,7 +152,7 @@ async function handler(m, { sock }) {
       console.error("[textpro] Haidar fallback gagal:", fbErr.message);
     }
     await m.react("❌");
-    m.reply(claraWrap("textpro", "Gagal generate. Coba lagi.", "error"));
+    m.reply(novaWrap("textpro", "Gagal generate. Coba lagi.", "error"));
   }
 }
 

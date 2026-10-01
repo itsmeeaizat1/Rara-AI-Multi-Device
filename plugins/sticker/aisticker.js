@@ -8,7 +8,7 @@
  */
 import { callImageGenChain } from "../../src/lib/nova-ai-service.js";
 import { upscaleImage, polishImage } from "../../src/lib/nova-remini-ffmpeg.js";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aisticker",
@@ -62,7 +62,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   if (!rawPrompt) {
     return m.reply(
-      claraWrap("AI Sticker", [
+      novaWrap("AI Sticker", [
         "Bikin sticker dari teks pakai AI — langsung jadi sticker, gak perlu foto!",
         "",
         "Cara pakai:",
@@ -106,7 +106,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     await sock.sendImageAsSticker(m.chat, buf, m, { packname, author });
     await m.react("🐣");
     await m.reply(
-      claraWrap("AI Sticker", [
+      novaWrap("AI Sticker", [
         "✅ Sticker AI jadi!",
         `🎨 Prompt: ${cleanPrompt}`,
         `⚡ Engine: ${img.via || "nano-banana"}${hdNote}`,
@@ -116,7 +116,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     console.error("[aisticker]", e.message || e);
     await m.react("❌");
     await m.reply(
-      claraWrap("AI Sticker", [
+      novaWrap("AI Sticker", [
         "❌ Gagal bikin sticker AI.",
         "",
         "Engine AI lagi sibuk/down — coba lagi bentar lagi ya.",

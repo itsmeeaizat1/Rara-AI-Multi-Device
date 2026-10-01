@@ -11,7 +11,7 @@
 // Subscriber per-chat TETAP dapat + target terpusat
 // (.switch auto autoberitanotify set) nambah jangkauan.
 
-import { claraWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import {
   SOURCES, isBeritaNotifierOn, setBeritaNotifierOn,
@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ═══ on / off ═══
     if (sub === "on" || sub === "aktif") {
       if (isSubscriber(m.chat)) {
-        return m.reply(claraWrap("beritanotify", `Chat ini udah langganan berita (${toSC(statusInfo().sourceLabel)}). Berita baru bakal masuk otomatis.`, "info"));
+        return m.reply(novaWrap("beritanotify", `Chat ini udah langganan berita (${toSC(statusInfo().sourceLabel)}). Berita baru bakal masuk otomatis.`, "info"));
       }
       addSubscriber(m.chat);
       if (!isBeritaNotifierOn()) setBeritaNotifierOn(true);
@@ -73,20 +73,20 @@ async function handler(m, { sock, config: botConfig }) {
       // sample langsung nge-flow (ala anime notifier) — 1 berita terbaru
       const r = await runCheck({ force: true, max: 1, only: m.chat }).catch(() => ({ sent: 0 }));
       if (!r?.sent) {
-        return m.reply(claraWrap("beritanotify",
+        return m.reply(novaWrap("beritanotify",
           `✅ ${toSC("langganan berita aktif")} — ${toSC("sumber")} ${toSC(SOURCES[statusInfo().source]?.label || "CNN Indonesia")}\n` +
           `📰 ${toSC("berita baru bakal masuk otomatis tiap")} ${statusInfo().intervalMin} ${toSC("menit")}\n\n` +
           tipText(`Kirim sekarang juga: ${prefix}beritanotify now`)));
       }
-      return m.reply(claraWrap("beritanotify", `✅ ${toSC("langganan berita aktif")} — ${toSC("itu sample terbaru di atas")}, berita berikutnya masuk otomatis tiap ${statusInfo().intervalMin} menit`));
+      return m.reply(novaWrap("beritanotify", `✅ ${toSC("langganan berita aktif")} — ${toSC("itu sample terbaru di atas")}, berita berikutnya masuk otomatis tiap ${statusInfo().intervalMin} menit`));
     }
 
     if (sub === "off" || sub === "mati") {
       if (!isSubscriber(m.chat)) {
-        return m.reply(claraWrap("beritanotify", `Chat ini gak lagi langganan. Aktifin: ${prefix}beritanotify on`, "info"));
+        return m.reply(novaWrap("beritanotify", `Chat ini gak lagi langganan. Aktifin: ${prefix}beritanotify on`, "info"));
       }
       removeSubscriber(m.chat);
-      return m.reply(claraWrap("beritanotify", `🛑 ${toSC("langganan berita dihentikan di chat ini")}\n${tipText(`Grup/chat lain yang langganan tetap jalan — kontrol terpusat: ${prefix}switch auto autoberitanotify off`)}`));
+      return m.reply(novaWrap("beritanotify", `🛑 ${toSC("langganan berita dihentikan di chat ini")}\n${tipText(`Grup/chat lain yang langganan tetap jalan — kontrol terpusat: ${prefix}switch auto autoberitanotify off`)}`));
     }
 
     // ═══ now ═══
@@ -95,10 +95,10 @@ async function handler(m, { sock, config: botConfig }) {
       const r = await runCheck({ force: true, max: 3 });
       if (r?.sent) {
         await m.react("🐣");
-        return m.reply(claraWrap("beritanotify", `📰 ${r.berita} ${toSC("berita terbaru dikirim di atas")} (${toSC("sumber")} ${toSC(statusInfo().sourceLabel)})`));
+        return m.reply(novaWrap("beritanotify", `📰 ${r.berita} ${toSC("berita terbaru dikirim di atas")} (${toSC("sumber")} ${toSC(statusInfo().sourceLabel)})`));
       }
       await m.react("❌");
-      return m.reply(claraWrap("beritanotify", `Gagal ambil feed (${r?.error || "coba lagi bentar"}).`, "error"));
+      return m.reply(novaWrap("beritanotify", `Gagal ambil feed (${r?.error || "coba lagi bentar"}).`, "error"));
     }
 
     // ═══ status ═══
@@ -106,20 +106,20 @@ async function handler(m, { sock, config: botConfig }) {
       const st = statusInfo();
       const srcList = Object.entries(SOURCES).map(([k, v]) => k === st.source ? `▸ ${toSC(v.label)} ✓` : `  ${toSC(v.label)}`).join("\n");
       let txt = `📰 *BERITA NOTIFIER*\n\n⚡ Status: ${st.enabled ? "ON" : "OFF"}\n📡 Sumber: ${toSC(st.sourceLabel)}\n⏱ Cek tiap: ${st.intervalMin} menit\n👥 Subscriber: ${st.subscribers.length} chat\n🎯 Target terpusat: ${toSC(st.targetDesc)}\n🕒 Cek terakhir: ${st.lastCheck ? new Date(st.lastCheck).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "-"}\n\n*Sumber tersedia:*\n${srcList}`;
-      return m.reply(claraWrap("beritanotify", txt));
+      return m.reply(novaWrap("beritanotify", txt));
     }
 
     // ═══ sumber ═══
     if (sub === "sumber" || sub === "source") {
       const name = (args[1] || "").toLowerCase();
       if (!name) {
-        return m.reply(claraWrap("beritanotify", `Sumber sekarang: ${toSC(statusInfo().sourceLabel)}\n\nPilihan:\n${Object.entries(SOURCES).map(([k, v]) => `▸ ${toSC(k)} — ${toSC(v.label)}`).join("\n")}\n\nFormat: ${prefix}beritanotify sumber <nama>`, "info"));
+        return m.reply(novaWrap("beritanotify", `Sumber sekarang: ${toSC(statusInfo().sourceLabel)}\n\nPilihan:\n${Object.entries(SOURCES).map(([k, v]) => `▸ ${toSC(k)} — ${toSC(v.label)}`).join("\n")}\n\nFormat: ${prefix}beritanotify sumber <nama>`, "info"));
       }
       const set = setSource(name);
       if (!set) {
-        return m.reply(claraWrap("beritanotify", `Sumber gak dikenal: ${name}\n\nPilihan: ${Object.keys(SOURCES).join(" / ")}`, "error"));
+        return m.reply(novaWrap("beritanotify", `Sumber gak dikenal: ${name}\n\nPilihan: ${Object.keys(SOURCES).join(" / ")}`, "error"));
       }
-      return m.reply(claraWrap("beritanotify", `📡 ${toSC("sumber berganti ke")} ${toSC(SOURCES[set].label)} — dedup direset, berita sumber baru bakal masuk mulai siklus berikutnya`));
+      return m.reply(novaWrap("beritanotify", `📡 ${toSC("sumber berganti ke")} ${toSC(SOURCES[set].label)} — dedup direset, berita sumber baru bakal masuk mulai siklus berikutnya`));
     }
 
     // ═══ interval ═══
@@ -127,17 +127,17 @@ async function handler(m, { sock, config: botConfig }) {
       const v = args[1];
       const set = setIntervalMin(v);
       if (set === null || set === undefined) {
-        return m.reply(claraWrap("beritanotify", `Interval gak valid: ${v || "(kosong)"}\n\nFormat: ${prefix}beritanotify interval <5-120> menit`, "error"));
+        return m.reply(novaWrap("beritanotify", `Interval gak valid: ${v || "(kosong)"}\n\nFormat: ${prefix}beritanotify interval <5-120> menit`, "error"));
       }
-      return m.reply(claraWrap("beritanotify", `⏱ ${toSC("cek tiap")} ${set} ${toSC("menit")}`));
+      return m.reply(novaWrap("beritanotify", `⏱ ${toSC("cek tiap")} ${set} ${toSC("menit")}`));
     }
 
     // ═══ sub gak dikenal ═══
-    return m.reply(claraWrap("beritanotify", `Sub gak dikenal. Yang ada: on | off | now | status | sumber | interval`, "info"));
+    return m.reply(novaWrap("beritanotify", `Sub gak dikenal. Yang ada: on | off | now | status | sumber | interval`, "info"));
   } catch (err) {
     console.error("beritanotify error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("beritanotify", te.novaError(err) || "Gagal memproses", "error"));
+    return m.reply(novaWrap("beritanotify", te.novaError(err) || "Gagal memproses", "error"));
   }
 }
 

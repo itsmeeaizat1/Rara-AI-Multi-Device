@@ -5,7 +5,7 @@ import crypto from "crypto";
 import axios from "axios";
 import FormData from "form-data";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const config = {
   name: "hd3",
@@ -324,7 +324,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     await m.react("❌");
     console.error("[HD3]", e.message);
-    m.reply(claraWrap("hd3", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("hd3", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

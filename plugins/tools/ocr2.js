@@ -2,7 +2,7 @@
 // ocr2.js — OCR v2 (ocr.space API, cloud-based, multi-language)
 import axios from "axios";
 import FormData from "form-data";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ocr2",
@@ -19,7 +19,7 @@ async function handler(m, { sock }) {
   try {
     const isImage = m.message?.imageMessage || (m.quoted && (m.quoted.type === "imageMessage" || m.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage));
     if (!isImage) {
-      return m.reply(claraWrap("ocr2", `Reply gambar dengan caption ${m.prefix}ocr2\n\nBahasa: eng, ind, ara, chi, jpn, kor, rus\nDefault: eng`, "guide"));
+      return m.reply(novaWrap("ocr2", `Reply gambar dengan caption ${m.prefix}ocr2\n\nBahasa: eng, ind, ara, chi, jpn, kor, rus\nDefault: eng`, "guide"));
     }
 
     await m.react("🕒");
@@ -29,11 +29,11 @@ async function handler(m, { sock }) {
       buffer = m.quoted ? await m.quoted.download() : await m.download();
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("ocr2", "Gagal download gambar.", "error"));
+      return m.reply(novaWrap("ocr2", "Gagal download gambar.", "error"));
     }
     if (!buffer) {
       await m.react("❌");
-      return m.reply(claraWrap("ocr2", "Gambar tidak ditemukan.", "error"));
+      return m.reply(novaWrap("ocr2", "Gambar tidak ditemukan.", "error"));
     }
 
     const lang = m.args[0]?.trim() || "eng";
@@ -48,13 +48,13 @@ async function handler(m, { sock }) {
 
     if (!data || data.IsErroredOnProcessing || !data.ParsedResults?.length) {
       await m.react("❌");
-      return m.reply(claraWrap("ocr2", "Gagal extract teks. Coba gambar yang lebih jelas.", "error"));
+      return m.reply(novaWrap("ocr2", "Gagal extract teks. Coba gambar yang lebih jelas.", "error"));
     }
 
     const extracted = data.ParsedResults[0].ParsedText?.trim();
     if (!extracted) {
       await m.react("❌");
-      return m.reply(claraWrap("ocr2", "Tidak ada teks terdeteksi.", "error"));
+      return m.reply(novaWrap("ocr2", "Tidak ada teks terdeteksi.", "error"));
     }
 
     await m.react("🐣");
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("ocr2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("ocr2", err.message || "Error", "error"));
+    return m.reply(novaWrap("ocr2", err.message || "Error", "error"));
   }
 }
 

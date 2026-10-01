@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // mlstalk.js — Mobile Legends Stalker (velyn.mom API)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mlstalk",
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const serverId = args[1] || "";
 
     if (!playerId || !/^\d+$/.test(playerId)) {
-      return m.reply(claraWrap("mlstalk", `Masukkan Player ID Mobile Legends.\n\nContoh: ${m.prefix}mlstalk 123456789 2001`, "guide"));
+      return m.reply(novaWrap("mlstalk", `Masukkan Player ID Mobile Legends.\n\nContoh: ${m.prefix}mlstalk 123456789 2001`, "guide"));
     }
 
     await m.react("🕒");
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
 
     if (!data || (!data.result && !data.data)) {
       await m.react("❌");
-      return m.reply(claraWrap("mlstalk", `Player ID "${playerId}" tidak ditemukan.`, "error"));
+      return m.reply(novaWrap("mlstalk", `Player ID "${playerId}" tidak ditemukan.`, "error"));
     }
 
     const r = data.result || data.data || data;
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("mlstalk error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("mlstalk", err.message || "Error", "error"));
+    return m.reply(novaWrap("mlstalk", err.message || "Error", "error"));
   }
 }
 

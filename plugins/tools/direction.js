@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     const distKm = (Math.acos(Math.sin(a.lat*Math.PI/180)*Math.sin(b.lat*Math.PI/180) +
       Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.cos(b.lon*Math.PI/180-a.lon*Math.PI/180))*6371).toFixed(0);
     await m.react("🐣");
-    await m.reply(claraWrap("Rute & Arah", [`Dari: *${a.name.substring(0,50)}*`,
+    await m.reply(novaWrap("Rute & Arah", [`Dari: *${a.name.substring(0,50)}*`,
       `Ke: *${b.name.substring(0,50)}*`,
       `Jarak: *${distKm} km* (garis lurus)`,
       `Peta: ${url}`].join("\n")) + "\n" + tipText("Klik link peta untuk navigasi"));

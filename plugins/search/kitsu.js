@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // kitsu.js — Kitsu API: search anime & manga (no API key)
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -50,7 +50,7 @@ async function handler(m, { sock, config, db }) {
     let query = m.args?.slice(1).join(" ") || "";
 
     if (!type || type === "help") {
-      return m.reply(claraWrap("Kitsu", [
+      return m.reply(novaWrap("Kitsu", [
         "Cari anime & manga dari Kitsu",
         "",
         "📌 *Cara Pakai:*",
@@ -66,7 +66,7 @@ async function handler(m, { sock, config, db }) {
     }
 
     if (!query) {
-      return m.reply(claraWrap("Kitsu", `Masukkan judul ${type}. Contoh: ${m.prefix}kitsu ${type} Naruto`));
+      return m.reply(novaWrap("Kitsu", `Masukkan judul ${type}. Contoh: ${m.prefix}kitsu ${type} Naruto`));
     }
     await m.react("🕒");
     const results = await kitsuSearch(type, query);
@@ -78,7 +78,7 @@ async function handler(m, { sock, config, db }) {
 
     const text = `Hasil pencarian ${type}: "${query}"\n\n` + results.map(item => fmtEntry(item, type)).join("\n\n");
     await m.react("🐣");
-    return m.reply(claraWrap("Kitsu", text));
+    return m.reply(novaWrap("Kitsu", text));
   } catch (e) {
     console.error("[kitsu] error:", e.message);
     await m.react("❌");

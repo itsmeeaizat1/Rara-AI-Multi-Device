@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import fs from "fs";
 
 const pluginConfig = {
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
       if (p.kategori && p.kategori !== "umum") txt += ` [${p.kategori}]`;
       txt += `\n`;
     }
-    return m.reply(claraWrap("belistore", txt));
+    return m.reply(novaWrap("belistore", txt));
   }
 
   const product = products[idx];
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } else {
-    await m.reply(claraWrap("belistore", txt));
+    await m.reply(novaWrap("belistore", txt));
   }
 
   let paymentTxt = `💳 *instruksi pembayaran*\n\n`;

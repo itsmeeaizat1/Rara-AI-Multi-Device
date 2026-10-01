@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const API = "https://www.themealdb.com/api/json/v1/1";
@@ -334,7 +334,7 @@ async function handler(m, { sock, args }) {
           return await sendRecipeReply(m, sock, formatMeal(dRes.data.meals[0]), dRes.data.meals[0].strMealThumb);
         }
       } catch (e) { console.error('[resep.js]:', e.message); }
-            return m.reply(claraWrap("Info", `Kategori "${query}" tidak ditemukan.`));
+            return m.reply(novaWrap("Info", `Kategori "${query}" tidak ditemukan.`));
     }
     // 70% Cookpad live, 30% TheMealDB
     if (Math.random() < 0.7) {
@@ -354,7 +354,7 @@ async function handler(m, { sock, args }) {
       if (ID_RECIPES.length > 0) {
         return await m.reply( formatIDRecipe(ID_RECIPES[Math.floor(Math.random() * ID_RECIPES.length)]), { commandName: "resep" });
       }
-            return m.reply(claraWrap("Error", "\u274c Gagal mengambil resep acak."));
+            return m.reply(novaWrap("Error", "\u274c Gagal mengambil resep acak."));
     }
   }
 
@@ -398,13 +398,13 @@ async function handler(m, { sock, args }) {
       for (let i = 0; i < areas.length; i += 3) txt += `${areas.slice(i, i + 3).join(" | ")}\n`;
       txt += `\nTotal: ${areas.length} negara\n\nGunakan: \`${m.prefix}resep negara <nama>\``;
       return await m.reply( txt, { commandName: "resep" });
-    } catch { return m.reply(claraWrap("Error", "\u274c Error mengambil daftar negara.")); }
+    } catch { return m.reply(novaWrap("Error", "\u274c Error mengambil daftar negara.")); }
   }
 
   if (sub === "negara" && query) {
     try {
       const res = await axios.get(`${API}/filter.php?a=${encodeURIComponent(query)}`);
-      if (!res.data.meals) { return m.reply(claraWrap("Info", `Negara "${query}" tidak ditemukan.`)); }
+      if (!res.data.meals) { return m.reply(novaWrap("Info", `Negara "${query}" tidak ditemukan.`)); }
       const meals = res.data.meals.slice(0, 15);
       let txt = `Resep dari: ${query}\n\n`;
       meals.forEach((meal, i) => txt += `${i + 1}. ${meal.strMeal} (ID: ${meal.idMeal})\n`);
@@ -417,7 +417,7 @@ async function handler(m, { sock, args }) {
   if (sub === "listbahan" || sub === "bahanlist") {
     try {
       const { ingredients } = await getCachedLists();
-      if (!ingredients.length) { return m.reply(claraWrap("Error", "\u274c Gagal mengambil daftar bahan.")); }
+      if (!ingredients.length) { return m.reply(novaWrap("Error", "\u274c Gagal mengambil daftar bahan.")); }
       const page = parseInt(query) || 1, perPage = 50;
       const start = (page - 1) * perPage, items = ingredients.slice(start, start + perPage);
       const total = Math.ceil(ingredients.length / perPage);
@@ -425,19 +425,19 @@ async function handler(m, { sock, args }) {
       items.forEach((ing, i) => txt += `${start + i + 1}. ${ing}\n`);
       if (page < total) txt += `\nHalaman selanjutnya: \`${m.prefix}resep listbahan ${page + 1}\``;
       return await m.reply( txt, { commandName: "resep" });
-    } catch { return m.reply(claraWrap("Error", "\u274c Error.")); }
+    } catch { return m.reply(novaWrap("Error", "\u274c Error.")); }
   }
 
   if (sub === "bahan" && query) {
     try {
       const res = await axios.get(`${API}/filter.php?i=${encodeURIComponent(query)}`);
-      if (!res.data.meals) { return m.reply(claraWrap("Resep", `Tidak ada resep dengan bahan "${query}".`)); }
+      if (!res.data.meals) { return m.reply(novaWrap("Resep", `Tidak ada resep dengan bahan "${query}".`)); }
       const meals = res.data.meals.slice(0, 15);
       let txt = `Resep dengan bahan: ${query}\n\n`;
       meals.forEach((meal, i) => txt += `${i + 1}. ${meal.strMeal} (ID: ${meal.idMeal})\n`);
       txt += `\nLihat detail: \`${m.prefix}resep <id>\``;
       return await m.reply( txt, { commandName: "resep" });
-    } catch { return m.reply(claraWrap("Error", "\u274c Error.")); }
+    } catch { return m.reply(novaWrap("Error", "\u274c Error.")); }
   }
 
   // === POPULER ===
@@ -463,7 +463,7 @@ async function handler(m, { sock, args }) {
     const idLocal = cpRes.length === 0 ? searchIDLocal(lbCleaned) : [];
     const total = cpRes.length + tmRes.length + idLocal.length;
     if (total === 0) {
-            return m.reply(claraWrap("Info", `Resep "${lbCleaned}" tidak ditemukan.`));
+            return m.reply(novaWrap("Info", `Resep "${lbCleaned}" tidak ditemukan.`));
     }
     let txt = `Daftar Resep: "${lbCleaned}"\nDitemukan ${total} resep\n\n`;
     let num = 1;
@@ -501,7 +501,7 @@ async function handler(m, { sock, args }) {
     if (sub.length >= 7) {
       const recipe = await getCookpadRecipe(sub);
       if (recipe) { return await sendRecipeReply(m, sock, formatCookpadRecipe(recipe), recipe.image); }
-            return m.reply(claraWrap("Info", `Resep Cookpad ID ${sub} tidak ditemukan.`));
+            return m.reply(novaWrap("Info", `Resep Cookpad ID ${sub} tidak ditemukan.`));
     }
     // Try TheMealDB
     if (sub.length >= 4) {
@@ -514,7 +514,7 @@ async function handler(m, { sock, args }) {
     const id = parseInt(sub);
     const recipe = ID_RECIPES.find(r => r.id === id);
     if (recipe) { return await m.reply( formatIDRecipe(recipe), { commandName: "resep" }); }
-        return m.reply(claraWrap("Info", `Resep ID ${sub} tidak ditemukan.`));
+        return m.reply(novaWrap("Info", `Resep ID ${sub} tidak ditemukan.`));
   }
 
   // === UNIFIED SEARCH (default) ===

@@ -1,6 +1,6 @@
 // E2E — altfgames (.dailywordgame/.game2048/.fourinarow/.slidingpuzzle/.minesweeper/.emojiquiz)
 // Port game dari altftool.com — offline native, sesi in-memory, animasi editFramesAnim.
-// GOTCHA: claraWrap merender smallcaps → SEMUA asersi huruf WAJIB dinormalisasi fromSC().
+// GOTCHA: novaWrap merender smallcaps → SEMUA asersi huruf WAJIB dinormalisasi fromSC().
 import fs from "node:fs";
 fs.rmSync(new URL("./e2e-db.json", import.meta.url), { recursive: true, force: true });
 const { initDatabase } = await import("../../src/lib/nova-database.js");

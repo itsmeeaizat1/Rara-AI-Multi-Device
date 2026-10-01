@@ -2,7 +2,7 @@
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { getParticipantJid } from '../../src/lib/nova-lid.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'warn',
     alias: ["warn"],
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
     const args = m.args
     if (!args[0] && !m.quoted && (!m.mentionedJid || m.mentionedJid.length === 0)) {
-        return m.reply(claraWrap("warn", `⚠️ *sistem warning grup*\n\n` +
+        return m.reply(novaWrap("warn", `⚠️ *sistem warning grup*\n\n` +
             `Sistem manajemen pelanggaran untuk member grup.\n` +
             `Batas Warning: *${maxWarns} kali* (Otomatis Kick)\n\n` +
             `*cara pakai:*\n` +
@@ -47,11 +47,11 @@ async function handler(m, { sock }) {
     if (args[0]?.toLowerCase() === 'max') {
         const newMax = parseInt(args[1])
         if (isNaN(newMax) || newMax < 1 || newMax > 20) {
-            return m.reply(claraWrap("warn", `gagal\n\nBatas referensi warning harus berupa angka 1-20.\n💡 Contoh: ${m.prefix}warn max 5`, "error"))
+            return m.reply(novaWrap("warn", `gagal\n\nBatas referensi warning harus berupa angka 1-20.\n💡 Contoh: ${m.prefix}warn max 5`, "error"))
         }
         groupData.maxWarnings = newMax
         db.setGroup(m.chat, groupData)
-        return m.reply(claraWrap("Warn", `batas warning diubah\n\nMaksimal warning grup ini telah diupdate menjadi ${newMax} kali.`, "success"))
+        return m.reply(novaWrap("Warn", `batas warning diubah\n\nMaksimal warning grup ini telah diupdate menjadi ${newMax} kali.`, "success"))
     }
 
     let targetUser = null
@@ -71,14 +71,14 @@ async function handler(m, { sock }) {
         const groupMeta = m.groupMetadata
         const participant = groupMeta.participants.find(p => getParticipantJid(p) === targetUser)
         if (participant?.admin) {
-            await m.reply(claraWrap("warn", `Tidak bisa memberikan warning kepada admin grup.`, "error"))
+            await m.reply(novaWrap("warn", `Tidak bisa memberikan warning kepada admin grup.`, "error"))
             return
         }
     } catch (e) { console.error('[warn.js]:', e.message); }
     
     const botJid = sock.user?.id?.split(':')[0] + '@s.whatsapp.net'
     if (targetUser === botJid) {
-        await m.reply(claraWrap("Warn", `Gak usah warn aku, aku cuma bot.`, "error"))
+        await m.reply(novaWrap("Warn", `Gak usah warn aku, aku cuma bot.`, "error"))
         return
     }
     
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
     if (warnCount >= maxWarns) {
         try {
             await sock.groupParticipantsUpdate(m.chat, [targetUser], 'remove')
-            await m.reply(claraWrap("warn", `🚨 *max warning tercapai*\n\n` +
+            await m.reply(novaWrap("warn", `🚨 *max warning tercapai*\n\n` +
                 `@${targetName} telah dikeluarkan dari grup karena mencapai batas pelanggaran!\n\n` +
                 `*rincian:*\n` +
                 `Warning: *${warnCount}/${maxWarns}*\n` +
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
             delete warnings[targetUser]
             db.setGroup(m.chat, { ...groupData, warnings: warnings })
         } catch (e) {
-            m.reply(claraWrap("warn", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(novaWrap("warn", te(m.prefix, m.command, m.pushName), "error"))
         }
     } else {
         await m.reply(

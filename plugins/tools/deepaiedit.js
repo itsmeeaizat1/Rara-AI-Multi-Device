@@ -3,7 +3,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "deepaiedit",
@@ -102,7 +102,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // EXAMPLES
     if (sub === "list" || sub === "contoh" || sub === "example") {
-      return m.reply(claraWrap("DeepAI Image Editor V2", [
+      return m.reply(novaWrap("DeepAI Image Editor V2", [
         "CONTOH PROMPT EDITING:",
         "",
         "1. Change the background to a beach",
@@ -126,7 +126,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // EDIT
     const prompt = text.trim();
     if (!prompt) {
-      return m.reply(claraWrap("DeepAI Image Editor V2", [
+      return m.reply(novaWrap("DeepAI Image Editor V2", [
         "Edit gambar dengan AI prompt. Gratis tanpa API key.",
         "",
         "CARA PAKAI:",
@@ -145,15 +145,15 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const q = m.quoted || m;
     const mime = (q.message?.[Object.keys(q.message)[0]]?.mimetype) || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(claraWrap("DeepAI Image Editor V2", "Reply gambar yang mau di-edit, lalu ketik perintah ini!\n\n💡 *Contoh:* Reply gambar + .deepaiedit change background to beach"));
+      return m.reply(novaWrap("DeepAI Image Editor V2", "Reply gambar yang mau di-edit, lalu ketik perintah ini!\n\n💡 *Contoh:* Reply gambar + .deepaiedit change background to beach"));
     }
 
-    m.reply(claraWrap("DeepAI Image Editor V2", "Sedang mengedit gambar dengan DeepAI...\nPrompt: " + prompt));
+    m.reply(novaWrap("DeepAI Image Editor V2", "Sedang mengedit gambar dengan DeepAI...\nPrompt: " + prompt));
 
     // Download image
     const imageBuffer = await q.download();
     if (!imageBuffer || imageBuffer.length === 0) {
-      return m.reply(claraWrap("DeepAI Image Editor V2", "Gagal download gambar. Coba lagi!"));
+      return m.reply(novaWrap("DeepAI Image Editor V2", "Gagal download gambar. Coba lagi!"));
     }
 
     // Edit image
@@ -164,7 +164,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       try {
         await conn.sendMessage(m.key.remoteJid, {
           image: { url: result.output_url },
-          caption: claraWrap("DeepAI Image Editor V2", [
+          caption: novaWrap("DeepAI Image Editor V2", [
             "EDIT BERHASIL",
             "",
             "Prompt: " + prompt,
@@ -174,7 +174,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         }, { quoted: m });
       } catch (sendErr) {
         // Fallback: send URL
-        return m.reply(claraWrap("DeepAI Image Editor V2", [
+        return m.reply(novaWrap("DeepAI Image Editor V2", [
           "EDIT BERHASIL",
           "",
           "Prompt: " + prompt,
@@ -188,7 +188,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       try {
         await conn.sendMessage(m.key.remoteJid, {
           image: { url: result.output },
-          caption: claraWrap("DeepAI Image Editor V2", [
+          caption: novaWrap("DeepAI Image Editor V2", [
             "EDIT BERHASIL",
             "",
             "Prompt: " + prompt,
@@ -196,7 +196,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           ], "success"),
         }, { quoted: m });
       } catch {
-        return m.reply(claraWrap("DeepAI Image Editor V2", [
+        return m.reply(novaWrap("DeepAI Image Editor V2", [
           "EDIT BERHASIL",
           "",
           "Hasil: " + result.output,
@@ -204,7 +204,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
     } else {
       await m.react("🐣");
-      return m.reply(claraWrap("DeepAI Image Editor V2", [
+      return m.reply(novaWrap("DeepAI Image Editor V2", [
         "Response tidak dikenali.",
         "Prompt: " + prompt,
         "Response: " + JSON.stringify(result).substring(0, 500),
@@ -213,7 +213,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[DeepAI Image Editor V2]", e);
-    m.reply(claraWrap("DeepAI Image Editor V2", [
+    m.reply(novaWrap("DeepAI Image Editor V2", [
       "Error: " + e.message,
       "",
       "Kemungkinan penyebab:",

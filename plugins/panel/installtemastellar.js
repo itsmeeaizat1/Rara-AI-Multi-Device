@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -70,16 +70,16 @@ function handler(m, { sock }) {
                         await execSSH(conn, THEME_CMD)
 
                         await execSSH(conn, BUILD_CMD)
-            await m.reply(claraWrap("installtemastellar", `
+            await m.reply(novaWrap("installtemastellar", `
 │ sTatus: *terinstall*
 │ Ip: ${ipvps}\n\n_Tema Stellar + dependencies berhasil diinstall!_`))
         } catch (err) {
-            m.reply(claraWrap("installtemastellar", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(novaWrap("installtemastellar", te(m.prefix, m.command, m.pushName), "error"))
         } finally {
             conn.end()
         }
     }).on('error', (err) => {
-        m.reply(claraWrap("installtemastellar", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
+        m.reply(novaWrap("installtemastellar", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
     }).connect(connSettings)
 }
 
