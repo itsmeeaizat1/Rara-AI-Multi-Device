@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // FIX 14 Sep 2026: versi lama CUMA nyimpen foto ke tmp lalu ngirim balik
 // FOTO ASLI TANPA DIPROSES SAMA SEKALI, sambil klaim caption "Status: SUCCESS"
 // efek wanted poster — bug ditemukan pas audit kualitas fitur canvas.

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // dicebattle.js — Dice Battle vs AI (2d6, bet gold)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { animDice } from "../../src/lib/rara-rpg-anim.js";

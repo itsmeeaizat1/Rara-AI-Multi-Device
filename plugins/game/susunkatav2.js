@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Auto-generated game plugin: susunkatav2 — soal live dari HaidarApis (api.haidarxd.my.id)
 
 import { games } from "../../src/lib/rara-game-factory.js";

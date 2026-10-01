@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-9router-local.js — 9ROUTER LOKAL NATIVE (v1)
 //
 // 9Router (npm: 9router) jalan BENERAN di Node.js bareng bot ini:

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .figlet — ASCII art banner via package figlet (16 Sep 2026, request owner:
 // figlet ternyata sudah terpasang sejak lama tapi BELUM PERNAH dipakai —
 // fitur gratis tanpa dep baru). Font kurasi + list font.

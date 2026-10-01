@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .mega — downloader file MEGA.nz via package megajs (16 Sep 2026, request
 // owner: audit dependencies → megajs terverifikasi hidup, fitur MEGA belum ada).
 // TANPA API eksternal — direct protokol MEGA. STRICT satuan: error asli keluar.

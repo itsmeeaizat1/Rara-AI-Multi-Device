@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // animenotify.js — Auto Anime Notifier (request owner 8 Sep 2026, ala script
 // standalone "anime notifier bot" owner). Sumber: AniList GraphQL (utama)
 // → Kitsu (fallback). Per-chat opt-in:

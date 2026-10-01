@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Heal — Recover HP and Energy using potions or resting
 
 import { animHeal } from "../../src/lib/rara-rpg-anim.js";

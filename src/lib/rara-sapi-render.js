@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 rara-sapi-render.js — renderer PLAIN TEXT data searchapi.io
 // 🔹 Prinsip owner 14 Sep 2026: hasil di chat HARUS plain text lengkap

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // disaster.js — Dashboard & cek bencana alam dunia + Indonesia (rename file owner 15 Sep 2026)
 // Kategori baru: bencana. Sumber: GDACS (EU/UN), NASA EONET, USGS, BMKG.
 // Semua endpoint resmi & verified hidup 2026-09-06.

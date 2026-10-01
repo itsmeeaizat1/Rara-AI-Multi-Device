@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .fourinarow — Connect Four vs AI (port altftool.com "Four in a Row")
 // Reply angka 1-7 buat drop disc. ANIMASI KHAS: disc 🔵 jatuh ke bawah kolom frame demi frame.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

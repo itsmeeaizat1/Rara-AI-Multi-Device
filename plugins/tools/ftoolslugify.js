@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolslugify — teks jadi URL slug (port altftool.com/tools/all/slug-generator)
 import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 

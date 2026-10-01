@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // AI Debate — Two AI characters debate a topic
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

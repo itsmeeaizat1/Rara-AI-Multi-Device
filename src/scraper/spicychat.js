@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/scraper/spicychat.js — SpicyChat AI (uncensored character chat,
 // guest-based, tanpa API key). Port dari script CLI owner 9 Sep 2026.
 //

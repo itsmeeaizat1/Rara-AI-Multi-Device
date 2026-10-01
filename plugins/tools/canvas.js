@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // FIX 14 Sep 2026 (audit fitur canvas): api.miaou.xyz DOWN — TLS handshake
 // ditolak (SNI "unrecognized name"), bukan cuma DNS mati tapi subdomain-nya
 // udah dilepas dari routing servernya sama sekali. Graceful error mengikuti

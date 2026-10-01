@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // gsmarena2.js — GSM Arena v2 (siputzx API, no npm dependency)
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

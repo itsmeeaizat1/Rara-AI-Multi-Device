@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT - BERITAV2 PLUGIN
+// RARA AI - MULTI DEVICE - BERITAV2 PLUGIN
 import axios from 'axios';
 import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 import * as cheerio from 'cheerio';

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .thumbnail — ambil frame dari video sebagai thumbnail (request owner 11 Sep
 // 2026: "cara thumbnail mp4", varian no 1: frame otomatis di 20% durasi).
 // REVISI 11 Sep (owner: "kyk gaya thumbnail gambar saat ini cn versi video kyk

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-lyrics-format.js — SATU PINTU format hasil fitur lirik
 // Request owner 19 Sep 2026: "cba format lirik ada field ini: jdul lagu,
 // durasi, album, artis dibawahnya lirik" — contoh:

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AGENT GATE AKSES COMMAND (25 Sep 2026, owner:
+// RARA AI - MULTI DEVICE — E2E: AGENT GATE AKSES COMMAND (25 Sep 2026, owner:
 // "user bsa akses ai agent tp agent cm akses cmd yg bs user gunakan, fitur
 // owner-only ditolak jujur"). Agent jalan ATAS NAMA user — command di luar
 // hak user DITOLAK sebelum eksekusi, bukan pura-pura sukses.

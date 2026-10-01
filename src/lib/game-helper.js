@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // game-helper.js — Helper factory untuk membuat game handler dengan mudah
 import { gameManager, delay } from './game-session.js';
 

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Nonton Anime Hub — .nonton
 // 🔹 Sumber zelapi.eu.cc/docs/anime (24 endpoint, 5 situs sumber).

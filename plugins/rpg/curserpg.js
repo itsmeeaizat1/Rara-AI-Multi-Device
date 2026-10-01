@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Curse — Kutuk musuh (reply target)
 import { ensureRpg, saveRpg, useMana, getRpgData } from "../../src/lib/rara-rpg-service.js";
 import { animGeneric } from "../../src/lib/rara-rpg-anim.js";

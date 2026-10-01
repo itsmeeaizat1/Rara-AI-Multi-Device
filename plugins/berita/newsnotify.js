@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // beritanotify — Auto Berita Notifier (request owner 12 Sep 2026):
 // "buat fitur auto berita notifier misal dr cnn klo update brita baru
 // dikirim sbagai plaintext dan thumbnail gambar brita".

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // downloader.js — Unified Downloader
 // Format: .downloader <platform> <format> <url atau keyword>
 

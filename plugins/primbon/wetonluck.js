@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // wetonluck.js — Rejeki weton
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";

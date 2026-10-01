@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-youtube-info.js — info YouTube jadi AI RICH ala contoh owner (10 Sep 2026:
 // script "!youtube" rich bot — thumbnail + table info + deskripsi, Piped API
 // TANPA KEY). Dipakai .yts (plugins/search/yts.js).

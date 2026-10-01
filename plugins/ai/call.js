@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 TELPON — Voice Agent (request owner 12 Sep 2026, ide fitur no 2)
 // 🔹 .telpon on → semua VN kamu dijawab pakai suara (STT → AI → TTS)

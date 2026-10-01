@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 AI SATUAN RICH (rara-ai-satuan-rich.js) — request owner 21 Sep
 //   2026: "aku mau smua ai satuan dibot ini support vision dan browsing".

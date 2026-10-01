@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Combat Modifiers — Buff, Debuff, Bless, Curse, Ward, Trap
 
 import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";

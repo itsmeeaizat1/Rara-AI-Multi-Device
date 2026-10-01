@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Kill-switch global: .bot off → bot TOTAL silent (gak ada reply/react/fitur), cuma .bot yang diproses.
 // Intercept-nya ada di paling awal src/handler.js — sebelum semua fitur, anti, auto, dan statistik.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

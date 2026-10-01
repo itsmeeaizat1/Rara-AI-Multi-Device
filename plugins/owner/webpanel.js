@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .webpanel — start/stop WEB DASHBOARD (port website engine lama utuh)
 // Engine: src/lib/hiweb/ — server HTTP standalone + halaman login + panel. OWNER-ONLY.
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";

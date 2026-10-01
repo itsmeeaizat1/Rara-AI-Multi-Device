@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .fixupx — Lihat isi tweet (teks + media + stats) tanpa buka browser.
 //    Terima link twitter.com/x.com biasa, auto-convert ke fixupx.com

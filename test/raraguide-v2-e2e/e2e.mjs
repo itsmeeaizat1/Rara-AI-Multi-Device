@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: DESAIN USAGE V2 (25 Sep 2026, sesi "desain
+// RARA AI - MULTI DEVICE — E2E: DESAIN USAGE V2 (25 Sep 2026, sesi "desain
 // kaomoji lucu"): 「✧ nama ✧」 + kaomoji semangat + sapaan ajakan + 📍 baris
 // cara/contoh/note mengalir + (khusus AI, request owner 25 Sep) ✨ model
 // aktif + 📋 model tersedia + baris spec ⚡⏱💸 fakta nyata.

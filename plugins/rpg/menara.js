@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // menara.js — MENARA SERIBU PINTU: petualangan teka-teki per lantai (request owner 21 Sep 2026)
 // 100 lantai, tiap lantai 1 pintu terkunci teka-teki (6 jenis, tema dunia acak per lantai).
 // Tiap lantai ke-10: GERBANG SANG BIJAK (boss 2 teka-teki berturut, reward ×3 + 1 permata).

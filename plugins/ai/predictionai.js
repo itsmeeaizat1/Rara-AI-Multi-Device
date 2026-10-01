@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // AI Fortune — AI fortune teller with personality
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

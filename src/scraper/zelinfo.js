@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 zelinfo.js — scraper ZelAPI kategori /info (live verified 15 Sep 2026):
 //   /info/tokengratis — direktori 24 provider AI gratis (tokengratis.id)

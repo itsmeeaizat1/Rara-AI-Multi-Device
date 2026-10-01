@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 rara-aicall-bridge.js — Voice Command Bridge AI Call (26 Sep 2026)
 // 🔹 Request owner: "apakah aicall bisa kontrol bot, misal lagi telepon

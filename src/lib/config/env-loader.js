@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // API key loader — baca dari src/lib/apikey/*.json
 // File ini aman di-push ke GitHub (tidak berisi key, cuma loader)
 

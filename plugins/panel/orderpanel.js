@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // orderpanel.js — AUTO ORDER PANEL (buyer): bayar QRIS pakasir → lunas →
 // panel Pterodactyl ke-create OTOMATIS + kredensial dikirim ke DM buyer.
 // Porting flow "auto order panel" script selfbot JPM APENBOTZ (21 Sep 2026).

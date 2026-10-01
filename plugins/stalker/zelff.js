@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zff — backup Free Fire suite dari zelapi (4 endpoint live):
 //   .zff search <nickname>  — cari pemain → uid/region/level/like

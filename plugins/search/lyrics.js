@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // lyrics.js — .lirik: primary nexray → FALLBACK Genius no-key (engine .lirik2,
 // request owner 2026-09-06: "klo .lirik g bsa fallback ke .lirik2")
 import axios from 'axios'

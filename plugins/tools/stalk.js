@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .stalk — cek profil sosial media/game/dev via zelapi.eu.cc /stalk
 // 🔹 Owner 14 Sep: fitur baru dari audit zelapi v3.0.0 (448 endpoint).

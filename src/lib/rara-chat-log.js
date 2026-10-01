@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 CHAT HISTORY PERSISTEN (rara-chat-log.js) — konfirmasi owner 21 Sep
 //   2026: histori chat TETAP KESIMPAN saat bot restart, hilang HANYA

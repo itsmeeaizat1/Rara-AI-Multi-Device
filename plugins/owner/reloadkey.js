@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .reloadkey — Reload SEMUA API key dari pusat file apikeys.json
 //   tanpa restart bot. PUSAT KEY (request owner 17 Sep 2026):
 //   src/lib/apikey/apikeys.json — tiap key ada komentar _note_<nama>

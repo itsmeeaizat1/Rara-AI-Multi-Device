@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * rara-bmkg-scheduler.js
  * Scheduler gempa BMKG otomatis — kirim info gempa terkini ke grup/saluran.

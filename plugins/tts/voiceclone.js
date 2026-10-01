@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Voice Clone — simpan sample suara, generate TTS dengan voice hasil clone
 // Primary: Fish Audio API (real voice cloning, free 10K credits/month)
 // Fallback: edge-tts + FFmpeg pitch/formant shift (tanpa API key)

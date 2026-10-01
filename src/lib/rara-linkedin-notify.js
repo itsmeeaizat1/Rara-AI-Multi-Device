@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * rara-linkedin-notify.js — Auto LinkedIn Job Notifier (request owner 10 Sep
  * 2026: "buat notif auto linkedin notifier jadi kayak info job yang baru di

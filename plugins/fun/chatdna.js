@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/fun/chatdna.js
 // Chat DNA Analyzer - Analyze chat patterns and generate fun "DNA" profiles
 // Commands: .chatdna (@tag), .dnamatch @user1 @user2, .chatdnaon, .chatdnaoff

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/lib/sewa/sewa.js — Sumber tunggal harga & info SEWA BOT + BELI PREMIUM
 //
 // ✦ UTAK ATIK HARGA CUKUP DI FILE INI — semua fitur auto-update:

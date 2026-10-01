@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // server.js — Set PTLA (application apikey) & PTLC (client capikey) per slot server panel
 // Format : .server plta <apikey> <serverN>   → set PTLA (PLTC otomatis dihapus)
 //          .server pltc <apikey> <serverN>   → set PTLC (PLTA otomatis dihapus)

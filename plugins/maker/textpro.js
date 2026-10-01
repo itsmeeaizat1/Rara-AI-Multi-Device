@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // textpro.js — Text effect maker via ephoto360 scraping (lokal, no API key)
 import axios from "axios";
 import { haidarTextpro } from "../../src/lib/rara-haidar.js";

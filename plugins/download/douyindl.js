@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // douyin — Download video/audio/STORY dari Douyin (TikTok China)
 // Primary: SnapTik (snaptik.fi — request owner 2026-09-06, "Support
 // Download Story Juga", port dari script owner) → Fallback: IkyyXD → azbry

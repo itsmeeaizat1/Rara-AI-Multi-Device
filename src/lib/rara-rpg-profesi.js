@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-rpg-profesi.js — Animasi KERJA per-profesi (8 Sep 2026,
 // request owner: "tiap game punya animasi sendiri beda-beda, ubah
 // animasi game .kerja seperti ini" + contoh PROFESI_ANIMATIONS).

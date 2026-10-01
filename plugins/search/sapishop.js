@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Shopping Suite — .gshopping .amz .ebay .walmart .bestbuy .shein
 // 🔹 Produk PLAIN TEXT: nama, harga, toko, rating, ongkir.

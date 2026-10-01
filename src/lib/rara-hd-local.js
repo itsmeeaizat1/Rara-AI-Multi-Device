@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-hd-local.js — Engine enhance/upscale AI 100% LOKAL (tanpa API, tanpa watermark)
 // Model: Swin2SR (keluarga Real-ESRGAN) via @huggingface/transformers (ONNX Runtime)
 //   - hd   : swin2SR-lightweight-x2-64   → 2x cepat, buat touch-up harian

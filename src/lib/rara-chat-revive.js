@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════════════════════════════
 // CHAT REVIVE — fitur grup #7 "deteksi dead chat + revive" (30 Sep 2026)
 // Grup yang sepi lebih dari N jam → bot lempar 1 pertanyaan seru / fakta

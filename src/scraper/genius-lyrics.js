@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 //  Genius Lyrics Scraper (ESM) — TANPA API KEY
 //  Target  : https://genius.com/

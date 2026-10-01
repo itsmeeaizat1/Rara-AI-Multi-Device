@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // applemusicdl — Download lagu dari Apple Music via IkyyXD
 // Primary: IkyyXD /download/applemusic | Fallback: manual info (no audio)
 import { ikyyDl } from "../../src/scraper/ikyydl.js";

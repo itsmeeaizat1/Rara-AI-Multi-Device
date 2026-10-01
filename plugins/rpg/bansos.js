@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // bansos.js — Korupsi dana bansos (high risk high reward)
 import { ensureRpg, addGold, removeGold, checkCooldown, setCooldown, formatTime } from "../../src/lib/rara-rpg-service.js";
 import { reactCooldown } from "../../src/lib/rara-menu-style.js";

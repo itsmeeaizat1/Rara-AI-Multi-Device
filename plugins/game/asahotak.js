@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Asah Otak — game multiplayer multi-ronde (upgrade ala script owner 9 Sep 2026)
 // Menggantikan versi factory 1-soal. Fitur verbatim script:
 //   • 5 kategori: Teka-teki 🧩 / Logika 🧠 / Matematika 🔢 / Tebak Gambar 🖼️ / Sulit 🔥

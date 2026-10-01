@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Auto-generated game plugin: zmaths — soal matematika extreme live ZelAPI
 
 import { games } from "../../src/lib/rara-game-factory.js";

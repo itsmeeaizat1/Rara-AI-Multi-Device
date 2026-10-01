@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // deepseek — DeepSeek AI (penalaran, jawab agak lama karena mikir dulu)
 // Scraper DeepSeekThinking lama udah mati → sekarang lewat rantai fallback
 // multi-API (rara-ai-fallback.js: Haidar deepsek → Ikyy → Xemoz deepseek).

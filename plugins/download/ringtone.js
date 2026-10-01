@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ringtone.js — Search & download ringtone (meloboom scrape, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";

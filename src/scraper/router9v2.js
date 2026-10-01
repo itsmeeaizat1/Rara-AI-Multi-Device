@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // router9v2.js — 9ROUTER V2 CLOUD (hosted 9router, 17 Sep 2026)
 // API gateway OpenAI-compatible: https://9router.cloudku.us.kg

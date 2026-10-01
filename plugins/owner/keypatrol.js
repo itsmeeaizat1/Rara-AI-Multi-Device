@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 //
 // .keypatrol — AUTO KEY PATROL (27 Sep 2026, fitur automation no.1).
 // Tiap 6 jam bot tes semua api key ke endpoint ringan provider. Key mati

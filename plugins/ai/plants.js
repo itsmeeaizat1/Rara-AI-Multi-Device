@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: AI Plant Identifier
  * Fitur: .tanaman (reply foto tanaman) → AI identifikasi: nama + latin,

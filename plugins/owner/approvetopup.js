@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // approvetopup.js — Owner: kelola pesanan beli satuan (.buylimit / .buykoin)
 // .approvetopup          → lihat semua pesanan pending
 // .approvetopup <nomor>  → approve → limit/koin masuk otomatis ke user

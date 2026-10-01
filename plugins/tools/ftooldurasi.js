@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooldurasi — selisih dua tanggal (port altftool.com/tools/all/date-duration-calculator)
 // Format: .ftooldurasi <tanggal1>|<tanggal2> — yyyy-mm-dd atau dd-mm-yyyy, opsional HH:mm (WIB).
 import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";

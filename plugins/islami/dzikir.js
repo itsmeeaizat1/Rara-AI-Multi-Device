@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // dzikir.js — Dzikir Pagi, Petang, Doa Harian, Doa Pilihan, Dzikir Setelah Shalat.
 // UPGRADE 24 Sep 2026: API-first via dua-dhikr.vercel.app (fitrahive/dua-dhikr, daftar
 // farizdotid, TANPA API KEY) — teks arab LENGKAP (19 pagi + 19 petang + 38 doa harian +

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Confess (DM — versi LAMA yang DIMINTA BALIK owner 20 Sep 2026:
 // "bisa ga fitur confes yg dulu dikembalikan soalnya confess ini beda
 // bukan buat crush tp pesan ke orang tp kekirim statusnya di grupnya

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // test-plugins.js — VERIFIKASI FORMAT TANPA GARIS (lib/styler.js + rara-menu-style.js)
 //
 // Aturan owner 2026-09-07 (rework): pesan berkotak TANPA garis box-drawing —

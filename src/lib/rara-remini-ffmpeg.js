@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 REMINI ENGINE — FFmpeg Upscale Pipeline (request owner 12 Sep 2026:
 //   "hasil remini pertama (Photiu) jelek bgt — pakai kode ini aja" → revisi

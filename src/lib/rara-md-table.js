@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ─────────────────────────────────────────────────────────────────
 // rara-md-table.js — parser pembersih markdown TABLE dari jawaban AI
 //

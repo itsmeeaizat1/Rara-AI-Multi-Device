@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // wxalert.js — Alert Cuaca AS (NWS) + Siklon Tropis (NHC) + EWS v2 AUTO-PUSH.
 // Versi bot dari wxrundown.com (riset 24 Sep 2026: wxrundown = app Base44 yang
 // datanya numpang API publik gratis — jadi Aina bangun langsung dari sumber asli):

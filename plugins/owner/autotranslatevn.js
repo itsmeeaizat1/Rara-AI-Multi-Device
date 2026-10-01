@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Auto-Translate Voice Note — Real-time VN detection, transcribe, translate, respond VN
 // Toggle: .toggleautovn on/off  (owner only)
 import { getDatabase } from "../../src/lib/rara-database.js";

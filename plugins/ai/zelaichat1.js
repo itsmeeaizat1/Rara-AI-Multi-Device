@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 ZelAI Chat 1 — suite .z dari zelapi.eu.cc
 // 🔹 Semua AI command prefix "z" biar kelihatan asal zelapi.

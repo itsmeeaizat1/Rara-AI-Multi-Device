@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .convert <format> — convert media terakhir yang diunduh (session 10 menit)
 import fs from "fs";
 import path from "path";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // balisoulmateprediction.js — Ramalan jodoh bali
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";

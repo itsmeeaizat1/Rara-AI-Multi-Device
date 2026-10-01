@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // spybelanja — Shopping Spy AI (ide fitur no 6, 12 Sep 2026):
 //   * reply screenshot produk Shopee/Tokopedia/marketplace → AI baca
 //     nama produk + harga + toko + rating, terus nyari harga pasar di web

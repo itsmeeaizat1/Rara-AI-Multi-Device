@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════════════════════════
 // PENGHITUNG LIBUR TERDEKAT (13 Sep 2026, variasi fitur polos batch 4)
 // ".harilibur daftar doang gak ada penghitung libur terdekat" —

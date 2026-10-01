@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AGENT SKILLS LAYER (25 Sep 2026, owner
+// RARA AI - MULTI DEVICE — E2E: AGENT SKILLS LAYER (25 Sep 2026, owner
 // "183 skill sekaligus" dari wshobson/agents, spec Anthropic Agent Skills).
 // Dicover: index 183, tokenizer hyphen, progressive disclosure (skillsBlock
 // kosong kalau gak ada match), cap isi, plugin .skill (list/detail/match).

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // photiu — Generate gambar dari teks via GPT Image (IkyyXD)
 // Original /ai/photiu down, redirected to /ai/gptimage
 import axios from "axios";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltextrepeat — ulang teks berkalang-kali (port altftool.com/tools/all/text-repeater)
 // Cap 20x + 3000 karakter biar gak jadi senjata spam.
 import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";

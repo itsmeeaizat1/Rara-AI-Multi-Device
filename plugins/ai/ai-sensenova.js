@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ai-sensenova — SenseNova AI (SenseTime) — multimodal vision + chat
 // Model: sensenova-6.8-flash-lite (input text+image, 256K ctx, gratis).
 // Key: apikeys.json raraai.sensenova (fallback env SENSENOVA_API_KEY).

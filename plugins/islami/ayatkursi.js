@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ayatkursi.js — Ayat Kursi
 import te from "../../src/lib/rara-error.js";
 import { raraWrap , raraBox} from "../../src/lib/rara-menu-style.js";

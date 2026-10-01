@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zsound <query> — search sound effect dari MyInstants (ribuan sound,
 //   live search) → kirim VN — versi atas .sfx yang cuma 30 sound hardcode.

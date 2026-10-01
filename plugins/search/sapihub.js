@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 SearchApi Hub — .sapi
 // 🔹 Akses SEMUA engine searchapi.io (90+) dalam 1 command.

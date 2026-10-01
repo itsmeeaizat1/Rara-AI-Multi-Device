@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // warungtycoon.js — WARUNG TYCOON (request owner 25 Sep 2026, game RPG baru, standar Game Designer)
 // Simulasi jualan kuliner: masak menu dari bahan baku → buka warung → pelanggan antre → omzet.
 // TIERS: 🛒 Gerobak (lvl 1) → 🏕️ Kios (5) → 🏪 Warung (10) → 🏠 Rumah Makan (15) → 🏛️ Restoran (20).

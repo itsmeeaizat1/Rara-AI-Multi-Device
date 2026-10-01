@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Family 100 Harvester — auto-isi soal baru dari internet ke src/data/family100.json
 // Request owner 8 Sep 2026: "soalnya ke isi sendiri dr internet, tambah otomatis
 // ke src/data family100 jadi soal baru". Target bank soal 2000+.

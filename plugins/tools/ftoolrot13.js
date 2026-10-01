@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolrot13 — sandi ROT13 (port altftool.com/tools/all/rot13) — geser huruf 13 posisi.
 // ROT13 symmetric: encode = decode. Huruf saja, angka/emoji/aksara lain gak disentuh.
 import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";

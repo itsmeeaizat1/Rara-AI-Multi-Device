@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // kuroneko.js — KuroNeko API (sylvatica.my.id) — scraper AI lengkap
 // Key: apikeys.json field `kuroneko` (fallback env KURONEKO_API_KEY)
 // Docs: sylvatica.my.id — free via login, semua endpoint pakai ?apikey=

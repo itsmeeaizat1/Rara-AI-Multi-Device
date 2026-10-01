@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // onephoto.js — Onepunya API: UPSCALE_IMAGE (GFPGAN/RestoreFormer) + REMOVE_BG.
 // .oneupscale <reply foto> [model] [rescale] — perbaiki/enhance wajah & foto lama
 //   model: GFPGANv1.2 | GFPGANv1.3 | GFPGANv1.4 (default) | RestoreFormer

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .tmpfilesorg — upload media ke tmpfiles.org (temporary file hosting, auto-hapus).
 // API publik gratis tanpa akun: POST https://tmpfiles.org/api/v1/upload (multipart).
 // Expire 60–172800 detik (1 menit–48 jam), default 1 jam. Max 100 MB per file.

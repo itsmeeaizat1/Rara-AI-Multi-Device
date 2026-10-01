@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // kalori — Kalori AI (ide fitur baru no 2, 12 Sep 2026):
 //   * reply/attach foto makanan → vision AI estimasi menu + kalori per item
 //     + total, langsung masuk log harian per user

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-key-patrol.js — AUTO KEY PATROL (27 Sep 2026, fitur automation no.1).
 // Tiap 6 jam tes SEMUA api key yang udah diisi ke endpoint ringan
 // masing-masing provider. Key mati/kedaluwarsa gak nunggu fitur error:

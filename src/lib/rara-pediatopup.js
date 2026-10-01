@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-pediatopup.js — API client PanelPedia TopUp (panelpediatopup.com)
 // Auto order layanan topup game/SMM: profile, service, order, status.
 // Auth: api_id + api_key + signature = md5(API ID + API KEY) (dok /api/docs).

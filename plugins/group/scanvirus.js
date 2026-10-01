@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // scanvirus.js — Toggle auto-scan virus file di grup via VirusTotal
 // Saat ON: setiap file (document) dari member di-scan otomatis ke VirusTotal
 // (60+ engine) — ada notif "sedang di-scan" + hasil verdict lengkap.

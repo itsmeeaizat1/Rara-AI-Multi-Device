@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // UnblurImage AI — Unblur & upscale gambar via unblurimage.ai API, no token needed
 // Tested: v1 PASS (53KB->4.1MB), v2 PASS (53KB->663KB), v3 FAIL (Cloudflare block)
 import crypto from "node:crypto";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .ztools — 6 tools ZelAPI yang hidup (kategori /tools, disweep live 15 Sep 2026):
 //   .zcode <js>       — Code Runner (sandbox Node v24 + axios/cheerio prebundled)

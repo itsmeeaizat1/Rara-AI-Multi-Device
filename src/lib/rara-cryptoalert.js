@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-cryptoalert.js — Crypto Price Alert: pasang target harga crypto,
 // bot notif OTOMATIS ke chat pas harga kena (fitur baru 9 Sep 2026, request
 // owner "fitur yg blm prnh ada di bot" — .crypto lama cuma cek harga manual).

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // trading.js — Trading System (jual beli item antar player via market)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { rpgSleep } from "../../src/lib/rara-rpg-anim.js";

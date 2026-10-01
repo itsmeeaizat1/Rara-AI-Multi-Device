@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Engine email automation: kirim via SMTP (nodemailer) + baca inbox via IMAP (imapflow + mailparser, lazy-load).
 import { getDatabase } from "./rara-database.js";
 

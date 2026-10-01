@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 RARA DOCTOR — Self-Healing Bot (request owner 12 Sep 2026,
 //   ide fitur no 7)

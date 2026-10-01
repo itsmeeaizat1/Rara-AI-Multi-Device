@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ytmp4.js — Download video YouTube
 // Primary: yt-dlp LOCAL (bestvideo+bestaudio di-merge — audio HQ ala .play 320,
 // hasilnya jauh lebih jernih daripada re-encode API) → IkyyXD → Sanka → ytdl fallback

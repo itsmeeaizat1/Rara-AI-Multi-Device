@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // gachawaifu.js — Gacha Waifu System (rarity + marry + collection)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { animGacha } from "../../src/lib/rara-rpg-anim.js";

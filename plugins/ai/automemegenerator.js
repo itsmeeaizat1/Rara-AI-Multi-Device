@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Instant Meme Generator — Real-time foto detection, auto add funny text via AI Vision
 // Dual Mode:
 //   One-shot (all users): .automeme — reply ke foto, generate meme sekali

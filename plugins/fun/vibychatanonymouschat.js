@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // vibychatanonymouschat.js — CHAT ANONIM ANTAR MEMBER BOT (DM only).
 // Dua user di-pair acak, pesan diteruskan anonim tanpa nunjukin nomor.
 // - .vibychatanonymouschat  (alias: anonymouschat, chatanon, chatrandom, anonchat, temanchat)

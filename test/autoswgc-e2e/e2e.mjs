@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AUTOSWGC — Auto SWGC terjadwal (porting JPM)
+// RARA AI - MULTI DEVICE — E2E: AUTOSWGC — Auto SWGC terjadwal (porting JPM)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

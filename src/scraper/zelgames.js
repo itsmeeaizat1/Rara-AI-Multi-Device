@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 zelgames.js — scraper ZelAPI kategori /games (live verified 15 Sep 2026):
 //   /games/maths — soal matematika random (mode extreme!) + correct_answer

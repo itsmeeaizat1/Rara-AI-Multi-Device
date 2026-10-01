@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Recycle — Recycle items, exchange for coins, stash all
 
 import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";

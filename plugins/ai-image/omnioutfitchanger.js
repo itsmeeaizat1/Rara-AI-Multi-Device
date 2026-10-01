@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .omnioutfitchanger — virtual try-on baju MULTI-ITEM (topi+baju+celana+
 // 🔹 sepatu sekaligus), cocok buat konten affiliate fashion (bukan NSFW).

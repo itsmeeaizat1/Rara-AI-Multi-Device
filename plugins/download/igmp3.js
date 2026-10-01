@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // igmp3.js — Download audio dari Instagram (pakai scraper ig.js lokal)
 import { PinDL } from "../../src/scraper/pindl.js";
 import { igDownload } from "../../src/scraper/ig.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // chatiblobby.js — CHATIB LOBBY: ruang obrol anonim multi-user (inspirasi chatib.chat).
 // Beda dari vibychat (1-on-1 random): semua member lobby saling ngobrol
 // pakai NICKNAME — nomor WA gak pernah dibocorin.

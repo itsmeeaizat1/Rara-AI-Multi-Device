@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-auto-api-health.js — Auto API Health Check
 // Cek API eksternal tiap interval, kirim notif ke owner kalau ada yang down
 import { CronJob } from "cron";

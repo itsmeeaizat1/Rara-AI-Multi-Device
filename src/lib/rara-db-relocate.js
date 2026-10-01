@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-db-relocate.js — relokasi file DB runtime dari src/data/ ke
 // src/database/<kategori>/ (request owner 26 Sep 2026: "smua db berfile
 // json yg nyimpen data user/info fitur disimpan di src/database/kategori/

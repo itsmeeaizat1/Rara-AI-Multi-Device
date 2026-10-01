@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/scraper/photiu.js — Image upscaler Photiu AI (https://www.photiu.ai)
 // Request owner 11 Sep 2026: "skrg ganti fitur .remini pakai kode ini" — engine
 // utama .remini pindah dari Remini mobile API ke endpoint internal Photiu AI.

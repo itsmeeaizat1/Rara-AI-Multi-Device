@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Remini — AI Photo Enhancer ala app Remini asli
 // ENGINE UTAMA (request owner 17 Sep 2026 "cba fitur remini ganti pakai api
 // ini" — ihancer.com): IHANCER AI → pass poles FFmpeg (denoise tipis + unsharp

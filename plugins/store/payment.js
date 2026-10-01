@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * .payment — Katalog Layanan Bot (WhatsApp native carousel, geser
  * kiri/kanan ala katalog toko). 4 kartu:

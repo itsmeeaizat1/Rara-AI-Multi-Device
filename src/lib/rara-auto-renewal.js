@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-auto-renewal.js — Auto Renewal Reminder
 // Kirim reminder ke premium user H-3 sebelum masa premium habis
 import { CronJob } from "cron";

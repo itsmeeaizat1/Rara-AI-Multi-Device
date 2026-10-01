@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // statscard — Image card statistik grup
 // 12 Sep 2026 fix: dulu baca db.data.groupActivity yang GAK PERNAH ditulis (mati total)
 // + signature legacy (isGroupOnly gak dikenal handler, m.key.remoteJid, usedPrefix)

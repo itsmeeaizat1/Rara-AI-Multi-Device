@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-pacific.js — API client Pacific Pedia SMM (api.pacific-pedia.co.id)
 // Auto order layanan sosmed (followers/likes/views/dll): profile, layanan,
 // pemesanan, status, refill. Auth CUMA api_key (tanpa api_id/signature),

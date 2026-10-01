@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // onedl.js — Onepunya API: DOWNLOADER (6 platform, auto-detect dari URL).
 // .onedl <url> [mp3|144p|360p|480p|720p|1080p]
 //   YouTube/YT Music  → format MP4 (kualitas) atau MP3

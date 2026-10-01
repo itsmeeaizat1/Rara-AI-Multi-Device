@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Stat — Statistik karakter (tampilan bar interaktif)
 import { ensureRpg } from "../../src/lib/rara-rpg-service.js";
 import { raraGameBox, gameCTA, psSection, psStat, raraRpgBox } from "../../src/lib/rara-games.js";

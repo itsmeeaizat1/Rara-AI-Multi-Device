@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // fazzroleplay.js — fazzcode.eu.cc chatbot-role wrapper
 // API roleplay AI: list karakter + create (mulai sesi, persona custom)

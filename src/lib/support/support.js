@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // support.js — Sumber tunggal link Join Grup Resmi & Saluran Resmi
 //
 // Dipakai: tombol popup Support (Join Grup Resmi / Ikuti Saluran Resmi),

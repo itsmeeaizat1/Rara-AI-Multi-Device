@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 Kiblat (Qibla Direction) — kandidat langka terakhir dari backlog
 //   (request owner 13 Sep: "ide fitur yg langka" — kiblat ke-singgut

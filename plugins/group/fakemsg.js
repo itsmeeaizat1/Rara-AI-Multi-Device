@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .fakemsg — ganti tampilan teks pesan yang di-reply (port engine lama fakemsg.js)
 import { delay } from "nova";
 import { raraGuide, raraError } from "../../src/lib/rara-menu-style.js";

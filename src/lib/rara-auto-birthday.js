@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-auto-birthday.js — Auto Birthday Reminder
 // Cek tiap hari di jam tertentu, kirim ucapan ultah ke user yang ultah
 import { CronJob } from "cron";

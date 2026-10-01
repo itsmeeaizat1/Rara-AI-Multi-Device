@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // send-menu.js — Reusable helper untuk kirim menu dengan preview card + nav buttons
 // Pattern: sendMessage + text + buttons (template type:1) + contextInfo.externalAdReply (thumbnail)
 // NO interactiveMessage, NO nativeFlowMessage — pakai template buttons yang support preview card
@@ -76,7 +76,7 @@ export async function sendMenuPreview(sock, m, {
       mentionedJid: [m.sender],
       isForwarded: false,
       externalAdReply: {
-        title: title || "Rara AI WhatsApp Bot",
+        title: title || "Rara AI - Multi Device",
         body: body || 'WhatsApp Multi Device',
         thumbnail: menuThumb,
         sourceUrl: sourceUrl || '',
@@ -111,7 +111,7 @@ export async function sendMenuPreview(sock, m, {
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
-            title: title || "Rara AI WhatsApp Bot",
+            title: title || "Rara AI - Multi Device",
             body: body || 'WhatsApp Multi Device',
             thumbnail: menuThumb,
             sourceUrl: sourceUrl || '',
@@ -297,7 +297,7 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
         audio: _menuAudioMp3,
         ptt: false,
         mimetype: 'audio/mpeg',
-      }, { quoted: { key: fakeKey, message: { conversation: '🎵 Rara AI WhatsApp Bot - Menu Audio' } } });
+      }, { quoted: { key: fakeKey, message: { conversation: '🎵 Rara AI - Multi Device - Menu Audio' } } });
     } else if (style === 4) {
       // MP3 biasa + reply fake troli order
       const fakeKey = {
@@ -310,7 +310,7 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
         audio: _menuAudioMp3,
         ptt: false,
         mimetype: 'audio/mpeg',
-      }, { quoted: { key: fakeKey, message: { orderMessage: { orderId: 'RARA-' + Date.now(), thumbnail: null, itemCount: 1, status: 1, surface: 1, message: 'Rara AI WhatsApp Bot', sellerJid: '0@s.whatsapp.net', token: 'rara' } } } });
+      }, { quoted: { key: fakeKey, message: { orderMessage: { orderId: 'RARA-' + Date.now(), thumbnail: null, itemCount: 1, status: 1, surface: 1, message: 'Rara AI - Multi Device', sellerJid: '0@s.whatsapp.net', token: 'rara' } } } });
     }
   } catch (e) {
     console.error('[send-menu] ❌ sendMenuAudio error:', e.message);

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-hd-pool.js — pool worker thread buat rara-hd-local (Swin2SR upscale).
 // SATU worker aktif (model ke-load sekali, cache pipeline tetap panas),
 // job dieksekusi satu-satu (CPU sudah saturate paralelism gak nambah cepat).

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-weather-alert.js — Alert CUACA EKSTREM ala EWS (8 Sep 2026,
 // request owner: "tambah supaya ada alert cuaca ekstremnya, tidak
 // hanya notif cuaca biasa").

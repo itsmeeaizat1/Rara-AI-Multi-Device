@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // expedition.js — Expedition System (send party on timed missions)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getCash, spendCash, formatRp } from "../../src/lib/rara-rpg-service.js";

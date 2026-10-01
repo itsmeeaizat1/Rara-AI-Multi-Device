@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/lib/rara-dashboard.js — MINI DASHBOARD OWNER (WEB) — fitur "bot masa depan" no.5
 //
 // Dashboard web ringan buat owner: stat system + bot + user + aktivitas + kesehatan

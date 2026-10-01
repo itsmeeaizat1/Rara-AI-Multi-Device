@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ytmp4v3.js — YouTube MP4 v3 (@distube/ytdl-core, direct engine)
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";

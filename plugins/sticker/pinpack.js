@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Scrape Pinterest langsung (tanpa API pihak ketiga)
 import { raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // guessnumber.js — Tebak angka 1-100 dengan hint lebih besar/kecil (no API)
 
 import { raraError } from "../../src/lib/rara-menu-style.js";

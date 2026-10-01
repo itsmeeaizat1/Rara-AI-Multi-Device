@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-boot-doctor.js — Cek kesehatan fitur otomatis saat bot NYALA/RESTART
 // (request owner 17 Sep 2026: "fitur system yg bsa deteksi fitur ini apikey
 // expired, endpoint down, fitur eror yg otomatis kirim ke dm owner pas botnya

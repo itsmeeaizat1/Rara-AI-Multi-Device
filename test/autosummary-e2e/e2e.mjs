@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AUTOSUMMARY UPGRADE HISTORI PERSISTEN
+// RARA AI - MULTI DEVICE — E2E: AUTOSUMMARY UPGRADE HISTORI PERSISTEN
 // Fitur #1 owner 21 Sep: ringkasan grup terjadwal kini baca chathistory.json
 // (persisten, tetap ada walau restart) — buffer in-memory jadi fallback.
 import fs from "node:fs";

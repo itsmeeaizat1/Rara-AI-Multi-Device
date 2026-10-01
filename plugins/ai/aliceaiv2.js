@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aliceaiv2 — Alice AI v2 (multi-mode: chat, TikTok caption, image gen)
 // API asli (velyn.biz.id) udah mati → chat lewat rantai fallback multi-API
 // (rara-ai-fallback.js: Haidar → Ikyy → Xemoz), image gen via callIkyyImage,

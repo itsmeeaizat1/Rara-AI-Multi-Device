@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rarabridge/adapter — jantung bridge multi-platform:
 //  1. Ubah pesan Telegram/Discord jadi RAW message bentuk Baileys (key + message.conversation)
 //     → masuk ke messageHandler LAMA → serialize/middleware/plugin jalan apa adanya.

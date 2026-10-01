@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // staminabar.js — Stamina system (manage energy for RPG activities)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { animGeneric } from "../../src/lib/rara-rpg-anim.js";

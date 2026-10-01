@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rarabridge/manager — lifecycle bridge Telegram & Discord.
 // Satu otak: pesan platform → adapter → messageHandler LAMA (serialize/middleware/plugin).
 // Token via .setkey telegram / .setkey discord (db apiKeys + env TELEGRAM_BOT_TOKEN/DISCORD_BOT_TOKEN).

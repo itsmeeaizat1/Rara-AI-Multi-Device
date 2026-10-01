@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Bank — Simpan & tarik gold dengan bunga harian
 
 import { animBank } from "../../src/lib/rara-rpg-anim.js";

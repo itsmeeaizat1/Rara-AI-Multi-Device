@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rpg-arena.js — Arena PvP (auto-matchmaking, rank system)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { rpgSleep } from "../../src/lib/rara-rpg-anim.js";

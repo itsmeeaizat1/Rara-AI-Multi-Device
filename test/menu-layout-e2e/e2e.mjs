@@ -22,13 +22,13 @@ const txt = raraMenuLayout({
   info: ["Info", { label: "Nama", value: "Budi" }],
   categories: [{ name: "Menu", commands: ["menu", "allmenu"] }],
   prefix: ".",
-  footerName: "Rara AI Whatsapp Bot",
+  footerName: "Rara AI - Multi Device",
 });
 const plain = fromSC(txt);
 
 t("1a. footerName param diterima tanpa error (backward-compat)", typeof txt === "string" && txt.length > 0);
-t("1b. body TIDAK ADA baris 'Rara AI Whatsapp Bot' sendiri (dobel sama footer kartu)",
-  !plain.includes("Rara AI Whatsapp Bot"), plain.slice(-80));
+t("1b. body TIDAK ADA baris 'Rara AI - Multi Device' sendiri (dobel sama footer kartu)",
+  !plain.includes("Rara AI - Multi Device"), plain.slice(-80));
 t("1c. body tetap ada command list (fitur inti gak ke-strip)", txt.includes(".menu") && txt.includes(".allmenu"));
 t("1d. tanpa footerName pun tetap normal (opsional)", (() => {
   const t2 = raraMenuLayout({ categories: [{ name: "Menu", commands: ["menu"] }], prefix: "." });

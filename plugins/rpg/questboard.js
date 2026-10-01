@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // questboard.js — Daily Quest Board (5 quest random, reward progresif)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { animQuest } from "../../src/lib/rara-rpg-anim.js";

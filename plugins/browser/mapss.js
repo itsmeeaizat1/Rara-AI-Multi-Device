@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // mapss.js — Cari tempat di Google Maps + screenshot + buka per nomor.
 // Request owner 24 Sep 2026 (pilihan jalur 2, tanpa API key SerpApi):
 // "pas gunakan fiturnya, contoh pencarian web hasilnya screenshot dulu

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-tiktok-format.js — SATU PINTU caption hasil fitur TikTok downloader
 // Request owner 19 Sep 2026: "tiktok jga ada filed ini cntoh kyk jdul video,
 // durasi, view, like, komentar, share, pencipta, download sd/hd trgantung

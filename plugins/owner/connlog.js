@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .connlog — Jurnal koneksi WhatsApp (OWNER ONLY)
 // Fix 18 Sep 2026 (report owner: "bot bntar reconnect stiap 10 menit atau
 // brapa menit, apakah ada fitur yg membuat bot reconnect apa dr baileysnya

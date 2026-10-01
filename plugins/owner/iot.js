@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .iot — kontrol perangkat IoT via MQTT langsung dari WhatsApp. OWNER-ONLY.
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { iotConnect, iotPublish, iotSubscribe, iotUnsubscribe, iotStatus, iotDisconnect } from "../../src/lib/rara-mqtt.js";

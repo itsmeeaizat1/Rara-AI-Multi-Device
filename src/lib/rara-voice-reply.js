@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-voice-reply.js — SATU PINTU balasan suara (Inworld TTS-2 neural → fallback msedge-tts → ogg → PTT)
 // (owner 29 Sep 2026: suara utama Inworld biar gak pecah; Inworld down → voice pertama msedge-tts)
 // Dipakai BANYAK FITUR (mode suara per chat, per fitur):

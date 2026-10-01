@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/lib/apikey/ai-chain.js — KONFIG MULTI-PROVIDER AI (single source of truth)
 // File config: src/lib/apikey/apikeys.json → section "aiMultiprovider"
 // (struktur baru: aiSatuan / aiMultiprovider / raraai dipisah di SATU file).

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Family 100 Game — versi modern ala Family Feud TV (request owner 8 Sep 2026)
 // 1 jawaban per pemain per ronde • poin survei 35/25/20/12/8 • reveal medali
 // ronde otomatis lanjut • scoreboard kumulatif • .family100 stop buat berhenti

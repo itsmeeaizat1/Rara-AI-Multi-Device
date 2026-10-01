@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // buycinta.js — Beli affection (RPG Cinta) — masukin jumlah affection (via factory rara-topup-flow.js)
 import { buildTopupPlugin } from "../../src/lib/store/rara-topup-flow.js";
 

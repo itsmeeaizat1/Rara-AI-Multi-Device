@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * .agentloop — AGENT LOOP ITERATIF dengan self-critique (upgrade #1 menuju
  * bot "masa depan", disetujui owner 24 Sep 2026).

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .htmlsnake — game Snake HTML self-contained (kategori HTML, port altftool "Snake Game")
 // Chat WA gak bisa render HTML → dikirim sebagai DOKUMEN .html, user tap → main di browser.
 import fs from "node:fs";

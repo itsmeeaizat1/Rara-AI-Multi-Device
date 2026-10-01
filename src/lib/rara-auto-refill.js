@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-auto-refill.js — Auto Restock/Refill Notification
 // Notif user saat energi/limit harian di-refill, dengan toggle on/off
 import { CronJob } from "cron";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 zelbypass.js — scraper zelapi.eu.cc kategori Bypass (18 endpoint docs,
 //    diverifikasi live 14 Sep 2026 — cuma yang genuinely berguna buat user

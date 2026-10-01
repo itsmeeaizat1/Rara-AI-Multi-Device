@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .linkreact — react emoji ke pesan WA manapun via link (port engine lama reaction.js)
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 

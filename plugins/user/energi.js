@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { runLiveTicker } from "../../src/lib/rara-countdown.js";
 import { computeNextResetTs, buildLimitCard } from "../../src/lib/rara-limit-card.js";

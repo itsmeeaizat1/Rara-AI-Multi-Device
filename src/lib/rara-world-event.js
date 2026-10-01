@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-world-event.js — TIME CAPSULE RPG / WORLD EVENT (26 Sep 2026, ide
 // owner no.6 dari sesi "fitur masa depan"): peristiwa game yang cuma
 // kejadian SEKALI SEJARAH dan gak bisa diulang — komet langka melintas,

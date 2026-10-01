@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-toko2.js — Alfamart-style shop system with cart, categories, promo
 
 import { getDatabase } from "./rara-database.js";

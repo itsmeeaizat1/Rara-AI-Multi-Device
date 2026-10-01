@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-pinglog.js — Ping log interaktif panel (rev 26 Sep 2026, request
 // owner: "lognya ibarat log bot modern masa depan, banyak field lengkap:
 // keamanan, ping, deteksi ada yg ubah kode entah aku atau orang lain di

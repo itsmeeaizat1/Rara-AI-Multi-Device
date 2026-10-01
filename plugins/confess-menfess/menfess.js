@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Menfess — porting script menfess bot standalone (owner, 9 Sep 2026):
 // menfess anonim (!menfess @target) / non-anonim (!sayfess @target) ke channel terpusat,
 // reply, like dedup, list, detail, limit harian per user, mode anon reply, stats, hapus (owner).

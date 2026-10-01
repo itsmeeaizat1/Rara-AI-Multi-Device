@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aipr — Foto soal/PR/tugas → AI baca + jawab
 import { GeminiVision } from "../../src/scraper/geminiVision.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

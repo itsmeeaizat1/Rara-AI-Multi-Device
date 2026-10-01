@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rich — RICH RESPONSE MESSAGE ala Meta AI (request owner 10 Sep 2026:
 // ".search itu cm nampikin link web dan tombol ke arah link trsebut, aku
 //  maunya nampilin web didalam chat kayak ai rich gini" + script contoh

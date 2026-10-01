@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .simulate — simulasi event grup (port engine lama simulate.js, adaptasi via ev.emit)
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 

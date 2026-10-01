@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // farmrpg.js — Farming system (plant, grow, harvest, sell)
 import { animFarm } from "../../src/lib/rara-rpg-anim.js";
 import { getDatabase } from "../../src/lib/rara-database.js";

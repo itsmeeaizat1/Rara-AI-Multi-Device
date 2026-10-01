@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // oneimage.js — Onepunya API: IMAGE_GENERATION.
 // .oneimg <prompt> — generate gambar AI dari teks
 // Sumber: onepunya.qzz.io (key .setkey onepunya) — beda engine dari .img2/.flux

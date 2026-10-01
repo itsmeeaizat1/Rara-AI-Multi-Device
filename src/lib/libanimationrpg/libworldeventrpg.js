@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libworldeventrpg.js — LIB ANIMASI khusus World Event /
 // Time Capsule (26 Sep 2026). Tiap JENIS event punya animasi sendiri
 // (aturan "beda game beda animasi"): komet = jatuh melintas langit malam,

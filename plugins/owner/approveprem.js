@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // approveprem.js — Owner: kelola pesanan beli premium (.buyprem)
 // Mirror approvetopup: pesanan pending direkam buyprem ke db.data.premiumOrders.
 // .approveprem          → lihat semua pesanan pending

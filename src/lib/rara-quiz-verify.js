@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-quiz-verify.js — Quiz verification system for new group members
 // Anti-spam: member baru harus jawab quiz sebelum bisa chat
 

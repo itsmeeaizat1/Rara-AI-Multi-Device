@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // attp.js — Animated text sticker (local canvas + ffmpeg, no API)
 // Ported from Alice's generate-attp.js to @napi-rs/canvas
 import { createCanvas, GlobalFonts } from "@napi-rs/canvas";

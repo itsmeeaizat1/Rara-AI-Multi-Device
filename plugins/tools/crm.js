@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .crm — message recipe inspector (port engine lama crm.js): reply pesan apapun →
 // keluar kode JS buat re-create pesan itu via relayMessage. Engine toCode verbatim engine asal.
 import { raraGuide, raraError } from "../../src/lib/rara-menu-style.js";

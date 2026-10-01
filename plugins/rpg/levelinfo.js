@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // levelinfo.js — Lihat info level RPG
 import { ensureRpg, getPlayerInfo } from "../../src/lib/rara-rpg-service.js";
 import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         return await m.reply(msg, {
           contextInfo: {
             externalAdReply: {
-              title: config.bot?.name || "Rara AI Whatsapp Bot",
+              title: config.bot?.name || "Rara AI - Multi Device",
               body: `Level ${rpg.level || 1} • ${rpg.job || "novice"}`,
               thumbnail: thumb,
               previewType: "PHOTO",

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Toko RPG — Belanja pakai UANG (Rp), mata uang RPG terpisah dari Gold.
 // Ekonomi: kerja/game dapet Rp -> belanja equip premium + alat profesi (+30% gajian) + kotak misteri.
 

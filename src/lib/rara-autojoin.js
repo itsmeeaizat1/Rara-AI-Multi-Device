@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-autojoin.js — auto join/leave grup & channel dengan timer (26 Sep 2026,
 // fitur owner ".autojoin group|channel <link> <waktu>" & ".autoout group|channel <link> <waktu>").
 //

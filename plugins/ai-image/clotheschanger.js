@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // clotheschanger — Keluarga fitur edit foto AI 1 command:
 // .aiclotheschanger (ganti baju — prompt/preset/gambar baju)
 // .aiclotheschangerfaceswap (tukar wajah 2 foto)

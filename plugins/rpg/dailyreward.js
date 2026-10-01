@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // dailyreward.js — Daily Login Reward (streak system)
 import { animDaily } from "../../src/lib/rara-rpg-anim.js";
 import { getDatabase } from "../../src/lib/rara-database.js";

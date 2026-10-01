@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .worldevent — TIME CAPSULE RPG / EVENT DUNIA (26 Sep 2026, ide owner
 // no.6 "fitur masa depan"): event sekali sejarah yang gak bisa diulang.
 // Yang ikut dapet GELAR LANGKA PERMANEN. Yang ketinggalan, ketinggalan

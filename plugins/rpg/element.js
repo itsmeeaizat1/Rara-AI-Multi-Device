@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Element System — Pilih elemen, cek kelemahan, bonus damage
 
 import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";

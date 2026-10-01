@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Core Service V2 — Full System Rebuild
 // Multi-currency, Equipment, Skills, Profession,
 // Achievements, Guild, PvP, Boss Raid, Co-op Farm

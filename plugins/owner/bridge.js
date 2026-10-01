@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .bridge — Rara multi-platform: bot yang sama bisa dipakai dari DM Telegram & Discord.
 // Fase 1 (publik, whitelist bertahap): kategori ai/tools/download/search/game/rpg/anime/fun.
 // .bridge — status

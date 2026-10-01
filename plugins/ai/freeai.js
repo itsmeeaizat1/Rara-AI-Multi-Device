@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/ai/freeai.js — free.ai GRATIS TANPA API KEY
 // .freeai <pesan>          — chat AI (Qwen3-30B)
 // .freeaiimage <prompt>    — text-to-image (sdxl)

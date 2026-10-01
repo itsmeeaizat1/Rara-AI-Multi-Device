@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ordersmm.js — AUTO ORDER SMM Pacific Pedia (buyer): pilih layanan sosmed
 // (followers/likes/views/dll) dari api.pacific-pedia.co.id → bayar QRIS
 // Pakasir → lunas → pesanan otomatis ke API → pantau status → struk DM.

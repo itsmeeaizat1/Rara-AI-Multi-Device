@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolstriptags — buang tag HTML dari teks (port altftool.com/tools/all/html-tag-stripper)
 import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // playvideo.js — Search YouTube → download video → kirim langsung
 // Resolusi: 360p / 480p (default) / 720p / HD 1080p
 import axios from "axios";

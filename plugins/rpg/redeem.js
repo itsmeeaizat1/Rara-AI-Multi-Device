@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // redeem.js — Redeem/Gift Code System (owner create, user claim)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-auto-target.js — Sistem target terpusat untuk SEMUA fitur otomasi
 // (request owner 8 Sep 2026: "semua fitur switch biar gampang dikustomisasi,
 // tambah opsi set — mau mode dm atau pc, terus ada pilihan target: grup

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // cpanel.js — Pusat kontrol panel Pterodactyl (v1-v100)
 // Power   : .cpanel start|stop|restart|kill <namaserver> <idpanel>
 // Status  : .cpanel status <namaserver> <idpanel>

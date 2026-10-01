@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: CHATIB LOBBY (ruang obrol anonim multi-user + guard)
+// RARA AI - MULTI DEVICE — E2E: CHATIB LOBBY (ruang obrol anonim multi-user + guard)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

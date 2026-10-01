@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // shopeedl.js — Download video Shopee no-watermark
 // Engine: shopeenowatermark.com (src/scraper/shopee-nowm.js — axios+cookie
 // jar → Puppeteer buat tembus Cloudflare) → ishop.id → IkyyXD shopeevid.

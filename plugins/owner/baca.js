@@ -1,5 +1,5 @@
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
   name: ["baca", "read", "markread"],
   alias: ["baca", "read", "markread"],

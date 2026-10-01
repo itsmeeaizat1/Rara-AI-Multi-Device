@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .game2048 — puzzle geser gabung angka sampai 2048 (port altftool.com "2048 Game")
 // Kontrol reply: w (atas) a (kiri) s (bawah) d (kanan).
 // ANIMASI KHAS: tile angka menggabung 2→4→8 (beda dari game lain).

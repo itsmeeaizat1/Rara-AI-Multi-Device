@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .aicall2 — Panggilan suara WhatsApp kesambung AI (service aicall/ Go)
 // RENAME 1 Okt 2026 (owner: "fitur .aicall ubah jadi .aicall2 krna btuh
 // konfigurasi — ibaratkan voip ini fitur aicall bawaan"): command .aicall

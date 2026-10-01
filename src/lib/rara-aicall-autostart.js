@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 rara-aicall-autostart.js — AI Call service auto-run (fix 18 Sep 2026)
 // 🔹 Request owner: "gmna supaya fitur aicall lngsung ke run saat bot

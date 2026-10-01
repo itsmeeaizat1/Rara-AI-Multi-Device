@@ -1,5 +1,5 @@
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: 'sulap',
     alias: ["sulap"],

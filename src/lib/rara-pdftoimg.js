@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-pdftoimg.js — PDF ke gambar: render tiap halaman PDF jadi PNG
 // (fitur baru 9 Sep 2026, request owner "fitur yg blm prnh ada di bot" —
 // pdftools lama cuma manipulate PDF (merge/split/watermark), GAK ADA render halaman)

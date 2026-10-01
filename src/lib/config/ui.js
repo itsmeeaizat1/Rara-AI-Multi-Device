@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ui.js — Konfigurasi tampilan UI (menu/reply variants) & dev mode
 
 export const ui = {

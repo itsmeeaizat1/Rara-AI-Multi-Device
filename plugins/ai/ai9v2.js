@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ai9v2.js — 9ROUTER V2 CLOUD (17 Sep 2026, request owner "cba buat fitur
 // 9router v2 jgn gnttin yg udh ada"): chat AI via hosted gateway
 // 9router.cloudku.us.kg (21 model: gemini-3.8/claude/gpt-oss/agent).

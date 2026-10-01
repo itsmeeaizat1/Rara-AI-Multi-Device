@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // play.js — Search YouTube → download audio → kirim langsung
 // Bitrate: 128 / 256 (default) / 320 kbps
 // REVISI 14 Sep 2026 (owner: "variasi menu chat card — bagian

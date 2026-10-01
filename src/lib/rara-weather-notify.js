@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-weather-notify.js — Engine notifikasi cuaca ala script standalone owner
 // UPGRADE MULTI-PROVIDER 8 Sep 2026: Open-Meteo + BMKG + MET Norway +
 // WeatherAPI (butuh key, auto-skip kalau gak ada) + mode AGGREGATE

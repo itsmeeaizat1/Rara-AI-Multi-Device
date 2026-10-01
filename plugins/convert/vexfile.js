@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .vexfile — upload file ke vexfile.com (file host PPD, file tersimpan permanen di akun owner,
 // link share https://vexfile.com/download/XXXX). API vexfile = REMOTE upload: bot staging file
 // ke tmpfiles.org dulu → kirim URL-nya → vexfile nyedot → link permanen.

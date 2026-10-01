@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Auto Download Status — status/story kontak otomatis diteruskan ke DM owner
 // (fitur langka bot MD luar sana yang belum ada di RARA).
 // Dipanggil dari jalur status@broadcast connection.js — non-blocking.

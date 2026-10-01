@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-webwatch.js — Web Watcher: pantau URL, notif otomatis pas isinya berubah
 // (fitur baru 9 Sep 2026, request owner "fitur yg blm prnh ada di bot" — urldiff
 // yang lama cuma bandingin 2 URL manual sekali jalan, ini SCHEDULER kontinu)

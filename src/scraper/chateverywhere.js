@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ChatEverywhere Scraper — Puppeteer-based untuk bypass Vercel Security Checkpoint
 // Free GPT-4o-mini tanpa API key
 //

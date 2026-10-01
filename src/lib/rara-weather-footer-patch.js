@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { getWeatherFooter, clearWeatherCache } from "./rara-weather-footer.js";
 
 const PATCH_KEY = "rara.weatherFooterPatched";

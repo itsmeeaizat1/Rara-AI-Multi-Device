@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-websearch.js — web search + page preview (request owner 2026-09-10:
 // ".googleserach buat nyari web — list 1..N, ketik nomor buka halaman,
 // bot kirim preview thumbnail + plain text isi halaman + readmore").

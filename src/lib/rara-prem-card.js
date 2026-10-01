@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════════════════════════
 // KARTU TICKER PREMIUM (13 Sep 2026, variasi fitur polos batch 4)
 // ".premium countdown statis doang" — sisa premium < 24 jam → ticker

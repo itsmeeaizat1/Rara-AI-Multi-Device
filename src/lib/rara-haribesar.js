@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-haribesar.js — NOTIFIER HARI BESAR & TANGGAL MERAH INDONESIA
 // (request owner 16 Sep 2026): bot kirim pesan otomatis SEKALI per hari
 // jam 08:00 WIB ke semua chat yang langganan — "Selamat Hari X" + tanggal

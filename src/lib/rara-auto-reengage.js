@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-auto-reengage.js — Auto Follow-up / Re-engagement
 // Cek user yang sudah lama tidak aktif, kirim pesan personal buat nge-boost engagement
 import { CronJob } from "cron";

@@ -718,7 +718,7 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
   // FIX 20 Sep 2026 (owner: "nama bot disini dihapus aja soalnya udh ada
   // nama bot di fotter akhir") — dulu raraMenuLayout nambah baris nama bot
   // sendiri di akhir body (mis. "rara ai whatsapp bot"), padahal sendMenuCard
-  // SUDAH nampilin nama bot di footer kartu ("✦ Rara AI Whatsapp Bot" dekat
+  // SUDAH nampilin nama bot di footer kartu ("✦ Rara AI - Multi Device" dekat
   // jam) → dobel. footerName param DIBIARKAN (backward-compat call sites)
   // tapi gak dirender lagi di body.
   void footerName;

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: NOVABRIDGE MULTI-PLATFORM (29 Sep 2026, owner:
+// RARA AI - MULTI DEVICE — E2E: NOVABRIDGE MULTI-PLATFORM (29 Sep 2026, owner:
 // "buat fitur bridge bisa kesambung ke tele dan discord" — desain bot multi-platform,
 // publik, whitelist bertahap). Rara bisa dipakai dari DM Telegram & Discord
 // dengan command yang sama — pesan platform → raw Baileys → messageHandler LAMA.

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // stickerfilter.js — Apply filter ke sticker (local @napi-rs/canvas, no API)
 import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
 import { addExifToWebp } from "../../src/lib/rara-exif.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rangerpost.js — Ranger Post (daily patrol duty, earn salary)
 // Rombak khas (batch #14): animasi Radar Patroli + item khas
 // Lencana Jasa + tool Radar Ranger (+10% salary & reward per level).

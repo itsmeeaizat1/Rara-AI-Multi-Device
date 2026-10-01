@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // lib/autoflow.js — MESIN eksekusi rule automation (ESM)
 // Membaca rule dari database/autoflow.json (file yang sama dengan .autonovaai)
 

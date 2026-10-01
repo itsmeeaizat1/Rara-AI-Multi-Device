@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rockpaperscissors.js — Batu Gunting Kertas vs Bot (single player, no API needed)
 
 import { raraError } from "../../src/lib/rara-menu-style.js";

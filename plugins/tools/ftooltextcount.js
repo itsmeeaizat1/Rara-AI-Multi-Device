@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltextcount — statistik teks (port altftool.com/tools/all/word-character-counter)
 import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 

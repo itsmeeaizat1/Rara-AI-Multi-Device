@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // inworldchat.js — Inworld AI: LLM chat via Realtime Router (platform.inworld.ai).
 // Model langsung format "provider/model" — OpenAI-compatible endpoint.
 // Default openai/gpt-5.4-nano (verifikasi live: cepat & murah). Bebas ganti model

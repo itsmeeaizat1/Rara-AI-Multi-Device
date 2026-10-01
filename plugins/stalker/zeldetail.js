@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zeldetail — 7 endpoint ZelAPI kategori Details:
 //   appstore | gmaps | googleplay | idnlive | speedtest | whatsapp | xiaomi

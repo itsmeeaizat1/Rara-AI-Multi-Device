@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolnato — eja NATO/ICAO alphabet (port altftool.com/tools/all/nato-phonetic-alphabet)
 import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 

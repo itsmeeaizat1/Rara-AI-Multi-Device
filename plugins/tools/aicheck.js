@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .aicheck — detektor teks AI (port engine lama aicheck.js, originality.ai free)
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 

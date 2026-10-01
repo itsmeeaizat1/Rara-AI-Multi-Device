@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // sdxl — Stable Diffusion XL image generation
 // FIX 16 Sep 2026 (owner report ".sdxl gagal"): pollinations gratis flaky —
 // sekarang ada FALLBACK ke ZelAPI ai-image/sdxl (key owner) kalau pollinations

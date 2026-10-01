@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-optimizer.js — Optimizer RAM otomatis (rev 26 Sep 2026, request
 // owner: "buat fitur optimizer — ketika di-on otomatis, ketika bot
 // memakan RAM lebih dari 500MB menurunkan RAM-nya, default-nya off").

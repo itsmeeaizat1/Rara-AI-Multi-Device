@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .wink — enhance/restorasi foto AI Meitu (port engine lama wink.js, tanpa key)
 import crypto from "crypto";
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/owner/ytproxy.js — PROXY YOUTUBE VIA WHATSAPP (1 Okt 2026)
 //
 // FALLBACK KEDUA buat fix bot-check YouTube (request owner: "fallback kedua

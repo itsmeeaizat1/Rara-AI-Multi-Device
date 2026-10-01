@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // session-cli.js — Util CLI pairing & normalisasi nomor (9 Sep 2026,
 // request owner: "di run cmd support masukin no pairing, gak perlu
 // set manual dr file bot identity")

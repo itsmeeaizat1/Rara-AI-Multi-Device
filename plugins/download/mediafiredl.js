@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // mediafiredl — Download file dari MediaFire
 // Primary: IkyyXD /download/mediafire | Fallback: builtin mediafire.js
 import { ikyyDl } from "../../src/scraper/ikyydl.js";

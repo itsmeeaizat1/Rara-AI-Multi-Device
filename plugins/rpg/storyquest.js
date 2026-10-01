@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Story Quest — Story-driven quest chain, narrator, NPC interaction
 
 import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";

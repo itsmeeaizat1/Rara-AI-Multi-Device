@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // detektif.js — RARA DETEKTIF: Kasus Kriminal Kota (request owner 21 Sep 2026, standar Game Designer)
 // Solo, hybrid: jelajah lokasi (.pergi), cari bukti (.cari), interogasi per topik (.interogasi/.tanya),
 // teka-teki lockbox (.jawab), deduksi final (.tuduh). 8 kasus berlapis tier (src/data/detektif-cases.json).

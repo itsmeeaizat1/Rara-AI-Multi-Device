@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .aicard — kartu GenAI native WhatsApp (engine: src/lib/rara-airich-hi.js)
 // SATU-SATUNYA engine AI rich Rara (GenAI card port) — HTML bubble NIXCODE udah dihapus total 29 Sep.
 import { raraGuide, raraError } from "../../src/lib/rara-menu-style.js";

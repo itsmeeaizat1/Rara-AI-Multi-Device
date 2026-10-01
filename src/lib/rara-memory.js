@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 MEMORY ENGINE — otak yang beneran inget user (request owner 12 Sep 2026)
 // 🔹 Ekstraksi otomatis fakta user dari percakapan AI (.raraai) —

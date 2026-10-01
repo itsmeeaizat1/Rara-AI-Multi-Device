@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // legendaryquest.js — Legendary Quest chain (7-part epic quest)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { rpgSleep, animQuest } from "../../src/lib/rara-rpg-anim.js";

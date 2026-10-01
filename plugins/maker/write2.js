@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // write2.js — Nulis v2 (nexray maker API, tulis tangan)
 import axios from "axios";
 import { nexrayNulis } from "../../src/scraper/nexray-maker.js";

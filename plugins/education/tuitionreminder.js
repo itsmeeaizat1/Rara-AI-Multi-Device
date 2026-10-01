@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Pengingat UKT/SPP
  * Fitur: Set deadline pembayaran + reminder otomatis H-7/3/1/0 +

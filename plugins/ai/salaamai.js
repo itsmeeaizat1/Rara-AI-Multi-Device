@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/ai/salaamai.js — AI ISLAMI dari ai.salaam.world (gratis tanpa api key)
 // .salaamai <pertanyaan>            — tanya Brother Junaid (default)
 // .salaamai <asisten> <pertanyaan>  — junaid | bilkees | khadijah | musa | zahra

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 //  rara-bencana.js — Core fitur Bencana Alam (kategori "cuaca")
 //  Sumber data (semua API resmi, gratis, tanpa key):

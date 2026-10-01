@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ping — cek performa & status sistem.
 // REWORK 2026-09-11 (owner: "fitur .ping itu rusak, hps ping2"):
 // - .ping2 DIHAPUS total (duplikat, plugins/main/ping2.js di-git rm)

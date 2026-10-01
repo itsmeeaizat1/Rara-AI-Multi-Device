@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ttp.js — Text to PNG sticker (local canvas, no API)
 // Ported from Alice's generateTtp to @napi-rs/canvas
 import { createCanvas } from "@napi-rs/canvas";

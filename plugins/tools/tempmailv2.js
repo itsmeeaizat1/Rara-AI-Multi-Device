@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // TempMail V2 — CatchMail.io API (https://api.catchmail.io)
 // Free disposable email, no auth required, custom domain support
 import { getDatabase } from "../../src/lib/rara-database.js";

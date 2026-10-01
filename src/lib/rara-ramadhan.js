@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════════════════════════
 // PENGHITUNG RAMADHAN (13 Sep 2026, variasi fitur polos batch 4)
 // ".ramadhan gak ada penghitung hari menuju Ramadhan" — menu panduan

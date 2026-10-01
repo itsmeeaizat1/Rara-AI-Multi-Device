@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // happymod.js — Search game mod dari Happymod (direct scrape, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";

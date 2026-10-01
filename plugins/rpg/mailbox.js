@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Mailbox — Mail system + medal display
 
 import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/rara-rpg-service.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .speedtest — tes kecepatan internet (ping/jitter/download/upload).
 // Request owner 11 Sep 2026: "tmbah speedtes".
 // Sumber: Cloudflare speed endpoint (https://speed.cloudflare.com) — gratis,

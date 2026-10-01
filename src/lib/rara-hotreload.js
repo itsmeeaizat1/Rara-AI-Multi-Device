@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Engine hot-reload: watch folder plugins/ — file .js berubah/ditambah → auto reload TANPA restart bot.
 // Catatan jujur: cuma PLUGIN yang di-reload; perubahan di src/lib atau src/handler.js tetap butuh restart.
 import fs from "fs";

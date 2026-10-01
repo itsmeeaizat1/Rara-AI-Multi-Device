@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Catur — Multiplayer Chess System (28 sub-commands)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { smallcapsText } from "../../src/lib/styler.js";

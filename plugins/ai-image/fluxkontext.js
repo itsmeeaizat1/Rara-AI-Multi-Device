@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // fluxkontext — Edit gambar dengan AI menggunakan prompt via Flux Kontext
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

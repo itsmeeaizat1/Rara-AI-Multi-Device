@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .emojiquiz — tebak film/lagu/benda dari emoji (port altftool.com "Emoji Quiz")
 // Sesi per CHAT (siapa pun boleh jawab — mode grup seru). Nyawa 3, 10 soal per ronde.
 // ANIMASI KHAS: kaca pembesar 🔍 mendekati emoji.

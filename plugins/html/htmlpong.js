@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .htmlpong — game Pong HTML self-contained (kategori HTML, port altftool "Paddle Ball Arcade")
 import fs from "node:fs";
 import path from "node:path";

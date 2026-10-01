@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Simple not-found reply — suggestion only, NO info section
 // Info section hanya untuk menu/allmenu/allmenucategory
 // REWORK 17 Sep 2026 (owner: "pesan di handler yg pakai drawing box, hapus

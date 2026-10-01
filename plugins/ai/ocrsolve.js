@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // OCR Code/Math Solver — Real-time foto detection, AI Vision analyze code/math
 // Dual Mode:
 //   One-shot (all users): .ocrsolve — reply ke foto, analisis sekali

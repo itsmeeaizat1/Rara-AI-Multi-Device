@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // groupanalytics — Analisis statistik grup (owner)
 // 12 Sep 2026 fix: dulu baca db.msgStats yang GAK PERNAH ditulis siapapun (mati total)
 // → sekarang live dari rara-activity-tracker (hook handler.js) + jam paling rame.

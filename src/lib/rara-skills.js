@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-skills.js — SKILL REGISTRY agent (.raraagent), request owner 12 Sep
 // 2026: "jadi tool, skills dan mcp banyak yg dipasang lengkap agent sebagai
 // tool tambahan atau kebutuhan yang dibutuhkan agent".

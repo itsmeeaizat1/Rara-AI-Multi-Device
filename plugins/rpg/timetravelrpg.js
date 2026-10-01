@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG TimeTravel — Perjalanan waktu harian
 // Rombak khas (batch #13): animasi Lorong Waktu + 4 era tujuan
 // dengan artefak masing-masing + item khas Kristal Waktu +

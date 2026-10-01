@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // dalleai — DALL-E style image generation (free via pollinations flux)
 import { dalleStyle } from "../../src/scraper/stable-diffusion.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

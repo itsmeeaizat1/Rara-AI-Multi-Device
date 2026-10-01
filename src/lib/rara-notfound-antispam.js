@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Smart anti-spam untuk "command not found" suggestion
 // Progressive escalation: makin sering spam, makin lama cooldown + response berubah
 

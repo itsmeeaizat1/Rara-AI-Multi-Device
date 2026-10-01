@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .rag — ingat dokumen (PDF/DOCX/TXT), tanya apa aja isinya. BM25 lokal + AI, tanpa API key.
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { saveDoc, listDocs, getDoc, deleteDoc, countDocs, extractDocText, askRag, searchDocs, ragLimits } from "../../src/lib/rara-rag.js";

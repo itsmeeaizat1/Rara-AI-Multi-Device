@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-ai-status.js — STATUS LOADING ALA AGENT untuk AI SATUAN
 // (request owner 29 Sep 2026: "aku mau ai satuan atau ai lain jga buat
 // animasi kyk ai agent biar ketauan dia lg ngapain" + "jd nanti ketauan

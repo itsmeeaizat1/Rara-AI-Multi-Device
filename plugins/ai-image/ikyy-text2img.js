@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ikyy-text2img — Generate gambar dari teks via GPT Image (IkyyXD)
 // Original /ai/text2img down (text2video.aritek.app ENOTFOUND), redirected to /ai/gptimage
 import axios from "axios";

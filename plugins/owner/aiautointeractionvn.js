@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // AI Auto Interaction VN — bicara dengan AI via voice note ATAU teks,
 // AI bisa balas pakai suara (VN) atau teks — sesuai mode (18 Sep 2026).
 // Toggle: .aiautointeractionvn on/off  (owner only, default OFF)

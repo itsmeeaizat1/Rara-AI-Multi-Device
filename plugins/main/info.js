@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import os from "os";
 import { execSync } from "child_process";
 import fs from "fs";
@@ -74,7 +74,7 @@ function getDiskUsage() {
 async function handler(m, { sock, config: botConfig, db, uptime }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
-    const botName = botConfig.bot?.name || "Rara AI WhatsApp Bot";
+    const botName = botConfig.bot?.name || "Rara AI - Multi Device";
 
     const dbInstance = getDatabase();
     const users = dbInstance?.db?.data?.users || {};
@@ -157,7 +157,7 @@ ${disk.ok ? `*${toSC("Disk")}:* ${formatBytes(disk.used)} / ${formatBytes(disk.t
 *${toSC("Uptime Server")}:* ${serverUptime}
 *${toSC("Uptime Bot")}:* ${botUptime}
 
-${toSC("Rara AI WhatsApp Bot")}`;
+${toSC("Rara AI - Multi Device")}`;
 
     // FIX OWNER 2026-09-07: card info = plain text + thumbnail externalAdReply
     // (payload interactive gak dirender di client penerima — "versi WA lama")

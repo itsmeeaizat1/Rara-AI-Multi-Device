@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ocr2.js — OCR v2 (ocr.space API, cloud-based, multi-language)
 import axios from "axios";
 import FormData from "form-data";

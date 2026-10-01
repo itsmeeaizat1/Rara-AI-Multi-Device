@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AUTO ORDER TOPUP PANELPEDIA (panelpediatopup.com)
+// RARA AI - MULTI DEVICE — E2E: AUTO ORDER TOPUP PANELPEDIA (panelpediatopup.com)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

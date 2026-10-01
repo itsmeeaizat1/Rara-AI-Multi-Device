@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ordertopup.js — AUTO ORDER TOPUP PanelPedia (buyer): pilih layanan dari
 // panelpediatopup.com → bayar QRIS Pakasir → lunas → order ke API PanelPedia
 // OTOMATIS + pantau status (Proses/Sukses/Gagal/Refund) → struk ke DM buyer.

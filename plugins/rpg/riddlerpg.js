@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Riddle — Tebak-tebakan harian
 import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
 import { raraRpgBox } from "../../src/lib/rara-games.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ai-mercury — Mercury AI (Inception Labs) — dLLM DIFUSI PERTAMA di dunia
 // Mercury-2: 5-10× lebih cepat dari model sekelas (diffusion LLM), 128K context,
 // OpenAI-compatible. Key: apikeys.json raraai.inception (fallback env INCEPTION_API_KEY).

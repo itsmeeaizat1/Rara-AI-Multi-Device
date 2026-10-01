@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════════════════════════
 // POMODORO ENGINE (13 Sep 2026, variasi fitur polos batch 4)
 // ".pomodoro fitur TIMER tapi gak ada timer hidup + session di RAM

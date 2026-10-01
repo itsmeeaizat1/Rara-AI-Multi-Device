@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ordernokos.js — AUTO ORDER NOKOS (nomor kosong) via 5SIM (5sim.net).
 // Dari request owner 28 Sep 2026: script website PHP buynokos-website.zip
 // (dulu numpang rumahotp.com — provider MATI, domain dijual GoDaddy)

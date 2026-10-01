@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * @file plugins/tools/imgtoprompt.js
  * @description Plugin untuk mengubah gambar menjadi prompt AI

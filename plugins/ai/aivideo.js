@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aivideo — TEXT → VIDEO AI (KuroNeko text2vid, engine sora) — GENERATOR
 // VIDEO AI PERTAMA di bot! Key: apikeys.json kuroneko.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

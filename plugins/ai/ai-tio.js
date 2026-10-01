@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════
 // 🔹 Tio AI Unified — .aitio <model> <prompt>
 // 🔹 Semua model Tio dalam satu command, langsung pilih model

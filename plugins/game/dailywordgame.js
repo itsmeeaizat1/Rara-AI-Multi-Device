@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .dailywordgame — tebak kata 5 huruf 6 kesempatan (port altftool.com "Daily Word Game")
 // Mode harian: kata sama untuk semua pemain per tanggal WIB. .dailywordgame acak = latihan.
 // ANIMASI KHAS: kotak tile kosong terungkap jadi hijau satu per satu (beda dari game lain).

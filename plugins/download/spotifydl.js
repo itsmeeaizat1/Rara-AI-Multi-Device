@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // spotifydl.js — Download lagu Spotify (spotifydown API)
 import path from "node:path";
 import axios from "axios";

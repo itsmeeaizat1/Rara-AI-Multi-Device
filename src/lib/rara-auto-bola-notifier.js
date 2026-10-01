@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-auto-bola-notifier.js — Auto Jadwal Bola Notifier (request owner 10 Sep
 // 2026: "tambah fitur auto jadwalbola notifier mirip kerja anime notifier").
 //

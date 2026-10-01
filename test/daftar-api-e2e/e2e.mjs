@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // test/daftar-api-e2e/e2e.mjs — E2E 2 plugin baru dari daftar farizdotid (tanpa API key):
 // .kuncijawabantts (kunci-tts-api.vercel.app) + .caridoa (doa-doa-api-ahmadramadhan.fly.dev).
 // Semua akses HTTP lewat seam _setHttpForTest — gak ada network di e2e.

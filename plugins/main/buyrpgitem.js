@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // buyrpgitem.js — Beli ITEM GAME dari ITEM_DB (JALUR ITEM)
 // Item yang sama dipakai di semua game RPG (material, senjata, armor, consumable, dll).
 // Harga per item berdasarkan value di ITEM_DB (terpusat: rara-store.js calcRpgItemPrice).

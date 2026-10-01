@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-createfile.js — helper bikin file untuk TOOLS.createfile .raraagent
 // (request owner 12 Sep 2026: "bisa buatkan file kyk txt, doc, xls, ja, html
 // dll" — .raraagent serba bisa layaknya superagent sungguhan).

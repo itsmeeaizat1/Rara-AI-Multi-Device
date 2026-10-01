@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // instagramdl — Download video/foto Instagram
 // Primary: IkyyXD /download/instagram (apikey + query) → all-in-one | Fallback: builtin ig.js
 import { offerConvert } from "../../src/lib/rara-convert.js";

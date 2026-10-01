@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aio2dl.js — receiver TERSEMBUNYI pilihan popup .aio2 (porting pola
 // .gvid/.gaud/.gimg dari script JPM APENBOTZ). GAK dipanggil manual —
 // id row popup ngirim `.aio2dl ext|mime|url`. Guard: URL WAJIB terdaftar

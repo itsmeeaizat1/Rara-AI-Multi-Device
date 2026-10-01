@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Predictive Life-Nudge — Bot belajar kebiasaan user, kirim pengingat proaktif
 // Track: pola chat, jam aktif, durasi aktivitas, emosi -> prediksi kebutuhan
 // .predictivenudge on/off — Toggle (default OFF saat pairing)

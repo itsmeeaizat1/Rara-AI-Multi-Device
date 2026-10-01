@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // instagrammedia.js — Download Instagram per format (URL-based):
 //   .igvideo <url> → kirim video aja
 //   .igimage <url> → kirim foto aja (carousel/slideshow)

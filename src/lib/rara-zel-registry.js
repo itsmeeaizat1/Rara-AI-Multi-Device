@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 rara-zel-registry.js — registry 86 AI endpoint zelapi.eu.cc (AUTO-GENERATED dari /api/docs)
 // 🔹 Semua command prefix "z" (.zchatgpt .zdeepseek ...) — biar kelihatan mana yang dari zelapi.

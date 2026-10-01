@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aichatimg — Chat AI yang bisa terima gambar + kirim gambar balik
 // Gabungan Gemini Vision (baca gambar) + UnlimitedAI (jawab) + Image gen (kirim gambar)
 import { visionScan } from "../../src/lib/rara-vision-chain.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-anime-render.js — renderer defensif buat data /anime/* zelapi.
 // FASE 1 (14 Sep 2026): ANIBIPLAY (reliable) + OTAKUDESU (subset
 // ongoing/complete yang reliable).

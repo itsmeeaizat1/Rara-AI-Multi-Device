@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Multi-language: bungkus sock biar sock.sendMessage langsung pun ke-translate
 import { makeLangAwareSock } from "./lib/rara-i18n-sock.js";
 import { enrichAiSatuan } from "./lib/rara-ai-satuan-rich.js";

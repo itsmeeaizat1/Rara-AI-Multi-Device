@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // claudev2 — Claude AI v2 (multi fallback: blackbox + unlimitedai)
 import { blackboxAI } from "../../src/scraper/blackbox-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // tqto.js — Daftar kontributor + info lengkap bot (request owner 20 Sep 2026):
 // kontributor AI disamain role "AI Coding Assistant", ditambah kredit library
 // (Baileys/base), daftar pembuat Rest API yang kepakai di fitur bot, kontak
@@ -31,7 +31,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock, uptime }) {
-    const botName = config.bot?.name || "Rara AI Whatsapp Bot"
+    const botName = config.bot?.name || "Rara AI - Multi Device"
 
     // ── Kontributor utama (yang keliatan sebelum readmore) ──
     const credits = [
@@ -98,12 +98,12 @@ ${restApis.map(r => `- ${r}`).join('\n')}
 - Bot sudah menyala tanpa mati selama ${runtimeStr}
 
 *Nama Script & Base:*
-- Base: Rara AI Multi Device
+- Base: Rara AI - Multi Device
 - Baileys: Multi-Device
 
 *Keterangan Lisensi:*
 Copyright © 2024-2026 Aizat (itsmeeaizat). All Rights Reserved.
-Script Rara AI WhatsApp Bot berlisensi proprietary — dilarang menyalin,
+Script Rara AI - Multi Device berlisensi proprietary — dilarang menyalin,
 menjual, atau menyebarkan sebagian maupun keseluruhan kode tanpa izin
 tertulis dari pembuat.`
 

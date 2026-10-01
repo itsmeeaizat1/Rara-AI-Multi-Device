@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // twitterdl.js — Download video dari Twitter/X (Sanka API + scrape fallback)
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";

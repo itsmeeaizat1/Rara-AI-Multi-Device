@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-onepunya.js — client REST API Onepunya (onepunya.qzz.io) 31 endpoint.
 // Auth: header x-api-key — key dari .setkey onepunya <key> (rara-api-keys.js).
 // Struktur respon: { status: boolean, message?: string, result: any }

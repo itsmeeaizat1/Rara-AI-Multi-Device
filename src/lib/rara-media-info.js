@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-media-info.js — SATU PINTU caption hasil fitur pemroses media
 // (stiker / converter / maker AI / tools), request owner 19-20 Sep 2026:
 // "apakah fitur lain bisa dibuat field juga kyk stiker, convert fitur kyk

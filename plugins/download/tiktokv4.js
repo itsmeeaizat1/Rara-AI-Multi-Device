@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // tiktokv4.js — TikTok Downloader V4 via IkyyXD
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { raraWrap, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";

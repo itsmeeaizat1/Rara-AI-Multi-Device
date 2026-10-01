@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // zelanime.js — caller generik buat semua endpoint /anime/* zelapi.eu.cc
 // (anibiplay, animelovers, wotanim, otakudesu — animekompi DIKELUARKAN,
 // mati total DNS ENOTFOUND v6.animekompi.fun, jangan dipanggil).

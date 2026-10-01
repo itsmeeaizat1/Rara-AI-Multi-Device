@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // search — web search multi-engine + preview halaman (request owner 2026-09-10:
 // ".serach jd klo user ketik serach doang g ada google/bing/search engine lain
 //  muncul usage. .serach list nama search engine. contoh .serach bing daftar

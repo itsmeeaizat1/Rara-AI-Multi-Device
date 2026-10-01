@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // File ini aman untuk di-obfuscate dengan obfuscator.io
 // Jangan obfuscate file lain (connection.js, dll)
 

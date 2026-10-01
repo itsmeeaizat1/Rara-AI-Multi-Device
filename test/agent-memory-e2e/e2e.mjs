@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AGENT MEMORY LAYER (upgrade #2 "bot masa depan")
+// RARA AI - MULTI DEVICE — E2E: AGENT MEMORY LAYER (upgrade #2 "bot masa depan")
 // Owner 25 Sep 2026: "harusnya nyambung ke dua ai agent raraagent dan
 // aisuperagent" + "autonovaagent juga harusnya punya memory jangka panjang
 // krna itu ai otomatis". Engine = rara-memory.js (store per-user db.setting

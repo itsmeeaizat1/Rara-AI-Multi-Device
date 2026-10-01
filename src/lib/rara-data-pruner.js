@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { logger } from './rara-logger.js'
 const INACTIVE_THRESHOLD = 14 * 24 * 60 * 60 * 1000
 const PRUNE_INTERVAL = 6 * 60 * 60 * 1000

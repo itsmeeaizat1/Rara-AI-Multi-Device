@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-anim-runner.js — ANIMASI SIDE-SCROLLING RUNNER REUSABLE (request owner 21 Sep 2026)
 // Karakter melintasi jalur tile (2 baris: pemandangan + lintasan) dalam code fence monospace,
 // pesan DIEDIT frame demi frame via Baileys edit key. Skala dengan LEVEL pemain:

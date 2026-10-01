@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Request owner 20 Sep 2026: tombol Penggunaan (popup Rules & Tutorial) di
 // menu card — .tutorial adalah tujuan baris "Tutorial" di popup itu.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

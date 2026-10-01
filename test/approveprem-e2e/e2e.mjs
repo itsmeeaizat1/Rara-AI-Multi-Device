@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: APPROVE PREMIUM (buyprem pending → .approveprem)
+// RARA AI - MULTI DEVICE — E2E: APPROVE PREMIUM (buyprem pending → .approveprem)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

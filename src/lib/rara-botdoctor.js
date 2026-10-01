@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-botdoctor.js — DOKTER BOT PRIBADI (26 Sep 2026, ide owner no.2 dari
 // sesi "fitur masa depan": "bot baca log pinglog + error + ramalert, kalau
 // ada pola aneh dia diagnosa sendiri dan ngasih laporan gejala → dugaan

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // topchat — Top chat member di grup (data LIVE dari rara-activity-tracker,
 // hook handler.js — 12 Sep 2026 fix: dulu baca chatStats yang recordernya gak ada = selalu kosong)
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

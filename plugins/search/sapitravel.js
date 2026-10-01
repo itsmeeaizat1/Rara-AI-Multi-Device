@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Travel Suite — .gtiket .ghotels
 // 🔹 Tiket pesawat PLAIN TEXT: harga, jam terbang, airline, transit.

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 rara-tmpfiles.js — shim upload URL (dulu host Termai)
 // 🔹 1 Okt 2026: Termai jadi free-tier limit kecil → dilepas. Zelapi gak

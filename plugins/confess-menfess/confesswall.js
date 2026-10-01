@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Confess Wall — confession wall grup, post anonim dengan thread & react
 // Disimpan di db.setting("confesswall") per-grup
 

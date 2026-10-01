@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // gunung.js — PENDAKIAN GUNUNG LEGENDA (request owner 21 Sep 2026, game petualangan #5, standar Game Designer)
 // Solo progres persist + elemen grup (buff Rombongan & leaderboard). 8 zona per gunung, tema gunung ACAK per run:
 // kelola STAMINA (regen 1/5 mnt) & OKSIGEN (zona 6+ wajib), cuaca berubah per daki (cerah/mendung/hujan/badai),

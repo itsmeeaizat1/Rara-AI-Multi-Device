@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // answerkeytts.js — Kunci Jawaban TTS (Teka Teki Silang) Indonesia.
 // Sumber: kunci-tts-api.vercel.app (nasrul21/kunci-tts-api, daftar farizdotid) — TANPA API KEY.
 // .kuncijawabantts <pertanyaan tts> — misal ".kuncijawabantts tidak jujur"

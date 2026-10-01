@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/ai/spicychat.js — SpicyChat AI: chat karakter "Wormgpt"
 // (asistan tanpa sensor) via prod.nd-api.com, guest tanpa API key.
 // Multi-turn per-user (session persist db), auto-reset pas expired.

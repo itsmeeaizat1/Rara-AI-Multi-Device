@@ -372,7 +372,7 @@ print("cmd unik: %d" % len(all_cmds))
 for cat, (name, fpath, title, entries) in CATS.items():
     n_real = len([e for e in entries if e[1] is not None])
     L = []
-    L.append("// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA")
+    L.append("// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA")
     L.append("// %s — KyioAPI kategori %s (%d endpoint) — api.kyio.web.id." % (os.path.basename(fpath), title, n_real))
     L.append("// FREE TIER TANPA KEY (10 RPM). Key opsional: .setkey kyio <api_key> -> 120 RPM + premium.")
     L.append("// Semua cmd pakai prefix .kyio biar gak bentrok fitur lain. TABEL endpoint ada di file ini,")
