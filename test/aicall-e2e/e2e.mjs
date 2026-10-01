@@ -1,4 +1,4 @@
-// E2E AICALL (17 Sep 2026) — plugin .aicall + service Go aicall/ (HTTP mock).
+// E2E AICALL (17 Sep 2026) — plugin .aicall2 + service Go aicall/ (HTTP mock).
 // Jalankan: node test/aicall-e2e/e2e.mjs
 import { initDatabase } from "../../src/lib/nova-database.js";
 import { fromSC } from "../../src/lib/styler.js";
@@ -8,7 +8,7 @@ const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 
 await initDatabase("/tmp/aicall-e2e-db.json");
-const { config: aicallConfig, handler: aicallHandler, _setAicallFetchForTest, _clearAicallFetchForTest, _setAicallPusatKeyForTest, _clearAicallPusatKeyForTest, _setAicallAgentForTest, _clearAicallAgentForTest } = await import("../../plugins/owner/aicall.js");
+const { config: aicallConfig, handler: aicallHandler, _setAicallFetchForTest, _clearAicallFetchForTest, _setAicallPusatKeyForTest, _clearAicallPusatKeyForTest, _setAicallAgentForTest, _clearAicallAgentForTest } = await import("../../plugins/owner/aicall2.js");
 
 // default: gateway agent DIANGGAP KOSONG — seksi agent nulis mock sendiri.
 // (tanpa ini, apikeys.json asli bisa bocorin tioApiKey ke tes lain)
@@ -33,15 +33,15 @@ async function mkM(text, { isOwner = true } = {}) {
 const box = (e) => fromSC((e.sent.find((s) => s.type === "reply") || { txt: "" }).txt);
 
 // ═══ 1. config ═══
-w("\n— config plugin .aicall —");
-check("config ke-load (name aicall, owner-only, enabled)", aicallConfig?.name === "aicall" && aicallConfig?.isOwner === true && aicallConfig?.isEnabled === true);
+w("\n— config plugin .aicall2 —");
+check("config ke-load (name aicall2, owner-only, enabled)", aicallConfig?.name === "aicall2" && aicallConfig?.isOwner === true && aicallConfig?.isEnabled === true);
 
 // ═══ 2. usage + owner gate ═══
 w("\n— usage & owner gate —");
 {
   const e = await mkM("");
   await aicallHandler(e.m);
-  check("tanpa arg → panduan cara pakai", box(e).includes("aicall"));
+  check("tanpa arg → panduan cara pakai", box(e).includes("aicall2"));
 }
 {
   const e = await mkM("12345");
@@ -55,7 +55,7 @@ w("\n— usage & owner gate —");
 }
 
 // ═══ 3. pasang panggilan (mock sukses) ═══
-w("\n— .aicall <nomor> → POST /call —");
+w("\n— .aicall2 <nomor> → POST /call —");
 {
   let captured = null;
   _setAicallFetchForTest(async (url, opts) => {
@@ -141,8 +141,8 @@ w("\n— tanpa key grok, key agent ada → ai_provider=agent —");
   _clearAicallFetchForTest();
 }
 
-// ═══ 3c. .aicall ai <grok|agent|groq|gemini> — ganti otak live ═══
-w("\n— .aicall ai grok/groq/gemini —");
+// ═══ 3c. .aicall2 ai <grok|agent|groq|gemini> — ganti otak live ═══
+w("\n— .aicall2 ai grok/groq/gemini —");
 {
   let captured = null;
   _setAicallPusatKeyForTest((name) => (name === "grok" || name === "xai" ? "xai-test-key-123" : name === "groq" ? "gsk-test-key-456" : ""));
@@ -153,26 +153,26 @@ w("\n— .aicall ai grok/groq/gemini —");
   });
   const e = await mkM("ai grok");
   await aicallHandler(e.m);
-  check(".aicall ai grok → POST /config {ai_provider:grok, grok_api}", captured?.body?.ai_provider === "grok" && captured?.body?.grok_api === "xai-test-key-123", JSON.stringify(captured?.body));
+  check(".aicall2 ai grok → POST /config {ai_provider:grok, grok_api}", captured?.body?.ai_provider === "grok" && captured?.body?.grok_api === "xai-test-key-123", JSON.stringify(captured?.body));
   check("konfirmasi otak grok", box(e).toLowerCase().includes("grok"), box(e).slice(0, 80));
   const eA = await mkM("ai agent");
   await aicallHandler(eA.m);
-  check(".aicall ai agent → POST /config {ai_provider:agent, agent_url, agent_key}", captured?.body?.ai_provider === "agent" && captured?.body?.agent_url === "https://9router.cloudku.us.kg/v1/chat/completions" && captured?.body?.agent_key === "tio-test-key-789", JSON.stringify(captured?.body));
+  check(".aicall2 ai agent → POST /config {ai_provider:agent, agent_url, agent_key}", captured?.body?.ai_provider === "agent" && captured?.body?.agent_url === "https://9router.cloudku.us.kg/v1/chat/completions" && captured?.body?.agent_key === "tio-test-key-789", JSON.stringify(captured?.body));
   check("konfirmasi otak agent + persona Aina", box(eA).toLowerCase().includes("agent") && box(eA).toLowerCase().includes("aina"), box(eA).slice(0, 90));
   _setAicallAgentForTest(() => ({ key: "", url: "", model: "ag/gemini-pro-agent" }));
   const e2 = await mkM("ai gemini");
   await aicallHandler(e2.m);
-  check(".aicall ai gemini → POST /config {ai_provider:gemini} tanpa grok_api", captured?.body?.ai_provider === "gemini" && !("grok_api" in captured.body), JSON.stringify(captured?.body));
+  check(".aicall2 ai gemini → POST /config {ai_provider:gemini} tanpa grok_api", captured?.body?.ai_provider === "gemini" && !("grok_api" in captured.body), JSON.stringify(captured?.body));
   const e3 = await mkM("ai groq");
   await aicallHandler(e3.m);
-  check(".aicall ai groq → POST /config {ai_provider:groq, groq_api}", captured?.body?.ai_provider === "groq" && captured?.body?.groq_api === "gsk-test-key-456", JSON.stringify(captured?.body));
+  check(".aicall2 ai groq → POST /config {ai_provider:groq, groq_api}", captured?.body?.ai_provider === "groq" && captured?.body?.groq_api === "gsk-test-key-456", JSON.stringify(captured?.body));
   _clearAicallPusatKeyForTest();
   _clearAicallFetchForTest();
 }
 {
   const e = await mkM("ai abc");
   await aicallHandler(e.m);
-  check(".aicall ai ngawur → hint grok/agent/groq/gemini", box(e).toLowerCase().includes("grok") && box(e).toLowerCase().includes("agent") && box(e).toLowerCase().includes("groq") && box(e).toLowerCase().includes("gemini"));
+  check(".aicall2 ai ngawur → hint grok/agent/groq/gemini", box(e).toLowerCase().includes("grok") && box(e).toLowerCase().includes("agent") && box(e).toLowerCase().includes("groq") && box(e).toLowerCase().includes("gemini"));
 }
 {
   // key grok belum ada di pusat → tetap konfirmasi tapi kasih warning key
@@ -197,7 +197,7 @@ w("\n— service Go down —");
 }
 
 // ═══ 5. status ═══
-w("\n— .aicall status —");
+w("\n— .aicall2 status —");
 {
   _setAicallFetchForTest(async () => ({
     status: 200,
@@ -223,7 +223,7 @@ w("\n— .aicall status —");
 }
 
 // ═══ 6. engine / voice live ═══
-w("\n— .aicall engine / .aicall voice —");
+w("\n— .aicall2 engine / .aicall2 voice —");
 {
   let captured = null;
   _setAicallFetchForTest(async (url, opts) => {
@@ -250,8 +250,8 @@ w("\n— .aicall engine / .aicall voice —");
   check("voice tanpa nama → hint daftar suara", box(e).toLowerCase().includes("gadisneural") || box(e).toLowerCase().includes("suara"), box(e).slice(0, 80));
 }
 
-// ═══ 6b. .aicall ai agent TANPA key gateway → warning jujur ═══
-w("\n— .aicall ai agent tanpa key 9router —");
+// ═══ 6b. .aicall2 ai agent TANPA key gateway → warning jujur ═══
+w("\n— .aicall2 ai agent tanpa key 9router —");
 {
   _setAicallPusatKeyForTest(() => "");
   _setAicallAgentForTest(() => ({ key: "", url: "", model: "ag/gemini-pro-agent" }));
