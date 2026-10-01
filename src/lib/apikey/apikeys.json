@@ -73,7 +73,7 @@
       "fitur": "SEMUA suite z — .zchatgpt .zsearch (.zcookpad .zdetik .zdns .zgroupwa .zjadwaltv .zapkmody .zdeviant .ztwixtor .zacode), .zinfo (.ztokengratis .zgold .zgunung .zcrypto .zsaham .zongkir), .zff (free fire), .zeldl (downloader + .zspotify), .zeldetail (.zappstore .zplaystore .zgmaps .zchannel .zidnlive .zspeedtest .zxiaomi), .ztools/.ztools2 (.zqr .zmorse .zkurs .zepho dll), .jktai/.zjktai (18 persona JKT48), .jkt48 (showroom), .zlokal/.zkodepos/.zklasemen/.zbasa/.zquran/.zsound, fallback .sdxl",
       "catatan": "docs zelapi.eu.cc/docs, key 'zelapi-xxx'"
     },
-    "zelapi": "zelapi-jpgz3p1"
+    "zelapi": "zelapi-5f3379f44fdf42b4"
   },
   "aiMultiprovider": {
     "_note": "CONFIG MULTI-PROVIDER AI (pindahan ai-providers.json — sekarang satu file di apikeys.json). (1) 'chain' = urutan prioritas otak AI .novaai/.autonovaai/autoflow — down/rate-limit otomatis geser kebawah. (2) 'providers' = KEY semua provider buat fitur AI satuan (.grok/.openai/.claude/dll) & rantai — isi 'apikey' provider yang lo punya; kosong = di-skip otomatis. Provider ikyy (free) udah preset key 'kyzz'. Dibaca LIVE tiap pemanggilan — edit tanpa restart.",
