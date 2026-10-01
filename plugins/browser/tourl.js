@@ -25,9 +25,6 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const termaiKey = config.APIkey.termai;
-const termaiDomain = "https://c.termai.cc";
-
 async function detectExt(buffer, fallback = "bin") {
   try {
     const type = await fileTypeFromBuffer(buffer);
@@ -134,27 +131,6 @@ async function uploadToQuax(buffer, filename) {
   return { host: "Qu.ax", url: data.files[0].url, expires: "Permanent" };
 }
 
-async function uploadToTermai(buffer) {
-  const ext = await detectExt(buffer, "bin");
-  const form = new FormData();
-  form.append("file", buffer, { filename: `file.${ext}` });
-
-  const res = await fetch(`${termaiDomain}/api/upload?key=${termaiKey}`, {
-    method: "POST",
-    body: form,
-    headers: form.getHeaders(),
-    timeout: 120000,
-  });
-
-  if (!res.ok) throw new Error("Termai gagal");
-  const data = await res.json();
-
-  if (!data?.status || !data?.path) {
-    throw new Error("Invalid response");
-  }
-
-  return { host: "Termai", url: data.path, expires: "Unknown" };
-}
 
 async function uploadToPone(buffer, filename) {
   const form = new FormData();
@@ -516,7 +492,6 @@ const UPLOADERS = [
   { name: "Leopard", fn: uploadToLeopard },
   { name: "0x0_Backup", fn: uploadTo0x0_alt },
   { name: "Qu.ax", fn: uploadToQuax },
-  { name: "Termai", fn: uploadToTermai },
   { name: "Nekohime", fn: uploadToNekohime },
   { name: "Faddlaninco", fn: uploadToFaddlaninco },
 ];

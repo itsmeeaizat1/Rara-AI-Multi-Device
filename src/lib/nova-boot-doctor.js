@@ -79,11 +79,6 @@ const KEY_PROBES = [
     url: k => `https://api.cuki.biz.id/api/ai/gita?apikey=${encodeURIComponent(k)}&q=ping`,
   },
   {
-    key: "termai", label: "Termai",
-    features: ".logicbell .tourl .animeapaini .qrcustom",
-    url: k => `https://api.termai.cc/api/chat/logic-bell?text=ping&key=${encodeURIComponent(k)}`,
-  },
-  {
     key: "fazzcode", label: "Fazzcode",
     features: ".airoleplaychat .fazzroleplay",
     method: "POST",
