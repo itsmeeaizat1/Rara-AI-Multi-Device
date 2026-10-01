@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import os from "os";
+import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
@@ -30,7 +31,7 @@ function formatBytes(b) {
   if (b === 0) return "0 B";
   const k = 1024;
   const sizes = ["B", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(b) / Math.log(k));
+  const i = Math.min(Math.max(Math.floor(Math.log(b) / Math.log(k)), 0), sizes.length - 1);
   return `${(b / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
 }
 
@@ -42,6 +43,32 @@ function formatUptime(ms) {
   if (d > 0) return `${d}d ${h}h ${m}m`;
   if (h > 0) return `${h}h ${m}m`;
   return `${m}m ${s % 60}s`;
+}
+
+// 🔹 DISK (request owner 1 Okt 2026: section Server di .info tambah
+// "used disk" & "total disk") — Node os module GAK punya API disk, jadi:
+// (1) fs.statfsSync (Node >= 18.15, Linux/VPS utama), (2) fallback df -B1,
+// (3) fallback null → baris disk disembunyikan senyap, jangan bunuh .info.
+// Path yang diukur = root filesystem bot berjalan (cwd), bukan partisi lain.
+function getDiskUsage() {
+  const target = process.cwd();
+  try {
+    const st = fs.statfsSync(target);
+    const total = Number(st.blocks) * Number(st.bsize);
+    const avail = Number(st.bavail) * Number(st.bsize);
+    if (total > 0) return { total, used: total - avail, ok: true };
+  } catch {}
+  try {
+    const out = execSync("df -B1 .", { timeout: 3000 }).toString();
+    const lines = out.trim().split("\n");
+    if (lines.length >= 2) {
+      const cols = lines[1].trim().split(/\s+/);
+      const total = parseInt(cols[1], 10);
+      const used = parseInt(cols[2], 10);
+      if (total > 0 && used >= 0) return { total, used, ok: true };
+    }
+  } catch {}
+  return { ok: false };
 }
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
@@ -70,6 +97,8 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const totalMem = os.totalmem();
     const usedMem = totalMem - os.freemem();
     const memPercent = ((usedMem / totalMem) * 100).toFixed(1);
+    const disk = getDiskUsage();
+    const diskPercent = disk.ok ? ((disk.used / disk.total) * 100).toFixed(1) : "-";
     
     const cpuCores = os.cpus().length;
     let cpuSpeed = os.cpus()[0]?.speed || 0;
@@ -124,6 +153,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 *${toSC("Load Avg")}:* ${loadAvg}
 *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
 *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
+${disk.ok ? `*${toSC("Disk")}:* ${formatBytes(disk.used)} / ${formatBytes(disk.total)} (${diskPercent}%)\n` : ""}
 *${toSC("Uptime Server")}:* ${serverUptime}
 *${toSC("Uptime Bot")}:* ${botUptime}
 
