@@ -615,7 +615,7 @@ function novaInfoBox(title, items = [], opts = {}) {
 // String = judul section (buka box baru), {label,value} = baris info.
 // Alignment label dihitung PER SECTION biar rapi.
 // ═══════════════════════════════════════════════
-function novaInfoSections(info = [], sc = true) {
+function novaInfoSections(info = [], sc = true, opts = {}) {
   // FIX 2026-09-07 (owner: "kok ada space di info section, harusnya rapat
   // gak ada spasi kliatan kosong") — versi lama padEnd label ke lebar
   // label TERPANJANG per section (mis. "Grup Mode" 9 char), jadi label
@@ -636,13 +636,13 @@ function novaInfoSections(info = [], sc = true) {
     } else if (item && item.label !== undefined && open) {
       const label = scFn(item.label);
       const value = item.value !== undefined && item.value !== null ? String(item.value) : "";
-      out += `• ${label} : ${value}\n`;
+      out += `${opts.bullet === false ? "" : "• "}${label} : ${value}\n`;
     }
   }
   return out;
 }
 
-function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false, legend = null, footerName = null } = {}) {
+function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false, legend = null, footerName = null, infoBullet = false } = {}) { // default OFF: request owner 2 Okt — titik bullet info section dihapus di semua menu
   const scFn = sc ? toSC : (s) => String(s);
   
   let out = "";
@@ -673,7 +673,7 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
   }
   
   // ── Info section: BOX TERPISAH per kategori (Info User, Info Waktu, dst) ──
-  const infoOut = novaInfoSections(info, sc);
+  const infoOut = novaInfoSections(info, sc, { bullet: infoBullet });
   out += infoOut;
   if (infoOut) out += "\n";
 
