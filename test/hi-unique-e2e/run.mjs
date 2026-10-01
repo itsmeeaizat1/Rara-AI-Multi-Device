@@ -14,7 +14,7 @@ const files = {
   react: "../../plugins/tools/react.js",
   pollination: "../../plugins/ai/pollination.js",
   fakemsg: "../../plugins/group/fakemsg.js",
-  simulate: "../../plugins/group/simulate.js",
+  simulate: "../../plugins/owner/simulate.js",
   aicheck: "../../plugins/tools/aicheck.js",
   crm: "../../plugins/tools/crm.js",
   dbmsg: "../../plugins/tools/dbmsg.js",
