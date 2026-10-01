@@ -52,15 +52,19 @@ res = await mod.runBootDoctor();
 cuki = res.find(r => r.label === "Cuki API");
 t("HTTP 200 tapi body 'apikey kadaluarsa' → key_invalid", cuki?.status === "key_invalid", JSON.stringify(cuki));
 
-respond("api.termai.cc", 429, "rate limit");
+// termai dibuang dari registry 1 Okt 2026 (free-tier limit, fitur dimigrasi ke
+// nova-uploader) — klasifikasi 429/402 sekarang diuji lewat Cuki API
+respond("api.cuki.biz.id", 429, "rate limit");
 res = await mod.runBootDoctor();
-let termai = res.find(r => r.label === "Termai");
-t("HTTP 429 → ratelimit", termai?.status === "ratelimit", JSON.stringify(termai));
+let cuki429 = res.find(r => r.label === "Cuki API");
+t("HTTP 429 → ratelimit", cuki429?.status === "ratelimit", JSON.stringify(cuki429));
 
-respond("api.termai.cc", 402, "quota exceeded");
+respond("api.cuki.biz.id", 402, "quota exceeded");
 res = await mod.runBootDoctor();
-termai = res.find(r => r.label === "Termai");
-t("HTTP 402 → quota", termai?.status === "quota", JSON.stringify(termai));
+let cuki402 = res.find(r => r.label === "Cuki API");
+t("HTTP 402 → quota", cuki402?.status === "quota", JSON.stringify(cuki402));
+
+t("entry Termai dibuang dari registry (migrasi 1 Okt)", !res.some(r => r.label === "Termai"));
 
 respond("magma.esdm.go.id", 500, "server error");
 res = await mod.runBootDoctor();

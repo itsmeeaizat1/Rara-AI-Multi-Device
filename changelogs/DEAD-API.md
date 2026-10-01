@@ -44,6 +44,7 @@
 | Domain | Status | Plugin | Command |
 |---|---|---|---|
 | `typli.ai` | 403 | typliv2.js | .typliv2 |
+| `api.termai.cc` | 429 free-tier (1 Okt 2026) | logic-bell.js (dihapus) + nova-uploader.js/nova-tmpfiles.js (dimigrasi) | (dulu) .logicbell, .tourl, .animeapaini, .musikapaini, .qrcustom |
 | `zerogptai.org` | 403 | zerogptv2.js | .zerogptv2 |
 
 ## PLACEHOLDER — Bukan API Real
