@@ -46,7 +46,7 @@ async function handler(m, { sock, config: botConfig }) {
     let msg = claraWrap("Group Analytics", lines.join("\n"));
 
     if (board.length) {
-      msg += "\n\n*ᴛᴏᴘ ᴍᴇᴍʙᴇʀꜱ (ᴍɪɴɢɢᴜ ɪɴɪ):*\n";
+      msg += "\n\n*top members (minggu ini):*\n";
       board.forEach((u, i) => {
         const name = (u.name || u.jid.split("@")[0]).slice(0, 20);
         msg += `${i + 1}. ${name} — ${u.messageCount} pesan (${u.points}pts)\n`;

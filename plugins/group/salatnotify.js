@@ -33,14 +33,14 @@ function handler(m, { sock, db }) {
         const statusGrup = group.notifSholat !== false ? '✅ AKTIF' : '❌ NONAKTIF';
         
         return m.reply(
-            `🕌 *ᴘᴇɴɢɪɴɢᴀᴛ ᴡᴀᴋᴛᴜ ꜱʜᴏʟᴀᴛ*\n\n` +
+            `🕌 *pengingat waktu sholat*\n\n` +
             `Status Global: *${statusGlobal}* (Dari Owner)\n` +
             `Status Grup: *${statusGrup}*\n` +
             `Lokasi: *${kotaSetting.nama}*\n\n` +
-            `*ᴘᴇɴɢᴀᴛᴜʀᴀɴ ɢʀᴜᴘ:*\n` +
+            `*pengaturan grup:*\n` +
             `*${m.prefix}notifsholat on* — Aktifkan notif di grup ini\n` +
             `*${m.prefix}notifsholat off* — Nonaktifkan notif di grup ini\n\n` +
-            `*ᴄᴀʀᴀ ᴋᴇʀᴊᴀ:*\n` +
+            `*cara kerja:*\n` +
             `1. Mengirimkan mp3 adzan & gambar jadwal saat masuk waktu sholat\n` +
             `2. Mengikuti jadwal real-time dari myquran.com\n` +
             `3. Jika Status Global NONAKTIF, grup tidak akan dikirim adzan meskipun Status Grup AKTIF.\n` +

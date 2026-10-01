@@ -62,7 +62,7 @@ async function handler(m, { args, sock }) {
   }
 
   if (!args[0]) {
-    let txt = `🔑 *ᴠᴇʀɪꜰɪᴋᴀꜱɪ ᴏᴛᴘ*\n\n`;
+    let txt = `🔑 *verifikasi otp*\n\n`;
     txt += `Masukkan kode OTP yang dikirim ke email:\n`;
     txt += `\`${m.prefix}verotp <kode>\`\n\n`;
     txt += `Contoh: \`${m.prefix}verotp 123456\``;

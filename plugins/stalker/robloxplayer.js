@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
     
     if (!query) {
         return m.reply(
-            `🎮 *ʀᴏʙʟᴏx ᴘʟᴀʏᴇʀ ꜱᴇᴀʀᴄʜ*\n\n` +
+            `🎮 *roblox player search*\n\n` +
             `Masukkan username untuk dicari\n\n` +
             `\`${m.prefix}robloxplayer linkmon\``
         )
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         
         const players = res.data.data.slice(0, 10)
         
-        let text = `🎮 *ʀᴏʙʟᴏx ᴘʟᴀʏᴇʀ ꜱᴇᴀʀᴄʜ*\n\n`
+        let text = `🎮 *roblox player search*\n\n`
         text += `Query: \`${query}\`\n`
         text += `Ditemukan: *${players.length}* player\n\n`
         

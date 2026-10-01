@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         if (data.graceDate) txt += `⚠️ Masa Tenggang: *${data.graceDate}*\n`
 
         if (data.packages && Array.isArray(data.packages) && data.packages.length > 0) {
-            txt += `\n📦 *ᴅᴀꜰᴛᴀʀ ᴘᴀᴋᴇᴛ ᴀᴋᴛɪꜰ*\n\n`
+            txt += `\n📦 *daftar paket aktif*\n\n`
             for (const pkg of data.packages) {
                 txt += `- *${pkg.name || pkg.packageName || "Paket"}*\n`
                 if (pkg.quota || pkg.remainingQuota) txt += `Sisa Kuota: *${pkg.remainingQuota || pkg.quota}*\n`
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
         }
 
         if (data.balance || data.pulsa) {
-            txt += `💰 *ꜱᴀʟᴅᴏ*\n`
+            txt += `💰 *saldo*\n`
             txt += `Pulsa: *${data.balance || data.pulsa}*\n\n`
         }
 
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
             const skipKeys = ["error", "status", "msisdn", "activeDate", "expireDate", "graceDate", "balance", "pulsa"]
             const extraKeys = Object.keys(data).filter(k => !skipKeys.includes(k))
             if (extraKeys.length > 0) {
-                txt += `\n📋 *ᴅᴇᴛᴀɪʟ ʟᴀɪɴɴʏᴀ*\n\n`
+                txt += `\n📋 *detail lainnya*\n\n`
                 for (const key of extraKeys) {
                     const val = data[key]
                     if (typeof val === "string" || typeof val === "number") {

@@ -220,7 +220,7 @@ w("\n===== 11. plugin handler .rentauto =====");
   st.marks = {}; st.lastDigestTs = NOW; st.lastDigestDate = new Date(NOW + 7 * HOUR).toISOString().slice(0, 10);
   const m2 = mkM(["tes"]);
   await handler(m2, { sock: mkSock() });
-  check("plugin: .rentauto tes → lapor aksi H-3", m2._replies.length === 1 && /ʜ-3/.test(m2._replies[0]) && /1 ʜᴀʟ/.test(m2._replies[0]), m2._replies[0]?.slice(0, 160));
+  check("plugin: .rentauto tes → lapor aksi H-3", m2._replies.length === 1 && /h-3/i.test(m2._replies[0]) && /1 hal/i.test(m2._replies[0]), m2._replies[0]?.slice(0, 160));
   delete db.data.sewa.groups[gid];
   // grace + jam
   const m3 = mkM(["grace", "7"]);
@@ -234,7 +234,7 @@ w("\n===== 11. plugin handler .rentauto =====");
   check("plugin: jam invalid → ditolak, state tetap", ensureRentAutoState(db).digestJam === "08:30" && /Format jam|melewati batas/.test(m5._replies[0]), m5._replies[0]);
   const m6 = mkM(["hahaha"]);
   await handler(m6, { sock: mkSock() });
-  check("plugin: sub gak dikenal → guide bantuan", /ʙᴇʟᴜᴍ ꜱᴀʏᴀ ᴋᴇɴᴀʟɪ/.test(m6._replies[0]), m6._replies[0]);
+  check("plugin: sub gak dikenal → guide bantuan", /belum saya kenali/.test(m6._replies[0]), m6._replies[0]);
 }
 
 w("\n===== 12. scheduler idempotent + cleanup =====");

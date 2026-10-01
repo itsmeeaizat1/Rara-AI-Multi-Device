@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
 
     if (!code) {
         return m.reply(claraWrap("esmtocjs", [
-      `🔄 *ᴇꜱᴍ ᴛᴏ ᴄᴊꜱ ᴄᴏɴᴠᴇʀᴛᴇʀ*`,
+      `🔄 *esm to cjs converter*`,
       `Convert ES Modules ke CommonJS`,
       ``,
       `📌 Format:`,

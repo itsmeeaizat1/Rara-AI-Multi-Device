@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `📦 *ɴᴘᴍ ꜱᴛᴀʟᴋ*\n\nMasukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk aizat\``; return await m.reply( __navText, "npmstalk"); }
+        { const __navText = `📦 *npm stalk*\n\nMasukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk aizat\``; return await m.reply( __navText, "npmstalk"); }
     }
     try {
         const res = await axios.get(`https://firefly.maiku.my.id/api/stalk-npm?apikey=${config.APIkey.firefly}&username=${encodeURIComponent(username)}`, {
@@ -47,16 +47,16 @@ async function handler(m, { sock }) {
         const d = res.data.data
         const s = d.stats || {}
         
-        let caption = `📦 *ɴᴘᴍ ꜱᴛᴀʟᴋ*\n\n` +
-            `👤 *ᴜꜱᴇʀɴᴀᴍᴇ:* ${d.username}\n` +
-            `📛 *ɴᴀᴍᴀ:* ${d.name || '-'}\n` +
-            `📧 *ᴇᴍᴀɪʟ:* ${d.email || '-'}\n\n` +
-            `📦 *ᴛᴏᴛᴀʟ ᴘᴀᴄᴋᴀɢᴇꜱ:* ${s.total_packages || 0}\n` +
-            `📉 *ᴍᴏɴᴛʜʟʏ ᴅᴏᴡɴʟᴏᴀᴅꜱ:* ${shortNum(s.total_monthly_downloads)}\n\n` +
+        let caption = `📦 *npm stalk*\n\n` +
+            `👤 *username:* ${d.username}\n` +
+            `📛 *nama:* ${d.name || '-'}\n` +
+            `📧 *email:* ${d.email || '-'}\n\n` +
+            `📦 *total packages:* ${s.total_packages || 0}\n` +
+            `📉 *monthly downloads:* ${shortNum(s.total_monthly_downloads)}\n\n` +
             `🔗 ${d.profile}\n\n`
             
         if (d.packages && d.packages.length > 0) {
-            caption += `*ᴅᴀꜰᴛᴀʀ ᴘᴀᴄᴋᴀɢᴇ:*\n`
+            caption += `*daftar package:*\n`
             d.packages.slice(0, 5).forEach((pkg, i) => {
                 caption += `📦 *${pkg.name}* (v${pkg.version})\n`
                 caption += `📉 ${shortNum(pkg.downloads_monthly)} dl/month\n`

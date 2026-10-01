@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
   if (!m.isOwner && !hasFullAccess(m.sender, "v" + serverNum, false)) {
     const userRole = getUserRole(m.sender, "v" + serverNum);
     return m.reply(
-      claraWrap("server", "❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n" +
+      claraWrap("server", "❌ *akses ditolak*\n\n" +
         "Set key server hanya untuk *Owner bot* & *Owner/CEO panel* server " + serverLabel + "\n" +
         "Role kamu: *" + (userRole ? userRole.toUpperCase() : "Tidak ada") + "*\n\n" +
         "Hirarki: Owner > CEO > Reseller")

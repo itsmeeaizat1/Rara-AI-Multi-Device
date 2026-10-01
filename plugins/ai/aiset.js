@@ -127,7 +127,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "mode") {
       if (!m.isOwner) {
         const text =
-          claraWrap("aiset", "Perintah ini khusus owner — ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ ʜᴇʟᴘ.", "error") +
+          claraWrap("aiset", "Perintah ini khusus owner — hanya owner yang bisa mengganti mode ai help.", "error") +
           "\n" ;
 
         await m.reply(text);

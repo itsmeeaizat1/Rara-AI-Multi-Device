@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     ]))
     }
     
-    { const __navText = `🕕 *ɢᴇɴᴇʀᴀᴛɪɴɢ qʀ ᴄᴏᴅᴇ...*`; await m.reply(__navText); }
+    { const __navText = `🕕 *generating qr code...*`; await m.reply(__navText); }
     
     try {
     await m.react("🕒");
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         await sock.sendMessage(m.chat, {
             image: { url: apiUrl },
-            caption: `📱 *qʀ ᴄᴏᴅᴇ*\n${data.substring(0, 50)}${data.length > 50 ? '...' : ''}`
+            caption: `📱 *qr code*\n${data.substring(0, 50)}${data.length > 50 ? '...' : ''}`
         }, { quoted: m })
     } catch (err) {
     await m.react("❌");

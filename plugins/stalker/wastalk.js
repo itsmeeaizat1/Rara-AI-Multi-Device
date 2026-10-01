@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
                    `*° Timezone :* ${business.business_hours?.timezone ? business.business_hours.timezone : '-'}\n` +
                    `*° Description :* ${business.description ? business.description : '-'}`;
         } else {
-            res += '*ꜱᴛᴀɴᴅᴀʀᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴀᴄᴄᴏᴜɴᴛ*';
+            res += '*standard whatsapp account*';
         }
 
         await sock.sendMessage(m.chat, {

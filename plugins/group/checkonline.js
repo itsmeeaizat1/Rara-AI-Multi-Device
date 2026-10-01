@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
         const onlineMembers = Object.keys(presences)
         const mentions = onlineMembers
         
-        let text = `📊 *ᴄᴇᴋ ᴏɴʟɪɴᴇ*\n\n`
+        let text = `📊 *cek online*\n\n`
         text += ""
         text += `👥 Nama: *${groupMetadata.subject}*\n`
         text += `👤 Total: \`${participants.length}\` member\n`

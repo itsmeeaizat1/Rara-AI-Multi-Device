@@ -194,7 +194,7 @@ export default {
     if (command === "cekfaktaon") {
       if (!isOwner) {
         await m.reply(claraWrap("Cek Fakta", [
-          `Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -216,7 +216,7 @@ export default {
     if (command === "cekfaktaoff") {
       if (!isOwner) {
         await m.reply(claraWrap("Cek Fakta", [
-          `Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -255,7 +255,7 @@ export default {
     // ─── Main: .cekfakta (fact-check) ───
     if (!isCekFaktaOn(groupId)) {
       await m.reply(claraWrap("Cek Fakta", [
-        `Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
+        `Status: *nonaktif di grup ini*`,
         ``,
         `Owner: ketik *${prefix}cekfaktaon* untuk mengaktifkan.`,
       ].join("\n")));
@@ -264,7 +264,7 @@ export default {
 
     if (!aiConfig.apiKey) {
       await m.reply(claraWrap("Cek Fakta", [
-        `Status: *ᴀɪ ʙᴇʟᴜᴍ ᴅɪᴋᴏɴꜰɪɢᴜʀᴀꜱɪ*`,
+        `Status: *ai belum dikonfigurasi*`,
         ``,
         `Owner: ketik *${prefix}aihelp* untuk set API key.`,
       ].join("\n")));
@@ -485,7 +485,7 @@ Aturan:
     } catch (error) {
       const text =
         claraWrap("Cek Fakta - Error", [
-          `Status: *ɢᴀɢᴀʟ*`,
+          `Status: *gagal*`,
           `Alasan: *${error.message}*`,
           ``,
           `Cek AI API key: *${prefix}aihelp*`,

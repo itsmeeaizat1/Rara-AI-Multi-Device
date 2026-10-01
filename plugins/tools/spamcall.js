@@ -47,7 +47,7 @@ async function handler(m, { sock, config: botConfig }) {
     const targetClean = String(target).replace(/@.+$/, "");
 
     for (let i = 0; i < count; i++) {
-      const body = `📞 *ꜱᴘᴀᴍ ᴄᴀʟʟ*
+      const body = `📞 *spam call*
 │ │ Target: *@${targetClean}*
 │ │ Call #${i + 1}/${count}`;
       mentions.push(targetClean);
@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Spam Call", [`Target: *@${targetClean}*`,
         `Jumlah: *${count}x*`,
-        "Status: *ꜱᴇʟᴇꜱᴀɪ*"].join("\n")) +
+        "Status: *selesai*"].join("\n")) +
       "\n" +
       tipText(`Gunakan dengan bijak`) +
       "\n" +

@@ -135,7 +135,7 @@ export async function renderQuoteCard({ quote, author = "", category = "chat" })
   }
 
   // footer DIHAPUS (13 Sep, revisi owner "di bawahnya ada -q bisa dihapus"):
-  // smallcaps Unicode (ɴᴏᴠᴀ/ꜱ/ʙ) gak punya glyph di Roboto_Medium → canvas
+  // smallcaps Unicode (nova/s/b) gak punya glyph di Roboto_Medium → canvas
   // ngerender tofu yang keliatan kayak "-q". Kartu biar bersih tanpa footer.
 
   return canvas.toBuffer("image/png");

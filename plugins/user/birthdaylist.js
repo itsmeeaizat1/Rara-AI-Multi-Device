@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     
     if (birthdays.length === 0) {
         return m.reply(
-            `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴅᴀᴛᴀ*\n\n` +
+            `❌ *tidak ada data*\n\n` +
             `Belum ada member yang set birthday\n\n` +
             `Gunakan: .setbirthday DD-MM`
         )
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     for (const b of birthdays.slice(0, 15)) {
         const isToday = b.day === currentDay && b.month === currentMonth
         const emoji = isToday ? '🎉' : '🎂'
-        text += `${emoji} ${b.day} ${months[b.month - 1]} - @${b.jid.split('@')[0]}${isToday ? ' *ʜᴀʀɪ ɪɴɪ!*' : ''}\n`
+        text += `${emoji} ${b.day} ${months[b.month - 1]} - @${b.jid.split('@')[0]}${isToday ? ' *hari ini!*' : ''}\n`
         mentions.push(b.jid)
     }
     

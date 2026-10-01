@@ -55,19 +55,19 @@ async function handler(m, { sock }) {
       msg += `💰 Gold kamu: *${rpg.gold}*\n`;
       msg += `
 `;
-      msg += `📦 *ᴄᴏɴsᴜᴍᴀʙʟᴇ*\n`;
+      msg += `📦 *consumable*\n`;
       for (const item of SHOP_ITEMS.filter(i => i.type === "consumable")) {
         msg += `${item.name} — *${item.price} gold* (${item.id})\n`;
       }
       msg += `
 `;
-      msg += `⚔️ *ᴇϙᴜɪᴘᴍᴇɴᴛ*\n`;
+      msg += `⚔️ *eϙuipment*\n`;
       for (const item of SHOP_ITEMS.filter(i => i.type === "weapon" || i.type === "armor" || i.type === "helmet" || i.type === "boots")) {
         msg += `${item.name} — *${item.price} gold* (${item.id})\n`;
       }
       msg += `
 `;
-      msg += `🔑 *ᴋᴇʏs*\n`;
+      msg += `🔑 *keys*\n`;
       for (const item of SHOP_ITEMS.filter(i => i.type === "key")) {
         msg += `${item.name} — *${item.price} gold* (${item.id})\n`;
       }

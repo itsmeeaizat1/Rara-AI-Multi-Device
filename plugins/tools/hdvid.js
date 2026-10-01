@@ -43,12 +43,12 @@ async function handler(m, { sock }) {
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());
 
     if (!videoBuffer || videoBuffer.length === 0) {
-      return m.reply(claraWrap("hdvid", `❌ *ɢᴀɢᴀʟ*\n\nAduh kak, videonya gagal diunduh! Coba kirim ulang ya.`));
+      return m.reply(claraWrap("hdvid", `❌ *gagal*\n\nAduh kak, videonya gagal diunduh! Coba kirim ulang ya.`));
     }
 
     if (videoBuffer.length > 50 * 1024 * 1024) {
       await m.react("🐣");
-      return m.reply(claraWrap("hdvid", `❌ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nMaaf kak, maksimal ukuran video cuma 50MB ya!`));
+      return m.reply(claraWrap("hdvid", `❌ *file terlalu besar*\n\nMaaf kak, maksimal ukuran video cuma 50MB ya!`));
     }
     const tempDir = os.tmpdir();
     const inputPath = path.join(tempDir, `input-hd-${Date.now()}.mp4`);
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
 
     const resultBuffer = fs.readFileSync(outputPath);
 
-    await sock.sendMedia(m.chat, resultBuffer, `*ᴘʀᴏꜱᴇꜱ ꜱᴇʟᴇꜱᴀɪ* \n\nIni dia hasil videonya kak, udah jauh lebih mulus dan HD kan? 😍`, m, {
+    await sock.sendMedia(m.chat, resultBuffer, `*proses selesai* \n\nIni dia hasil videonya kak, udah jauh lebih mulus dan HD kan? 😍`, m, {
       type: "video",
       mimetype: "video/mp4",
       fileName: `HDVID-${Date.now()}.mp4`,

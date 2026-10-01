@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
     };
     db.save();
     return m.reply(
-      `✅ *ᴘᴇʀꜱᴏɴᴀ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\nNama: ${personaArgs[0]}\nKey: ${pName}\nLogic: ${pInstruction.substring(0, 80)}${pInstruction.length > 80 ? "..." : ""}\n\nGunakan: .autoai on --novamode=${pName}`,
+      `✅ *persona ditambahkan*\n\nNama: ${personaArgs[0]}\nKey: ${pName}\nLogic: ${pInstruction.substring(0, 80)}${pInstruction.length > 80 ? "..." : ""}\n\nGunakan: .autoai on --novamode=${pName}`,
     );
   }
 
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
     cfg.enableCommands = true;
     db.save();
     return m.reply(
-      `✅ *ᴇɴᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*\n\nUser sekarang bisa menggunakan command walau AutoAI aktif\nBot tetap merespon saat di-tag/reply\n\n_Gunakan ${m.prefix || "."}autoai disablecommand untuk menonaktifkan_`,
+      `✅ *enable command*\n\nUser sekarang bisa menggunakan command walau AutoAI aktif\nBot tetap merespon saat di-tag/reply\n\n_Gunakan ${m.prefix || "."}autoai disablecommand untuk menonaktifkan_`,
     );
   }
 
@@ -162,7 +162,7 @@ async function handler(m, { sock }) {
     cfg.enableCommands = false;
     db.save();
     return m.reply(
-      `🔒 *ᴅɪꜱᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*\n\nSemua command (kecuali owner) diblokir saat AutoAI aktif\nBot hanya merespon saat di-tag atau di-reply\n\n_Gunakan ${m.prefix || "."}autoai enablecommand untuk mengaktifkan kembali_`,
+      `🔒 *disable command*\n\nSemua command (kecuali owner) diblokir saat AutoAI aktif\nBot hanya merespon saat di-tag atau di-reply\n\n_Gunakan ${m.prefix || "."}autoai enablecommand untuk mengaktifkan kembali_`,
     );
   }
 
@@ -180,9 +180,9 @@ async function handler(m, { sock }) {
           .join("\n")
       : "  ▸ (belum ada custom persona)";
     let txt = `🤖 *DaғTar Persona*\n\n`;
-    txt += `*ʙᴀᴡᴀᴀɴ:*\n${builtIn}\n\n`;
-    txt += `*ᴄᴜꜱᴛᴏᴍ:*\n${custom}\n\n`;
-    txt += `*ɢʟᴏʙᴀʟ:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
+    txt += `*bawaan:*\n${builtIn}\n\n`;
+    txt += `*custom:*\n${custom}\n\n`;
+    txt += `*global:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
     txt += `.autoai on --novamode=<key>\n`;
     txt += `.autoai tambahpersona nama | logic\n`;
     txt += `.autoai hapuspersona nama\n`;
@@ -353,7 +353,7 @@ async function handler(m, { sock }) {
     };
     db.save();
     let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
-        txt += `🎭 Karakter: *ᴄᴜꜱᴛᴏᴍ*\n`;
+        txt += `🎭 Karakter: *custom*\n`;
     txt += `🧠 Logic: ${customLogic.substring(0, 100)}${customLogic.length > 100 ? "..." : ""}\n`;
     txt += `📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
     txt += `👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;

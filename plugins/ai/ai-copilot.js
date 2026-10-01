@@ -90,7 +90,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text = novaError("AICopilot",
-      `Status: *ɢᴀɢᴀʟ*\n` +
+      `Status: *gagal*\n` +
       `Alasan: *${error.message}*`,
       "error"
     );

@@ -36,10 +36,10 @@ async function handler(m, { sock }) {
         }
         
         const r = data.data.result
-        let response = `💑 *ʀᴀᴍᴀʟᴀɴ ᴊᴏᴅᴏʜ*\n\n`
+        let response = `💑 *ramalan jodoh*\n\n`
         response += `👤 *${r.orang_pertama.nama}*\n${r.orang_pertama.tanggal_lahir}\n\n`
         response += `👤 *${r.orang_kedua.nama}*\n${r.orang_kedua.tanggal_lahir}\n\n`
-        response += `📜 *HaꜱIl Ramalan:*\n`
+        response += `📜 *HasIl Ramalan:*\n`
         
         r.hasil_ramalan.forEach((h, i) => {
             response += `${i+1}. ${h}\n\n`

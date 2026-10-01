@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
       )
         .resize(50, 50)
         .toBuffer(),
-      caption: `*ᴅᴏɴᴇ*
+      caption: `*done*
 Jika kamu ingin mendownload lagi, ketik ${m.prefix}nerdfont lagi`,
     });
   } catch (err) {

@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
 
  const message = 
  `⭐ *Apa Itu Premium?*\n\n` +
- `Premium adalah *ᴜꜱᴇʀ ʙᴇʀʙᴀʏᴀʀ* yang mendapatkan akses ke fitur eksklusif dan keuntungan lebih.\n\n` +
+ `Premium adalah *user berbayar* yang mendapatkan akses ke fitur eksklusif dan keuntungan lebih.\n\n` +
  "" +
  `\`\`\`Limit harian: ${premiumLimit}x (vs ${defaultLimit}x user biasa)\`\`\`\n` +
  `\`\`\`Cooldown lebih rendah\`\`\`\n` +

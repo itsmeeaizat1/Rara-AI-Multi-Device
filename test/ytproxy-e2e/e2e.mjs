@@ -17,8 +17,9 @@ const ytdlp = await import(pathToFileURL(path.join(REPO, "src/scraper/nova-ytdlp
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const t = (name, ok, extra = "") => { w((ok ? "  ✅ " : "  ❌ ") + name + (ok ? "" : " — " + String(extra).slice(0, 160))); ok ? pass++ : fail++; };
-const SC_MAP = { a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ' };
-const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+const SC_MAP = { a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z' };
+// UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
+const toSC = (s) => String(s ?? "");
 const hasSC = (reply, kw) => String(reply || "").includes(toSC(kw)) || String(reply || "").toLowerCase().includes(kw.toLowerCase());
 
 function mockM({ args = [] } = {}) {
@@ -62,7 +63,7 @@ try {
   let m1 = mockM({ args: ["http://user:rahasia@proxy.example.com:8080"] });
   await handler(m1, {});
   t("3a. URL valid → tersimpan ke data/yt-proxy.txt", fs.existsSync(PROXY_PATH) && fs.readFileSync(PROXY_PATH, "utf8").trim() === "http://user:rahasia@proxy.example.com:8080");
-  t("3b. balasan sukses (kecil: TERPASANG)", hasSC(m1.replies[0], "ᴛᴇʀᴘᴀꜱᴀɴɢ") || m1.replies[0]?.includes("ᴛᴇʀᴘᴀꜱᴀɴɢ"), (m1.replies[0] || "").slice(0, 100));
+  t("3b. balasan sukses (kecil: TERPASANG)", hasSC(m1.replies[0], "terpasang") || m1.replies[0]?.includes("terpasang"), (m1.replies[0] || "").slice(0, 100));
   t("3c. balasan nunjukin flag yt-dlp aktif (kecil)", hasSC(m1.replies[0], "aktif"), (m1.replies[0] || "").slice(0, 100));
   t("3d. password GAK bocor di balasan", !m1.replies[0]?.includes("rahasia"));
 
@@ -90,7 +91,7 @@ try {
   w("\n— handler: status —");
   m1 = mockM({ args: ["status"] });
   await handler(m1, {});
-  t("7a. status: proxy aktif nongol", m1.replies[0]?.includes("PROXY") || m1.replies[0]?.includes("ᴘʀᴏxʏ"), (m1.replies[0] || "").slice(0, 80));
+  t("7a. status: proxy aktif nongol", m1.replies[0]?.includes("PROXY") || m1.replies[0]?.includes("proxy"), (m1.replies[0] || "").slice(0, 80));
   t("7b. status: alamat dimasker", m1.replies[0]?.includes("127.0.0.1:9050"));
   t("7c. status: sumber file disebut (kecil)", hasSC(m1.replies[0], "yt-pro"), (m1.replies[0] || "").slice(0, 120));
 
@@ -109,13 +110,13 @@ try {
   m1 = mockM({ args: ["clear"] });
   await handler(m1, {});
   t("9a. clear → file proxy kehapus", !fs.existsSync(PROXY_PATH));
-  t("9b. balasan jelas dihapus", (m1.replies[0] || "").includes("ᴅɪʜᴀᴘᴜꜱ") || (m1.replies[0] || "").toLowerCase().includes("hapus"));
+  t("9b. balasan jelas dihapus", (m1.replies[0] || "").includes("dihapus") || (m1.replies[0] || "").toLowerCase().includes("hapus"));
   m1 = mockM({ args: ["clear"] });
   await handler(m1, {});
   t("9c. clear ulang → jujur udah bersih (kecil)", hasSC(m1.replies[0], "bersih") || (m1.replies[0] || "").toLowerCase().includes("bersih"));
   m1 = mockM({ args: ["status"] });
   await handler(m1, {});
-  t("9d. status tanpa proxy → tidak ada proxy terpasang", hasSC(m1.replies[0], "ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴘʀᴏxʏ") || (m1.replies[0] || "").includes("ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴘʀᴏxʏ"), (m1.replies[0] || "").slice(0, 100));
+  t("9d. status tanpa proxy → tidak ada proxy terpasang", hasSC(m1.replies[0], "tidak ada proxy") || (m1.replies[0] || "").includes("tidak ada proxy"), (m1.replies[0] || "").slice(0, 100));
 
   w("\n— config —");
   t("10a. owner-only", config.isOwner === true);

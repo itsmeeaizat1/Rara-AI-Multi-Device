@@ -76,25 +76,25 @@ async function handler(m, { sock }) {
     }
 
     if (materials.length > 0) {
-      msg += `📦 *ᴍᴀᴛᴇʀɪᴀʟ*\n`;
+      msg += `📦 *material*\n`;
       for (const l of materials) msg += `${l}\n`;
       msg += `\n`;
     }
 
     if (consumables.length > 0) {
-      msg += `🧪 *ᴄᴏɴsᴜᴍᴀʙʟᴇ*\n`;
+      msg += `🧪 *consumable*\n`;
       for (const l of consumables) msg += `${l}\n`;
       msg += `\n`;
     }
 
     if (equipment.length > 0) {
-      msg += `⚔️ *ᴇϙᴜɪᴘᴍᴇɴᴛ*\n`;
+      msg += `⚔️ *eϙuipment*\n`;
       for (const l of equipment) msg += `${l}\n`;
       msg += `\n`;
     }
 
     if (others.length > 0) {
-      msg += `📌 *ʟᴀɪɴɴʏᴀ*\n`;
+      msg += `📌 *lainnya*\n`;
       for (const l of others) msg += `${l}\n`;
       msg += `\n`;
     }

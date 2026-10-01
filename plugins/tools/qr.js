@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
       m.chat,
       {
         image: buffer,
-        caption: `✅ *Qʀ ᴄᴏᴅᴇ ɢᴇɴᴇʀᴀᴛᴇᴅ*\n\nData: ${text}`,
+        caption: `✅ *Qr code generated*\n\nData: ${text}`,
       },
       { quoted: m }
     );

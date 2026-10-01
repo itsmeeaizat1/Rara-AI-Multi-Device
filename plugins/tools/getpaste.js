@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text || !text.includes("pastebin.com")) {
-    return m.reply( `📋 *ɢᴇᴛ ᴘᴀꜱᴛᴇʙɪɴ*\n\n` +
+    return m.reply( `📋 *get pastebin*\n\n` +
       `Masukkan link Pastebin yang valid\n\n` +
       `Contoh: \`${m.prefix}getpaste https://pastebin.com/Gu8RZaqv\``, "getpaste");
   }

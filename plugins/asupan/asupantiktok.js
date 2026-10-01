@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data) {
-      return m.reply(claraWrap("Asupantiktok", `🚩 *ᴜꜱᴇʀɴᴀᴍᴇ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\nUsername: ${query}`));
+      return m.reply(claraWrap("Asupantiktok", `🚩 *username tidak ditemukan*\n\nUsername: ${query}`));
     }
 
     const video = data;

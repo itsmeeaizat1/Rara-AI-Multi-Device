@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Case", [`Deskripsi: *${desc}*`,
         `Pelapor: *${m.pushName || m.sender}*`,
-        "Status: *ᴛᴇʀᴋɪʀɪᴍ*"].join("\n")) +
+        "Status: *terkirim*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}case <deskripsi> untuk buat laporan lain`) +
       "\n" +

@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     const data = await res.json();
 
     if (!data.success) {
-      return m.reply(claraWrap("Ipwho", `❌ *ɪᴘ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\nIP ${ip} tidak valid`));
+      return m.reply(claraWrap("Ipwho", `❌ *ip tidak ditemukan*\n\nIP ${ip} tidak valid`));
     }
 
     if (data.latitude && data.longitude) {
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     }
 
     const text =
-      `🌐 *ɪᴘ ʟᴏᴏᴋᴜᴘ*\n\n` +
+      `🌐 *ip lookup*\n\n` +
       "" +
       `🔢 IP: ${data.ip}\n` +
       `🌍 Country: ${data.country} ${data.country_code}\n` +
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
       `🌐 Proxy: ${data.security?.proxy ? "✅ Yes" : "❌ No"}\n` +
       `🤖 Tor: ${data.security?.tor ? "✅ Yes" : "❌ No"}\n` +
       `---`;
-    await sendToolsPreview(sock, m.chat, text, "🌐 *ɪᴘ ʟᴏᴏᴋᴜᴘ*", data.country, {
+    await sendToolsPreview(sock, m.chat, text, "🌐 *ip lookup*", data.country, {
       quoted: m,
     });
   } catch (e) {

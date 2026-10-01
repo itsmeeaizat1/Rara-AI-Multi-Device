@@ -80,7 +80,7 @@ function fireLelangTicker(db, sock, m, auctionId, extraLines = []) {
   const card = (remMs) => {
     if (remMs <= 0) {
       return [
-        "🔨 *ʟᴇʟᴀɴɢ ʙᴇʀᴀᴋʜɪʀ!*",
+        "🔨 *lelang berakhir!*",
         "",
         "Item: *" + auction0.title + "*",
         "ID: `" + auctionId + "`",
@@ -91,7 +91,7 @@ function fireLelangTicker(db, sock, m, auctionId, extraLines = []) {
     const elapsed = Math.max(0, totalDur - remMs);
     const total = Math.max(totalDur, 1);
     return [
-      "🔨 *ʟᴇʟᴀɴɢ ᴀᴋᴛɪꜰ*",
+      "🔨 *lelang aktif*",
       "",
       "Item: *" + auction0.title + "*",
       "ID: `" + auctionId + "`",
@@ -165,7 +165,7 @@ function autoCloseExpired(db, sock) {
         const winner = auction.bids[auction.bids.length - 1];
         auction.winner = winner;
         const winnerText =
-          "🏆 *ʟᴇʟᴀɴɢ ʙᴇʀᴀᴋʜɪʀ*\n\n" +
+          "🏆 *lelang berakhir*\n\n" +
           "Item: *" + auction.title + "*\n" +
           "ID: `" + id + "`\n" +
           "Pemenang: @" + winner.bidder.split("@")[0] + "\n" +
@@ -181,7 +181,7 @@ function autoCloseExpired(db, sock) {
       } else {
         sock.sendMessage(auction.chatId, {
           text:
-            "😔 *ʟᴇʟᴀɴɢ ʙᴇʀᴀᴋʜɪʀ*\n\n" +
+            "😔 *lelang berakhir*\n\n" +
             "Item: *" + auction.title + "*\n" +
             "ID: `" + id + "`\n" +
             "Total Bid: 0\n" +

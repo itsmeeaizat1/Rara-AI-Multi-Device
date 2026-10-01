@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const audioUrl = await uploadTo0x0(audioBuffer, filename);
 
-    await m.reply(claraWrap("Musikapaini", "🔍 *ᴍᴇɴɢɪᴅᴇɴᴛɪꜰɪᴋᴀꜱɪ...*\n\nMencari info lagu..."));
+    await m.reply(claraWrap("Musikapaini", "🔍 *mengidentifikasi...*\n\nMencari info lagu..."));
 
     const data = await novaApi.neoxr.whatMusic(
       {
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data?.status || !data?.data) {
-      return m.reply(claraWrap("musikapaini", "❌ *ɢᴀɢᴀʟ*\n\nLagu tidak dikenali atau API error"));
+      return m.reply(claraWrap("musikapaini", "❌ *gagal*\n\nLagu tidak dikenali atau API error"));
     }
 
     const music = data.data;

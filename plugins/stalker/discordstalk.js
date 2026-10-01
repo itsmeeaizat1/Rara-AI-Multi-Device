@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
   if (!userId) {
     return m.reply(
-      `🎮 *ᴅɪꜱᴄᴏʀᴅ ꜱᴛᴀʟᴋ*\n\n` +
+      `🎮 *discord stalk*\n\n` +
         `Masukkan Discord User ID\n\n` +
         `\`Contoh: ${m.prefix}discordstalk 297574907510784000\``,
     );
@@ -56,12 +56,12 @@ async function handler(m, { sock }) {
       : "-";
 
     const caption =
-      `🎮 *ᴅɪꜱᴄᴏʀᴅ ꜱᴛᴀʟᴋ*\n\n` +
-      `👤 *ᴜꜱᴇʀɴᴀᴍᴇ:* ${d.username || "-"}\n` +
-      `📛 *ᴅɪꜱᴘʟᴀʏ ɴᴀᴍᴇ:* ${d.global_name || "-"}\n` +
-      `🔢 *ᴅɪꜱᴄʀɪᴍɪɴᴀᴛᴏʀ:* #${d.discriminator || "0"}\n` +
-      `🆔 *ᴜꜱᴇʀ ɪᴅ:* ${d.id}\n\n` +
-      `📅 *ᴅɪʙᴜᴀᴛ:* ${createdDate}\n\n` +
+      `🎮 *discord stalk*\n\n` +
+      `👤 *username:* ${d.username || "-"}\n` +
+      `📛 *display name:* ${d.global_name || "-"}\n` +
+      `🔢 *discriminator:* #${d.discriminator || "0"}\n` +
+      `🆔 *user id:* ${d.id}\n\n` +
+      `📅 *dibuat:* ${createdDate}\n\n` +
       `_Discord User Lookup_`;
     if (d.avatar_url) {
       await sock.sendMessage(

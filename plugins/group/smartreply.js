@@ -158,7 +158,7 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.enabled = true;
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        claraWrap("Smart Reply", [`Status: *ᴀᴋᴛɪꜰ*`,
+        claraWrap("Smart Reply", [`Status: *aktif*`,
           `Provider: *${smartReply.provider.toUpperCase()}*`,
           `Topics: *${smartReply.topics.length}*`,
           `Bot akan auto-jawab pertanyaan yang match keyword`].join("\n")) + "\n" +
@@ -172,7 +172,7 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.enabled = false;
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        claraWrap("Smart Reply", [`Status: *ɴᴏɴᴀᴋᴛɪꜰ*`,
+        claraWrap("Smart Reply", [`Status: *nonaktif*`,
           `Topics tersimpan, bisa diaktifkan lagi`].join("\n")) + "\n" +
         tipText(`Aktifkan: ${prefix}smartreply on`);
 

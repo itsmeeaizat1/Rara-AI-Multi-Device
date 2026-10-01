@@ -39,8 +39,8 @@ async function uploadToCatbox(buffer, filename = 'file.jpg') {
 async function handler(m, { sock }) {
     if (m.isGroup) {
         return m.reply(
-            `🚫 *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
-            `Untuk menjaga keamanan data 🛡️, penambahan informasi hanya dapat dilakukan di *ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ*.\n\n` +
+            `🚫 *akses ditolak*\n\n` +
+            `Untuk menjaga keamanan data 🛡️, penambahan informasi hanya dapat dilakukan di *private chat*.\n\n` +
             `Silakan chat bot secara langsung 📱, lalu ketik:\n` +
             `\`${m.prefix}addlist <nama>|<isi>\``
         )
@@ -52,16 +52,16 @@ async function handler(m, { sock }) {
 
     if (pipeIdx === -1) {
         return m.reply(
-            `➕ *ᴛᴀᴍʙᴀʜ ɪɴꜰᴏʀᴍᴀꜱɪ ᴛᴏᴋᴏ*\n\n` +
+            `➕ *tambah informasi toko*\n\n` +
             `📋 Format:\n` +
             `\`${m.prefix}addlist <nama>|<isi>\`\n\n` +
-            `📌 *ᴘᴀʀᴀᴍᴇᴛᴇʀ:*\n` +
-            `*ɴᴀᴍᴀ* — Judul informasi (min. 2 karakter)\n` +
-            `*ɪꜱɪ* — Konten informasi (gunakan \`;;\` untuk baris baru)\n\n` +
-            `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
+            `📌 *parameter:*\n` +
+            `*nama* — Judul informasi (min. 2 karakter)\n` +
+            `*isi* — Konten informasi (gunakan \`;;\` untuk baris baru)\n\n` +
+            `📝 *contoh:*\n` +
             `\`${m.prefix}addlist Syarat & Ketentuan|1. Pembelian tidak bisa dibatalkan;;2. Garansi 7 hari;;3. Hubungi admin untuk klaim\`\n` +
             `\`${m.prefix}addlist Cara Order|1. Ketik .listproduk;;2. Pilih produk;;3. Ketik .beli <nomor>\`\n\n` +
-            `🖼️ *ᴛɪᴘꜱ:*\n` +
+            `🖼️ *tips:*\n` +
             `Kirim gambar/video terlebih dahulu, lalu reply media tersebut dengan command di atas untuk menambahkan media 📸\n` +
             `Gunakan \`;;\` untuk membuat baris baru dalam isi informasi ✍️\n` +
             `Informasi ini bisa dilihat semua orang melalui \`${m.prefix}list\` 👥`
@@ -72,10 +72,10 @@ async function handler(m, { sock }) {
     const content = text.substring(pipeIdx + 1).trim().replace(/;;/g, '\n')
 
     if (!name || name.length < 2) {
-        return m.reply(claraWrap("addlist", `❌ *ɴᴀᴍᴀ ᴛᴇʀʟᴀʟᴜ ᴘᴇɴᴅᴇᴋ.*\n\nMinimal 2 karakter diperlukan agar mudah dikenali 📝`))
+        return m.reply(claraWrap("addlist", `❌ *nama terlalu pendek.*\n\nMinimal 2 karakter diperlukan agar mudah dikenali 📝`))
     }
     if (!content || content.length < 3) {
-        return m.reply(claraWrap("addlist", `❌ *ɪꜱɪ ɪɴꜰᴏʀᴍᴀꜱɪ ᴛᴇʀʟᴀʟᴜ ᴘᴇɴᴅᴇᴋ.*\n\nMinimal 3 karakter diperlukan ✍️`))
+        return m.reply(claraWrap("addlist", `❌ *isi informasi terlalu pendek.*\n\nMinimal 3 karakter diperlukan ✍️`))
     }
 
     let imageUrl = null
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
 
     lists.push(newList)
     db.setting('storeLists', lists)
-    let reply = `✅ *ɪɴꜰᴏʀᴍᴀꜱɪ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n`
+    let reply = `✅ *informasi ditambahkan*\n\n`
     reply += `🏷️ Nama: *${name}*\n`
     if (imageUrl) reply += `🖼️ Media: ✅ Gambar\n`
     if (videoUrl) reply += `🎬 Media: ✅ Video\n`

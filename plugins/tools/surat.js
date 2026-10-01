@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `📌 Format:`,
       `  ${prefix}surat <jenis> <detail>`,
       ``,
-      `*ᴊᴇɴɪꜱ ꜱᴜʀᴀᴛ:*`,
+      `*jenis surat:*`,
       `  dinas, lamaran, keterangan, tugas, izin, undangan`,
       ``,
       `💡 Contoh:`,

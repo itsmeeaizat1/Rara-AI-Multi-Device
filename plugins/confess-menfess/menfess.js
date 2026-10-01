@@ -97,7 +97,7 @@ function getUserTodayCount(mf, sender) {
 // cari menfess berdasarkan id (string pendek) ATAU nomor urut (#N)
 function findPost(mf, key) {
   // key di-normalisasi dari smallcaps — user sering copy ID langsung dari
-  // pesan bot yang udah ke-smallcaps guard global (ᴍᴛꜱʏ → mtsy)
+  // pesan bot yang udah ke-smallcaps guard global (mtsy → mtsy)
   const k = fromSC(String(key || "")).trim();
   if (!k) return null;
   const byId = mf.posts.find((p) => p.id === k);

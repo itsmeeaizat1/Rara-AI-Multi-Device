@@ -86,7 +86,7 @@ const PROFESI_SET = new Set([
 // Menu pilihan kerjaan — muncul kalau .kerja dipanggil tanpa/karena arg salah.
 // Sebelumnya .kerja langsung eksekusi random padahal user belum milih jenis.
 function kerjaMenu(prefix, rpg, invalid = false) {
-  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+  const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
   const sc = (s) => String(s).replace(/[a-zA-Z]/g, c => scMap[c.toLowerCase()] || c);
 
   // teks polos — prefix "│ " & pemotongan baris dijamin boxLeft()

@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
         if (!folderId) {
             const current = getStoredFolderId()
             return m.reply(claraWrap("Upload GDrive",
-                "*ɢᴅʀɪᴠᴇ ꜰᴏʟᴅᴇʀ ɪᴅ*\n\n" +
+                "*gdrive folder id*\n\n" +
                 "Current: `" + (current || 'none (root)') + "`\n\n" +
                 "Set folder: `.uploadgdrive setfolder <folderId>`\n" +
                 "Reset: `.uploadgdrive setfolder reset`"
@@ -207,7 +207,7 @@ async function handler(m, { sock }) {
         try {
             const files = await listDriveFiles(10)
             if (files.length === 0) {
-                return m.reply(claraWrap("Upload GDrive", "*ɢᴅʀɪᴠᴇ ꜰɪʟᴇꜱ*\n\nBelum ada file di Drive."))
+                return m.reply(claraWrap("Upload GDrive", "*gdrive files*\n\nBelum ada file di Drive."))
             }
             let body = "*GDrive Files (" + files.length + ")*\n\n"
             files.forEach(function(f, i) {
@@ -225,7 +225,7 @@ async function handler(m, { sock }) {
         const fileId = args[1]
         if (!fileId) {
             return m.reply(claraWrap("Upload GDrive",
-                "*ᴅᴇʟᴇᴛᴇ ɢᴅʀɪᴠᴇ ꜰɪʟᴇ*\n\n" +
+                "*delete gdrive file*\n\n" +
                 "📌 *Cara Pakai:* `.uploadgdrive delete <fileId>`\n" +
                 "Lihat fileId: `.uploadgdrive list`"
             ))
@@ -248,7 +248,7 @@ async function handler(m, { sock }) {
             } catch (e) { console.error('[uploadgdrive.js]:', e.message); }
         }
         return m.reply(claraWrap("Upload GDrive",
-            "*ɢᴅʀɪᴠᴇ ꜱᴛᴀᴛᴜꜱ*\n\n" +
+            "*gdrive status*\n\n" +
             "Credentials: " + (hasCreds ? 'Terpasang' : 'Belum ada') + credsInfo + "\n" +
             "Folder ID: `" + (getStoredFolderId() || 'root') + "`\n\n" +
             "Setup: Taruh `gdrive-service-account.json` di folder `config/`"
@@ -262,7 +262,7 @@ async function handler(m, { sock }) {
         return m.reply(
             "GAGAL\n\n" +
             "Reply media/berkas dengan `" + m.prefix + "uploadgdrive`\n\n" +
-            "*ꜱᴜʙ-ᴄᴏᴍᴍᴀɴᴅꜱ:*\n" +
+            "*sub-commands:*\n" +
             "`" + m.prefix + "uploadgdrive status` - Cek status\n" +
             "`" + m.prefix + "uploadgdrive list` - List 10 file terakhir\n" +
             "`" + m.prefix + "uploadgdrive setfolder <id>` - Set folder tujuan\n" +
@@ -287,11 +287,11 @@ async function handler(m, { sock }) {
 
         try { fs.unlinkSync(filePath) } catch (e) { console.error('[uploadgdrive.js]:', e.message); }
         let body = "BERHASIL UPLOAD\n\n"
-        body += "*ɢᴏᴏɢʟᴇ ᴅʀɪᴠᴇ*\n\n"
+        body += "*google drive*\n\n"
         body += "Nama: " + result.name + "\n"
         body += "Size: " + formatBytes(parseInt(result.size || buffer.length)) + "\n"
         body += "File ID: `" + result.id + "`\n\n"
-        body += "*ʟɪɴᴋ:*\n" + (result.webViewLink || 'N/A')
+        body += "*link:*\n" + (result.webViewLink || 'N/A')
 
         await m.react("🐣");
         return m.reply(claraWrap("Upload GDrive", body))
@@ -303,7 +303,7 @@ async function handler(m, { sock }) {
         if (error.message === 'NO_CREDENTIALS') {
             return m.reply(claraWrap("Upload GDrive",
                 "GAGAL - Service Account belum di-setup\n\n" +
-                "*ᴄᴀʀᴀ ꜱᴇᴛᴜᴘ:*\n" +
+                "*cara setup:*\n" +
                 "1. Buka https://console.cloud.google.com\n" +
                 "2. Buat project baru, enable Google Drive API\n" +
                 "3. IAM > Service Accounts > Create\n" +

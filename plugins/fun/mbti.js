@@ -119,7 +119,7 @@ async function handler(m, { sock, args }) {
   else if (lowerText === "aa") answer = 1; // strongly left
   else if (lowerText === "bb") answer = 5; // strongly right
   else {
-    return m.reply(claraWrap("Mbti", `Pilih *A* atau *B* saja!\n\nAtau ketik *ᴄᴀɴᴄᴇʟ* untuk batal.`));
+    return m.reply(claraWrap("Mbti", `Pilih *A* atau *B* saja!\n\nAtau ketik *cancel* untuk batal.`));
   }
 
   // Record answer
@@ -196,7 +196,7 @@ async function handler(m, { sock, args }) {
   txt += `A. ${nextQ.leftTrait}\n`;
   txt += `B. ${nextQ.rightTrait}\n\n`;
   txt += `Balas dengan *A* atau *B*\n`;
-  txt += `Ketik *ᴄᴀɴᴄᴇʟ* untuk batal`;
+  txt += `Ketik *cancel* untuk batal`;
 
   await m.react("🐣");
   await m.reply(claraWrap("MBTI", txt.split("\n")));

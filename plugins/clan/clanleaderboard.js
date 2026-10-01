@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
 
     const medals = ['🥇', '🥈', '🥉']
 
-    let txt = `🏰 *ᴄʟᴀɴ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ*\n\n`
+    let txt = `🏰 *clan leaderboard*\n\n`
 
     clans.slice(0, 10).forEach((clan, i) => {
         const medal = medals[i] || `${i + 1}.`

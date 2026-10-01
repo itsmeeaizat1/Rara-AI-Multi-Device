@@ -38,7 +38,7 @@ function makeMap(lower, upper) {
 const FONTS = {
   smallcaps: {
     label: "Small Caps",
-    map: makeMap("ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+    map: makeMap("abcdefghijklmnopǫrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
   },
   sansbold: {
     label: "Sans Bold",

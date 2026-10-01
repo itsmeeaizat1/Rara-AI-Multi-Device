@@ -54,10 +54,10 @@ async function handler(m, { sock }) {
     const whoisData = whoisRes.status === "fulfilled" ? whoisRes.value : null;
 
     if (!dnsData && !whoisData) {
-      return m.reply(claraWrap("Lookup", `❌ *ɢᴀɢᴀʟ*\n\nTidak dapat memproses domain`));
+      return m.reply(claraWrap("Lookup", `❌ *gagal*\n\nTidak dapat memproses domain`));
     }
 
-    let text = `🔍 *ᴅɴꜱ ʟᴏᴏᴋᴜᴘ*\n\n`;
+    let text = `🔍 *dns lookup*\n\n`;
     text += `Domain: \`${domain}\`\n\n`;
 
     if (dnsData && !dnsData.includes("error")) {
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
         text += `🌐 NS: ${nameservers.join(", ")}\n`;
       text += `---`;
     }
-    await sendToolsPreview(sock, m.chat, text, "🔍 *ᴅɴꜱ ʟᴏᴏᴋᴜᴘ*", domain, {
+    await sendToolsPreview(sock, m.chat, text, "🔍 *dns lookup*", domain, {
       quoted: m,
     });
   } catch (e) {

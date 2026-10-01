@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
           "",
           `${m.prefix}totp add <label> <secret>`,
           "",
-          "*ᴄᴏɴᴛᴏʜ:*",
+          "*contoh:*",
           `${m.prefix}totp add gmail JBSWY3DPEHPK3PXP`,
           `${m.prefix}totp add facebook otpauth://totp/facebook:user?secret=...`,
           "",
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
       }
       await m.react("🐣");
       return m.reply(claraWrap("totp", [
-        "✅ *ᴀᴋᴜɴ 2ꜰᴀ ᴛᴇʀꜱɪᴍᴘᴇɴ!*",
+        "✅ *akun 2fa tersimpen!*",
         "",
         `🏷️ ${res.account.label}`,
         `🔢 Kode sekarang: *${res.code}*`,
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
       if (!list.length) {
         return m.reply(claraWrap("totp", `Belum ada akun 2FA tersimpan.\n\nKetik ${m.prefix}totp add <label> <secret> buat mulai.`, "guide"));
       }
-      const lines = ["🔐 *ᴀᴋᴜɴ 2ꜰᴀ ᴛᴇʀꜱɪᴍᴘᴇɴ*", ""];
+      const lines = ["🔐 *akun 2fa tersimpen*", ""];
       list.forEach((a, i) => {
         lines.push(`${i + 1}. 🏷️ *${a.label}*`);
         lines.push(`   🔢 ${a.digits} digit | ⏱️ ${a.period}s | 📅 ${new Date(a.createdDate).toLocaleDateString("id-ID")}`);
@@ -119,9 +119,9 @@ async function handler(m, { sock }) {
     if (!m.args.length) {
       const list = listAccounts(uid);
       const help = [
-        "🔐 *ᴛᴏᴛᴘ 2ꜰᴀ ᴀᴜᴛʜᴇɴᴛɪᴄᴀᴛᴏʀ*",
+        "🔐 *totp 2fa authenticator*",
         "",
-        "ᴋᴏᴅᴇ ʟᴏɢɪɴ 6-ᴅɪɢɪᴛ ʀᴇᴀʟ-ᴛɪᴍᴇ ᴀʟᴀ ɢᴏᴏɢʟᴇ ᴀᴜᴛʜᴇɴᴛɪᴄᴀᴛᴏʀ",
+        "kode login 6-digit real-time ala google authenticator",
         "",
         `▸ ${m.prefix}totp <label>`,
         "   lihat kode sekarang",
@@ -132,10 +132,10 @@ async function handler(m, { sock }) {
         `▸ ${m.prefix}totp del <no|label>`,
         "   hapus akun",
         "",
-        "🔒 ᴘʀɪᴠᴀᴛᴇ ᴏɴʟʏ — ᴋᴏᴅᴇ 2ꜰᴀ ꜱᴇɴꜱɪᴛɪꜰ",
+        "🔒 private only — kode 2fa sensitif",
       ];
       if (list.length) {
-        help.push("", "*ᴀᴋᴜɴ ʟᴜ:*");
+        help.push("", "*akun lu:*");
         list.slice(0, 5).forEach((a, i) => help.push(`${m.prefix}totp ${a.label}`));
       }
       return m.reply(claraWrap("totp", help.join("\n")));
@@ -158,13 +158,13 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("totp", [
       `🔐 *${account.label}*`,
       "",
-      `ɴɪᴋᴍᴀᴛ ᴋᴏᴅᴇ ʏɢ ᴀᴋᴛɪꜰ ɴʏᴀ...`,
+      `nikmat kode yg aktif nya...`,
       "",
       `*${g.code}*`,
       "",
-      `${progressBar(g.secondsRemaining, account.period)} ${g.secondsRemaining}ᴅᴛᴋ`,
+      `${progressBar(g.secondsRemaining, account.period)} ${g.secondsRemaining}dtk`,
       "",
-      "⚠️ ᴋᴏᴅᴇ ʙᴇʀɢᴀɴᴛɪ ᴛɪᴀᴘ " + (account.period || 30) + " ᴅᴇᴛɪᴋ",
+      "⚠️ kode berganti tiap " + (account.period || 30) + " detik",
     ].join("\n")));
   } catch (e) {
     await m.react("❌");

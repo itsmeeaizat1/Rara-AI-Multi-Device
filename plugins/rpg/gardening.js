@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
         msg += `📭 Kebon kosong\n`;
         msg += `
 `;
-        msg += `📋 *ᴛᴀɴᴀᴍᴀɴ ᴛᴇʀsᴇᴅɪᴀ*\n`;
+        msg += `📋 *tanaman tersedia*\n`;
         for (const crop of CROPS) {
           msg += `🌱 ${crop.name} (${crop.id}) — ${crop.growTime / 60000}m\n`;
         }

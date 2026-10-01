@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
 
     if (!text) {
         return m.reply(claraWrap("carbon", [
-      `🖥️ *ᴄᴀʀʙᴏɴ ᴄᴏᴅᴇ*`,
+      `🖥️ *carbon code*`,
       `Fitur ini mengubah teks kode program kamu menjadi gambar cantik ala Carbon`,
       ``,
       `📌 Format:`,

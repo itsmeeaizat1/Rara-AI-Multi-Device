@@ -37,7 +37,7 @@ function handler(m, { sock }) {
         user.settings.levelupNotif = false
         db.save()
         return m.reply(claraWrap("Level Up Notif", 
-            `Status: *ᴏꜰꜰ* ❌\n` +
+            `Status: *off* ❌\n` +
             `Notifikasi level up dinonaktifkan.`))
     }
     

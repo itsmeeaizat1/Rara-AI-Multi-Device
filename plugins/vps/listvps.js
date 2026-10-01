@@ -64,13 +64,13 @@ Total: ${droplets.length} droplet
             
             txt += `
 
-*ꜱᴛᴀᴛᴜꜱ:* ${status}
+*status:* ${status}
 │ *ID:* ${droplet.id}
 │ *IP:* ${ip}
-│ *ʀᴀᴍ:* ${droplet.memory} MB
-│ *ᴄᴘᴜ:* ${droplet.vcpus} vCPU
-│ *ᴅɪꜱᴋ:* ${droplet.disk} GB
-│ *ʀᴇɢɪᴏɴ:* ${droplet.region?.slug || '-'}
+│ *ram:* ${droplet.memory} MB
+│ *cpu:* ${droplet.vcpus} vCPU
+│ *disk:* ${droplet.disk} GB
+│ *region:* ${droplet.region?.slug || '-'}
 `
         }
         await m.reply(txt)

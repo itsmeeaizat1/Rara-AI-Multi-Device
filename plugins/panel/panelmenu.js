@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         if (userServers.length === 0) {
             return m.reply(claraWrap("panelmenu",
                 "Akses Ditolak\n\n" +
-                "Hanya *ʙᴏᴛ ᴏᴡɴᴇʀ* atau *Reseller/CEO Panel* yang bisa akses menu ini\n\n" +
+                "Hanya *bot owner* atau *Reseller/CEO Panel* yang bisa akses menu ini\n\n" +
                 "Minta owner untuk add kamu sebagai reseller:\n" +
                 ".addreseller v1 @tag"
             ))

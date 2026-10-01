@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
 
     if (!data?.status || !data?.data?.url) {
       await m.react("🐣");
-      return m.reply(claraWrap("emojitoimage", "❌ *ɢᴀɢᴀʟ*\n\nEmoji tidak ditemukan atau API error"));
+      return m.reply(claraWrap("emojitoimage", "❌ *gagal*\n\nEmoji tidak ditemukan atau API error"));
     }
 
     const imgUrl = data.data.url;
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     await sock.sendMedia(
       m.chat,
       imgUrl,
-      `🖼️ *ᴇᴍᴏᴊɪ ᴛᴏ ɪᴍᴀɢᴇ*\n\nEmoji: ${emoji}\nStyle: ${validStyle}\nCode: ${data.data.code || "-"}`,
+      `🖼️ *emoji to image*\n\nEmoji: ${emoji}\nStyle: ${validStyle}\nCode: ${data.data.code || "-"}`,
       m,
       { type: "image", contextInfo: saluranCtx() },
     );

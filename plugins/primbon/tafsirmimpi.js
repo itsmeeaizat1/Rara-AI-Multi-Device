@@ -31,11 +31,11 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data?.hasil?.length) {
-            return m.reply(novaError("TafsirMimpi", `❌ *ɢᴀɢᴀʟ*\n\nTidak ditemukan tafsir untuk: ${keyword}`))
+            return m.reply(novaError("TafsirMimpi", `❌ *gagal*\n\nTidak ditemukan tafsir untuk: ${keyword}`))
         }
         
         const r = data.data
-        let response = `🌙 *ᴛᴀꜰꜱɪʀ ᴍɪᴍᴘɪ*\n\n`
+        let response = `🌙 *tafsir mimpi*\n\n`
         response += `Kata kunci: *${r.keyword}*\n`
         response += `Ditemukan: *${r.total} hasil*\n\n`
         

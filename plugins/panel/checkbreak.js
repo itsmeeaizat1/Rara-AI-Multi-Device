@@ -40,7 +40,7 @@ function handler(m, { sock }) {
   );
 
   if (!hasAccess && !m.isOwner) {
-    return m.reply(novaError("Panel", `❌ *ɢᴀɢᴀʟ*\n\nKamu tidak memiliki akses ke CPanel!`));
+    return m.reply(novaError("Panel", `❌ *gagal*\n\nKamu tidak memiliki akses ke CPanel!`));
   }
 
   const db = getDatabase();
@@ -50,18 +50,18 @@ function handler(m, { sock }) {
   const elapsed = now - lastUsed;
   const remaining = Math.max(0, jedaMs - elapsed);
 
-  let status = "✅ *ʀᴇᴀᴅʏ*";
+  let status = "✅ *ready*";
   let statusDesc = "Bisa create panel sekarang!";
 
   if (jedaMs === 0) {
-    status = "⚡ *ɴᴏ ᴊᴇᴅᴀ*";
+    status = "⚡ *no jeda*";
     statusDesc = "Jeda dinonaktifkan, bebas create!";
   } else if (remaining > 0) {
-    status = "🕕 *ᴄᴏᴏʟᴅᴏᴡɴ*";
+    status = "🕕 *cooldown*";
     statusDesc = `Tunggu ${formatTime(remaining)} lagi`;
   }
 
-  let text = `⏱️ *ꜱᴛᴀᴛᴜꜱ ᴊᴇᴅᴀ ᴘᴀɴᴇʟ*\n\n`;
+  let text = `⏱️ *status jeda panel*\n\n`;
     text += `${status}\n`;
   text += `${statusDesc}\n`;
   text += `\n`;

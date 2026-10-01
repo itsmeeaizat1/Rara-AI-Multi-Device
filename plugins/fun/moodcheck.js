@@ -76,7 +76,7 @@ function checkNegativeStreak(userJid) {
 
 const SUPPORT_MESSAGES = {
   Sedih: [
-    "Hei, aku perhatiin 3x terakhir mood kamu terdeteksi *ꜱᴇᴅɪʜ*. Kamu nggak sendirian, ya. Kalau mau curhat atau butuh teman dengerin, aku di sini.",
+    "Hei, aku perhatiin 3x terakhir mood kamu terdeteksi *sedih*. Kamu nggak sendirian, ya. Kalau mau curhat atau butuh teman dengerin, aku di sini.",
     "Kamu udah 3 kali kedeteksi sedih dari voice note kamu. Nggak apa-apa kok ngerasa gitu. Tapi jangan dipendem sendiri, share ke teman atau ke aku aja.",
   ],
   Stres: [
@@ -170,7 +170,7 @@ async function triggerAIConversation(sock, groupId, userJid, pushName, mood, moo
 
     if (reply && reply.trim()) {
       const body = [
-        `*ᴍᴏᴏᴅ ꜱᴜᴘᴘᴏʀᴛ - ᴀɪ ᴄᴏɴɴᴇᴄᴛ*`,
+        `*mood support - ai connect*`,
         ` `,
         `Hai ${pushName},`,
         ` `,
@@ -191,7 +191,7 @@ async function triggerAIConversation(sock, groupId, userJid, pushName, mood, moo
     const moodKey = mood;
     const supportMsg = getSupportMessage(moodKey, pushName);
     const fallbackBody = [
-      `*ᴘᴇꜱᴀɴ ꜱᴜᴘᴘᴏʀᴛ ᴏᴛᴏᴍᴀᴛɪꜱ*`,
+      `*pesan support otomatis*`,
       ` `,
       `Hai ${pushName},`,
       ` `,
@@ -491,24 +491,24 @@ function generateReport(analysis, pushName) {
   }).join("\n");
 
   const report = [
-    `*ᴠᴏɪᴄᴇ ɴᴏᴛᴇ ᴍᴏᴏᴅ ᴀɴᴀʟʏᴢᴇʀ*`,
+    `*voice note mood analyzer*`,
     ` `,
     `Pengirim: ${pushName || "Anonim"}`,
     ` `,
-    `*ʜᴀꜱɪʟ ᴜᴛᴀᴍᴀ:*`,
+    `*hasil utama:*`,
     `${moodEmojis[topMoodKey]} ${moodLabels[topMoodKey]} (${topScore}%)`,
     `Sekunder: ${moodEmojis[secondMoodKey]} ${moodLabels[secondMoodKey]} (${secondScore}%)`,
     ` `,
-    `*ᴀɴᴀʟɪꜱɪꜱ:*`,
+    `*analisis:*`,
     `${moodDescriptions[topMoodKey]}`,
     ` `,
-    `*ꜱᴀʀᴀɴ:*`,
+    `*saran:*`,
     `${moodAdvice[topMoodKey]}`,
     ` `,
-    `*ᴅɪꜱᴛʀɪʙᴜꜱɪ ᴍᴏᴏᴅ:*`,
+    `*distribusi mood:*`,
     bars,
     ` `,
-    `*ᴀᴜᴅɪᴏ ᴍᴇᴛʀɪᴄꜱ:*`,
+    `*audio metrics:*`,
     `Durasi: ${metrics.duration.toFixed(1)}s`,
     `Loudness: ${metrics.loudness}% (vol: ${metrics.meanVolume}dB)`,
     `Pitch: ${metrics.pitchLevel}% (ZCR: ${metrics.zcr})`,
@@ -616,7 +616,7 @@ async function handler(m, { sock }) {
       db.groups[groupId].moodAI = true;
       db.groups[groupId].moodAIEnabledAt = Date.now();
       saveMoodDB(db);
-      await m.reply(claraWrap("Mood AI Connect", "Mood AI Connect sudah DINYALAKAN untuk grup ini.\n\nKalau seseorang 3x berturut-turut terdeteksi mood negatif, bot akan menghubungkan mereka ke AI untuk ngobrol interaktif.\n\n*ᴄᴏᴏʟᴅᴏᴡɴ:* Default 30 menit per user. Bisa diubah dengan .moodaiset <menit>.\n\n*ꜱʏᴀʀᴀᴛ:* Mood Tracking juga harus ON (.moodtrackon) dan AI config harus terisi (apiKey di .aihelp)."));
+      await m.reply(claraWrap("Mood AI Connect", "Mood AI Connect sudah DINYALAKAN untuk grup ini.\n\nKalau seseorang 3x berturut-turut terdeteksi mood negatif, bot akan menghubungkan mereka ke AI untuk ngobrol interaktif.\n\n*cooldown:* Default 30 menit per user. Bisa diubah dengan .moodaiset <menit>.\n\n*syarat:* Mood Tracking juga harus ON (.moodtrackon) dan AI config harus terisi (apiKey di .aihelp)."));
       return;
     }
 
@@ -687,7 +687,7 @@ async function handler(m, { sock }) {
       }
 
       const statusBody = [
-        `*ꜱᴛᴀᴛᴜꜱ ᴍᴏᴏᴅ ᴛʀᴀᴄᴋɪɴɢ*`,
+        `*status mood tracking*`,
         ` `,
         `Tracking: ${trackStatus}`,
         `Aktif Sejak: ${trackEnabledAt}`,
@@ -788,13 +788,13 @@ async function handler(m, { sock }) {
         `Total Records: ${history.length}`,
         `Mood Dominan: ${moodEmojis[dominantMood[0]] || ""} ${dominantMood[0]} (${dominantMood[1]}x)`,
         ` `,
-        `*ᴛʀᴇɴᴅ ɪɴᴛᴇɴꜱɪᴛᴀꜱ:*`,
+        `*trend intensitas:*`,
         `${sparkline}`,
         ` `,
-        `*ʀɪᴡᴀʏᴀᴛ ᴛᴇʀᴀᴋʜɪʀ:*`,
+        `*riwayat terakhir:*`,
         historyLines,
         ` `,
-        `*ᴅɪꜱᴛʀɪʙᴜꜱɪ ᴍᴏᴏᴅ:*`,
+        `*distribusi mood:*`,
         distLines,
       ].join("\n");
 
@@ -895,7 +895,7 @@ async function handler(m, { sock }) {
             else if (isMoodSuggOn(groupId)) {
               const supportMsg = getSupportMessage(moodKey, m.pushName);
               const supportBody = [
-                `*ᴘᴇꜱᴀɴ ꜱᴜᴘᴘᴏʀᴛ ᴏᴛᴏᴍᴀᴛɪꜱ*`,
+                `*pesan support otomatis*`,
                 ` `,
                 `Hai ${m.pushName || "Kamu"},`,
                 ` `,

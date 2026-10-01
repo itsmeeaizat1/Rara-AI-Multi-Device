@@ -127,7 +127,7 @@ async function handleSession(m, sock) {
       await sock.sendButton(
         m.chat,
         null,
-        "🎁 *ɢɪᴠᴇᴀᴡᴀʏ ᴄʀᴇᴀᴛᴏʀ*\n\nPertanyaan 2/3:\nMau jalankan giveaway di grup ini atau grup lain?",
+        "🎁 *giveaway creator*\n\nPertanyaan 2/3:\nMau jalankan giveaway di grup ini atau grup lain?",
         m,
         { buttons, footer: "Pilih grup untuk giveaway" },
       );
@@ -165,7 +165,7 @@ async function askPrizeDetails(m, sock, session) {
       adminJid,
       {
         text:
-          "🎁 *ɢɪᴠᴇᴀᴡᴀʏ ᴄʀᴇᴀᴛᴏʀ*\n\n" +
+          "🎁 *giveaway creator*\n\n" +
           "Pertanyaan 3/3:\nBerikan detail hadiah dengan format:\n" +
           "nama hadiah | detail hadiah\n\n" +
           "Contoh: Premium Account | Email: xxx@gmail.com | Password: xxx",
@@ -211,7 +211,7 @@ async function createGiveaway(session, sock, m) {
   const remaining = formatDuration(giveaway.duration);
 
   const giveawayText =
-    "🎉 *ɢ ɪ ᴠ ᴇ ᴀ ᴡ ᴀ ʏ*\n\n" +
+    "🎉 *g i v e a w a y*\n\n" +
     `🎁 Title: *${giveaway.title}*\n` +
     `🏆 Hadiah: *${giveaway.prizeName}*\n` +
     `👥 Pemenang: ${giveaway.winners}\n` +
@@ -219,7 +219,7 @@ async function createGiveaway(session, sock, m) {
     `⏱️ Durasi: ${remaining}\n` +
     `🆔 Id: \`${giveawayId}\`\n` +
     `\n` +
-    `Klik tombol *ᴊᴏɪɴ* untuk ikut giveaway!`;
+    `Klik tombol *join* untuk ikut giveaway!`;
 
   const joinButton = [
     {
@@ -276,7 +276,7 @@ async function endGiveaway(giveawayId, sock, db) {
 
     await sock.sendMessage(giveaway.chatId, {
       text:
-        `😔 *ɢɪᴠᴇᴀᴡᴀʏ ʙᴇʀᴀᴋʜɪʀ*\n\n` +
+        `😔 *giveaway berakhir*\n\n` +
         `Giveaway *${giveaway.title}* berakhir tanpa peserta.\n\n` +
         `🆔 Id: \`${giveawayId}\`\n` +
         `👥 Peserta: 0\n`,
@@ -311,7 +311,7 @@ async function endGiveaway(giveawayId, sock, db) {
     giveaway.chatId,
     {
       text:
-        `🎊 *ɢɪᴠᴇᴀᴡᴀʏ ʙᴇʀᴀᴋʜɪʀ!*\n\n` +
+        `🎊 *giveaway berakhir!*\n\n` +
         `${winnerText}\n` +
         `\n` +
         `🎁 Title: *${giveaway.title}*\n` +
@@ -426,7 +426,7 @@ async function handler(m, { sock }) {
     });
 
     await m.reply(
-      "🎁 *ɢɪᴠᴇᴀᴡᴀʏ ᴄʀᴇᴀᴛᴏʀ*\n\n" +
+      "🎁 *giveaway creator*\n\n" +
         "Pertanyaan 1/3:\nBerikan detail giveaway dengan format:\n" +
         "nama | durasi | jumlah pemenang\n\n" +
         "Contoh: Premium Account | 5m | 1\n" +
@@ -481,7 +481,7 @@ async function handler(m, { sock }) {
     const active = entries.filter((g) => !g.ended);
     const ended = entries.filter((g) => g.ended);
 
-    let text = "📋 *ᴅᴀꜰᴛᴀʀ ɢɪᴠᴇᴀᴡᴀʏ*\n\n";
+    let text = "📋 *daftar giveaway*\n\n";
     if (active.length > 0) {
       text += "*Aktif:*\n";
       for (const g of active) {
@@ -491,7 +491,7 @@ async function handler(m, { sock }) {
       text += "\n";
     }
     if (ended.length > 0) {
-      text += "🔴 *ʙᴇʀᴀᴋʜɪʀ:*\n";
+      text += "🔴 *berakhir:*\n";
       for (const g of ended.slice(-5)) {
         text += `🆔 \`${g.giveawayId}\` — ${g.title} (${g.winnerList?.length || 0} pemenang)\n`;
       }
@@ -541,7 +541,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(giveaway.chatId, {
       text:
-        `🔄 *ɢɪᴠᴇᴀᴡᴀʏ ʀᴇʀᴏʟʟ!*\n\n` +
+        `🔄 *giveaway reroll!*\n\n` +
         `${winnerText}\n` +
         `\n` +
         `🎁 Title: *${giveaway.title}*\n` +
@@ -574,7 +574,7 @@ async function handler(m, { sock }) {
 
   if (cmd === "giveaway") {
     await m.reply(
-      "🎁 *ɢɪᴠᴇᴀᴡᴀʏ ᴍᴇɴᴜ*\n\n" +
+      "🎁 *giveaway menu*\n\n" +
         `${prefix}giveawaycreate — Buat giveaway\n` +
         `${prefix}giveawaylist — Lihat daftar\n` +
         `${prefix}giveawaydelete — Hapus giveaway\n` +

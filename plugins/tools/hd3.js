@@ -299,7 +299,7 @@ async function handler(m, { sock }) {
 
     const resultBuffer = Buffer.from(dlRes.data);
     const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
-    const caption = `*ʜᴅ ᴇɴʜᴀɴᴄᴇᴅ*\nSize: ${sizeMB}MB\nSource: BeautyPlus\nQuality: Full HD`;
+    const caption = `*hd enhanced*\nSize: ${sizeMB}MB\nSource: BeautyPlus\nQuality: Full HD`;
 
     if (resultBuffer.length > 5 * 1024 * 1024) {
       // Auto document mode kalau > 5MB (no compress)

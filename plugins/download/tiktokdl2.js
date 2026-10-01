@@ -280,7 +280,7 @@ async function handler(m, { sock }) {
         }
 
         if (result.mp3.length > 0) {
-            m.reply(claraWrap("Tiktokdl2", `🍀 *ɴᴏᴛᴇ*\nKonten ini tidak memiliki video/slide, mengirim audio saja...`))
+            m.reply(claraWrap("Tiktokdl2", `🍀 *note*\nKonten ini tidak memiliki video/slide, mengirim audio saja...`))
             await sock.sendMessage(
                 m.chat,
                 {

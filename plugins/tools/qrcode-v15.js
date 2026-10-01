@@ -53,8 +53,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     const out =
       claraWrap("QR Code", [`Text: *${text}*`,
-        "Format: *ᴘɴɢ*",
-        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+        "Format: *png*",
+        "Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}qrcode <teks> untuk buat QR lagi`) +
       "\n" +

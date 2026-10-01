@@ -108,7 +108,7 @@ async function handler(m, { sock, db }) {
     const actionText = action === 'open' ? 'BUKA' : 'TUTUP';
     const emoji = action === 'open' ? '🔓' : '🔒';
     
-    const successMsg = `✅ *ᴊᴀᴅᴡᴀʟ ᴅɪꜱɪᴍᴘᴀɴ*
+    const successMsg = `✅ *jadwal disimpan*
 
 ${emoji} Aksi: *${actionText}*
 Waktu: *${formattedTime} WIB*

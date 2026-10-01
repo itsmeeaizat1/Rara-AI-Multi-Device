@@ -194,7 +194,7 @@ async function handler(m, { sock }) {
       isLifetime: existing.isLifetime,
       totalGroups: Object.keys(db.db.data.sewa.groups).length,
     }).catch((e) => { console.error('[renewsewa.js]:', e.message); });
-    let text = `✅ *ꜱᴇᴡᴀ ᴅɪᴘᴇʀᴘᴀɴᴊᴀɴɢ*\n\n`;
+    let text = `✅ *sewa diperpanjang*\n\n`;
     text += `Grup: *${groupName}*\n`;
     text += `Tambahan: *${formatDuration(durationStr)}*\n`;
     text += `Expired baru: *${expiredStr}*\n`;

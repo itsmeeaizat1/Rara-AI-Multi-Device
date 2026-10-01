@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
         return { jid, name: u?.name || jid.split("@")[0], level: u?.rpg?.level || 1 };
       }).sort((a, b) => b.level - a.level).slice(0, 5);
 
-      msg += `📋 *ᴛᴏᴘ ᴍᴇᴍʙᴇʀs*\n`;
+      msg += `📋 *top members*\n`;
       for (let i = 0; i < memberData.length; i++) {
         const m = memberData[i];
         const medal = ["🥇", "🥈", "🥉"][i] || `${i + 1}.`;

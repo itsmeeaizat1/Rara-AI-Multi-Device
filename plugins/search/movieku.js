@@ -76,7 +76,7 @@ async function getMovieDetail(movieUrl) {
 
 function formatDownloads(downloads) {
     if (!downloads || Object.keys(downloads).length === 0) return ""
-    let txt = `\n🔽 *ʟɪɴᴋ ᴅᴏᴡɴʟᴏᴀᴅ*\n\n`
+    let txt = `\n🔽 *link download*\n\n`
     const qualities = ["1080p", "720p", "480p", "360p"]
     for (const q of qualities) {
         if (!downloads[q]) continue
@@ -96,11 +96,11 @@ async function handler(m, { sock }) {
 
     if (!query) {
         return m.reply(
-            `🎬 *ᴍᴏᴠɪᴇᴋᴜ*\n\n` +
+            `🎬 *movieku*\n\n` +
             `Fitur ini membantu kamu mencari informasi lengkap tentang film dari database Movieku, termasuk sinopsis, detail film, dan link download dalam berbagai kualitas resolusi\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+            `*cara pakai:*\n` +
             `\`${m.prefix}movieku <judul film>\`\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*contoh:*\n` +
             `\`${m.prefix}movieku avengers\`\n` +
             `\`${m.prefix}movieku one piece\`\n\n` +
             `_Hasil pencarian akan menampilkan film yang paling relevan dengan judul yang kamu cari_`
@@ -122,10 +122,10 @@ async function handler(m, { sock }) {
             const synopsisText = detail.synopsis.length > 500
                 ? detail.synopsis.substring(0, 497) + "..."
                 : detail.synopsis
-            txt += `📝 *ꜱɪɴᴏᴘꜱɪꜱ:*\n${synopsisText}\n\n`
+            txt += `📝 *sinopsis:*\n${synopsisText}\n\n`
         }
 
-        txt += `📋 *ᴅᴇᴛᴀɪʟ ꜰɪʟᴍ*\n\n`
+        txt += `📋 *detail film*\n\n`
         if (detail.genre) txt += `🎭 Genre: *${detail.genre}*\n`
         if (detail.release) txt += `📅 Rilis: *${detail.release}*\n`
         if (detail.duration) txt += `⏱️ Durasi: *${detail.duration}*\n`
@@ -137,7 +137,7 @@ async function handler(m, { sock }) {
         if (detail.stars) txt += `🌟 Pemeran: *${detail.stars}*\n`
 
         if (detail.stream) {
-            txt += `\n▶️ *ꜱᴛʀᴇᴀᴍɪɴɢ:* ${detail.stream}\n`
+            txt += `\n▶️ *streaming:* ${detail.stream}\n`
         }
 
         txt += formatDownloads(detail.downloads)
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
         }
 
         if (movies.length > 1) {
-            let listTxt = `🎬 *ʜᴀꜱɪʟ ʟᴀɪɴɴʏᴀ*\n\n`
+            let listTxt = `🎬 *hasil lainnya*\n\n`
             listTxt += `Ditemukan *${movies.length}* film yang cocok dengan pencarianmu, berikut daftar lengkapnya:\n\n`
             const maxShow = Math.min(movies.length, 10)
             for (let i = 1; i < maxShow; i++) {

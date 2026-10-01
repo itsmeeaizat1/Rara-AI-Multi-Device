@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     if(!link) return m.reply( `*LINK NGL NYA MANA ??*\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
     if(!kata) return m.reply( `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
     if(!jumlah) return m.reply( `*JUMLAH NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
-    if(isNaN(jumlah)) { const __navText = `*ᴊᴜᴍʟᴀʜ ɴʏᴀ ʜᴀʀᴜꜱ ᴀɴɢᴋᴀ*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`; return await m.reply(__navText); }
+    if(isNaN(jumlah)) { const __navText = `*jumlah nya harus angka*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`; return await m.reply(__navText); }
     try {
     await m.react("🕒");
         for(let i = 0; i < jumlah; i++) {
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
         }
         await m.react("🐣");
         await sock.sendMessage(m.chat, {
-            text: `✅ *ᴅᴏɴᴇ*\n\nBerhasil mengirim spam NGL Message!\nTarget: ${link}\nPesan: ${kata} (${jumlah}x)`
+            text: `✅ *done*\n\nBerhasil mengirim spam NGL Message!\nTarget: ${link}\nPesan: ${kata} (${jumlah}x)`
         }, { quoted: m })
         
     } catch (error) {

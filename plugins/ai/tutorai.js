@@ -55,27 +55,27 @@ Gunakan bahasa Indonesia yang santai dan mudah dimengerti.`;
       if (!t) continue;
 
       if (t.startsWith("PENGERTIAN:")) {
-        formatted += `📖 *ᴘᴇɴɢᴇʀᴛɪᴀɴ*
+        formatted += `📖 *pengertian*
 ${t.replace("PENGERTIAN:", "").trim()}
 
 `;
       } else if (t.startsWith("ANALOGI:")) {
-        formatted += `💡 *ᴀɴᴀʟᴏɢɪ*
+        formatted += `💡 *analogi*
 ${t.replace("ANALOGI:", "").trim()}
 
 `;
       } else if (t.startsWith("PENJELASAN:")) {
-        formatted += `📝 *ᴘᴇɴᴊᴇʟᴀsᴀɴ*
+        formatted += `📝 *penjelasan*
 ${t.replace("PENJELASAN:", "").trim()}
 
 `;
       } else if (t.startsWith("CONTOH:")) {
-        formatted += `✅ *ᴄᴏɴᴛᴏʜ*
+        formatted += `✅ *contoh*
 ${t.replace("CONTOH:", "").trim()}
 
 `;
       } else if (t.startsWith("RANGKUMAN:")) {
-        formatted += `📌 *ʀᴀɴɢᴋᴜᴍᴀɴ*
+        formatted += `📌 *rangkuman*
 ${t.replace("RANGKUMAN:", "").trim()}\n`;
       } else {
         formatted += `${t}\n`;

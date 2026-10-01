@@ -74,7 +74,7 @@ I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   I.setComposer(async () => "JAWABAN FINAL: beli laptop A.");
 
   await handler(mkM({ text: "riset laptop gaming terbaik lalu rekomendasikan" }), { sock, db: getDatabase(), config: cfg });
-  t("2a. konfirmasi loop baru dibalas", replies.length === 1 && /ʟᴏᴏᴘ ʙᴀʀᴜ|loop baru/i.test(replies[0]), replies[0]?.slice(0, 80));
+  t("2a. konfirmasi loop baru dibalas", replies.length === 1 && /loop baru|loop baru/i.test(replies[0]), replies[0]?.slice(0, 80));
   t("2b. konfirmasi nunjukin tujuan + budget", /rekomendasi laptop/i.test(replies[0]) && /4 putaran/.test(replies[0]), replies[0]?.slice(0, 160));
   const run0 = I.store().runs.l1;
   t("2c. loop kepersist status running", run0?.status === "running", run0?.status);
@@ -90,7 +90,7 @@ I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   const dms = sent.filter((s) => s.jid === OWNER);
   t("2i. DM progress per putaran terkirim", dms.length >= 3, dms.map((d) => d.text?.slice(0, 30)));
   t("2j. DM putaran 1 nunjukin evaluasi 'belum tercapai'", dms.some((d) => /belum tercapai/i.test(d.text)), dms[0]?.text?.slice(0, 120));
-  t("2k. DM final 'SELESAI' + tercapai terkirim", dms.some((d) => /sᴇʟᴇsᴀɪ|selesai/i.test(d.text) && /ᴛᴇʀᴄᴀᴘᴀɪ|tercapai/i.test(d.text)), dms.at(-1)?.text?.slice(0, 90));
+  t("2k. DM final 'SELESAI' + tercapai terkirim", dms.some((d) => /selesai|selesai/i.test(d.text) && /tercapai|tercapai/i.test(d.text)), dms.at(-1)?.text?.slice(0, 90));
 }
 
 console.log("— section 3: budget habis tanpa satisfied — laporan jujur —");
@@ -109,7 +109,7 @@ I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   t("3a. budget 4 putaran jalan semua (gak satisfied-satisfied)", run?.status === "done" && run.iterations.length === 4, { s: run?.status, n: run?.iterations?.length });
   t("3b. met=false — gak bohong tercapai", run.met === false, run.met);
   t("3c. putaran 2+ ikuti instruksi critic", /cari lebih banyak data/i.test(String(run.iterations[2]?.instruction)), run.iterations[2]?.instruction);
-  t("3d. DM final jujur 'budget habis'", sent.some((d) => /ʙᴜᴅɢᴇᴛ|budget/i.test(d.text) && /ʜᴀʙɪꜱ|habis/i.test(d.text)), sent.at(-1)?.text?.slice(0, 120));
+  t("3d. DM final jujur 'budget habis'", sent.some((d) => /budget|budget/i.test(d.text) && /habis|habis/i.test(d.text)), sent.at(-1)?.text?.slice(0, 120));
 }
 
 console.log("— section 4: putaran gagal + stop + subcommand —");
@@ -126,18 +126,18 @@ I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   await wait(700);
   const run3 = I.store().runs.l3;
   t("4a. putaran gagal dicatat, loop lanjut", run3?.iterations[0]?.result === null && run3?.cur >= 2, { r0: run3?.iterations?.[0]?.result, cur: run3?.cur });
-  t("4b. DM putaran gagal terkirim", sent.some((d) => /ɢᴀɢᴀʟ|gagal/i.test(d.text)), sent.map((d) => d.text?.slice(0, 30)));
+  t("4b. DM putaran gagal terkirim", sent.some((d) => /gagal|gagal/i.test(d.text)), sent.map((d) => d.text?.slice(0, 30)));
 
   // ─── status ───
   replies = [];
   await handler(mkM({ text: "status" }), { sock, db: getDatabase(), config: cfg });
-  t("4c. status nunjukin loop terakhir", replies.length === 1 && /ꜱᴛᴀᴛᴜꜱ ʟᴏᴏᴘ|status loop/i.test(replies[0]), replies[0]?.slice(0, 60));
+  t("4c. status nunjukin loop terakhir", replies.length === 1 && /status loop|status loop/i.test(replies[0]), replies[0]?.slice(0, 60));
   t("4d. status nunjukin iterasi + ikon evaluasi", /🟡|⚠️|✅/.test(replies[0]), replies[0]?.slice(0, 200));
 
   // ─── list ───
   replies = [];
   await handler(mkM({ text: "list" }), { sock, db: getDatabase(), config: cfg });
-  t("4e. list nunjukin semua loop", /ʟᴜᴘ|L3|L3|ʟ3/i.test(replies[0] || "") || /ʟɪꜱᴛ|ᴅᴀꜰᴛᴀʀ/i.test(replies[0] || ""), replies[0]?.slice(0, 90));
+  t("4e. list nunjukin semua loop", /lup|L3|L3|l3/i.test(replies[0] || "") || /list|daftar/i.test(replies[0] || ""), replies[0]?.slice(0, 90));
 
   // ─── stop loop yang masih jalan (critic gak pernah puas, 4 putaran perlu waktu) ───
   I.resetSeams();
@@ -151,7 +151,7 @@ I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   await wait(80); // biarkan putaran 1 jalan
   replies = [];
   await handler(mkM({ text: "stop" }), { sock, db: getDatabase(), config: cfg });
-  t("4f. stop loop jalan dibalas", replies.length === 1 && /ᴅɪʜᴇɴᴛɪᴋᴀɴ|dihentikan/i.test(replies[0]), replies[0]?.slice(0, 80));
+  t("4f. stop loop jalan dibalas", replies.length === 1 && /dihentikan|dihentikan/i.test(replies[0]), replies[0]?.slice(0, 80));
   const run4 = I.store().runs.l4;
   t("4g. status jadi stopped", run4?.status === "stopped", run4?.status);
   await wait(600);
@@ -160,12 +160,12 @@ I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   // ─── hasil (belum ada answer karena di-stop) ───
   replies = [];
   await handler(mkM({ text: "hasil l4" }), { sock, db: getDatabase(), config: cfg });
-  t("4i. hasil loop di-stop → jujur belum ada jawaban final", replies.length === 1 && /ʙᴇʟᴜᴍ ᴘᴜɴʏᴀ|belum punya/i.test(replies[0]), replies[0]?.slice(0, 80));
+  t("4i. hasil loop di-stop → jujur belum ada jawaban final", replies.length === 1 && /belum punya|belum punya/i.test(replies[0]), replies[0]?.slice(0, 80));
 
   // ─── hasil l1 (ada answer) ───
   replies = [];
   await handler(mkM({ text: "hasil l1" }), { sock, db: getDatabase(), config: cfg });
-  t("4j. hasil final dikirim ke DM", replies.length === 1 && /ᴅɪᴋɪʀɪᴍ|dikirim/i.test(replies[0]) && sent.some((d) => /ᴊᴀᴡᴀʙᴀɴ ꜰɪɴᴀʟ|jawaban final/i.test(d.text)), replies[0]?.slice(0, 80));
+  t("4j. hasil final dikirim ke DM", replies.length === 1 && /dikirim|dikirim/i.test(replies[0]) && sent.some((d) => /jawaban final|jawaban final/i.test(d.text)), replies[0]?.slice(0, 80));
 }
 
 console.log("— section 5: resume setelah restart + guard dobel —");
@@ -205,13 +205,13 @@ console.log("— section 6: usage tanpa argumen —");
 I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   replies = [];
   await handler(mkM({ text: "" }), { sock, db: getDatabase(), config: cfg });
-  t("6a. usage desain V2 keluar (✧ kaomoji)", replies.length === 1 && /✧/.test(replies[0]) && /ᴀɢᴇɴᴛʟᴏᴏᴘ/.test(replies[0]), replies[0]?.slice(0, 60));
-  t("6b. usage nunjukin bedanya sama autotask", /ᴀᴜᴛᴏᴛᴀꜱᴋ|autotask/i.test(replies[0]), replies[0]?.includes("autotask"));
+  t("6a. usage desain V2 keluar (✧ kaomoji)", replies.length === 1 && /✧/.test(replies[0]) && /agentloop/.test(replies[0]), replies[0]?.slice(0, 60));
+  t("6b. usage nunjukin bedanya sama autotask", /autotask|autotask/i.test(replies[0]), replies[0]?.includes("autotask"));
 
   // tugas kependekan
   replies = [];
   await handler(mkM({ text: "singkat" }), { sock, db: getDatabase(), config: cfg });
-  t("6c. tugas <8 char ditolak jujur", replies.length === 1 && /ᴋᴇᴘᴇɴᴅᴇᴋᴀɴ|kependekan/i.test(replies[0]), replies[0]?.slice(0, 80));
+  t("6c. tugas <8 char ditolak jujur", replies.length === 1 && /kependekan|kependekan/i.test(replies[0]), replies[0]?.slice(0, 80));
 }
 
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);

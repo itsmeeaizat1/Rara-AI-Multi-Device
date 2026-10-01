@@ -13,7 +13,7 @@ import {
   isMultiLangEnabled,
 } from "../../src/lib/nova-language.js";
 
-const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+const SC_MAP = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
 const toSC = (s) => String(s || "").replace(/[a-z]/g, c => SC_MAP[c] || c);
 
 function claraWrap(title, text) {
@@ -79,7 +79,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Cek master toggle — kalo OFF, tolak user
     if (!isMultiLangEnabled()) {
       let offText = claraWrap("Language Menu Bot", [
-        "Status: *ᴍᴜʟᴛɪ-ʟᴀɴɢᴜᴀɢᴇ ᴏꜰꜰ*",
+        "Status: *multi-language off*",
         "Default: *Bahasa Indonesia (murni)*",
         "",
         "Fitur ini sedang dimatikan oleh owner",

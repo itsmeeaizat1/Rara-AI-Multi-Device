@@ -29,15 +29,15 @@ async function handler(m, { sock }) {
 
     const args = m.args
     if (!args[0] && !m.quoted && (!m.mentionedJid || m.mentionedJid.length === 0)) {
-        return m.reply(claraWrap("warn", `⚠️ *ꜱɪꜱᴛᴇᴍ ᴡᴀʀɴɪɴɢ ɢʀᴜᴘ*\n\n` +
+        return m.reply(claraWrap("warn", `⚠️ *sistem warning grup*\n\n` +
             `Sistem manajemen pelanggaran untuk member grup.\n` +
             `Batas Warning: *${maxWarns} kali* (Otomatis Kick)\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+            `*cara pakai:*\n` +
             `*${m.prefix}warn @user <alasan>* — Memberi warning\n` +
             `*${m.prefix}warn max <angka>* — Mengubah batas maksimal warning\n` +
             `*${m.prefix}listwarn* — Melihat daftar member bermasalah\n` +
             `*${m.prefix}resetwarn @user* — Menghapus semua warning member\n\n` +
-            `*ᴀʟᴜʀ ᴘᴀᴋᴀɪ:*\n` +
+            `*alur pakai:*\n` +
             `1. Saat member melakukan pelanggaran pertama, beri mereka SP1: *${m.prefix}warn @user Spam pesan*\n` +
             `2. Bot akan mencatat "Spam pesan" sebagai warning ke-1 mereka.\n` +
             `3. Jika melanggar lagi, beri peringatan kedua dengan alasan baru: *${m.prefix}warn @user Berkata kasar*\n` +
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     }
     
     if (!targetUser) {
-        await m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        await m.reply( `⚠️ *cara pakai*\n\n` +
             `Reply pesan user + \`${m.prefix}warn alasan\`\n` +
             `Atau: \`${m.prefix}warn @user alasan\``, "warn")
         return
@@ -101,9 +101,9 @@ async function handler(m, { sock }) {
     if (warnCount >= maxWarns) {
         try {
             await sock.groupParticipantsUpdate(m.chat, [targetUser], 'remove')
-            await m.reply(claraWrap("warn", `🚨 *ᴍᴀx ᴡᴀʀɴɪɴɢ ᴛᴇʀᴄᴀᴘᴀɪ*\n\n` +
+            await m.reply(claraWrap("warn", `🚨 *max warning tercapai*\n\n` +
                 `@${targetName} telah dikeluarkan dari grup karena mencapai batas pelanggaran!\n\n` +
-                `*ʀɪɴᴄɪᴀɴ:*\n` +
+                `*rincian:*\n` +
                 `Warning: *${warnCount}/${maxWarns}*\n` +
                 `Alasan Terakhir: *${reason}*`))
             delete warnings[targetUser]
@@ -113,9 +113,9 @@ async function handler(m, { sock }) {
         }
     } else {
         await m.reply(
-            `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ ᴅɪʙᴇʀɪᴋᴀɴ*\n\n` +
+            `⚠️ *peringatan diberikan*\n\n` +
             `@${targetName} telah menerima Surat Peringatan (SP${warnCount})!\n\n` +
-            `*ʀɪɴᴄɪᴀɴ:*\n` +
+            `*rincian:*\n` +
             `Warning ke: *${warnCount}/${maxWarns}*\n` +
             `Alasan: *${reason}*\n\n` +
             `_${maxWarns - warnCount} warning lagi = KICK OTOMATIS_`,

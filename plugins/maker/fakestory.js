@@ -211,7 +211,7 @@ async function handler(m, { sock }) {
   const username = m.args.join(" ").trim() || m.pushName || "User";
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
   if (!isImage) {
-    return m.reply( `📷 *ꜰᴀᴋᴇ ꜱᴛᴏʀʏ*\n\n` +
+    return m.reply( `📷 *fake story*\n\n` +
         `Kirim gambar + reply gambar lain untuk 2 gambar berbeda, atau 1 gambar aja!\n\n` +
         `Format: \`${m.prefix}fakestory <nama>\`\n` +
         `Contoh: \`${m.prefix}fakestory Misaki\``, "fakestory");

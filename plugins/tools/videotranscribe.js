@@ -115,13 +115,13 @@ async function handler(m, { sock,  args }) {
       transcript += `... (teks terlalu panjang)`;
     }
 
-    const info = claraWrap("Video Transcribe", [`*ᴛɪᴛʟᴇ:* ${result.title}`, `*ʟᴀɴɢᴜᴀɢᴇ:* ${lang.toUpperCase()}`, `*ꜱᴇɢᴍᴇɴᴛꜱ:* ${result.total}`, ``, `*ᴛʀᴀɴꜱᴄʀɪᴘᴛ:*`, transcript].join("\n"));
+    const info = claraWrap("Video Transcribe", [`*title:* ${result.title}`, `*language:* ${lang.toUpperCase()}`, `*segments:* ${result.total}`, ``, `*transcript:*`, transcript].join("\n"));
     await m.react("🐣");
     await m.reply(info);
   } catch (err) {
     await m.react("❌");
     console.error("[VideoTranscribe]", err.message);
-    m.reply(claraWrap("videotranscribe", `❌ *ɢᴀɢᴀʟ:* ${err.message || "Gagal proses nih video"}`));
+    m.reply(claraWrap("videotranscribe", `❌ *gagal:* ${err.message || "Gagal proses nih video"}`));
   }
 }
 

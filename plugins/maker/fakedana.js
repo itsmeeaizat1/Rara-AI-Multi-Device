@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     if (!nominal) {
         return m.reply(claraWrap("FAKE DANA", `\`Contoh: ${m.prefix}fakedana 10000\``), "fakedana")
     }
-    if(isNaN(nominal)) { const __navText = `*ʜᴀʀᴀᴘ ᴍᴀꜱᴜᴋᴋᴀɴ ᴀɴɢᴋᴀ*`; return await m.reply(__navText); }
+    if(isNaN(nominal)) { const __navText = `*harap masukkan angka*`; return await m.reply(__navText); }
     try {
         const saldo = Number(nominal.replace(/[^0-9]/g, '')).toLocaleString('id-ID')
         const fake = await generate(saldo)

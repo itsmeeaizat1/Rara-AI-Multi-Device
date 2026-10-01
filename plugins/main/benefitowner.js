@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
 
  const message = 
  `👑 *Apa Itu Owner?*\n\n` +
- `Owner adalah *ᴘᴇᴍɪʟɪᴋ ʙᴏᴛ* yang memiliki akses penuh ke semua fitur dan kontrol sistem.\n\n` +
+ `Owner adalah *pemilik bot* yang memiliki akses penuh ke semua fitur dan kontrol sistem.\n\n` +
  "" +
  `\`\`\`Akses semua command tanpa batasan\`\`\`\n` +
  `\`\`\`Limit tidak terbatas (-1)\`\`\`\n` +

@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url || !url.includes("alightcreative.com")) {
     return m.reply(
-      `📱 *ᴀʟɪɢʜᴛ ᴍᴏᴛɪᴏɴ ᴅᴀᴛᴀ*\n\n` +
+      `📱 *alight motion data*\n\n` +
         `- Lihat info project AM dari link share\n` +
         `- Masukkan URL share Alight Motion\n\n` +
         `\`${m.prefix}am-data <url>\``,
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
 
     if (!res?.status || !info) {
       return m.reply(
-        `📱 *ɢᴀɢᴀʟ ᴍᴇᴍʙᴀᴄᴀ ᴅᴀᴛᴀ*\n\n` + `- Pastikan URL share valid`,
+        `📱 *gagal membaca data*\n\n` + `- Pastikan URL share valid`,
       );
     }
     const projects =
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
           : "")
       : "-";
 
-    let msg = claraWrap("Alight Motion Data", [`*ᴊᴜᴅᴜʟ* → ${info.title || "-"}`, `*ᴜᴋᴜʀᴀɴ* → ${fmtSize(info.size)}`, `*ᴅᴏᴡɴʟᴏᴀᴅ* → ${info.downloads ?? 0}x`, `*ʟɪᴋᴇꜱ* → ${info.likes ?? 0}`, `*ᴠᴇʀꜱɪ* → \`${info.amVersionString || "-"}\``, `*ᴘʟᴀᴛꜰᴏʀᴍ* → ${info.amPlatform || "-"}`, `*ᴍᴀx ꜰꜰ* → v${info.maxFFVer || "-"}`, `*ᴛᴀɴɢɢᴀʟ* → ${fmtDate(info.shareDate)}`, ``, `🎬 *ᴘʀᴏᴊᴇᴄᴛ*`, projects, ``, `*ᴇꜰꜰᴇᴄᴛꜱ* → ${effects}`].join("\n"));
+    let msg = claraWrap("Alight Motion Data", [`*judul* → ${info.title || "-"}`, `*ukuran* → ${fmtSize(info.size)}`, `*download* → ${info.downloads ?? 0}x`, `*likes* → ${info.likes ?? 0}`, `*versi* → \`${info.amVersionString || "-"}\``, `*platform* → ${info.amPlatform || "-"}`, `*max ff* → v${info.maxFFVer || "-"}`, `*tanggal* → ${fmtDate(info.shareDate)}`, ``, `🎬 *project*`, projects, ``, `*effects* → ${effects}`].join("\n"));
 
     if (info.largeThumbUrl) {
       await sock.sendMedia(m.chat, info.largeThumbUrl, null, m, {

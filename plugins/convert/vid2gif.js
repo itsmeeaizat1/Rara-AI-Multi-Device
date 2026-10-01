@@ -70,14 +70,14 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("Video to GIF", ["Reply video lalu ketik .vid2gif",
           "Convert video ke GIF dengan FFmpeg",
           "",
-          "*ᴏᴘꜱɪ:*",
+          "*opsi:*",
           `${prefix}vid2gif — Default (10s, 480p, 15fps)`,
           `${prefix}vid2gif 5 — 5 detik pertama`,
           `${prefix}vid2gif 720 — Resolusi 720p`,
           `${prefix}vid2gif 5 720 — 5 detik, 720p`,
           `${prefix}vid2gif 0 480 30 — Full video, 480p, 30fps`,
           "",
-          "*ᴘᴀʀᴀᴍᴇᴛᴇʀ:*",
+          "*parameter:*",
           "Detik: 0 = full video (max 30s)",
           "Resolusi: 240, 360, 480, 720 (default 480)",
           "FPS: 10, 15, 20, 30 (default 15)"].join("\n")) + "\n" +
@@ -94,7 +94,7 @@ async function handler(m, { sock, config: botConfig }) {
       mediaBuffer = await m.quoted.download();
     } else {
       const text =
-        claraWrap("Video to GIF", ["Status: *ɢᴀɢᴀʟ ᴅᴏᴡɴʟᴏᴀᴅ ᴠɪᴅᴇᴏ*",
+        claraWrap("Video to GIF", ["Status: *gagal download video*",
           "Coba reply video yang valid"].join("\n")) + "\n" +
         tipText("Reply video lalu ketik .vid2gif");
 
@@ -104,7 +104,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       const text =
-        claraWrap("Video to GIF", ["Status: *ʙᴜꜰꜰᴇʀ ᴠɪᴅᴇᴏ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*"].join("\n")) + "\n" +
+        claraWrap("Video to GIF", ["Status: *buffer video tidak valid*"].join("\n")) + "\n" +
         tipText("Coba video lain");
 
       await m.reply( text, "vid2gif");
@@ -190,7 +190,7 @@ async function handler(m, { sock, config: botConfig }) {
         fileName: "converted_" + Date.now() + ".gif",
         mimetype: "image/gif",
         caption:
-          claraWrap("Video to GIF", [`Status: *ʙᴇʀʜᴀꜱɪʟ*`,
+          claraWrap("Video to GIF", [`Status: *berhasil*`,
             `Mode: *Dokumen (file besar)*`,
             `Durasi: *${durLabel}*`,
             `Resolusi: *${resolution}p*`,
@@ -204,7 +204,7 @@ async function handler(m, { sock, config: botConfig }) {
       await sock.sendMessage(m.chat, {
         video: gifBuffer,
         caption:
-          claraWrap("Video to GIF", [`Status: *ʙᴇʀʜᴀꜱɪʟ*`,
+          claraWrap("Video to GIF", [`Status: *berhasil*`,
             `Durasi: *${durLabel}*`,
             `Resolusi: *${resolution}p*`,
             `FPS: *${fps}*`,

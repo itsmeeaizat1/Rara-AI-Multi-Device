@@ -167,13 +167,13 @@ async function handler(m, { sock }) {
       }
 
       let msg = buildHeader();
-      msg += `  *ᴘᴏsᴛ #${post.id}*\n`;
+      msg += `  *post #${post.id}*\n`;
       msg += `📅 ${formatTime(post.createdAt)}\n`;
       msg += `🔒 Anonim\n\n`;
       msg += `  📝 *Isi Confess:*\n  \`\`\`${post.text}\`\`\`\n\n`;
 
       // Reactions
-      msg += `  *ʀᴇᴀᴄᴛɪᴏɴs:*\n`;
+      msg += `  *reactions:*\n`;
       Object.entries(REACT_TYPES).forEach(([key, val]) => {
         const count = post.reactions?.[key] || 0;
         msg += `${val.emoji} ${val.label}: *${count}*\n`;
@@ -181,7 +181,7 @@ async function handler(m, { sock }) {
 
       // Replies
       const replies = post.replies || [];
-      msg += `\n  *ʀᴇᴘʟɪᴇs* (${replies.length}):\n`;
+      msg += `\n  *replies* (${replies.length}):\n`;
       if (replies.length === 0) {
         msg += `(belum ada balasan)\n`;
         msg += `\`${m.prefix}confesswall reply ${post.id} <teks>\`\n`;
@@ -212,7 +212,7 @@ async function handler(m, { sock }) {
       if (!REACT_TYPES[type]) {
         let msg = buildHeader();
         msg += `❌ Type tidak valid!\n`;
-        msg += `  *ʀᴇᴀᴄᴛ ᴛʏᴘᴇ:*\n`;
+        msg += `  *react type:*\n`;
         Object.entries(REACT_TYPES).forEach(([k, v]) => {
           msg += `${v.emoji} \`${k}\`\n`;
         });
@@ -255,7 +255,7 @@ async function handler(m, { sock }) {
         saveWall(db, gid, wall);
         let msg = buildHeader();
         msg += `✅ ${REACT_TYPES[type].emoji} ${REACT_TYPES[type].label} terkirim ke #${id}!\n\n`;
-        msg += `  *ᴛᴏᴛᴀʟ ʀᴇᴀᴄᴛs:*\n`;
+        msg += `  *total reacts:*\n`;
         Object.entries(REACT_TYPES).forEach(([k, v]) => {
           const c = post.reactions[k] || 0;
           if (c > 0) msg += `${v.emoji} ${v.label}: *${c}*\n`;
@@ -338,7 +338,7 @@ async function handler(m, { sock }) {
           });
         }
       });
-      msg += `  *ʀᴇᴀᴄᴛ ʙʀᴇᴀᴋᴅᴏᴡɴ:*\n`;
+      msg += `  *react breakdown:*\n`;
       Object.entries(REACT_TYPES).forEach(([k, v]) => {
         msg += `${v.emoji} ${v.label}: *${breakdown[k]}*\n`;
       });
@@ -366,7 +366,7 @@ async function handler(m, { sock }) {
         return;
       }
       let msg = buildHeader();
-      msg += `  *ʀᴇᴠᴇᴀʟ ᴘᴏsᴛ #${id}*\n\n`;
+      msg += `  *reveal post #${id}*\n\n`;
       msg += `👤 Author: @${post.author.split("@")[0]}\n`;
       msg += `📅 ${formatTime(post.createdAt)}\n`;
       msg += `📝 \`\`\`${post.text}\`\`\`\n`;
@@ -421,7 +421,7 @@ Statistik wall grup\n\n`;
 Buka identitas penulis\n\n`;
     msg += `\`${m.prefix}confesswall del <id>\` *(owner)*
 Hapus post\n\n`;
-    msg += `  *ʀᴇᴀᴄᴛ ᴛʏᴘᴇ:*\n`;
+    msg += `  *react type:*\n`;
     Object.entries(REACT_TYPES).forEach(([k, v]) => {
       msg += `${v.emoji} \`${k}\`\n`;
     });

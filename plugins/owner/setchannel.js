@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
       status = "Aktif (broadcast akan jalan)";
     }
 
-    return m.reply( "*ᴘᴇɴɢᴀᴛᴜʀᴀɴ ꜱᴀʟᴜʀᴀɴ*\n\n" +
+    return m.reply( "*pengaturan saluran*\n\n" +
       "ID: " + currentId + "\n" +
       "Nama: " + currentName + "\n" +
       "Link: " + currentLink + "\n" +
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
   try {
     persistSaluranConfig({ id: saluranId, link: saluranLink, name: saluranName });
 
-    let replyText = "*ꜱᴀʟᴜʀᴀɴ ʙᴇʀʜᴀꜱɪʟ ᴅɪ-ꜱᴇᴛ*\n\n";
+    let replyText = "*saluran berhasil di-set*\n\n";
     replyText += "ID: " + saluranId + "\n";
     replyText += "Link: " + saluranLink + "\n";
     replyText += "Nama: " + saluranName + "\n\n";

@@ -76,7 +76,7 @@ ok("handler.js: ampro answerHandler ter-wire", hjs.includes("ampro.js"));
   ok("ampro: pending magic-link TERSIMPAN DI FILE (bukan Map in-memory)", !!pf.__pending?.["owner@s.whatsapp.net"]?.email);
   rep.length = 0;
   const rA = await A.answerHandler(mkM("https://alightcreative.com/?link=https%3A%2F%2Fx.com%3FoobCode%3DABC123xyz456"), { sock: {} });
-  ok("ampro: reply link valid di proses BARU tetap kejawab dari file (tahan restart)", rA === true && has("ᴀᴋᴛɪꜰ"));
+  ok("ampro: reply link valid di proses BARU tetap kejawab dari file (tahan restart)", rA === true && has("aktif"));
   await A.handler(mkM(".ampro tes@gmail.com"), { sock: {}, config: { command: { prefix: "." } } });
   rep.length = 0;
   const rB = await A.answerHandler(mkM("https://email.google.com/buka-ini"), { sock: {} });
@@ -88,7 +88,7 @@ ok("handler.js: ampro answerHandler ter-wire", hjs.includes("ampro.js"));
   fsp.writeFileSync(FILE2, JSON.stringify(f5));
   rep.length = 0;
   const rD = await A.answerHandler(mkM("https://x.com/?oobCode=ABC123xyz456"), { sock: {} });
-  ok("ampro: TTL lewat → respon kedaluwarsa (bukan senyap)", rD === true && rep.some((x) => x.includes("ᴋᴇᴅᴀʟᴜᴡᴀʀꜱᴀ")));
+  ok("ampro: TTL lewat → respon kedaluwarsa (bukan senyap)", rD === true && rep.some((x) => x.includes("kedaluwarsa")));
   try { fsp.rmSync(FILE2, { force: true }); } catch {}
   if (bak !== null) try { fsp.writeFileSync(FILE2, bak); } catch {}
 }

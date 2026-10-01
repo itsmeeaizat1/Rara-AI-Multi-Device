@@ -193,7 +193,7 @@ _setClothesDepsForTest({
   upscale: async (buf, f) => { hdCalls.push("upscale" + f); return Buffer.alloc(4000, 7); },
 });
 await handler(mockM({ isImage: true, text: "hd casual" }), { sock: sockMock });
-t("6l. hd → polish kepanggil + caption HD", hdCalls.includes("polish") && norm(sent.at(-1)?.opts?.caption || "").includes("hd"));
+t("6l. hd → polish kepanggil + caption HD", hdCalls.includes("polish") && norm(sent.at(-1)?.opts?.caption || "").toLowerCase().includes("hd"));
 t("6m. hd + preset → prompt casual + polish", engineCalls2.at(-1) && /casual everyday outfit/.test(engineCalls2.at(-1).prompt));
 
 // hd2 → upscale 2x

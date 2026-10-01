@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
             `\`${m.prefix}animeapaini\`\n\n` +
             `Atau reply gambar dengan:\n` +
             `\`${m.prefix}animeapaini\`\n\n` +
-            `⚠️ *ᴄᴀᴛᴀᴛᴀɴ:* Video tidak didukung, hanya gambar/screenshot`
+            `⚠️ *catatan:* Video tidak didukung, hanya gambar/screenshot`
         )
     }
     try {
@@ -107,13 +107,13 @@ async function handler(m, { sock }) {
         const animeName = filename.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/\.mp4|\.mkv|\.avi/gi, '').trim() || 'Unknown Anime'
         
         const caption = `🔍 *Anime Apa Ini?*\n\n` +
-            `🎬 *ᴀɴɪᴍᴇ:* ${animeName}\n` +
-            `📺 *ᴇᴘɪꜱᴏᴅᴇ:* ${d.episode || 'Movie/OVA'}\n` +
-            `🆔 *ᴀɴɪʟɪꜱᴛ ɪᴅ:* ${d.anilist || '-'}\n\n` +
-            `⏱️ *ᴛɪᴍᴇꜱᴛᴀᴍᴘ:*\n` +
+            `🎬 *anime:* ${animeName}\n` +
+            `📺 *episode:* ${d.episode || 'Movie/OVA'}\n` +
+            `🆔 *anilist id:* ${d.anilist || '-'}\n\n` +
+            `⏱️ *timestamp:*\n` +
             `  │ From: \`${formatTime(d.from)}\`\n` +
             `  │ To: \`${formatTime(d.to)}\`\n\n` +
-            `📊 *ꜱɪᴍɪʟᴀʀɪᴛʏ:* ${similarity}%\n\n` +
+            `📊 *similarity:* ${similarity}%\n\n` +
             `🔗 https://anilist.co/anime/${d.anilist || ''}`
         if (d.image) {
             await sock.sendMedia(m.chat, d.image, caption, m, {

@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
       `JPG, PNG, GIF, WEBP`
     ]));
   }
-  { const __navText = `🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ...*\n\nMengekstrak teks dari gambar...`; await m.reply(__navText); };
+  { const __navText = `🕕 *memproses...*\n\nMengekstrak teks dari gambar...`; await m.reply(__navText); };
   try {
     await m.react("🕒");
     let buffer;
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
       buffer = await m.download();
     }
     if (!buffer || buffer.length === 0) {
-      return m.reply(claraWrap("Ocr", `❌ *ɢᴀɢᴀʟ*\n\nTidak dapat download gambar`));
+      return m.reply(claraWrap("Ocr", `❌ *gagal*\n\nTidak dapat download gambar`));
     }
     const Tesseract = await getTesseract();
     const {
@@ -50,10 +50,10 @@ async function handler(m, { sock }) {
     const extractedText = text ? text.trim() : "";
     if (!extractedText || extractedText.length === 0) {
       await m.react("🐣");
-      return m.reply(claraWrap("Ocr", `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴛᴇᴋꜱ*\n\nTidak ada teks yang terdeteksi di gambar`));
+      return m.reply(claraWrap("Ocr", `❌ *tidak ada teks*\n\nTidak ada teks yang terdeteksi di gambar`));
     }
     const responseText =
-      `📖 *ᴏᴄʀ ʀᴇꜱᴜʟᴛ*\n\n` +
+      `📖 *ocr result*\n\n` +
       "" +
       `${extractedText
         .split("\n")
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
       sock,
       m.chat,
       responseText,
-      "📖 *ᴏᴄʀ*",
+      "📖 *ocr*",
       `${extractedText.length} chars`,
       { quoted: m },
     );

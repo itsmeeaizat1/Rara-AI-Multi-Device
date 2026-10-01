@@ -36,9 +36,9 @@ function convertUnicode(str, upperStart, lowerStart, numStart) {
 
 function toSmallCaps(str) {
   const smallCapsMap = {
-    a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ',
-    k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', q: 'ǫ', r: 'ʀ', s: 's', t: 'ᴛ',
-    u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', x: 'x', y: 'ʏ', z: 'ᴢ'
+    a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h', i: 'i', j: 'j',
+    k: 'k', l: 'l', m: 'm', n: 'n', o: 'o', p: 'p', q: 'ǫ', r: 'r', s: 's', t: 't',
+    u: 'u', v: 'v', w: 'w', x: 'x', y: 'y', z: 'z'
   };
   return str.split("").map((c) => smallCapsMap[c.toLowerCase()] || c).join("");
 }

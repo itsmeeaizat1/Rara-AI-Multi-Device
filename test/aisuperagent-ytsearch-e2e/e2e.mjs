@@ -155,13 +155,13 @@ t("3a. request youtube DIDETEKSI LOKAL (ytsearchSend kepanggil)", c1.length === 
 t("3b. query ke-ekstrak bener + download:false (preview)", c1[0]?.query === "bot alya md" && c1[0]?.wantDownload === false, JSON.stringify(c1[0]));
 t("3c. planner AI GAK kepake (gak ada crash 'PLANNER AI GAK BOLEH KEPAKE')", !o1.some(x => /PLANNER AI GAK BOLEH|Gagal/.test(x)), o1.join(" | ").slice(0, 120));
 t("3d. thumbnail preview dikirim via engine", o1.some(x => x.includes("preview bot alya md")));
-t("3e. status final di-edit 'udah aku kirim di atas' (smallcaps)", o1.filter(x => x.startsWith("[edit]")).some(x => x.includes("ᴋɪʀɪᴍ ᴅɪ ᴀᴛᴀꜱ")), o1.filter(x => x.startsWith("[edit]")).join(" | ").slice(0, 120));
+t("3e. status final di-edit 'udah aku kirim di atas' (smallcaps)", o1.filter(x => x.startsWith("[edit]")).some(x => x.includes("kirim di atas")), o1.filter(x => x.startsWith("[edit]")).join(" | ").slice(0, 120));
 
 // unduh (eksplisit) — instan juga
 const c2 = [];
 const o2 = await runHandler("unduh video bot alya md di youtube", c2);
 t("3f. 'unduh video X' → deteksi lokal download:true", c2[0]?.query === "bot alya md" && c2[0]?.wantDownload === true, JSON.stringify(c2[0]));
-t("3g. status final 'udah aku unduh' (smallcaps)", o2.filter(x => x.startsWith("[edit]")).some(x => x.includes("ᴜɴᴅᴜʜ")), o2.filter(x => x.startsWith("[edit]")).join(" | ").slice(0, 120));
+t("3g. status final 'udah aku unduh' (smallcaps)", o2.filter(x => x.startsWith("[edit]")).some(x => x.includes("unduh")), o2.filter(x => x.startsWith("[edit]")).join(" | ").slice(0, 120));
 
 // bukan youtube → deteksi lokal gak nyangkut (planner bakal jalan → error mock tertangkap rapi)
 const c3 = [];

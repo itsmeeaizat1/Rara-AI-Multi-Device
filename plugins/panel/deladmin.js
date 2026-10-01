@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     // Owner & CEO (admin panel). Reseller tidak boleh menghapus admin panel.
     if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("deladmin", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+        return m.reply(claraWrap("deladmin", `❌ *akses ditolak*\n\n` +
             `Hapus admin panel hanya untuk *Owner* & *CEO (admin panel)*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}* | Server: *${serverLabel}*`))
     }
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     const userId = m.text?.trim()
     
     if (!userId || isNaN(userId)) {
-        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return m.reply( `⚠️ *cara pakai*\n\n` +
             `\`${m.prefix}${m.command} userid\`\n\n` +
             `Lihat user ID dengan \`${m.prefix}listadmin${serverVersion}\``, "deladmin")
     }

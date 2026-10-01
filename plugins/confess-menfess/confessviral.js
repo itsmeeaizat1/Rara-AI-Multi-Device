@@ -263,7 +263,7 @@ async function replyHandler(m, { sock }) {
 
     let replyText = ``
     replyText += `💕 Orang yang kamu confess (${md.emoji} ${md.label}) balas!\n\n`;
-    replyText += `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n`;
+    replyText += `  💬 *isi balasan:*\n`;
     replyText += `  \`\`\`${replyMessage}\`\`\`\n\n`;
     replyText += `  🔒 _Identitas kamu tetap anonim_\n\n`;
     

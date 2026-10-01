@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
   return m.reply(claraWrap("Mode Public Diaktifkasi", 
       `Bot sekarang merespon semua member di grup ini\n` +
       `Override mode global aktif untuk grup ini\n\n` +
-      `📋 *ɢʀᴜᴘ ʟᴀɪɴ ᴛɪᴅᴀᴋ ᴛᴇʀᴘᴇɴɢᴀʀᴜʜ*\n\n` +
+      `📋 *grup lain tidak terpengaruh*\n\n` +
       `_Gunakan ${m.prefix}selfthisgc untuk menutup akses lagi_`));
 }
 

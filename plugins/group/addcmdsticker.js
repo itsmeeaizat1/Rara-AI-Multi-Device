@@ -28,9 +28,9 @@ async function handler(m, { sock }) {
     if (!commandName) {
         const existingCmds = listStickerCommands()
         
-        let txt = `🖼️ *ꜱᴛɪᴄᴋᴇʀ ᴛᴏ ᴄᴏᴍᴍᴀɴᴅ*\n\n`
+        let txt = `🖼️ *sticker to command*\n\n`
         txt += `Reply sticker + ketik command yang ingin dijadikan shortcut.\n\n`
-        txt += `*ᴄᴏɴᴛᴏʜ:*\n`
+        txt += `*contoh:*\n`
         txt += `Reply sticker, lalu ketik:\n`
         txt += `\`.addcmdsticker menu\`\n\n`
         
@@ -50,12 +50,12 @@ async function handler(m, { sock }) {
     
     // Validasi reply sticker
     if (!m.quoted) {
-        return m.reply(claraWrap("Addcmdsticker", '⚠️ *ʀᴇᴘʟʏ ꜱᴛɪᴄᴋᴇʀ* yang ingin dijadikan command!'))
+        return m.reply(claraWrap("Addcmdsticker", '⚠️ *reply sticker* yang ingin dijadikan command!'))
     }
     
     const stickerHash = getQuotedStickerHash(m)
     if (!stickerHash) {
-        return m.reply(claraWrap("Addcmdsticker", '⚠️ Pesan yang di-reply bukan *ꜱᴛɪᴄᴋᴇʀ*!'))
+        return m.reply(claraWrap("Addcmdsticker", '⚠️ Pesan yang di-reply bukan *sticker*!'))
     }
     
     // Validasi command exists
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     
     if (success) {
         await m.reply(
-            `✅ *ꜱᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
+            `✅ *sticker command ditambahkan*\n\n` +
             `🖼️ Sticker → \`.${cleanCmd}\`\n\n` +
             `_Kirim sticker tersebut untuk menjalankan command!_`
         )

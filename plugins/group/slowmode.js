@@ -48,17 +48,17 @@ async function handler(m, { sock }) {
             .map(([name, sec]) => `  *.slowmode ${name}* — ${sec}s`)
             .join('\n')
 
-        return m.reply( `🐢 *ꜱʟᴏᴡᴍᴏᴅᴇ*\n\n` +
+        return m.reply( `🐢 *slowmode*\n\n` +
             `Status: ${enabled ? `✅ ON (${delay}s)` : '❌ OFF'}\n` +
             `Mode: *${mode}*\n\n` +
-            `*ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
+            `*penggunaan:*\n` +
             `*.slowmode on 30* — semua pesan + command\n` +
             `*.slowmode onlycommand 30* — command only\n` +
             `*.slowmode off* — nonaktifkan\n\n` +
-            `*ᴘʀᴇꜱᴇᴛ:*\n${presetList}\n\n` +
-            `*ᴍᴏᴅᴇ:*\n` +
-            `  *ᴀʟʟ* — hapus semua pesan saat delay\n` +
-            `  *ᴏɴʟʏᴄᴏᴍᴍᴀɴᴅ* — silent command, chat bebas\n\n` +
+            `*preset:*\n${presetList}\n\n` +
+            `*mode:*\n` +
+            `  *all* — hapus semua pesan saat delay\n` +
+            `  *onlycommand* — silent command, chat bebas\n\n` +
             `_Admin & owner tidak terpengaruh_`, "slowmode")
     }
 
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
     const modeDesc = MODES[mode]
 
     await m.reply(
-        `✅ Slowmode *ᴀᴋᴛɪꜰ*\n\n` +
+        `✅ Slowmode *aktif*\n\n` +
         `Delay: *${delay} detik*${label}\n` +
         `Mode: *${mode}*\n` +
         `${modeDesc}\n\n` +

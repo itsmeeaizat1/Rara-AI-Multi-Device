@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
 
     if (!query) {
-        { const __navText = `🧱 *ᴍᴄᴘᴇᴅʟ ꜱᴇᴀʀᴄʜ*\n\nContoh:\n\`${m.prefix}mcpe survival\``; return await m.reply( __navText, "mcpedl"); }
+        { const __navText = `🧱 *mcpedl search*\n\nContoh:\n\`${m.prefix}mcpe survival\``; return await m.reply( __navText, "mcpedl"); }
     }
     try {
         const result = await fetchMcpe(query)
@@ -59,10 +59,10 @@ async function handler(m, { sock }) {
             return m.reply(novaError("MCPEDL", `Gak nemu hasil untuk: ${query} nih`))
         }
 
-        let caption = '🧱 *ᴍᴄᴘᴇᴅʟ ꜱᴇᴀʀᴄʜ*\n\n'
-        caption += `🔎 *qᴜᴇʀʏ:* ${result.query || query}\n`
-        caption += `📦 *ᴛᴏᴛᴀʟ:* ${result.total || items.length}\n`
-        caption += `🌐 *ꜱᴏᴜʀᴄᴇ:* ${result.source || 'mcpedl.org'}\n\n`
+        let caption = '🧱 *mcpedl search*\n\n'
+        caption += `🔎 *query:* ${result.query || query}\n`
+        caption += `📦 *total:* ${result.total || items.length}\n`
+        caption += `🌐 *source:* ${result.source || 'mcpedl.org'}\n\n`
 
         items.forEach((item, index) => {
             caption += `*${index + 1}.* ${trimText(item.title)}\n`

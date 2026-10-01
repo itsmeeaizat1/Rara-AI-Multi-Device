@@ -62,7 +62,7 @@ async function handler(m, { config: botConfig }) {
     if (k === "reset") {
       const s = resetSupport();
       return m.reply(claraWrap("Set Support", [
-        "Status: *ʙᴇʀʜᴀꜱɪʟ*",
+        "Status: *berhasil*",
         "Semua setelan support direset ke default config",
       ]));
     }
@@ -78,7 +78,7 @@ async function handler(m, { config: botConfig }) {
     // Validasi link
     if (k === "group" && !/^https:\/\/chat\.whatsapp\.com\/[\w.-]+$/i.test(value)) {
       return m.reply(claraWrap("Set Support", [
-        "Status: *ɢᴀɢᴀʟ*",
+        "Status: *gagal*",
         "Link grup harus diawali https://chat.whatsapp.com/",
         "",
         `📌 Ketik: ${prefix}setsupport group https://chat.whatsapp.com/AbCdEf`,
@@ -86,7 +86,7 @@ async function handler(m, { config: botConfig }) {
     }
     if (k === "saluran" && !/^https:\/\/whatsapp\.com\/channel\/[\w.-]+$/i.test(value)) {
       return m.reply(claraWrap("Set Support", [
-        "Status: *ɢᴀɢᴀʟ*",
+        "Status: *gagal*",
         "Link saluran harus diawali https://whatsapp.com/channel/",
         "",
         `📌 Ketik: ${prefix}setsupport saluran https://whatsapp.com/channel/AbCdEf`,
@@ -112,13 +112,13 @@ async function handler(m, { config: botConfig }) {
 
     setSupport({ [target.field]: value });
     return m.reply(claraWrap("Set Support", [
-      `Status: *ʙᴇʀʜᴀꜱɪʟ*`,
+      `Status: *berhasil*`,
       `${target.label}: *${value}*`,
     ]));
   } catch (error) {
     console.error("[setsupport] error:", error.message);
     return m.reply(claraWrap("Set Support", [
-      "Status: *ɢᴀɢᴀʟ*",
+      "Status: *gagal*",
       "Alasan: *" + error.message + "*",
     ]));
   }

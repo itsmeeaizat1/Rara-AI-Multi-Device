@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     db.save();
 
     await m.reply(
-      `💍 *ᴀᴅᴀ ʏᴀɴɢ ᴍᴇʟᴀᴍᴀʀ ɴɪʜʜ*\n\n` +
+      `💍 *ada yang melamar nihh*\n\n` +
       `💒 @${m.sender.split("@")[0]} melamar @${targetJid.split("@")[0]}\n` +
       `⏱️ Berlaku *1 jam*\n\n` +
       `_Balas pesan ini dengan *terima* atau *tolak*_\n` +

@@ -42,16 +42,16 @@ async function handler(m, { sock }) {
     const r = data.result.player_info;
     const imageUrl = data.result.image_url;
     
-    let caption = `🌟 *ɢᴇɴꜱʜɪɴ ɪᴍᴘᴀᴄᴛ ꜱᴛᴀʟᴋ* 🌟\n\n`;
+    let caption = `🌟 *genshin impact stalk* 🌟\n\n`;
     caption += `Halo Traveler! Ini dia informasi akun untuk UID *${data.result.id}*:\n\n`;
     
-    caption += `👤 *ɪɴꜰᴏ ᴘᴇᴍᴀɪɴ*\n`;
+    caption += `👤 *info pemain*\n`;
     caption += `  - Nickname: *${r.nickname || "-"}*\n`;
     caption += `  - Adventure Rank (AR): ${r.level || "-"}\n`;
     caption += `  - World Level (WL): ${r.world_level || "-"}\n`;
     caption += `  - Signature: ${r.signature || "-"}\n\n`;
     
-    caption += `🏆 *ᴘᴇɴᴄᴀᴘᴀɪᴀɴ*\n`;
+    caption += `🏆 *pencapaian*\n`;
     caption += `  - Total Achievement: ${r.achievements || "-"}\n`;
     caption += `  - Spiral Abyss: ${r.spiral_abyss || "Belum ada data"}\n`;
     if (r.theater) caption += `  - Imaginarium Theater: ${r.theater}\n`;
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[Genshin Stalk]", error.message);
-    m.reply(claraWrap("genshinstalk", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menarik data dari server Genshin Impact. Silakan coba beberapa saat lagi ya."));
+    m.reply(claraWrap("genshinstalk", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Genshin Impact. Silakan coba beberapa saat lagi ya."));
   }
 }
 

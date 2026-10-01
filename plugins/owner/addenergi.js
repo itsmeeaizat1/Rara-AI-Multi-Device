@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
         (config.isPremium(targetJid) && (config.energi?.premium ?? -1) === -1)
 
     if (!isUnlimited && effectiveUnlimited) {
-        return m.reply( `⚡ *ɪɴꜰᴏʀᴍᴀꜱɪ*\n` +
+        return m.reply( `⚡ *informasi*\n` +
             `@${targetJid.split('@')[0]} sudah memiliki energi *∞ Unlimited*\n` +
             `Tidak perlu menambahkan energi lagi`, "addenergi")
     }

@@ -25,7 +25,7 @@ async function handler(m, { sock, db }) {
         const current = db.setting('audioMenu') !== false
 
         if (!option) {
-            return await m.reply(claraWrap("Aktifaudiomenu", `Status: *${current ? '✅ Aktif' : '❌ Nonaktif'}*\n\n*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n\`${m.prefix}aktifaudiomenu ya\` - Aktifkan audio\n\`${m.prefix}aktifaudiomenu gak\` - Nonaktifkan audio`))
+            return await m.reply(claraWrap("Aktifaudiomenu", `Status: *${current ? '✅ Aktif' : '❌ Nonaktif'}*\n\n*cara pakai:*\n\`${m.prefix}aktifaudiomenu ya\` - Aktifkan audio\n\`${m.prefix}aktifaudiomenu gak\` - Nonaktifkan audio`))
         }
 
         if (option === 'ya' || option === 'on' || option === '1' || option === 'aktif') {

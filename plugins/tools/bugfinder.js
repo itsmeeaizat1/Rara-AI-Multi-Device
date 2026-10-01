@@ -49,10 +49,10 @@ async function handler(m, { sock,  args }) {
     const meta = info.metadata;
     const bugInfo = info.bugsFound;
     
-    let text = `🐛 *ʜᴀꜱɪʟ ᴀɴᴀʟɪꜱᴀ ʙᴜɢ*\n\n`;
-    text += `*ʙᴀʜᴀꜱᴀ:* ${meta.detectedLanguage}\n`;
-    text += `*ᴛɪɴɢᴋᴀᴛ:* ${meta.severityInfo.level} ${meta.severityInfo.icon}\n`;
-    text += `*ʙᴜɢ ᴅɪᴛᴇᴍᴜᴋᴀɴ:* ${bugInfo.total}\n\n`;
+    let text = `🐛 *hasil analisa bug*\n\n`;
+    text += `*bahasa:* ${meta.detectedLanguage}\n`;
+    text += `*tingkat:* ${meta.severityInfo.level} ${meta.severityInfo.icon}\n`;
+    text += `*bug ditemukan:* ${bugInfo.total}\n\n`;
     
     if (bugInfo.summary) {
       text += `*📝 Ringkasan:*\n${bugInfo.summary}\n\n`;

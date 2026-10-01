@@ -294,14 +294,14 @@ async function mp3quran(input) {
 async function handler(m, { sock, args }) {
   if (args.length === 0) {
     return m.reply(
-      `🕌 *ᴀᴜᴅɪᴏ qᴜʀᴀɴ*\n\n` +
+      `🕌 *audio quran*\n\n` +
       `Mode yang tersedia:\n` +
       `- \`.audio-quran reciters\` (List qari)\n` +
       `- \`.audio-quran suwar\` (List surah 1-114)\n` +
       `- \`.audio-quran radios\` (List radio live)\n` +
       `- \`.audio-quran riwayat\` (List bacaan)\n` +
       `- \`.audio-quran audio <nama_qari> <nomor_surah>\`\n\n` +
-      `*ᴄᴏɴᴛᴏʜ:* \`.audio-quran audio sudais 1\``
+      `*contoh:* \`.audio-quran audio sudais 1\``
     );
   }
   try {
@@ -327,10 +327,10 @@ async function handler(m, { sock, args }) {
       const reciterName = r.audios[0].reciterName;
       const moshafName = r.audios[0].moshafName;
       
-      let caption = `🕌 *ᴀᴜᴅɪᴏ qᴜʀᴀɴ*\n\n`;
-      caption += `*qᴀʀɪ:* ${reciterName}\n`;
-      caption += `*ᴍᴏꜱʜᴀꜰ:* ${moshafName}\n`;
-      caption += `*ꜱᴜʀᴀʜ:* ke-${surahId}\n\n`;
+      let caption = `🕌 *audio quran*\n\n`;
+      caption += `*qari:* ${reciterName}\n`;
+      caption += `*moshaf:* ${moshafName}\n`;
+      caption += `*surah:* ke-${surahId}\n\n`;
       caption += `Sedang mengirim audio...`;
       
       await m.reply(claraWrap("audioquran", caption));

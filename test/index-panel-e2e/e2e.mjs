@@ -88,38 +88,38 @@ const run = async (args) => { replies.length = 0; await plugin.handler(fakeM(arg
 
 // usage card
 const card = await run([]);
-t("5a usage card keluar", card.includes("ɪɴᴅᴇx") && card.includes("ᴏᴘᴛɪᴍɪᴢᴇʀ"), card.slice(0, 100));
-t("5b daftar sub lengkap (pinglog/jam/ram/status)", ["ᴘɪɴɢʟᴏɢ", "ᴊᴀᴍ", "ʀᴀᴍ", "ꜱᴛᴀᴛᴜꜱ"].every((k) => card.includes(k)));
+t("5a usage card keluar", card.includes("index") && card.includes("optimizer"), card.slice(0, 100));
+t("5b daftar sub lengkap (pinglog/jam/ram/status)", ["pinglog", "jam", "ram", "status"].every((k) => card.includes(k)));
 
 // optimizer via plugin
 setOptimizer(false);
 const onCard = await run(["optimizer", "on"]);
-t("5c .index optimizer on", onCard.includes("ᴀᴋᴛɪꜰ") && getOptimizerState().on === true, onCard.slice(0, 80));
+t("5c .index optimizer on", onCard.toLowerCase().includes("aktif") && getOptimizerState().on === true, onCard.slice(0, 80));
 await run(["optimizer", "on", "600"]);
 t("5d .index optimizer on 600 → threshold 600", getOptimizerState().thresholdMB === 600);
 const stCard = await run(["optimizer", "status"]);
-t("5e .index optimizer status", stCard.includes("ᴏɴ") && stCard.includes("600"), stCard.slice(0, 80));
+t("5e .index optimizer status", stCard.includes("on") && stCard.includes("600"), stCard.slice(0, 80));
 const offCard = await run(["optimizer", "off"]);
-t("5f .index optimizer off → state off", offCard.includes("ᴅɪᴍᴀᴛɪᴋᴀɴ") && getOptimizerState().on === false);
+t("5f .index optimizer off → state off", offCard.includes("dimatikan") && getOptimizerState().on === false);
 
 // ram & status & optimize
 const ramCard = await run(["ram"]);
-t("5g .index ram", ramCard.includes("ʀᴀᴍ") && ramCard.includes("ᴍʙ"), ramCard.slice(0, 90));
+t("5g .index ram", ramCard.toLowerCase().includes("ram") && ramCard.toLowerCase().includes("mb"), ramCard.slice(0, 90));
 const stRamCard = await run(["status"]);
-t("5h .index status ringkasan", stRamCard.includes("ᴏᴘᴛɪᴍɪᴢᴇʀ") && stRamCard.includes("ᴜᴘᴛɪᴍᴇ") || stRamCard.includes("ᴏᴘᴛɪᴍɪᴢᴇʀ") && stRamCard.includes("ᴡᴀ"), stRamCard.slice(0, 90));
+const srl = stRamCard.toLowerCase(); t("5h .index status ringkasan", srl.includes("optimizer") && (srl.includes("uptime") || srl.includes("wa")), stRamCard.slice(0, 90));
 const optCard = await run(["optimize"]);
-t("5i .index optimize manual", optCard.includes("ᴏᴘᴛɪᴍᴀꜱɪ") && optCard.includes("ᴍʙ"));
+t("5i .index optimize manual", optCard.toLowerCase().includes("optimasi") && optCard.toLowerCase().includes("mb"));
 
 // salah subcommand
 const salah = await run(["ngasal"]);
-t("5j sub asal → kartu salah", salah.includes("ʏᴀʜ ᴋᴀᴋ") && sc(salah).includes("index"), salah.slice(0, 80));
+t("5j sub asal → kartu salah", salah.includes("yah kak") && sc(salah).includes("index"), salah.slice(0, 80));
 
 // pinglog & jam runtime control
 const fakeSockCtl = { generateMessageTag: () => "T", query: async () => "ok", ev: { on: () => {}, off: () => {} } };
 replies.length = 0;
 await plugin.handler(fakeM(["pinglog", "on"], ".index pinglog on"), { sock: fakeSockCtl, config: { command: { prefix: "." } } });
 const plOn = replies[0] || "";
-t("5k .index pinglog on", plOn.includes("ᴘɪɴɢ") && plOn.includes("ɴʏᴀʟᴀᴋᴀɴ"), plOn.slice(0, 80));
+t("5k .index pinglog on", plOn.includes("ping") && plOn.includes("nyalakan"), plOn.slice(0, 80));
 const pitl = (await import(R + "/src/lib/nova-pinglog.js"))._pingLogInternalsForTest();
 t("5l pinglog beneran jalan", pitl.isRunning() === true && pitl.isClockRunning() === true);
 const jamOn = await run(["jam", "on"]);
@@ -132,16 +132,16 @@ t("5o .index pinglog off → semua mati", pitl.isRunning() === false && pitl.isC
 await plugin.handler(fakeM(["ping", "on"], ".index ping on"), { sock: fakeSockCtl, config: { command: { prefix: "." } } });
 t("5p .index ping on (alias)", pitl.isRunning() === true);
 const pingOff = await run(["ping", "off"]);
-t("5q .index ping off (alias) → mati", pitl.isRunning() === false && pingOff.includes("ᴍᴀᴛɪᴋᴀɴ"), pingOff.slice(0, 60));
+t("5q .index ping off (alias) → mati", pitl.isRunning() === false && pingOff.includes("matikan"), pingOff.slice(0, 60));
 
 // ─── 6. .index restart (no.2 — DB disimpan dulu, exit via seam) ───
 const pctl = procCtl._processControlForTest();
 const exitCalls = [];
 pctl.setExit((code) => exitCalls.push(code));
 const cardR1 = await run(["restart"]);
-t("6a restart tanpa konfirmasi → kartu peringatan", cardR1.includes("ʏᴀᴋɪɴ") || cardR1.includes("ʀᴇꜱᴛᴀʀᴛ"), cardR1.slice(0, 90));
+t("6a restart tanpa konfirmasi → kartu peringatan", cardR1.includes("yakin") || cardR1.includes("restart"), cardR1.slice(0, 90));
 const cardR2 = await run(["restart", "ya"]);
-t("6b restart ya → dijalankan (belum exit, jeda 1.5 dtk)", cardR2.includes("ᴅɪᴊᴀʟᴀɴᴋᴀɴ") && exitCalls.length === 0, cardR2.slice(0, 90));
+t("6b restart ya → dijalankan (belum exit, jeda 1.5 dtk)", cardR2.includes("dijalankan") && exitCalls.length === 0, cardR2.slice(0, 90));
 t("6c isRestarting aktif", procCtl.isRestarting() === true);
 const resDup = await procCtl.gracefulRestart();
 t("6d panggilan kedua ditolak (idempotent)", resDup.ok === false && resDup.reason.includes("sedang"));
@@ -153,13 +153,13 @@ pctl.resetRestarting();
 
 // ─── 7. .index dbsave (no.3 — paksa simpan DB) ───
 const saveCard = await run(["dbsave"]);
-t("7a .index dbsave → tersimpan", saveCard.includes("ᴛᴇʀꜱɪᴍᴘᴀɴ"), saveCard.slice(0, 80));
+t("7a .index dbsave → tersimpan", saveCard.includes("tersimpan"), saveCard.slice(0, 80));
 const saveCardAlias = await run(["db"]);
-t("7b alias db → jalan juga", saveCardAlias.includes("ᴛᴇʀꜱɪᴍᴘᴀɴ"));
+t("7b alias db → jalan juga", saveCardAlias.includes("tersimpan"));
 
 // ─── 8. .index reconnect (no.4 — tanpa sock nyata → jujur gagal) ───
 const rcCard = await run(["reconnect"]);
-t("8a .index reconnect tanpa koneksi → jujur gagal", rcCard.includes("ɢᴀɢᴀʟ") && rcCard.includes("ᴋᴏɴᴇᴋꜱɪ"), rcCard.slice(0, 100));
+t("8a .index reconnect tanpa koneksi → jujur gagal", rcCard.includes("gagal") && rcCard.includes("koneksi"), rcCard.slice(0, 100));
 const connMod = await import(R + "/src/connection.js");
 t("8b forceReconnect diekspor connection.js", typeof connMod.forceReconnect === "function");
 const rcRes = connMod.forceReconnect("tes e2e");
@@ -172,17 +172,17 @@ t("9a getWatchdogStatus bentuk bener", typeof wd0.active === "boolean" && wd0.in
 t("9b setWatchdogInterval(45)", conn9.setWatchdogInterval(45).ok === true && conn9.getWatchdogStatus().intervalMin === 45);
 t("9c interval gak valid ditolak (0, 5000, abc)", conn9.setWatchdogInterval(0).ok === false && conn9.setWatchdogInterval(5000).ok === false && conn9.setWatchdogInterval("abc").ok === false);
 const wdCard = await run(["watchdog", "status"]);
-t("9d .index watchdog status", wdCard.includes("ᴡᴀᴛᴄʜᴅᴏɢ") && wdCard.includes("45"), wdCard.slice(0, 90));
+const wdl = wdCard.toLowerCase(); t("9d .index watchdog status", wdl.includes("watchdog") && wdl.includes("45"), wdCard.slice(0, 90));
 const wdSet = await run(["watchdog", "interval", "10"]);
 t("9e .index watchdog interval 10", conn9.getWatchdogStatus().intervalMin === 10 && wdSet.includes("10"), wdSet.slice(0, 90));
 const wdBad = await run(["watchdog", "interval", "0"]);
-t("9f interval gak valid → kartu tolak", wdBad.includes("ɢᴀᴋ ᴠᴀʟɪᴅ"), wdBad.slice(0, 80));
+t("9f interval gak valid → kartu tolak", wdBad.includes("gak valid"), wdBad.slice(0, 80));
 await run(["watchdog", "off"]);
 t("9g .index watchdog off → berhenti", conn9.getWatchdogStatus().active === false);
 await run(["watchdog", "on"]);
 t("9h .index watchdog on → aktif lagi", conn9.getWatchdogStatus().active === true);
 const wdWrong = await run(["watchdog", "ngasal"]);
-t("9i sub watchdog asal → kartu salah", wdWrong.includes("ʏᴀʜ ᴋᴀᴋ"));
+t("9i sub watchdog asal → kartu salah", wdWrong.includes("yah kak"));
 conn9.stopWatchdog();
 t("9j cleanup: watchdog dimatiin lagi", conn9.getWatchdogStatus().active === false);
 

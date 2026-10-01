@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const data = response.data;
 
     if (!data.status || !data.data || data.data.length === 0) {
-      return m.reply(claraWrap("pixiv", `❌ *ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ ʜᴀꜱɪʟ ᴜɴᴛᴜᴋ:* ${query}`));
+      return m.reply(claraWrap("pixiv", `❌ *tidak ditemukan hasil untuk:* ${query}`));
     }
 
     const results = data.data.slice(0, 10);
@@ -41,9 +41,9 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    let caption = `🎨 *ᴘɪxɪᴠ ꜱᴇᴀʀᴄʜ*\n`;
-    caption += `📝 *ᴋᴜᴇʀʏ:* ${query}\n`;
-    caption += `📊 *ʜᴀꜱɪʟ:* ${results.length} artwork\n\n`;
+    let caption = `🎨 *pixiv search*\n`;
+    caption += `📝 *kuery:* ${query}\n`;
+    caption += `📊 *hasil:* ${results.length} artwork\n\n`;
 
     results.forEach((art, i) => {
       const aiLabel = art.aiType === 2 ? " 🤖" : "";
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     if (error.response?.status === 403) {
-      return m.reply(claraWrap("Pixiv", `❌ *ᴀᴘɪ ᴋᴇʏ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ ᴀᴛᴀᴜ ʟɪᴍɪᴛ ᴛᴇʀᴄᴀᴘᴀɪ*`));
+      return m.reply(claraWrap("Pixiv", `❌ *api key tidak valid atau limit tercapai*`));
     }
     m.reply(claraWrap("pixiv", te(m.prefix, m.command, m.pushName), "error"));
   }

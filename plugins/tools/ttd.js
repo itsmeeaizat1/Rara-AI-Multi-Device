@@ -121,7 +121,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  1. Reply pesan PDF`,
       `  2. Ketik: ${prefix}ttd Nama Lengkap`,
       ``,
-      `*ᴏᴘꜱɪ:*`,
+      `*opsi:*`,
       `  page=N (halaman ke-N, default: halaman terakhir)`,
       `  x=N y=N (posisi ttd, default: 50, 80)`,
       `  scale=N (ukuran gambar, default: 0.3)`,

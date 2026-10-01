@@ -6,8 +6,9 @@ import { config as stConfig, handler as stHandler } from "../../plugins/main/spe
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
-const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
-const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+const SC_MAP = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h', i: 'i', j: 'j', k: 'k', l: 'l', m: 'm', n: 'n', o: 'o', p: 'p', r: 'r', s: 's', t: 't', u: 'u', v: 'v', w: 'w', y: 'y', z: 'z' };
+// UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
+const toSC = (s) => String(s ?? "");
 
 const mkStream = (chunks) => new ReadableStream({
   start(c) { for (const ch of chunks) c.enqueue(ch); c.close(); },
@@ -64,13 +65,13 @@ w("\n— 1. alur lengkap .speedtest (stub network) —");
   check("stage 1 kirim (bukan edit)", sent[0]?.type === "send" && sent[0]?.text.includes(toSC("Menghubungkan")), sent[0]?.text.slice(0, 40));
   check("semua stage berikutnya EDIT pesan yang sama", sent.slice(1).every((s) => s.type === "edit"), sent.map((s) => s.type).join(","));
   const finalMsg = sent.filter((s) => s.text.includes(toSC("Hasil Tes"))).pop();
-  check("ada box hasil final", !!finalMsg, "gak ada box ᴄᴘᴜ");
+  check("ada box hasil final", !!finalMsg, "gak ada box cpu");
   if (finalMsg) {
-    check("header 「 ✦ ꜱᴘᴇᴇᴅᴛᴇꜱᴛ ✦ 」", finalMsg.text.startsWith(`「 ✦ ${toSC("Speedtest")} ✦ 」`));
-    check("ping ms terisi", /• ᴘɪɴɢ : [\d.]+ ms/.test(finalMsg.text), finalMsg.text.slice(0, 80));
-    check("jitter ms terisi", /• ᴊɪᴛᴛᴇʀ : [\d.]+ ms/.test(finalMsg.text));
-    check("download Mbps terisi", /• ᴅᴏᴡɴʟᴏᴀᴅ : [\d.]+ Mbps/.test(finalMsg.text));
-    check("upload Mbps terisi", /• ᴜᴘʟᴏᴀᴅ : [\d.]+ Mbps/.test(finalMsg.text));
+    check("header 「 ✦ speedtest ✦ 」", finalMsg.text.startsWith(`「 ✦ ${toSC("Speedtest")} ✦ 」`));
+    check("ping ms terisi", /• ping : [\d.]+ ms/i.test(finalMsg.text), finalMsg.text.slice(0, 80));
+    check("jitter ms terisi", /• jitter : [\d.]+ ms/i.test(finalMsg.text));
+    check("download Mbps terisi", /• download : [\d.]+ Mbps/i.test(finalMsg.text));
+    check("upload Mbps terisi", /• upload : [\d.]+ Mbps/i.test(finalMsg.text));
     check("IP publik dari trace (1.2.3.4)", finalMsg.text.includes("1.2.3.4"));
     check("section koneksi + status + kuota terpakai", finalMsg.text.includes(toSC("Koneksi")) && finalMsg.text.includes(toSC("Kuota Terpakai")) && /~[\d.]+ MB/.test(finalMsg.text));
   }

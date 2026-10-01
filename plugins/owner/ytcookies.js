@@ -90,11 +90,11 @@ async function handler(m, { sock }) {
     if (!st) {
       return m.reply(
         claraWrap("Yt Cookies", [
-          "🔴 *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴄᴏᴏᴋɪᴇs ᴛᴇʀᴘᴀꜱᴀɴɢ*",
+          "🔴 *tidak ada cookies terpasang*",
           "",
           "YouTube lagi ngeblokir IP server → .play/.playvideo gagal di konversi.",
           "",
-          "📍 ᴄᴀʀᴀ ʟᴏɢɪɴ:",
+          "📍 cara login:",
           "1. Browser yang login YouTube (akun sekunder!)",
           "2. Install extension 'Get cookies.txt LOCALLY'",
           "3. Buka youtube.com → extension → Export",
@@ -105,12 +105,12 @@ async function handler(m, { sock }) {
     const ageDays = ((Date.now() - st.modified.getTime()) / 86400000).toFixed(1);
     return m.reply(
       claraWrap("Yt Cookies", [
-        `${st.valid ? "🟢" : "🟡"} *ᴄᴏᴏᴋɪᴇꜱ ${st.valid ? "ᴠᴀʟɪᴅ" : "ʙᴇʀᴍᴀꜱᴀʟᴀʜ"}*`,
-        `• ʟᴏᴋᴀꜱɪ : data/yt-cookies.txt`,
-        `• ᴜᴋᴜʀᴀɴ : ${(st.size / 1024).toFixed(1)} KB`,
-        `• ʙᴀʀɪꜱ ᴄᴏᴏᴋɪᴇ : ${st.cookieLines} (yt: ${st.ytLines})`,
-        `• ᴜᴍᴜʀ : ${ageDays} hari${Number(ageDays) > 21 ? " ⚠️ mending ekspor ulang" : ""}`,
-        st.valid ? "" : `• ᴍᴀꜱᴀʟᴀʜ : ${st.reason}`,
+        `${st.valid ? "🟢" : "🟡"} *cookies ${st.valid ? "valid" : "bermasalah"}*`,
+        `• lokasi : data/yt-cookies.txt`,
+        `• ukuran : ${(st.size / 1024).toFixed(1)} KB`,
+        `• baris cookie : ${st.cookieLines} (yt: ${st.ytLines})`,
+        `• umur : ${ageDays} hari${Number(ageDays) > 21 ? " ⚠️ mending ekspor ulang" : ""}`,
+        st.valid ? "" : `• masalah : ${st.reason}`,
       ].filter(Boolean).join("\n")),
     );
   }
@@ -119,7 +119,7 @@ async function handler(m, { sock }) {
   if (sub === "clear" || sub === "off" || sub === "logout") {
     if (fs.existsSync(COOKIES_PATH)) {
       fs.unlinkSync(COOKIES_PATH);
-      return m.reply(claraWrap("Yt Cookies", ["🟡 *ᴄᴏᴏᴋɪᴇꜱ ᴅɪʜᴀᴘᴜꜱ* — bot balik mode tanpa login YouTube.", "", "Kalau .play masih kebutuh login, kirim file cookies.txt baru."].join("\n")));
+      return m.reply(claraWrap("Yt Cookies", ["🟡 *cookies dihapus* — bot balik mode tanpa login YouTube.", "", "Kalau .play masih kebutuh login, kirim file cookies.txt baru."].join("\n")));
     }
     return m.reply(claraWrap("Yt Cookies", ["Tidak ada cookies tersimpan — sudah bersih dari awal."].join("\n")));
   }
@@ -184,10 +184,10 @@ async function handler(m, { sock }) {
   await m.react("🐣");
   return m.reply(
     claraWrap("Yt Cookies", [
-      "🟢 *ʟᴏɢɪɴ ʏᴏᴜᴛᴜʙᴇ ʙᴇʀʜᴀꜱɪʟ* 🎉",
-      `• ʙᴀʀɪꜱ ᴄᴏᴏᴋɪᴇ : ${res.cookieLines} (yt: ${res.ytLines})`,
-      "• ᴛᴇʀꜱɪᴍᴘᴀɴ : data/yt-cookies.txt",
-      "• ʏᴛ-ᴅʟᴘ : otomatis pakai cookies di download berikutnya",
+      "🟢 *login youtube berhasil* 🎉",
+      `• baris cookie : ${res.cookieLines} (yt: ${res.ytLines})`,
+      "• tersimpan : data/yt-cookies.txt",
+      "• yt-dlp : otomatis pakai cookies di download berikutnya",
       "",
       "📌 Tes langsung: ketik *.play lathi* — kalau masih bot-check, cookies-nya kurang segar, ekspor ulang.",
       "📌 Cookies expire beberapa minggu — begitu bot-check balik, kirim file baru lagi.",

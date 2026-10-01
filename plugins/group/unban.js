@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text =
       claraWrap("Unban", [`Target: *${targetName}*`,
-        "Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪ-ᴜɴʙᴀɴ*"].join("\n")) +
+        "Status: *berhasil di-unban*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}unban <@target> untuk unban orang lain`) +
       "\n" +

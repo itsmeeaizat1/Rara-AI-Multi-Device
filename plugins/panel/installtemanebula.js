@@ -103,7 +103,7 @@ function handler(m, { sock }) {
 
                         await execSSH(conn, CMD_NEBULA)
             await m.reply(claraWrap("installtemanebula", `
-│ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*
+│ sTatus: *terinstall*
 │ Ip: ${ipvps}\n\n_Tema Nebula berhasil diinstall!_`))
         } catch (err) {
             console.error('[Nebula Install Error]', err)

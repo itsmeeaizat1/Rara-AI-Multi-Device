@@ -55,27 +55,27 @@ Gunakan bahasa Indonesia, tafsir dengan bijak dan positif. Jangan menakut-nakuti
       if (!t) continue;
 
       if (t.startsWith("MAKNA UTAMA:")) {
-        formatted += `🌙 *ᴍᴀᴋɴᴀ ᴜᴛᴀᴍᴀ*\n`;
+        formatted += `🌙 *makna utama*\n`;
         formatted += `${t.replace("MAKNA UTAMA:", "").trim()}
 
 `;
       } else if (t.startsWith("ASPEK PSIKOLOGIS:")) {
-        formatted += `🧠 *ᴀsᴘᴇᴋ ᴘsɪᴋᴏʟᴏɢɪs*\n`;
+        formatted += `🧠 *aspek psikologis*\n`;
         formatted += `${t.replace("ASPEK PSIKOLOGIS:", "").trim()}
 
 `;
       } else if (t.startsWith("ASPEK SPIRITUAL:")) {
-        formatted += `*ᴀsᴘᴇᴋ sᴘɪʀɪᴛᴜᴀʟ*\n`;
+        formatted += `*aspek spiritual*\n`;
         formatted += `${t.replace("ASPEK SPIRITUAL:", "").trim()}
 
 `;
       } else if (t.startsWith("PREDIKSI:")) {
-        formatted += `🔮 *ᴘʀᴇᴅɪᴋsɪ*\n`;
+        formatted += `🔮 *prediksi*\n`;
         formatted += `${t.replace("PREDIKSI:", "").trim()}
 
 `;
       } else if (t.startsWith("SARAN:")) {
-        formatted += `💡 *sᴀʀᴀɴ*\n`;
+        formatted += `💡 *saran*\n`;
         formatted += `${t.replace("SARAN:", "").trim()}\n`;
       } else {
         formatted += `${t}\n`;

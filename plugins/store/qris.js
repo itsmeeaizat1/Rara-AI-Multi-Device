@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     if (!qrisPath) {
       return m.reply(
         claraWrap("Qris", [
-          "Status: *ɢᴀɢᴀʟ*",
+          "Status: *gagal*",
           "Alasan: *File QRIS tidak ditemukan*",
           `Minta QRIS langsung ke owner: wa.me/${ownerNumber}`,
         ].join("\n")),

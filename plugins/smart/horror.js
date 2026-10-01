@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     return m.reply("❌ Yah, gagal bikin ceritanya nih 😵\nCoba lagi yuk!", "horor");
   }
 
-  const header = "👻 *ʜᴏʀʀᴏʀ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
+  const header = "👻 *horror story*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n\n Dibuat oleh Nova AI";
   return m.reply( header + story + footer, "horor");
 }

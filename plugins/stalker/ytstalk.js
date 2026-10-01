@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `📺 *ʏᴏᴜᴛᴜʙᴇ ꜱᴛᴀʟᴋ*\n\nMasukkan username YouTube\n\n\`Contoh: ${m.prefix}ytstalk mrbeast\``; return await m.reply( __navText, "ytstalk"); }
+        { const __navText = `📺 *youtube stalk*\n\nMasukkan username YouTube\n\n\`Contoh: ${m.prefix}ytstalk mrbeast\``; return await m.reply( __navText, "ytstalk"); }
     }
     try {
         const res = await axios.get(`https://firefly.maiku.my.id/api/stalk-youtube?apikey=${config.APIkey.firefly}&username=${encodeURIComponent(username)}`, {
@@ -37,13 +37,13 @@ async function handler(m, { sock }) {
         
         const c = res.data.data
         
-        let caption = `📺 *ʏᴏᴜᴛᴜʙᴇ ꜱᴛᴀʟᴋ*\n\n` +
-            `👤 *ɴᴀᴍᴀ:* ${c.name}\n` +
-            `🔗 *ᴜꜱᴇʀɴᴀᴍᴇ:* @${username}\n` +
-            `✅ *ᴠᴇʀɪꜰɪᴇᴅ:* ${c.verified ? 'Ya' : 'Tidak'}\n\n` +
-            `👥 *ꜱᴜʙꜱᴄʀɪʙᴇʀꜱ:* ${c.subscribers}\n` +
-            `🎬 *ᴛᴏᴛᴀʟ ᴠɪᴅᴇᴏ:* ${c.video_count}\n\n` +
-            `📝 *ᴅᴇꜱᴋʀɪᴘꜱɪ:*\n${c.about || '-'}\n\n` +
+        let caption = `📺 *youtube stalk*\n\n` +
+            `👤 *nama:* ${c.name}\n` +
+            `🔗 *username:* @${username}\n` +
+            `✅ *verified:* ${c.verified ? 'Ya' : 'Tidak'}\n\n` +
+            `👥 *subscribers:* ${c.subscribers}\n` +
+            `🎬 *total video:* ${c.video_count}\n\n` +
+            `📝 *deskripsi:*\n${c.about || '-'}\n\n` +
             `🔗 ${c.url}`
         await sock.sendMessage(m.chat, {
             image: { url: c.thumbnail },

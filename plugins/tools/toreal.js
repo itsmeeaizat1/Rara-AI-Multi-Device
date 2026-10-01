@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    const caption = `✅ *ᴛᴏ ʀᴇᴀʟ*
+    const caption = `✅ *to real*
 
  Image enhanced to realistic
 Engine: nexray AI`;

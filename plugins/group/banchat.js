@@ -30,14 +30,14 @@ async function handler(m, { sock }) {
         
         if (isUnban) {
             if (!groupData.isBanned) {
-                return m.reply(claraWrap("banchat", `⚠️ *ɢʀᴜᴘ ᴛɪᴅᴀᴋ ᴅɪʙᴀɴ*\n\n` +
+                return m.reply(claraWrap("banchat", `⚠️ *grup tidak diban*\n\n` +
                     `Grup ini tidak dalam status banned.\n` +
                     `Semua user bisa menggunakan bot.`))            }
             
             db.setGroup(m.chat, { ...groupData, isBanned: false })
             
             return sock.sendMessage(m.chat, {
-                text: `✅ *ɢʀᴜᴘ ᴅɪ-ᴜɴʙᴀɴ*\n\n` +
+                text: `✅ *grup di-unban*\n\n` +
                     `📛 Grup: *${groupName}*\n` +
                     `📊 sTatus: *✅ AKTIF*\n` +
                     `👤 Unban Oleh: @${m.sender.split('@')[0]}\n` +
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         
         db.setGroup(m.chat, { ...groupData, isBanned: true })
         
-        await m.reply(claraWrap("banchat", `🚫 *ɢʀᴜᴘ ᴅɪʙᴀɴ*\n\n` +
+        await m.reply(claraWrap("banchat", `🚫 *grup diban*\n\n` +
                 `📛 Grup: *${groupName}*\n` +
                 `• Status: *BANNED*\n` +
                 `👤 Ban Oleh: @${m.sender.split('@')[0]}\n` +

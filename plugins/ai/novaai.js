@@ -210,7 +210,7 @@ async function handler(m, { sock, conn, config, db }) {
   // ada gambar (langsung/reply) → teks boleh kosong, langsung scan (jangan print help)
   const hasImageForVision = m.isImage || m.quoted?.isImage;
   if (!text && !hasImageForVision) {
-    const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+    const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
     const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
     const categories = {
       'Grup': ['closegc', 'opengc', 'lockedit', 'unlockedit', 'setname', 'setdesc', 'setpp', 'groupinfo'],

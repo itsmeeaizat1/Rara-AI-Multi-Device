@@ -20,7 +20,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.args.length < 2) {
-        { const __navText = `💕 *ᴋᴇᴄᴏᴄᴏᴋᴀɴ ɴᴀᴍᴀ*\n\nFormat: nama1 nama2\n\n\`Contoh: ${m.prefix}kecocokannamapasangan putu keyla\``; return await m.reply(__navText); }
+        { const __navText = `💕 *kecocokan nama*\n\nFormat: nama1 nama2\n\n\`Contoh: ${m.prefix}kecocokannamapasangan putu keyla\``; return await m.reply(__navText); }
     }
     
     const [nama1, nama2] = m.args
@@ -35,11 +35,11 @@ async function handler(m, { sock }) {
         }
         
         const result = data.data
-        const response = `💕 *ᴋᴇᴄᴏᴄᴏᴋᴀɴ ɴᴀᴍᴀ ᴘᴀꜱᴀɴɢᴀɴ*\n\n` +
+        const response = `💕 *kecocokan nama pasangan*\n\n` +
             `👤 ${result.nama_anda}\n` +
             `💑 ${result.nama_pasangan}\n\n` +
-            `✅ *ꜱIꜱI PoꜱItif:*\n${result.sisi_positif}\n\n` +
-            `❌ *ꜱIꜱI Negatif:*\n${result.sisi_negatif}\n\n` +
+            `✅ *sIsI PosItif:*\n${result.sisi_positif}\n\n` +
+            `❌ *sIsI Negatif:*\n${result.sisi_negatif}\n\n` +
             `_${result.catatan}_`
         await m.reply(response)
         

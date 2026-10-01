@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
       msg += `💼 Gold kamu: *${rpg.gold}*\n`;
       msg += `
 `;
-      msg += `📊 *ᴘʀɪᴢᴇ ᴛɪᴇʀs*\n`;
+      msg += `📊 *prize tiers*\n`;
       msg += `🎯 Jackpot: *50.000 gold* (0.5%)\n`;
       msg += `🥇 Big Win: *10.000 gold* (2%)\n`;
       msg += `🥈 Medium: *2.000 gold* (8%)\n`;

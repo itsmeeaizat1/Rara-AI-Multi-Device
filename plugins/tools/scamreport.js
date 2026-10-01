@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     let lines = [
       "Nomor: " + num,
       "Total laporan: " + report.count + "x",
-      "Status: *ᴅɪʟᴀᴘᴏʀᴋᴀɴ ᴘᴇɴɪᴘᴜ*",
+      "Status: *dilaporkan penipu*",
       "",
       "Laporan terbaru:",
     ];

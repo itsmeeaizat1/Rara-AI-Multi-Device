@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
       msg += `🏆 W:${rpg.arenaWins || 0} L:${rpg.arenaLosses || 0}\n`;
       msg += `
 `;
-      msg += `📋 *ᴍᴏᴅᴇs*\n`;
+      msg += `📋 *modes*\n`;
       msg += `🤖 .arenav3 ai — lawan AI (casual, no rating)\n`;
       msg += `⚔️ .arenav3 ranked — lawan AI (rated, ELO)\n`;
       msg += `🎮 .arenav3 casual — lawan AI (no stake)\n`;

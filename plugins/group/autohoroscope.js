@@ -119,7 +119,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
-      return m.reply(claraWrap("Auto Horoscope", ["Status: " + (cfg.enabled ? "*ᴀᴋᴛɪꜰ*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Zodiak terakhir: " + (cfg.lastZodiac || "Belum ada")]));
+      return m.reply(claraWrap("Auto Horoscope", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Zodiak terakhir: " + (cfg.lastZodiac || "Belum ada")]));
     }
     if (sub === "now" || sub === "sekarang") {
       const zodiac = ZODIACS[Math.floor(Math.random() * ZODIACS.length)];

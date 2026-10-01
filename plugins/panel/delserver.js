@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("delserver", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+        return m.reply(claraWrap("delserver", `❌ *akses ditolak*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     
     if (!serverId || isNaN(serverId)) {
         const available = getAvailableServers(pteroConfig)
-        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return m.reply( `⚠️ *cara pakai*\n\n` +
             `\`${m.prefix}${m.command} serverid\`\n\n` +
             `Server tersedia: *${available.join(', ') || 'none'}*\n` +
             `Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "delserver")

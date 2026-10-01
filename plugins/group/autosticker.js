@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     
     if (!arg) {
         const status = current ? '✅ Aktif' : '❌ Nonaktif'
-        return m.reply( `🖼️ *ᴀᴜᴛᴏꜱᴛɪᴄᴋᴇʀ*\n\n` +
+        return m.reply( `🖼️ *autosticker*\n\n` +
             `Status: ${status}\n\n` +
             `Gunakan:\n` +
             `\`${m.prefix}autosticker on\` - aktifkan\n` +
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         }
         db.setGroup(m.chat, { autosticker: false })
         await db.save()
-        { const __navText = `🖼️ *ᴀᴜᴛᴏꜱᴛɪᴄᴋᴇʀ*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
+        { const __navText = `🖼️ *autosticker*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
     }
     
     return m.reply(claraWrap("Auto sticker", `Gunakan: \`${m.prefix}autosticker on/off\``, "error"))

@@ -5,7 +5,7 @@
 import { SUPPORTED_LANGUAGES, getUserLanguage } from "./nova-language.js";
 
 // ── UN-SMALLCAPS (fix 18 Sep 2026, owner: "yg keubah cm caption doang") ──
-// ClaraWrap/menu kebentuk SMALLCAPS Unicode (ꜰɪᴛᴜʀ ᴍᴇɴᴜ...) SEBELUM nyampe
+// ClaraWrap/menu kebentuk SMALLCAPS Unicode (fitur menu...) SEBELUM nyampe
 // ke translateUI → Google Translate gak kenali glyph kecil itu → teks menu gak
 // pernah ke-translate (caption media yang polos Latin ya ke-translate).
 // Solusi: balikin dulu smallcaps → huruf biasa SEBELUM dikirim ke Google.
@@ -195,7 +195,7 @@ export async function translateUI(text, sender) {
     const langInfo = SUPPORTED_LANGUAGES[lang];
     if (!langInfo) return text;
 
-    // 0. UN-SMALLCAPS: menu/claraWrap nyampe sini udah kebentuk ꜰɪᴛᴜʀ —
+    // 0. UN-SMALLCAPS: menu/claraWrap nyampe sini udah kebentuk fitur —
     // balikin ke huruf biasa biar Google Translate kenali katanya.
     const plain = unSmallcaps(text);
     const wasSmallcaps = plain !== text;

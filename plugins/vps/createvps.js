@@ -125,15 +125,15 @@ ssh_pwauth: True`,
         
         const detailTxt = `
 *ID:* ${dropletId}
-│ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${hostname}
+│ *hostname:* ${hostname}
 │ *IP:* ${ip}
-│ *ᴜꜱᴇʀ:* root
-│ *ᴘᴀꜱꜱᴡᴏʀᴅ:* ${password}
+│ *user:* root
+│ *password:* ${password}
 
 
-*ʀᴀᴍ:* ${spec.ram}
-│ *ᴄᴘᴜ:* ${spec.cpu}
-│ *ʀᴇɢɪᴏɴ:* ${region}
+*ram:* ${spec.ram}
+│ *cpu:* ${spec.cpu}
+│ *region:* ${region}
 │ *OS:* Ubuntu 22.04
 
 Simpan data ini baik-baik!`

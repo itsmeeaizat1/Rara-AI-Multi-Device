@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Breach Check", [
           "Password: " + "*".repeat(Math.min(password.length, 20)),
           "",
-          "Status: *ᴀᴍᴀɴ*",
+          "Status: *aman*",
           "Tidak ditemukan di database breach (HIBP)",
           "",
           "Kekuatan password: " + verdict + " (" + strength + "/100)",
@@ -193,7 +193,7 @@ async function handler(m, { sock }) {
     const breaches = KNOWN_BREACHES_BY_DOMAIN[validation.domain] || [];
     if (breaches.length > 0) {
       lines.push("");
-      lines.push("Status: *ᴅᴏᴍᴀɪɴ ᴘᴇʀɴᴀʜ ᴛᴇʀʙᴏᴄᴏʀ*");
+      lines.push("Status: *domain pernah terbocor*");
       lines.push("");
       lines.push("Breaches yang melibatkan " + validation.domain + ":");
       breaches.forEach((b, i) => {
@@ -209,7 +209,7 @@ async function handler(m, { sock }) {
     }
 
     lines.push("");
-    lines.push("Status: *ᴀᴍᴀɴ*");
+    lines.push("Status: *aman*");
     lines.push("Domain bukan disposable");
     lines.push("Tidak ada breach yang diketahui untuk domain ini");
     lines.push("");

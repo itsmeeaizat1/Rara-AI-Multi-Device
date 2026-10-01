@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
         }
 
         if (sub === 'list') {
-            let text = `📋 *ᴅᴀꜰᴛᴀʀ ᴘᴇʀᴍɪɴᴛᴀᴀɴ ᴍᴀꜱᴜᴋ*\n\n`
+            let text = `📋 *daftar permintaan masuk*\n\n`
             text += `Total: ${pendingList.length} permintaan\n\n`
 
             for (let i = 0; i < pendingList.length; i++) {

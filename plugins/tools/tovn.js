@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     if (!mediaSource) {
         await m.reply( claraWrap("GAGAL", 
             `Tidak ada audio/video yang terdeteksi!\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
+            `*cara penggunaan:*\n` +
             `1. Kirim audio/video + caption \`${m.prefix}tovn\`\n` +
             `2. Reply audio/video dengan \`${m.prefix}tovn\``), "tovn")
         return

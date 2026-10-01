@@ -39,10 +39,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     let text = `
 *OS:* ${osName}
-*ʜᴏꜱᴛ:* ${hostname}
-*ᴜᴘᴛɪᴍᴇ:* ${uptime}
-*ᴄᴘᴜ:* ${cpu}
-*ʀᴀᴍ:* ${ram}
+*host:* ${hostname}
+*uptime:* ${uptime}
+*cpu:* ${cpu}
+*ram:* ${ram}
 
 Ketik ${prefix}menu untuk kembali`;
 
@@ -51,7 +51,7 @@ Ketik ${prefix}menu untuk kembali`;
     const prefix = botConfig.command?.prefix || ".";
     let text = `
 *Status:* Gagal
-*ᴀʟᴀꜱᴀɴ:* ${error.message}
+*alasan:* ${error.message}
 
 Coba lagi ya`;
 

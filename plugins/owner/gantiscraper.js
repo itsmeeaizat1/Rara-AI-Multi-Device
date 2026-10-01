@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}gantiscraper namafile\` - Custom nama file\n\n` +
         `📋 *Lihat daftar scraper:*\n` +
         `\`${m.prefix}gantiscraper list\`\n\n` +
-        `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ:*\nCode lama akan di-backup sebelum diganti`,
+        `⚠️ *peringatan:*\nCode lama akan di-backup sebelum diganti`,
     );
   }
 
@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
 
   if (!fileName) {
     return m.reply(
-      `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa mendeteksi nama scraper\nGunakan \`${m.prefix}gantiscraper <namafile>\``,
+      `❌ *gagal*\n\nTidak bisa mendeteksi nama scraper\nGunakan \`${m.prefix}gantiscraper <namafile>\``,
     );
   }
 

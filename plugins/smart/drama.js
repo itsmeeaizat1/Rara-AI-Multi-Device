@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     return m.reply("❌ Yah, gagal bikin ceritanya nih 😵\nCoba lagi yuk!", "drama");
   }
 
-  const header = "🎭 *ᴅʀᴀᴍᴀ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
+  const header = "🎭 *drama story*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n\n Dibuat oleh Nova AI";
   return m.reply( header + story + footer, "drama");
 }

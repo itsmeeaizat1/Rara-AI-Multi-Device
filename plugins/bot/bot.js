@@ -169,10 +169,10 @@ async function handler(m, { sock }) {
         await m.react("🐣")
         const isOff = db.setting('botPower') === false
         const isMute = db.setting('botMute') === true
-        const curMode = db.setting('onlyGc') ? 'ɢᴄ (cuma grup)'
-            : db.setting('onlyPc') ? 'ᴘᴄ (cuma chat pribadi)'
-            : 'ᴀʟʟ (semua chat)'
-        const curStatus = isOff ? 'ᴏꜰꜰ (sunyi total)' : isMute ? 'ᴍᴜᴛᴇ (dijeda)' : 'ᴏɴ (aktif)'
+        const curMode = db.setting('onlyGc') ? 'gc (cuma grup)'
+            : db.setting('onlyPc') ? 'pc (cuma chat pribadi)'
+            : 'all (semua chat)'
+        const curStatus = isOff ? 'off (sunyi total)' : isMute ? 'mute (dijeda)' : 'on (aktif)'
         return m.reply(claraWrap('Status Bot', [
             `Status : ${curStatus}`,
             `Mode : ${curMode}`,
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
     if (['off', 'mati', 'stop'].includes(act)) {
         if (db.setting('botPower') === false) {
             await m.react("🐣")
-            return m.reply(claraWrap('Status Bot', 'Bot udah ᴏꜰꜰ dari tadi kak.\nKetik *.bot on* buat nyalain.'))
+            return m.reply(claraWrap('Status Bot', 'Bot udah off dari tadi kak.\nKetik *.bot on* buat nyalain.'))
         }
         db.setting('botPower', false)
         db.setting('botMute', false) // off menimpa mute — level paling dalam
@@ -203,7 +203,7 @@ async function handler(m, { sock }) {
         const saluran = await waitSaluran(sock, db, 'off')
 
         return m.reply(claraWrap('Bot Dimatikan', [
-            'Bot sekarang *ᴏꜰꜰ* — sunyi total.',
+            'Bot sekarang *off* — sunyi total.',
             '',
             'Bot gak akan merespon fitur apa pun',
             '(gak ada reaksi, gak ada auto, gak ada notif',
@@ -224,16 +224,16 @@ async function handler(m, { sock }) {
         if (db.setting('botPower') === false) {
             await m.react("❗")
             return m.reply(claraWrap('Status Bot', [
-                'Bot lagi *ᴏꜰꜰ* (sunyi total) — lebih dalam dari mute.',
+                'Bot lagi *off* (sunyi total) — lebih dalam dari mute.',
                 '',
-                'Mute cuma bisa dipasang pas bot *ᴏɴ*.',
+                'Mute cuma bisa dipasang pas bot *on*.',
                 'Ketik *.bot on* buat nyalain bot langsung aktif,',
                 'atau nyalain dulu terus *.bot mute* buat dijeda.',
             ].join('\n')))
         }
         if (db.setting('botMute') === true) {
             await m.react("🐣")
-            return m.reply(claraWrap('Status Bot', 'Bot udah *ᴍᴜᴛᴇ* (dijeda) dari tadi kak.\nKetik *.bot on* buat nyalain.'))
+            return m.reply(claraWrap('Status Bot', 'Bot udah *mute* (dijeda) dari tadi kak.\nKetik *.bot on* buat nyalain.'))
         }
         db.setting('botMute', true)
         await m.react("🐣")
@@ -244,7 +244,7 @@ async function handler(m, { sock }) {
         const saluran = await waitSaluran(sock, db, 'mute')
 
         return m.reply(claraWrap('Bot Dijeda', [
-            'Bot sekarang *ᴍᴜᴛᴇ* — sedang dijeda.',
+            'Bot sekarang *mute* — sedang dijeda.',
             '',
             'Semua command gak bisa diakses.',
             'Nyoba command apa pun → bot bales notif',
@@ -265,7 +265,7 @@ async function handler(m, { sock }) {
     if (['on', 'nyala', 'start', 'hidup'].includes(act)) {
         if (db.setting('botPower') !== false && db.setting('botMute') !== true) {
             await m.react("🐣")
-            return m.reply(claraWrap('Status Bot', 'Bot udah *ᴏɴ* kok, jalan normal.'))
+            return m.reply(claraWrap('Status Bot', 'Bot udah *on* kok, jalan normal.'))
         }
         db.setting('botPower', true)
         db.setting('botMute', false)
@@ -278,7 +278,7 @@ async function handler(m, { sock }) {
         const saluran = await waitSaluran(sock, db, 'on')
 
         return m.reply(claraWrap('Bot Dinyalakan', [
-            'Bot kembali *ᴏɴ* — semua fitur aktif lagi.',
+            'Bot kembali *on* — semua fitur aktif lagi.',
             '',
             `Notifikasi dikirim ke *${grupCount}* grup`,
             saluranStatusLine(saluran, channelName) + '.',
@@ -294,9 +294,9 @@ async function handler(m, { sock }) {
 
         // .bot mode → status mode doang
         if (!sub) {
-            const curMode = db.setting('onlyGc') ? 'ɢᴄ (cuma grup)'
-                : db.setting('onlyPc') ? 'ᴘᴄ (cuma chat pribadi)'
-                : 'ᴀʟʟ (semua chat)'
+            const curMode = db.setting('onlyGc') ? 'gc (cuma grup)'
+                : db.setting('onlyPc') ? 'pc (cuma chat pribadi)'
+                : 'all (semua chat)'
             await m.react("🐣")
             return m.reply(claraWrap('Mode Bot', [
                 `Mode sekarang : ${curMode}`,
@@ -316,7 +316,7 @@ async function handler(m, { sock }) {
                 db.setting('onlyPc', false)
                 await m.react("🐣")
                 return m.reply(claraWrap('Mode Bot', [
-                    'Mode *ɢᴄ* dimatikan — bot respon di semua chat lagi.',
+                    'Mode *gc* dimatikan — bot respon di semua chat lagi.',
                     '',
                     `Matikan bot total: *.bot off*`,
                 ].join('\n')))
@@ -325,7 +325,7 @@ async function handler(m, { sock }) {
             db.setting('onlyPc', false)
             await m.react("🐣")
             return m.reply(claraWrap('Mode Bot', [
-                'Mode diubah ke *ɢᴄ* — bot cuma respon di grup.',
+                'Mode diubah ke *gc* — bot cuma respon di grup.',
                 '',
                 'Chat pribadi (PC) di-diamin.',
                 'Owner tetap bisa command di mana pun.',
@@ -340,7 +340,7 @@ async function handler(m, { sock }) {
                 db.setting('onlyGc', false)
                 await m.react("🐣")
                 return m.reply(claraWrap('Mode Bot', [
-                    'Mode *ᴘᴄ* dimatikan — bot respon di semua chat lagi.',
+                    'Mode *pc* dimatikan — bot respon di semua chat lagi.',
                     '',
                     `Matikan bot total: *.bot off*`,
                 ].join('\n')))
@@ -349,7 +349,7 @@ async function handler(m, { sock }) {
             db.setting('onlyGc', false)
             await m.react("🐣")
             return m.reply(claraWrap('Mode Bot', [
-                'Mode diubah ke *ᴘᴄ* — bot cuma respon di chat pribadi.',
+                'Mode diubah ke *pc* — bot cuma respon di chat pribadi.',
                 '',
                 'Grup di-diamin.',
                 'Owner tetap bisa command di mana pun.',
@@ -363,7 +363,7 @@ async function handler(m, { sock }) {
             db.setting('onlyPc', false)
             await m.react("🐣")
             return m.reply(claraWrap('Mode Bot', [
-                'Mode diubah ke *ᴀʟʟ* — bot respon di semua chat.',
+                'Mode diubah ke *all* — bot respon di semua chat.',
                 'Grup + chat pribadi aktif lagi.',
             ].join('\n')))
         }

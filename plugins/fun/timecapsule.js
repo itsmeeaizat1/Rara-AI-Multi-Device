@@ -29,11 +29,11 @@ const PRESETS = [
 
 function buildMenu(prefix) {
   return (
-    claraWrap("Time Capsule", ["Fitur: *ᴛɪᴍᴇ ᴄᴀᴘꜱᴜʟᴇ*",
+    claraWrap("Time Capsule", ["Fitur: *time capsule*",
       "Konsep: *Pesan dikunci, terbuka nanti*",
       "Cooldown: *10 detik*"].join("\n")) +
     "\n" +
-    claraWrap("PreꜱEt Idea", PRESETS) +
+    claraWrap("PresEt Idea", PRESETS) +
     "\n" +
     claraWrap("Pakai", [`${prefix}timecapsule <hari>|<pesan>`, `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
     "\n" +
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!Number.isInteger(days) || days <= 0 || !message) {
       const text =
-        claraWrap("Time Capsule", ["Alasan: *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*",
+        claraWrap("Time Capsule", ["Alasan: *format salah*",
           `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}timecapsule untuk melihat menu`);

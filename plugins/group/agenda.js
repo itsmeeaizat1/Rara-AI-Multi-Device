@@ -360,7 +360,7 @@ export default {
     if (new RegExp(`^${prefix}agendaon\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Agenda", [
-          `Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -379,7 +379,7 @@ export default {
     if (new RegExp(`^${prefix}agendaoff\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Agenda", [
-          `Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `Status: *akses ditolak*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -421,7 +421,7 @@ export default {
     // Check if enabled
     if (!isAgendaOn(groupId)) {
       await m.reply(claraWrap("Agenda", [
-        `Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
+        `Status: *nonaktif di grup ini*`,
         ``,
         `Owner: ketik *${prefix}agendaon* untuk mengaktifkan.`,
       ].join("\n")));
@@ -502,7 +502,7 @@ export default {
       ];
 
       if (event.status === "done") {
-        lines.push(``, `Status: *ꜱᴇʟᴇꜱᴀɪ* ✅`);
+        lines.push(``, `Status: *selesai* ✅`);
         if (event.notifiedAt) {
           lines.push(`Notifikasi terkirim: ${formatDate(event.notifiedAt)}`);
         }
@@ -526,7 +526,7 @@ export default {
     if (subCmd && subCmd[1] === "hapus") {
       if (!isOwner) {
         await m.reply(claraWrap("Agenda", [
-          `Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa menghapus acara.`,
         ].join("\n")));

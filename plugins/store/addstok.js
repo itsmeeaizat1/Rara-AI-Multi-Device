@@ -21,8 +21,8 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   if (m.isGroup) {
-    return m.reply(claraWrap("addstok", `🚫 *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
-        `Untuk menjaga privasi data stok 🛡️, penambahan stok hanya dapat dilakukan di *ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ*.\n\n` +
+    return m.reply(claraWrap("addstok", `🚫 *akses ditolak*\n\n` +
+        `Untuk menjaga privasi data stok 🛡️, penambahan stok hanya dapat dilakukan di *private chat*.\n\n` +
         `Silakan chat bot secara langsung 📱`));
   }
 
@@ -55,9 +55,9 @@ async function handler(m, { sock }) {
         }
 
         return m.reply(`*Tambah Stok Fisik*\n\n` +
-            `Produk *${product.name}* bertipe **ꜰɪꜱɪᴋ** 📦\n\n` +
+            `Produk *${product.name}* bertipe **fisik** 📦\n\n` +
             `Format: \`${m.prefix}addstok ${productNo + 1} <jumlah>\`\n\n` +
-            `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
+            `📝 *contoh:*\n` +
             `\`${m.prefix}addstok ${productNo + 1} 8\` — Tambah 8 pcs\n\n` +
             `Stok saat ini: *${product.stock === -1 ? "♾️ Unlimited" : product.stock + " pcs"}*`);
       }
@@ -78,11 +78,11 @@ async function handler(m, { sock }) {
             fileBuffer = await m.quoted.download();
           } catch {
             return m.reply(
-              `❌ *ɢᴀɢᴀʟ ᴍᴇᴍʙᴀᴄᴀ ꜰɪʟᴇ.*\n\nPastikan file tidak kosong dan dapat diunduh 📄`,
+              `❌ *gagal membaca file.*\n\nPastikan file tidak kosong dan dapat diunduh 📄`,
             );
           }
           if (!fileBuffer || fileBuffer.length === 0)
-            return m.reply(claraWrap("addstok", `❌ *ꜰɪʟᴇ ᴋᴏꜱᴏɴɢ.* 📄`));
+            return m.reply(claraWrap("addstok", `❌ *file kosong.* 📄`));
 
           const fileContent = fileBuffer.toString("utf-8").trim();
           const lines = [];
@@ -107,10 +107,10 @@ async function handler(m, { sock }) {
             lines.push(...tokens);
           }
           if (lines.length === 0)
-            return m.reply(claraWrap("addstok", `❌ *ꜰɪʟᴇ ᴛɪᴅᴀᴋ ʙᴇʀɪꜱɪ ᴅᴀᴛᴀ ᴠᴀʟɪᴅ.* 📄`));
+            return m.reply(claraWrap("addstok", `❌ *file tidak berisi data valid.* 📄`));
           if (lines.length > 1000)
             return m.reply(
-              `❌ *ᴛᴇʀʟᴀʟᴜ ʙᴀɴʏᴀᴋ ɪᴛᴇᴍ.* Maksimal 1.000 per import 📄`,
+              `❌ *terlalu banyak item.* Maksimal 1.000 per import 📄`,
             );
 
           if (!product.stockItems) product.stockItems = [];
@@ -149,15 +149,15 @@ async function handler(m, { sock }) {
     }
 
     return m.reply(`*Tambah Stok*\n\n` +
-        `🔑 *ᴘʀᴏᴅᴜᴋ ᴅɪɢɪᴛᴀʟ* — Tambah data akun/key:\n` +
+        `🔑 *produk digital* — Tambah data akun/key:\n` +
         `\`${m.prefix}addstok <nomor_produk>|<detail>\`\n\n` +
         `📄 *Import dari file .txt:*\n` +
         `\`${m.prefix}addstok <nomor_produk>\` (reply file .txt)\n\n` +
-        `📦 *ᴘʀᴏᴅᴜᴋ ꜰɪꜱɪᴋ* — Tambah jumlah stok:\n` +
+        `📦 *produk fisik* — Tambah jumlah stok:\n` +
         `\`${m.prefix}addstok <nomor_produk> <jumlah>\`\n\n` +
-        `📝 *ᴄᴏɴᴛᴏʜ ᴅɪɢɪᴛᴀʟ:*\n` +
+        `📝 *contoh digital:*\n` +
         `\`${m.prefix}addstok 1|Email: user@mail.com;;Password: pass123\`\n\n` +
-        `📝 *ᴄᴏɴᴛᴏʜ ꜰɪꜱɪᴋ:*\n` +
+        `📝 *contoh fisik:*\n` +
         `\`${m.prefix}addstok 2 8\` — Tambah 8 pcs untuk produk #2\n\n` +
         `Gunakan \`;;\` untuk baris baru dalam detail 🔑\n` +
         `Setiap baris di file .txt = 1 stok item 📄\n` +
@@ -186,7 +186,7 @@ async function handler(m, { sock }) {
     }
     product.stock = (product.stock === -1 ? 0 : product.stock) + addCount;
     db.setting("storeProducts", products);
-    return m.reply(claraWrap("addstok", `📦 *ꜱᴛᴏᴋ ꜰɪꜱɪᴋ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
+    return m.reply(claraWrap("addstok", `📦 *stok fisik ditambahkan*\n\n` +
         `🏷️ Produk: *${product.name}*\n` +
         `➕ Ditambahkan: *${addCount} pcs*\n` +
         `📊 Total stok: *${product.stock} pcs*`));
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
 
   const isDuplicate = product.stockItems.some((item) => item.detail === detail);
   if (isDuplicate) {
-    return m.reply(claraWrap("addstok", `⚠️ *ᴅᴀᴛᴀ ꜱᴛᴏᴋ ꜱᴜᴅᴀʜ ᴀᴅᴀ.*\n\nItem dengan detail yang sama sudah terdaftar di produk *${product.name}* 🔑`));
+    return m.reply(claraWrap("addstok", `⚠️ *data stok sudah ada.*\n\nItem dengan detail yang sama sudah terdaftar di produk *${product.name}* 🔑`));
   }
 
   product.stockItems.push({

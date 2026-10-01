@@ -69,7 +69,7 @@ function guide(m) {
     contoh: ".9router jelaskan siapa presiden indonesia\n.9router ag browsing berita hari ini\n.9router ag buatkan kode fitur html\n.9router model glm\n.9router setmodel glm/glm-4.7",
     note: "kirim/reply foto + caption pertanyaan juga bisa — dibaca model vision native 9router\nsync & start hanya owner",
     modelAktif: getModelPref(m.chat),
-    spec: ["⚡ ʟᴀʏᴀɴᴀɴ ʟᴏᴋᴀʟ 9ʀᴏᴜᴛᴇʀ", "⏱ ᴄᴏᴏʟᴅᴏᴡɴ 5 ᴅᴛᴋ", "💸 ɢʀᴀᴛɪꜱ"],
+    spec: ["⚡ layanan lokal 9router", "⏱ cooldown 5 dtk", "💸 gratis"],
   }));
 }
 

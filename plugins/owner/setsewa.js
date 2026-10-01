@@ -84,7 +84,7 @@ async function handler(m, { config: botConfig }) {
     if (k === "reset") {
       resetSewaPrices();
       return m.reply(claraWrap("Set Sewa", [
-        "Status: *ʙᴇʀʜᴀꜱɪʟ*",
+        "Status: *berhasil*",
         "Semua harga direset ke default file src/lib/sewa/sewa.js",
       ]));
     }
@@ -114,7 +114,7 @@ async function handler(m, { config: botConfig }) {
       try {
         const pkg = setPremiumPrice(dur, { price: priceVal });
         return m.reply(claraWrap("Set Sewa", [
-          "Status: *ʙᴇʀʜᴀꜱɪʟ*",
+          "Status: *berhasil*",
           `Paket: *${pkg.label} (${pkg.duration})*`,
           `Harga baru: *${pkg.price}*`,
           "",
@@ -122,7 +122,7 @@ async function handler(m, { config: botConfig }) {
         ]));
       } catch (e) {
         return m.reply(claraWrap("Set Sewa", [
-          "Status: *ɢᴀɢᴀʟ*",
+          "Status: *gagal*",
           `Alasan: *${e.message}*`,
           "",
           "Durasi valid: " + premiumPrice.map((p) => p.duration).join(", "),
@@ -134,7 +134,7 @@ async function handler(m, { config: botConfig }) {
       try {
         setSewaPrice(k === "qris" ? "qrisUrl" : k, value);
         return m.reply(claraWrap("Set Sewa", [
-          "Status: *ʙᴇʀʜᴀꜱɪʟ*",
+          "Status: *berhasil*",
           `Field: *${k}*`,
           `Nilai baru: *${value}*`,
           "",
@@ -142,7 +142,7 @@ async function handler(m, { config: botConfig }) {
         ]));
       } catch (e) {
         return m.reply(claraWrap("Set Sewa", [
-          "Status: *ɢᴀɢᴀʟ*",
+          "Status: *gagal*",
           `Alasan: *${e.message}*`,
         ]));
       }
@@ -156,7 +156,7 @@ async function handler(m, { config: botConfig }) {
   } catch (error) {
     console.error("[setsewa] error:", error.message);
     return m.reply(claraWrap("Set Sewa", [
-      "Status: *ɢᴀɢᴀʟ*",
+      "Status: *gagal*",
       `Alasan: *${error.message}*`,
     ]));
   }

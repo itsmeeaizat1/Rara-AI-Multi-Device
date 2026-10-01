@@ -175,7 +175,7 @@ async function handler(m, { sock }) {
       let animText = "";
       animText += `⚡ Pet kamu menyerap energi sihir kuno...\n`;
       animText += ` Tubuh *${oldName}* dipenuhi aura cahaya terang!\n`;
-      animText += `💥 *ʙᴏᴏᴍ! ᴇᴠᴏʟᴜꜱɪ ʙᴇʀʜᴀꜱɪʟ!*\n`;
+      animText += `💥 *boom! evolusi berhasil!*\n`;
       animText += `
 `;
       animText += `🐾 Pet Baru : *${pet.emoji} ${pet.name}*\n`;

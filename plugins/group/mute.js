@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text =
       claraWrap("Mute", [`Target: *${targetName}*`,
-        "Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪᴍᴜᴛᴇ*"].join("\n")) +
+        "Status: *berhasil dimute*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}mute <@target> untuk mute orang lain`) +
       "\n" +

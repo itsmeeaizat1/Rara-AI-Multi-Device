@@ -24,7 +24,7 @@ async function handler(m, { sock, db }) {
 
     if (!action) {
         const status = group.antiremove || 'off'
-        await m.reply( `🗑️ *ᴀɴᴛɪʀᴇᴍᴏᴠᴇ*\n\n` +
+        await m.reply( `🗑️ *antiremove*\n\n` +
             `Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
             `\`.antiremove on/off\``, "antiremove")
         return
@@ -32,7 +32,7 @@ async function handler(m, { sock, db }) {
 
     if (action === 'on') {
         db.setGroup(m.chat, { ...group, antiremove: 'on' })
-        { const __navText = `✅ *ᴀɴᴛɪʀᴇᴍᴏᴠᴇ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\nPesan yang dihapus akan di-forward ulang.`; await m.reply(__navText); }
+        { const __navText = `✅ *antiremove diaktifkan*\nPesan yang dihapus akan di-forward ulang.`; await m.reply(__navText); }
         return
     }
 

@@ -108,18 +108,18 @@ async function handler(m, { sock }) {
     const time = moment(now).tz("Asia/Jakarta").format("HH:mm");
 
     let buffer;
-    let caption = "*ɪqᴄ ᴄʜᴀᴛ*";
+    let caption = "*iqc chat*";
 
     if (mode === "iphone") {
       try {
         buffer = await renderIphone(text, time, m);
-        caption = "*ɪqᴄ ᴄʜᴀᴛ — ɪᴘʜᴏɴᴇ*";
+        caption = "*iqc chat — iphone*";
       } catch (err) {
         // Render lokal gagal (misal dependensi belum ke-instal di VPS) →
         // fallback ke mode android biar user tetap dapat gambar.
         console.error("[IQC] iphone fallback ke android:", err.message);
         buffer = await renderAndroid(text, time);
-        caption = "*ɪqᴄ ᴄʜᴀᴛ* (ɪᴘʜᴏɴᴇ ꜱᴇᴅᴀɴɢ ᴅɪᴘᴇʀʙᴀɪᴋ, ᴘᴀᴋᴀɪ ᴀɴᴅʀᴏɪᴅ)";
+        caption = "*iqc chat* (iphone sedang diperbaik, pakai android)";
       }
     } else {
       buffer = await renderAndroid(text, time);

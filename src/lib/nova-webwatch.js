@@ -268,7 +268,7 @@ async function sendAlert({ watch, oldSize, newSize, snippet }) {
   const delta = newSize - oldSize;
   const deltaTxt = delta === 0 ? "" : (delta > 0 ? ` (+${delta.toLocaleString("id-ID")} char)` : ` (${delta.toLocaleString("id-ID")} char)`);
   const lines = [
-    "🌐 *ᴡᴇʙ ᴡᴀᴛᴄʜᴇʀ* — ᴀʟᴇʀᴛ!",
+    "🌐 *web watcher* — alert!",
     "",
     `📰 *${watch.title}*`,
     `🔗 ${watch.url}`,

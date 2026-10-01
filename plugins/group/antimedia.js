@@ -51,13 +51,13 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const status = groupData.antimedia ? "✅ ON" : "❌ OFF";
-    await m.reply( `🖼️ *ᴀɴᴛɪᴍᴇᴅɪᴀ*\n\nStatus: *${status}*\n\n\`.antimedia on/off\``, "antimedia");
+    await m.reply( `🖼️ *antimedia*\n\nStatus: *${status}*\n\n\`.antimedia on/off\``, "antimedia");
     return;
   }
 
   if (action === "on") {
     db.setGroup(m.chat, { antimedia: true });
-    { const __navText = `✅ *ᴀɴᴛɪᴍᴇᴅɪᴀ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`; await m.reply(__navText); };
+    { const __navText = `✅ *antimedia diaktifkan*`; await m.reply(__navText); };
     return;
   }
 

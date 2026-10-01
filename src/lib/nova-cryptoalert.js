@@ -272,7 +272,7 @@ async function sendAlert(a, change24h) {
   if (!sock) return;
   const chg = typeof change24h === "number" ? ` (${change24h >= 0 ? "+" : ""}${change24h.toFixed(2)}% 24 jam)` : "";
   const lines = [
-    "🎯 *ᴄʀʏᴘᴛᴏ ᴀʟᴀʀᴍ* — ᴛᴀʀɢᴇᴛ ᴋᴇɴᴀ!",
+    "🎯 *crypto alarm* — target kena!",
     "",
     `🪙 *${a.coinName}* (${a.symbol})${chg}`,
     `💵 Harga sekarang: *${formatRp(a.lastPrice)}*`,

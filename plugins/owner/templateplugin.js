@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         { const __navText = 'This is an example plugin!'; await m.reply(__navText); }
     } catch (error) {
         console.error('Example Plugin Error:', error)
-        await m.reply('❌ *ɢᴀɢᴀʟ*\\n\\n' + error.message)
+        await m.reply('❌ *gagal*\\n\\n' + error.message)
     }
 }
 export { pluginConfig as config, handler }

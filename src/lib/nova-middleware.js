@@ -173,9 +173,9 @@ function checkAccessBlocked(m) {
     return {
       blocked: true,
       message:
-        `「 ✦ Aᴋsᴇs Dɪᴛᴏʟᴀᴋ ✦ 」\n` +
-        `Nᴏᴍᴏʀ ᴋᴀᴍᴜ ᴅɪʙʟᴏᴋɪʀ ᴅᴀʀɪ ʙᴏᴛ ɪɴɪ\n` +
-        `Hᴜʙᴜɴɢɪ ᴏᴡɴᴇʀ ᴜɴᴛᴜᴋ ɪɴꜰᴏ ʟᴇʙɪʜ ʟᴀɴᴊᴜᴛ\n`,
+        `「 ✦ Akses Ditolak ✦ 」\n` +
+        `Nomor kamu diblokir dari bot ini\n` +
+        `Hubungi owner untuk info lebih lanjut\n`,
     };
   }
 
@@ -186,9 +186,9 @@ function checkAccessBlocked(m) {
       return {
         blocked: true,
         message:
-          `「 ✦ Mᴏᴅᴇ Wʜɪᴛᴇʟɪsᴛ ✦ 」\n` +
-          `Bᴏᴛ ʜᴀɴʏᴀ ᴍᴇʀᴇsᴘᴏɴ ɴᴏᴍᴏʀ ᴛᴇʀᴅᴀꜰᴛᴀʀ\n` +
-          `Nᴏᴍᴏʀ ᴋᴀᴍᴜ ʙᴇʟᴜᴍ ᴛᴇʀᴅᴀꜰᴛᴀʀ ᴏʟᴇʜ ᴏᴡɴᴇʀ\n`,
+          `「 ✦ Mode Whitelist ✦ 」\n` +
+          `Bot hanya merespon nomor terdaftar\n` +
+          `Nomor kamu belum terdaftar oleh owner\n`,
       };
     }
   }
@@ -242,10 +242,10 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isModeLimited: true,
       modeLimitedMessage:
-        `「 ✦ Mᴏᴅᴇ Gʀᴜᴘ Oɴʟʏ ✦ 」\n` +
-        `Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ɢʀᴜᴘ sᴀᴊᴀ\n` +
-        `Sɪʟᴀᴋᴀɴ ɢᴜɴᴀᴋᴀɴ ʙᴏᴛ ᴅɪ ᴅᴀʟᴀᴍ ɢʀᴜᴘ\n` +
-        `Pʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n`,
+        `「 ✦ Mode Grup Only ✦ 」\n` +
+        `Bot sedang dalam mode grup saja\n` +
+        `Silakan gunakan bot di dalam grup\n` +
+        `Private chat dinonaktifkan sementara\n`,
     };
   }
   if (onlyPc && m.isGroup && !m.isOwner) {
@@ -253,10 +253,10 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isModeLimited: true,
       modeLimitedMessage:
-        `「 ✦ Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ Oɴʟʏ ✦ 」\n` +
-        `Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ sᴀᴊᴀ\n` +
-        `Sɪʟᴀᴋᴀɴ ᴄʜᴀᴛ ʙᴏᴛ ʟᴇᴡᴀᴛ ᴘᴇsᴀɴ ᴘʀɪʙᴀᴅɪ\n` +
-        `Aᴋsᴇs ᴅɪ ɢʀᴜᴘ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n`,
+        `「 ✦ Mode Private Only ✦ 」\n` +
+        `Bot sedang dalam mode private chat saja\n` +
+        `Silakan chat bot lewat pesan pribadi\n` +
+        `Akses di grup dinonaktifkan sementara\n`,
     };
   }
 

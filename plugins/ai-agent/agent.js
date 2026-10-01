@@ -206,7 +206,7 @@ async function execAction(a, ctx, m, sock) {
       const members = (meta?.participants || []).map(p => p.jid || p.id);
       if (!members.length) return { ok: false, msg: "Gak bisa baca daftar member" };
       await sock.sendMessage(m.chat, {
-        text: "📢 *ᴛᴀɢ ᴀʟʟ*\n\n" + members.map(id => `@${id.split("@")[0]}`).join(" "),
+        text: "📢 *tag all*\n\n" + members.map(id => `@${id.split("@")[0]}`).join(" "),
         mentions: members,
       });
       return { ok: true, msg: `Semua ${members.length} member di-tag` };

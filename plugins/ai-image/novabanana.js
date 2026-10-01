@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
 
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
   if (!isImage) {
-    return m.reply( claraWrap("Novabanana", `🍌 *ɴᴀɴᴏ ʙᴀɴᴀɴᴀ*\n\nReply atau kirim gambar dengan caption`), { commandName: "novabanana" });
+    return m.reply( claraWrap("Novabanana", `🍌 *nano banana*\n\nReply atau kirim gambar dengan caption`), { commandName: "novabanana" });
   }
   try {
   await m.react("🕒");

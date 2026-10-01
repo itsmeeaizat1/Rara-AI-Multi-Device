@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
             )
         }
         
-        let txt = `🖼️ *ꜱᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅꜱ*\n\n`
+        let txt = `🖼️ *sticker commands*\n\n`
         txt += ""
         
         for (const cmd of existingCmds) {
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
         }
         txt += `---\n\n`
         
-        txt += `*ʜᴀᴘᴜꜱ ᴅᴇɴɢᴀɴ:*\n`
+        txt += `*hapus dengan:*\n`
         txt += `\`${pfx}delstickercmd <command>\`\n`
         txt += `atau reply sticker + \`${pfx}delstickercmd\``
         
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     
     if (deleted) {
         await m.reply(
-            `✅ *ꜱᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
+            `✅ *sticker command dihapus*\n\n` +
             `🗑️ \`${deletedCmd}\` telah dihapus.`
         )
     } else {

@@ -28,9 +28,9 @@ async function handler(m, { sock }) {
 
     return m.reply(claraWrap("Anti Culik", 
         `Bot akan otomatis keluar dari grup jika ditambah oleh orang yang tidak dikenal tanpa izin.\n\n` +
-        `*ꜱᴛᴀᴛᴜꜱ:*\n` +
+        `*status:*\n` +
         `Mode: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+        `*cara pakai:*\n` +
         `*${m.prefix}anticulik on* — Aktifkan\n` +
         `*${m.prefix}anticulik off* — Nonaktifkan\n\n` +
         `_Jika aktif, bot hanya bisa join via *${m.prefix}join* atau ditambah oleh owner_`));
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
   if (option === "on") {
     db.setting("anticulik", "on");
     const ctx = saluranCtx();
-    return m.reply(claraWrap("anticulik", `🛡️ *ᴀɴᴛɪ ᴄᴜʟɪᴋ ᴀᴋᴛɪꜰ*\n\n` +
+    return m.reply(claraWrap("anticulik", `🛡️ *anti culik aktif*\n\n` +
         `Bot akan keluar otomatis jika ditambah tanpa izin\n` +
         `Satu-satunya cara bot bisa join: *${m.prefix}join* oleh owner\n\n` +
         `_Member yang menambah bot akan diberi peringatan_`));
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
 
   if (option === "off") {
     db.setting("anticulik", "off");
-    return m.reply(claraWrap("anticulik", `🛡️ *ᴀɴᴛɪ ᴄᴜʟɪᴋ ɴᴏɴᴀᴋᴛɪꜰ*\n\n` +
+    return m.reply(claraWrap("anticulik", `🛡️ *anti culik nonaktif*\n\n` +
         `Bot tidak akan keluar otomatis jika ditambah ke grup\n` +
         `Siapapun bisa menambahkan bot ke grup`));
   }
@@ -97,7 +97,7 @@ async function handleAntiCulik(event, sock, db) {
 
   await sock.sendMessage(event.id, {
     text:
-      `🛡️ *ᴀɴᴛɪ ᴄᴜʟɪᴋ*\n\n` +
+      `🛡️ *anti culik*\n\n` +
       `Minimal izin dulu ya bang, jangan asal culik 🗿\n\n` +
       `Bot ditambah oleh ${inviterMention} tanpa izin\n` +
       `Bot akan keluar dari grup ini\n\n` +

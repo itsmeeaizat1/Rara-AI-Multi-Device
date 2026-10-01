@@ -264,7 +264,7 @@ async function sendBackupToOwner(backupInfo) {
     const state = loadBackupState();
 
     const caption =
-      `「 ✦ Aᴜᴛᴏ Bᴀᴄᴋᴜᴘ ✦ 」\n` +
+      `「 ✦ Auto Backup ✦ 」\n` +
       // FIX v24.2.0: dulu ada `+ +` (plus ganda) → baris "Waktu" jadi NaN.
       `• *Waktu:* ${timeHelper.formatDateTime("DD MMMM YYYY HH:mm:ss")} WIB\n` +
       `• *Size:* ${sizeInMB} MB\n` +

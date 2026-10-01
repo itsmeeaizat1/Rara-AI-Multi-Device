@@ -3,10 +3,10 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 function claraWrap(title, text) {
-  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+  const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   const body = Array.isArray(text) ? text.join("\n") : text;
-  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *ʙᴏʟᴅ*
+  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *bold*
   const scBody = body.split("\n").map(line => {
     if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:")) return line;
     return toSC(line);
@@ -14,7 +14,7 @@ function claraWrap(title, text) {
   return `${toSC(title)}\n\n${scBody}`;
 }
 async function formatAndReply( text, cmdName) {
-  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+  const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   // Convert all text to small caps, skip command lines
   text = text.split("\n").map(line => {
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     };
 
     await sock.groupSettingUpdate(m.chat, patch);
-    let text = "PERSETUJUAN MEMBER: " + (isOn ? "*ᴀᴋᴛɪꜰ*" : "*ɴᴏɴᴀᴋᴛɪꜰ*") + "\n\n";
+    let text = "PERSETUJUAN MEMBER: " + (isOn ? "*aktif*" : "*nonaktif*") + "\n\n";
     if (isOn) {
       text += "Sekarang member yang mau gabung harus di-approve admin dulu.\n\n";
       text += "Approve: " + m.prefix + "approvejoin <nomor> <groupId>\n";

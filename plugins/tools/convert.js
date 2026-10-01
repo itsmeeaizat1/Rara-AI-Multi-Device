@@ -87,7 +87,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
       const text =
         claraWrap("Convert", [
           `Input: *${raw}*`,
-          "Status: *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*",
+          "Status: *format salah*",
           "",
           `Format: ${prefix}convert <nilai> <dari> ke <ke>`,
           `Contoh: ${prefix}convert 5 km ke mil`,

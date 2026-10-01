@@ -106,28 +106,28 @@ async function handler(m, { sock,  args }) {
 
     const data = hitungMBG(uang);
 
-    let contentTxt = `💰 *ᴅᴀɴᴀ :* ${formatRupiah(uang)}\n\n`;
-    contentTxt += `🕒 *ᴅᴜʀᴀꜱɪ ᴍʙɢ:*\n`;
+    let contentTxt = `💰 *dana :* ${formatRupiah(uang)}\n\n`;
+    contentTxt += `🕒 *durasi mbg:*\n`;
     contentTxt += `${data.durasi.tahun} TAHUN, ${data.durasi.bulan} BULAN, ${data.durasi.hari} HARI\n`;
     contentTxt += `${data.durasi.jam} JAM, ${data.durasi.menit} MENIT, ${data.durasi.detik} DETIK\n`;
     contentTxt += `_(Berdasarkan pengeluaran ~Rp ${(data.pengeluaran / 1000000000).toFixed(1)} Miliar/hari)_\n\n`;
     
-    contentTxt += `🍱 *ꜱᴇᴛᴀʀᴀ ᴘᴏʀꜱɪ ᴍᴀᴋᴀɴ:*\n`;
+    contentTxt += `🍱 *setara porsi makan:*\n`;
     contentTxt += `${data.porsi.toLocaleString('id-ID')} porsi (@ Rp 15.000/porsi)\n\n`;
 
-    contentTxt += `📊 *ᴘᴇʀʙᴀɴᴅɪɴɢᴀɴ ɢᴀᴊɪ ɪɴᴅᴏɴᴇꜱɪᴀ:*\n`;
+    contentTxt += `📊 *perbandingan gaji indonesia:*\n`;
     contentTxt += `🏢 UMR DKI Jakarta (Rp 5,4 Jt/bulan): ${data.gajiIndonesia.dki}\n`;
     contentTxt += `🏭 UMR Jawa Tengah (Rp 2,04 Jt/bulan): ${data.gajiIndonesia.jateng}\n`;
     contentTxt += `👨‍🏫 Gaji Guru Honorer (Rp 300rb/bulan): ${data.gajiIndonesia.guru}\n\n`;
 
-    contentTxt += `⚽ *ᴘᴇʀʙᴀɴᴅɪɴɢᴀɴ ɢᴀᴊɪ ᴘᴇꜱᴇᴘᴀᴋʙᴏʟᴀ:*\n`;
+    contentTxt += `⚽ *perbandingan gaji pesepakbola:*\n`;
     for (let p of data.pemain) {
       contentTxt += `🏆 ${p.nama}\n`;
       contentTxt += `💵 ${formatRupiah(p.gaji)}/tahun\n`;
       contentTxt += `📈 Persentase: ${p.persen}\n\n`;
     }
 
-    let txt = `🍽️ *ʜᴀꜱɪʟ ʜɪᴛᴜɴɢ ᴋᴀʟᴋᴜʟᴀᴛᴏʀ ᴍʙɢ* 🍽️\n\n`;
+    let txt = `🍽️ *hasil hitung kalkulator mbg* 🍽️\n\n`;
     txt += contentTxt.trim().split("\n").map(line => line.trim() ? `${line}` : ``).join("\n");
 
     await m.react("🐣");

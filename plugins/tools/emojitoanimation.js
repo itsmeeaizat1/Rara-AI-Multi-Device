@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const { data } = await axios.get(apiUrl, { timeout: 15000 });
 
     if (!data?.status || !data?.data?.url) {
-      return m.reply(claraWrap("emojitoanimasi", "❌ *ɢᴀɢᴀʟ*\n\nEmoji tidak ditemukan atau API error"));
+      return m.reply(claraWrap("emojitoanimasi", "❌ *gagal*\n\nEmoji tidak ditemukan atau API error"));
     }
 
     const webpUrl = data.data.url;

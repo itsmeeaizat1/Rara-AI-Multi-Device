@@ -32,19 +32,19 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(novaError("Zodiak", `❌ *ɢᴀɢᴀʟ*\n\nGagal mendapatkan ramalan`))
+            return m.reply(novaError("Zodiak", `❌ *gagal*\n\nGagal mendapatkan ramalan`))
         }
         
         const r = data.data
         const response = `⭐ *Zodiak ${zodiac.toUpperCase()}*\n\n` +
             `${r.zodiak}\n\n` +
-            `🔢 *ɴᴏᴍᴏʀ:* ${r.nomor_keberuntungan}\n` +
-            `*ʙᴜɴɢᴀ:* ${r.bunga_keberuntungan}\n` +
-            `🎨 *ᴡᴀʀɴᴀ:* ${r.warna_keberuntungan}\n` +
-            `💎 *ʙᴀᴛᴜ:* ${r.batu_keberuntungan}\n` +
-            `🔥 *ᴇʟᴇᴍᴇɴ:* ${r.elemen_keberuntungan}\n` +
-            `🪐 *ᴘʟᴀɴᴇᴛ:* ${r.planet_yang_mengitari}\n` +
-            `💕 *ᴘᴀꜱᴀɴɢᴀɴ:* ${r.pasangan_zodiak}`
+            `🔢 *nomor:* ${r.nomor_keberuntungan}\n` +
+            `*bunga:* ${r.bunga_keberuntungan}\n` +
+            `🎨 *warna:* ${r.warna_keberuntungan}\n` +
+            `💎 *batu:* ${r.batu_keberuntungan}\n` +
+            `🔥 *elemen:* ${r.elemen_keberuntungan}\n` +
+            `🪐 *planet:* ${r.planet_yang_mengitari}\n` +
+            `💕 *pasangan:* ${r.pasangan_zodiak}`
         await m.reply(response)
         
     } catch (error) {
