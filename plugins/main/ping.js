@@ -10,6 +10,7 @@ import { novaError, novaInfoSections } from "../../src/lib/nova-menu-style.js";
 import os from "os";
 import fs from "fs";
 import { performance } from "perf_hooks";
+import { execSync } from "child_process";
 import { fetchTrace } from "../../src/lib/nova-speedtest.js";
 
 // IP lokal pertama (non-internal IPv4) — fail-safe
@@ -62,6 +63,29 @@ const fmtUp = (s) => {
   return `${m}m ${sc}s`;
 };
 
+// 🔹 DISK (request owner 1 Okt 2026: .ping juga tambah used/total disk —
+// konsisten sama .info): statfs dulu, fallback df -B1, gagal → skip senyap.
+function getDiskUsage() {
+  const target = process.cwd();
+  try {
+    const st = fs.statfsSync(target);
+    const total = Number(st.blocks) * Number(st.bsize);
+    const avail = Number(st.bavail) * Number(st.bsize);
+    if (total > 0) return { total, used: total - avail, ok: true };
+  } catch {}
+  try {
+    const out = execSync("df -B1 .", { timeout: 3000 }).toString();
+    const lines = out.trim().split("\n");
+    if (lines.length >= 2) {
+      const cols = lines[1].trim().split(/\s+/);
+      const total = parseInt(cols[1], 10);
+      const used = parseInt(cols[2], 10);
+      if (total > 0 && used >= 0) return { total, used, ok: true };
+    }
+  } catch {}
+  return { ok: false };
+}
+
 const fmtSize = (b) => {
   if (!b || b === 0) return "0 B";
   const u = ["B", "KB", "MB", "GB", "TB"];
@@ -78,6 +102,8 @@ async function handler(m, { sock }) {
     const usedMem = totalMem - freeMem;
     const memPct = ((usedMem / totalMem) * 100).toFixed(1);
     const memoryUsage = process.memoryUsage();
+    const disk = getDiskUsage();
+    const diskPct = disk.ok ? ((disk.used / disk.total) * 100).toFixed(1) : null;
     const loadAvg = os.loadavg();
 
     // panel — label smallcaps otomatis via novaInfoSections, value verbatim
@@ -100,6 +126,13 @@ async function handler(m, { sock }) {
       { label: "Sisa Bebas", value: fmtSize(freeMem) },
       { label: "RSS Node.js", value: fmtSize(memoryUsage.rss) },
     ];
+    if (disk.ok) {
+      info.push(
+        "Penyimpanan",
+        { label: "Total Disk", value: fmtSize(disk.total) },
+        { label: "Dipakai", value: `${fmtSize(disk.used)} (${diskPct}%)` }
+      );
+    }
 
     const execTime = (performance.now() - tStart).toFixed(2);
 
