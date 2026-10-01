@@ -41,11 +41,11 @@ function mockM(fullArgs, opts = {}) {
   return {
     text: fullArgs, fullArgs, body: fullArgs,
     prefix: ".", command: "confess", args: String(fullArgs).split(/\s+/),
-    chat: opts.chat || "12036302-1234@g.us",
-    sender: opts.sender || "6289999000001@s.whatsapp.net",
+    chat: opts.chat || "6289999009001@s.whatsapp.net", // default DM (revisi 1 Okt: confess dieksekusi dari DM)
+    sender: opts.sender || "6289999009001@s.whatsapp.net",
     pushName: opts.pushName || "Penguji",
-    chatName: opts.chatName || "Grup Uji",
-    isGroup: true, isOwner: false, quoted: opts.quoted || null,
+    chatName: opts.chatName || "Chat Penguji",
+    isGroup: opts.isGroup || false, isOwner: false, quoted: opts.quoted || null,
     react: async (e) => reacted.push(e),
     reply: async (txt) => replies.push(String(txt)),
   };
@@ -66,10 +66,10 @@ function mockSock() {
 {
   replies.length = 0;
   await confessHandler(mockM("confess"), { sock: mockSock() });
-  const guide = sent.find((s) => s.jid === "6289999000001@s.whatsapp.net");
+  const guide = sent.find((s) => s.jid === "6289999009001@s.whatsapp.net");
   const g = fromSC(guide?.payload?.text || "");
   t("2a. tanpa arg: panduan masuk ke DM pengirim (bukan grup)", /anonim/i.test(g) && /non-anonim/i.test(g), g.slice(0, 80));
-  t("2b. grup GAK nerima panduan (sifatnya DM doang)", replies.length === 0, "grup dapat: " + replies.length);
+  t("2b. dipakai dari DM — grup gak nerima apa pun", replies.length === 0, "grup dapat: " + replies.length);
 }
 
 // ── case 3: .confess nomor|pesan → DM anonim ke ORANGnya + status ke GRUP ──
@@ -82,13 +82,13 @@ function mockSock() {
   const dmText = fromSC(dm?.payload?.text || "");
   t("3b. DM: isi pesan masuk", /aku suka kamu diam-diam/.test(dmText), dmText.slice(0, 80));
   t("3c. DM: anonim (gak nyebut nama pengirim)", !/Penguji/.test(dmText), dmText.slice(0, 80));
-  const dmStatus = sent.find((s) => s.jid === "6289999000001@s.whatsapp.net");
+  const dmStatus = sent.find((s) => s.jid === "6289999009001@s.whatsapp.net");
   const statusText = fromSC(dmStatus?.payload?.text || "");
   t("3d. status PESAN TERKIRIM masuk ke DM pengirim", /pesan terkirim/i.test(statusText), statusText.slice(0, 60));
-  t("3e. GRUP GAK DAPAT APA-APA (nol jejak di grup — revisi owner 20 Sep)", replies.length === 0, "grup dapat: " + replies.length);
-  t("3f. react 💌 HANYA di private (di grup gak boleh keliatan)", !reacted.includes("💌"));
+  t("3e. dipakai dari DM — grup gak dapet apa-apa (nol jejak)", replies.length === 0, "grup dapat: " + replies.length);
+  t("3f. react 💌 keluar saat dipakai dari DM", reacted.includes("💌"));
   t("3g. stats tersimpan (sender sent=1)", (() => {
-    const u = db.getUser("6289999000001@s.whatsapp.net");
+    const u = db.getUser("6289999009001@s.whatsapp.net");
     return (u?.confessStats?.sent || 0) >= 1;
   })());
 }
@@ -106,11 +106,11 @@ function mockSock() {
 {
   sent.length = 0;
   await confessHandler(mockM("confess 62|pendek"), { sock: mockSock() });
-  const v1 = sent.find((s) => s.jid === "6289999000001@s.whatsapp.net");
+  const v1 = sent.find((s) => s.jid === "6289999009001@s.whatsapp.net");
   t("5a. nomor gak valid ditolak (ke DM)", /valid/i.test(fromSC(v1?.payload?.text || "")), (v1?.payload?.text || "").slice(0, 60));
   sent.length = 0;
-  await confessHandler(mockM("confess 6289999000001|ke diri sendiri ya"), { sock: mockSock() });
-  const v2 = sent.find((s) => s.jid === "6289999000001@s.whatsapp.net");
+  await confessHandler(mockM("confess 6289999009001|ke diri sendiri ya"), { sock: mockSock() });
+  const v2 = sent.find((s) => s.jid === "6289999009001@s.whatsapp.net");
   t("5b. confess ke diri sendiri ditolak (ke DM)", /diri sendiri/i.test(fromSC(v2?.payload?.text || "")));
 }
 
@@ -124,11 +124,31 @@ function mockSock() {
   });
   const handled = await confessReply(m, { sock: mockSock() });
   t("6a. reply target di-handle (return true)", handled === true);
-  const fwd = sent.find((s) => s.jid === "6289999000001@s.whatsapp.net");
+  const fwd = sent.find((s) => s.jid === "6289999009001@s.whatsapp.net");
   t("6b. balasan diterusin ke DM pengirim (grup tetap hening)", !!fwd, JSON.stringify(sent.map((s) => s.jid)));
   t("6e. GAK ADA pesan apa pun ke grup pengirim", !sent.some((s) => s.jid === "12036302-1234@g.us"));
   t("6c. isi balasan masuk", /iya aku juga suka kamu/.test(fromSC(fwd?.payload?.text || "")), (fwd?.payload?.text || "").slice(0, 80));
   t("6d. konfirmasi ke target", sent.some((s) => s.jid === "6281234567890@s.whatsapp.net"));
+}
+
+// ── case 8: REVISI 1 Okt — dipakai di GRUP → notifikasi arah ke DM ──
+{
+  sent.length = 0; replies.length = 0; reacted.length = 0;
+  const m = mockM("confess 6281234567890|rahasia banget", {
+    chat: "12036302-1234@g.us", isGroup: true,
+  });
+  await confessHandler(m, { sock: mockSock() });
+  const notice = fromSC(replies[0] || "");
+  t("8a. GRUP dapat notifikasi pakai-fitur-di-DM", replies.length === 1 && /dm/i.test(notice), notice.slice(0, 70));
+  t("8b. notifikasi nyebut caranya (.confess di chat pribadi)", /\.confess/.test(notice) && /chat pribadi/i.test(notice), notice.slice(0, 90));
+  t("8c. confess GAK dieksekusi dari grup (target gak dapat apa-apa)", !sent.some((s) => s.jid === "6281234567890@s.whatsapp.net"), JSON.stringify(sent.map((s) => s.jid)));
+  t("8d. DM pengirim juga gak dapet apa-apa (cuma notifikasi grup)", !sent.some((s) => s.jid === "6289999009001@s.whatsapp.net"), JSON.stringify(sent.map((s) => s.jid)));
+  t("8e. gak ada react di grup", reacted.length === 0, JSON.stringify(reacted));
+  // tanpa argumen pun dari grup → tetep notifikasi (bukan panduan DM)
+  replies.length = 0; sent.length = 0;
+  const m2 = mockM("confess", { chat: "12036302-1234@g.us", isGroup: true });
+  await confessHandler(m2, { sock: mockSock() });
+  t("8f. tanpa argumen di grup → tetap notifikasi arahan DM (bukan panduan)", replies.length === 1 && /dm/i.test(fromSC(replies[0] || "")), fromSC(replies[0] || "").slice(0, 70));
 }
 
 // ── case 7: confess2 masih jalan (channel) ──

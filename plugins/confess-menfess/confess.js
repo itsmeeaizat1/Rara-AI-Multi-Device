@@ -9,9 +9,12 @@
 // Confess channel terpusat (v3 lama) pindah ke .confess2 (plugins/confess-menfess/confess2.js).
 // REVISI 20 Sep (owner: "yg dlu confessnya g ngaish tau je grup jd sifatnya
 // dm doang") — SEMUA balasan bot (status terkirim + terusan balasan target)
-// DIKIRIM KE DM PENGGIRIM (m.sender), BUKAN m.chat. Kalau command dipakai di
-// grup, grup GAK menerima apa-apa (gak ada reply, gak ada react) — 100% rahasia,
-// makanya gak ada confess komit lama yang begini (semua varian balikin ke m.chat).
+// DIKIRIM KE DM PENGGIRIM (m.sender), BUKAN m.chat.
+// REVISI 1 Okt (owner: "pas ketik .confess digrup kan pesan mncul ke dm user
+// ya hrsnya ada notifikasi digrupnya bahwa hrsnya menggunakan fitur di dm") —
+// .confess di grup GAK dieksekusi lagi. Grup kirim KARTU NOTIFIKASI yang
+// arahin ke DM (dulu grup dapet NOL output — orang dikirain command mati).
+// Confess-nya sendiri tetap rahasia: cuma jalan dari DM, gak ada jejak di grup.
 // 2 mode: anonim (default) & non-anonim (dengan nama)
 // .confess nomor|pesan          → anonim
 // .confess nomor|pesan|nama     → non-anonim (identitas terungkap)
@@ -70,6 +73,19 @@ async function dmReply(m, sock, text) {
 }
 
 async function handler(m, { sock }) {
+  // REVISI 1 Okt 2026: dipakai di grup → NOTIFIKASI ke grup, confess gak jalan.
+  // Orang di grup langsung tahu fiturnya dipakai di DM (gak senyap-senyap
+  // bingung lagi), tapi isi confess-nya sendiri gak pernah lewat grup.
+  if (m.isGroup) {
+    await m.reply(claraWrap("confess", [
+      `Fitur ini dipakai di *ᴅᴍ* ya! 🤫`,
+      ``,
+      `Silakan ketik ${m.prefix}confess <nomor>|<pesan> di chat pribadi bot.`,
+      `Confess kamu bakal tetap 100% rahasia — gak ada jejak apa pun di grup. 🔒`,
+    ]));
+    return;
+  }
+
   const input = m.fullArgs?.trim() || m.text?.trim();
 
   if (!input || !input.includes("|")) {
