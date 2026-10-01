@@ -191,6 +191,7 @@ class VoipCall extends EventEmitter {
         this.#activeCall = activeCall;
         this.#coordinator = activeCall.coordinator;
         activeCall.on('ringing', () => this.emit('ringing'));
+        activeCall.on('accepted', () => this.emit('accepted'));
         activeCall.on('connected', () => {
             this.emit('connected');
             this._advance().catch((err) => this.emit('error', err));
