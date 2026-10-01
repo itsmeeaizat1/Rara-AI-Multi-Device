@@ -17,8 +17,13 @@ const db = await initDatabase(DB_DIR + "/db.json");
 const { _setLevelCardLoadImageForTest, checkAndNotifyLevelUp } = await import(R + "/src/lib/nova-level.js");
 const { grantActivityExp, BASE_CMD_EXP, GAME_CMD_EXP } = await import(R + "/src/lib/nova-activity-progress.js");
 
-// fake image biar kartu level-up gak nyamber jaringan
-_setLevelCardLoadImageForTest(async () => ({ width: 4, height: 4 }));
+// fake image biar kartu level-up gak nyamber jaringan — sekalian CATAT
+// argumen tiap pemanggilan (assert sumber background/avatar perbaikan 1 Okt)
+const loadImageCalls = [];
+_setLevelCardLoadImageForTest(async (src) => {
+  loadImageCalls.push(src);
+  return { width: 4, height: 4 };
+});
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
@@ -121,6 +126,40 @@ w("\n— grantActivityExp: EXP per aktivitas (db beneran, isolated) —");
   check("1 aktivitas nyebrang ke level 2 → leveledUp", res?.leveledUp === true && res?.newLevel === 2, JSON.stringify(res));
   check("award koin masuk (+1000)", koinAfter - koinBefore >= 1000, `${koinBefore}→${koinAfter}`);
   check("kartu selamat terkirim via PREVIEW (bukan media)", sock.replies.length === 1 && /SELAMAT/i.test(sock.replies[0].txt) && sock.media.length === 0, `reply=${sock.replies.length} media=${sock.media.length}`);
+}
+
+// ═══════════════════════════════════════════════════════════════
+w("\n— perbaikan 1 Okt 2026: thumbnail level up deterministik —");
+{
+  // background HARUS dari asset lokal nova-levelup (Buffer), bukan fetch remote
+  const jid = "6281112223334@s.whatsapp.net";
+  const u = db.setUser(jid);
+  u.exp = 9985;
+  const sock = mockSock();
+  sock.profileBuffer = async () => Buffer.from("PP-BUFFER-FAKE"); // buffer cached
+  const m = mockReply(sock, { sender: jid, chat: "c@g.us", pushName: "F", prefix: "." });
+  const callsBefore = loadImageCalls.length;
+  await checkAndNotifyLevelUp(sock, m, db, u, 9985, 10000);
+  const bg = loadImageCalls[callsBefore];
+  check("background dari ASSET LOKAL (Buffer, .ganti-nova-levelup.jpg nyambung)", Buffer.isBuffer(bg), typeof bg);
+  check("background BUKAN string URL remote (gak fetch wallpapersden)", typeof bg !== "string", String(bg).slice(0, 50));
+  check("avatar pakai sock.profileBuffer (Buffer)", loadImageCalls[callsBefore + 1]?.toString() === "PP-BUFFER-FAKE", typeof loadImageCalls[callsBefore + 1]);
+  check("cuma 2 loadImage (bg + avatar), tanpa fetch ekstra", loadImageCalls.length - callsBefore === 2, loadImageCalls.length - callsBefore);
+  check("thumbnail terkirim valid (bukan kosong)", !!sock.replies[0].ext?.thumbnail);
+}
+{
+  // sock tanpa profileBuffer → fallback profilePictureUrl (URL string) — masih jalan
+  const jid = "6281112223335@s.whatsapp.net";
+  const u = db.setUser(jid);
+  u.exp = 9985;
+  const sock = mockSock(); // cuma profilePictureUrl (throw "no pp")
+  const m = mockReply(sock, { sender: jid, chat: "c@g.us", pushName: "G", prefix: "." });
+  const res = await checkAndNotifyLevelUp(sock, m, db, u, 9985, 10000);
+  check("sock tanpa profileBuffer → tetap jalan (fallback URL)", res.notified && sock.replies.length === 1, JSON.stringify(res));
+  check("thumbnail fallback: avatar kosong gak bikin kartu gagal", !!sock.replies[0].ext?.thumbnail);
+  // thumbnail final HARUS JPEG (WA cuma render JPEG di preview)
+  const first = sock.replies[0].ext?.thumbnail;
+  check("thumbnail preview JPEG (magic 0xFFD8)", first && first[0] === 0xff && first[1] === 0xd8, first ? first.slice(0, 4).toString("hex") : "null");
 }
 
 w(`\n— summary —\nPASS ${pass} / FAIL ${fail}`);

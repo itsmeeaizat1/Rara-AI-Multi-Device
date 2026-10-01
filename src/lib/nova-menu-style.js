@@ -34,6 +34,10 @@ const toSC = (s) => String(s);
 // - URLs (http/https jangan di-convert)
 // - numbers
 // - leading │ prefix
+// Wrap konten box per kata supaya WhatsApp gak hard-wrap acak di tengah
+// baris — lanjutan baris tetap pakai prefix │ biar box keliatan rapi.
+const BOX_WRAP_WIDTH = 30; // GUARD: 60 kelebaran — WA fold di ~30-35, sisanya tembus border kiri
+
 const scLine = (line) => {
   const str = String(line);
   if (!str || !str.trim()) return str;
@@ -45,6 +49,48 @@ const scLine = (line) => {
     return toSC(part);
   }).join('');
 };
+
+// LEBAR SERAGAM KARTU USAGE (owner 1 Okt 2026: "aku mau semua pesan menu
+// gelembung ukuran lebarnya standarnya kyk menu allmenu" — kartu usage V2
+// (.aicard, .voipcall, dst) gelembungnya LEBIH LEBAR dari allmenu karena
+// kalimat sapaan/cara/note dikirim sebagai SATU baris fisik panjang tanpa
+// \n — WhatsApp yang hard-wrap sendiri gak konsisten lebarnya antar pesan.
+// FIX: potong manual ≤ BOX_WRAP_WIDTH char/baris SEBELUM dikirim (persis
+// lebar yang dipakai box lain), biar lebar gelembung SERAGAM/standar kayak
+// allmenu — tanpa gantung ke wrap natural WhatsApp. URL dibiarkan utuh satu
+// baris sendiri (gak dipotong paksa) biar tetap bisa diklik. KECUALI fitur
+// game (request owner "kecuali game gpp") — caller WAJIB skip lewat
+// isGameCmd sebelum pakai ini (sudah digabung di novaGuide/novaGuideV2/
+// novaAiUsage non-game branch).
+function wrapParagraph(text, width = BOX_WRAP_WIDTH) {
+  const str = String(text ?? "");
+  if (!str.trim()) return str;
+  const out = [];
+  for (const raw of str.split("\n")) {
+    let line = "";
+    for (const word of raw.split(/\s+/).filter(Boolean)) {
+      if (/^https?:\/\//i.test(word)) {
+        if (line) { out.push(line); line = ""; }
+        out.push(word); // URL utuh, gak dipotong paksa
+        continue;
+      }
+      if ((line + " " + word).trim().length > width) {
+        if (line) out.push(line);
+        line = word;
+      } else {
+        line = line ? line + " " + word : word;
+      }
+    }
+    if (line) out.push(line);
+  }
+  return out.join("\n");
+}
+
+// scWrap: wrapParagraph + smallcaps dalam satu panggilan. Baris pendek
+// (≤ width) gak berubah tampilannya sama sekali — cuma baris panjang yang
+// kepotong jadi beberapa baris. Aman dipakai gantiin scLine di mana pun
+// konten berupa kalimat prosa (sapaan/cara/note), BUKAN command verbatim.
+const scWrap = (text, width = BOX_WRAP_WIDTH) => scLine(wrapParagraph(text, width));
 
 // Helper: detect real emoji (bukan "i" atau teks biasa)
 const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
@@ -59,10 +105,6 @@ const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
  * Separator: pass "---" as a line.
  * Empty: pass "" as a line.
  */
-// Wrap konten box per kata supaya WhatsApp gak hard-wrap acak di tengah
-// baris — lanjutan baris tetap pakai prefix │ biar box keliatan rapi.
-const BOX_WRAP_WIDTH = 30; // GUARD: 60 kelebaran — WA fold di ~30-35, sisanya tembus border kiri
-
 // GUARD (owner 2026-09-07): semua body box lewat wrapText styler.js —
 // maks width char/baris, multi-baris dipecah bener, kata/URL super
 // panjang dipotong paksa — gak ada lagi baris yang dilipat WhatsApp
@@ -999,13 +1041,16 @@ function novaGuide(commandName, intro, example, note) {
   const name = toSC(String(commandName).toLowerCase());
   let out = `「✧ ${name} ✧」\n`;
   out += `${v2Kaomoji(commandName)} ${name}!!\n`;
-  if (intro && String(intro).trim()) out += `\n${scLine(intro)}\n`;
+  // GUARD LEBAR SERAGAM (1 Okt 2026): intro & note = kalimat prosa → scWrap
+  // (potong ≤30 char/baris, standar kayak allmenu). example = command
+  // VERBATIM → TETAP scLine biasa, gak dipotong (harus bisa di-copas utuh).
+  if (intro && String(intro).trim()) out += `\n${scWrap(intro)}\n`;
   if (example || note) {
     const exLines = String(example || "").split("\n").map((l) => l.trim()).filter(Boolean);
     if (exLines.length) out += `\n📍 ${toSC("Contoh")}: ${exLines.join(" · ")}\n`;
     if (note) {
       const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
-      if (nl.length) out += nl.map((l) => scLine(l)).join("\n") + "~\n";
+      if (nl.length) out += nl.map((l) => scWrap(l)).join("\n") + "~\n";
     }
   }
   const spec = v2Spec(commandName);
@@ -1099,16 +1144,24 @@ export function novaGuideV2(commandName, opts = {}) {
     kaomoji = "ヾ(≧▽≦*)o 😆", sapaan = "", cara = "", contoh = "", note = "",
     modelAktif = null, models = [], spec = [], extra = [],
   } = opts;
+  // GUARD LEBAR SERAGAM (1 Okt 2026, kecuali game — caller yang nentuin
+  // routing, novaGuideV2 sendiri gak dipanggil buat game): sapaan/cara/note
+  // kalimat prosa → scWrap (≤30 char/baris, standar kayak allmenu). contoh
+  // = command VERBATIM → gak dipotong.
   const name = toSC(String(commandName).toLowerCase());
   let out = `「✧ ${name} ✧」\n`;
   out += `${kaomoji} ${name}!!\n`;
-  if (sapaan && String(sapaan).trim()) out += `\n${scLine(sapaan)}\n`;
+  if (sapaan && String(sapaan).trim()) out += `\n${scWrap(sapaan)}\n`;
   if (cara || contoh || note) {
-    out += `\n📍 ${toSC("Cara")}: ${scLine(cara)}\n`;
+    // prefix "📍 Cara: " makan jatah lebar baris pertama — wrap cara di
+    // (width - panjang prefix) biar baris pertama + prefix TETAP ≤30 total,
+    // konsisten standar allmenu (bukan cuma teks cara-nya doang yang ≤30).
+    const caraPrefix = `📍 ${toSC("Cara")}: `;
+    out += `\n${caraPrefix}${scWrap(cara, Math.max(10, BOX_WRAP_WIDTH - caraPrefix.length))}\n`;
     if (contoh) out += `${toSC("Contoh")}: ${contoh}\n`;
     if (note) {
       const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
-      if (nl.length) out += nl.map((l) => scLine(l)).join("\n") + "~\n";
+      if (nl.length) out += nl.map((l) => scWrap(l)).join("\n") + "~\n";
     }
   }
   if (Array.isArray(extra) && extra.length) {

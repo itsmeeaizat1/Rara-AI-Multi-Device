@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import sharp from "sharp";
+import { getAssetBuffer } from "./nova-asset-manager.js";
 
 const EXP_PER_LEVEL = 10000;
 
@@ -198,7 +199,14 @@ async function levelPreviewThumb(buffer) {
       .jpeg({ quality: 88 })
       .toBuffer();
   } catch {
-    return buffer;
+    // FIX 1 Okt 2026 (owner: "thumbnail level up kadang muncul kadang gagal"):
+    // dulu sharp gagal → balikin buffer PNG RGBA ASLI → WA nolak senyap →
+    // preview kosong (bug 19 Sep muncul lagi secara intermiten). Sekarang
+    // fallback = JPEG solid gelap VALID, preview tetap muncul (gelap).
+    return Buffer.from(
+      "/9j/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAkAEADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAEC/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AkQDaAAAAAAAAAAAAAAAAAAAAAAP/2Q==",
+      "base64",
+    );
   }
 }
 
@@ -253,11 +261,23 @@ async function checkAndNotifyLevelUp(sock, m, db, user, oldExp, newExp) {
     ctx.beginPath();
     ctx.roundRect(10, 10, width - 20, height - 20, 30);
     ctx.clip();
+    // FIX 1 Okt 2026 (owner: "thumbnail level up kadang muncul kadang gagal"):
+    // background gak lagi fetch remote hardcoded tiap level up (wallpapersden
+    // lambat/mati intermiten dari IP datacenter → kartu kadang bagus kadang
+    // polos). Prioritas: (1) ASSET LOKAL 'nova-levelup' — .ganti-nova-levelup.jpg
+    // sekarang BENERAN nyambung ke kartu (dulu cuman pajangan!); (2) remote
+    // pakai fetch TIMEOUT 5 dtk (dulu loadImage tanpa timeout → notif level up
+    // bisa gantung lama, keliatan "nbug").
     try {
-      const background = await loadImage(
-        data.backgroundUrl ||
-          "https://images.wallpapersden.com/image/download/anime-night-sky-scenery_bWlsZ26UmZqaraWkpJRmbmdlrWZnZWU.jpg",
-      );
+      let bgSrc = data.backgroundBuffer || getAssetBuffer("nova-levelup");
+      if (!bgSrc && data.backgroundUrl) {
+        const res = await fetch(data.backgroundUrl, {
+          signal: AbortSignal.timeout(5000),
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        bgSrc = Buffer.from(await res.arrayBuffer());
+      }
+      const background = await loadImage(bgSrc);
       const ratio = Math.max(
         width / background.width,
         height / background.height,
@@ -282,7 +302,12 @@ async function checkAndNotifyLevelUp(sock, m, db, user, oldExp, newExp) {
     ctx.lineWidth = 2;
     ctx.strokeRect(10, 10, width - 20, height - 20);
     try {
-      const avatar = await loadImage(data.avatarUrl).catch(() => null);
+      // FIX 1 Okt 2026: avatar dari BUFFER (sock.profileBuffer, cached) dulu —
+      // URL pps.whatsapp.net itu signed & bisa expired/lambat → lingkaran
+      // avatar kadang muncul kadang gak.
+      const avatar = await loadImage(data.avatarBuffer || data.avatarUrl).catch(
+        () => null,
+      );
       if (avatar) {
         ctx.shadowColor = "#00f2ff";
         ctx.shadowBlur = 20;
@@ -365,7 +390,12 @@ async function checkAndNotifyLevelUp(sock, m, db, user, oldExp, newExp) {
 
     let ppBuffer = null;
     try {
-      ppBuffer = await sock.profilePictureUrl(m.sender, "image");
+      // profileBuffer = Buffer cached (tanpa URL signed yang bisa expired);
+      // fallback ke URL lama kalau sock gak punya helper itu
+      ppBuffer =
+        typeof sock.profileBuffer === "function"
+          ? await sock.profileBuffer(m.sender)
+          : await sock.profilePictureUrl(m.sender, "image");
     } catch {}
 
     const txt = `🎊 *SELAMAT @${m.sender.split("@")[0]}!*
@@ -409,9 +439,10 @@ Sering seringlah berinteraksi dengan bot agar level kamu bertambah!`;
         level: newLevel,
         currentXp: newExp,
         requiredXp: expForLevel(newLevel),
-        avatarUrl:
-          ppBuffer ||
+        avatarBuffer: ppBuffer, // Buffer → loadImage lokal, gak fetch remote lagi
+        avatarUrl: ppBuffer ||
           "https://ui-avatars.com/api/?name=K&background=00f2ff&color=fff&size=256",
+        // backgroundUrl cuma fallback kalau asset lokal nova-levelup gak ada
         backgroundUrl:
           "https://images.wallpapersden.com/image/download/anime-night-sky-scenery_bWlsZ26UmZqaraWkpJRmbmdlrWZnZWU.jpg",
       });
