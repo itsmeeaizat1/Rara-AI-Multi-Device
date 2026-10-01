@@ -339,6 +339,17 @@ class VoipCall extends EventEmitter {
     }
 }
 
+// Putusan video/audio call dari opsi callType + jenis item pertama.
+// 'auto' (default) = perilaku lama: video iff item pertama video.
+// Diekspor biar bisa dites unit tanpa koneksi socket beneran.
+export function resolveIsVideoCall(callType, firstItemKind) {
+    if (callType === 'video')
+        return true;
+    if (callType === 'audio')
+        return false;
+    return firstItemKind === 'video';
+}
+
 export default class Voip {
     #conn;
     #client = null;
@@ -368,6 +379,13 @@ export default class Voip {
         const targetJid = String(jid || '').replace(/\D/g, '');
         if (!targetJid)
             throw new Error('Invalid phone number / jid.');
+        // MODE 2 JENIS CALL (revisi owner 1 Okt 2026): 'audio' = telepon biasa
+        // (media video dimainkan lewat jalur AUDIO-nya aja), 'video' = telepon
+        // video (tanpa media video -> black screen via loadBlankSource),
+        // 'auto' (default) = perilaku lama: video iff item pertama video.
+        const callType = options.callType === 'audio' || options.callType === 'video'
+            ? options.callType
+            : 'auto';
         const rawItems = Array.isArray(media) ? media : [media ?? 'silence'];
         const items = [];
         for (const raw of rawItems) {
@@ -375,7 +393,13 @@ export default class Voip {
                 items.push({ kind: 'audio', source: 'silence', isTemp: false });
                 continue;
             }
-            items.push(await normalizeItem(raw, this.#ffprobePath, this.#tmpDir));
+            const item = await normalizeItem(raw, this.#ffprobePath, this.#tmpDir);
+            // Telepon biasa + media video: putar AUDIONYA saja (WaAudioEngine
+            // bisa ekstrak track audio dari container video) - playlist gak
+            // boleh nyentuh video engine di call yang bukan video.
+            items.push(callType === 'audio' && item.kind === 'video'
+                ? { ...item, kind: 'audio' }
+                : item);
         }
         const first = items[0];
         const videoConfig = resolveVideoConfig(resolution, { width: first.sourceWidth, height: first.sourceHeight });
@@ -421,8 +445,8 @@ export default class Voip {
                 // via ffmpeg, which extracts the audio track from a video
                 // container the same as it would a plain audio file.
                 audioSource: first.source,
-                isVideo: first.kind === 'video',
-                ...(first.kind === 'video' ? { videoSource: first.source } : {}),
+                isVideo: resolveIsVideoCall(callType, first.kind),
+                ...(resolveIsVideoCall(callType, first.kind) && first.kind === 'video' ? { videoSource: first.source } : {}),
                 durationMs: 0,
                 videoConfig,
             });

@@ -6,6 +6,9 @@ function ok(name, cond, detail = "") {
   else console.log(`  ✗ ${name} ${detail}`);
 }
 console.log("─── HIROVOIP e2e ───");
+const { readFileSync: require_fs_read } = await import("node:fs");
+// readFileSync path relatif ke CWD — WAJIB resolve dari import.meta.url biar gak ENOENT saat jalan dari luar root
+const fsHere = (rel) => require_fs_read(new URL(rel, import.meta.url), "utf8");
 
 const mod = await import("../../src/lib/hivoip/index.js");
 ok("engine Voip ke-import", typeof mod.default === "function");
@@ -71,6 +74,55 @@ ok("handler: usage → novaGuide (gak nelpon)", res?.handled === true && /voipca
   } finally {
     console.warn = origWarn;
   }
+}
+
+// ═══ REVISI OWNER 1 Okt 2026: 2 MODE — .voipcall = telepon biasa (default),
+// .voipvideocall = telepon video. Plus FIX LATEN: .voipend/.voipsilent selama
+// ini GAK pernah ke-registrasi sebagai alias → kena jalur command-not-found,
+// gak pernah nyamper ke handler.
+{
+  ok("alias: voipvideocall & videocall ke-registrasi", plugin.config.alias.includes("voipvideocall") && plugin.config.alias.includes("videocall"));
+  ok("FIX LATEN: voipend & voipsilent ke-registrasi (selama ini kena not-found)", plugin.config.alias.includes("voipend") && plugin.config.alias.includes("voipsilent"));
+
+  // routing isVideo (helper engine, tanpa socket beneran)
+  const { resolveIsVideoCall } = await import("../../src/lib/hivoip/index.js");
+  ok("routing: mode audio + media video → TETAP telepon biasa", resolveIsVideoCall("audio", "video") === false);
+  ok("routing: mode video + media audio/tanpa media → TETAP telepon video", resolveIsVideoCall("video", "audio") === true);
+  ok("routing: mode video + media video → telepon video", resolveIsVideoCall("video", "video") === true);
+  ok("routing: mode audio tanpa media → telepon biasa", resolveIsVideoCall("audio", "audio") === false);
+  ok("routing: auto (default) = perilaku lama (video iff item pertama video)", resolveIsVideoCall("auto", "video") === true && resolveIsVideoCall("auto", "audio") === false);
+
+  // plugin parsing: .voipvideocall ke-detect sebagai cmd videocall
+  const rawTest = ".voipvideocall 6281234567890";
+  const cmdParsed = (rawTest.match(/voip(call|videocall|end|silent)/i) || [])[1]?.toLowerCase();
+  ok("parsing: '.voipvideocall' ke-detect sebagai cmd videocall (bukan 'call')", cmdParsed === "videocall", cmdParsed);
+  const rawTest2 = ".voipend force";
+  const cmdParsed2 = (rawTest2.match(/voip(call|videocall|end|silent)/i) || [])[1]?.toLowerCase();
+  ok("parsing: '.voipend' tetap ke-detect sebagai cmd end", cmdParsed2 === "end", cmdParsed2);
+
+  // strip args: nomor kebaca bener untuk kedua mode
+  const stripRe = /^\.voip(call|videocall|end|silent)\s*/i;
+  ok("strip: args .voipvideocall bersih (nomor doang)", ".voipvideocall 6281234567890 x.mp4".replace(stripRe, "").trim() === "6281234567890 x.mp4");
+  ok("strip: args .voipcall bersih (nomor doang)", ".voipcall 6281234567890 auto".replace(stripRe, "").trim() === "6281234567890 auto");
+
+  // guide nyebut 2 mode
+  let guide2 = null;
+  await plugin.handler({ text: ".voipcall", chat: "x@s.whatsapp.net", sender: "x@s.whatsapp.net", isOwner: true,
+    react: async () => {}, reply: async (t) => { guide2 = t; return { key: { id: "K2" } }; }, quoted: null },
+    { sock: { user: { id: "b@s.whatsapp.net" }, sendMessage: async () => ({}) }, config: { command: { prefix: "." } } });
+  const { fromSC: __fromSC } = await import("../../src/lib/styler.js");
+  const guideNorm = __fromSC(String(guide2 || "")).toLowerCase();
+  ok("guide: nyebut .voipcall = telepon biasa", guideNorm.includes("telepon biasa") && guideNorm.includes("voipvideocall") && guideNorm.includes("telepon video"), guideNorm.slice(0, 90));
+
+  // engine: media video di mode audio dimainkan sebagai AUDIO (guard struktur)
+  const engineSrc = fsHere("../../src/lib/hivoip/index.js");
+  ok("engine: mode audio meremap item video → audio (putar audionya aja)", engineSrc.includes("callType === 'audio' && item.kind === 'video'"));
+
+  // media session: video call tanpa source → blank source (black screen)
+  const sessionSrc = fsHere("../../src/lib/hivoip/call/WaCallMediaSession.js");
+  ok("session: video call polos → loadBlankSource (black screen via lavfi)",
+    /mediaType === CallMediaType\.Video && !this\.videoEngine\.hasSource\(\)/.test(sessionSrc) && sessionSrc.includes("loadBlankSource()"),
+    "guard blank source gak ketemu");
 }
 
 console.log(`─── hasil: ${pass}/${total} ${pass === total ? "PASSED ✓" : "ADA YANG GAGAL ✗"} ───`);

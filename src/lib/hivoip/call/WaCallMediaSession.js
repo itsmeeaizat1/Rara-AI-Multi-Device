@@ -1517,6 +1517,23 @@ export class WaCallMediaSession {
         this.audioEngine.startPlayback();
         this.audioEngine.startCapture();
 
+        // Video call tanpa media video (mis. .voipvideocall polos tanpa URL):
+        // kirim black screen BENERAN via ffmpeg lavfi biar pane video target
+        // gak kosong/idle. loadBlankSource() async (cek ffmpeg PATH) - start()
+        // di bawah jadi no-op duluan, start ulang begitu source ke-load
+        // (guard sama kayak onSourceUpdated, lihat situ).
+        if (this.info.mediaType === CallMediaType.Video && !this.videoEngine.hasSource()) {
+            this.videoEngine.loadBlankSource()
+                .then(() => {
+                if (this.mediaFlowStarted && this.sctpRelay.hasConnection()) {
+                    this.videoEngine.start();
+                }
+            })
+                .catch((err) => {
+                this.logger.error('blank video fallback unavailable', { callId: this.info.callId, message: toError(err).message });
+            });
+        }
+
         // Video starts in the same tick as audio. ffmpeg reads the source
         // with -re (real-time pace) and each access unit is sent to the
         // relay the instant it's parsed from ffmpeg's output - there's no
