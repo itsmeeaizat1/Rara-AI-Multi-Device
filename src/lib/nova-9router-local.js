@@ -293,6 +293,39 @@ export async function ensureRouter9GatewayKey({ create = true, _retried = false 
   return key;
 }
 
+// ── SELF-HEAL GATEWAY KEY BASI (fix 1 Okt 2026 malam, report owner:
+// ".9router restart ttep g bsa gagal") — akar: gateway.apikey di
+// 9routerapikey.json bisa BASI (DB server 9router di-reset / machine-id
+// ganti / key dari boot lain), tapi ensureRouter9GatewayKey() DULU
+// PERCAYA BLIND key lama itu, dan .9router restart cuma respawn proses
+// TANPA nyentuh key basi → kartu restart bilang "gateway ok" padahal
+// chat tetap 401 selamanya. Sekarang: key divalidasi & diprovisi ulang
+// otomatis di 3 titik (restart, chat, error message gak suruh manual lagi).
+
+/** Buang gateway key basi dari 9routerapikey.json (dipakai sebelum re-provision). */
+export async function invalidateRouter9GatewayKey() {
+  const cfg = readRouter9Config();
+  if (cfg?.gateway?.apikey) {
+    cfg.gateway.apikey = "";
+    writeRouter9Config(cfg);
+    return true;
+  }
+  return false;
+}
+
+/** Validasi gateway key yang ada sekarang — dipakai .9router restart
+ *  biar kartunya JUJUR (key lama ditolak = diprovisi baru, bukan "ok" palsu). */
+export async function router9ValidateGatewayKey() {
+  let key = "";
+  try { key = await ensureRouter9GatewayKey(); } catch (e) { return { ok: false, error: e.message }; }
+  if (!key) return { ok: false, error: "belum ada gateway key" };
+  const r = await httpJson(`${getRouter9Base()}/v1/models`, {
+    timeoutMs: 10000,
+    headers: { Authorization: `Bearer ${key}` },
+  });
+  return { ok: r.ok, status: r.status, key };
+}
+
 // Sync provider key berbayar dari 9routerapikey.json → 9Router lokal.
 // Skip yang kosong / gak aktif; skip yang udah ada (dedupe by name) biar gak dobel.
 export async function syncRouter9ProviderKeys() {
@@ -397,7 +430,7 @@ export async function router9ImageGen({ model, prompt, n = 1, size = "1024x1024"
 // ── CHAT — jantung 9router lokal. TANPA FALLBACK ke API AI lain. ──
 export async function router9Chat({
   model, system, user, history = [], maxTokens = 1024, temperature = 0.7,
-  timeoutMs = 120000, apiKey = null,
+  timeoutMs = 120000, apiKey = null, _retried = false,
 } = {}) {
   const t0 = Date.now();
   _state.stats.requests++;
@@ -446,6 +479,25 @@ export async function router9Chat({
     _state.stats.lastError = null;
     return { text: text.trim(), model: res?.model || model, latencyMs };
   } catch (e) {
+    // ── SELF-HEAL CHAT (fix 1 Okt 2026 malam): gateway key basi ditolak
+    // server → buang key lama, provisi ulang, ULANG CHAT SEKALI. Tanpa ini
+    // user dipaksa bersihin key manual + restart — dan .9router
+    // restart pun gak nolong karena key basi gak pernah divalidasi.
+    if ((e?.status === 401 || e?.status === 403) && !apiKey && !_retried) {
+      try {
+        await invalidateRouter9GatewayKey();
+        const fresh = await ensureRouter9GatewayKey({ create: true });
+        if (fresh) {
+          return await router9Chat({
+            model, system, user, history, maxTokens, temperature, timeoutMs,
+            apiKey: fresh, _retried: true,
+          });
+        }
+      } catch (e2) {
+        console.error("[9router-lokal] self-heal gateway key gagal:", e2?.message || e2);
+        // jatuh ke error jujur di bawah (jangan ngabarin sukses palsu)
+      }
+    }
     const latencyMs = Date.now() - t0;
     _state.stats.fail++;
     const msg = mapRouter9Error(e, model);
@@ -461,7 +513,7 @@ export async function router9Chat({
 function mapRouter9Error(e, model) {
   const status = e?.status;
   const raw = String(e?.error?.message || e?.message || "");
-  if (status === 401 || status === 403) return `gateway key 9router ditolak (${status}) — hapus gateway.apikey di 9routerapikey.json lalu restart`;
+  if (status === 401 || status === 403) return `gateway key 9router ditolak (${status}) — key baru sudah otomatis dicoba; kalau masih gagal, ketik .9router restart (owner)`;
   if (status === 404 && /no active credentials/i.test(raw)) {
     return `belum ada provider aktif untuk model "${model}" — hubungkan provider di dashboard 9router (http://127.0.0.1:${getRouter9Port()}/dashboard) atau isi src/lib/apikey/9routerapikey.json lalu .9router sync`;
   }

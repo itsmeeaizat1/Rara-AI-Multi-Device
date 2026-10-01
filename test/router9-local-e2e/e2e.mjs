@@ -78,12 +78,15 @@ const srv = http.createServer((req, res) => {
       return send(201, { connection: c });
     }
     if (req.url === "/v1/models") {
-      if (!auth.startsWith("Bearer ")) return send(401, { error: "unauthorized" });
+      // realistis: key basi/asing DITOLAK (bukan cuma format Bearer)
+      if (!auth.startsWith("Bearer ") || !gwKeys.includes(auth.slice(7))) return send(401, { error: "unauthorized" });
       return send(200, { data: MODELS });
     }
     if (req.url === "/v1/chat/completions") {
       calls.chat.push({ auth, body: j });
       if (failMode === "401") return send(401, { error: { message: "bad key" } });
+      // realistis: gateway key BASI (gak dikenal server) → 401 — buat uji self-heal
+      if (!auth.startsWith("Bearer ") || !gwKeys.includes(auth.slice(7))) return send(401, { error: { message: "unauthorized" } });
       if (failMode === "404-nocred") return send(404, { error: { message: "No active credentials for provider: glm", code: "model_not_found" } });
       if (failMode === "429") return send(429, { error: { message: "rate limited" } });
       if (failMode === "503") return send(503, { error: { message: "upstream down" } });
@@ -121,7 +124,7 @@ const {
   router9IsUp, ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys,
   router9Models, router9FindModel, router9Chat, router9ImageGen, router9ImageModels,
   router9VisionModels, router9Stats, ROUTER9_DEFAULT_MODEL, getRouter9Base,
-  killStalePort9Router,
+  killStalePort9Router, invalidateRouter9GatewayKey, router9ValidateGatewayKey,
 } = engine;
 const plug = await import(pathToFileURL(path.join(R, "plugins/ai/9router.js")).href);
 const { handler } = plug;
@@ -196,13 +199,13 @@ try { await router9Chat({ model: "alicode-intl/glm-4.7", user: "x" }); t("3f. 42
 catch (e) { t("3f. 429 → rate limit jujur", /rate limit/i.test(e.message), e.message); }
 failMode = null;
 const st1 = router9Stats();
-t("3g. stats dicatat (requests/ok/fail)", st1.requests >= 5 && st1.fail === 3 && st1.ok >= 2, JSON.stringify(st1));
+t("3g. stats dicatat (requests/ok/fail — 401 kini 2 request karena self-heal retry)", st1.requests >= 6 && st1.fail === 4 && st1.ok >= 2, JSON.stringify(st1));
 
 // ═══ 4. ENGINE — image gen ═══
 section("4. image generation");
 const img1 = await router9ImageGen({ model: "poe/nano-banana", prompt: "kucing astronot" });
 t("4a. gambar balik sebagai base64", img1.b64 && Buffer.from(img1.b64, "base64").toString() === "PNGFAKE", JSON.stringify(img1).slice(0, 80));
-t("4b. images/generations dikasih gateway key + prompt", calls.images.at(-1).auth === `Bearer ${gw}` && calls.images.at(-1).body.prompt === "kucing astronot");
+t("4b. images/generations dikasih gateway key + prompt", calls.images.at(-1).auth.startsWith("Bearer sk-mock-gw-") && calls.images.at(-1).body.prompt === "kucing astronot");
 failMode = "404-nocred";
 try { await router9ImageGen({ prompt: "kucing" }); t("4c. no-cred → GAGAL (harus)", false); }
 catch (e) { t("4c. gak ada provider image → pesan arahan sync", /belum ada provider image-gen/i.test(e.message), e.message); }
@@ -396,6 +399,43 @@ section("8. self-heal proses basi + .9router restart");
   // 8j: source guard — self-heal cuma sekali retry (gak infinite loop)
   const engSrc8 = fs.readFileSync(path.join(R, "src/lib/nova-9router-local.js"), "utf8");
   t("8k. engine: self-heal single-retry (_retried guard) + kill-by-port ada", engSrc8.includes("_retried") && engSrc8.includes("findPidOnPort") && engSrc8.includes("killStalePort9Router"));
+
+  // ═══ 9. GATEWAY KEY BASI → SELF-HEAL (fix 1 Okt 2026 malam, report owner
+  // ".9router restart ttep g bsa gagal") — dulu key lama dipercaya buta,
+  // restart gak pernah nolong. ═══
+  section("9. gateway key basi → self-heal");
+  // 9a: injeksi key BASI ke config (simulasi: DB server di-reset / machine-id ganti)
+  const cfgStale = JSON.parse(fs.readFileSync(CFG_PATH, "utf8"));
+  cfgStale.gateway.apikey = "sk-stale-basi-dari-boot-lama";
+  fs.writeFileSync(CFG_PATH, JSON.stringify(cfgStale, null, 2));
+  const keysBefore9 = calls.keys.length;
+  const v9 = await router9ValidateGatewayKey();
+  t("9a. router9ValidateGatewayKey: key basi DETEKSI (ok:false)", v9.ok === false && (v9.status === 401 || v9.status === 403), JSON.stringify(v9));
+  // 9b: chat dengan key basi → invalidate + provisi baru + retry → SUKSES
+  const c9 = await router9Chat({ model: "alicode-intl/glm-4.7", user: "halo lagi" });
+  t("9b. chat self-heal: key basi → provisi ulang → jawaban tetap dapet", c9.text === "jawaban-mock", JSON.stringify(c9).slice(0, 80));
+  t("9c. self-heal: POST /api/keys kepanggil (key baru dibikin)", calls.keys.length === keysBefore9 + 1, `calls=${calls.keys.length}`);
+  const cfgHealed9 = JSON.parse(fs.readFileSync(CFG_PATH, "utf8"));
+  t("9d. key basi kebuang dari config, key baru tersimpan", cfgHealed9.gateway.apikey !== "sk-stale-basi-dari-boot-lama" && cfgHealed9.gateway.apikey.startsWith("sk-mock-gw-"), cfgHealed9.gateway.apikey);
+  t("9e. chat retry pakai key BARU (bukan key basi)", calls.chat.at(-1).auth === `Bearer ${cfgHealed9.gateway.apikey}`);
+  // 9f: .9router restart dengan key basi → kartu JUJUR (bukan "ok" palsu)
+  const cfgStale2 = JSON.parse(fs.readFileSync(CFG_PATH, "utf8"));
+  cfgStale2.gateway.apikey = "sk-stale-lagi";
+  fs.writeFileSync(CFG_PATH, JSON.stringify(cfgStale2, null, 2));
+  const mR9 = mkM({ args: ["restart"], isOwner: true });
+  await run(mR9, mkSock());
+  t("9f. restart: key basi diprovisi baru (kartu jujur)", (mR9._replies[0] || "").includes("key lama basi"), (mR9._replies[0] || "").slice(0, 160));
+  t("9g. restart: config keisi key baru", JSON.parse(fs.readFileSync(CFG_PATH, "utf8")).gateway.apikey.startsWith("sk-mock-gw-"));
+  // 9h: apiKey param eksplisit yang basi → TANPA heal, error jujur (gak infinite)
+  try {
+    await router9Chat({ model: "alicode-intl/glm-4.7", user: "x", apiKey: "sk-stale-param" });
+    t("9h. apiKey basi → GAGAL (harus)", false, "harusnya throw");
+  } catch (e) {
+    t("9h. apiKey param basi → tanpa heal, jujur 401", /gateway key 9router ditolak/i.test(e.message), e.message);
+  }
+  // 9i: source guard — pesan error gak nyuruh manual hapus JSON lagi
+  const engSrc9 = fs.readFileSync(path.join(R, "src/lib/nova-9router-local.js"), "utf8");
+  t("9i. engine: pesan 401 gak suruh hapus manual + invalidate/validate ada", !engSrc9.includes("hapus gateway.apikey") && engSrc9.includes("invalidateRouter9GatewayKey") && engSrc9.includes("router9ValidateGatewayKey"));
 }
 
 srv.close();
