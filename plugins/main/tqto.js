@@ -51,7 +51,6 @@ async function handler(m, { sock, uptime }) {
         'Xemoz Official — api-xemoz-official.my.id',
         'KuroNeko / Sylvatica — sylvatica.my.id',
         'FGSI — fgsi.dpdns.org',
-        'Termai — api.termai.cc',
         'Inception Labs — api.inceptionlabs.ai',
         '9Router — 9router.cloudku.us.kg',
         'Anabot — anabot.my.id',

@@ -1,7 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import axios from 'axios'
-import FormData from 'form-data'
 import te from '../../src/lib/nova-error.js'
 import config from "../../config.js";
 const pluginConfig = {
@@ -22,20 +20,13 @@ const pluginConfig = {
 
 const BASE_URL = 'https://api.denayrestapi.xyz'
 
+// Upload via engine nova-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
+import { uploadImage } from "../../src/lib/nova-uploader.js"
+
 async function uploadTo0x0(buffer) {
     try {
-        const form = new FormData()
-        form.append('file', buffer, { filename: 'logo.png', contentType: 'image/png' })
-        
-        const response = await axios.post('https://c.termai.cc/api/upload?key=' + config.APIkey.termai, form, {
-            headers: form.getHeaders(),
-            timeout: 30000
-        })
-        
-        if (response.data?.status === 'success' && response.data?.files?.[0]?.url) {
-            return response.data
-        }
-        return null
+        const url = await uploadImage(buffer, 'logo.png')
+        return { status: 'success', files: [{ url }] }
     } catch {
         return null
     }
