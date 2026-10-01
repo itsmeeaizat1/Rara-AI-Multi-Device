@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import { setMenuImageMode, getMenuImage } from "../../src/lib/nova-asset-manager.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { setMenuImageMode, getMenuImage } from "../../src/lib/rara-asset-manager.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "setmenuimage",
@@ -9,7 +9,7 @@ const pluginConfig = {
   category: "owner",
   description: "Set gambar preview menu: mode asset atau URL",
   usage: ".setmenuimage <asset|url> [url/link]",
-  example: ".setmenuimage url https://example.com/banner.jpg\n.setmenuimage asset\n.setmenuimage asset nova2",
+  example: ".setmenuimage url https://example.com/banner.jpg\n.setmenuimage asset\n.setmenuimage asset rara2",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -25,20 +25,20 @@ async function handler(m, { sock, db }) {
   const mode = args[0]?.toLowerCase();
 
   if (!mode || !["asset", "url"].includes(mode)) {
-    const current = config.bot?.menuImage || { mode: "asset", url: "", asset: "nova" };
+    const current = config.bot?.menuImage || { mode: "asset", url: "", asset: "rara" };
     let txt = `Mode saat ini: *${current.mode}*
-Asset: *${current.asset || "nova"}*
+Asset: *${current.asset || "rara"}*
 URL: *${current.url || "(kosong)"}*
 「 Cara pakai 」
  1. \`${prefix}setmenuimage asset\` → pakai gambar lokal
- 2. \`${prefix}setmenuimage asset nova2\` → ganti key asset
+ 2. \`${prefix}setmenuimage asset rara2\` → ganti key asset
  3. \`${prefix}setmenuimage url https://link-gambar.jpg\` → pakai URL`;
-    await m.reply(novaWrap("setmenuimage", txt));
+    await m.reply(raraWrap("setmenuimage", txt));
     return;
   }
 
   if (mode === "asset") {
-    const assetKey = args[1] || config.bot?.menuImage?.asset || "nova";
+    const assetKey = args[1] || config.bot?.menuImage?.asset || "rara";
     if (!config.assets?.[assetKey]) {
       await m.reply(
         `❌ Asset key \`${assetKey}\` tidak ditemukan di config\nCek daftar asset di config.js`
@@ -66,7 +66,7 @@ URL: *${current.url || "(kosong)"}*
 
     // Test fetch URL
     try {
-      const img = await getMenuImage("nova");
+      const img = await getMenuImage("rara");
       setMenuImageMode("url", url, "");
       db.setSetting("menuImageMode", "url");
       db.setSetting("menuImageUrl", url);

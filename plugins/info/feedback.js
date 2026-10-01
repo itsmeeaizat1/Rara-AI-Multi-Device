@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // feedback.js — Kirim masukan/saran ke owner (kirim langsung ke WA owner + simpan DB)
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaCaption, tipText } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import te from "../../src/lib/nova-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraCaption, tipText } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "masukan",
@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!message) {
-      return m.reply(novaWrap("Kirim Masukan", [
+      return m.reply(raraWrap("Kirim Masukan", [
         "Kirim saran/masukan ke owner bot",
         "",
         "📌 *Cara Pakai:*",
@@ -80,7 +80,7 @@ async function handler(m, { sock, config: botConfig }) {
         timeStyle: "short",
       });
 
-      const ownerMsg = novaWrap("Masukan Masuk", [
+      const ownerMsg = raraWrap("Masukan Masuk", [
         `Pesan: *${message.slice(0, 1000)}${message.length > 1000 ? "..." : ""}*`,
         "",
         `Dari: ${senderName} (${senderNum})`,
@@ -101,12 +101,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Reply ke pengirim
     if (ownerNotified) {
-      await m.reply(novaWrap("Kirim Masukan", [
+      await m.reply(raraWrap("Kirim Masukan", [
         `Pesan: *${message.slice(0, 500)}${message.length > 500 ? "..." : ""}*`,
         `Status: Terkirim ke owner`,
       ]));
     } else {
-      await m.reply(novaWrap("Kirim Masukan", [
+      await m.reply(raraWrap("Kirim Masukan", [
         `Pesan: *${message.slice(0, 500)}${message.length > 500 ? "..." : ""}*`,
         `Status: Tersimpan (owner tidak terjangkau)`,
       ]));

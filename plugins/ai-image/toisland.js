@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 import { live3d } from '../../src/scraper/seaart.js'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return m.reply(novaGuideV2("toisland", {
+        return m.reply(raraGuideV2("toisland", {
  kaomoji: "(◕‿◕)",
  sapaan: "pindahkan suasana fotomu ke pulau tropis!",
       cara: "kirim atau reply gambar dengan caption commandnya",
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(novaWrap("toisland", `❌ Gagal mendownload gambar`))
+            return m.reply(raraWrap("toisland", `❌ Gagal mendownload gambar`))
         }
         
         const result = await live3d(buffer, PROMPT)
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
             type: 'image',
         })
         // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-        await m.reply(mediaInfoCaption({ header: "Nova To Island", fields: [
+        await m.reply(mediaInfoCaption({ header: "Rara To Island", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Pulau Tropis" },
             { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
         ] }))
         
     } catch (error) {
-        m.reply(novaWrap("toisland", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("toisland", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

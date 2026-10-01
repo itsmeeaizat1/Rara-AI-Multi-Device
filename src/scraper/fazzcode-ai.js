@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // fazzcode-ai.js — fazzcode.eu.cc AI wrapper (NON-roleplay)
 // Sweep live 14 Sep 2026 dari 225 endpoint docs, YANG HIDUP:
@@ -136,7 +136,7 @@ export async function agnesChat(prompt) {
 }
 
 /**
- * fazzcodeAiChat — gabungan untuk RANTAI fallback AI (nova-ai-fallback.js):
+ * fazzcodeAiChat — gabungan untuk RANTAI fallback AI (rara-ai-fallback.js):
  * NoTrack duluan → kalau kena auto-lock/rate → Agnes 2.5 Flash.
  * Throw kalau dua-duanya gagal (biar rantai lanjut step berikutnya).
  * @param {string} prompt

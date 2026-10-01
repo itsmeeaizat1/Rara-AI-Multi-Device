@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: .AUTOTASK — agent tugas otonom berjangka
+// RARA AI WHATSAPP BOT — E2E: .AUTOTASK — agent tugas otonom berjangka
 // Saran fitur #5: kerjain bertahap di background, lapor tiap milestone ke DM owner.
 import fs from "node:fs";
 import os from "node:os";
@@ -13,7 +13,7 @@ const t = (name, cond, extra = "") => {
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "autotask-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
 const at = await import(R + "/plugins/ai-agent/autotask.js");

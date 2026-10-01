@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // WebsiteCloner — Clone website & dapatkan template HTML/CSS via smartdom API
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "webclone",
@@ -79,7 +79,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await m.react("🕒");
     const url = text.trim();
     if (!url) {
-      return m.reply(novaWrap("WebsiteCloner", [
+      return m.reply(raraWrap("WebsiteCloner", [
         "Clone website & dapatkan template HTML/CSS",
         "Gratis tanpa token via smartdom API",
         "",
@@ -96,10 +96,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // Validate URL
     if (!url.match(/^https?:\/\/.+/)) {
-      return m.reply(novaWrap("WebsiteCloner", "URL tidak valid! Harus diawali http:// atau https://\n💡 *Contoh:* .webclone https://example.com"));
+      return m.reply(raraWrap("WebsiteCloner", "URL tidak valid! Harus diawali http:// atau https://\n💡 *Contoh:* .webclone https://example.com"));
     }
 
-    m.reply(novaWrap("WebsiteCloner", "Sedang cloning website...\nURL: " + url + "\nMungkin butuh 10-30 detik."));
+    m.reply(raraWrap("WebsiteCloner", "Sedang cloning website...\nURL: " + url + "\nMungkin butuh 10-30 detik."));
 
     const { cloneData, templateData } = await cloneWebsite(url);
 
@@ -132,7 +132,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
             document: fileBuffer,
             mimetype: "text/html",
             fileName,
-            caption: novaWrap("WebsiteCloner", [
+            caption: raraWrap("WebsiteCloner", [
               "CLONE BERHASIL",
               "",
               "URL: " + url,
@@ -184,11 +184,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("Source: smartdom API (gratis, no token)");
 
     await m.react("🐣");
-    return m.reply(novaWrap("WebsiteCloner", lines, "success"));
+    return m.reply(raraWrap("WebsiteCloner", lines, "success"));
   } catch (e) {
     await m.react("❌");
     console.error("[WebsiteCloner]", e);
-    m.reply(novaWrap("WebsiteCloner", [
+    m.reply(raraWrap("WebsiteCloner", [
       "Error: " + e.message,
       "",
       "Kemungkinan penyebab:",

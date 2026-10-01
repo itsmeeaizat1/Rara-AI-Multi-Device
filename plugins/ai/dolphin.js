@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 import axios from 'axios'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 const pluginConfig = {
     name: 'dolphin',
     alias: ["dolphin"],
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     }
     
     if (!text) {
-        return m.reply(novaWrap("Dolphin", `❌ Masukkan pertanyaan!`))
+        return m.reply(raraWrap("Dolphin", `❌ Masukkan pertanyaan!`))
     }
     try {
     await m.react("🕒");
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
       console.error("[dolphin.js] IkyyXD fallback failed:", ikyyErr.message);
     }
 
-        m.reply(novaWrap("dolphin", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("dolphin", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

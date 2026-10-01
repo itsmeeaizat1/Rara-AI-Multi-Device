@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 import axios from 'axios'
-import { uploadImage } from '../../src/lib/nova-uploader.js'
-import { f } from '../../src/lib/nova-http.js'
-import te from '../../src/lib/nova-error.js'
+import { uploadImage } from '../../src/lib/rara-uploader.js'
+import { f } from '../../src/lib/rara-http.js'
+import te from '../../src/lib/rara-error.js'
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(novaGuideV2("tohijab", {
+        return m.reply(raraGuideV2("tohijab", {
  kaomoji: "(◕ᴗ◕)",
  sapaan: "pasangkan hijab cantik di fotomu secara natural!",
         cara: "kirim atau reply gambar dengan caption commandnya",
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(novaWrap("tohijab", `❌ Gagal mendownload gambar`))
+            return m.reply(raraWrap("tohijab", `❌ Gagal mendownload gambar`))
         }
         
         const imageUrl = await uploadImage(buffer, 'image.jpg')
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
             type: 'image',
         })
         // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-        await m.reply(mediaInfoCaption({ header: "Nova To Hijab", fields: [
+        await m.reply(mediaInfoCaption({ header: "Rara To Hijab", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Hijab" },
             { icon: "⚙️", label: "Engine", value: "FAA AI API" },
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
         ] }))
         
     } catch (error) {
-        m.reply(novaWrap("tohijab", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("tohijab", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

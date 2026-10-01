@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "antispammenu",
@@ -19,7 +19,7 @@ const pluginConfig = {
 };
 
 // === Tracker ===
-if (!global.novaMenuSpamV2) global.novaMenuSpamV2 = {};
+if (!global.raraMenuSpamV2) global.raraMenuSpamV2 = {};
 
 // Menu commands yang kena limit menu
 const MENU_COMMANDS = [
@@ -116,10 +116,10 @@ export function checkMenuSpamV2(m) {
   const sender = m.sender;
   const trackerKey = `${m.isGroup ? "gc" : "dm"}_${scopeType}_${sender}`;
 
-  if (!global.novaMenuSpamV2[trackerKey]) {
-    global.novaMenuSpamV2[trackerKey] = { calls: [], cooldownUntil: 0 };
+  if (!global.raraMenuSpamV2[trackerKey]) {
+    global.raraMenuSpamV2[trackerKey] = { calls: [], cooldownUntil: 0 };
   }
-  const tracker = global.novaMenuSpamV2[trackerKey];
+  const tracker = global.raraMenuSpamV2[trackerKey];
 
   // Check cooldown
   if (now < tracker.cooldownUntil) {
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
 
   // === HELP ===
   if (!action || action === "help" || action === "bantuan") {
-    return m.reply( novaWrap("Anti-Spam Menu V2", [
+    return m.reply( raraWrap("Anti-Spam Menu V2", [
       "Anti-spam menu (.menu/.allmenu) & fitur (command lain)",
       "",
       "Perintah:",
@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
   // === STATUS ===
   if (action === "status" || action === "info") {
     const s = settings;
-    return m.reply(novaWrap("Anti-Spam Menu V2 Status", [
+    return m.reply(raraWrap("Anti-Spam Menu V2 Status", [
       "*grup - menu*",
       `  Status: ${s.group.menu.enabled ? "AKTIF" : "MATI"}`,
       `  Limit: ${s.group.menu.limit}x per ${s.group.menu.windowMs / 1000}s`,
@@ -235,7 +235,7 @@ async function handler(m, { sock }) {
 
     // Validate type
     if (typeArg !== "menu" && typeArg !== "fitur") {
-      return m.reply(novaWrap("Anti-Spam Menu V2", `Tipe harus "menu" atau "fitur"\n💡 *Contoh:* .antispammenuv2 ${action} menu on`, "error"));
+      return m.reply(raraWrap("Anti-Spam Menu V2", `Tipe harus "menu" atau "fitur"\n💡 *Contoh:* .antispammenuv2 ${action} menu on`, "error"));
     }
 
     const typeKey = typeArg;
@@ -245,62 +245,62 @@ async function handler(m, { sock }) {
     if (subCmd === "on") {
       target.enabled = true;
       db.setting("antispamMenuV2", settings);
-      return m.reply(novaWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} diaktifkan!`, "success"));
+      return m.reply(raraWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} diaktifkan!`, "success"));
     }
 
     if (subCmd === "off") {
       target.enabled = false;
       db.setting("antispamMenuV2", settings);
-      return m.reply(novaWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} dimatikan!`, "info"));
+      return m.reply(raraWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} dimatikan!`, "info"));
     }
 
     if (subCmd === "limit") {
       const val = parseInt(subVal);
       if (!val || val < 1 || val > 20) {
-        return m.reply(novaWrap("Anti-Spam Menu V2", `Nilai limit 1-20!\n💡 *Contoh:* .antispammenuv2 ${action} ${typeArg} limit 5`, "error"));
+        return m.reply(raraWrap("Anti-Spam Menu V2", `Nilai limit 1-20!\n💡 *Contoh:* .antispammenuv2 ${action} ${typeArg} limit 5`, "error"));
       }
       target.limit = val;
       db.setting("antispamMenuV2", settings);
-      return m.reply(novaWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} limit: ${val}x`, "success"));
+      return m.reply(raraWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} limit: ${val}x`, "success"));
     }
 
     if (subCmd === "window") {
       const val = parseInt(subVal);
       if (!val || val < 5 || val > 600) {
-        return m.reply(novaWrap("Anti-Spam Menu V2", `Window 5-600 detik!\n💡 *Contoh:* .antispammenuv2 ${action} ${typeArg} window 60`, "error"));
+        return m.reply(raraWrap("Anti-Spam Menu V2", `Window 5-600 detik!\n💡 *Contoh:* .antispammenuv2 ${action} ${typeArg} window 60`, "error"));
       }
       target.windowMs = val * 1000;
       db.setting("antispamMenuV2", settings);
-      return m.reply(novaWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} window: ${val}s`, "success"));
+      return m.reply(raraWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} window: ${val}s`, "success"));
     }
 
     if (subCmd === "cooldown") {
       const val = parseInt(subVal);
       if (!val || val < 5 || val > 600) {
-        return m.reply(novaWrap("Anti-Spam Menu V2", `Cooldown 5-600 detik!\n💡 *Contoh:* .antispammenuv2 ${action} ${typeArg} cooldown 120`, "error"));
+        return m.reply(raraWrap("Anti-Spam Menu V2", `Cooldown 5-600 detik!\n💡 *Contoh:* .antispammenuv2 ${action} ${typeArg} cooldown 120`, "error"));
       }
       target.cooldownMs = val * 1000;
       db.setting("antispamMenuV2", settings);
-      return m.reply(novaWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} cooldown: ${val}s`, "success"));
+      return m.reply(raraWrap("Anti-Spam Menu V2", `${scopeLabel} ${typeLabel} cooldown: ${val}s`, "success"));
     }
 
-    return m.reply(novaWrap("Anti-Spam Menu V2", `Sub-perintah tidak dikenal.\nKetik .antispammenuv2 help`, "warn"));
+    return m.reply(raraWrap("Anti-Spam Menu V2", `Sub-perintah tidak dikenal.\nKetik .antispammenuv2 help`, "warn"));
   }
 
   // === Legacy on/off (maps to group menu) ===
   if (action === "on") {
     settings.group.menu.enabled = true;
     db.setting("antispamMenuV2", settings);
-    return m.reply(novaWrap("Anti-Spam Menu V2", "Grup menu diaktifkan! (untuk DM/fitur lihat .antispammenuv2 help)", "success"));
+    return m.reply(raraWrap("Anti-Spam Menu V2", "Grup menu diaktifkan! (untuk DM/fitur lihat .antispammenuv2 help)", "success"));
   }
 
   if (action === "off") {
     settings.group.menu.enabled = false;
     db.setting("antispamMenuV2", settings);
-    return m.reply(novaWrap("Anti-Spam Menu V2", "Grup menu dimatikan! (untuk DM/fitur lihat .antispammenuv2 help)", "info"));
+    return m.reply(raraWrap("Anti-Spam Menu V2", "Grup menu dimatikan! (untuk DM/fitur lihat .antispammenuv2 help)", "info"));
   }
 
-  return m.reply(novaWrap("Anti-Spam Menu V2", `Perintah tidak dikenal: ${action}\nKetik .antispammenuv2 help`, "warn"));
+  return m.reply(raraWrap("Anti-Spam Menu V2", `Perintah tidak dikenal: ${action}\nKetik .antispammenuv2 help`, "warn"));
 }
 
 export { pluginConfig as config, handler };

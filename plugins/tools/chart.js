@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // chart.js — Render data jadi grafik bar bergambar (canvas lokal @napi-rs/canvas)
 // Fitur baru 9 Sep 2026 (request owner: fitur baru biar nambah dependencies)
 // Mode:
@@ -6,9 +6,9 @@
 //   .chart <label..> | <nilai..>  → grafik custom (label & nilai dipisah koma)
 //   .chart <nilai..>              → grafik nilai aja (label otomatis #1..#N)
 import { createCanvas } from "@napi-rs/canvas";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getLeaderboard, formatRp } from "../../src/lib/nova-rpg-service.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getLeaderboard, formatRp } from "../../src/lib/rara-rpg-service.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "chart",
@@ -143,7 +143,7 @@ export async function renderChart({ title, subtitle, items, money = false }) {
   // Footer sumber
   ctx.fillStyle = THEME.muted;
   ctx.font = "20px sans-serif";
-  ctx.fillText("Nova AI • chart engine lokal", PAD, H - 26);
+  ctx.fillText("Rara AI • chart engine lokal", PAD, H - 26);
 
   return await canvas.encode("png");
 }
@@ -167,7 +167,7 @@ const RPG_LABELS = {
 };
 
 function chartHelp(m) {
-  return novaWrap("chart", [
+  return raraWrap("chart", [
     "📊 *mode grafik*",
     "",
     `▸ ${m.prefix}chart rpg <tipe>`,
@@ -210,7 +210,7 @@ async function handler(m, { sock }) {
       const type = RPG_TYPES[key];
       if (!type) {
         await m.react("❌");
-        return m.reply(novaWrap("chart", [
+        return m.reply(raraWrap("chart", [
           "❌ *tipe rpg nya tidak ketemu*",
           "",
           `▸ ${m.prefix}chart rpg gold`,
@@ -223,12 +223,12 @@ async function handler(m, { sock }) {
       const players = getLeaderboard(type, 10);
       if (!players.length) {
         await m.react("❌");
-        return m.reply(novaWrap("chart", "Belum ada data pemain RPG buat dijadikan grafik.", "error"));
+        return m.reply(raraWrap("chart", "Belum ada data pemain RPG buat dijadikan grafik.", "error"));
       }
       await m.react("🕒");
       const png = await renderChart({
         title: `📊 TOP 10 ${RPG_LABELS[type].toUpperCase()}`,
-        subtitle: "Leaderboard RPG — Nova AI",
+        subtitle: "Leaderboard RPG — Rara AI",
         items: players.map((p) => ({ label: p.name, value: p.value })),
         money: type === "cash",
       });
@@ -251,41 +251,41 @@ async function handler(m, { sock }) {
       values = parseNumbers(valuePart);
       if (values.some(Number.isNaN)) {
         await m.react("❌");
-        return m.reply(novaWrap("chart", "❌ Nilainya harus angka semua, dipisah koma.\n\nContoh: .chart pisang,jeruk | 10,25", "error"));
+        return m.reply(raraWrap("chart", "❌ Nilainya harus angka semua, dipisah koma.\n\nContoh: .chart pisang,jeruk | 10,25", "error"));
       }
       if (labels.length !== values.length) {
         await m.react("❌");
-        return m.reply(novaWrap("chart", "❌ Jumlah label & nilai harus sama.\n\nContoh: .chart pisang,jeruk,apel | 10,25,7", "error"));
+        return m.reply(raraWrap("chart", "❌ Jumlah label & nilai harus sama.\n\nContoh: .chart pisang,jeruk,apel | 10,25,7", "error"));
       }
     } else {
       values = parseNumbers(raw);
       labels = values.map((_, i) => `#${i + 1}`);
       if (values.some(Number.isNaN)) {
         await m.react("❌");
-        return m.reply(novaWrap("chart", "❌ Nilainya harus angka, dipisah koma.\n\nContoh: .chart 10,25,7 atau .chart pisang,jeruk | 10,25", "error"));
+        return m.reply(raraWrap("chart", "❌ Nilainya harus angka, dipisah koma.\n\nContoh: .chart 10,25,7 atau .chart pisang,jeruk | 10,25", "error"));
       }
     }
 
     if (values.length < 2) {
       await m.react("❌");
-      return m.reply(novaWrap("chart", "❌ Minimal 2 data biar keliatan grafiknya 😄", "error"));
+      return m.reply(raraWrap("chart", "❌ Minimal 2 data biar keliatan grafiknya 😄", "error"));
     }
     if (values.length > 12) {
       await m.react("❌");
-      return m.reply(novaWrap("chart", "❌ Maksimal 12 data per grafik.", "error"));
+      return m.reply(raraWrap("chart", "❌ Maksimal 12 data per grafik.", "error"));
     }
 
     await m.react("🕒");
     const png = await renderChart({
       title: "📊 GRAFIK DATA",
-      subtitle: "Custom chart — Nova AI",
+      subtitle: "Custom chart — Rara AI",
       items: values.map((v, i) => ({ label: labels[i] || `#${i + 1}`, value: v })),
     });
     await sock.sendMedia(m.chat, png, null, m, { type: "image" });
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("chart", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("chart", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

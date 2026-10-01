@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "kickall",
@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
 
     const text =
-      novaWrap("Kick All", ["Status: *berhasil*",
+      raraWrap("Kick All", ["Status: *berhasil*",
         "Semua member non-admin telah dikick."].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-    await m.reply(novaError("KickAll", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("KickAll", "Gagal nih, coba lagi ya"));
   }
 
   return { handled: true };

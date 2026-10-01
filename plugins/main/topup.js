@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // topup.js — Katalog topup terpadu 4 JALUR (Akun, RPG, Item, Cinta)
-// Digenerate langsung dari TOPUP_ITEMS (src/lib/store/nova-store.js)
+// Digenerate langsung dari TOPUP_ITEMS (src/lib/store/rara-store.js)
 // → menu SELALU sinkron dengan harga/jalur terbaru, gak ada harga stale.
 // Sub: .topup status (cek pesanan pending), .topup <akun|rpg|item|cinta> (filter jalur)
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { toSC, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { toSC, raraWrap } from "../../src/lib/rara-menu-style.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
@@ -16,7 +16,7 @@ import {
   MIN_TOPUP_PRICE,
   ensureTopups,
   topupCancelHint,
-} from "../../src/lib/store/nova-store.js";
+} from "../../src/lib/store/rara-store.js";
 
 const pluginConfig = {
   name: "topup",
@@ -85,9 +85,9 @@ async function handler(m, { sock }) {
     const sender = m.key.participant || m.key.remoteJid;
     const pending = topups.pending[sender];
     if (!pending || pending.status !== "pending") {
-      return m.reply(novaWrap("topup", "Gak ada pesanan topup yang pending.\nKetik .topup buat lihat katalog."));
+      return m.reply(raraWrap("topup", "Gak ada pesanan topup yang pending.\nKetik .topup buat lihat katalog."));
     }
-    return m.reply(novaWrap("topup", [
+    return m.reply(raraWrap("topup", [
       `${toSC("Pesanan kamu masih menunggu pembayaran")} —`,
       "",
       `${toSC("Item")} : *${pending.name}*`,

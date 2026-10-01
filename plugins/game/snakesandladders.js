@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // snakesandladders.js — Game ular tangga (snakes & ladders)
-import { novaWrap, novaBox } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
-import te from "../../src/lib/nova-error.js";
-import { formatRp } from "../../src/lib/nova-rpg-service.js";
-import { rollBonus } from "../../src/lib/nova-game-rewards.js";
+import { raraWrap, raraBox } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
+import te from "../../src/lib/rara-error.js";
+import { formatRp } from "../../src/lib/rara-rpg-service.js";
+import { rollBonus } from "../../src/lib/rara-game-rewards.js";
 
 const SNAKES = { 29: 7, 24: 12, 72: 36, 90: 56, 75: 64, 91: 72, 97: 78 };
 const LADDERS = { 15: 37, 23: 41, 49: 86, 74: 95 };
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     const sender = m.sender;
 
     if (!action || action === "start") {
-      if (games.has(from)) return m.reply(novaWrap("ulartangga", "Game sudah ada! Ketik .snakesandladders join", "guide"));
+      if (games.has(from)) return m.reply(raraWrap("ulartangga", "Game sudah ada! Ketik .snakesandladders join", "guide"));
       games.set(from, {
         players: [sender],
         positions: { [sender]: 1 },
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         started: false,
       });
       await m.react("🐣");
-      return m.reply(novaBox("Ular Tangga", [
+      return m.reply(raraBox("Ular Tangga", [
         "Game dimulai",
         "---",
         `Pemain: @${sender.split("@")[0]}`,
@@ -50,22 +50,22 @@ async function handler(m, { sock }) {
 
     if (action === "join") {
       const game = games.get(from);
-      if (!game) return m.reply(novaWrap("ulartangga", "Belum ada game! Ketik .snakesandladders start", "guide"));
-      if (game.players.includes(sender)) return m.reply(novaWrap("ulartangga", "Kamu sudah join!", "guide"));
-      if (game.started) return m.reply(novaWrap("ulartangga", "Game sudah dimulai!", "guide"));
+      if (!game) return m.reply(raraWrap("ulartangga", "Belum ada game! Ketik .snakesandladders start", "guide"));
+      if (game.players.includes(sender)) return m.reply(raraWrap("ulartangga", "Kamu sudah join!", "guide"));
+      if (game.started) return m.reply(raraWrap("ulartangga", "Game sudah dimulai!", "guide"));
       game.players.push(sender);
       game.positions[sender] = 1;
       await m.react("🐣");
-      return m.reply(novaGameBox({ title: "ulartangga", icon: "🐍", flavor: "🎲 *MASUK ARENA!*", body: `@${sender.split("@")[0]} bergabung!
+      return m.reply(raraGameBox({ title: "ulartangga", icon: "🐍", flavor: "🎲 *MASUK ARENA!*", body: `@${sender.split("@")[0]} bergabung!
 Total pemain: ${game.players.length}` }));
     }
 
     if (action === "roll") {
       const game = games.get(from);
-      if (!game) return m.reply(novaWrap("ulartangga", "Belum ada game! Ketik .snakesandladders start", "guide"));
-      if (!game.players.includes(sender)) return m.reply(novaWrap("ulartangga", "Kamu belum join! Ketik .snakesandladders join", "guide"));
+      if (!game) return m.reply(raraWrap("ulartangga", "Belum ada game! Ketik .snakesandladders start", "guide"));
+      if (!game.players.includes(sender)) return m.reply(raraWrap("ulartangga", "Kamu belum join! Ketik .snakesandladders join", "guide"));
       if (game.turn >= game.players.length) game.turn = 0;
-      if (game.players[game.turn] !== sender) return m.reply(novaWrap("ulartangga", `Bukan giliranmu! Giliran @${game.players[game.turn].split("@")[0]}`, "guide"));
+      if (game.players[game.turn] !== sender) return m.reply(raraWrap("ulartangga", `Bukan giliranmu! Giliran @${game.players[game.turn].split("@")[0]}`, "guide"));
       game.started = true;
 
       await m.react("🕒");
@@ -130,12 +130,12 @@ Total pemain: ${game.players.length}` }));
     if (action === "end") {
       games.delete(from);
       await m.react("🐣");
-      return m.reply(novaGameBox({ title: "ulartangga", icon: "🐍", flavor: "🏁 *PERMAINAN DIHENTIKAN!*", body: "Papan ditutup, ularnya tidur lagi. Ketik .snakesandladders buat main lagi." }));
+      return m.reply(raraGameBox({ title: "ulartangga", icon: "🐍", flavor: "🏁 *PERMAINAN DIHENTIKAN!*", body: "Papan ditutup, ularnya tidur lagi. Ketik .snakesandladders buat main lagi." }));
     }
   } catch (err) {
     console.error("ulartangga error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("ulartangga", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("ulartangga", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

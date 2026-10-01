@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'antitagsw',
     alias: ["antitagsw"],
@@ -27,23 +27,23 @@ async function handler(m, { sock, db }) {
     if (!action) {
         const status = group.antitagsw || 'off'
 
-        await m.reply( novaWrap("AntitagSW Settings", [`Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*`, "", `Fitur ini menghapus pesan tag status`, `(groupStatusMentionMessage)`, "", `Pilihan:`, `\`${m.prefix}antitagsw on\` → Aktifkan`, `\`${m.prefix}antitagsw off\` → Nonaktifkan`].join("\n")), "antitagsw")
+        await m.reply( raraWrap("AntitagSW Settings", [`Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*`, "", `Fitur ini menghapus pesan tag status`, `(groupStatusMentionMessage)`, "", `Pilihan:`, `\`${m.prefix}antitagsw on\` → Aktifkan`, `\`${m.prefix}antitagsw off\` → Nonaktifkan`].join("\n")), "antitagsw")
         return
     }
 
     if (action === 'on') {
         db.setGroup(groupId, { ...group, antitagsw: 'on' })
-        await m.reply(novaWrap("AntitagSW Aktif", ["Anti tag status berhasil diaktifkan!", "Pesan tag status akan dihapus otomatis."].join("\n")))
+        await m.reply(raraWrap("AntitagSW Aktif", ["Anti tag status berhasil diaktifkan!", "Pesan tag status akan dihapus otomatis."].join("\n")))
         return
     }
 
     if (action === 'off') {
         db.setGroup(groupId, { ...group, antitagsw: 'off' })
-        await m.reply(novaWrap("AntitagSW Nonaktif", "Anti tag status berhasil dinonaktifkan."))
+        await m.reply(raraWrap("AntitagSW Nonaktif", "Anti tag status berhasil dinonaktifkan."))
         return
     }
 
-    await m.reply(novaWrap("Pilihan Tidak Valid", "Gunakan: on atau off"))
+    await m.reply(raraWrap("Pilihan Tidak Valid", "Gunakan: on atau off"))
 }
 
 export { pluginConfig as config, handler }

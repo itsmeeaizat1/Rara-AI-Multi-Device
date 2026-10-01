@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT — E2E: AUTO BROADCAST SALURAN (finalisasi Saluran WA
+// RARA AI WHATSAPP BOT — E2E: AUTO BROADCAST SALURAN (finalisasi Saluran WA
 // 25 Sep). Plugin .autobroadcastchannel tadinya GAK punya e2e — bug nyata
-// ketemu pas audit finalisasi: novaBox dipakai 4x tapi GAK pernah diimport
+// ketemu pas audit finalisasi: raraBox dipakai 4x tapi GAK pernah diimport
 // → ReferenceError crash di `.autobroadcastchannel all on/off` + toggle event
 // (hanya tampilan status yang jalan). Suite ini maksa jalur-jalur itu.
 import os from "node:os";
@@ -18,10 +18,10 @@ function t(name, cond, info) {
 }
 const section = (x) => console.log("\n— " + x + " —");
 
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(os.tmpdir(), "saluran-autobc-e2e-db-" + Date.now()));
 
-const { NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled } = await import(R + "/src/lib/nova-saluran-broadcast.js");
+const { NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled } = await import(R + "/src/lib/rara-saluran-broadcast.js");
 const db = getDatabase();
 
 // ═══ SECTION 1: plugin .autobroadcastchannel ═══
@@ -40,11 +40,11 @@ const run = async (text) => { sent.length = 0; await plugin.handler(mkM(text), {
 const outStatus = await run(".autobroadcastchannel");
 t("1a. status tampil daftar event (" + Object.keys(NOTIFY_EVENTS).length + ")", Object.keys(NOTIFY_EVENTS).every((k) => outStatus.includes(k)), outStatus.slice(0, 120));
 
-// 1b: all on — jalur novaBox yang tadinya CRASH (ReferenceError)
+// 1b: all on — jalur raraBox yang tadinya CRASH (ReferenceError)
 let crashed = false;
 let outAll = "";
 try { outAll = await run(".autobroadcastchannel all on"); } catch (e) { crashed = true; }
-t("1b. all on GAK crash (bug novaBox fixed)", !crashed, { crashed, out: outAll.slice(0, 120) });
+t("1b. all on GAK crash (bug raraBox fixed)", !crashed, { crashed, out: outAll.slice(0, 120) });
 t("1c. all on → semua event kecatat ON", Object.values(getAllNotifyStatus()).every((x) => x.enabled === true));
 t("1d. state db.setting tersimpan (bukan cuma teks)", db.setting("saluranNotify_userBanned") === true);
 
@@ -71,7 +71,7 @@ try { outFmt = await run(".autobroadcastchannel all"); } catch (e) { crashed = t
 t("1i. all tanpa arg → hint format, gak crash", !crashed && /on\/off/i.test(outFmt), outFmt.slice(0, 120));
 
 // ═══ SECTION 2: lib broadcast — toggle + bentuk balasan default ═══
-section("2. lib nova-saluran-broadcast");
+section("2. lib rara-saluran-broadcast");
 t("2a. default semua event OFF (gak spam tanpa izin owner)", Object.values(getAllNotifyStatus()).every((x) => x.enabled === false));
 t("2b. setNotifyEnabled balikin nilai baru", setNotifyEnabled("userRegister", true) === true && setNotifyEnabled("userRegister", false) === false);
 t("2c. label event manusiawi (bukan key mentah)", getAllNotifyStatus().userRegister.label && getAllNotifyStatus().userRegister.label !== "userRegister", getAllNotifyStatus().userRegister);

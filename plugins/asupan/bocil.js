@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
-import { f } from '../../src/lib/nova-http.js'
-import { novaWrap, novaLine, toSC } from "../../src/lib/nova-menu-style.js";
+import { f } from '../../src/lib/rara-http.js'
+import { raraWrap, raraLine, toSC } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
         const data = loadJsonData('bocil.json')
         
         if (data.length === 0) {
-            return m.reply(novaWrap("Bocil", `❌ Data tidak tersedia`))
+            return m.reply(raraWrap("Bocil", `❌ Data tidak tersedia`))
         }
         
         const item = data[Math.floor(Math.random() * data.length)]
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         
         
     } catch (error) {
-        m.reply(novaWrap("Error", `Video tidak ditemukan`))
+        m.reply(raraWrap("Error", `Video tidak ditemukan`))
     }
 }
 

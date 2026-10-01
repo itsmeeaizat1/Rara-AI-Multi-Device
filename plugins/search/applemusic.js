@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: "applemusic",
     alias: ["applemusic"],
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
         const res = await axios.get(`https://api.nexray.web.id/search/applemusic?q=${encodeURIComponent(query)}`)
         
         if (!res.data?.result?.length) {
-            return m.reply(novaError("AppleMusic", `Gak nemu hasil untuk: ${query} nih`));
+            return m.reply(raraError("AppleMusic", `Gak nemu hasil untuk: ${query} nih`));
         }
         
         const tracks = res.data.result.slice(0, 5)
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
         return m.reply(txt.trim())
         
     } catch (err) {
-        return m.reply(novaWrap("applemusic", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("applemusic", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

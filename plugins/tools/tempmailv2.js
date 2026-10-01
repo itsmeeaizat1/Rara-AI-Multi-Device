@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // TempMail V2 — CatchMail.io API (https://api.catchmail.io)
 // Free disposable email, no auth required, custom domain support
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "tempmailv2",
@@ -132,7 +132,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       // Sanitize username
       username = username.replace(/[^a-z0-9._-]/gi, "").toLowerCase();
       if (!username || username.length < 2) {
-        return m.reply(novaWrap("Temp Email V2", "Username minimal 2 karakter (huruf, angka, titik, underscore, strip)."));
+        return m.reply(raraWrap("Temp Email V2", "Username minimal 2 karakter (huruf, angka, titik, underscore, strip)."));
       }
       const email = username + "@" + DEFAULT_DOMAIN;
 
@@ -142,7 +142,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       db.data.users[sender].tempmailV2Created = new Date().toISOString();
       await db.save();
 
-      return m.reply(novaWrap("Temp Email V2", [
+      return m.reply(raraWrap("Temp Email V2", [
         "EMAIL BARU DIBUAT",
         "",
         "Email: " + email,
@@ -167,7 +167,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       db.data.users[sender].tempmailV2Created = new Date().toISOString();
       await db.save();
 
-      return m.reply(novaWrap("Temp Email V2", [
+      return m.reply(raraWrap("Temp Email V2", [
         "RANDOM EMAIL DIBUAT",
         "",
         "Email: " + email,
@@ -181,16 +181,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       let email = (args[1] || "").toLowerCase().trim();
       if (!email) email = user.tempmailV2 || "";
       if (!email) {
-        return m.reply(novaWrap("Temp Email V2", "Belum ada email aktif. Ketik .tempmailv2 new <username> atau .tempmailv2 gen"));
+        return m.reply(raraWrap("Temp Email V2", "Belum ada email aktif. Ketik .tempmailv2 new <username> atau .tempmailv2 gen"));
       }
 
-      m.reply(novaWrap("Temp Email V2", "Mengambil inbox dari CatchMail.io..."));
+      m.reply(raraWrap("Temp Email V2", "Mengambil inbox dari CatchMail.io..."));
 
       const data = await apiListMailbox(email);
       const messages = data.messages || [];
 
       if (messages.length === 0) {
-        return m.reply(novaWrap("Temp Email V2", [
+        return m.reply(raraWrap("Temp Email V2", [
           "INBOX: " + email,
           "",
           "Kosong. Belum ada pesan masuk.",
@@ -215,7 +215,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("Baca pesan: .tempmailv2 read <id> " + email);
       lines.push("Hapus pesan: .tempmailv2 delete <id> " + email);
 
-      return m.reply(novaWrap("Temp Email V2", lines));
+      return m.reply(raraWrap("Temp Email V2", lines));
     }
 
     // READ — baca isi pesan
@@ -224,13 +224,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       let email = (args[2] || "").toLowerCase().trim();
       if (!email) email = user.tempmailV2 || "";
       if (!id) {
-        return m.reply(novaWrap("Temp Email V2", "Format: .tempmailv2 read <id> <email>\n💡 *Contoh:* .tempmailv2 read abc123 aizat@catchmail.io"));
+        return m.reply(raraWrap("Temp Email V2", "Format: .tempmailv2 read <id> <email>\n💡 *Contoh:* .tempmailv2 read abc123 aizat@catchmail.io"));
       }
       if (!email) {
-        return m.reply(novaWrap("Temp Email V2", "Belum ada email aktif. Ketik .tempmailv2 new <username>"));
+        return m.reply(raraWrap("Temp Email V2", "Belum ada email aktif. Ketik .tempmailv2 new <username>"));
       }
 
-      m.reply(novaWrap("Temp Email V2", "Mengambil pesan dari CatchMail.io..."));
+      m.reply(raraWrap("Temp Email V2", "Mengambil pesan dari CatchMail.io..."));
 
       const msg = await apiGetMessage(id, email);
       const bodyText = stripHtml(msg.body?.html) || msg.body?.text || "(no content)";
@@ -271,7 +271,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       lines.push("", "Hapus pesan: .tempmailv2 delete " + id + " " + email);
 
-      return m.reply(novaWrap("Temp Email V2", lines, "info"));
+      return m.reply(raraWrap("Temp Email V2", lines, "info"));
     }
 
     // DELETE — hapus pesan
@@ -280,12 +280,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       let email = (args[2] || "").toLowerCase().trim();
       if (!email) email = user.tempmailV2 || "";
       if (!id || !email) {
-        return m.reply(novaWrap("Temp Email V2", "Format: .tempmailv2 delete <id> <email>\n💡 *Contoh:* .tempmailv2 delete abc123 aizat@catchmail.io"));
+        return m.reply(raraWrap("Temp Email V2", "Format: .tempmailv2 delete <id> <email>\n💡 *Contoh:* .tempmailv2 delete abc123 aizat@catchmail.io"));
       }
 
       await apiDeleteMessage(id, email);
 
-      return m.reply(novaWrap("Temp Email V2", [
+      return m.reply(raraWrap("Temp Email V2", [
         "PESAN DIHAPUS",
         "",
         "ID: " + id,
@@ -300,16 +300,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       let email = (args[1] || "").toLowerCase().trim();
       if (!email) email = user.tempmailV2 || "";
       if (!email) {
-        return m.reply(novaWrap("Temp Email V2", "Belum ada email aktif."));
+        return m.reply(raraWrap("Temp Email V2", "Belum ada email aktif."));
       }
 
-      m.reply(novaWrap("Temp Email V2", "Mengambil semua pesan untuk dihapus..."));
+      m.reply(raraWrap("Temp Email V2", "Mengambil semua pesan untuk dihapus..."));
 
       const data = await apiListMailbox(email);
       const messages = data.messages || [];
 
       if (messages.length === 0) {
-        return m.reply(novaWrap("Temp Email V2", "Inbox sudah kosong."));
+        return m.reply(raraWrap("Temp Email V2", "Inbox sudah kosong."));
       }
 
       let deleted = 0;
@@ -323,7 +323,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         }
       }
 
-      return m.reply(novaWrap("Temp Email V2", [
+      return m.reply(raraWrap("Temp Email V2", [
         "BULK DELETE",
         "",
         "Email: " + email,
@@ -337,9 +337,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const email = user.tempmailV2 || "";
       const created = user.tempmailV2Created || "";
       if (!email) {
-        return m.reply(novaWrap("Temp Email V2", "Belum ada email aktif. Ketik .tempmailv2 new <username>"));
+        return m.reply(raraWrap("Temp Email V2", "Belum ada email aktif. Ketik .tempmailv2 new <username>"));
       }
-      return m.reply(novaWrap("Temp Email V2", [
+      return m.reply(raraWrap("Temp Email V2", [
         "EMAIL AKTIF",
         "",
         "Email: " + email,
@@ -352,7 +352,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // HELP
     await m.react("🐣");
-    return m.reply(novaWrap("Temp Email V2", [
+    return m.reply(raraWrap("Temp Email V2", [
       "CatchMail.io API — Free Disposable Email",
       "Gratis tanpa auth, custom domain support",
       "",
@@ -377,7 +377,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[TempMail V2]", e);
-    m.reply(novaWrap("Temp Email V2", "Error: " + e.message));
+    m.reply(raraWrap("Temp Email V2", "Error: " + e.message));
   }
 }
 

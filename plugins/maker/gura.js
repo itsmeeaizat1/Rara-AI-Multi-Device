@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import FormData from "form-data";
 import fetch from "node-fetch";
 import mime from "mime-types";
 import { downloadMediaMessage, getContentType } from "nova";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "gura",
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (!type || type !== "imageMessage") {
-      return m.reply(novaWrap("Gura", "⚠️ Kak, tolong reply ke pesan gambar ya!"));
+      return m.reply(raraWrap("Gura", "⚠️ Kak, tolong reply ke pesan gambar ya!"));
     }
     media = await downloadMediaMessage(m.quoted, "buffer", {});
   } else if (m.message) {
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     media = await downloadMediaMessage(m, "buffer", {});
   }
 
-  if (!media) return m.reply(novaError("Gura", "Gagal baca media nih, coba lagi ya"));
+  if (!media) return m.reply(raraError("Gura", "Gagal baca media nih, coba lagi ya"));
   await m.react("🕒");
   try {
     const imgUrl = await uploadToCatbox(media);
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(m.chat, { image: buffer, caption: "🦈 *RAWWRR! Gura is here!*" }, { quoted: m });
   } catch (err) {
     await m.react("❌");
-    m.reply(novaWrap("gura", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("gura", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

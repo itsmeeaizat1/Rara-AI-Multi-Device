@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 MEMORY ENGINE COMMAND — .memory (request owner 12 Sep 2026)
 // 🔹 Lihat / cari / tambah / hapus kenangan yang bot simpan tentangmu
-// 🔹 Toggle on/off buat auto-extract + auto-recall pas ngobrol .novaai
+// 🔹 Toggle on/off buat auto-extract + auto-recall pas ngobrol .raraai
 // 🔹 Kenangan persist di database — aman walau bot restart
 // ============================================================
-import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 import {
   listMemories, addMemory, removeMemory, resetMemories,
   isMemoryOn, toggleMemory, relevantMemories,
-} from "../../src/lib/nova-memory.js";
+} from "../../src/lib/rara-memory.js";
 
 const pluginConfig = {
   name: "memory",
@@ -37,7 +37,7 @@ function fmtAge(ts) {
 
 function listBox(m, facts, header) {
   const lines = facts.map((f, i) => `${i + 1}. ${f.text} _(${fmtAge(f.ts)})_`);
-  return novaWrap(header, [
+  return raraWrap(header, [
     `📌 Kenangan bot tentang kamu:`,
     ``,
     ...lines,
@@ -54,9 +54,9 @@ async function handler(m, { sock, db } = {}) {
   if (sub === "on" || sub === "off") {
     const now = toggleMemory(db, m.sender, sub === "on");
     await m.react("🐣");
-    return m.reply(novaWrap("Memory", [
+    return m.reply(raraWrap("Memory", [
       `✅ Memori ${now ? "diaktifkan" : "dimatikan"}.`,
-      now ? `Bot otomatis inget fakta penting dari obrolan .novaai dan manggilnya balik pas relevan.` : `Bot berhenti nyatet — kenangan lama tetep kesimpen, cuma gak dipake.`,
+      now ? `Bot otomatis inget fakta penting dari obrolan .raraai dan manggilnya balik pas relevan.` : `Bot berhenti nyatet — kenangan lama tetep kesimpen, cuma gak dipake.`,
     ]));
   }
 
@@ -64,50 +64,50 @@ async function handler(m, { sock, db } = {}) {
   if (sub === "reset") {
     resetMemories(db, m.sender);
     await m.react("🐣");
-    return m.reply(novaWrap("Memory", [`✅ Semua kenangan tentang kamu udah dihapus.`]));
+    return m.reply(raraWrap("Memory", [`✅ Semua kenangan tentang kamu udah dihapus.`]));
   }
 
   // ── hapus <no> ──
   if (sub === "hapus" || sub === "del" || sub === "delete") {
     const idx = Number(args[1]);
-    if (!idx) return m.reply(novaError("Memory", `Nomor mana yang mau dihapus? Contoh: ${m.prefix}memory hapus 2`));
+    if (!idx) return m.reply(raraError("Memory", `Nomor mana yang mau dihapus? Contoh: ${m.prefix}memory hapus 2`));
     const facts = listMemories(db, m.sender);
     const removed = facts[idx - 1];
     if (!removeMemory(db, m.sender, idx)) {
       await m.react("❌");
-      return m.reply(novaError("Memory", `Gak ada kenangan nomor ${idx} — total kamu punya ${facts.length}.`));
+      return m.reply(raraError("Memory", `Gak ada kenangan nomor ${idx} — total kamu punya ${facts.length}.`));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("Memory", [`✅ Dihapus: "${removed.text}"`]));
+    return m.reply(raraWrap("Memory", [`✅ Dihapus: "${removed.text}"`]));
   }
 
   // ── add <fakta> ──
   if (sub === "add" || sub === "tambah") {
     const fact = args.slice(1).join(" ").trim();
-    if (!fact) return m.reply(novaError("Memory", `Fakta apa yang mau diinget? Contoh: ${m.prefix}memory add aku suka seblak pedas`));
+    if (!fact) return m.reply(raraError("Memory", `Fakta apa yang mau diinget? Contoh: ${m.prefix}memory add aku suka seblak pedas`));
     if (addMemory(db, m.sender, fact, { source: "manual" })) {
       await m.react("🐣");
-      return m.reply(novaWrap("Memory", [`✅ Gue catet: "${fact}"`]));
+      return m.reply(raraWrap("Memory", [`✅ Gue catet: "${fact}"`]));
     }
     await m.react("❌");
-    return m.reply(novaError("Memory", `Itu udah gue inget / mirip sama yang udah ada — cek ${m.prefix}memory`));
+    return m.reply(raraError("Memory", `Itu udah gue inget / mirip sama yang udah ada — cek ${m.prefix}memory`));
   }
 
   // ── cari <q> ──
   if (sub === "cari" || sub === "search" || sub === "find") {
     const q = args.slice(1).join(" ").trim();
-    if (!q) return m.reply(novaError("Memory", `Cari apa? Contoh: ${m.prefix}memory cari kucing`));
+    if (!q) return m.reply(raraError("Memory", `Cari apa? Contoh: ${m.prefix}memory cari kucing`));
     const facts = listMemories(db, m.sender);
     const rel = relevantMemories(db, m.sender, q, 5);
     if (!rel.length) {
       const shown = Math.min(facts.length, 5);
-      return m.reply(novaWrap("Memory", [
+      return m.reply(raraWrap("Memory", [
         `🔍 Gak nemu kenangan tentang "${q}".`,
         facts.length ? `Kamu punya ${facts.length} kenangan${shown ? " — beberapa terbaru:" : ""}` : "Dan kamu belum punya kenangan tersimpan.",
         ...(shown ? ["", ...facts.slice(-shown).map((f, i) => `• ${f.text}`)] : []),
       ]));
     }
-    return m.reply(novaWrap("Memory", [
+    return m.reply(raraWrap("Memory", [
       `🔍 Kenangan tentang "${q}":`,
       ``,
       ...rel.map((f) => `• ${f.text} _(${fmtAge(f.ts)})_`),
@@ -118,10 +118,10 @@ async function handler(m, { sock, db } = {}) {
   const facts = listMemories(db, m.sender);
   const on = isMemoryOn(db, m.sender);
   if (!facts.length) {
-    return m.reply(novaWrap("Memory", [
+    return m.reply(raraWrap("Memory", [
       `📌 Belum ada kenangan tentang kamu.`,
       ``,
-      `Bot otomatis nyatet fakta penting pas kamu ngobrol di .novaai${on ? "" : " (tapi kamu matikan auto-nya — nyalakan: .memory on)"}.`,
+      `Bot otomatis nyatet fakta penting pas kamu ngobrol di .raraai${on ? "" : " (tapi kamu matikan auto-nya — nyalakan: .memory on)"}.`,
       `Tambah manual: ${m.prefix}memory add <fakta>`,
     ]));
   }

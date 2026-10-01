@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // min1ai — 1min.ai (app.1min.ai) AI multi provider
 // STRICT SATU RUTE (owner 11 Sep: satuan gak ada fallback) — 1min.ai down /
 // key mati / kredit kurang → error jelas, GAK nyamber ke brand lain.
 // Model default: qwen3-vl-8b-thinking (FREE — kata owner "qwen thinking").
 // Ganti model: .min1ai model <id> (persist per user, db.setting min1aiModel).
-import { novaGuideV2, novaInfoSections, novaGuide, novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraGuideV2, raraInfoSections, raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 import { min1aiChat, MIN1AI_MODEL_GROUPS, MIN1AI_MODELS, MIN1AI_DEFAULT_MODEL } from "../../src/scraper/min1ai.js";
 
 const pluginConfig = {
@@ -76,7 +76,7 @@ async function handler(m, { sock, db } = {}) {
     const picked = normModel(args[1] || "");
     if (!picked || !VALID_MODELS.includes(picked)) {
       const cur = getSavedModel(db, m.sender) || MIN1AI_DEFAULT_MODEL;
-      return m.reply(novaGuideV2("Min1AI", {
+      return m.reply(raraGuideV2("Min1AI", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)♡",
  sapaan: "modelnya gak ada nih kak, cek daftar yang bener ya~ (˶ᵔᵕᵔ˶)",
         cara: "ketik pertanyaannya sesudah command",
@@ -98,14 +98,14 @@ async function handler(m, { sock, db } = {}) {
       await m.react("🐣");
       // pola .ai: label smallcaps, VALUE VERBATIM (model ID harus bisa diketik persis)
       const isFree = FREE_MODELS.includes(picked);
-      return m.reply(novaInfoSections([
+      return m.reply(raraInfoSections([
         "Min1AI",
         { label: "Model aktif", value: picked },
         { label: "Biaya", value: isFree ? "free" : "butuh kredit berbayar" },
       ]) + "\nBerhasil kak 🥳");
     } catch (e) {
       await m.react("❌");
-      return m.reply(novaWrap("min1ai", e.message || "Gagal simpan model", "error"));
+      return m.reply(raraWrap("min1ai", e.message || "Gagal simpan model", "error"));
     }
   }
 
@@ -114,7 +114,7 @@ async function handler(m, { sock, db } = {}) {
   // ── .min1ai doang / salah pemakaian — usage daftar model ──
   if (!prompt) {
     const cur = getSavedModel(db, m.sender) || MIN1AI_DEFAULT_MODEL;
-    return m.reply(novaGuideV2("Min1AI", {
+    return m.reply(raraGuideV2("Min1AI", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)♡",
  sapaan: "satu pintu banyak model AI! tanya aja apa pun (˶ᵔᵕᵔ˶)",
       cara: "ketik pertanyaannya sesudah command",
@@ -136,7 +136,7 @@ async function handler(m, { sock, db } = {}) {
     await m.react("🕒");
     const reply = await min1aiChat(prompt, { model });
     try {
-      const { appendTurn } = await import("../../src/lib/nova-ai-session.js");
+      const { appendTurn } = await import("../../src/lib/rara-ai-session.js");
       appendTurn("satuan:" + m.sender, prompt, reply);
     } catch {}
     await m.react("🐣");
@@ -144,7 +144,7 @@ async function handler(m, { sock, db } = {}) {
   } catch (err) {
     console.error("min1ai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("min1ai", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("min1ai", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // deepseek — DeepSeek AI (penalaran, jawab agak lama karena mikir dulu)
 // Scraper DeepSeekThinking lama udah mati → sekarang lewat rantai fallback
-// multi-API (nova-ai-fallback.js: Haidar deepsek → Ikyy → Xemoz deepseek).
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
-import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
+// multi-API (rara-ai-fallback.js: Haidar deepsek → Ikyy → Xemoz deepseek).
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { aiFallbackChat } from "../../src/lib/rara-ai-fallback.js";
 
 const pluginConfig = {
   name: "deepseek", alias: ["deepseek"],
@@ -16,7 +16,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
   if (!text) {
-    return m.reply(novaWrap("deepseek", `AI yang bisa mikir dulu sebelum jawab — cocok buat pertanyaan yang butuh penalaran.\n\n📌 Format:\n${m.prefix}deepseek <pertanyaan>\n\n💡 Contoh:\n${m.prefix}deepseek Jelaskan black hole\n${m.prefix}deepseek Buat kode sorting algorithm\n\nBot akan mikir dulu, baru jawab — jadi agak lama sedikit`, "guide"));
+    return m.reply(raraWrap("deepseek", `AI yang bisa mikir dulu sebelum jawab — cocok buat pertanyaan yang butuh penalaran.\n\n📌 Format:\n${m.prefix}deepseek <pertanyaan>\n\n💡 Contoh:\n${m.prefix}deepseek Jelaskan black hole\n${m.prefix}deepseek Buat kode sorting algorithm\n\nBot akan mikir dulu, baru jawab — jadi agak lama sedikit`, "guide"));
   }
   try {
     await m.react("🕒");
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("deepseek error:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("deepseek", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(raraWrap("deepseek", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

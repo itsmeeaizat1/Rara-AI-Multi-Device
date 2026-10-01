@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'cmdvn',
     alias: ["cmdvn"],
@@ -36,7 +36,7 @@ function handler(m, { sock }) {
 
     if (subCmd === 'on') {
         db.setting('cmdVn', true)
-        return m.reply(novaWrap("cmdvn", `✅ *Cmd Vn Aktif*\n\n` +
+        return m.reply(raraWrap("cmdvn", `✅ *Cmd Vn Aktif*\n\n` +
             `Kirim voice note berisi nama command\n` +
             `Bot akan transkrip dan jalankan otomatis\n` +
             `Contoh: VN "menu" → trigger .menu`))
@@ -44,7 +44,7 @@ function handler(m, { sock }) {
 
     if (subCmd === 'off') {
         db.setting('cmdVn', false)
-        return m.reply(novaWrap("Cmdvn", `❌ CMD VN *dinonaktifkan*. Command via text normal.`))
+        return m.reply(raraWrap("Cmdvn", `❌ CMD VN *dinonaktifkan*. Command via text normal.`))
     }
 
     return m.reply(`❌ Gunakan \`${m.prefix}cmdvn on\` atau \`${m.prefix}cmdvn off\``)

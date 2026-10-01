@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 import crypto from "crypto";
 import axios from "axios";
@@ -8,10 +8,10 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import yts from "yt-search";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const run = promisify(exec);
 const pluginConfig = {
   name: "playch",
@@ -96,7 +96,7 @@ function generateWaveform(audioBuf, samples = 64) {
 async function handler(m, { sock }) {
   const raw = m.text?.trim() || "";
   let chId = config?.saluran?.id;
-  let chName = config?.saluran?.name || config?.bot?.name || "Nova-AI";
+  let chName = config?.saluran?.name || config?.bot?.name || "Rara-AI";
   let q = raw;
 
   const idchMatch = raw.match(/--idch\s+(\S+)/);
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
   try {
     const { videos } = await yts(q);
     const video = pickVideo({ videos });
-    if (!video) return m.reply(novaError("PlayCh", "Video gak nemu nih"));
+    if (!video) return m.reply(raraError("PlayCh", "Video gak nemu nih"));
 
     const ytChannel = video.author?.name || video.author?.username || "Unknown";
 
@@ -159,10 +159,10 @@ async function handler(m, { sock }) {
       ptt: true,
       waveform: Array.from(waveform),
     });
-    { const __navText = novaWrap("${title}", `✅ *${title}* berhasil dikirim ke saluran`); await m.reply( __navText, "playch"); };
+    { const __navText = raraWrap("${title}", `✅ *${title}* berhasil dikirim ke saluran`); await m.reply( __navText, "playch"); };
   } catch (e) {
     console.error("[PlayCh]", e);
-    m.reply(novaWrap("playch", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("playch", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

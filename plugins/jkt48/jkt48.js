@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .jkt48 — data SHOWROOM JKT48 dari zelapi.eu.cc (5 endpoint):
 //   info | comments | gift | rank | stream
@@ -10,7 +10,7 @@
 // ═════════════════════════════════════════════
 
 import { jktShowroom, ZEL_JKT48_KINDS, _setZelJktHttpForTest, _setZelJktKeyForTest } from "../../src/scraper/zeljkt.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "jkt48",
@@ -98,13 +98,13 @@ async function handler(m, { sock }) {
 
     if (!args.length) {
       const kinds = ZEL_JKT48_KINDS.map((k) => `• *${k}* — ${KIND_DESC[k] || ""}`).join("\n");
-      return m.reply(novaWrap("jkt48",
+      return m.reply(raraWrap("jkt48",
         `🎬 SHOWROOM JKT48 — 5 jenis data\n\n${kinds}\n\nCara pakai: ${prefix}jkt48 <jenis> <roomId> [| cookies]\nroomId = angka room SHOWROOM (ada di link share room member).\nContoh: ${prefix}jkt48 info 123456`));
     }
 
     const kind = (args[0] || "").toLowerCase();
     if (!ZEL_JKT48_KINDS.includes(kind)) {
-      return m.reply(novaWrap("jkt48",
+      return m.reply(raraWrap("jkt48",
         `Jenis "${args[0]}" gak ada — pilihan: ${ZEL_JKT48_KINDS.join(" / ")}`, "error"));
     }
 
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
       cookies = pipeParts[1] || "";
     }
     if (!roomId) {
-      return m.reply(novaWrap("jkt48",
+      return m.reply(raraWrap("jkt48",
         `roomId-nya mana? Contoh: ${prefix}jkt48 ${kind} 123456`, "error"));
     }
 
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
         API_KEY: "API key zelapi belum diisi — isi apikeys.json (zelapi) di server.",
         ROOM_ID_KOSONG: "roomId harus angka room SHOWROOM.",
       };
-      return m.reply(novaWrap("jkt48", map[r.error] || `Endpoint JKT48 Showroom error: ${r.error}`, "error"));
+      return m.reply(raraWrap("jkt48", map[r.error] || `Endpoint JKT48 Showroom error: ${r.error}`, "error"));
     }
 
     await m.react("🐣");
@@ -138,10 +138,10 @@ async function handler(m, { sock }) {
     const body = renderJson(r.data) || "Respon kosong dari endpoint.";
     let out = `*SHOWROOM ${kind.toUpperCase()}* — room ${roomId}\n\n${body}`;
     if (streamUrl) out += `\n\n🔗 Link stream:\n${streamUrl}`;
-    return m.reply(novaWrap("jkt48", out));
+    return m.reply(raraWrap("jkt48", out));
   } catch (err) {
     await m.react("❌");
-    return m.reply(novaWrap("jkt48", "gagal proses: " + (err?.message || "error"), "error"));
+    return m.reply(raraWrap("jkt48", "gagal proses: " + (err?.message || "error"), "error"));
   }
 }
 

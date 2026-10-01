@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Rift — Portal dimensi, distortion, time travel
 
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animRift } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animRift } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "rift",
@@ -33,10 +33,10 @@ const TIMETRAVEL_REWARDS = ["+200 EXP", "-100 gold", "skip cooldown", "+500 gold
 async function handler(m, { sock, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("rift", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("rift", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (command === "rift") {
-      if ((rpg.energy || 0) < 20) return m.reply(novaRpgBox("rift", "Energi tidak cukup. Butuh 20 energi.", "info"));
+      if ((rpg.energy || 0) < 20) return m.reply(raraRpgBox("rift", "Energi tidak cukup. Butuh 20 energi.", "info"));
       await m.react("🕒");
     await animRift(m, sock);
       const effect = RIFT_EFFECTS[Math.floor(Math.random() * RIFT_EFFECTS.length)];
@@ -62,7 +62,7 @@ async function handler(m, { sock, command }) {
     }
 
     if (command === "distortion") {
-      if ((rpg.energy || 0) < 15) return m.reply(novaRpgBox("distortion", "Energi tidak cukup. Butuh 15 energi.", "info"));
+      if ((rpg.energy || 0) < 15) return m.reply(raraRpgBox("distortion", "Energi tidak cukup. Butuh 15 energi.", "info"));
       await m.react("🕒");
       const loot = DISTORTION_LOOT[Math.floor(Math.random() * DISTORTION_LOOT.length)];
       const flavor = DISTORTION_FLAVOR[Math.floor(Math.random() * DISTORTION_FLAVOR.length)];
@@ -81,7 +81,7 @@ async function handler(m, { sock, command }) {
       if (Date.now() - lastTT < 86400000) {
         const remaining = 86400000 - (Date.now() - lastTT);
         const hours = Math.floor(remaining / 3600000);
-        return m.reply(novaRpgBox("timetravel", "Kamu sudah time travel hari ini. Coba " + hours + " jam lagi.", "info"));
+        return m.reply(raraRpgBox("timetravel", "Kamu sudah time travel hari ini. Coba " + hours + " jam lagi.", "info"));
       }
       await m.react("🕒");
       const reward = TIMETRAVEL_REWARDS[Math.floor(Math.random() * TIMETRAVEL_REWARDS.length)];
@@ -98,7 +98,7 @@ async function handler(m, { sock, command }) {
   } catch (e) {
     console.error("rift error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox(m.command || "rift", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox(m.command || "rift", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

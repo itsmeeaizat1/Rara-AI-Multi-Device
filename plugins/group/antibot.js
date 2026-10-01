@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import {
   findParticipantByNumber,
   getParticipantJid,
-} from "../../src/lib/nova-lid.js";
-import { gpMsg } from "../../src/lib/nova-group-protection.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-lid.js";
+import { gpMsg } from "../../src/lib/rara-group-protection.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: ["antibot", "botdetect"],
   alias: ["antibot", "botdetect"],
@@ -153,16 +153,16 @@ function handler(m, { sock }) {
   if (args === "on") {
     db.setGroup(m.chat, { ...groupData, antibot: true });
     db.save();
-    return m.reply(novaWrap("Antibot", `antibot diaktifkan`, "success"));
+    return m.reply(raraWrap("Antibot", `antibot diaktifkan`, "success"));
   }
 
   if (args === "off") {
     db.setGroup(m.chat, { ...groupData, antibot: false });
     db.save();
-    return m.reply(novaWrap("Antibot", `antibot dinonaktifkan`, "error"));
+    return m.reply(raraWrap("Antibot", `antibot dinonaktifkan`, "error"));
   }
 
-  return m.reply(novaWrap("Anti bot", `Gunakan \`.antibot on\` atau \`.antibot off\``, "error"));
+  return m.reply(raraWrap("Anti bot", `Gunakan \`.antibot on\` atau \`.antibot off\``, "error"));
 }
 
 function isBotMessage(m) {

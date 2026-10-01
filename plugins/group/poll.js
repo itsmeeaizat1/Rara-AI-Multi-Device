@@ -1,23 +1,23 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Poll — .poll
 // 🔹 Polling interaktif + native WA poll, auto-close timer.
 // 🔹 UPGRADE 14 Sep 2026 (request owner "ya poll"):
 //   (1) PERSIST — dulu RAM murni: restart = votes lenyap, timer mati.
-//       Sekinian via nova-poll-engine (db + restore + re-arm timer).
+//       Sekinian via rara-poll-engine (db + restore + re-arm timer).
 //   (2) LIVE COUNTDOWN 🕒 di kartu poll → auto-close; close/delete
 //       → closing adaptif (bukan "waktu habis" menyesatkan).
 //   (3) BAR METER ▰▱ standar di semua hasil + pemenang 🏆.
 // ═════════════════════════════════════════════
 
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   pollPersist,
   buildPollResult,
   closePollNow,
   armPollTimer,
   firePollTicker,
-} from "../../src/lib/nova-poll-engine.js";
+} from "../../src/lib/rara-poll-engine.js";
 
 const pluginConfig = {
   name: "poll",
@@ -52,7 +52,7 @@ function generatePollId() {
 }
 
 function getActivePolls(chatId) {
-  const polls = global.novaPolls[chatId] || {};
+  const polls = global.raraPolls[chatId] || {};
   return Object.entries(polls)
     .filter(([_, p]) => !p.closed)
     .sort((a, b) => a[1].createdAt - b[1].createdAt);
@@ -63,14 +63,14 @@ async function handler(m, { sock }) {
     const text = m.text || "";
     const chatId = m.chat;
 
-    if (!global.novaPolls[chatId]) global.novaPolls[chatId] = {};
+    if (!global.raraPolls[chatId]) global.raraPolls[chatId] = {};
 
     const args = text.trim().split(/\s+/);
     const subCmd = (args[0] || "").toLowerCase();
 
     // === HELP ===
     if (!text || subCmd === "help" || subCmd === "bantuan") {
-      return m.reply(novaWrap("Poll", [
+      return m.reply(raraWrap("Poll", [
         "📊 *POLLING INTERAKTIF — AUTO-CLOSE TIMER*",
         "",
         "Poll text + native WA poll sekaligus. Hasil bar meter ▰▱, tahan restart.",
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     if (subCmd === "create" || subCmd === "buat") {
       let rest = text.slice(text.indexOf(" ") + 1).trim();
       if (!rest) {
-        return m.reply(novaWrap("Poll", "Format salah!\n\nKetik .poll help untuk panduan", "error"));
+        return m.reply(raraWrap("Poll", "Format salah!\n\nKetik .poll help untuk panduan", "error"));
       }
 
       let isMultiple = false;
@@ -115,25 +115,25 @@ async function handler(m, { sock }) {
 
       const pipeParts = rest.split("|").map((p) => p.trim());
       if (pipeParts.length < 2) {
-        return m.reply(novaWrap("Poll", "Format salah! Gunakan: pertanyaan | opsi1, opsi2, ...", "error"));
+        return m.reply(raraWrap("Poll", "Format salah! Gunakan: pertanyaan | opsi1, opsi2, ...", "error"));
       }
 
       const question = pipeParts[0];
       const options = pipeParts[1].split(",").map((o) => o.trim()).filter(Boolean);
 
       if (options.length < 2) {
-        return m.reply(novaWrap("Poll", "Minimal 2 opsi!", "error"));
+        return m.reply(raraWrap("Poll", "Minimal 2 opsi!", "error"));
       }
       if (options.length > 10) {
-        return m.reply(novaWrap("Poll", "Maksimal 10 opsi!", "error"));
+        return m.reply(raraWrap("Poll", "Maksimal 10 opsi!", "error"));
       }
       if (question.length > 200) {
-        return m.reply(novaWrap("Poll", "Pertanyaan terlalu panjang (max 200 karakter)", "error"));
+        return m.reply(raraWrap("Poll", "Pertanyaan terlalu panjang (max 200 karakter)", "error"));
       }
 
       const activeCount = getActivePolls(chatId).length;
       if (activeCount >= 3) {
-        return m.reply(novaWrap("Poll", "Maksimal 3 poll aktif per grup!\n\nTutup poll lain dulu dengan .poll close", "warn"));
+        return m.reply(raraWrap("Poll", "Maksimal 3 poll aktif per grup!\n\nTutup poll lain dulu dengan .poll close", "warn"));
       }
 
       const pollId = generatePollId();
@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
         creator: m.sender,
         creatorName: m.pushName || m.sender.split("@")[0],
       };
-      global.novaPolls[chatId][pollId] = poll;
+      global.raraPolls[chatId][pollId] = poll;
       pollPersist();
       armPollTimer(sock, chatId, pollId);
       await m.react("🐣");
@@ -174,18 +174,18 @@ async function handler(m, { sock }) {
       const optNum = parseInt(args[2]);
 
       if (!pollId || !optNum) {
-        return m.reply(novaWrap("Poll", "Format: .poll vote <pollId> <nomorOpsi>\n\n💡 Contoh: .poll vote POLL-A1B2C 2", "error"));
+        return m.reply(raraWrap("Poll", "Format: .poll vote <pollId> <nomorOpsi>\n\n💡 Contoh: .poll vote POLL-A1B2C 2", "error"));
       }
 
-      const poll = global.novaPolls[chatId]?.[pollId];
+      const poll = global.raraPolls[chatId]?.[pollId];
       if (!poll) {
-        return m.reply(novaWrap("Poll", `Poll ${pollId} tidak ditemukan!`, "error"));
+        return m.reply(raraWrap("Poll", `Poll ${pollId} tidak ditemukan!`, "error"));
       }
       if (poll.closed) {
-        return m.reply(novaWrap("Poll", `Poll ${pollId} sudah ditutup!`, "warn"));
+        return m.reply(raraWrap("Poll", `Poll ${pollId} sudah ditutup!`, "warn"));
       }
       if (optNum < 1 || optNum > poll.options.length) {
-        return m.reply(novaWrap("Poll", `Pilih nomor 1 sampai ${poll.options.length}!`, "error"));
+        return m.reply(raraWrap("Poll", `Pilih nomor 1 sampai ${poll.options.length}!`, "error"));
       }
 
       const optIndex = optNum - 1;
@@ -195,7 +195,7 @@ async function handler(m, { sock }) {
           if (idx >= 0) {
             poll.votes[m.sender].splice(idx, 1);
             pollPersist(); // votes persist (restart gak lenyap)
-            return m.reply(novaWrap("Poll", `Vote dibatalkan: ${poll.options[optIndex]}\n\nKetik .poll hasil ${pollId} untuk lihat hasil`, "info"));
+            return m.reply(raraWrap("Poll", `Vote dibatalkan: ${poll.options[optIndex]}\n\nKetik .poll hasil ${pollId} untuk lihat hasil`, "info"));
           }
           poll.votes[m.sender].push(optIndex);
         } else {
@@ -207,7 +207,7 @@ async function handler(m, { sock }) {
       pollPersist();
 
       const votedOpts = poll.votes[m.sender].map((i) => poll.options[i]).join(", ");
-      return m.reply(novaWrap("Poll Vote", [
+      return m.reply(raraWrap("Poll Vote", [
         "✅ Vote tercatat!",
         `Pilihan: ${votedOpts}`,
         `Poll: ${pollId}`,
@@ -223,9 +223,9 @@ async function handler(m, { sock }) {
       if (!pollId) {
         const active = getActivePolls(chatId);
         if (active.length === 0) {
-          const allPolls = Object.entries(global.novaPolls[chatId]);
+          const allPolls = Object.entries(global.raraPolls[chatId]);
           if (allPolls.length === 0) {
-            return m.reply(novaWrap("Poll", "Belum ada poll di grup ini!", "warn"));
+            return m.reply(raraWrap("Poll", "Belum ada poll di grup ini!", "warn"));
           }
           pollId = allPolls.sort((a, b) => b[1].createdAt - a[1].createdAt)[0][0];
         } else {
@@ -233,15 +233,15 @@ async function handler(m, { sock }) {
         }
       }
 
-      const poll = global.novaPolls[chatId]?.[pollId];
+      const poll = global.raraPolls[chatId]?.[pollId];
       if (!poll) {
-        return m.reply(novaWrap("Poll", `Poll ${pollId} tidak ditemukan!`, "error"));
+        return m.reply(raraWrap("Poll", `Poll ${pollId} tidak ditemukan!`, "error"));
       }
 
       const status = poll.closed ? "CLOSED" : "AKTIF";
       const remaining = poll.closed ? "-" : formatDuration(Math.max(0, poll.closedAt - Date.now()));
 
-      return m.reply(novaWrap(`Poll Result [${status}]`, [
+      return m.reply(raraWrap(`Poll Result [${status}]`, [
         `ID: ${pollId}`,
         `Pertanyaan: ${poll.question}`,
         `Sisa waktu: ${remaining}`,
@@ -252,9 +252,9 @@ async function handler(m, { sock }) {
 
     // === LIST ===
     if (subCmd === "list" || subCmd === "daftar") {
-      const polls = Object.entries(global.novaPolls[chatId]);
+      const polls = Object.entries(global.raraPolls[chatId]);
       if (polls.length === 0) {
-        return m.reply(novaWrap("Poll", "Belum ada poll di grup ini!", "info"));
+        return m.reply(raraWrap("Poll", "Belum ada poll di grup ini!", "info"));
       }
 
       const lines = polls.map(([id, p]) => {
@@ -264,7 +264,7 @@ async function handler(m, { sock }) {
         return `${id} [${status}]\n   Q: ${p.question}\n   Votes: ${totalVoters} orang | Sisa: ${remaining}`;
       });
 
-      return m.reply(novaWrap("Poll List", lines));
+      return m.reply(raraWrap("Poll List", lines));
     }
 
     // === CLOSE ===
@@ -274,17 +274,17 @@ async function handler(m, { sock }) {
       if (!pollId) {
         const active = getActivePolls(chatId);
         if (active.length === 0) {
-          return m.reply(novaWrap("Poll", "Tidak ada poll aktif untuk ditutup!", "warn"));
+          return m.reply(raraWrap("Poll", "Tidak ada poll aktif untuk ditutup!", "warn"));
         }
         pollId = active[active.length - 1][0];
       }
 
-      const poll = global.novaPolls[chatId]?.[pollId];
+      const poll = global.raraPolls[chatId]?.[pollId];
       if (!poll) {
-        return m.reply(novaWrap("Poll", `Poll ${pollId} tidak ditemukan!`, "error"));
+        return m.reply(raraWrap("Poll", `Poll ${pollId} tidak ditemukan!`, "error"));
       }
       if (poll.closed) {
-        return m.reply(novaWrap("Poll", `Poll ${pollId} sudah ditutup!`, "warn"));
+        return m.reply(raraWrap("Poll", `Poll ${pollId} sudah ditutup!`, "warn"));
       }
 
       const groupMeta = await sock.groupMetadata(chatId).catch(() => null);
@@ -292,12 +292,12 @@ async function handler(m, { sock }) {
       const isCreator = poll.creator === m.sender;
 
       if (!isAdmin && !isCreator && !m.isOwner) {
-        return m.reply(novaWrap("Poll", "Hanya admin, creator poll, atau owner yang bisa menutup poll!", "error"));
+        return m.reply(raraWrap("Poll", "Hanya admin, creator poll, atau owner yang bisa menutup poll!", "error"));
       }
 
       // closePollNow: matiin timer + persist + kirim hasil
       await closePollNow(sock, chatId, pollId, `ditutup oleh ${m.pushName || m.sender.split("@")[0]}`, { silent: true });
-      return m.reply(novaWrap("Poll Closed", [
+      return m.reply(raraWrap("Poll Closed", [
         `Poll ${pollId} ditutup oleh ${m.pushName || m.sender.split("@")[0]}`,
         "",
         buildPollResult(poll),
@@ -308,12 +308,12 @@ async function handler(m, { sock }) {
     if (subCmd === "delete" || subCmd === "hapus" || subCmd === "del") {
       const pollId = (args[1] || "").toUpperCase().trim();
       if (!pollId) {
-        return m.reply(novaWrap("Poll", "Format: .poll delete <pollId>", "error"));
+        return m.reply(raraWrap("Poll", "Format: .poll delete <pollId>", "error"));
       }
 
-      const poll = global.novaPolls[chatId]?.[pollId];
+      const poll = global.raraPolls[chatId]?.[pollId];
       if (!poll) {
-        return m.reply(novaWrap("Poll", `Poll ${pollId} tidak ditemukan!`, "error"));
+        return m.reply(raraWrap("Poll", `Poll ${pollId} tidak ditemukan!`, "error"));
       }
 
       const groupMeta = await sock.groupMetadata(chatId).catch(() => null);
@@ -321,19 +321,19 @@ async function handler(m, { sock }) {
       const isCreator = poll.creator === m.sender;
 
       if (!isAdmin && !isCreator && !m.isOwner) {
-        return m.reply(novaWrap("Poll", "Hanya admin, creator, atau owner yang bisa hapus poll!", "error"));
+        return m.reply(raraWrap("Poll", "Hanya admin, creator, atau owner yang bisa hapus poll!", "error"));
       }
 
       poll.deleted = true; // marker → ticker closing "DIHAPUS"
       const tid = global.__pollTimers?.[`${chatId}:${pollId}`];
       if (tid) { clearTimeout(tid); delete global.__pollTimers[`${chatId}:${pollId}`]; }
-      delete global.novaPolls[chatId][pollId];
+      delete global.raraPolls[chatId][pollId];
       pollPersist();
-      return m.reply(novaWrap("Poll", `Poll ${pollId} berhasil dihapus! ✅`, "success"));
+      return m.reply(raraWrap("Poll", `Poll ${pollId} berhasil dihapus! ✅`, "success"));
     }
 
     // === UNKNOWN ===
-    return m.reply(novaWrap("Poll", [
+    return m.reply(raraWrap("Poll", [
       `Perintah tidak dikenal: ${subCmd}`,
       "",
       "Ketik .poll help untuk melihat semua perintah",
@@ -341,7 +341,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[poll]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("Poll", "⚠️ Ada error pas proses poll. Coba lagi ya."));
+    return m.reply(raraWrap("Poll", "⚠️ Ada error pas proses poll. Coba lagi ya."));
   }
 }
 

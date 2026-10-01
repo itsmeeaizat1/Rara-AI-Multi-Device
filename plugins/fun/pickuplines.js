@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "gombal",
@@ -89,7 +89,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (arg && !GOMBAL_DB[arg] && !arg.startsWith("@") && !mentioned) {
-      return m.reply(novaWrap("Gombal", "Kategori tidak ditemukan!\n\nTersedia: " + CATEGORIES.join(", "), "warn"));
+      return m.reply(raraWrap("Gombal", "Kategori tidak ditemukan!\n\nTersedia: " + CATEGORIES.join(", "), "warn"));
     }
 
     const selectedCat = category || CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
@@ -106,7 +106,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     rows.push("│", `│ • ${line}`);
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "gombal", icon: "💘",
       flavor: "💘 *GOMBALAN BUAT KAMU!*",
       body: rows.join("\n"),
@@ -114,7 +114,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }));
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("Gombal", "Error: " + e.message, "error"));
+    return m.reply(raraWrap("Gombal", "Error: " + e.message, "error"));
   }
 }
 

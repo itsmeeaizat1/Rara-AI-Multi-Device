@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import FormData from 'form-data'
 import * as cheerio from 'cheerio'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const EFFECT_URLS = {
     glitchtext: 'https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html',
     writetext: 'https://en.ephoto360.com/write-text-on-wet-glass-online-589.html',
@@ -54,7 +54,7 @@ const pluginConfig = {
     category: "maker",
     description: 'Buat efek text keren dengan berbagai style',
     usage: '.<effect> <text>',
-    example: '.glitchtext Nova-AI',
+    example: '.glitchtext Rara-AI',
     isOwner: false,
     isPremium: false,
     isGroup: false,
@@ -117,23 +117,23 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (command === 'ephoto') {
-        return m.reply(novaWrap("ephoto", [
+        return m.reply(raraWrap("ephoto", [
             "Buat efek text keren!",
             "",
             "Daftar efek:",
             ...Object.keys(EFFECT_URLS).map(e => `${m.prefix}${e}`),
             "",
-            `💡 Contoh: ${m.prefix}glitchtext Nova-AI`,
+            `💡 Contoh: ${m.prefix}glitchtext Rara-AI`,
         ]))
     }
     
     if (!text) {
-        return m.reply(novaWrap("ephoto", "Masukkan text!\n💡 Contoh: " + m.prefix + command + " Nova-AI"))
+        return m.reply(raraWrap("ephoto", "Masukkan text!\n💡 Contoh: " + m.prefix + command + " Rara-AI"))
     }
     
     const effectUrl = EFFECT_URLS[command]
     if (!effectUrl) {
-        return m.reply(novaWrap("ephoto", "Efek tidak ditemukan"))
+        return m.reply(raraWrap("ephoto", "Efek tidak ditemukan"))
     }
     try {
         await m.react("🕒");
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
         })
     } catch (error) {
         await m.react("❌");
-        m.reply(novaWrap("ephoto", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("ephoto", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

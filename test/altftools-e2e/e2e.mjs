@@ -2,7 +2,7 @@
 // Sumber ide: altftool.com (13.947 tool browser) — di-port NATIVE offline, gak pake API situs itu.
 import fs from "node:fs";
 fs.rmSync(new URL("./e2e-db.json", import.meta.url), { recursive: true, force: true });
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(new URL("./e2e-db.json", import.meta.url).pathname);
 
 const from = async (p) => await import("../../plugins/tools/" + p + ".js");

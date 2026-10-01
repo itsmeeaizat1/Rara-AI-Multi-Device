@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .reloadkey — Reload SEMUA API key dari pusat file apikeys.json
 //   tanpa restart bot. PUSAT KEY (request owner 17 Sep 2026):
 //   src/lib/apikey/apikeys.json — tiap key ada komentar _note_<nama>
@@ -6,8 +6,8 @@
 // .reloadkey — reload key tanpa restart
 // .reloadkey status — cek key mana yang aktif (masked)
 import { reloadKeys } from "../../src/lib/config/env-loader.js";
-import { getAllKeyStatus, getMaskedKey } from "../../src/lib/nova-api-keys.js";
-import { novaError, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { getAllKeyStatus, getMaskedKey } from "../../src/lib/rara-api-keys.js";
+import { raraError, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "reloadkey",
@@ -41,19 +41,19 @@ async function handler(m, { config: botConfig }) {
         "",
         "File pusat: src/lib/apikey/apikeys.json",
       ];
-      return m.reply(novaWrap(lines.join("\n")));
+      return m.reply(raraWrap(lines.join("\n")));
     }
 
     reloadKeys();
     return m.reply(
-      novaWrap(
+      raraWrap(
         "Semua API key di-reload dari src/lib/apikey/apikeys.json.\n\n" +
           "Fitur AI/downloader langsung pakai key baru — tanpa restart.\n\n" +
           tipText(prefix + "reloadkey status — lihat key aktif")
       )
     );
   } catch (err) {
-    return m.reply(novaError("reload key", err?.message || String(err)));
+    return m.reply(raraError("reload key", err?.message || String(err)));
   }
 }
 

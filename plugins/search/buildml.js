@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "buildml",
@@ -17,7 +17,7 @@ async function handler(m, { sock }) {
   try {
     const hero = m.args.join(" ").trim();
     if (!hero) {
-      return m.reply(novaWrap("buildml", `Mau cari build hero apa?\n\nContoh: ${m.prefix}buildml Lancelot`, "guide"));
+      return m.reply(raraWrap("buildml", `Mau cari build hero apa?\n\nContoh: ${m.prefix}buildml Lancelot`, "guide"));
     }
 
     await m.react("🕒");
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
 
     if (!data || data.status === false || (!data.result && !data.data)) {
       await m.react("❌");
-      return m.reply(novaWrap("buildml", `Hero "${hero}" tidak ditemukan.`, "error"));
+      return m.reply(raraWrap("buildml", `Hero "${hero}" tidak ditemukan.`, "error"));
     }
 
     const r = data.result || data.data || data;
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("buildml error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("buildml", err.message || "Error", "error"));
+    return m.reply(raraWrap("buildml", err.message || "Error", "error"));
   }
 }
 

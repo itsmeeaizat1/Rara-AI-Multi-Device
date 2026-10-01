@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // emojimix.js — Gabungkan 2 emoji (oiapi → gstatic CDN, no API key)
 import axios from "axios";
 import config from "../../config.js";
-import { novaWrap, novaError, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "emojimix",
@@ -61,14 +61,14 @@ async function getEmojimixUrl(emoji1, emoji2) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaWrap("emojimix", `Gabungkan 2 emoji menjadi 1 sticker!\n\nContoh: ${m.prefix}emojimix 😎 😂`, "guide"));
+    return m.reply(raraWrap("emojimix", `Gabungkan 2 emoji menjadi 1 sticker!\n\nContoh: ${m.prefix}emojimix 😎 😂`, "guide"));
   }
 
   const emojiRegex = /\p{Extended_Pictographic}/gu;
   const emojis = text.match(emojiRegex);
 
   if (!emojis || emojis.length < 2) {
-    return m.reply(novaError("EmojiMix", "Masukkan minimal 2 emoji!"));
+    return m.reply(raraError("EmojiMix", "Masukkan minimal 2 emoji!"));
   }
 
   try {
@@ -80,22 +80,22 @@ async function handler(m, { sock }) {
 
     if (!imageUrl) {
       await m.react("❌");
-      return m.reply(novaWrap("emojimix", `Kombinasi ${emoji1} + ${emoji2} tidak tersedia!\n\nCoba kombinasi lain.`, "error"));
+      return m.reply(raraWrap("emojimix", `Kombinasi ${emoji1} + ${emoji2} tidak tersedia!\n\nCoba kombinasi lain.`, "error"));
     }
 
     const res = await axios.get(imageUrl, { responseType: "arraybuffer", timeout: 15000 });
     const buffer = Buffer.from(res.data);
 
     await sock.sendImageAsSticker(m.chat, buffer, m, {
-      packname: config.sticker?.packname || "Nova AI",
+      packname: config.sticker?.packname || "Rara AI",
       author: config.sticker?.author || "Aizat",
     });
     await m.react("🐣");
-    await m.reply(novaBerhasil("emojimix"));
+    await m.reply(raraBerhasil("emojimix"));
   } catch (err) {
     console.error("[EmojiMix]", err);
     await m.react("❌");
-    m.reply(novaWrap("emojimix", "Gagal membuat emoji mix. Coba lagi nanti!", "error"));
+    m.reply(raraWrap("emojimix", "Gagal membuat emoji mix. Coba lagi nanti!", "error"));
   }
 }
 

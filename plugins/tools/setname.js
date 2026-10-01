@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "setname",
     alias: ["setname"],
     category: 'tools',
     description: 'Mengubah nama profil bot',
     usage: '.setname <nama baru>',
-    example: '.setname Nova-AI',
+    example: '.setname Rara-AI',
     isOwner: true,
     isPremium: false,
     isGroup: false,
@@ -20,17 +20,17 @@ async function handler(m, { sock }) {
     const newName = m.text?.trim()
     
     if (!newName) {
-        await m.reply(novaWrap("setname", [
+        await m.reply(raraWrap("setname", [
             `Ubah nama profil bot.`,
             ``,
             `📌 Format: ${m.prefix}setname <nama bot baru>`,
-            `💡 Contoh: ${m.prefix}setname Nova AI`,
+            `💡 Contoh: ${m.prefix}setname Rara AI`,
         ]))
         return
     }
     
     if (newName.length < 1 || newName.length > 25) {
-        await m.reply(novaWrap("setname", `⚠️ *validasi*\n\n` +
+        await m.reply(raraWrap("setname", `⚠️ *validasi*\n\n` +
             `Nama bot harus 1-25 karakter.`))
         return
     }
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
         await sock.updateProfileName(newName)
         
         await m.react("🐣");
-        await m.reply(novaWrap("setname", `✅ *nama bot diubah*\n\n` +
+        await m.reply(raraWrap("setname", `✅ *nama bot diubah*\n\n` +
             `Nama bot sekarang: *${newName}*`))
     } catch (error) {
     await m.react("❌");

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getParticipantJid } from '../../src/lib/nova-lid.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getParticipantJid } from '../../src/lib/rara-lid.js'
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'demote',
     alias: ["demote"],
@@ -41,26 +41,26 @@ async function handler(m, { sock }) {
         const participant = groupMeta.participants.find(p => getParticipantJid(p) === target)
 
         if (!participant) {
-            m.reply(novaWrap("Demote", `gagal\n\nUser tidak ditemukan di grup!`, "error"))
+            m.reply(raraWrap("Demote", `gagal\n\nUser tidak ditemukan di grup!`, "error"))
             return
         }
 
         if (!participant.admin) {
-            await m.reply(novaWrap("Demote", `gagal\n\nUser bukan admin!`, "error"))
+            await m.reply(raraWrap("Demote", `gagal\n\nUser bukan admin!`, "error"))
             return
         }
 
         if (participant.admin === 'superadmin') {
-            await m.reply(novaWrap("demote", `gagal\n\nTidak bisa demote owner grup!`, "error"))
+            await m.reply(raraWrap("demote", `gagal\n\nTidak bisa demote owner grup!`, "error"))
             return
         }
 
         await sock.groupParticipantsUpdate(m.chat, [target], 'demote')
 
-        await m.reply(novaWrap("Demote", `@${target.split('@')[0]} sekarang bukan admin lagi.`, "info"))
+        await m.reply(raraWrap("Demote", `@${target.split('@')[0]} sekarang bukan admin lagi.`, "info"))
 
     } catch (error) {
-        m.reply(novaWrap("demote", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("demote", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

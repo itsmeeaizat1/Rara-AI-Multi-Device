@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "autosticker",
     alias: ["autosticker"],
@@ -39,23 +39,23 @@ async function handler(m, { sock }) {
     
     if (arg === 'on' || arg === '1' || arg === 'aktif') {
         if (current) {
-            return m.reply(novaWrap("Autosticker", `Sudah aktif!`))
+            return m.reply(raraWrap("Autosticker", `Sudah aktif!`))
         }
         db.setGroup(m.chat, { autosticker: true })
         await db.save()
-        return m.reply(novaWrap("Autosticker", `Berhasil diaktifkan!\nGambar/video akan otomatis jadi sticker`, "success"))
+        return m.reply(raraWrap("Autosticker", `Berhasil diaktifkan!\nGambar/video akan otomatis jadi sticker`, "success"))
     }
     
     if (arg === 'off' || arg === '0' || arg === 'nonaktif') {
         if (!current) {
-            return m.reply(novaWrap("Autosticker", `Sudah nonaktif!`))
+            return m.reply(raraWrap("Autosticker", `Sudah nonaktif!`))
         }
         db.setGroup(m.chat, { autosticker: false })
         await db.save()
         { const __navText = `🖼️ *autosticker*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
     }
     
-    return m.reply(novaWrap("Auto sticker", `Gunakan: \`${m.prefix}autosticker on/off\``, "error"))
+    return m.reply(raraWrap("Auto sticker", `Gunakan: \`${m.prefix}autosticker on/off\``, "error"))
 }
 
 async function autoStickerHandler(m, sock) {
@@ -93,7 +93,7 @@ async function autoStickerHandler(m, sock) {
         
         if (isImage) {
             await sock.sendImageAsSticker(m.chat, buffer, m, {
-                packname: config.sticker?.packname || 'Nova',
+                packname: config.sticker?.packname || 'Rara',
                 author: config.sticker?.author || 'Bot'
             })
         } else if (isVideo) {
@@ -102,7 +102,7 @@ async function autoStickerHandler(m, sock) {
             if (duration > 10) return false
             
             await sock.sendVideoAsSticker(m.chat, buffer, m, {
-                packname: config.sticker?.packname || 'Nova',
+                packname: config.sticker?.packname || 'Rara',
                 author: config.sticker?.author || 'Bot'
             })
         }

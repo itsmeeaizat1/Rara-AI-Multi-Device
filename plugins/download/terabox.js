@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { tipText, raraWrap, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -70,7 +70,7 @@ const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title
     const url = m.text?.trim();
 
     if (!url) {
-      return m.reply(novaGuide("Terabox", "Masukkan URL file Terabox yang mau diunduh!", `${prefix}terabox https://terabox.com/s/xxxx`));
+      return m.reply(raraGuide("Terabox", "Masukkan URL file Terabox yang mau diunduh!", `${prefix}terabox https://terabox.com/s/xxxx`));
     }
 
     const response = await axios.get(url, { responseType: "arraybuffer", maxRedirects: 5 });
@@ -86,15 +86,15 @@ const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title
     });
 
     const text =
-      novaWrap("Terabox", [`Link: *${url}*`,
+      raraWrap("Terabox", [`Link: *${url}*`,
         "Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}terabox <link> untuk download file lain`);
 
     await m.reply(text);
-      await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("terabox2"));
+      await m.react("🐣"); await m.react("🐣"); m.reply(raraBerhasil("terabox2"));
   } catch (error) {
-    return m.reply(novaError("Terabox", `Gagal mengunduh file — ${error.message || 'terjadi kesalahan, coba lagi nanti ya'}`));
+    return m.reply(raraError("Terabox", `Gagal mengunduh file — ${error.message || 'terjadi kesalahan, coba lagi nanti ya'}`));
   }
 
   return { handled: true };

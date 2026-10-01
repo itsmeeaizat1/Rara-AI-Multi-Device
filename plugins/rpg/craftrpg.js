@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Craft — Craft consumables from raw materials
 
 import {
   ensureRpg, addItem, removeItem, ITEM_DB, getItemCount
-} from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animCraft } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animCraft } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "craft",
@@ -116,7 +116,7 @@ const RECIPES = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("craftrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("craftrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -143,13 +143,13 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 Ketik .craftrpg <id> untuk craft\n`;
       
-      return m.reply(novaRpgBox("craftrpg", msg));
+      return m.reply(raraRpgBox("craftrpg", msg));
     }
 
     // Find recipe
     const recipe = RECIPES.find(r => r.id === action);
     if (!recipe) {
-      return m.reply(novaRpgBox("craftrpg", `Resep *${action}* tidak ditemukan. Ketik .craftrpg list untuk lihat semua.`, "warn"));
+      return m.reply(raraRpgBox("craftrpg", `Resep *${action}* tidak ditemukan. Ketik .craftrpg list untuk lihat semua.`, "warn"));
     }
 
     // Check materials
@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
 
     if (missing.length > 0) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("craftrpg", `Material tidak cukup!\nKurang: *${missing.join(", ")}*\nKumpulkan dengan .petualangberburu, .mining, atau .mancing.`, "warn"));
+      return m.reply(raraRpgBox("craftrpg", `Material tidak cukup!\nKurang: *${missing.join(", ")}*\nKumpulkan dengan .petualangberburu, .mining, atau .mancing.`, "warn"));
     }
 
     // Consume materials
@@ -178,7 +178,7 @@ async function handler(m, { sock }) {
     addItem(m, recipe.result, recipe.qty);
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "craftrpg", icon: "⚒️",
       flavor: "✅ *CRAFT BERHASIL!*",
       body: [
@@ -192,7 +192,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("craftrpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("craftrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("craftrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

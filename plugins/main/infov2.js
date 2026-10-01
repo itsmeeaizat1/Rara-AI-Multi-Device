@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { toSC, novaError } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toSC, raraError } from "../../src/lib/rara-menu-style.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "infov2",
@@ -29,7 +29,7 @@ async function handler(m, { sock, config: botConfig }) {
     const groups = Object.keys(db.groups || {}).length;
 
     const text = boxMessage("◆ INFO ◆",
-      "• " + toSC("Bot") + " : *" + (botConfig.bot?.name || "Nova AI") + "*\n" +
+      "• " + toSC("Bot") + " : *" + (botConfig.bot?.name || "Rara AI") + "*\n" +
       "• " + toSC("Versi") + " : *" + (botConfig.bot?.version || "1.0.0") + "*\n" +
       "• " + toSC("Mode") + " : *" + (botConfig.mode || "public").toUpperCase() + "*\n" +
       "• " + toSC("Prefix") + " : *" + prefix + "*\n" +
@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     return m.reply(text);
   } catch (error) {
-    return m.reply(novaError("Infov2", "Gagal menampilkan info"));
+    return m.reply(raraError("Infov2", "Gagal menampilkan info"));
   }
 }
 

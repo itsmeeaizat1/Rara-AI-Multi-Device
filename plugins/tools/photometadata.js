@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Metadata — Baca EXIF & metadata foto (local via sharp, no API)
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "photometadata",
@@ -68,7 +68,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
 
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(novaWrap("Photo Metadata", [
+      return m.reply(raraWrap("Photo Metadata", [
         "Reply foto dulu, lalu ketik:",
         usedPrefix + "photometadata",
         "",
@@ -76,11 +76,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "warn"));
     }
 
-    m.reply(novaWrap("Photo Metadata", "Membaca metadata foto..."));
+    m.reply(raraWrap("Photo Metadata", "Membaca metadata foto..."));
 
     const imgBuffer = await q.download();
     if (!imgBuffer || imgBuffer.length === 0) {
-      return m.reply(novaWrap("Photo Metadata", "Gagal download gambar.", "warn"));
+      return m.reply(raraWrap("Photo Metadata", "Gagal download gambar.", "warn"));
     }
 
     const meta = await sharp(imgBuffer).metadata();
@@ -176,11 +176,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("Sharp version: " + (sharp.versions?.sharp || "N/A"));
 
     await m.react("🐣");
-    return m.reply(novaWrap("Photo Metadata", lines, "info"));
+    return m.reply(raraWrap("Photo Metadata", lines, "info"));
   } catch (e) {
     await m.react("❌");
     console.error("[PhotoMetadata]", e);
-    m.reply(novaWrap("Photo Metadata", [
+    m.reply(raraWrap("Photo Metadata", [
       "Error: " + e.message,
       "",
       "Kemungkinan:",

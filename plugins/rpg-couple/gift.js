@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Kado: kasih item dari inventory ke pasangan, dapat affection (revival dari RPG lama, disesuaikan sistem baru)
 
-import { ensureRpg, getRpgData, addItem, removeItem, addExp, ITEM_DB } from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
-import { getCintaData, addAffection } from "../../src/lib/nova-rpg-cinta.js";
+import { ensureRpg, getRpgData, addItem, removeItem, addExp, ITEM_DB } from "../../src/lib/rara-rpg-service.js";
+import { raraGameBox, gameCTA, renderStatBar, raraRpgBox } from "../../src/lib/rara-games.js";
+import { getCintaData, addAffection } from "../../src/lib/rara-rpg-cinta.js";
 
 const pluginConfig = {
   name: "kado",
@@ -50,7 +50,7 @@ async function handler(m) {
     // Harus punya pasangan
     if (!cinta.spouse) {
       await m.react("❗");
-      return m.reply(novaRpgBox("Kado", [
+      return m.reply(raraRpgBox("Kado", [
         "Kasih kado ke siapa? Ke bot? 😅",
         "Kamu belum punya pasangan!",
       ], "error"));
@@ -80,7 +80,7 @@ async function handler(m) {
       }
       lines.push("---", `Ketik: ${m.prefix}kado <nama item>`);
       await m.react("🐣");
-      return m.reply(novaRpgBox("Kado", lines));
+      return m.reply(raraRpgBox("Kado", lines));
     }
 
     // Cari item di inventory
@@ -89,7 +89,7 @@ async function handler(m) {
 
     if (!itemId || !slot || (slot.qty || 0) <= 0) {
       await m.react("❗");
-      return m.reply(novaRpgBox("Kado", [
+      return m.reply(raraRpgBox("Kado", [
         `Item *${args}* tidak ada di inventory kamu!`,
         `Cek inventory: ${m.prefix}kado (tanpa argumen)`,
       ], "error"));
@@ -110,7 +110,7 @@ async function handler(m) {
     const myCinta = getCintaData(m);
     myCinta.giftCount = (myCinta.giftCount || 0) + 1;
 
-    const msg = novaGameBox({
+    const msg = raraGameBox({
       title: "rpg cinta", icon: "🎁",
       flavor: `🎁 *${(ITEM_DB[itemId]?.name || itemId).toUpperCase()} UNTUK ${partnerName.toUpperCase()}!*`,
       body: [
@@ -131,7 +131,7 @@ async function handler(m) {
   } catch (e) {
     console.error("[kado] Error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("Kado", "Yah gagal kak, coba lagi 😩", "error"));
+    return m.reply(raraRpgBox("Kado", "Yah gagal kak, coba lagi 😩", "error"));
   }
 }
 

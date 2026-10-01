@@ -1,6 +1,6 @@
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animRoulette } from "../../src/lib/nova-rpg-anim.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animRoulette } from "../../src/lib/rara-rpg-anim.js";
 
 const pluginConfig = {
   name: "roulette",
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
       guide += `*6.* High / Besar (19-36) (2x)\n`;
       guide += `*7.* Angka Spesifik (0-36) (36x)\n\n`;
       guide += `Contoh: *${prefix}roulette red 100* atau *${prefix}roulette 7 100*`;
-      return m.reply(novaRpgBox("roulette", guide, "info"));
+      return m.reply(raraRpgBox("roulette", guide, "info"));
     }
 
     let betTypeInput = args[0].toLowerCase();
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
 
     if (isNaN(betAmountInput) || betAmountInput < MIN_BET) {
       return m.reply(
-        novaRpgBox(
+        raraRpgBox(
           "roulette",
           `Minimal taruhan adalah *${MIN_BET} gold*! Contoh: *${prefix}roulette red 100*`,
           "warn"
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
 
     if (currentGold < bet) {
       return m.reply(
-        novaRpgBox(
+        raraRpgBox(
           "roulette",
           `Gold kamu tidak cukup! Punya *${currentGold} gold*, butuh *${bet} gold*.`,
           "error"
@@ -153,7 +153,7 @@ async function handler(m, { sock }) {
       }
     } else {
       return m.reply(
-        novaRpgBox(
+        raraRpgBox(
           "roulette",
           `Jenis taruhan *${betTypeInput}* tidak valid!\nPilih: red, black, even, odd, low, high, atau angka 0-36.`,
           "warn"
@@ -197,7 +197,7 @@ async function handler(m, { sock }) {
       properties.push("Angka Nol (0)");
     }
 
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "roulette", icon: "🎡",
       flavor: won ? "🎉 *MENANG!*" : "💀 *KALAH!*",
       body: [
@@ -214,7 +214,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("roulette error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("roulette", err.message || "Terjadi kesalahan pada roulette.", "error"));
+    return m.reply(raraRpgBox("roulette", err.message || "Terjadi kesalahan pada roulette.", "error"));
   }
 }
 

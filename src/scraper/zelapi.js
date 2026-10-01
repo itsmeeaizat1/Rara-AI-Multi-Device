@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 zelapi.js — scraper zelapi.eu.cc (86 AI endpoint, suite .z)
 // 🔹 STRICT SATUAN: status:false / key kosong → error ASLI keluar, no fallback.
 // ═════════════════════════════════════════════
 
 import { getZelKey } from "../lib/config/env-loader.js";
-import { getZelSpec, ZEL_AI_REGISTRY } from "../lib/nova-zel-registry.js";
+import { getZelSpec, ZEL_AI_REGISTRY } from "../lib/rara-zel-registry.js";
 
 const BASE = "https://zelapi.eu.cc";
 const TIMEOUT_MS = 60000;

@@ -1,6 +1,6 @@
-import { normalizeNewsletterMeta } from "../../src/lib/nova-saluran.js";
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { normalizeNewsletterMeta } from "../../src/lib/rara-saluran.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -39,7 +39,7 @@ async function handler(m, { sock, args }) {
   const text = (m.text || "").trim();
 
   if (!text) {
-    await m.reply(novaWrap("Cek ID Channel", [
+    await m.reply(raraWrap("Cek ID Channel", [
       `📌 ${toSC("Cara Pakai")}:`,
       "",
       "`.cekidch https://whatsapp.com/channel/xxxxx`",
@@ -50,7 +50,7 @@ async function handler(m, { sock, args }) {
   }
 
   if (!text.includes("https://whatsapp.com/channel/")) {
-    await m.reply(novaWrap("Cek ID Channel", "❌ Link tidak valid. Pastikan link dimulai dengan https://whatsapp.com/channel/", "error"));
+    await m.reply(raraWrap("Cek ID Channel", "❌ Link tidak valid. Pastikan link dimulai dengan https://whatsapp.com/channel/", "error"));
     return;
   }
 
@@ -63,7 +63,7 @@ async function handler(m, { sock, args }) {
 
     if (!res || !res.id) {
       await m.react("🐣");
-      await m.reply(novaWrap("Cek ID Channel", "❌ Channel tidak ditemukan. Pastikan link valid dan channel masih aktif.", "error"));
+      await m.reply(raraWrap("Cek ID Channel", "❌ Channel tidak ditemukan. Pastikan link valid dan channel masih aktif.", "error"));
       return;
     }
 
@@ -89,7 +89,7 @@ async function handler(m, { sock, args }) {
       lines.push(`📝 ${toSC("Deskripsi")}: ${toSC(descPreview)}`);
     }
 
-    const infoText = novaWrap(`📢 ${toSC("Channel Info")}`, lines, "success");
+    const infoText = raraWrap(`📢 ${toSC("Channel Info")}`, lines, "success");
 
     // Kirim dengan tombol copy ID + buka channel
     const buttons = [
@@ -111,12 +111,12 @@ async function handler(m, { sock, args }) {
 
     await sock.sendButton(m.chat, chPicUrl || null, infoText, m, {
       buttons,
-      footer: config.bot?.name || "Nova-AI",
+      footer: config.bot?.name || "Rara-AI",
     });
   } catch (e) {
     await m.react("❌");
     console.error("[cekidch] Error:", e.message);
-    await m.reply(novaWrap("Cek ID Channel", "❌ Terjadi kesalahan saat mengambil info channel. Coba lagi nanti.", "error"));
+    await m.reply(raraWrap("Cek ID Channel", "❌ Terjadi kesalahan saat mengambil info channel. Coba lagi nanti.", "error"));
   }
 }
 

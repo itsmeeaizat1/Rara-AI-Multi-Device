@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { runCekAnim } from "../../src/lib/nova-cek-anim.js";
-import { cekFunAI } from "../../src/lib/nova-fun-ai.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { runCekAnim } from "../../src/lib/rara-cek-anim.js";
+import { cekFunAI } from "../../src/lib/rara-fun-ai.js";
 const pluginConfig = {
     name: "cekjodoh",
     alias: ["cekjodoh"],
@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
     const parts = input.split(/[&,]/).map(s => s.trim()).filter(s => s)
     
     if (parts.length < 2) {
-        { const __navText = novaWrap("Cek Jodoh", `Masukkan 2 nama!\n\n💡 *Contoh:* ${m.prefix}cekjodoh Budi & Ani`); return await m.reply(__navText, "cekjodoh"); }
+        { const __navText = raraWrap("Cek Jodoh", `Masukkan 2 nama!\n\n💡 *Contoh:* ${m.prefix}cekjodoh Budi & Ani`); return await m.reply(__navText, "cekjodoh"); }
     }
     
     const percent = Math.floor(Math.random() * 101)
@@ -62,7 +62,7 @@ async function handler(m, { sock, config: botConfig }) {
          `Tingkat kejodohan dia: ${percent}%`,
          `"${desc}"`].join("\n")
     
-    await runCekAnim(m, sock, novaWrap("Cek Jodoh", txt), { mentions: [mentioned] }, { subject: m.command })
+    await runCekAnim(m, sock, raraWrap("Cek Jodoh", txt), { mentions: [mentioned] }, { subject: m.command })
 }
 
 export { pluginConfig as config, handler }

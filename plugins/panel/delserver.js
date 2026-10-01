@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
-import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
-import te from '../../src/lib/nova-error.js'
+import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
+import te from '../../src/lib/rara-error.js'
 const allCommands = VALID_SERVERS.slice(0, 5).map(v => `delserver${v}`)
 const allAliases = VALID_SERVERS.map(v => `hapusserver${v}`)
 
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(novaWrap("delserver", `❌ *akses ditolak*\n\n` +
+        return m.reply(raraWrap("delserver", `❌ *akses ditolak*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
         } else {
             txt += `Isi config pterodactyl di \`config.js\``
         }
-        return m.reply(novaWrap("delserver", txt))
+        return m.reply(raraWrap("delserver", txt))
     }
     
     if (!serverId || isNaN(serverId)) {
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
             `Nama: \`${server.name}\``)
         
     } catch (err) {
-        return m.reply(novaWrap("delserver", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("delserver", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

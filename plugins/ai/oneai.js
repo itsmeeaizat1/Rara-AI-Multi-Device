@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // oneai.js — Onepunya API: AI_CHAT_GENERATION + MULTIMODAL_CHAT.
 // .onechat [model] <teks>   — chat AI (model: chatgpt gemini qwen chat; default chatgpt)
 // .onechat <reply foto> <teks> — foto dijawab (vision via multimodal)
 // Sumber: onepunya.qzz.io (key .setkey onepunya) — numpang model Onepunya,
 // beda dari AI satuan (.gpt4o dkk) yang udah ada.
-import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { aiChat, multimodalChat } from "../../src/lib/nova-onepunya.js";
-import { uploadImage } from "../../src/lib/nova-uploader.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
+import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { aiChat, multimodalChat } from "../../src/lib/rara-onepunya.js";
+import { uploadImage } from "../../src/lib/rara-uploader.js";
 
 const pluginConfig = {
   name: "onechat",
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       const prompt = text || "Deskripsikan isi gambar ini.";
       const buf = await m.quoted.download();
       if (!buf || !buf.length) {
-        return m.reply(novaWrap("Onepunya AI", "Gagal mengunduh foto yang di-reply."));
+        return m.reply(raraWrap("Onepunya AI", "Gagal mengunduh foto yang di-reply."));
       }
       const imgUrl = await uploadImage(Buffer.from(buf), "onepunya-vision.jpg");
       // multimodal pakai model "0"|"1"|"2" (chatgpt|gemini|qwen)
@@ -59,12 +59,12 @@ async function handler(m, { sock }) {
       });
       const answer = res?.response || res?.text || "";
       if (!answer) throw new Error("Respon kosong dari server.");
-      return m.reply(novaWrap("Onepunya AI", `🤖 (${model})\n\n${String(answer).slice(0, 3000)}`));
+      return m.reply(raraWrap("Onepunya AI", `🤖 (${model})\n\n${String(answer).slice(0, 3000)}`));
     }
 
     // ── teks biasa → AI chat ──
     if (!text) {
-      return m.reply(novaGuideV2("onechat", {
+      return m.reply(raraGuideV2("onechat", {
  kaomoji: "(๑˃̵ᴗ˂̵)و",
  sapaan: "satu pintu banyak model AI, tanya apa pun! (๑•̀ㅂ•́)✧",
         cara: "ketik pertanyaannya sesudah command",
@@ -82,9 +82,9 @@ async function handler(m, { sock }) {
     // bentuk respon bervariasi: string | {response} | {message}
     const answer = typeof res === "string" ? res : (res?.response || res?.message || res?.result || "");
     if (!answer) throw new Error("Respon kosong dari server.");
-    return m.reply(novaWrap("Onepunya AI", `🤖 (${model})\n\n${String(answer).slice(0, 3000)}`));
+    return m.reply(raraWrap("Onepunya AI", `🤖 (${model})\n\n${String(answer).slice(0, 3000)}`));
   } catch (e) {
-    return m.reply(novaWrap("Onepunya AI", `Gagal: ${String(e.message || e).slice(0, 200)}`));
+    return m.reply(raraWrap("Onepunya AI", `Gagal: ${String(e.message || e).slice(0, 200)}`));
   }
 }
 

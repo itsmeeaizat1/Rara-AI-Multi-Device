@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, separator,
-  tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, separator,
+  tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 /**
@@ -139,7 +139,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!isImage) {
       const text =
-        novaError("AICaption", "Error nih") + "\n" +
+        raraError("AICaption", "Error nih") + "\n" +
         tipText("Reply foto lalu ketik .aicaption");
 
       await m.react("🐣");
@@ -157,7 +157,7 @@ async function handler(m, { sock, config: botConfig }) {
       mediaBuffer = Buffer.isBuffer(stream) ? stream : Buffer.from(stream);
     } else {
       const text =
-        novaError("AICaption", "Error nih") + "\n" +
+        raraError("AICaption", "Error nih") + "\n" +
         tipText("Reply foto lalu ketik .aicaption");
 
       await m.reply(text, "aicaption");
@@ -166,7 +166,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       const text =
-        novaError("AICaption", "Error nih") + "\n" +
+        raraError("AICaption", "Error nih") + "\n" +
         tipText("Coba foto lain");
 
       await m.reply(text, "aicaption");
@@ -216,7 +216,7 @@ async function handler(m, { sock, config: botConfig }) {
     const styleLabel = useStyle === "default" ? "Mix" : useStyle.charAt(0).toUpperCase() + useStyle.slice(1);
 
     const result =
-      novaError("AICaption", "Error nih") + "\n\n" +
+      raraError("AICaption", "Error nih") + "\n\n" +
       `${captionResult}` + "\n\n" +
       tipText("Copy caption favoritmu untuk Instagram") + "\n" +
       tipText(`${prefix}aicaption product — style jualan`);
@@ -226,7 +226,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[AI Caption Error]", error);
     const text =
-      novaError("AICaption", "Gagal generate caption nih");
+      raraError("AICaption", "Gagal generate caption nih");
 
     await m.reply(text);
     return { handled: true };

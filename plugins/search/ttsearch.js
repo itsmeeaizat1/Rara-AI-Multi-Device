@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import crypto from "crypto";
 import {
   generateWAMessage,
   generateWAMessageFromContent,
   jidNormalizedUser,
 } from "nova";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 import { getdlTikTokSearch } from "../../src/scraper/getdl-tiktok.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "ttsearch",
   alias: ["ttsearch"],
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply(novaWrap("TTSearch", [
+    return m.reply(raraWrap("TTSearch", [
       `📌 Cari video TikTok dari keyword:`,
       ``,
       `💡 Contoh:`,
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
 
     if (!videos || videos.length === 0) {
       await m.react("❗");
-      return m.reply(novaError("TTSearch", `Gak nemu video untuk: ${query} nih`));
+      return m.reply(raraError("TTSearch", `Gak nemu video untuk: ${query} nih`));
     }
     if (fromGetdl) await m.react("🐣");
 
@@ -142,7 +142,7 @@ ${video.author?.nickname ? `Author: ${video.author.nickname}\n` : ""}${video.sta
       }
     }
   } catch (error) {
-    m.reply(novaWrap("ttsearch", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("ttsearch", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .guild — GUILD WAR ANTAR GRUP (26 Sep 2026, ide owner no.5 "fitur masa
-// depan": RPG Nova jadi sosial — 1 grup = 1 guild, perang lintas grup,
+// depan": RPG Rara jadi sosial — 1 grup = 1 guild, perang lintas grup,
 // papan peringkat global). Kekuatan guild = agregat stat RPG anggota.
-// Engine: src/lib/nova-guildwar.js (jangan duplikasi logika di sini).
+// Engine: src/lib/rara-guildwar.js (jangan duplikasi logika di sini).
 // Animasi khas: dua pasukan berbaris → bentrok 💥 (libguildwarrpg.js).
 //
 // Commands:
@@ -16,16 +16,16 @@
 //   .guild top                      — Peringkat guild SEMUA grup
 //   .guild leave / .guild bubar     — Keluar / bubarkan (ketua)
 
-import { novaGuide } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { ensureRpg, useEnergy, addGold, addExp, removeGold } from "../../src/lib/nova-rpg-service.js";
+import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { ensureRpg, useEnergy, addGold, addExp, removeGold } from "../../src/lib/rara-rpg-service.js";
 import {
   ensureGuildWarState, createGuild, joinGuild, leaveGuild, disbandGuild,
   donateTreasury, findGuildByName, getGuild, startWar, warAttack, guildSide,
   sweepWars, buildWarStartCard, buildScoreCard, buildResultCard,
   buildGuildCard, buildTopCard, getGuildPower, guildRank, memberPower,
   WAR_STAKE, WAR_WINDOW_MS, MIN_JOIN_LEVEL, ATTACK_ENERGY, MVP_GOLD,
-} from "../../src/lib/nova-guildwar.js";
+} from "../../src/lib/rara-guildwar.js";
 import { playWarAnim, playVictoryAnim } from "../../src/lib/libanimationrpg/libguildwarrpg.js";
 
 const pluginConfig = {
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     if (!sub) {
       m.react?.("\u2694\uFE0F");
       const mine = getGuild(st, group);
-      return m.reply(novaGuide(
+      return m.reply(raraGuide(
         "guild",
         (mine ? "Grup ini punya guild: " + mine.emoji + " " + mine.name + " (" + mine.members.length + " anggota, treasury " + mine.treasury + " gold)" : "Grup ini belum punya guild \u2014 bikin: .guild create <nama>") + "\n.guild join — gabung guild grup ini\n.guild war <nama lawan> — tantang guild grup lain (taruhan " + WAR_STAKE + " gold)\n.guild attack — serang saat perang live\n.guild top — peringkat guild semua grup\n.guild donate <gold> — sumbang treasury",
         ".guild create Naga Hitam | \u{1F409}\n.guild war Elang Biru\n.guild attack",

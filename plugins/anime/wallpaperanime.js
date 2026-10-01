@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 /**
  * plugins/anime/wallpaperanime.js
@@ -67,7 +67,7 @@ async function searchWallhaven(query, minRes) {
 
   const res = await fetch(`${WALLHAVEN_API}?${params}`, {
     signal: AbortSignal.timeout(15000),
-    headers: { "User-Agent": "Mozilla/5.0 (NovaBot/1.0)" },
+    headers: { "User-Agent": "Mozilla/5.0 (RaraBot/1.0)" },
   });
 
   if (!res.ok) throw new Error(`Wallhaven error: HTTP ${res.status}`);
@@ -87,7 +87,7 @@ async function searchKonachan(query) {
   const tags = query ? `${query} order:random` : "order:random";
   const res = await fetch(`${KONACHAN_API}?tags=${encodeURIComponent(tags)}&limit=20`, {
     signal: AbortSignal.timeout(15000),
-    headers: { "User-Agent": "Mozilla/5.0 (NovaBot/1.0)" },
+    headers: { "User-Agent": "Mozilla/5.0 (RaraBot/1.0)" },
   });
 
   if (!res.ok) throw new Error(`Konachan error: HTTP ${res.status}`);
@@ -109,7 +109,7 @@ async function searchKonachan(query) {
 async function downloadImage(url) {
   const res = await fetch(url, {
     signal: AbortSignal.timeout(30000),
-    headers: { "User-Agent": "Mozilla/5.0 (NovaBot/1.0)" },
+    headers: { "User-Agent": "Mozilla/5.0 (RaraBot/1.0)" },
   });
 
   if (!res.ok) throw new Error(`Gagal mengunduh: HTTP ${res.status}`);
@@ -127,13 +127,13 @@ async function handler(m, { sock, config: botConfig }) {
       list += POPULAR_ANIME.slice(i, i + 4).join(", ") + "\n";
     }
     list += "\nCari: .wallpaperanime <nama> hd";
-    return m.reply( novaWrap("Wallpaper Anime", list));
+    return m.reply( raraWrap("Wallpaper Anime", list));
   }
 
   // Validasi input
   if (!text) {
     const help = `Unduh Wallpaper Anime HD\n\nCara pakai:\n.wallpaperanime <karakter> — Cari wallpaper\n.wallpaperanime random — Anime acak\n.wallpaperanime <karakter> hd — HD 1920x1080+\n.wallpaperanime <karakter> 4k — 4K 3840x2160+\n.wallpaperanime <karakter> mobile — Portrait HP\n.wallpaperanime list — Karakter populer\n\nContoh:\n.wallpaperanime naruto hd\n.wallpaperanime zero two\n.wallpaperanime rem mobile\n.wallpaperanime genshin impact 4k\n\nSource: Wallhaven (99rb+ anime) + Konachan (Jepang)`;
-    return m.reply( novaWrap("Wallpaper Anime", help));
+    return m.reply( raraWrap("Wallpaper Anime", help));
   }
   try {
     // Parse input: cek keyword resolusi
@@ -177,7 +177,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // 3. Kalau semua kosong
     if (!results || results.length === 0) {
-      return m.reply(novaWrap("Wallpaper Anime", `Tidak ada wallpaper anime untuk "${query}".\n\nCoba kata kunci lain:\nnaruto, one piece, demon slayer, gojo, rem\n\nAtau lihat: .wallpaperanime list`));
+      return m.reply(raraWrap("Wallpaper Anime", `Tidak ada wallpaper anime untuk "${query}".\n\nCoba kata kunci lain:\nnaruto, one piece, demon slayer, gojo, rem\n\nAtau lihat: .wallpaperanime list`));
     }
 
     // Pilih 1 random dari hasil (top 10)
@@ -194,12 +194,12 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: imageBuffer,
-      caption: novaWrap("Wallpaper Anime", caption),
+      caption: raraWrap("Wallpaper Anime", caption),
     }, { quoted: m });
   } catch (error) {
     let errMsg = error.message || "Gagal mencari wallpaper anime.";
     await m.react("❌");
-    return m.reply(novaWrap("Wallpaper Anime Error", errMsg));
+    return m.reply(raraWrap("Wallpaper Anime Error", errMsg));
   }
 }
 

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 import config from '../../config.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js"
+import { raraWrap } from "../../src/lib/rara-menu-style.js"
 import { setPanelField, clearPanelField, MAX_PANELS } from "../../src/lib/panel/index.js"
 
 const pluginConfig = {
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
         txt += '  ' + prefix + 'setpanel status\n'
         txt += '  (cek status semua server)'
 
-        return m.reply(novaWrap('setpanel', txt))
+        return m.reply(raraWrap('setpanel', txt))
     }
 
     // .setpanel status
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
         }
         if (configured === 0) txt += '(belum ada panel terkonfigurasi)\n'
         txt += 'Total terkonfigurasi: ' + configured + '/' + MAX_PANELS + ' slot\n'
-        return m.reply(novaWrap('setpanel', txt))
+        return m.reply(raraWrap('setpanel', txt))
     }
 
     // Parse: .setpanel v1 <domain> atau .setpanel v1 <field> <value>
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
     const serverNum = serverArg.match(/^v?(\d{1,3})$/)?.[1]
     const serverNumInt = parseInt(serverNum, 10)
     if (!serverNum || !(serverNumInt >= 1 && serverNumInt <= MAX_PANELS)) {
-        return m.reply(novaWrap('setpanel', 'Server tidak valid. Gunakan v1 sampai v100.\n\n💡 *Contoh:* ' + prefix + 'setpanel v1 https://domain.com'))
+        return m.reply(raraWrap('setpanel', 'Server tidak valid. Gunakan v1 sampai v100.\n\n💡 *Contoh:* ' + prefix + 'setpanel v1 https://domain.com'))
     }
 
     const serverKey = 'server' + serverNum
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
         // .setpanel v1 apikey <value>
         const value = args[2]
         if (!value) {
-            return m.reply(novaWrap('setpanel', 'Value tidak boleh kosong.\n\n💡 *Contoh:* ' + prefix + 'setpanel v1 apikey ptla_xxxx'))
+            return m.reply(raraWrap('setpanel', 'Value tidak boleh kosong.\n\n💡 *Contoh:* ' + prefix + 'setpanel v1 apikey ptla_xxxx'))
         }
 
         // Jangan tampilkan key di response
@@ -123,9 +123,9 @@ async function handler(m, { sock }) {
             if (config.pterodactyl?.[serverKey]) {
                 config.pterodactyl[serverKey][secondArg] = value
             }
-            return m.reply(novaWrap('setpanel', serverArg.toUpperCase() + ' ' + secondArg + ' berhasil diupdate\n\nNilai: ' + maskedValue + '\n\nPerubahan langsung aktif, tidak perlu restart'))
+            return m.reply(raraWrap('setpanel', serverArg.toUpperCase() + ' ' + secondArg + ' berhasil diupdate\n\nNilai: ' + maskedValue + '\n\nPerubahan langsung aktif, tidak perlu restart'))
         } else {
-            return m.reply(novaWrap('setpanel', 'Gagal update: ' + result.error))
+            return m.reply(raraWrap('setpanel', 'Gagal update: ' + result.error))
         }
     } else if (args[1]) {
         // .setpanel v1 https://domain.com (set domain)
@@ -142,12 +142,12 @@ async function handler(m, { sock }) {
             if (config.pterodactyl?.[serverKey]) {
                 config.pterodactyl[serverKey].domain = domain
             }
-            return m.reply(novaWrap('setpanel', serverArg.toUpperCase() + ' domain berhasil diupdate\n\nDomain: ' + domain + '\n\nPerubahan langsung aktif, tidak perlu restart'))
+            return m.reply(raraWrap('setpanel', serverArg.toUpperCase() + ' domain berhasil diupdate\n\nDomain: ' + domain + '\n\nPerubahan langsung aktif, tidak perlu restart'))
         } else {
-            return m.reply(novaWrap('setpanel', 'Gagal update domain: ' + result.error))
+            return m.reply(raraWrap('setpanel', 'Gagal update domain: ' + result.error))
         }
     } else {
-        return m.reply(novaWrap('setpanel', 'Format salah.\n\nContoh:\n  ' + prefix + 'setpanel v1 https://domain.com\n  ' + prefix + 'setpanel v1 apikey ptla_xxxx'))
+        return m.reply(raraWrap('setpanel', 'Format salah.\n\nContoh:\n  ' + prefix + 'setpanel v1 https://domain.com\n  ' + prefix + 'setpanel v1 apikey ptla_xxxx'))
     }
 }
 

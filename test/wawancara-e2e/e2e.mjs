@@ -13,8 +13,8 @@ const low = (s) => String(s || "").toLowerCase();
 
 const R = path.resolve(".");
 fs.rmSync("/tmp/wawancara-e2e-db", { recursive: true, force: true });
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/wawancara-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/wawancara-e2e-db/rara.json");
 const db = getDatabase();
 
 const { config, handler, _setWawancaraDepsForTest } = await import(R + "/plugins/ai/interview.js");

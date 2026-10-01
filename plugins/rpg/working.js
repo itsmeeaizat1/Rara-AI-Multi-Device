@@ -1,18 +1,18 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Kerja — Work for gold, scaling with job level (animated)
 
 import {
   ensureRpg, addExp, addGold, addJobExp, useEnergy,
   checkCooldown, setCooldown, formatTime, JOB_DB,
   addCash, spendCash, formatRp, saveRpg
-} from "../../src/lib/nova-rpg-service.js";
-import { animProfesi, PROFESI_ANIMATIONS, gajianCash } from "../../src/lib/nova-rpg-profesi.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { animProfesi, PROFESI_ANIMATIONS, gajianCash } from "../../src/lib/rara-rpg-profesi.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 /** Bar progress Job EXP standar ▰▱ (14 Sep — bar untuk semua progress level) */
 function jobBar(cur, next) {
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("kerja", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("kerja", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // Pilih jenis kerjaan dulu — jangan langsung eksekusi random
     const arg = (m.args[0] || "").toLowerCase();
@@ -124,18 +124,18 @@ async function handler(m, { sock }) {
     if (arg === "infinite") {
       if (!m.isOwner) {
         await m.react("🚫");
-        return m.reply(novaRpgBox("kerja", "Fitur infinite khusus owner bot.", "warn"));
+        return m.reply(raraRpgBox("kerja", "Fitur infinite khusus owner bot.", "warn"));
       }
       const sub = (m.args[1] || "").toLowerCase();
       if (sub === "on" || sub === "off") {
         rpg.cheat = sub === "on";
         saveRpg(m, rpg);
         await m.react("⚡");
-        return m.reply(novaRpgBox("kerja", sub === "on"
+        return m.reply(raraRpgBox("kerja", sub === "on"
           ? "💎 Mode INFINITE AKTIF\nKerja bebas cooldown & tanpa energi, payout ×100, stamina & cash gak pernah habis (belanja gak terpotong)."
           : "Mode infinite dimatikan. Ekonomi kembali normal.", sub === "on" ? "info" : "warn"));
       }
-      return m.reply(novaRpgBox("kerja", `💎 Mode INFINITE : ${rpg.cheat ? "AKTIF ✅" : "MATI ❌"}\nPerintah: ${m.prefix}working infinite on/off\nEfek: kerja bebas cooldown/energi, payout ×100, stamina gak habis, belanja gak motong cash.`, "info"));
+      return m.reply(raraRpgBox("kerja", `💎 Mode INFINITE : ${rpg.cheat ? "AKTIF ✅" : "MATI ❌"}\nPerintah: ${m.prefix}working infinite on/off\nEfek: kerja bebas cooldown/energi, payout ×100, stamina gak habis, belanja gak motong cash.`, "info"));
     }
 
     const chosenJob = JOB_CHOICES[arg];
@@ -148,12 +148,12 @@ async function handler(m, { sock }) {
     const cd = cheat ? 0 : checkCooldown(m, "lastWork");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("kerja", `Cooldown kerja tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("kerja", `Cooldown kerja tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (!cheat && rpg.energy < WORK_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("kerja", `Energi kurang! Butuh *${WORK_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
+      return m.reply(raraRpgBox("kerja", `Energi kurang! Butuh *${WORK_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
     }
 
     if (!cheat) useEnergy(m, WORK_ENERGY, sock);
@@ -209,7 +209,7 @@ async function handler(m, { sock }) {
       "",
       `⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
     ].join("\n");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "kerja", icon: "💼",
       flavor: prof.gajian[0] || "💼 *GAJIAN!*",
       body,
@@ -218,7 +218,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("kerja error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("kerja", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("kerja", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

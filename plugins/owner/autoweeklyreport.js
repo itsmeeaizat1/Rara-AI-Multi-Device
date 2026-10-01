@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autoweeklyreport — Auto Weekly Group Insights
  *
@@ -26,15 +26,15 @@
 import fs from "fs";
 import path from "path";
 import { CronJob } from "cron";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaNoInput, novaGuide, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraNoInput, raraGuide, toSC, raraBox } from "../../src/lib/rara-menu-style.js";
 import {
   getWeeklyStats,
   getLeaderboard,
   getChatBuffer,
   getCurrentWeekStartWIB,
   initActivityTracker,
-} from "../../src/lib/nova-activity-tracker.js";
+} from "../../src/lib/rara-activity-tracker.js";
 
 // Seam e2e: AI analyzer bisa di-inject biar tes gak nyamber AI live
 let analyzeChatFn = null;
@@ -64,7 +64,7 @@ Aturan: maksimal 3 topik paling sering dibahas (abstraksi, bukan kutipan). Angka
 
     const reply = analyzeChatFn
       ? await analyzeChatFn(prompt)
-      : (await import("../../src/lib/nova-ai-fallback.js")).aiChainChat(prompt);
+      : (await import("../../src/lib/rara-ai-fallback.js")).aiChainChat(prompt);
 
     if (!reply || typeof reply !== "string") return null;
     let raw = reply.replace(/```(json)?/gi, "").trim();
@@ -274,7 +274,7 @@ async function generateReport(sock, groupId) {
 
   // Kalau tidak ada aktivitas
   if (stats.totalMessages === 0) {
-    return novaBox(toSC("Weekly Group Insights"), [
+    return raraBox(toSC("Weekly Group Insights"), [
       `${toSC("Grup")}: ${groupName}`,
       toSC("Tidak ada aktivitas minggu ini"),
       ``,
@@ -353,10 +353,10 @@ async function generateReport(sock, groupId) {
   }
 
   // Footer
-  lines.push(`${toSC("Auto-generated oleh Nova AI")}`);
+  lines.push(`${toSC("Auto-generated oleh Rara AI")}`);
   lines.push(`${toSC("Lapor mingguan tiap Senin")}`);
 
-  return novaBox(toSC("Weekly Group Insights"), lines);
+  return raraBox(toSC("Weekly Group Insights"), lines);
 }
 
 // ============================================================
@@ -444,7 +444,7 @@ async function sendAllReports(sock) {
 
   // Notifikasi owner
   if (ownerNums.length > 0) {
-    const summary = novaBox(toSC("Weekly Report Sent"), [
+    const summary = raraBox(toSC("Weekly Report Sent"), [
       `Sent: ${sentCount} ${toSC("grup")}`,
       `Failed: ${failCount}`,
       `Send to: ${settings.sendTo === "owner" ? "PM Owner" : toSC("Grup")}`,
@@ -512,7 +512,7 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push(``);
     lines.push(`${toSC("Ketik")} .autoweeklyreport now ${toSC("untuk test")}`);
 
-    await m.reply(novaBox(toSC("Weekly Group Insights"), lines));
+    await m.reply(raraBox(toSC("Weekly Group Insights"), lines));
     return;
   }
 
@@ -522,7 +522,7 @@ async function handler(m, { sock, config: botConfig }) {
     saveSettings(db);
     startCron(sock);
     startSnapshotCron();
-    await m.reply(novaBox(toSC("Weekly Group Insights"), [
+    await m.reply(raraBox(toSC("Weekly Group Insights"), [
       toSC("Auto-report AKTIF"),
       `Schedule: Senin ${settings.sendTime} WIB`,
       `Send to: ${settings.sendTo === "owner" ? "PM Owner" : toSC("Grup")}`,
@@ -537,7 +537,7 @@ async function handler(m, { sock, config: botConfig }) {
     settings.enabled = false;
     saveSettings(db);
     stopCron();
-    await m.reply(novaBox(toSC("Weekly Group Insights"), [
+    await m.reply(raraBox(toSC("Weekly Group Insights"), [
       toSC("Auto-report DIMATIKAN"),
       toSC("Daily snapshot tetap berjalan"),
     ]));
@@ -551,7 +551,7 @@ async function handler(m, { sock, config: botConfig }) {
     let groupId = args[1];
     if (!groupId && m.isGroup) groupId = m.chat;
     if (!groupId) {
-      return m.reply(novaError("autoweeklyreport", "Butuh groupId atau jalankan di dalam grup", ".autoweeklyreport now 1203xxx@g.us"));
+      return m.reply(raraError("autoweeklyreport", "Butuh groupId atau jalankan di dalam grup", ".autoweeklyreport now 1203xxx@g.us"));
     }
 
     const report = await generateReport(sock, groupId);
@@ -565,18 +565,18 @@ async function handler(m, { sock, config: botConfig }) {
     let groupId = args[1];
     if (!groupId && m.isGroup) groupId = m.chat;
     if (!groupId) {
-      return m.reply(novaError("autoweeklyreport", "Butuh groupId atau jalankan di dalam grup", ".autoweeklyreport addgc 1203xxx@g.us"));
+      return m.reply(raraError("autoweeklyreport", "Butuh groupId atau jalankan di dalam grup", ".autoweeklyreport addgc 1203xxx@g.us"));
     }
 
     if (settings.groups.includes(groupId)) {
-      return m.reply(novaError("autoweeklyreport", "Grup sudah ada di daftar", ".autoweeklyreport listgc"));
+      return m.reply(raraError("autoweeklyreport", "Grup sudah ada di daftar", ".autoweeklyreport listgc"));
     }
 
     settings.groups.push(groupId);
     saveSettings(db);
 
     const groupName = await getGroupName(sock, groupId).catch(() => groupId.split("@")[0]);
-    await m.reply(novaBox(toSC("Weekly Group Insights"), [
+    await m.reply(raraBox(toSC("Weekly Group Insights"), [
       `${toSC("Grup ditambahkan")}: ${groupName}`,
       `Total grup: ${settings.groups.length}`,
     ]));
@@ -588,18 +588,18 @@ async function handler(m, { sock, config: botConfig }) {
     let groupId = args[1];
     if (!groupId && m.isGroup) groupId = m.chat;
     if (!groupId) {
-      return m.reply(novaError("autoweeklyreport", "Butuh groupId atau jalankan di dalam grup", ".autoweeklyreport delgc 1203xxx@g.us"));
+      return m.reply(raraError("autoweeklyreport", "Butuh groupId atau jalankan di dalam grup", ".autoweeklyreport delgc 1203xxx@g.us"));
     }
 
     if (!settings.groups.includes(groupId)) {
-      return m.reply(novaError("autoweeklyreport", "Grup tidak ada di daftar", ".autoweeklyreport listgc"));
+      return m.reply(raraError("autoweeklyreport", "Grup tidak ada di daftar", ".autoweeklyreport listgc"));
     }
 
     settings.groups = settings.groups.filter((g) => g !== groupId);
     saveSettings(db);
 
     const groupName = await getGroupName(sock, groupId).catch(() => groupId.split("@")[0]);
-    await m.reply(novaBox(toSC("Weekly Group Insights"), [
+    await m.reply(raraBox(toSC("Weekly Group Insights"), [
       `${toSC("Grup dihapus")}: ${groupName}`,
       `Total grup: ${settings.groups.length}`,
     ]));
@@ -609,7 +609,7 @@ async function handler(m, { sock, config: botConfig }) {
   // .autoweeklyreport listgc
   if (subCmd === "listgc" || subCmd === "list") {
     if (settings.groups.length === 0) {
-      return m.reply(novaBox(toSC("Weekly Group Insights"), [
+      return m.reply(raraBox(toSC("Weekly Group Insights"), [
         toSC("Belum ada grup yang di-enable"),
         `${toSC("Gunakan")} .autoweeklyreport addgc <groupId>`,
       ]));
@@ -628,7 +628,7 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push(``);
     lines.push(`${toSC("Send to")}: ${settings.sendTo === "owner" ? "PM Owner" : toSC("Grup")}`);
 
-    await m.reply(novaBox(toSC("Grup Enabled"), lines));
+    await m.reply(raraBox(toSC("Grup Enabled"), lines));
     return;
   }
 
@@ -636,7 +636,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "settime") {
     const time = args[1];
     if (!time || !/^\d{1,2}:\d{2}$/.test(time)) {
-      return m.reply(novaError("autoweeklyreport", "Format: HH:MM", ".autoweeklyreport settime 08:00"));
+      return m.reply(raraError("autoweeklyreport", "Format: HH:MM", ".autoweeklyreport settime 08:00"));
     }
 
     settings.sendTime = time;
@@ -647,7 +647,7 @@ async function handler(m, { sock, config: botConfig }) {
       startCron(sock);
     }
 
-    await m.reply(novaBox(toSC("Weekly Group Insights"), [
+    await m.reply(raraBox(toSC("Weekly Group Insights"), [
       `Send Time: Senin ${time} WIB`,
       toSC("Schedule updated"),
     ]));
@@ -658,13 +658,13 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "sendto") {
     const target = args[1]?.toLowerCase();
     if (target !== "group" && target !== "owner") {
-      return m.reply(novaError("autoweeklyreport", "Pilih: group atau owner", ".autoweeklyreport sendto owner"));
+      return m.reply(raraError("autoweeklyreport", "Pilih: group atau owner", ".autoweeklyreport sendto owner"));
     }
 
     settings.sendTo = target;
     saveSettings(db);
 
-    await m.reply(novaBox(toSC("Weekly Group Insights"), [
+    await m.reply(raraBox(toSC("Weekly Group Insights"), [
       `Send To: ${target === "owner" ? "PM Owner" : toSC("Grup")}`,
     ]));
     return;
@@ -677,13 +677,13 @@ async function handler(m, { sock, config: botConfig }) {
       const snaps = takeDailySnapshot();
       const groupCount = Object.keys(snaps).length;
       await m.react("🐣");
-      await m.reply(novaBox(toSC("Daily Snapshot"), [
+      await m.reply(raraBox(toSC("Daily Snapshot"), [
         `${toSC("Snapshot taken")}: ${new Date().toLocaleString("id-ID")}`,
         `${toSC("Grup terlacak")}: ${groupCount}`,
       ]));
       return;
     }
-    return m.reply(novaError("autoweeklyreport", "Format: .autoweeklyreport snapshot now", ".autoweeklyreport snapshot now"));
+    return m.reply(raraError("autoweeklyreport", "Format: .autoweeklyreport snapshot now", ".autoweeklyreport snapshot now"));
   }
 
   // .autoweeklyreport reset
@@ -692,7 +692,7 @@ async function handler(m, { sock, config: botConfig }) {
     settings.lastSent = null;
     settings.lastSnapshot = null;
     saveSettings(db);
-    await m.reply(novaBox(toSC("Weekly Group Insights"), [
+    await m.reply(raraBox(toSC("Weekly Group Insights"), [
       toSC("Snapshot data direset"),
       toSC("Group list tetap, hanya data snapshot yang dihapus"),
     ]));
@@ -700,7 +700,7 @@ async function handler(m, { sock, config: botConfig }) {
   }
 
   // Unknown
-  return m.reply(novaError("autoweeklyreport", novaGuide(botConfig.command?.prefix || ".", "autoweeklyreport", m.pushName), ".autoweeklyreport now"));
+  return m.reply(raraError("autoweeklyreport", raraGuide(botConfig.command?.prefix || ".", "autoweeklyreport", m.pushName), ".autoweeklyreport now"));
 }
 
 export { pluginConfig, handler, pluginConfig as config };

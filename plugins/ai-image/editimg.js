@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // editimg — Edit gambar dengan AI (text-to-image editing)
 import { Img2Img } from "../../src/scraper/img2img.js";
 import { live3d } from "../../src/scraper/seaart.js";
-import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "editimg",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
     if (!isImage) {
       return m.reply(
-        novaGuide(
+        raraGuide(
           "editimg",
           "Edit gambar dengan AI\n" +
           "Kirim/reply foto + caption instruksi",
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     const prompt = m.text?.trim() || m.args?.join(" ").trim();
     if (!prompt) {
       await m.react("❌");
-      return m.reply(novaWrap("editimg", `Kasih instruksi editnya!\n\nContoh: ${prefix}editimg ubah background jadi pantai (reply foto)`, "guide"));
+      return m.reply(raraWrap("editimg", `Kasih instruksi editnya!\n\nContoh: ${prefix}editimg ubah background jadi pantai (reply foto)`, "guide"));
     }
 
     await m.react("🕒");
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
 
     if (!buffer) {
       await m.react("❌");
-      return m.reply(novaWrap("editimg", "Gagal download gambar. Coba kirim ulang.", "error"));
+      return m.reply(raraWrap("editimg", "Gagal download gambar. Coba kirim ulang.", "error"));
     }
 
     // Rantai edit gambar — nano-banana DULUAN (live verified 8 Sep 2026),
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
 
     if (!result) {
       await m.react("❌");
-      return m.reply(novaWrap("editimg", "Semua API edit gambar lagi down. Coba lagi nanti.", "error"));
+      return m.reply(raraWrap("editimg", "Semua API edit gambar lagi down. Coba lagi nanti.", "error"));
     }
 
     await m.react("🐣");
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("editimg error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("editimg", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("editimg", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

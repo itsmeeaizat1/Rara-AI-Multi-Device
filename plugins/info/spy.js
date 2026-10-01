@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaHeader,  separator, tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraHeader,  separator, tipText, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "spy",
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!target) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "ℹ️",
   name: "spy",
   description: "Lihat info target",
@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
     ];
 
     const text =
-      novaWrap("Spy", ["🕵️", "---", { subHeader: "Intel" }, ...lines]) +
+      raraWrap("Spy", ["🕵️", "---", { subHeader: "Intel" }, ...lines]) +
       "\n\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Spy", "Gagal nih, coba lagi ya");
+      raraError("Spy", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "spy");
   }

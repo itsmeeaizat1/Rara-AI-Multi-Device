@@ -3,7 +3,7 @@
 // key kosong / status != 200 / balas kosong → error asli keluar.
 // GOTCHA LIVE: sebagian model balas SSE walau stream:false — dua-duanya dites.
 import fs from "node:fs";
-import { initDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase } from "../../src/lib/rara-database.js";
 import { fromSC } from "../../src/lib/styler.js";
 import * as mod from "../../src/scraper/router9v2.js";
 import plug from "../../plugins/ai/ai9v2.js";
@@ -35,7 +35,7 @@ const t = (name, ok, extra) => {
 // ── mock m ──
 function mkM(text, args) {
   // GOTCHA: [] itu TRUTHY → (args || text) milih array kosong → [].split
-  // TypeError → di-swallow handler uncaughtException global (nova-lid.js)
+  // TypeError → di-swallow handler uncaughtException global (rara-lid.js)
   // → test MATI SENYAP exit 0.
   const argArr = Array.isArray(args) ? args : String(args || text || "").split(/\s+/).filter(Boolean);
   const o = {

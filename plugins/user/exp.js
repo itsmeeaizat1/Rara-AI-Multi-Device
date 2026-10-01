@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { calculateLevel, getRole } from "../../src/lib/nova-level.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { calculateLevel, getRole } from "../../src/lib/rara-level.js";
 
 const pluginConfig = {
   name: "expuser",

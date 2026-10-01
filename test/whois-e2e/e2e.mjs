@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: .WHOIS — "Siapa nomor ini?" dossier AI dari histori persisten
+// RARA AI WHATSAPP BOT — E2E: .WHOIS — "Siapa nomor ini?" dossier AI dari histori persisten
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -11,10 +11,10 @@ const t = (name, cond, extra = "") => {
 };
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "whois-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const chatlog = await import(R + "/src/lib/nova-chat-log.js");
+const chatlog = await import(R + "/src/lib/rara-chat-log.js");
 const whois = await import(R + "/plugins/owner/whois.js");
 const { config: pc, handler } = whois;
 const I = whois._whoisInternalsForTest();

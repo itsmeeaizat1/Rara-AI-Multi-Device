@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .kategori — Manage kategori toko biasa
  * Owner: lihat, tambah, hapus kategori
  * User: lihat daftar kategori + produk per kategori
  */
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, toSC, raraBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "kategori",
@@ -42,31 +42,31 @@ async function handler(m, { sock }) {
     if (action === "add" && isOwner) {
       const nama = (args[1] || "").toLowerCase();
       if (!nama || nama.length < 2) {
-        return m.reply(novaWrap("Kategori", "Format: .kategori add <nama>"));
+        return m.reply(raraWrap("Kategori", "Format: .kategori add <nama>"));
       }
       if (customCats.includes(nama)) {
-        return m.reply(novaWrap("Kategori", "Kategori sudah ada: " + nama));
+        return m.reply(raraWrap("Kategori", "Kategori sudah ada: " + nama));
       }
       customCats.push(nama);
       db.setting("storeCategories", customCats);
       db.save();
-      return m.reply(novaWrap("Kategori", toSC("Kategori ditambah") + ": " + nama));
+      return m.reply(raraWrap("Kategori", toSC("Kategori ditambah") + ": " + nama));
     }
 
     // Owner: del kategori
     if (action === "del" && isOwner) {
       const nama = (args[1] || "").toLowerCase();
       if (!nama) {
-        return m.reply(novaWrap("Kategori", "Format: .kategori del <nama>"));
+        return m.reply(raraWrap("Kategori", "Format: .kategori del <nama>"));
       }
       const idx = customCats.indexOf(nama);
       if (idx === -1) {
-        return m.reply(novaWrap("Kategori", "Kategori tidak ditemukan: " + nama));
+        return m.reply(raraWrap("Kategori", "Kategori tidak ditemukan: " + nama));
       }
       customCats.splice(idx, 1);
       db.setting("storeCategories", customCats);
       db.save();
-      return m.reply(novaWrap("Kategori", toSC("Kategori dihapus") + ": " + nama));
+      return m.reply(raraWrap("Kategori", toSC("Kategori dihapus") + ": " + nama));
     }
 
     // Show all categories
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
       const allCats = [...new Set([...customCats, ...productCats])];
 
       if (allCats.length === 0) {
-        return m.reply(novaWrap("Kategori", toSC("Belum ada kategori.") + " Tambah produk dengan kategori atau .kategori add <nama>"));
+        return m.reply(raraWrap("Kategori", toSC("Belum ada kategori.") + " Tambah produk dengan kategori atau .kategori add <nama>"));
       }
 
       const lines = [""];
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
         lines.push(toSC("Owner: .kategori add/del <nama>"));
       }
 
-      return m.reply(novaBox("KATEGORI TOKO", lines));
+      return m.reply(raraBox("KATEGORI TOKO", lines));
     }
 
     // Show products in category
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
 
     if (filtered.length === 0) {
       const allCats = [...new Set(products.map((p) => p.kategori || "umum"))];
-      return m.reply(novaWrap("Kategori",
+      return m.reply(raraWrap("Kategori",
         toSC("Kategori tidak ditemukan") + ": " + filterCat + "\\n\\n" +
         "Tersedia: " + allCats.join(", ")
       ));
@@ -131,9 +131,9 @@ async function handler(m, { sock }) {
 
     lines.push(toSC("Beli: .beli <nomor>"));
 
-    return m.reply(novaBox("KATEGORI: " + filterCat.toUpperCase(), lines));
+    return m.reply(raraBox("KATEGORI: " + filterCat.toUpperCase(), lines));
   } catch (error) {
-    return m.reply(novaWrap("Kategori", toSC("Error") + ": " + error.message));
+    return m.reply(raraWrap("Kategori", toSC("Error") + ": " + error.message));
   }
 }
 

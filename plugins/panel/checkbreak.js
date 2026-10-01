@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { hasAccessToServer, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
-import * as timeHelper from '../../src/lib/nova-time.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { hasAccessToServer, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
+import * as timeHelper from '../../src/lib/rara-time.js'
 const DEFAULT_JEDA = 5 * 60 * 1000;
 
 const pluginConfig = {
@@ -40,7 +40,7 @@ function handler(m, { sock }) {
   );
 
   if (!hasAccess && !m.isOwner) {
-    return m.reply(novaError("Panel", `❌ *gagal*\n\nKamu tidak memiliki akses ke CPanel!`));
+    return m.reply(raraError("Panel", `❌ *gagal*\n\nKamu tidak memiliki akses ke CPanel!`));
   }
 
   const db = getDatabase();
@@ -84,7 +84,7 @@ function handler(m, { sock }) {
     text += `_Owner: gunakan \`${m.prefix}jedacreate\` untuk setting_`;
   }
 
-  return m.reply(novaWrap("cekjeda", text));
+  return m.reply(raraWrap("cekjeda", text));
 }
 
 export { pluginConfig as config, handler }

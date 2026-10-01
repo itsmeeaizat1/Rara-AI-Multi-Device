@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolnumberwords — angka → terbilang Bahasa Indonesia (port altftool.com/tools/all/number-to-words)
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolnumberwords", alias: ["numberwords", "terbilang", "kataangka"], category: "tools",
@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const raw = (m.text || "").trim().replace(/\./g, "");
     if (!raw) {
-      return m.reply(novaGuideV2("ftoolnumberwords", {
+      return m.reply(raraGuideV2("ftoolnumberwords", {
         kaomoji: "(◍•ᴗ•◍)",
         sapaan: "angka mau dijadiin terbilang? tinggal ketik angkanya~",
         cara: "masukkan angka bulat sampai 999 triliun, titik pemisah ribuan boleh ikut",
@@ -50,7 +50,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (!/^\d{1,15}$/.test(raw)) {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftoolnumberwords", {
+      return m.reply(raraSalahV2("ftoolnumberwords", {
         kaomoji: "(・_・;)",
         pesan: "input harus angka bulat positif maksimal 15 digit",
         contoh: `${prefix}ftoolnumberwords 1500000`,
@@ -59,7 +59,7 @@ async function handler(m, { sock, config: botConfig }) {
     const n = Number(raw);
     if (n > 999999999999999) {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftoolnumberwords", {
+      return m.reply(raraSalahV2("ftoolnumberwords", {
         kaomoji: "(・_・;)",
         pesan: "angkanya kegedean, maksimal 999 triliun",
         contoh: `${prefix}ftoolnumberwords 1500000`,
@@ -67,12 +67,12 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const words = terbilang(n);
     await m.react("🐣");
-    await m.reply(novaWrap("Terbilang", [`Angka: ${raw}`,
+    await m.reply(raraWrap("Terbilang", [`Angka: ${raw}`,
       "",
       "```" + words.charAt(0).toUpperCase() + words.slice(1) + ".```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("Terbilang", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("Terbilang", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'toaudio',
     alias: ["toaudio"],
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
         await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -vn -ar 44100 -ac 2 -b:a 192k "${outputPath}"`)
 
         if (!fs.existsSync(outputPath)) {
-            await m.reply(novaWrap("toaudio", `❌ *konversi gagal*\n\n` +
+            await m.reply(raraWrap("toaudio", `❌ *konversi gagal*\n\n` +
                 `Gagal mengekstrak audio dari media.\n` +
                 `Pastikan ffmpeg terinstall dengan benar.`))
             return

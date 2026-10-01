@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaHeader, separator, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraHeader, separator, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "aidescribe", alias: ["aidescribe"], category: "smart",
@@ -14,7 +14,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
-      await m.reply( novaWrap("AI Describe", ["Reply gambar dengan command ini",
+      await m.reply( raraWrap("AI Describe", ["Reply gambar dengan command ini",
         "AI akan mendeskripsikan isinya"].join("\n")), "aidescribe");
       return { handled: true };
     }
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
       systemPrompt: "Kamu adalah AI vision yang mendeskripsikan gambar.",
       image: base64,
     });
-    await m.reply(novaWrap("AI Describe", "👁️") + "\n\n" + result );
+    await m.reply(raraWrap("AI Describe", "👁️") + "\n\n" + result );
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import { downloadContentFromMessage } from "nova";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "antirvo",
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
   if (!action) {
     const status = currentStatus ? "ON" : "OFF";
     const scope = isGroup ? "Grup ini" : "Private chat";
-    await m.reply(novaWrap("AntiRvo", [`Status ${scope}: ${status}`, ``, `Ketik:`, `${m.prefix}antirvo on  - Aktifkan`, `${m.prefix}antirvo off - Nonaktifkan`, ``, `Saat aktif, setiap pesan sekali lihat (view once) akan otomatis ditampilkan sebagai media biasa.`].join("\n")));
+    await m.reply(raraWrap("AntiRvo", [`Status ${scope}: ${status}`, ``, `Ketik:`, `${m.prefix}antirvo on  - Aktifkan`, `${m.prefix}antirvo off - Nonaktifkan`, ``, `Saat aktif, setiap pesan sekali lihat (view once) akan otomatis ditampilkan sebagai media biasa.`].join("\n")));
     return;
   }
 
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
       if (!config.antirvo) config.antirvo = {};
       config.antirvo.private = true;
     }
-    await m.reply(novaWrap("AntiRvo", "AntiRvo diaktifkan. Setiap pesan sekali lihat akan otomatis ditampilkan."));
+    await m.reply(raraWrap("AntiRvo", "AntiRvo diaktifkan. Setiap pesan sekali lihat akan otomatis ditampilkan."));
     return;
   }
 
@@ -149,11 +149,11 @@ async function handler(m, { sock }) {
       if (!config.antirvo) config.antirvo = {};
       config.antirvo.private = false;
     }
-    await m.reply(novaWrap("AntiRvo", "AntiRvo dinonaktifkan."));
+    await m.reply(raraWrap("AntiRvo", "AntiRvo dinonaktifkan."));
     return;
   }
 
-  await m.reply(novaGuide("AntiRvo", "Pilihan gak valid nih!", m.prefix + "antirvo on/off"));
+  await m.reply(raraGuide("AntiRvo", "Pilihan gak valid nih!", m.prefix + "antirvo on/off"));
 }
 
 export { pluginConfig as config, handler };

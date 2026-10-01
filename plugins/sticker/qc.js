@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Quote Card sticker — hybrid: API quotly (primary, hasil ala Telegram/Alya)
 // + render lokal @napi-rs/canvas (fallback otomatis kalau API down)
 import axios from 'axios'
 import canvasPkg from '@napi-rs/canvas';
-import { novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 const { createCanvas, loadImage } = canvasPkg;
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js"
+import te from '../../src/lib/rara-error.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js"
 
 const pluginConfig = {
     name: 'qc',
@@ -211,7 +211,7 @@ async function handler(m, { sock }) {
     // Usage hanya muncul kalau .qc polos tanpa text dan tanpa reply
     if (args.length === 0 && !m.quoted) {
         const colorList = Object.keys(COLORS).join(', ')
-        return m.reply(novaWrap("qc", [
+        return m.reply(raraWrap("qc", [
             "📌 Format:",
             m.prefix + "qc <text> — background putih (default)",
             m.prefix + "qc <warna> <text> — background sesuai warna",
@@ -238,11 +238,11 @@ async function handler(m, { sock }) {
     }
 
     if (!message) {
-        return m.reply(novaWrap("qc", "Masukkan text untuk quote!", "error"))
+        return m.reply(raraWrap("qc", "Masukkan text untuk quote!", "error"))
     }
 
     if (message.length > 80) {
-        return m.reply(novaWrap("qc", `Maksimal 80 karakter! (Saat ini: ${message.length})`, "error"))
+        return m.reply(raraWrap("qc", `Maksimal 80 karakter! (Saat ini: ${message.length})`, "error"))
     }
 
     try {
@@ -262,14 +262,14 @@ async function handler(m, { sock }) {
         await m.react("🐣")
 
         await sock.sendImageAsSticker(m.chat, buffer, m, {
-            packname: config.sticker?.packname || 'Nova-AI',
+            packname: config.sticker?.packname || 'Rara-AI',
             author: config.sticker?.author || 'Bot'
         })
-        await m.reply(novaBerhasil("Qc"));
+        await m.reply(raraBerhasil("Qc"));
     } catch (error) {
         console.error("[qc] Error:", error.message)
         await m.react("❌")
-        m.reply(novaGangguan("Qc"))
+        m.reply(raraGangguan("Qc"))
     }
 }
 

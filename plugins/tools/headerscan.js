@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaHeader,  separator, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraHeader,  separator, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 import https from "node:https";
 import http from "node:http";
 
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
-      await m.reply( novaCaption({
+      await m.reply( raraCaption({
   emoji: "🛠️",
   name: "headerscan",
   description: "Scan HTTP headers website",
@@ -29,7 +29,7 @@ async function handler(m, { sock, config: botConfig }) {
     const mod = url.startsWith("https") ? https : http;
     await new Promise((resolve, reject) => {
       mod.request(url, { method: "HEAD", timeout: 10000 }, (res) => {
-        let text = novaWrap("Header Scan", "🔍") + "\n\n" + novaWrap(url, [
+        let text = raraWrap("Header Scan", "🔍") + "\n\n" + raraWrap(url, [
           `Status: *${res.statusCode} ${res.statusMessage}*`,
           ...Object.entries(res.headers).slice(0, 12).map(([k,v]) => `${k}: ${v}`),
         ]);
@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaError("Tools", "Gagal nih"));
+    await m.reply(raraError("Tools", "Gagal nih"));
   }
   return { handled: true };
 }

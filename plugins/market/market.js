@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .market — Alfamart Market System (menu utama)
  *
@@ -7,13 +7,13 @@
  * User: belanja, lacak paket, cek riwayat
  */
 
-import { novaWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, toSC, raraBox } from "../../src/lib/rara-menu-style.js";
 import {
   getProducts, getCategories, listByCategory,
   cartTotal, getCart, listInvoices,
   formatRupiah, formatStock, statusText,
   KATEGORI_TOKO, KURIR_LIST,
-} from "../../src/lib/nova-toko2.js";
+} from "../../src/lib/rara-toko2.js";
 
 const pluginConfig = {
   name: "market",
@@ -111,9 +111,9 @@ async function handler(m, { sock }) {
       lines.push(toSC("Kurir") + ": " + Object.keys(KURIR_LIST).length + " kurir support");
     }
 
-    return m.reply(novaBox("MARKET ALFAMART", lines));
+    return m.reply(raraBox("MARKET ALFAMART", lines));
   } catch (error) {
-    return m.reply(novaWrap("Market", toSC("Error") + ": " + error.message));
+    return m.reply(raraWrap("Market", toSC("Error") + ": " + error.message));
   }
 }
 

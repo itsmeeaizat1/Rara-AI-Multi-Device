@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════════════════════════════
 // CHATREVIVE — fitur grup "deteksi dead chat + revive" (30 Sep 2026)
 // Grup sepi > N jam (default 6) → bot kirim 1 pertanyaan/fakta seru
@@ -7,18 +7,18 @@
 // ═══════════════════════════════════════════════════════════════════════
 
 import {
-  novaWrap,
+  raraWrap,
   toSC,
   bracketBox,
   tipText,
-} from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-menu-style.js";
 import {
   enableChatRevive,
   disableChatRevive,
   setChatReviveThreshold,
   getChatReviveStatus,
   testChatRevive,
-} from "../../src/lib/nova-chat-revive.js";
+} from "../../src/lib/rara-chat-revive.js";
 
 const pluginConfig = {
   name: "chatrevive",
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
     }
     const r = setChatReviveThreshold(jid, jam);
     if (!r.ok) {
-      return reply(novaWrap("chatrevive", toSC("Batas sepi harus angka bulat antara 1 sampai 24 jam. Contoh: .chatrevive jam 3")));
+      return reply(raraWrap("chatrevive", toSC("Batas sepi harus angka bulat antara 1 sampai 24 jam. Contoh: .chatrevive jam 3")));
     }
     return reply(bracketBox("✅", toSC("Batas Sepi Diubah"), [
       toSC("Grup dianggap sepi setelah") + " " + r.thresholdHours + " " + toSC("jam tanpa obrolan"),
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
   if (action === "tes" || action === "now") {
     const r = await testChatRevive(sock, jid);
     if (!r.sent) {
-      return reply(novaWrap("chatrevive", toSC("AI-nya lagi gak bisa bikin pesan sekarang. Fitur jalan otomatis kalau grup sepi — coba lagi nanti ya")));
+      return reply(raraWrap("chatrevive", toSC("AI-nya lagi gak bisa bikin pesan sekarang. Fitur jalan otomatis kalau grup sepi — coba lagi nanti ya")));
     }
     return; // pesan revive udah kekirim oleh engine, gak perlu bunyi lagi
   }

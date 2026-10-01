@@ -2,7 +2,7 @@ import { appendFileSync } from "fs";
 const log = (s) => appendFileSync("/tmp/chart-debug.log", s + "\n");
 try {
   log("1. start");
-  const { initDatabase, getDatabase } = await import("../../src/lib/nova-database.js");
+  const { initDatabase, getDatabase } = await import("../../src/lib/rara-database.js");
   log("2. imported db");
   await initDatabase("/tmp/chart-e2e-db.json");
   log("3. init done");

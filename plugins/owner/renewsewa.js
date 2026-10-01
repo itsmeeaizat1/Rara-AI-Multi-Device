@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 import fs from "fs";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
-import { grantSewaPremium } from "../../src/lib/nova-sewa-premium.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { notifySewaBot } from "../../src/lib/rara-saluran-broadcast.js";
+import { grantSewaPremium } from "../../src/lib/rara-sewa-premium.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "renewsewa",
   alias: ["renewsewa"],
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
 
   const args = m.args;
   if (args.length < 2) {
-    return m.reply(novaWrap("renewsewa", `📝 *PERPANJANG SEWA*\n\n` +
+    return m.reply(raraWrap("renewsewa", `📝 *PERPANJANG SEWA*\n\n` +
         `Format: *${m.prefix}renewsewa <link/id> <durasi>*\n\n` +
         `*FORMAT DURASI:*\n` +
         `30i = 30 menit\n` +
@@ -126,11 +126,11 @@ async function handler(m, { sock }) {
   const durationMs = parseDurationMs(durationStr);
 
   if (!durationMs)
-    return m.reply(novaWrap("Renewsewa", `❌ Format durasi tidak valid\n💡 *Contoh:* 7d, 1m, 1y, lifetime`));
+    return m.reply(raraWrap("Renewsewa", `❌ Format durasi tidak valid\n💡 *Contoh:* 7d, 1m, 1y, lifetime`));
   try {
     const result = await resolveGroupId(sock, input);
     if (!result) {
-      return m.reply(novaWrap("renewsewa", `❌ Grup tidak ditemukan`));
+      return m.reply(raraWrap("renewsewa", `❌ Grup tidak ditemukan`));
     }
 
     const { id: groupId, inviteCode } = result;
@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
       existing.isLifetime = true;
     } else {
       if (existing.isLifetime) {
-        return m.reply(novaWrap("Renewsewa", `❌ Grup ini sudah Permanent, tidak perlu diperpanjang`));
+        return m.reply(raraWrap("Renewsewa", `❌ Grup ini sudah Permanent, tidak perlu diperpanjang`));
       }
       const baseTime =
         existing.expiredAt > Date.now() ? existing.expiredAt : Date.now();
@@ -218,9 +218,9 @@ async function handler(m, { sock }) {
       );
     } catch (e) { console.error('[renewsewa.js]:', e.message); }
 
-    return m.reply(novaWrap("renewsewa", text));
+    return m.reply(raraWrap("renewsewa", text));
   } catch (error) {
-    await m.reply(novaWrap("renewsewa", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(raraWrap("renewsewa", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

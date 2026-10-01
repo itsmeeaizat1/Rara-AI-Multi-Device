@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import fs from "fs";
 import path from "path";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "rulesgrup",
   alias: ["rulesgrup"],
@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     process.cwd(),
     "assets",
     "images",
-    "nova-rules.jpg",
+    "rara-rules.jpg",
   );
   let imageBuffer = fs.existsSync(imagePath)
     ? fs.readFileSync(imagePath)
@@ -51,14 +51,14 @@ async function handler(m, { sock, config: botConfig }) {
 
   const saluranId = botConfig.saluran?.id || "@newsletter";
   const saluranName =
-    botConfig.saluran?.name || botConfig.bot?.name || "Nova-AI";
+    botConfig.saluran?.name || botConfig.bot?.name || "Rara-AI";
 
   if (imageBuffer) {
     await sock.sendMedia(m.chat, imageBuffer, rulesText, m, {
       type: "image",
     });
   } else {
-    { const __navText = (rulesText); await m.reply(novaWrap("rulesgrup", __navText)); };
+    { const __navText = (rulesText); await m.reply(raraWrap("rulesgrup", __navText)); };
   }
 }
 

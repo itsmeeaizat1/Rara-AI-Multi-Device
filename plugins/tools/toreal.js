@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import FormData from "form-data";
 import { nexrayUpscale } from "../../src/scraper/nexray-maker.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "toreal",
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const isImage = m.message?.imageMessage || (quotedMsg && (quotedMsg.imageMessage || quotedMsg.stickerMessage));
 
     if (!isImage) {
-      return m.reply(novaWrap("toreal", `Kirim/reply foto dengan caption ${m.prefix}toreal untuk enhance ke realistic.`, "guide"));
+      return m.reply(raraWrap("toreal", `Kirim/reply foto dengan caption ${m.prefix}toreal untuk enhance ke realistic.`, "guide"));
     }
 
     await m.react("🕒");

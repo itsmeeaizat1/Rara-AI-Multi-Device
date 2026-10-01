@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config, { getOwnerName } from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import {
   addJadibotOwner,
   removeJadibotOwner,
   getJadibotOwners,
-} from "../../src/lib/nova-jadibot-database.js";
+} from "../../src/lib/rara-jadibot-database.js";
 import fs from "fs";
 import path from "path";
 import {
@@ -13,9 +13,9 @@ import {
   lidToJid,
   resolveAnyLidToJid,
   isLidConverted,
-} from "../../src/lib/nova-lid.js";
+} from "../../src/lib/rara-lid.js";
 import { getGroupMode } from "../group/botmode.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "addowner",
   alias: ["addowner", "addown", "setowner", "delowner", "delown", "dedown", "ownerlist", "listowner"],
@@ -151,14 +151,14 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
         txt += `${i + 1}. 👑 @${number}${name !== "Owner" ? ` — *${name}*` : ""}\n`;
       });
       txt += `\nTotal: *${jbOwners.length}* owner`;
-      return m.reply(novaWrap("addowner", txt));
+      return m.reply(raraWrap("addowner", txt));
     } else if (isCpanelMode) {
       const panelOwners = config.pterodactyl.ownerPanels || [];
       const fullOwners = db.data.owner || [];
       const allOwners = [...new Set([...panelOwners, ...fullOwners])];
 
       if (allOwners.length === 0) {
-        return m.reply(novaWrap("addowner", `📋 *Daftar Owner Panel*\n\nBelum ada owner panel terdaftar.`));
+        return m.reply(raraWrap("addowner", `📋 *Daftar Owner Panel*\n\nBelum ada owner panel terdaftar.`));
       }
       let txt = `📋 *DAFTAR OWNER PANEL*\n\n`;
       const mentions = allOwners.map(toMentionJid).filter(Boolean);
@@ -174,14 +174,14 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
         txt += `${i + 1}. ${label} @${number}${name !== "Owner" ? ` — *${name}*` : ""}\n`;
       });
       txt += `\nTotal: *${allOwners.length}* owner | 👑 Full, 🖥️ Panel`;
-      return m.reply(novaWrap("addowner", txt));
+      return m.reply(raraWrap("addowner", txt));
     } else {
       const configOwners = (config.owner?.number || []).map(String);
       const dbOwners = db.data.owner || [];
       const allOwners = [...new Set([...configOwners, ...dbOwners])];
 
       if (allOwners.length === 0) {
-        return m.reply(novaWrap("addowner", `📋 *Daftar Owner*\n\nBelum ada owner terdaftar.`));
+        return m.reply(raraWrap("addowner", `📋 *Daftar Owner*\n\nBelum ada owner terdaftar.`));
       }
       let txt = `📋 *DAFTAR OWNER*\n\n`;
       const mentions = allOwners.map(toMentionJid).filter(Boolean);
@@ -198,7 +198,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
         txt += `${i + 1}. ${label} @${number}${name !== "Owner" ? ` — *${name}*` : ""}\n`;
       });
       txt += `\nTotal: *${allOwners.length}* owner | ⭐ Main, 👑 Added`;
-      return m.reply(novaWrap("addowner", txt));
+      return m.reply(raraWrap("addowner", txt));
     }
   }
 
@@ -216,7 +216,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
   }
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
-    return m.reply(novaWrap("Addowner", `❌ *Gagal*\n\nFormat nomor tidak valid`));
+    return m.reply(raraWrap("Addowner", `❌ *Gagal*\n\nFormat nomor tidak valid`));
   }
 
   // JADIBOT: user jadibot mengelola owner SESSION-nya sendiri — BUKAN owner bot utama.
@@ -224,17 +224,17 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
   //  sebelumnya branch ini dead code dan .addowner jadibot nyasar ke owner utama)
   if (isJadibot) {
     if (!jadibotId) {
-      return m.reply(novaError("Addowner", "Session jadibot gak teridentifikasi — coba lagi"));
+      return m.reply(raraError("Addowner", "Session jadibot gak teridentifikasi — coba lagi"));
     }
     if (isAdd) {
       if (addJadibotOwner(jadibotId, targetNumber)) {
-        return m.reply(novaWrap("Addowner", `✅ Berhasil menambahkan *${targetNumber}* sebagai owner jadibot`));
+        return m.reply(raraWrap("Addowner", `✅ Berhasil menambahkan *${targetNumber}* sebagai owner jadibot`));
       } else {
         return m.reply(`❌ \`${targetNumber}\` sudah menjadi owner Jadibot ini.`);
       }
     } else if (isDel) {
       if (removeJadibotOwner(jadibotId, targetNumber)) {
-        return m.reply(novaWrap("Addowner", `✅ Berhasil menghapus *${targetNumber}* dari owner jadibot`));
+        return m.reply(raraWrap("Addowner", `✅ Berhasil menghapus *${targetNumber}* dari owner jadibot`));
       } else {
         return m.reply(`❌ \`${targetNumber}\` bukan owner Jadibot ini.`);
       }
@@ -255,12 +255,12 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
 
       config.pterodactyl.ownerPanels.push(targetNumber);
       if (savePanelConfig()) {
-        return m.reply(novaWrap("Addowner", `✅ Berhasil menambahkan *${targetNumber}* sebagai owner panel${roleChanged}`));
+        return m.reply(raraWrap("Addowner", `✅ Berhasil menambahkan *${targetNumber}* sebagai owner panel${roleChanged}`));
       } else {
         config.pterodactyl.ownerPanels = config.pterodactyl.ownerPanels.filter(
           (s) => s !== targetNumber,
         );
-        return m.reply(novaWrap("addowner", `❌ Gagal menyimpan ke config.js`));
+        return m.reply(raraWrap("addowner", `❌ Gagal menyimpan ke config.js`));
       }
     } else if (isDel) {
       const ownerList = config.pterodactyl.ownerPanels || [];
@@ -274,9 +274,9 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
         (s) => String(s).trim() !== String(targetNumber).trim(),
       );
       if (savePanelConfig()) {
-        return m.reply(novaWrap("Addowner", `✅ Berhasil menghapus *${targetNumber}* dari owner panel`));
+        return m.reply(raraWrap("Addowner", `✅ Berhasil menghapus *${targetNumber}* dari owner panel`));
       } else {
-        return m.reply(novaWrap("addowner", `❌ Gagal menyimpan ke config.js`));
+        return m.reply(raraWrap("addowner", `❌ Gagal menyimpan ke config.js`));
       }
     }
   } else {
@@ -316,7 +316,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       delete nameMap[targetNumber];
       db.setting("ownerNames", nameMap);
       db.save();
-      return m.reply(novaWrap("Addowner", `✅ Berhasil menghapus *${targetNumber}* dari full owner`));
+      return m.reply(raraWrap("Addowner", `✅ Berhasil menghapus *${targetNumber}* dari full owner`));
     }
   }
 }

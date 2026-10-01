@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Travel — Pindah lokasi
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "travel", alias: ["travel", "travelrpg"],
@@ -22,21 +22,21 @@ const LOCATIONS = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("travelrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("travelrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
     const text = m.args.join(" ").trim().toLowerCase();
     if (!text || !LOCATIONS[text]) {
       let list = Object.entries(LOCATIONS).map(([k,v]) => `• ${v}`).join("\n");
-      return m.reply(novaRpgBox("travelrpg", `🗺️ Lokasi tersedia:\n${list}\n\nContoh: ${m.prefix}travelrpg hutan`, "guide"));
+      return m.reply(raraRpgBox("travelrpg", `🗺️ Lokasi tersedia:\n${list}\n\nContoh: ${m.prefix}travelrpg hutan`, "guide"));
     }
     rpg.location = text;
     saveRpg(m, rpg);
     await m.react("🐣");
   await animGeneric(m, sock, "🧭", "Traveling");
-    return m.reply(novaRpgBox("travelrpg", `🧭 Kamu berpindah ke *${LOCATIONS[text]}*`, "success"));
+    return m.reply(raraRpgBox("travelrpg", `🧭 Kamu berpindah ke *${LOCATIONS[text]}*`, "success"));
   } catch (e) {
     console.error("travelrpg error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("travelrpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("travelrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // fishing.js — Mancing RPG (pancing ikan, rarity, sell) — dari kode owner
 // Rombak khas 9 Sep 2026 (batch #2 antrean animasi per-game):
 // - Animasi bentuk baru RIAK & TARIKAN (riak melebar + float tenggelem + tensi)
 // - Item khas: 🐚 Mutiara (drop dari pancingan sendiri) → upgrade 🎣 Joran
-// - Result box rapih novaRpgBox
+// - Result box rapih raraRpgBox
 // CATATAN: db key "fishing" DIBIARKAN (kontinuitas data koleksi ikan/joran).
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { shapeFishing } from "../../src/lib/nova-rpg-shapes.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { ensureRpg, spendCash, getCash, formatRp } from "../../src/lib/nova-rpg-service.js";
-import { getRpgWeather, applyWeatherToFishWeights, rpgWeatherTag } from "../../src/lib/nova-rpg-weather.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { shapeFishing } from "../../src/lib/rara-rpg-shapes.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { ensureRpg, spendCash, getCash, formatRp } from "../../src/lib/rara-rpg-service.js";
+import { getRpgWeather, applyWeatherToFishWeights, rpgWeatherTag } from "../../src/lib/rara-rpg-weather.js";
 
 const pluginConfig = {
   name: "fishing",
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     // ══════ INVENTORY ══════
     if (sub === "inventory" || sub === "koleksi") {
       if (data.catches.length === 0) {
-        return m.reply(novaRpgBox("mancing", `Belum ada tangkapan 🥲\nMulai memancing: ${m.prefix}mancing`, "guide"));
+        return m.reply(raraRpgBox("mancing", `Belum ada tangkapan 🥲\nMulai memancing: ${m.prefix}mancing`, "guide"));
       }
       const grouped = {};
       data.catches.forEach((f) => { grouped[f.name] = (grouped[f.name] || 0) + 1; });
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
           const fish = FISH_TYPES.find((f) => f.name === name);
           return `• ${fish?.emoji || "🐟"} ${name} x${count} (${fish?.rarity || "?"})`;
         }).join("\n");
-      return m.reply(novaRpgBox("mancing",
+      return m.reply(raraRpgBox("mancing",
         `📦 KOLEKSI TANGKAPAN\n\n${list}\n\n` +
         `🐟 Total : ${data.totalCaught} ikan\n🏆 Best catch : ${data.bestCatch || "-"}\n🐚 Mutiara : ${data.pearls}x\n\n` +
         `💡 .fishing sell — jual semua ikan`));
@@ -103,21 +103,21 @@ async function handler(m, { sock }) {
     // ══════ SELL ══════
     if (sub === "sell" || sub === "jual") {
       if (data.catches.length === 0) {
-        return m.reply(novaRpgBox("mancing", "Tidak ada ikan untuk dijual 🥲", "warn"));
+        return m.reply(raraRpgBox("mancing", "Tidak ada ikan untuk dijual 🥲", "warn"));
       }
       const totalGold = data.catches.reduce((s, f) => s + fishPrice(FISH_TYPES.find(ft => ft.name === f.name) || { price: 0 }, rodLv), 0);
       try { await db.addGold?.(m.sender, totalGold); } catch {}
       data.catches = [];
       await db.setPlayerData(m.sender, "fishing", data);
       await m.react("🐣");
-      return m.reply(novaRpgBox("mancing",
+      return m.reply(raraRpgBox("mancing",
         `💰 TERJUAL SEMUA IKAN!\n\n` +
         `🐟 Dijual : ${data.totalCaught} total tangkapan\n💰 Gold : +${totalGold.toLocaleString()}\n🎣 Joran : Lv.${rodLv} (+${10 * (rodLv - 1)}% harga)`));
     }
 
     // ══════ JORAN STATUS ══════
     if (sub === "joran" || sub === "status") {
-      return m.reply(novaRpgBox("mancing",
+      return m.reply(raraRpgBox("mancing",
         `🎣 JORAN KAMU\n\n` +
         `Level : *Lv.${rodLv}*\n🗑️ Peluang sampah : −${20 * (rodLv - 1)}%\n✨ Peluang ikan langka : +${25 * (rodLv - 1)}%\n💰 Harga jual ikan : +${10 * (rodLv - 1)}%\n\n` +
         `🐚 Mutiara : ${data.pearls}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
@@ -129,19 +129,19 @@ async function handler(m, { sock }) {
       const needPearl = ROD_PEARL_COST(rodLv);
       const needRp = ROD_RP_COST(rodLv);
       if (data.pearls < needPearl) {
-        return m.reply(novaRpgBox("mancing",
+        return m.reply(raraRpgBox("mancing",
           `🐚 Upgrade Joran ke Lv.${rodLv + 1} butuh:\n\n• Mutiara : ${needPearl}x (punya ${data.pearls}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Mutiara didapat dari .fishing sendiri — 5% per pancing, ikan langka (S+) dijamin dapat!`, "warn"));
       }
       ensureRpg(m, m.pushName);
       if (!spendCash(m, needRp)) {
-        return m.reply(novaRpgBox("mancing", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("mancing", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = await getFishData(db, m.sender);
       fresh.pearls -= needPearl;
       fresh.rods = (fresh.rods || 1) + 1;
       await db.setPlayerData(m.sender, "fishing", fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("mancing",
+      return m.reply(raraRpgBox("mancing",
         `🎣 JORAN UPGRADED!\n\nLevel : Lv.${rodLv} → Lv.${rodLv + 1}\n🗑️ Peluang sampah : −${20 * rodLv}%\n✨ Peluang ikan langka : +${25 * rodLv}%\n💰 Harga jual ikan : +${10 * rodLv}%\n\n🐚 Material : −${needPearl} Mutiara\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
@@ -174,7 +174,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
 
     const isRare = ["S", "SS", "SSS"].includes(fish.rarity);
-    return m.reply(novaRpgBox("mancing",
+    return m.reply(raraRpgBox("mancing",
       `${isRare ? "✨ TANGKAPAN LANGKA!" : "🎣 TANGKAPAN BERHASIL!"}\n\n` +
       `${fish.emoji} *${fish.name}*\n` +
       `Rarity : *${fish.rarity}* | Harga : *${fishPrice(fish, rodLv).toLocaleString()} gold*\n\n` +
@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("fishing error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("mancing", err?.message || "Error", "error"));
+    return m.reply(raraRpgBox("mancing", err?.message || "Error", "error"));
   }
 }
 

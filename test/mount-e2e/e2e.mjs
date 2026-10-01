@@ -1,7 +1,7 @@
 // E2E mount — RPG Tunggangan: fix .mount feed (stuck) + animasi khas kandang
 import path from "node:path";
 import fs from "node:fs";
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
 
 process.env.MOUNT_ANIM_MS = "0"; // animasi kandang instan saat e2e
 

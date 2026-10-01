@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolurlcode — encode/decode URL (port altftool.com/tools/all/url-encoder-decoder)
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolurlcode", alias: ["urlcode", "urlencode", "urldecode"], category: "tools",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      return m.reply(novaGuideV2("ftoolurlcode", {
+      return m.reply(raraGuideV2("ftoolurlcode", {
         kaomoji: "(◍•ᴗ•◍)",
         sapaan: "link atau teks mau di-encode/di-decode? gih~",
         cara: "ketik enc (teks→aman URL) atau dec (URL→teks biasa) lalu isinya",
@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
         result = decodeURIComponent(text);
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaSalahV2("ftoolurlcode", {
+        return m.reply(raraSalahV2("ftoolurlcode", {
           kaomoji: "(・_・;)",
           pesan: "stringnya gak bisa didecode — ada pola % yang gak valid",
           contoh: `${prefix}ftoolurlcode dec halo%20dunia`,
@@ -42,19 +42,19 @@ async function handler(m, { sock, config: botConfig }) {
       }
     } else {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftoolurlcode", {
+      return m.reply(raraSalahV2("ftoolurlcode", {
         kaomoji: "(・_・;)",
         pesan: "pilih enc atau dec ya",
         contoh: `${prefix}ftoolurlcode enc halo dunia`,
       }), "ftoolurlcode");
     }
     await m.react("🐣");
-    await m.reply(novaWrap("URL Encode/Decode", [`Hasil (${action === "enc" || action === "encode" ? "encode" : "decode"}):`,
+    await m.reply(raraWrap("URL Encode/Decode", [`Hasil (${action === "enc" || action === "encode" ? "encode" : "decode"}):`,
       "",
       "```" + (result.length > 800 ? result.substring(0, 800) + "…" : result) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("URL Encode/Decode", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("URL Encode/Decode", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

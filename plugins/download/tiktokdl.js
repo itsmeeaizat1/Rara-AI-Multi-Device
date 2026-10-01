@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { offerConvert } from "../../src/lib/nova-convert.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { offerConvert } from "../../src/lib/rara-convert.js";
 import axios from "axios";
-import { AIRich } from "../../src/lib/nova-builder.js";
-import { novaGuideV2, novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine, toSC, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { AIRich } from "../../src/lib/rara-builder.js";
+import { raraGuideV2, raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine, toSC, raraBerhasil, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 import { getdlTikTokSearch } from "../../src/scraper/getdl-tiktok.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
   const command = m?.command;
   if (!text) {
-    return m.reply(novaGuideV2("tiktok", {
+    return m.reply(raraGuideV2("tiktok", {
  kaomoji: "(≧◡≦) ♡",
  sapaan: "tiktok favorit mau disimpen? kasih link atau keywordnya! (⌒‿⌒)ﻭ",
       cara: "tempel linknya atau ketik keyword pencariannya",
@@ -193,7 +193,7 @@ async function handler(m, { sock }) {
       const video = sesi.videos[idx - 1];
       if (!video) {
         await m.react("❗");
-        return m.reply(novaWrap("TikTok Search", `Nomor ${idx} gak ada di hasil pencarian (1-${sesi.videos.length}). Ketik ulang keyword-nya ya!`));
+        return m.reply(raraWrap("TikTok Search", `Nomor ${idx} gak ada di hasil pencarian (1-${sesi.videos.length}). Ketik ulang keyword-nya ya!`));
       }
       try {
         await m.react("🕒");
@@ -219,7 +219,7 @@ async function handler(m, { sock }) {
       } catch (err) {
         console.error("[TikTok Search Pick]", err.message || err);
         await m.react("❌");
-        return m.reply(novaGangguan("TikTok Search"));
+        return m.reply(raraGangguan("TikTok Search"));
       }
     }
     // Gak ada sesi aktif → jatuh ke search biasa dengan keyword angka
@@ -243,7 +243,7 @@ async function handler(m, { sock }) {
       }
       if (!videos || videos.length === 0) {
         await m.react("❗");
-        return m.reply(novaWrap("TikTok Search", `Gak nemu video untuk keyword: ${text}`));
+        return m.reply(raraWrap("TikTok Search", `Gak nemu video untuk keyword: ${text}`));
       }
 
       // Simpan sesi biar bisa dipilih nomornya
@@ -263,7 +263,7 @@ async function handler(m, { sock }) {
         return `│ ${i + 1}. ${String(v.title).slice(0, 45)}${String(v.title).length > 45 ? "..." : ""}\n│    🕒 ${dur}${v.createdAt ? ` · ${new Date(v.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}` : ""}`;
       });
       await m.react("🐣");
-      return m.reply(novaWrap(`TikTok Search — ${source}`, [
+      return m.reply(raraWrap(`TikTok Search — ${source}`, [
         `📌 Hasil pencarian untuk: ${text}`,
         ``,
         ...listLines,
@@ -274,7 +274,7 @@ async function handler(m, { sock }) {
     } catch (err) {
       console.error("[TikTok Search]", err.message || err);
       await m.react("❌");
-      return m.reply(novaGangguan("TikTok Search"));
+      return m.reply(raraGangguan("TikTok Search"));
     }
   }
 
@@ -303,7 +303,7 @@ async function handler(m, { sock }) {
       }, { quoted: m });
       await offerConvert(sock, m, { mediaUrl: video.url, type: "video", platform: "TikTok", title: ikyyResult.title, sourceUrl: text });
       return;
-      await m.reply(novaBerhasil("TikTok"));
+      await m.reply(raraBerhasil("TikTok"));
     }
 
     // Fallback to tikwm
@@ -340,7 +340,7 @@ async function handler(m, { sock }) {
           mediaType: 2,
         }),
       }, { quoted: m });
-      await m.reply(novaBerhasil("TikTok"));
+      await m.reply(raraBerhasil("TikTok"));
       await offerConvert(sock, m, { mediaUrl: zann.url, type: "video", platform: "TikTok", title: result.title, sourceUrl: text });
 
       await sock.sendMessage(
@@ -389,7 +389,7 @@ async function handler(m, { sock }) {
     }
   } catch (e) {
     console.error(e);
-    m.reply(novaGangguan("TikTok"));
+    m.reply(raraGangguan("TikTok"));
   }
 }
 

@@ -1,4 +1,4 @@
-// E2E: nova-menu-style novaMenuLayout — hapus baris nama bot dobel di body
+// E2E: rara-menu-style raraMenuLayout — hapus baris nama bot dobel di body
 // (owner 20 Sep 2026: "nama bot disini dihapus aja soalnya udh ada nama bot
 // di fotter akhir" — footer kartu sendMenuCard sudah nampilin nama bot).
 // Jalankan: node test/menu-layout-e2e/e2e.mjs
@@ -13,25 +13,25 @@ function t(label, cond, extra) {
 }
 
 const REPO = path.resolve(".");
-const { novaMenuLayout } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-menu-style.js")).href);
+const { raraMenuLayout } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-menu-style.js")).href);
 const { fromSC } = await import(pathToFileURL(path.join(REPO, "src/lib/styler.js")).href);
 
-const txt = novaMenuLayout({
+const txt = raraMenuLayout({
   intro: "Halo kak!",
-  introTitle: "Nova",
+  introTitle: "Rara",
   info: ["Info", { label: "Nama", value: "Budi" }],
   categories: [{ name: "Menu", commands: ["menu", "allmenu"] }],
   prefix: ".",
-  footerName: "Nova AI Whatsapp Bot",
+  footerName: "Rara AI Whatsapp Bot",
 });
 const plain = fromSC(txt);
 
 t("1a. footerName param diterima tanpa error (backward-compat)", typeof txt === "string" && txt.length > 0);
-t("1b. body TIDAK ADA baris 'Nova AI Whatsapp Bot' sendiri (dobel sama footer kartu)",
-  !plain.includes("Nova AI Whatsapp Bot"), plain.slice(-80));
+t("1b. body TIDAK ADA baris 'Rara AI Whatsapp Bot' sendiri (dobel sama footer kartu)",
+  !plain.includes("Rara AI Whatsapp Bot"), plain.slice(-80));
 t("1c. body tetap ada command list (fitur inti gak ke-strip)", txt.includes(".menu") && txt.includes(".allmenu"));
 t("1d. tanpa footerName pun tetap normal (opsional)", (() => {
-  const t2 = novaMenuLayout({ categories: [{ name: "Menu", commands: ["menu"] }], prefix: "." });
+  const t2 = raraMenuLayout({ categories: [{ name: "Menu", commands: ["menu"] }], prefix: "." });
   return t2.includes(".menu");
 })());
 

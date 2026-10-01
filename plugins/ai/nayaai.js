@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nayaai — Naya AI via api.cuki.biz.id
 import { nayaAI } from "../../src/scraper/cuki-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "nayaai",
@@ -25,17 +25,17 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("nayaai", `Mau nanya apa ke Naya AI?\n\nContoh: ${m.prefix}nayaai rekomendasi film horor\n${m.prefix}nayaai cara membuat kopi manual brew`, "guide"));
+      return m.reply(raraWrap("nayaai", `Mau nanya apa ke Naya AI?\n\nContoh: ${m.prefix}nayaai rekomendasi film horor\n${m.prefix}nayaai cara membuat kopi manual brew`, "guide"));
     }
 
     await m.react("🕒");
 
     let result = await nayaAI(text);
-    if (!result.status) result = await UnlimitedAI(text, "nova-ai");
+    if (!result.status) result = await UnlimitedAI(text, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("nayaai", "Naya AI lagi offline 🤖", "error"));
+      return m.reply(raraWrap("nayaai", "Naya AI lagi offline 🤖", "error"));
     }
 
     await m.react("🐣");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("nayaai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("nayaai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("nayaai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

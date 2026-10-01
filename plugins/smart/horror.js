@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -33,7 +33,7 @@ async function generateHoror(names) {
       "- Jangan pakai kata-kata kasar\n" +
       "- Jangan terlalu gore/violent\n" +
       "- Format: paragraf pendek, dialog pakai tanda kutip";
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
     return result?.success ? result.response : null;
   } catch {
     return null;
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
   }
 
   const header = "👻 *horror story*\n\nKarakter: " + names.join(", ") + "\n\n";
-  const footer = "\n\n Dibuat oleh Nova AI";
+  const footer = "\n\n Dibuat oleh Rara AI";
   return m.reply( header + story + footer, "horor");
 }
 

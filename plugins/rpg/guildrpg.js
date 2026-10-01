@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Guild — Create/join/leave guild, view guild info
 
 import {
   ensureRpg, createGuild, joinGuild, leaveGuild, getGuild, JOB_DB
-} from "../../src/lib/nova-rpg-service.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "guild",
@@ -15,7 +15,7 @@ const pluginConfig = {
   category: "rpg",
   description: "Sistem guild RPG — buat, join, leave, info guild",
   usage: ".guild <create|join|leave|list|info> [nama/id]",
-  example: ".guild create Nova Hunters",
+  example: ".guild create Rara Hunters",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -28,7 +28,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("guildrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("guildrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
       if (!guild) {
         saveRpg: rpg.guildId = null; rpg.guildRank = null;
   await animGeneric(m, sock, "🏰", "Loading Guild");
-        return m.reply(novaRpgBox("guildrpg", "Guild tidak ditemukan (mungkin sudah dihapus).", "warn"));
+        return m.reply(raraRpgBox("guildrpg", "Guild tidak ditemukan (mungkin sudah dihapus).", "warn"));
       }
 
       let msg = "";
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
     // Create guild
     if (action === "create" || action === "buat") {
       const name = args.slice(1).join(" ");
-      if (!name) return m.reply(novaRpgBox("guildrpg", "Nama guild apa? Contoh: .guildrpg create Nova Hunters", "warn"));
+      if (!name) return m.reply(raraRpgBox("guildrpg", "Nama guild apa? Contoh: .guildrpg create Rara Hunters", "warn"));
 
       const result = createGuild(m, name);
 
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
         msg += `ID: *${result.guildId}*\n`;
                 return m.reply(msg);
       } else {
-        return m.reply(novaRpgBox("guildrpg", result.reason || "Gagal buat guild.", "warn"));
+        return m.reply(raraRpgBox("guildrpg", result.reason || "Gagal buat guild.", "warn"));
       }
     }
 
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
       }));
 
       if (guildList.length === 0) {
-        return m.reply(novaRpgBox("guildrpg", "Belum ada guild yang dibuat. Jadilah yang pertama! Ketik .guildrpg create <nama>", "info"));
+        return m.reply(raraRpgBox("guildrpg", "Belum ada guild yang dibuat. Jadilah yang pertama! Ketik .guildrpg create <nama>", "info"));
       }
 
       let msg = "";
@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
     // Join guild
     if (action === "join" || action === "gabung") {
       const guildId = args[1];
-      if (!guildId) return m.reply(novaRpgBox("guildrpg", "Guild ID apa? Ketik .guildrpg list untuk lihat.", "warn"));
+      if (!guildId) return m.reply(raraRpgBox("guildrpg", "Guild ID apa? Ketik .guildrpg list untuk lihat.", "warn"));
 
       const result = joinGuild(m, guildId);
 
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
         msg += `👥 Members: ${result.guild.members.length}/50\n`;
                 return m.reply(msg);
       } else {
-        return m.reply(novaRpgBox("guildrpg", result.reason || "Gagal join guild.", "warn"));
+        return m.reply(raraRpgBox("guildrpg", result.reason || "Gagal join guild.", "warn"));
       }
     }
 
@@ -168,15 +168,15 @@ async function handler(m, { sock }) {
         msg += `✅ Kamu keluar dari guild\n`;
                 return m.reply(msg);
       } else {
-        return m.reply(novaRpgBox("guildrpg", result.reason || "Tidak ada guild untuk ditinggalkan.", "warn"));
+        return m.reply(raraRpgBox("guildrpg", result.reason || "Tidak ada guild untuk ditinggalkan.", "warn"));
       }
     }
 
-    return m.reply(novaRpgBox("guildrpg", "Aksi tidak dikenal. Gunakan: create, join, leave, list, info", "warn"));
+    return m.reply(raraRpgBox("guildrpg", "Aksi tidak dikenal. Gunakan: create, join, leave, list, info", "warn"));
   } catch (err) {
     console.error("guildrpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("guildrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("guildrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

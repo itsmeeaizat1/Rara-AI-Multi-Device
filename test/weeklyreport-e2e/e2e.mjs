@@ -1,5 +1,5 @@
 // E2E Upgrade Weekly Report + Tracker (12 Sep 2026):
-// (1) chatBuffer + hourly di nova-activity-tracker (rekam otomatis via trackActivity)
+// (1) chatBuffer + hourly di rara-activity-tracker (rekam otomatis via trackActivity)
 // (2) AI topik + sentimen di generateReport (seam _setWeeklyReportAiForTest; degrade silent)
 // (3) 4 fitur mati (topchat/groupanalytics/statscard/grupdashboard) rewired ke tracker live
 import path from "node:path";
@@ -23,9 +23,9 @@ if (existed) fs.copyFileSync(TRACKER_DB, BACKUP);
 try { fs.rmSync(TRACKER_DB, { force: true }); } catch {}
 try { fs.rmSync("/tmp/weeklyreport-e2e-db", { recursive: true, force: true }); } catch {}
 
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/weeklyreport-e2e-db/nova.json");
-const { trackActivity, getChatBuffer, getHourly, getWeeklyStats, getLeaderboard } = await import(R + "/src/lib/nova-activity-tracker.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/weeklyreport-e2e-db/rara.json");
+const { trackActivity, getChatBuffer, getHourly, getWeeklyStats, getLeaderboard } = await import(R + "/src/lib/rara-activity-tracker.js");
 
 const GID = "120363test@g.us";
 function msg(text, sender, opts = {}) {

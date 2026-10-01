@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
-import { f } from '../../src/lib/nova-http.js'
-import te from '../../src/lib/nova-error.js'
+import { f } from '../../src/lib/rara-http.js'
+import te from '../../src/lib/rara-error.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'gita',
@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        return m.reply(novaGuideV2("gita", {
+        return m.reply(raraGuideV2("gita", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)",
  sapaan: "nanya apa aja ke Gita GPT, asisten AI serba bisa! (◕ᴗ◕)",
           cara: "ketik pertanyaannya sesudah command",
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         { const __navText = `${content?.trim()}`; await m.reply(__navText); }
 
     } catch (error) {
-        m.reply(novaWrap("gita", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("gita", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

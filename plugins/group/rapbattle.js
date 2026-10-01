@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "rapbattle",
@@ -50,12 +50,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // START
     if (sub === "start") {
       if (game.active) {
-        return m.reply(novaWrap("Rap Battle", "Battle lagi jalan!\nKetik .rapbattle stop untuk hentikan."));
+        return m.reply(raraWrap("Rap Battle", "Battle lagi jalan!\nKetik .rapbattle stop untuk hentikan."));
       }
 
       const target = m.mentionedJid?.[0];
       if (!target) {
-        return m.reply(novaWrap("Rap Battle", [
+        return m.reply(raraWrap("Rap Battle", [
           "Tag lawan kamu!\n",
           "Contoh: .rapbattle start @Budi",
           "",
@@ -63,7 +63,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         ]));
       }
       if (target === sender) {
-        return m.reply(novaWrap("Rap Battle", "Gak bisa battle diri sendiri!"));
+        return m.reply(raraWrap("Rap Battle", "Gak bisa battle diri sendiri!"));
       }
 
       game.active = true;
@@ -79,7 +79,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.startedAt = Date.now();
       await db.save();
 
-      return m.reply(novaWrap("Rap Battle", [
+      return m.reply(raraWrap("Rap Battle", [
         "Rap battle dimulai!",
         "",
         "P1: @" + sender.split("@")[0],
@@ -97,31 +97,31 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // VOTE
     if (sub === "vote") {
       if (!game.active || game.phase !== "vote") {
-        return m.reply(novaWrap("Rap Battle", "Belum waktunya vote! Tunggu semua pemain kirim rap."));
+        return m.reply(raraWrap("Rap Battle", "Belum waktunya vote! Tunggu semua pemain kirim rap."));
       }
 
       const target = m.mentionedJid?.[0];
       if (!target) {
-        return m.reply(novaWrap("Rap Battle", "Tag siapa yang menurutmu menang!\n.rapbattle vote @user"));
+        return m.reply(raraWrap("Rap Battle", "Tag siapa yang menurutmu menang!\n.rapbattle vote @user"));
       }
       if (target !== game.p1 && target !== game.p2) {
-        return m.reply(novaWrap("Rap Battle", "Itu bukan pemain battle!"));
+        return m.reply(raraWrap("Rap Battle", "Itu bukan pemain battle!"));
       }
       if (game.voters[sender]) {
-        return m.reply(novaWrap("Rap Battle", "Kamu sudah vote!"));
+        return m.reply(raraWrap("Rap Battle", "Kamu sudah vote!"));
       }
 
       game.votes[target] = (game.votes[target] || 0) + 1;
       game.voters[sender] = target;
       await db.save();
 
-      return m.reply(novaWrap("Rap Battle", "Vote @" + target.split("@")[0] + " tercatat! (" + game.votes[target] + " vote)", "success"));
+      return m.reply(raraWrap("Rap Battle", "Vote @" + target.split("@")[0] + " tercatat! (" + game.votes[target] + " vote)", "success"));
     }
 
     // RESULT
     if (sub === "result" || sub === "hasil") {
       if (game.phase !== "vote" && !game.p1) {
-        return m.reply(novaWrap("Rap Battle", "Belum ada battle. Ketik .rapbattle start @lawan."));
+        return m.reply(raraWrap("Rap Battle", "Belum ada battle. Ketik .rapbattle start @lawan."));
       }
 
       let result = "Rap Battle Result:\n\n";
@@ -133,13 +133,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       result += "\nBaris P2:\n";
       game.bars.p2.forEach((b) => (result += "  " + b + "\n"));
 
-      return m.reply(novaWrap("Rap Battle", result));
+      return m.reply(raraWrap("Rap Battle", result));
     }
 
     // STOP
     if (sub === "stop") {
       if (!game.active) {
-        return m.reply(novaWrap("Rap Battle", "Gak ada battle aktif."));
+        return m.reply(raraWrap("Rap Battle", "Gak ada battle aktif."));
       }
       game.active = false;
       game.phase = "idle";
@@ -152,7 +152,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       else if (p2Votes > p1Votes) winner = "P2 @" + game.p2.split("@")[0] + " menang!";
       else winner = "Seri!";
 
-      return m.reply(novaWrap("Rap Battle", [
+      return m.reply(raraWrap("Rap Battle", [
         "Battle dihentikan!",
         "",
         winner,
@@ -165,7 +165,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (game.active && (game.phase === "p1" || game.phase === "p2") && sender === game.currentTurn) {
       const bar = text.trim();
       if (!bar || bar.length < 3) {
-        return m.reply(novaWrap("Rap Battle", "Kirim baris rap kamu!\n.rapbattle <baris rap>"));
+        return m.reply(raraWrap("Rap Battle", "Kirim baris rap kamu!\n.rapbattle <baris rap>"));
       }
 
       const playerKey = game.phase;
@@ -181,7 +181,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           game.currentTurn = game.p2;
           await db.save();
 
-          return m.reply(novaWrap("Rap Battle", [
+          return m.reply(raraWrap("Rap Battle", [
             "Baris P1 selesai!",
             "",
             "Giliran P2: @" + game.p2.split("@")[0],
@@ -202,7 +202,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
             result += "\nP2: @" + game.p2.split("@")[0] + "\n";
             game.bars.p2.forEach((b) => (result += "  " + b + "\n"));
 
-            return m.reply(novaWrap("Rap Battle", result, "success"));
+            return m.reply(raraWrap("Rap Battle", result, "success"));
           } else {
             // Next round
             game.round++;
@@ -211,7 +211,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
             game.beat = BEATS[Math.floor(Math.random() * BEATS.length)];
             await db.save();
 
-            return m.reply(novaWrap("Rap Battle", [
+            return m.reply(raraWrap("Rap Battle", [
               "Ronde " + game.round + "/" + ROUNDS_MAX + "!",
               "Beat: " + game.beat,
               "",
@@ -222,11 +222,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         }
       }
 
-      return m.reply(novaWrap("Rap Battle", "Baris " + barsCount + "/2 terkirim!\nKirim 1 baris lagi.", "success"));
+      return m.reply(raraWrap("Rap Battle", "Baris " + barsCount + "/2 terkirim!\nKirim 1 baris lagi.", "success"));
     }
 
     // DEFAULT - help
-    return m.reply(novaWrap("Rap Battle", [
+    return m.reply(raraWrap("Rap Battle", [
       "Rap battle grup — tiap pemain kirim baris rap, grup vote paling hot",
       "",
       "CARA PAKAI:",
@@ -242,7 +242,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]));
   } catch (e) {
     console.error("[Rap Battle]", e);
-    m.reply(novaWrap("Rap Battle", "Error: " + e.message));
+    m.reply(raraWrap("Rap Battle", "Error: " + e.message));
   }
 }
 

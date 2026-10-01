@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Anime Couple PP — Random anime couple profile pictures via Andaraz API
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "animecouple",
@@ -70,7 +70,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     try {
       await conn.sendMessage(m.key.remoteJid, {
         image: result.male,
-        caption: novaWrap("Anime Couple PP", [
+        caption: raraWrap("Anime Couple PP", [
           "COUPLE ANIME (COWOK)",
           "",
           "Source: Andaraz API",
@@ -88,7 +88,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     try {
       await conn.sendMessage(m.key.remoteJid, {
         image: result.female,
-        caption: novaWrap("Anime Couple PP", [
+        caption: raraWrap("Anime Couple PP", [
           "COUPLE ANIME (CEWEK)",
           "",
           "Source: Andaraz API",
@@ -98,7 +98,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     } catch (e) {
       console.error("[AnimeCouple] female send:", e.message);
       // Fallback: send URLs
-      return m.reply(novaWrap("Anime Couple PP", [
+      return m.reply(raraWrap("Anime Couple PP", [
         "Gagal kirim gambar, ini link-nya:",
         "",
         "Cowok: " + result.maleUrl,
@@ -107,7 +107,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
   } catch (e) {
     console.error("[AnimeCouple]", e);
-    m.reply(novaWrap("Anime Couple PP", [
+    m.reply(raraWrap("Anime Couple PP", [
       "Error: " + e.message,
       "",
       "Kemungkinan penyebab:",

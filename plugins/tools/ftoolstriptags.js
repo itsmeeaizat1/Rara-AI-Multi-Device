@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolstriptags — buang tag HTML dari teks (port altftool.com/tools/all/html-tag-stripper)
-import { novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolstriptags", alias: ["striptags", "htmlstrip", "htmlketeks"], category: "tools",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(novaGuideV2("ftoolstriptags", {
+      return m.reply(raraGuideV2("ftoolstriptags", {
         kaomoji: "(•̀ᴗ•́)و",
         sapaan: "teks HTML berantakan mau dibersihin? tempel aja~",
         cara: "tempel teks html apa pun, semua tag dihapus dan simbol khusus diterjemahin",
@@ -33,15 +33,15 @@ async function handler(m, { sock, config: botConfig }) {
     out = out.replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
     if (!out) {
       await m.react("❌");
-      return m.reply(novaWrap("Strip HTML", ["ERROR: hasilnya kosong — isinya tag semua?"].join("\n")));
+      return m.reply(raraWrap("Strip HTML", ["ERROR: hasilnya kosong — isinya tag semua?"].join("\n")));
     }
     await m.react("🐣");
-    await m.reply(novaWrap("Strip HTML", ["HTML BERSIH",
+    await m.reply(raraWrap("Strip HTML", ["HTML BERSIH",
       "",
       "```" + (out.length > 800 ? out.substring(0, 800) + "…" : out) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("Strip HTML", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("Strip HTML", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

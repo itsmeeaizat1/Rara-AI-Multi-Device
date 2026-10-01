@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "katabijak",
@@ -87,12 +87,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("- " + q.tokoh)
       lines.push("")
       lines.push("Kategori: " + KATEGORI_LIST.join(", "))
-      return m.reply(novaWrap("Kata Bijak", lines.join("\n")))
+      return m.reply(raraWrap("Kata Bijak", lines.join("\n")))
     }
 
     const kat = KATEGORI_LIST.find(k => k.includes(input) || k === input)
     if (!kat) {
-      return m.reply(novaWrap("Kata Bijak", "Kategori tidak ditemukan: " + input + "\nTersedia: " + KATEGORI_LIST.join(", ")))
+      return m.reply(raraWrap("Kata Bijak", "Kategori tidak ditemukan: " + input + "\nTersedia: " + KATEGORI_LIST.join(", ")))
     }
 
     const q = BIJAK[kat][Math.floor(Math.random() * BIJAK[kat].length)]
@@ -102,9 +102,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push('"' + q.kata + '"')
     lines.push("- " + q.tokoh)
 
-    return m.reply(novaWrap("Kata Bijak: " + kat, lines.join("\n")))
+    return m.reply(raraWrap("Kata Bijak: " + kat, lines.join("\n")))
   } catch (e) {
-    return m.reply(novaWrap("Kata Bijak", "Error: " + e.message))
+    return m.reply(raraWrap("Kata Bijak", "Error: " + e.message))
   }
 }
 

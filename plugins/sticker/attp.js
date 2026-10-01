@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // attp.js — Animated text sticker (local canvas + ffmpeg, no API)
 // Ported from Alice's generate-attp.js to @napi-rs/canvas
 import { createCanvas, GlobalFonts } from "@napi-rs/canvas";
@@ -8,8 +8,8 @@ import os from "os";
 import { execFile } from "child_process";
 import { promisify } from "util";
 import config from "../../config.js";
-import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { addExifToWebp } from "../../src/lib/rara-exif.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -108,10 +108,10 @@ async function handler(m, { sock }) {
     text = m.quoted.text.trim();
   }
   if (!text) {
-    return m.reply(novaWrap("attp", `Masukkan teks untuk sticker!\n\nContoh: ${m.prefix}attp Hello World`, "guide"));
+    return m.reply(raraWrap("attp", `Masukkan teks untuk sticker!\n\nContoh: ${m.prefix}attp Hello World`, "guide"));
   }
   if (text.length > 100) {
-    return m.reply(novaWrap("attp", "Teks terlalu panjang! Maksimal 100 karakter.", "error"));
+    return m.reply(raraWrap("attp", "Teks terlalu panjang! Maksimal 100 karakter.", "error"));
   }
 
   try {
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
     let stickerBuffer = gifBuffer;
     try {
       stickerBuffer = await addExifToWebp(gifBuffer, {
-        packname: config.sticker?.packname || "Nova AI",
+        packname: config.sticker?.packname || "Rara AI",
         author: config.sticker?.author || "Aizat",
       });
     } catch (e) {
@@ -131,11 +131,11 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, { sticker: stickerBuffer }, { quoted: m });
     await m.react("🐣");
-    await m.reply(novaBerhasil("attp"));
+    await m.reply(raraBerhasil("attp"));
   } catch (err) {
     console.error("[ATTP]", err);
     await m.react("❌");
-    m.reply(novaWrap("attp", "Gagal membuat sticker. Coba lagi nanti!", "error"));
+    m.reply(raraWrap("attp", "Gagal membuat sticker. Coba lagi nanti!", "error"));
   }
 }
 

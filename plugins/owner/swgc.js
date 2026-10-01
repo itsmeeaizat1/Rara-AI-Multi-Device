@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import { fileTypeFromBuffer } from "file-type";
 import fs from "fs";
 import path from "path";
 import { config } from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { handleAntiSwGc } from "../../src/lib/nova-group-protection.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { handleAntiSwGc } from "../../src/lib/rara-group-protection.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraLine, raraCaption } from "../../src/lib/rara-menu-style.js";
 const botConfig = config;
 
 function buildSyntheticSwGcRawMessage(sock, remoteJid, content, messageId) {
@@ -110,7 +110,7 @@ async function handler(m, { sock, db }) {
     const pendingData = pendingSwgc.get(m.sender);
 
     if (!pendingData) {
-      m.reply(novaWrap("Swgc", `⚠️ *Tidak ada data pending. Silakan kirim ulang media + .swgc*`));
+      m.reply(raraWrap("Swgc", `⚠️ *Tidak ada data pending. Silakan kirim ulang media + .swgc*`));
       return;
     }
 
@@ -199,7 +199,7 @@ async function handler(m, { sock, db }) {
     try {
       buffer = await m.quoted.download();
       if (!buffer) {
-        m.reply(novaWrap("Swgc", `❌ Gagal mengambil media.`));
+        m.reply(raraWrap("Swgc", `❌ Gagal mengambil media.`));
         return;
       }
       const fileType = await fileTypeFromBuffer(buffer);
@@ -220,7 +220,7 @@ async function handler(m, { sock, db }) {
         rawContent.ptt = m.quoted.msg?.ptt || false;
       }
     } catch (e) {
-      await m.reply(novaWrap("swgc", te(m.prefix, m.command, m.pushName), "error"));
+      await m.reply(raraWrap("swgc", te(m.prefix, m.command, m.pushName), "error"));
       return;
     }
   } else if (
@@ -232,7 +232,7 @@ async function handler(m, { sock, db }) {
     try {
       buffer = await m.download();
       if (!buffer) {
-        m.reply(novaWrap("Swgc", `❌ Gagal mengambil media.`));
+        m.reply(raraWrap("Swgc", `❌ Gagal mengambil media.`));
         return;
       }
       const fileType = await fileTypeFromBuffer(buffer);
@@ -252,7 +252,7 @@ async function handler(m, { sock, db }) {
         rawContent.ptt = m.msg?.ptt || false;
       }
     } catch (e) {
-      await m.reply(novaCaption({
+      await m.reply(raraCaption({
   emoji: "📢",
   name: "swgc",
   description: "Post Group Status/Story ke grup pilihan (border hijau)",
@@ -288,7 +288,7 @@ async function handler(m, { sock, db }) {
     const groupList = Object.entries(groups);
 
     if (groupList.length === 0) {
-      await m.reply(novaWrap("Swgc", `⚠️ *Bot tidak berada di grup manapun.*`));
+      await m.reply(raraWrap("Swgc", `⚠️ *Bot tidak berada di grup manapun.*`));
       return;
     }
 
@@ -323,7 +323,7 @@ async function handler(m, { sock, db }) {
       contextInfo: {
         ...saluranCtx(),
       },
-      footer: "NOVA MD",
+      footer: "RARA MD",
       interactiveButtons: [
         {
           name: "single_select",

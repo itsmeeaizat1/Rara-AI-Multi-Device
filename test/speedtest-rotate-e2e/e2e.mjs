@@ -11,9 +11,9 @@ process.chdir(R);
 // knob rotasi dipercepat buat e2e
 process.env.NOVA_SPEEDTEST_ROTATE_MS = "300";
 
-const DB_DIR = "/tmp/nova-speed-db-" + Date.now();
+const DB_DIR = "/tmp/rara-speed-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const mod = await import(R + "/plugins/info/speedtest.js");

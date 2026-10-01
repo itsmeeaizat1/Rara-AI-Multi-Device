@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: BuyPrem
  * Pembuat Code: Aizat
@@ -8,8 +8,8 @@
 
 import fs from "fs";
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, bracketBox, tipText, toSC } from "../../src/lib/rara-menu-style.js";
 import { generateWAMessageFromContent } from "nova";
 import axios from "axios";
 
@@ -31,7 +31,7 @@ const pluginConfig = {
 
 // Harga premium: dari src/lib/sewa/sewa.js (utak atik harga di situ)
 import { PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
-import { premiumRoles } from "../../src/lib/store/nova-store.js";
+import { premiumRoles } from "../../src/lib/store/rara-store.js";
 
 // Session sementara untuk user yang lagi proses beli
 const buySessions = new Map();
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
   // Cancel
   if (args === "batal" || args === "cancel") {
     buySessions.delete(sender);
-    return m.reply(novaWrap("buyprem", "Pembelian premium dibatalkan."));
+    return m.reply(raraWrap("buyprem", "Pembelian premium dibatalkan."));
   }
 
   // Kalau ada argumen durasi langsung → cari paket matching

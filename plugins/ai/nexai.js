@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nexai — NexAI multi-provider (apinex.bond) — request owner 12 Sep 2026:
 // "tmbah ai multi provider baru nexai, jd pas ketik cmd .nexai mncul list
 // model yg tersedia ada model free jg defaultnya glm".
@@ -6,8 +6,8 @@
 // .nexai list = daftar model LIVE dari katalog publik APInex (free ditandain).
 // .nexai model <id|alias> = ganti model persist per user (pola min1aiModel).
 // STRICT SATU RUTE (pola satuan owner): down → error jelas, gak nyamber.
-import { novaWrap, novaAiUsage, novaInfoSections } from "../../src/lib/nova-menu-style.js";
-import { clearSession as clearAiSession } from "../../src/lib/nova-ai-session.js";
+import { raraWrap, raraAiUsage, raraInfoSections } from "../../src/lib/rara-menu-style.js";
+import { clearSession as clearAiSession } from "../../src/lib/rara-ai-session.js";
 import {
   nexaiChat, nexaiModels, normNexaiModel,
   NEXAI_DEFAULT_MODEL, NEXAI_MODEL_ALIAS, NEXAI_FALLBACK_MODELS,
@@ -82,7 +82,7 @@ async function handler(m, { sock, db } = {}) {
   if (first === "reset" || first === "hapus" || first === "clear") {
     resetSession(m.sender);
     await m.react("🐣");
-    return m.reply(novaInfoSections(["NexAI", { label: "Sesi", value: "baru dimulai" }]) + "\nBerhasil kak 🥳");
+    return m.reply(raraInfoSections(["NexAI", { label: "Sesi", value: "baru dimulai" }]) + "\nBerhasil kak 🥳");
   }
 
   // ── .nexai model <id|alias> — ganti model persist per user ──
@@ -91,7 +91,7 @@ async function handler(m, { sock, db } = {}) {
     if (!picked) {
       const cur = getSavedModel(db, m.sender) || NEXAI_DEFAULT_MODEL;
       const { models } = await nexaiModels();
-      return m.reply(novaAiUsage("NexAI", {
+      return m.reply(raraAiUsage("NexAI", {
         prefix: m.prefix,
         command: "nexai",
         modelAktif: `${cur}${cur === NEXAI_DEFAULT_MODEL ? " (default)" : ""}`,
@@ -107,12 +107,12 @@ async function handler(m, { sock, db } = {}) {
     const known = models.some((m) => m.id === picked) || NEXAI_FALLBACK_MODELS.some((m) => m.id === picked);
     if (!known) {
       await m.react("❌");
-      return m.reply(novaWrap("nexai", `model "${picked}" gak ada di APInex — ketik ${m.prefix}nexai list buat daftar model`, "error"));
+      return m.reply(raraWrap("nexai", `model "${picked}" gak ada di APInex — ketik ${m.prefix}nexai list buat daftar model`, "error"));
     }
     saveModel(db, m.sender, picked);
     await m.react("🐣");
     const isFree = picked.startsWith("free/");
-    return m.reply(novaInfoSections([
+    return m.reply(raraInfoSections([
       "NexAI",
       { label: "Model aktif", value: picked },
       { label: "Biaya", value: isFree ? "free (zero-cost)" : "butuh saldo APInex" },
@@ -125,7 +125,7 @@ async function handler(m, { sock, db } = {}) {
   if (!prompt || first === "list" || first === "modelnya") {
     const cur = getSavedModel(db, m.sender) || NEXAI_DEFAULT_MODEL;
     const { models, live } = await nexaiModels();
-    return m.reply(novaAiUsage("NexAI", {
+    return m.reply(raraAiUsage("NexAI", {
       prefix: m.prefix,
       command: "nexai",
       modelAktif: `${cur}${cur === NEXAI_DEFAULT_MODEL ? " (default)" : ""}`,
@@ -145,7 +145,7 @@ async function handler(m, { sock, db } = {}) {
     await m.react("🕒");
     const reply = await nexaiChat(prompt, { model, timeoutMs: 60000 }); // glm flash kadang cold start
     try {
-      const { appendTurn } = await import("../../src/lib/nova-ai-session.js");
+      const { appendTurn } = await import("../../src/lib/rara-ai-session.js");
       appendTurn("satuan:" + m.sender, prompt, reply);
     } catch {}
     await m.react("🐣");
@@ -153,7 +153,7 @@ async function handler(m, { sock, db } = {}) {
   } catch (err) {
     console.error("[NexAI]", err.message || err);
     await m.react("❌");
-    return m.reply(novaWrap("nexai", err.message || "NexAI lagi gangguan, coba lagi ya", "error"));
+    return m.reply(raraWrap("nexai", err.message || "NexAI lagi gangguan, coba lagi ya", "error"));
   }
 }
 

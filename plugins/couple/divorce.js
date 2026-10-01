@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Sistem Nikah — Cerai
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "cerainikah",
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
     if (!myData.fun.nikah) {
       return m.reply(
-        novaWrap("cerainikah", "Kamu tidak sedang menikah! 💔")
+        raraWrap("cerainikah", "Kamu tidak sedang menikah! 💔")
       );
     }
 

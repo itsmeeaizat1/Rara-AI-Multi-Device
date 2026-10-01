@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 import axios from 'axios'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'potensipenyakit',
     alias: ["potensipenyakit"],
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(novaError("PotensiPenyakit", "Gagal analisa nih"))
+            return m.reply(raraError("PotensiPenyakit", "Gagal analisa nih"))
         }
         
         const result = data.data
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
         await m.reply(response)
         
     } catch (error) {
-        m.reply(novaWrap("potensipenyakit", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("potensipenyakit", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

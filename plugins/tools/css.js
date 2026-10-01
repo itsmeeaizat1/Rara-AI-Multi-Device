@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaHeader, separator, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraHeader, separator, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "css", alias: ["css"], category: "tools",
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const tpl = m.text?.trim()?.toLowerCase();
     if (!tpl) {
-      { const __navText = (novaCaption({
+      { const __navText = (raraCaption({
   emoji: "🛠️",
   name: "css",
   description: "Generate CSS snippet",
@@ -35,7 +35,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (!TEMPLATES[tpl]) throw new Error(`Template "${tpl}" tidak ada. Pilih: ${Object.keys(TEMPLATES).join(", ")}`);
     await m.react("🐣");
-    await m.reply(novaHeader("CSS: " + tpl, "🎯") + "\n\n```css\n" + TEMPLATES[tpl] + "\n```");
+    await m.reply(raraHeader("CSS: " + tpl, "🎯") + "\n\n```css\n" + TEMPLATES[tpl] + "\n```");
   } catch (e) {
     await m.react("❌");
     await m.reply("Error: " + e.message);

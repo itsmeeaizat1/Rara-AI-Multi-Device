@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: ['disableenergi', 'enableenergi'],
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     db.setting('energi', isEnable)
     db.save()
 
-    return m.reply(novaWrap("sIstem Energi Diaktifkan", isEnable
+    return m.reply(raraWrap("sIstem Energi Diaktifkan", isEnable
             ? '⚡ *sIstem Energi Diaktifkan*\n\nSetiap command sekarang memerlukan energi.'
             : '🔌 *sIstem Energi Dinonaktifkan*\n\nCommand tidak lagi membutuhkan energi.'))
 }

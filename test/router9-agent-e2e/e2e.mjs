@@ -4,7 +4,7 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { setAgentDeps } from "../../src/lib/nova-agent.js";
+import { setAgentDeps } from "../../src/lib/rara-agent.js";
 
 const R = path.resolve();
 let pass = 0, fail = 0;
@@ -28,7 +28,7 @@ const srv = http.createServer((req, res) => {
     if (req.url === "/api/health") return send(200, { ok: true });
     if (req.url === "/api/keys" && req.method === "GET") {
       if (!cli) return send(401, { error: "no cli token" });
-      return send(200, { keys: gwKeys.map((k) => ({ key: k, name: "nova-bot" })) });
+      return send(200, { keys: gwKeys.map((k) => ({ key: k, name: "rara-bot" })) });
     }
     if (req.url === "/api/keys" && req.method === "POST") {
       calls.keys++; const key = "sk-agent-mock-new";
@@ -58,11 +58,11 @@ fs.writeFileSync(cfgTmp, JSON.stringify({ gateway: { apikey: "" }, providers: []
 process.env.ROUTER9_CONFIG = cfgTmp;
 
 // database + modul
-await import("../../src/lib/nova-database.js").then(async (m) => {
+await import("../../src/lib/rara-database.js").then(async (m) => {
   process.env.DATABASE_PATH = path.join(tmpHome, "db.json");
   await m.initDatabase?.(process.env.DATABASE_PATH);
 });
-const { runAgent } = await import("../../src/lib/nova-agent.js");
+const { runAgent } = await import("../../src/lib/rara-agent.js");
 const { buildExecutors } = await import("../../plugins/ai-agent/agent.js");
 const { handler } = await import("../../plugins/ai/9router.js");
 
@@ -104,8 +104,8 @@ section("2. anti-loop: command '9router' dari dalam agent diblok");
   const ex = buildExecutors(mkM(), mkSock(), null, null, {}, null);
   const r = await ex.command({ cmd: "9router", args: "ag halo" });
   t("2a. .9router dari dalam agent → ditolak (loop)", r?.ok === false && /loop/i.test(r?.msg || ""), JSON.stringify(r));
-  const r2 = await ex.command({ cmd: "novaagent", args: "halo" });
-  t("2b. .novaagent juga masih keblok", r2?.ok === false && /loop/i.test(r2?.msg || ""));
+  const r2 = await ex.command({ cmd: "raraagent", args: "halo" });
+  t("2b. .raraagent juga masih keblok", r2?.ok === false && /loop/i.test(r2?.msg || ""));
 }
 
 section("3. plugin .9router ag end-to-end (mock server + deps stub)");

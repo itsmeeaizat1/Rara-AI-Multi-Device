@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: MCP MANAGER + GITHUB MCP (request owner 25 Sep 2026:
+// RARA AI WHATSAPP BOT — E2E: MCP MANAGER + GITHUB MCP (request owner 25 Sep 2026:
 // "mcp digithub bsa diakses ai agent dan opencode"). Verifikasi:
 // env passthrough stdio (token GITHUB_PERSONAL_ACCESS_TOKEN dsb) pakai server
 // MCP stdio NYATA (node -e inline, tanpa npx/network), mcpSetEnv/mcpSetHeader,
@@ -20,12 +20,12 @@ function t(name, cond, info) {
 const section = (x) => console.log("\n— " + x + " —");
 
 // db init SEBELUM import lib (pola absen-meter)
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(os.tmpdir(), "mcp-manager-e2e-db-" + Date.now()));
 
-const mcp = await import(R + "/src/lib/nova-mcp.js");
+const mcp = await import(R + "/src/lib/rara-mcp.js");
 const { setMcpRpc, resetMcpRpc } = mcp;
-const { toSC } = await import(R + "/src/lib/styler.js"); // novaWrap → smallcaps (GOTCHA: asersi wajib toSC)
+const { toSC } = await import(R + "/src/lib/styler.js"); // raraWrap → smallcaps (GOTCHA: asersi wajib toSC)
 
 // ── server MCP stdio NYATA: node -e, respon initialize/tools/list/tools/call.
 // tool "whoami" balikin env NOVA_MCP_TEST_TOKEN → bukti env PASSTHROUGH.
@@ -150,12 +150,12 @@ await mcp.mcpRemoveServer("web").catch(() => {});
 await mcp.mcpRemoveServer("github").catch(() => {});
 
 // ═══ SECTION 4: merge ke agent tetap jalan (getMcpToolEntries) ═══
-section("4. merge ke .novaagent tetap jalan");
+section("4. merge ke .raraagent tetap jalan");
 await mcp.mcpAddServer("tes2", { type: "stdio", command: "node", args: ["-e", FAKE_SERVER_SRC], env: { NOVA_MCP_TEST_TOKEN: "z" } });
 const entries = await mcp.getMcpToolEntries();
 const fqKey = "mcp.tes2.whoami";
 t("4a. tool MCP ke-entry registry agent (mcp.tes2.whoami)", !!entries[fqKey] && /TOOL MCP \[tes2\]/.test(entries[fqKey].desc), Object.keys(entries));
-t("4b. entry punya run() buat executor novaai", typeof entries[fqKey]?.run === "function");
+t("4b. entry punya run() buat executor raraai", typeof entries[fqKey]?.run === "function");
 const flat = await mcp.getMcpTools();
 t("4c. getMcpTools flat nyebut server+tool", flat.some((x) => x.server === "tes2" && x.tool === "whoami"), flat);
 await mcp.mcpRemoveServer("tes2").catch(() => {});

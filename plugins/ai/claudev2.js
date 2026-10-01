@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // claudev2 — Claude AI v2 (multi fallback: blackbox + unlimitedai)
 import { blackboxAI } from "../../src/scraper/blackbox-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "claudev2",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("claudev2", `Mau nanya apa ke Claude v2?\n\nContoh: ${m.prefix}claudev2 buat puisi persahabatan\n${m.prefix}claudev2 jelaskan OOP`, "guide"));
+      return m.reply(raraWrap("claudev2", `Mau nanya apa ke Claude v2?\n\nContoh: ${m.prefix}claudev2 buat puisi persahabatan\n${m.prefix}claudev2 jelaskan OOP`, "guide"));
     }
 
     await m.react("🕒");
@@ -37,14 +37,14 @@ async function handler(m, { sock }) {
 
     // Fallback ke UnlimitedAI
     if (!result.status) {
-      result = await UnlimitedAI(text, "nova-ai", {
+      result = await UnlimitedAI(text, "rara-ai", {
         systemPrompt: "Jawab dengan gaya Claude AI — thoughtful, nuanced, dan detail. Bahasa Indonesia.",
       });
     }
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("claudev2", "Claude v2 lagi offline 🤖", "error"));
+      return m.reply(raraWrap("claudev2", "Claude v2 lagi offline 🤖", "error"));
     }
 
     await m.react("🐣");
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("claudev2 error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("claudev2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("claudev2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

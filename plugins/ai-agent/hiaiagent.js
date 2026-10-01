@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .hiaiagent — AI agent framework MCP (engine src/lib/hiai/)
-// Nama cmd SENGAJA beda dari agent Nova (.novaagent/.mcp/.ai lain) biar gak bentrok.
-import { novaGuide, novaError, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+// Nama cmd SENGAJA beda dari agent Rara (.raraagent/.mcp/.ai lain) biar gak bentrok.
+import { raraGuide, raraError, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 import { runAgent, resetSession, listTools, countTools, MODELS, getApiKeys, setContext } from "../../src/lib/hiai/mcp.js";
-import { AIRich } from "../../src/lib/nova-airich-hi.js";
+import { AIRich } from "../../src/lib/rara-airich-hi.js";
 
 const pluginConfig = {
   name: "hiaiagent",
@@ -32,11 +32,11 @@ async function handler(m, { sock, config: botConfig }) {
     // subcommand
     if (!bodyText || arg === "help" || arg === "menu") {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "hiaiagent",
         "AI agent MCP — AI bisa pakai tool: kelola grup, kirim pesan, baca chat, web, database, pengingat, media, sistem.",
         `${prefix}hiaiagent buatkan grup baru bernama Tes Agent`,
-        `Sub: ${prefix}hiaiagent reset (reset sesi) · ${prefix}hiaiagent tools (daftar tool) · ${prefix}hiaiagent info (status) · ${prefix}hiaiagent models. Beda dari .novaagent (agent internal Nova).`
+        `Sub: ${prefix}hiaiagent reset (reset sesi) · ${prefix}hiaiagent tools (daftar tool) · ${prefix}hiaiagent info (status) · ${prefix}hiaiagent models. Beda dari .raraagent (agent internal Rara).`
       ));
       return { handled: true };
     }
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
       const tools = listTools();
       const lines = tools.slice(0, 40).map((t) => `- ${t.name}: ${String(t.description || "").slice(0, 80)}`);
       await m.react("⚡");
-      await m.reply(novaWrap("HIAIAGENT Tools Aktif", [
+      await m.reply(raraWrap("HIAIAGENT Tools Aktif", [
         `Total: *${countTools()}* tool`,
         "",
         ...lines,
@@ -57,14 +57,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (arg === "models") {
       const names = Object.keys(MODELS || {});
       await m.react("⚡");
-      await m.reply(novaWrap("HIAIAGENT Models", names.length ? names.map((n) => `- ${n}`).join("\n") : "MODELS kosong"));
+      await m.reply(raraWrap("HIAIAGENT Models", names.length ? names.map((n) => `- ${n}`).join("\n") : "MODELS kosong"));
       return { handled: true };
     }
 
     if (arg === "info") {
       const keys = getApiKeys();
       await m.react("⚡");
-      await m.reply(novaWrap("HIAIAGENT Status", [
+      await m.reply(raraWrap("HIAIAGENT Status", [
         `Engine: *MCP agent* (src/lib/hiai/)`,
         `Tools terpasang: *${countTools()}*`,
         `API keys (env AI_KEYS): *${keys.length}*`,
@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (arg === "reset") {
       resetSession(m.sender);
       await m.react("⚡");
-      await m.reply(novaWrap("HIAIAGENT Reset", "Sesi percakapan agent kamu sudah direset."));
+      await m.reply(raraWrap("HIAIAGENT Reset", "Sesi percakapan agent kamu sudah direset."));
       return { handled: true };
     }
 
@@ -104,7 +104,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = result?.text || result?.message || "";
     if (!text) {
       await m.react("❌");
-      await m.reply(novaError("HIAIAGENT", "Agent gak balas apa-apa — cek env AI_KEYS terisi (.hiaiagent info) lalu coba lagi"));
+      await m.reply(raraError("HIAIAGENT", "Agent gak balas apa-apa — cek env AI_KEYS terisi (.hiaiagent info) lalu coba lagi"));
       return { handled: true };
     }
     await m.react("⚡");
@@ -112,7 +112,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[hiaiagent]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("HIAIAGENT", `Gagal: ${String(error.message).slice(0, 120)}`));
+    await m.reply(raraError("HIAIAGENT", `Gagal: ${String(error.message).slice(0, 120)}`));
   }
 
   return { handled: true };

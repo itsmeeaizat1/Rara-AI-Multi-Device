@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "domaincheck",
@@ -24,7 +24,7 @@ async function checkDomain(domain) {
   // Try RDAP first — if it returns data, domain is REGISTERED
   try {
     const res = await fetch(RDAP_BOOTSTRAP + encodeURIComponent(domain), {
-      headers: { "Accept": "application/rdap+json", "User-Agent": "Mozilla/5.0 (Nova Bot)" },
+      headers: { "Accept": "application/rdap+json", "User-Agent": "Mozilla/5.0 (Rara Bot)" },
       signal: AbortSignal.timeout(10000),
     });
 
@@ -98,7 +98,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const domain = text.replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "").trim();
     if (!domain || !domain.includes(".")) {
-      return m.reply(novaWrap("DomainCheck", "Domain tidak valid!\n💡 *Contoh:* " + prefix + "domaincheck example.com"));
+      return m.reply(raraWrap("DomainCheck", "Domain tidak valid!\n💡 *Contoh:* " + prefix + "domaincheck example.com"));
     }
     const result = await checkDomain(domain);
     const tld = domain.split(".").pop();
@@ -165,11 +165,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     await m.react("🐣");
-    return m.reply(novaWrap("Domain Check: " + domain, lines.join("\n")));
+    return m.reply(raraWrap("Domain Check: " + domain, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("domaincheck error:", e);
-    return m.reply(novaWrap("DomainCheck", "Error: " + e.message));
+    return m.reply(raraWrap("DomainCheck", "Error: " + e.message));
   }
 }
 

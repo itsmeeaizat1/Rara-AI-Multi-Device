@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // vibychatanonymouschat.js — CHAT ANONIM ANTAR MEMBER BOT (DM only).
 // Dua user di-pair acak, pesan diteruskan anonim tanpa nunjukin nomor.
 // - .vibychatanonymouschat  (alias: anonymouschat, chatanon, chatrandom, anonchat, temanchat)
@@ -7,10 +7,10 @@
 // - .vibychatstop       keluar sesi / daftar tunggu
 // ATURAN (revisi owner 24 Sep 2026): link BOLEH dikirim & diteruskan.
 // Sesi nutup otomatis kalau gak ada yang balas selama 1 JAM.
-// Engine: src/lib/nova-anonchat.js (relay via answerHandler di handler.js).
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { startChat, skipChat, stopChat, relayMessage } from "../../src/lib/nova-anonchat.js";
+// Engine: src/lib/rara-anonchat.js (relay via answerHandler di handler.js).
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { startChat, skipChat, stopChat, relayMessage } from "../../src/lib/rara-anonchat.js";
 
 const pluginConfig = {
   name: "vibychatanonymouschat",
@@ -41,7 +41,7 @@ async function handler(m, { sock, db: _db }) {
 
   // fitur ini cuma jalan di DM (privasi: pesan anonim gak boleh nongol di grup)
   if (m.isGroup || (m.chat || "").endsWith("@g.us")) {
-    return m.reply(novaWrap("Chat Anonim", "Chat anonim cuma bisa dipakai di DM bot ya — chat pribadi bot biar privat."));
+    return m.reply(raraWrap("Chat Anonim", "Chat anonim cuma bisa dipakai di DM bot ya — chat pribadi bot biar privat."));
   }
 
   if (["vibychatskip", "chatibskip", "skipanon"].includes(cmd)) return skipChat(m, sock, db);

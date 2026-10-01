@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { delay } from "../../src/lib/nova-utils.js";
+import { delay } from "../../src/lib/rara-utils.js";
 
 const pluginConfig = {
   name: "aidebate",
@@ -50,7 +50,7 @@ async function aiJudge(topic, proArgs, conArgs) {
       "ARGUMEN KONTRA:\n" + conArgs + "\n\n" +
       "Beri: 1) Skor PRO (0-100), 2) Skor KONTRA (0-100), 3) Alasan singkat, 4) Pemenang. Format:\n" +
       "PRO: <skor>\nKONTRA: <skor>\nALASAN: <ringkas>\nPENERANG: <PRO/KONTRA>";
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
     return result?.success ? result.response : null;
   } catch {
     return null;
@@ -67,12 +67,12 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "start" || sub === "mulai") {
     const topic = args.slice(2).join(" ").trim();
     if (!topic) {
-      await m.reply(novaWrap("AI Debate", "Format: " + prefix + "debate start <topik>\n💡 *Contoh:* " + prefix + "debate start AI menguntungkan manusia"));
+      await m.reply(raraWrap("AI Debate", "Format: " + prefix + "debate start <topik>\n💡 *Contoh:* " + prefix + "debate start AI menguntungkan manusia"));
       return { handled: true };
     }
     const existing = getDebate(db, gid);
     if (existing && existing.status === "active") {
-      await m.reply(novaWrap("AI Debate", "Debat masih aktif. Ketik " + prefix + "debate stop dulu."));
+      await m.reply(raraWrap("AI Debate", "Debat masih aktif. Ketik " + prefix + "debate stop dulu."));
       return { handled: true };
     }
     const data = {
@@ -88,7 +88,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       startedAt: Date.now(),
     };
     saveDebate(db, gid, data);
-    await m.reply(novaWrap("AI Debate", [
+    await m.reply(raraWrap("AI Debate", [
       "Topik: " + topic,
       "Ronde: " + ROUNDS,
       "Durasi/ronde: " + ROUND_DURATION + " detik",
@@ -105,24 +105,24 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "pro") {
     const debate = getDebate(db, gid);
     if (!debate) {
-      await m.reply(novaWrap("AI Debate", "Belum ada debat. Ketik " + prefix + "debate start <topik>."));
+      await m.reply(raraWrap("AI Debate", "Belum ada debat. Ketik " + prefix + "debate start <topik>."));
       return { handled: true };
     }
     if (debate.status !== "waiting") {
-      await m.reply(novaWrap("AI Debate", "Debat sudah mulai."));
+      await m.reply(raraWrap("AI Debate", "Debat sudah mulai."));
       return { handled: true };
     }
     if (debate.pro) {
-      await m.reply(novaWrap("AI Debate", "Tim PRO sudah ada: @" + debate.pro.split("@")[0]));
+      await m.reply(raraWrap("AI Debate", "Tim PRO sudah ada: @" + debate.pro.split("@")[0]));
       return { handled: true };
     }
     if (debate.con === m.sender) {
-      await m.reply(novaWrap("AI Debate", "Kamu sudah di tim KONTRA."));
+      await m.reply(raraWrap("AI Debate", "Kamu sudah di tim KONTRA."));
       return { handled: true };
     }
     debate.pro = m.sender;
     saveDebate(db, gid, debate);
-    await m.reply(novaWrap("AI Debate", "@" + m.sender.split("@")[0] + " join tim PRO! " + (debate.con ? "Tim lengkap! Ketik " + prefix + "debate begin" : "Menunggu tim KONTRA...")), { mentions: [m.sender] });
+    await m.reply(raraWrap("AI Debate", "@" + m.sender.split("@")[0] + " join tim PRO! " + (debate.con ? "Tim lengkap! Ketik " + prefix + "debate begin" : "Menunggu tim KONTRA...")), { mentions: [m.sender] });
     return { handled: true };
   }
 
@@ -130,24 +130,24 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "con" || sub === "kontra") {
     const debate = getDebate(db, gid);
     if (!debate) {
-      await m.reply(novaWrap("AI Debate", "Belum ada debat. Ketik " + prefix + "debate start <topik>."));
+      await m.reply(raraWrap("AI Debate", "Belum ada debat. Ketik " + prefix + "debate start <topik>."));
       return { handled: true };
     }
     if (debate.status !== "waiting") {
-      await m.reply(novaWrap("AI Debate", "Debat sudah mulai."));
+      await m.reply(raraWrap("AI Debate", "Debat sudah mulai."));
       return { handled: true };
     }
     if (debate.con) {
-      await m.reply(novaWrap("AI Debate", "Tim KONTRA sudah ada: @" + debate.con.split("@")[0]));
+      await m.reply(raraWrap("AI Debate", "Tim KONTRA sudah ada: @" + debate.con.split("@")[0]));
       return { handled: true };
     }
     if (debate.pro === m.sender) {
-      await m.reply(novaWrap("AI Debate", "Kamu sudah di tim PRO."));
+      await m.reply(raraWrap("AI Debate", "Kamu sudah di tim PRO."));
       return { handled: true };
     }
     debate.con = m.sender;
     saveDebate(db, gid, debate);
-    await m.reply(novaWrap("AI Debate", "@" + m.sender.split("@")[0] + " join tim KONTRA! " + (debate.pro ? "Tim lengkap! Ketik " + prefix + "debate begin" : "Menunggu tim PRO...")), { mentions: [m.sender] });
+    await m.reply(raraWrap("AI Debate", "@" + m.sender.split("@")[0] + " join tim KONTRA! " + (debate.pro ? "Tim lengkap! Ketik " + prefix + "debate begin" : "Menunggu tim PRO...")), { mentions: [m.sender] });
     return { handled: true };
   }
 
@@ -155,22 +155,22 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "begin" || sub === "mulai2") {
     const debate = getDebate(db, gid);
     if (!debate) {
-      await m.reply(novaWrap("AI Debate", "Belum ada debat."));
+      await m.reply(raraWrap("AI Debate", "Belum ada debat."));
       return { handled: true };
     }
     if (!debate.pro || !debate.con) {
-      await m.reply(novaWrap("AI Debate", "Tim belum lengkap. Butuh 1 PRO + 1 CON."));
+      await m.reply(raraWrap("AI Debate", "Tim belum lengkap. Butuh 1 PRO + 1 CON."));
       return { handled: true };
     }
     if (m.sender !== debate.pro && m.sender !== debate.con && !m.isOwner) {
-      await m.reply(novaWrap("AI Debate", "Hanya pemain atau owner yang bisa mulai."));
+      await m.reply(raraWrap("AI Debate", "Hanya pemain atau owner yang bisa mulai."));
       return { handled: true };
     }
     debate.status = "active";
     debate.round = 1;
     debate.currentTurn = debate.pro;
     saveDebate(db, gid, debate);
-    await m.reply(novaWrap("AI Debate", [
+    await m.reply(raraWrap("AI Debate", [
       "DEBAT DIMULAI!",
       "Topik: " + debate.topic,
       "Ronde 1/" + debate.rounds,
@@ -187,17 +187,17 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "arg" || sub === "argumen") {
     const debate = getDebate(db, gid);
     if (!debate || debate.status !== "active") {
-      await m.reply(novaWrap("AI Debate", "Tidak ada debat aktif."));
+      await m.reply(raraWrap("AI Debate", "Tidak ada debat aktif."));
       return { handled: true };
     }
     const text = args.slice(2).join(" ").trim();
     if (!text) {
-      await m.reply(novaWrap("AI Debate", "Ketik argumen kamu: " + prefix + "debate arg <teks>"));
+      await m.reply(raraWrap("AI Debate", "Ketik argumen kamu: " + prefix + "debate arg <teks>"));
       return { handled: true };
     }
     if (m.sender !== debate.currentTurn) {
       const side = debate.currentTurn === debate.pro ? "PRO" : "KONTRA";
-      await m.reply(novaWrap("AI Debate", "Bukan giliran kamu. Giliran tim " + side + "."));
+      await m.reply(raraWrap("AI Debate", "Bukan giliran kamu. Giliran tim " + side + "."));
       return { handled: true };
     }
 
@@ -215,18 +215,18 @@ async function handler(m, { sock, db, config: botConfig }) {
         // Final - judge
         debate.status = "judging";
         saveDebate(db, gid, debate);
-        await m.reply(novaWrap("AI Debate", "Semua ronde selesai! AI Judge sedang menilai..."));
+        await m.reply(raraWrap("AI Debate", "Semua ronde selesai! AI Judge sedang menilai..."));
         const verdict = await aiJudge(debate.topic, debate.proArgs.join("\n"), debate.conArgs.join("\n"));
         debate.status = "done";
         debate.verdict = verdict;
         saveDebate(db, gid, debate);
-        await m.reply(novaWrap("AI Debate Verdict", "Topik: " + debate.topic + "\n\n" + (verdict || "Gagal menilai nih")));
+        await m.reply(raraWrap("AI Debate Verdict", "Topik: " + debate.topic + "\n\n" + (verdict || "Gagal menilai nih")));
         return { handled: true };
       } else {
         debate.round++;
         debate.currentTurn = debate.pro;
         saveDebate(db, gid, debate);
-        await m.reply(novaWrap("AI Debate", [
+        await m.reply(raraWrap("AI Debate", [
           "Ronde " + debate.round + "/" + debate.rounds,
           "Giliran PRO: @" + debate.pro.split("@")[0],
           "Ketik " + prefix + "debate arg <teks>",
@@ -238,7 +238,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       saveDebate(db, gid, debate);
       const nextSide = m.sender === debate.pro ? "KONTRA" : "PRO";
       const nextJid = m.sender === debate.pro ? debate.con : debate.pro;
-      await m.reply(novaWrap("AI Debate", "Argumen " + side.toUpperCase() + " tersimpan!\nGiliran " + nextSide + ": @" + nextJid.split("@")[0]), { mentions: [nextJid] });
+      await m.reply(raraWrap("AI Debate", "Argumen " + side.toUpperCase() + " tersimpan!\nGiliran " + nextSide + ": @" + nextJid.split("@")[0]), { mentions: [nextJid] });
       return { handled: true };
     }
   }
@@ -246,16 +246,16 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== STOP
   if (sub === "stop" || sub === "batal") {
     if (!m.isOwner && !m.isAdmin) {
-      await m.reply(novaWrap("AI Debate", "Khusus admin/owner."));
+      await m.reply(raraWrap("AI Debate", "Khusus admin/owner."));
       return { handled: true };
     }
     delDebate(db, gid);
-    await m.reply(novaWrap("AI Debate", "Debat dibatalkan."));
+    await m.reply(raraWrap("AI Debate", "Debat dibatalkan."));
     return { handled: true };
   }
 
   // ==================== HELP
-  await m.reply(novaWrap("AI Debate", [
+  await m.reply(raraWrap("AI Debate", [
     "AI DEBATE MODE",
     "",
     "Cara pakai:",

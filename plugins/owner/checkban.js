@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "checkban",
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
   let dbStatus = db.setting("bannedUsers");
 
-  { const __navText = novaWrap("checkban", `DEBUG BAN (${target})
+  { const __navText = raraWrap("checkban", `DEBUG BAN (${target})
 cleanNumber: ${cleanNumber}
 bannedList (config): ${JSON.stringify(bannedList)}
 savedBanned (db): ${JSON.stringify(savedBanned)}

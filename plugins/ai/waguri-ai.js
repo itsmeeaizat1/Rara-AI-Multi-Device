@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "waguri-ai",
@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(novaGuideV2("waguri-ai", {
+    return m.reply(raraGuideV2("waguri-ai", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)",
  sapaan: "ngobrol sama Waguri, gadis pemalu yang manis dan sering salah tingkah! (˶ᵔ ᵕ ᵔ˶)",
       cara: "ketik pertanyaannya sesudah command",
@@ -35,14 +35,14 @@ async function handler(m, { sock }) {
     const result = await UnlimitedAI(text, "waguri-ai");
 
     if (!result.status) {
-      { return await m.reply(novaWrap("waguri-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
+      { return await m.reply(raraWrap("waguri-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
     }
     const reply = result.answer;
     await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(novaWrap("waguri-ai", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("waguri-ai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

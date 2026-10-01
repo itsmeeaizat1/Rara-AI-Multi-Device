@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autoconflict — Auto-Conflict Detector & De-escalation
  *
@@ -29,9 +29,9 @@
  *   .autoconflict reset                — Reset stats & tension
  */
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -449,7 +449,7 @@ async function handler(m, { sock, config: botConfig }) {
         })
         .join("\n") || "Belum ada data";
 
-      await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [
+      await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [
         `Status: ${status}`,
         `Sensitivity: ${settings.sensitivity} (warn: ${threshold.warn}, critical: ${threshold.critical})`,
         `Style: ${settings.style}`,
@@ -466,7 +466,7 @@ async function handler(m, { sock, config: botConfig }) {
         "---",
         `Tension per Group:`,
         groupTensions,
-      ]) + "\n\n" + novaBox("COMMANDS", [
+      ]) + "\n\n" + raraBox("COMMANDS", [
         `${prefix}autoconflict on/off`,
         `${prefix}autoconflict sensitivity <low/medium/high>`,
         `${prefix}autoconflict style <calm/humor/fact>`,
@@ -485,7 +485,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "on") {
       settings.enabled = true;
       db.db.write();
-      await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [
+      await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [
         "Status: ON",
         "AI akan deteksi konflik & auto-intervensi",
         `Sensitivity: ${settings.sensitivity}`,
@@ -498,7 +498,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "off") {
       settings.enabled = false;
       db.db.write();
-      await m.reply(novaBox("AUTO-CONFLICT DETECTOR", ["Status: OFF"]));
+      await m.reply(raraBox("AUTO-CONFLICT DETECTOR", ["Status: OFF"]));
       return { handled: true };
     }
 
@@ -506,7 +506,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "sensitivity") {
       const level = (args[1] || "").toLowerCase();
       if (!["low", "medium", "high"].includes(level)) {
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [
           `Current: ${settings.sensitivity}`,
           "Pilihan: low, medium, high",
           `Ketik: ${prefix}autoconflict sensitivity <level>`,
@@ -520,7 +520,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.sensitivity = level;
       db.db.write();
       const t = THRESHOLDS[level];
-      await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [
+      await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [
         `Sensitivity: ${level}`,
         `Warn: ${t.warn} | Critical: ${t.critical}`,
       ]));
@@ -531,7 +531,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "style") {
       const style = (args[1] || "").toLowerCase();
       if (!["calm", "humor", "fact"].includes(style)) {
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [
           `Current: ${settings.style}`,
           "Pilihan: calm, humor, fact",
           `Ketik: ${prefix}autoconflict style <calm/humor/fact>`,
@@ -544,7 +544,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.style = style;
       db.db.write();
-      await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [`Style: ${style}`]));
+      await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [`Style: ${style}`]));
       return { handled: true };
     }
 
@@ -552,7 +552,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "cooldown") {
       const mins = parseInt(args[1]);
       if (!mins || mins < 1) {
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [
           `Current: ${settings.cooldownMinutes} menit`,
           `Ketik: ${prefix}autoconflict cooldown <menit>`,
         ]));
@@ -560,7 +560,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.cooldownMinutes = mins;
       db.db.write();
-      await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [`Cooldown: ${mins} menit`]));
+      await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [`Cooldown: ${mins} menit`]));
       return { handled: true };
     }
 
@@ -568,7 +568,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "notify") {
       const val = (args[1] || "").toLowerCase();
       if (!["on", "off"].includes(val)) {
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [
           `Current: ${settings.notifyOwner ? "ON" : "OFF"}`,
           `Ketik: ${prefix}autoconflict notify on/off`,
         ]));
@@ -576,7 +576,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.notifyOwner = val === "on";
       db.db.write();
-      await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [`Notify Owner: ${val.toUpperCase()}`]));
+      await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [`Notify Owner: ${val.toUpperCase()}`]));
       return { handled: true };
     }
 
@@ -588,11 +588,11 @@ async function handler(m, { sock, config: botConfig }) {
           settings.activeGroups.push(gid);
           db.db.write();
         }
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [`Grup ditambah: ${gid}`, `Total: ${settings.activeGroups.length}`]));
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [`Grup ditambah: ${gid}`, `Total: ${settings.activeGroups.length}`]));
       } else {
         settings.activeGroups = settings.activeGroups.filter((g) => g !== gid);
         db.db.write();
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [`Grup dihapus: ${gid}`, `Total: ${settings.activeGroups.length}`]));
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [`Grup dihapus: ${gid}`, `Total: ${settings.activeGroups.length}`]));
       }
       return { handled: true };
     }
@@ -603,7 +603,7 @@ async function handler(m, { sock, config: botConfig }) {
         .sort((a, b) => b[1].level - a[1].level);
 
       if (groups.length === 0) {
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", ["Belum ada data tension"]));
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", ["Belum ada data tension"]));
         return { handled: true };
       }
 
@@ -613,14 +613,14 @@ async function handler(m, { sock, config: botConfig }) {
         return `| ${jid.slice(0, 15)}... ${bar} ${gt.level}/100 [${status}]`;
       });
 
-      await m.reply(novaBox("TENSION STATUS", lines));
+      await m.reply(raraBox("TENSION STATUS", lines));
       return { handled: true };
     }
 
     // ─── HISTORY ───
     if (sub === "history") {
       if (settings.history.length === 0) {
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", ["History: kosong"]));
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", ["History: kosong"]));
         return { handled: true };
       }
       const recent = settings.history.slice(-15).reverse();
@@ -628,7 +628,7 @@ async function handler(m, { sock, config: botConfig }) {
         const time = new Date(h.timestamp).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
         return `| ${h.sender} [${h.tension}] ${h.type} — ${h.group} ${time}`;
       });
-      await m.reply(novaBox("CONFLICT HISTORY", lines));
+      await m.reply(raraBox("CONFLICT HISTORY", lines));
       return { handled: true };
     }
 
@@ -636,7 +636,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "addword" || sub === "delword") {
       const word = args.slice(1).join(" ").toLowerCase();
       if (!word) {
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [
           `Ketik: ${prefix}autoconflict ${sub} <kata>`,
         ]));
         return { handled: true };
@@ -646,11 +646,11 @@ async function handler(m, { sock, config: botConfig }) {
           settings.conflictKeywords.push(word);
           db.db.write();
         }
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [`Keyword ditambah: ${word}`, `Total: ${settings.conflictKeywords.length}`]));
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [`Keyword ditambah: ${word}`, `Total: ${settings.conflictKeywords.length}`]));
       } else {
         settings.conflictKeywords = settings.conflictKeywords.filter((w) => w !== word);
         db.db.write();
-        await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [`Keyword dihapus: ${word}`, `Total: ${settings.conflictKeywords.length}`]));
+        await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [`Keyword dihapus: ${word}`, `Total: ${settings.conflictKeywords.length}`]));
       }
       return { handled: true };
     }
@@ -669,17 +669,17 @@ async function handler(m, { sock, config: botConfig }) {
       };
       settings.history = [];
       db.db.write();
-      await m.reply(novaBox("AUTO-CONFLICT DETECTOR", ["Tension, stats & history direset"]));
+      await m.reply(raraBox("AUTO-CONFLICT DETECTOR", ["Tension, stats & history direset"]));
       return { handled: true };
     }
 
     // ─── UNKNOWN ───
-    await m.reply(novaBox("AUTO-CONFLICT DETECTOR", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autoconflict untuk dashboard`]));
+    await m.reply(raraBox("AUTO-CONFLICT DETECTOR", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autoconflict untuk dashboard`]));
     return { handled: true };
 
   } catch (error) {
     console.error("[autoconflict] handler error:", error.message);
-    await m.reply(novaError("AutoConflict", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("AutoConflict", "Gagal nih, coba lagi ya"));
     return { handled: true };
   }
 }

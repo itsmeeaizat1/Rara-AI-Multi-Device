@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "motw",
@@ -37,29 +37,29 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "auto") {
       const toggle = (args[1] || "").toLowerCase();
       if (!["on", "off"].includes(toggle)) {
-        return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}motw auto on|off`, "info"));
+        return m.reply(raraWrap("Usage", `Cara: ${usedPrefix}motw auto on|off`, "info"));
       }
       data.autoSelect = toggle === "on";
       await db.save();
-      return m.reply(novaWrap("Member of the Week", `Auto-select ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan pilih member teraktif tiap Minggu.`, "info"));
+      return m.reply(raraWrap("Member of the Week", `Auto-select ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan pilih member teraktif tiap Minggu.`, "info"));
     }
 
     if (sub === "reset") {
       data.members = {};
       data.weekStart = Date.now();
       await db.save();
-      return m.reply(novaWrap("Member of the Week", "Data mingguan direset. Hitung ulang dari sekarang."));
+      return m.reply(raraWrap("Member of the Week", "Data mingguan direset. Hitung ulang dari sekarang."));
     }
 
     if (sub === "history") {
       if (data.history.length === 0) {
-        return m.reply(novaWrap("Member of the Week", "Belum ada riwayat pemenang."));
+        return m.reply(raraWrap("Member of the Week", "Belum ada riwayat pemenang."));
       }
       const hist = data.history.slice(-5).map((h, i) => {
         const date = new Date(h.timestamp).toLocaleDateString("id-ID");
         return `${i + 1}. @${h.jid.split("@")[0]} - ${h.messageCount} pesan (${date})`;
       }).join("\n");
-      return m.reply(novaWrap("Member of the Week", `Riwayat Pemenang:\n\n${hist}`, "info"));
+      return m.reply(raraWrap("Member of the Week", `Riwayat Pemenang:\n\n${hist}`, "info"));
     }
 
     if (Date.now() - data.weekStart > WEEK_MS) {
@@ -72,7 +72,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       .sort((a, b) => (b[1].count || 0) - (a[1].count || 0));
 
     if (sorted.length === 0) {
-      return m.reply(novaWrap("Member of the Week", [
+      return m.reply(raraWrap("Member of the Week", [
         "Belum ada data aktivitas minggu ini.",
         "",
         `Command:`,
@@ -92,7 +92,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       return `${medal} @${jid.split("@")[0]} - ${d.count || 0} pesan`;
     }).join("\n");
 
-    return m.reply(novaWrap("Member of the Week", [
+    return m.reply(raraWrap("Member of the Week", [
       `Kandidat Member of the Week:`,
       "",
       top5,
@@ -105,7 +105,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("motw error:", e);
-    return m.reply(novaError("Motw", e.message));
+    return m.reply(raraError("Motw", e.message));
   }
 }
 

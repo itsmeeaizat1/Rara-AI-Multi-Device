@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "dailyquest",
@@ -88,7 +88,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const bonusStatus = udata.claimedBonus ? "[CLAIMED]" : "[AVAILABLE]";
     const allDone = cfg.questPool.every(q => (udata.progress[q.id] || 0) >= q.target);
 
-    await m.reply(novaWrap("Daily Quest", [
+    await m.reply(raraWrap("Daily Quest", [
       "Tanggal: " + cfg.dailyDate,
       "@" + m.sender.split("@")[0],
       "",
@@ -111,19 +111,19 @@ async function handler(m, { sock, db, config: botConfig }) {
     const amount = parseInt(args[3] || "0", 10);
     const quest = cfg.questPool.find(q => q.id === qid);
     if (!quest) {
-      await m.reply(novaError("DailyQuest", "Quest ID gak valid nih! Ketik " + prefix + "dailyquest list"));
+      await m.reply(raraError("DailyQuest", "Quest ID gak valid nih! Ketik " + prefix + "dailyquest list"));
       return { handled: true };
     }
     if ((udata.progress[qid] || 0) >= quest.target) {
-      await m.reply(novaWrap("Daily Quest", "Quest " + qid + " sudah selesai!"));
+      await m.reply(raraWrap("Daily Quest", "Quest " + qid + " sudah selesai!"));
       return { handled: true };
     }
     udata.progress[qid] = Math.min(quest.target, (udata.progress[qid] || 0) + amount);
     saveConfig(db, gid, cfg);
     if (udata.progress[qid] >= quest.target) {
-      await m.reply(novaWrap("Daily Quest", "Quest selesai: " + quest.desc + "!\nKlaim reward: " + prefix + "dailyquest claim"));
+      await m.reply(raraWrap("Daily Quest", "Quest selesai: " + quest.desc + "!\nKlaim reward: " + prefix + "dailyquest claim"));
     } else {
-      await m.reply(novaWrap("Daily Quest", "Progress updated: " + qid + " (" + udata.progress[qid] + "/" + quest.target + ")"));
+      await m.reply(raraWrap("Daily Quest", "Progress updated: " + qid + " (" + udata.progress[qid] + "/" + quest.target + ")"));
     }
     return { handled: true };
   }
@@ -147,7 +147,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     if (!claimedAny) {
       const incomplete = cfg.questPool.filter(q => (udata.progress[q.id] || 0) < q.target).map(q => q.desc).join(", ");
-      await m.reply(novaWrap("Daily Quest", "Tidak ada quest yang bisa diklaim.\nBelum selesai: " + incomplete));
+      await m.reply(raraWrap("Daily Quest", "Tidak ada quest yang bisa diklaim.\nBelum selesai: " + incomplete));
       return { handled: true };
     }
     user.coin = (user.coin || 0) + totalCoin;
@@ -155,7 +155,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     db.setUser(m.sender, user);
     db.save();
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Daily Quest - Claimed", [
+    await m.reply(raraWrap("Daily Quest - Claimed", [
       "Reward diterima:",
       ...claimedList.map(c => "+ " + c),
       "",
@@ -167,13 +167,13 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "claimbonus" || sub === "klaimbonus") {
     if (udata.claimedBonus) {
-      await m.reply(novaWrap("Daily Quest", "Bonus sudah diklaim hari ini!"));
+      await m.reply(raraWrap("Daily Quest", "Bonus sudah diklaim hari ini!"));
       return { handled: true };
     }
     // Check if all main quests done
     const allDone = cfg.questPool.every(q => (udata.progress[q.id] || 0) >= q.target);
     if (!allDone) {
-      await m.reply(novaWrap("Daily Quest", "Selesaikan semua misi harian dulu!"));
+      await m.reply(raraWrap("Daily Quest", "Selesaikan semua misi harian dulu!"));
       return { handled: true };
     }
     udata.claimedBonus = true;
@@ -182,7 +182,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     db.setUser(m.sender, user);
     db.save();
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Daily Quest - BONUS!", [
+    await m.reply(raraWrap("Daily Quest - BONUS!", [
       "Bonus quest di-claim!",
       cfg.bonusQuest.desc,
       "",
@@ -196,28 +196,28 @@ async function handler(m, { sock, db, config: botConfig }) {
     const qid = (args[2] || "").toLowerCase();
     const quest = cfg.questPool.find(q => q.id === qid);
     if (!quest) {
-      await m.reply(novaError("DailyQuest", "Quest ID gak valid nih"));
+      await m.reply(raraError("DailyQuest", "Quest ID gak valid nih"));
       return { handled: true };
     }
     udata.progress[qid] = quest.target;
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Daily Quest", "Quest " + qid + " ditandai selesai! Claim: " + prefix + "dailyquest claim"));
+    await m.reply(raraWrap("Daily Quest", "Quest " + qid + " ditandai selesai! Claim: " + prefix + "dailyquest claim"));
     return { handled: true };
   }
 
   if (sub === "reset" || sub === "resetdaily") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Daily Quest", "Khusus owner."));
+      await m.reply(raraWrap("Daily Quest", "Khusus owner."));
       return { handled: true };
     }
     cfg.dailyDate = "";
     cfg = generateDailyQuests(cfg);
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Daily Quest", "Quest harian direset. Quest baru di-generate."));
+    await m.reply(raraWrap("Daily Quest", "Quest harian direset. Quest baru di-generate."));
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Daily Quest", [
+  await m.reply(raraWrap("Daily Quest", [
     "DAILY QUEST HARIAN",
     "",
     prefix + "dailyquest list - lihat misi hari ini",

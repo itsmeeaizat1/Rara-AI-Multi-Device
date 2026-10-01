@@ -1,16 +1,16 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Nebang — Cut trees for wood (different tree types, scaling)
 
 import {
   ensureRpg, addExp, addGold, useEnergy, addItem, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
-  getCash, spendCash, formatRp} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { shapeNebang } from "../../src/lib/nova-rpg-shapes.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import te from "../../src/lib/nova-error.js";
+  getCash, spendCash, formatRp} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { shapeNebang } from "../../src/lib/rara-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "nebang",
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("nebang", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("nebang", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // ── subcommand khas nebang: gergaji status & upgrade ──
     const sub = (m.args?.[0] || "").toLowerCase();
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     const lv = tool.level || 0;
 
     if (sub === "gergaji" || sub === "status") {
-      return m.reply(novaRpgBox("nebang",
+      return m.reply(raraRpgBox("nebang",
         `🪓 GERGAJI KAMU
 
 ` +
@@ -81,7 +81,7 @@ Ketik: .nebang upgrade`));
       const needShard = TOOL.shardCost(lv);
       const needRp = TOOL.rpCost(lv);
       if ((tool.shards || 0) < needShard) {
-        return m.reply(novaRpgBox("nebang",
+        return m.reply(raraRpgBox("nebang",
           `🪚 Upgrade Gergaji ke Lv.${lv + 1} butuh:
 
 • Serpih Kayu Keras : ${needShard}x (punya ${tool.shards || 0}x)
@@ -90,7 +90,7 @@ Ketik: .nebang upgrade`));
 💡 Serpih didapat dari .nebang sendiri — 40% per tebang, pohon Ebony/Mistik dijamin +2!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
-        return m.reply(novaRpgBox("nebang", `💵 Upgrade butuh *${formatRp(needRp)}*.
+        return m.reply(raraRpgBox("nebang", `💵 Upgrade butuh *${formatRp(needRp)}*.
 Uang kamu: ${formatRp(getCash(m))}
 💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
@@ -100,7 +100,7 @@ Uang kamu: ${formatRp(getCash(m))}
       fresh.spent = (fresh.spent || 0) + needRp;
       getDatabase().setPlayerData(m.sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("nebang",
+      return m.reply(raraRpgBox("nebang",
         `🪓 GERGAJI UPGRADED!
 
 Level : Lv.${lv} → Lv.${lv + 1}
@@ -114,12 +114,12 @@ Level : Lv.${lv} → Lv.${lv + 1}
     const cd = checkCooldown(m, "lastNebang");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("nebang", `Cooldown tebang tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("nebang", `Cooldown tebang tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < NEBANG_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("nebang", `Energi kurang! Butuh *${NEBANG_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(raraRpgBox("nebang", `Energi kurang! Butuh *${NEBANG_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     // Pick tree based on level
@@ -159,7 +159,7 @@ Level : Lv.${lv} → Lv.${lv + 1}
     setCooldown(m, "lastNebang", NEBANG_COOLDOWN);
 
     await m.react("🐣");
-    return m.reply(novaRpgBox("nebang",
+    return m.reply(raraRpgBox("nebang",
       `🪓 TEBANG SELESAI!
 
 ` +
@@ -183,7 +183,7 @@ Level : Lv.${lv} → Lv.${lv + 1}
   } catch (err) {
     console.error("nebang error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("nebang", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("nebang", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .tmpfilesorg — upload media ke tmpfiles.org (temporary file hosting, auto-hapus).
 // API publik gratis tanpa akun: POST https://tmpfiles.org/api/v1/upload (multipart).
 // Expire 60–172800 detik (1 menit–48 jam), default 1 jam. Max 100 MB per file.
 // Alias pendek .tmporg. NB: alias .tmpfiles MILIK fileio.js (file.io) — jangan dipakai di sini.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const TMPFILES_API = "https://tmpfiles.org/api/v1/upload";
 const TMPFILES_MAX_BYTES = 104857600; // 100 MB (batas server)
@@ -50,7 +50,7 @@ function mediaFilename(target) {
   if (name) return String(name).replace(/[\\/\0]/g, "_").slice(0, 180) || "file";
   const mime = String(target?.mimetype || target?.msg?.mimetype || "application/octet-stream").split(";")[0];
   const ext = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "video/mp4": "mp4", "audio/mpeg": "mp3", "audio/ogg": "ogg" }[mime] || "bin";
-  return `nova-upload.${ext}`;
+  return `rara-upload.${ext}`;
 }
 
 // seam untuk e2e: override fetch seluruhnya
@@ -112,7 +112,7 @@ async function handler(m) {
 
   const target = getMediaTarget(m);
   if (!target) {
-    return m.reply(novaWrap("tmpfiles.org", `Reply atau kirim media${args.length ? "" : " dengan caption " + m.prefix + "tmpfilesorg"} untuk dapat link sementara.\n\nDurasi opsional: angka = menit, atau pakai satuan s/m/h/d (1 menit sampai 48 jam, default 1 jam).\nContoh: ${m.prefix}tmpfilesorg 10m — terhapus dalam 10 menit.`, "guide"));
+    return m.reply(raraWrap("tmpfiles.org", `Reply atau kirim media${args.length ? "" : " dengan caption " + m.prefix + "tmpfilesorg"} untuk dapat link sementara.\n\nDurasi opsional: angka = menit, atau pakai satuan s/m/h/d (1 menit sampai 48 jam, default 1 jam).\nContoh: ${m.prefix}tmpfilesorg 10m — terhapus dalam 10 menit.`, "guide"));
   }
 
   try {
@@ -121,7 +121,7 @@ async function handler(m) {
     if (!Buffer.isBuffer(buffer) || buffer.length === 0) throw new Error("media kosong");
     if (buffer.length > TMPFILES_MAX_BYTES) {
       await m.react("❌");
-      return m.reply(novaWrap("tmpfiles.org", `Ukuran file ${formatSize(buffer.length)} melebihi batas server 100 MB. Kompres dulu atau pakai ${m.prefix}tourl.`, "error"));
+      return m.reply(raraWrap("tmpfiles.org", `Ukuran file ${formatSize(buffer.length)} melebihi batas server 100 MB. Kompres dulu atau pakai ${m.prefix}tourl.`, "error"));
     }
     const mime = String(target.mimetype || target.msg?.mimetype || "application/octet-stream").split(";")[0];
     const filename = mediaFilename(target);
@@ -139,11 +139,11 @@ async function handler(m) {
     ];
     if (directLink) lines.push(`Download langsung: ${directLink}`);
     lines.push(`Terhapus otomatis: ${formatExpiryWib(up.expireSec)}`);
-    return m.reply(novaWrap("tmpfiles.org", lines.join("\n"), "success"));
+    return m.reply(raraWrap("tmpfiles.org", lines.join("\n"), "success"));
   } catch (e) {
     console.error("tmpfilesorg error:", e?.message || e);
     await m.react("❌");
-    return m.reply(novaWrap("tmpfiles.org", `Upload gagal: ${String(e?.message || e).slice(0, 180)}`, "error"));
+    return m.reply(raraWrap("tmpfiles.org", `Upload gagal: ${String(e?.message || e).slice(0, 180)}`, "error"));
   }
 }
 

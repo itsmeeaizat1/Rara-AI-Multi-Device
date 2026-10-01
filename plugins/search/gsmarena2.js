@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // gsmarena2.js — GSM Arena v2 (siputzx API, no npm dependency)
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "gsmarena2",
@@ -18,7 +18,7 @@ async function handler(m, { sock }) {
   try {
     const query = m.args.join(" ").trim();
     if (!query) {
-      return m.reply(novaWrap("gsmarena2", `Cari HP apa?\n\nContoh: ${m.prefix}gsmarena2 samsung galaxy s25`, "guide"));
+      return m.reply(raraWrap("gsmarena2", `Cari HP apa?\n\nContoh: ${m.prefix}gsmarena2 samsung galaxy s25`, "guide"));
     }
 
     await m.react("🕒");
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
     if (!data || data.status === false || (!data.data && !data.result)) {
       await m.react("❌");
-      return m.reply(novaWrap("gsmarena2", `HP "${query}" tidak ditemukan.`, "error"));
+      return m.reply(raraWrap("gsmarena2", `HP "${query}" tidak ditemukan.`, "error"));
     }
 
     const r = data.data || data.result || data;
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("gsmarena2 error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("gsmarena2", err.message || "Error", "error"));
+    return m.reply(raraWrap("gsmarena2", err.message || "Error", "error"));
   }
 }
 

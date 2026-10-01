@@ -10,7 +10,7 @@ const check = (name, ok, extra) => { w((ok ? "  ✅ " : "  ❌ ") + name + (ok ?
 const STATE = path.join(process.cwd(), "src", "database", "auto", "linkedinnotify.json");
 try { fs.unlinkSync(STATE); } catch {}
 
-const lib = await import("../../src/lib/nova-linkedin-notify.js");
+const lib = await import("../../src/lib/rara-linkedin-notify.js");
 const plug = (await import("../../plugins/loker/linkedinnotify.js")).default;
 
 // ── market lowongan ala actor valig (struktur ASLI live) ──
@@ -44,7 +44,7 @@ const mkM = (chat) => ({
   react: async (e) => { },
 });
 const lastReply = () => String(mkM._last || "");
-const toSC = (s) => String(s); // novaWrap smallcaps — assert pakai substring longgar
+const toSC = (s) => String(s); // raraWrap smallcaps — assert pakai substring longgar
 
 const clear = () => { sent.length = 0; mkM._last = null; };
 
@@ -195,13 +195,13 @@ check("job id market tetap ada", st.sentIds[keys[0]]);
 // ═══ 9. REGISTRASI ═══
 w("\n[9] Registrasi sistem");
 const idx = fs.readFileSync(path.join(process.cwd(), "index.js"), "utf8");
-check("schedulerInits index.js", idx.includes("nova-linkedin-notify.js") && idx.includes("initLinkedInNotifier"));
+check("schedulerInits index.js", idx.includes("rara-linkedin-notify.js") && idx.includes("initLinkedInNotifier"));
 const sw = fs.readFileSync(path.join(process.cwd(), "plugins/owner/switch.js"), "utf8");
 check("AUTO_REGISTRY autolinkedin", sw.includes("autolinkedin: {"));
 check("alias switch linkedinnotify/lnjobs", sw.includes('linkedinnotify: "autolinkedin"') && sw.includes('lnjobs: "autolinkedin"'));
 check("SUBSCRIBER_FEATURES", sw.includes("autolinkedin: '.linkedinnotify on'"));
-const sh = fs.readFileSync(path.join(process.cwd(), "src/lib/nova-linkedin-notify.js"), "utf8");
-check("import lib di switch benar", sw.includes("from '../../src/lib/nova-linkedin-notify.js'"));
+const sh = fs.readFileSync(path.join(process.cwd(), "src/lib/rara-linkedin-notify.js"), "utf8");
+check("import lib di switch benar", sw.includes("from '../../src/lib/rara-linkedin-notify.js'"));
 check("actor valig (termurah $0.0004/job)", sh.includes("valig~linkedin-jobs-scraper"));
 check("window 07:00–22:00 + interval default 120 (credit guard)", sh.includes("WINDOW_START") && sh.includes("DEFAULT_INTERVAL_MENIT"));
 

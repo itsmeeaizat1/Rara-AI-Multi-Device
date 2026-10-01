@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Shop — Buy and sell items
 
-import { animShop } from "../../src/lib/nova-rpg-anim.js";
+import { animShop } from "../../src/lib/rara-rpg-anim.js";
 import {
   ensureRpg, saveRpg, addGold, removeGold, addItem, removeItem,
   getInventory, ITEM_DB, getItemCount, equipItem
-} from "../../src/lib/nova-rpg-service.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-rpg-service.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "shop",
@@ -44,7 +44,7 @@ const SHOP_ITEMS = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("shoprpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("shoprpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -84,16 +84,16 @@ async function handler(m, { sock }) {
       const itemId = args[1];
       const qty = parseInt(args[2]) || 1;
 
-      if (!itemId) return m.reply(novaRpgBox("shoprpg", "Item tidak ditemukan. Ketik .shoprpg untuk lihat daftar.", "warn"));
+      if (!itemId) return m.reply(raraRpgBox("shoprpg", "Item tidak ditemukan. Ketik .shoprpg untuk lihat daftar.", "warn"));
 
       // Cari item di SHOP_ITEMS (by id atau name fuzzy)
       const shopItem = SHOP_ITEMS.find(i => i.id === itemId || i.name.toLowerCase() === itemId.toLowerCase());
-      if (!shopItem) return m.reply(novaRpgBox("shoprpg", `Item *${itemId}* tidak dijual di shop.`, "warn"));
+      if (!shopItem) return m.reply(raraRpgBox("shoprpg", `Item *${itemId}* tidak dijual di shop.`, "warn"));
 
       const total = shopItem.price * qty;
       if (rpg.gold < total) {
         await m.react("🚫");
-        return m.reply(novaRpgBox("shoprpg", `Gold tidak cukup! Butuh *${total} gold* untuk *${qty}x ${shopItem.name}*. Gold kamu: *${rpg.gold}*`, "warn"));
+        return m.reply(raraRpgBox("shoprpg", `Gold tidak cukup! Butuh *${total} gold* untuk *${qty}x ${shopItem.name}*. Gold kamu: *${rpg.gold}*`, "warn"));
       }
 
       removeGold(m, total, sock);
@@ -117,16 +117,16 @@ async function handler(m, { sock }) {
       const itemId = args[1];
       const qty = parseInt(args[2]) || 1;
 
-      if (!itemId) return m.reply(novaRpgBox("shoprpg", "Item apa yang mau dijual? Ketik .shoprpg untuk lihat daftar.", "warn"));
+      if (!itemId) return m.reply(raraRpgBox("shoprpg", "Item apa yang mau dijual? Ketik .shoprpg untuk lihat daftar.", "warn"));
 
       // Cari item di ITEM_DB
       const itemInfo = ITEM_DB[itemId];
-      if (!itemInfo) return m.reply(novaRpgBox("shoprpg", `Item *${itemId}* tidak dikenal.`, "warn"));
+      if (!itemInfo) return m.reply(raraRpgBox("shoprpg", `Item *${itemId}* tidak dikenal.`, "warn"));
 
       const owned = getItemCount(m, itemId);
       if (owned < qty) {
         await m.react("🚫");
-        return m.reply(novaRpgBox("shoprpg", `Item tidak cukup! Kamu punya *${owned}x ${itemInfo.name}*, mau jual *${qty}x*.`, "warn"));
+        return m.reply(raraRpgBox("shoprpg", `Item tidak cukup! Kamu punya *${owned}x ${itemInfo.name}*, mau jual *${qty}x*.`, "warn"));
       }
 
       const sellPrice = Math.floor((itemInfo.value || 5) * 0.6); // 60% dari value
@@ -149,11 +149,11 @@ async function handler(m, { sock }) {
       return m.reply(msg);
     }
 
-    return m.reply(novaRpgBox("shoprpg", "Aksi tidak dikenal. Gunakan .shoprpg, .shoprpg buy <item>, atau .shoprpg sell <item>", "warn"));
+    return m.reply(raraRpgBox("shoprpg", "Aksi tidak dikenal. Gunakan .shoprpg, .shoprpg buy <item>, atau .shoprpg sell <item>", "warn"));
   } catch (err) {
     console.error("shoprpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("shoprpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("shoprpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

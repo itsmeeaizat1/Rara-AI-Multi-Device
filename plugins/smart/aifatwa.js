@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaHeader, separator, tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraHeader, separator, tipText, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "aifatwa", alias: ["aifatwa"], category: "smart",
@@ -15,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const q = m.text?.trim();
     if (!q) {
-      await m.reply( novaCaption({
+      await m.reply( raraCaption({
   emoji: "🕌",
   name: "aifatwa",
   description: "Tanya hukum Islam, AI cari referensi",
@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Jawab pertanyaan Islam berikut berdasarkan Al-Quran, Hadis, dan pendapat ulama. Berikan referensi. Bahasa Indonesia.\n\nPertanyaan: ${q}`, {
       systemPrompt: "Kamu adalah asisten Islam yang berpengetahuan. Berikan jawaban seimbang dengan referensi. Ingatkan bahwa ini bukan fatwa resmi.",
     });
-    await m.reply(novaWrap("AI Fatwa", "⚖️") + "\n\n" + result + "\n\n" +  tipText("Ini bukan fatwa resmi. Konsultasi ulama untuk kepastian."));
+    await m.reply(raraWrap("AI Fatwa", "⚖️") + "\n\n" + result + "\n\n" +  tipText("Ini bukan fatwa resmi. Konsultasi ulama untuk kepastian."));
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

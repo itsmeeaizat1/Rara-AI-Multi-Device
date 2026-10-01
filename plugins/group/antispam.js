@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js"
-import { novaWarning } from "../../src/lib/nova-group-protection.js"
-import { novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from "../../src/lib/rara-error.js"
+import { raraWarning } from "../../src/lib/rara-group-protection.js"
+import { raraLine } from "../../src/lib/rara-menu-style.js";
 
-function novaWrap(title, text) {
+function raraWrap(title, text) {
   const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   const body = Array.isArray(text) ? text.join("\n") : text;
@@ -82,7 +82,7 @@ async function handler(m, { sock, db }) {
         groupData.antispamDelay = delayMs
         db.setGroup(m.chat, groupData)
         
-        return m.reply(novaWrap("antispam", `🛡️ *sensitivitas anti spam diperbarui*\n\n` +
+        return m.reply(raraWrap("antispam", `🛡️ *sensitivitas anti spam diperbarui*\n\n` +
             `Jeda Maksimal: *${delayMs} ms* (${(delayMs/1000).toFixed(1)} detik)\n\n` +
             `Sistem kini akan menganggap pesan sebagai spam jika anggota mengirim beberapa pesan dengan jeda di bawah *${(delayMs/1000).toFixed(1)} detik* antar pesannya`))
     }
@@ -90,13 +90,13 @@ async function handler(m, { sock, db }) {
     if (action === "on" || action === "off") {
         const isEnable = action === "on"
         if (groupData.antispam === isEnable) {
-            return m.reply(novaWrap("Antispam", `Fitur antispam sudah ${isEnable ? "aktif" : "nonaktif"} di grup ini, tidak ada perubahan yang dibuat`, "success"))
+            return m.reply(raraWrap("Antispam", `Fitur antispam sudah ${isEnable ? "aktif" : "nonaktif"} di grup ini, tidak ada perubahan yang dibuat`, "success"))
         }
         
         groupData.antispam = isEnable
         db.setGroup(m.chat, groupData)
         
-        await m.reply(novaWrap("antispam", `🛡️ *anti spam diperbarui*\n\n` +
+        await m.reply(raraWrap("antispam", `🛡️ *anti spam diperbarui*\n\n` +
             `Status: *${isEnable ? "AKTIF ✅" : "NONAKTIF ❌"}*\n\n` +
             `Sistem bot kini akan ${isEnable ? "mengawasi secara ketat" : "berhenti mengawasi"} setiap aktivitas spam atau flood pesan yang dilakukan oleh member di dalam grup ini`))
     } else {
@@ -108,7 +108,7 @@ async function handler(m, { sock, db }) {
         if (action === "kick") textAction = "Menendang member yang membandel secara otomatis"
         if (action === "delete") textAction = "Menghapus pesan spam yang mengganggu"
         
-        await m.reply(novaWrap("antispam", `🛡️ *aksi anti spam diperbarui*\n\n` +
+        await m.reply(raraWrap("antispam", `🛡️ *aksi anti spam diperbarui*\n\n` +
             `Metode Hukuman: *${action.toUpperCase()}*\n\n` +
             `Sistem bot akan langsung mengambil tindakan berupa *${textAction}* apabila ada member yang terdeteksi melakukan pelanggaran berupa tindakan spam brutal`))
     }
@@ -159,7 +159,7 @@ async function handleSpamAction(m, sock, db) {
         spamTracker.set(chatKey, userData)
         
         if (userData.warnings >= 3) {
-            await m.reply(novaWarning("ANTI SPAM — PERINGATAN MAKSIMAL", [
+            await m.reply(raraWarning("ANTI SPAM — PERINGATAN MAKSIMAL", [
                 ["Pengirim", `@${senderId.split("@")[0]}`],
                 ["Pelanggaran", "Spam terdeteksi"],
                 ["Peringatan", "3 dari 3"],
@@ -169,7 +169,7 @@ async function handleSpamAction(m, sock, db) {
             userData.count = 0
             spamTracker.set(chatKey, userData)
         } else {
-            await m.reply(novaWarning("ANTI SPAM — PERINGATAN", [
+            await m.reply(raraWarning("ANTI SPAM — PERINGATAN", [
                 ["Pengirim", `@${senderId.split("@")[0]}`],
                 ["Pelanggaran", "Spam terdeteksi"],
                 ["Peringatan", `${userData.warnings} dari 3`],
@@ -180,7 +180,7 @@ async function handleSpamAction(m, sock, db) {
         }
     } else if (action === "kick") {
         if (m.isBotAdmin) {
-            await m.reply(novaWarning("ANTI SPAM — TINDAKAN", [
+            await m.reply(raraWarning("ANTI SPAM — TINDAKAN", [
                 ["Pengirim", `@${senderId.split("@")[0]}`],
                 ["Pelanggaran", "Spam brutal terdeteksi"],
                 ["Tindakan", "Dikeluarkan dari grup otomatis"],
@@ -188,7 +188,7 @@ async function handleSpamAction(m, sock, db) {
             await sock.groupParticipantsUpdate(m.chat, [senderId], "remove")
             spamTracker.delete(chatKey)
         } else {
-            await m.reply(novaWarning("ANTI SPAM — INFO", [
+            await m.reply(raraWarning("ANTI SPAM — INFO", [
                 ["Pengirim", `@${senderId.split("@")[0]}`],
                 ["Pelanggaran", "Spam brutal terdeteksi"],
                 ["Tindakan", "Tidak dieksekusi — bot bukan admin"],

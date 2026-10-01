@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import os from "os";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { mediaInfoCaption, fmtBytes } from "../../src/lib/nova-media-info.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption, fmtBytes } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "togif",
@@ -21,15 +21,15 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const quoted = m.quoted;
-    if (!quoted) return m.reply(novaWrap("togif", "Reply sticker atau video dengan caption .togif", "guide"));
+    if (!quoted) return m.reply(raraWrap("togif", "Reply sticker atau video dengan caption .togif", "guide"));
 
     const isMedia = quoted.type === "stickerMessage" || quoted.type === "videoMessage" || quoted.mtype === "stickerMessage" || quoted.mtype === "videoMessage";
-    if (!isMedia) return m.reply(novaWrap("togif", "Reply harus sticker atau video!", "guide"));
+    if (!isMedia) return m.reply(raraWrap("togif", "Reply harus sticker atau video!", "guide"));
 
     await m.react("🕒");
 
     const mediaBuffer = await quoted.download();
-    if (!mediaBuffer) { await m.react("❌"); return m.reply(novaWrap("togif", "Gagal mengunduh media.")); }
+    if (!mediaBuffer) { await m.react("❌"); return m.reply(raraWrap("togif", "Gagal mengunduh media.")); }
 
     // Coba kirim langsung sebagai video dengan gifPlayback
     try {
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
         video: mediaBuffer,
         mimetype: "video/mp4",
         gifPlayback: true,
-        caption: mediaInfoCaption({ header: "Nova To GIF", fields: [
+        caption: mediaInfoCaption({ header: "Rara To GIF", fields: [
           { icon: "📥", label: "Input", value: inputKind },
           { icon: "📤", label: "Output", value: "GIF" },
           { icon: "📦", label: "Ukuran", value: fmtBytes(mediaBuffer.length) },
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("togif error:", e.message);
     await m.react("❌");
-    m.reply(novaGangguan("togif"));
+    m.reply(raraGangguan("togif"));
   }
 }
 

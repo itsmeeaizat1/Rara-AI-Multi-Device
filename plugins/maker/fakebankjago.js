@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // FIX 14 Sep 2026 (audit fitur canvas): ensureFile() nulis font ke path
 // relatif "../assets/fonts/..." — relatif ke process.cwd(), BUKAN ke lokasi
 // file plugin. Kalau bot dijalanin dari root repo, path itu nyasar SATU
@@ -7,9 +7,9 @@
 // Font-nya SUDAH ADA di assets/fonts/ bawaan repo, jadi gak perlu download
 // ulang dari GitHub tiap kali file gak ketemu di path yang salah — langsung
 // register dari path absolut via import.meta.url (immune ke cwd).
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { Canvas, loadImage, FontLibrary } from 'skia-canvas'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 import { fileURLToPath } from "url";
 
 const _font1Path = fileURLToPath(new URL("../../assets/fonts/Fontspring-DEMO-ceraroundpro-medium.otf", import.meta.url));
@@ -72,7 +72,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const [nama,nominal] = m.text?.split(',')
     if (!nama || !nominal) {
-        return m.reply(novaWrap("fakebankjago", [
+        return m.reply(raraWrap("fakebankjago", [
             "Bikin screenshot chat fake bank ala Bank Jago.",
             "",
             `📌 Format: ${m.prefix}fakebank <nama>,<nominal>`,
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
             `💡 Contoh: ${m.prefix}fakebank Aizat,10000`,
         ]))
     }
-    if(isNaN(nominal)) { return m.reply(novaWrap("fakebankjago", "Nominal harus berupa angka kak.", "error")); }
+    if(isNaN(nominal)) { return m.reply(raraWrap("fakebankjago", "Nominal harus berupa angka kak.", "error")); }
     try {
         await m.react("🕒");
         const saldo = Number(nominal.replace(/[^0-9]/g, '')).toLocaleString('id-ID')
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
         })
     } catch (error) {
         await m.react("❌");
-        m.reply(novaWrap("fakebankjago", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("fakebankjago", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

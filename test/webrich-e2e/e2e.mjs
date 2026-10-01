@@ -8,9 +8,9 @@
 import {
   setPipedHttp, setYtsSearch, resetYouTubeDeps,
   getYouTubeFeed, formatYouTubeFeedRich, pipedSuggestions, extractVideoId,
-} from "../../src/lib/nova-youtube-info.js";
-import { formatGoogleSerpRich } from "../../src/lib/nova-web-rich.js";
-import { buildRichResponse, sendRichMessage } from "../../src/lib/nova-rich-response.js";
+} from "../../src/lib/rara-youtube-info.js";
+import { formatGoogleSerpRich } from "../../src/lib/rara-web-rich.js";
+import { buildRichResponse, sendRichMessage } from "../../src/lib/rara-rich-response.js";
 import { config as webConfig, handler as webHandler } from "../../plugins/browser/web.js";
 
 let pass = 0, fail = 0;

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { gpMsg } from "../../src/lib/nova-group-protection.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { gpMsg } from "../../src/lib/rara-group-protection.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "antivid",
@@ -57,17 +57,17 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antivideo: true });
-    await m.reply(novaWrap("Antivideo", `Anti Video diaktifkan`));
+    await m.reply(raraWrap("Antivideo", `Anti Video diaktifkan`));
     return;
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antivideo: false });
-    await m.reply(novaWrap("Antivideo", `Anti Video dinonaktifkan`));
+    await m.reply(raraWrap("Antivideo", `Anti Video dinonaktifkan`));
     return;
   }
 
-  await m.reply(novaWrap("Anti vid", `Gunakan \`${m.prefix}antivideo on\` atau \`${m.prefix}antivideo off\``, "info"));
+  await m.reply(raraWrap("Anti vid", `Gunakan \`${m.prefix}antivideo on\` atau \`${m.prefix}antivideo off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiVideo };

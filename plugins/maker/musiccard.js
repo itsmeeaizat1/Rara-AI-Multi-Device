@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { downloadMediaMessage, getContentType } from "nova";
 import { ImageUploadService } from "node-upload-images";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "musiccard",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (type !== "imageMessage") {
-      return m.reply(novaGuide("MusicCard", "Itu bukan gambar nih! Reply gambar dulu", ".musiccard Perfect|Ed Sheeran"));
+      return m.reply(raraGuide("MusicCard", "Itu bukan gambar nih! Reply gambar dulu", ".musiccard Perfect|Ed Sheeran"));
     }
     try {
       mediaBuffer = await downloadMediaMessage(
@@ -39,12 +39,12 @@ async function handler(m, { sock }) {
       );
       mimetype = m.quoted.message[type]?.mimetype;
     } catch (e) {
-      return m.reply(novaError("MusicCard", "Gagal download gambar nih, coba kirim ulang"));
+      return m.reply(raraError("MusicCard", "Gagal download gambar nih, coba kirim ulang"));
     }
   } else if (m.message) {
     const type = getContentType(m.message);
     if (type !== "imageMessage") {
-      return m.reply(novaGuide("MusicCard", "Gambarnya mana nih? Kirim gambar dengan caption", ".musiccard Perfect|Ed Sheeran"));
+      return m.reply(raraGuide("MusicCard", "Gambarnya mana nih? Kirim gambar dengan caption", ".musiccard Perfect|Ed Sheeran"));
     }
     try {
       mediaBuffer = await downloadMediaMessage(
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
       );
       mimetype = m.message[type]?.mimetype;
     } catch (e) {
-      return m.reply(novaError("MusicCard", "Gagal download gambar nih, coba kirim ulang"));
+      return m.reply(raraError("MusicCard", "Gagal download gambar nih, coba kirim ulang"));
     }
   }
 
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
   }
 
   if (!text) {
-    return m.reply(novaWrap("Musiccard", "❌ *Judul lagu dan artis belum diisi!*\n\nFormat penulisan yang benar adalah: `.musiccard <judul>|<nama>`\nPisahkan judul dan nama artis dengan simbol pita ( | )."));
+    return m.reply(raraWrap("Musiccard", "❌ *Judul lagu dan artis belum diisi!*\n\nFormat penulisan yang benar adalah: `.musiccard <judul>|<nama>`\nPisahkan judul dan nama artis dengan simbol pita ( | )."));
   }
 
   let judul = text;
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
 
     if (!uploadResult || !uploadResult.directLink) {
       await m.react("❌");
-      return m.reply(novaWrap("Musiccard", "⚠️ *Gagal mengunggah gambar!* Pastikan ukuran gambarnya tidak terlalu besar dan coba lagi ya."));
+      return m.reply(raraWrap("Musiccard", "⚠️ *Gagal mengunggah gambar!* Pastikan ukuran gambarnya tidak terlalu besar dan coba lagi ya."));
     }
 
     const apiUrl = `https://api.nexray.eu.cc/canvas/musiccard?judul=${encodeURIComponent(judul)}&nama=${encodeURIComponent(nama)}&image_url=${encodeURIComponent(uploadResult.directLink)}`;
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
 
     if (res.headers["content-type"] && !res.headers["content-type"].includes("image")) {
       await m.react("❌");
-      return m.reply(novaWrap("Gagal membuat Music Card.", "⚠️ *gagal membuat music card.* Server merespon dengan format yang salah."));
+      return m.reply(raraWrap("Gagal membuat Music Card.", "⚠️ *gagal membuat music card.* Server merespon dengan format yang salah."));
     }
 
     const cardBuffer = Buffer.from(res.data);
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[Music Card]", err.message);
     await m.react("❌");
-    m.reply(novaWrap("Terjadi masalah di sistem kami.", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menghubungi server pembuat kartu. Silakan coba beberapa saat lagi ya."));
+    m.reply(raraWrap("Terjadi masalah di sistem kami.", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menghubungi server pembuat kartu. Silakan coba beberapa saat lagi ya."));
   }
 }
 

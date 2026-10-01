@@ -1,5 +1,5 @@
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 const pluginConfig = {
   name: "npc", alias: ["npc", "npcrpg"],
   category: "rpg", description: "Bicara dengan NPC",
@@ -15,9 +15,9 @@ const NPCS = {
 async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim().toLowerCase();
-    if (!text || !NPCS[text]) return m.reply(novaRpgBox("npcrpg", `NPC tersedia: ${Object.keys(NPCS).join(", ")}\nContoh: ${m.prefix}npcrpg penjaga`, "guide"));
+    if (!text || !NPCS[text]) return m.reply(raraRpgBox("npcrpg", `NPC tersedia: ${Object.keys(NPCS).join(", ")}\nContoh: ${m.prefix}npcrpg penjaga`, "guide"));
   await animGeneric(m, sock, "🧙", "NPC Interaction");
-    return m.reply(novaRpgBox("npcrpg", NPCS[text], "info"));
-  } catch (e) { return m.reply(novaRpgBox("npcrpg", "Error.", "error")); }
+    return m.reply(raraRpgBox("npcrpg", NPCS[text], "info"));
+  } catch (e) { return m.reply(raraRpgBox("npcrpg", "Error.", "error")); }
 }
 export { pluginConfig as config, handler };

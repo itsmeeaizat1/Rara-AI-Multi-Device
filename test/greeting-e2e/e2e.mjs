@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: nova-greeting.js
+// RARA AI WHATSAPP BOT — E2E: rara-greeting.js
 // Cover 3 fix 20 Sep 2026: (1) timezone Asia/Jakarta bukan jam server lokal,
 // (2) prompt bervariasi tiap panggilan (nonce + fitur diacak, anti jawaban itu2 aja),
 // (3) cooldown 10 detik — cache basi dibalikin instan + refresh background.
@@ -15,7 +15,7 @@ function t(name, cond, info) {
   else { fail++; console.error("  \u274c " + name, info !== undefined ? JSON.stringify(info) : ""); }
 }
 
-const mod = await import(R + "/src/lib/nova-greeting.js");
+const mod = await import(R + "/src/lib/rara-greeting.js");
 const { getAiGreeting, _setGreetingHttpForTest, _resetGreetingCacheForTest } = mod;
 
 // helper: pasang mock fetch yang balikin teks AI dari url (buat ngecek prompt)
@@ -50,7 +50,7 @@ console.log("\n— section 1: timezone-aware prompt —");
   await getAiGreeting();
   const url = decodeURIComponent(calls.calls[0] || "");
   // prompt HARUS mengandung salah satu dari pagi/siang/sore/malam sesuai Asia/Jakarta saat ini
-  const { getHour } = await import(R + "/src/lib/nova-time.js");
+  const { getHour } = await import(R + "/src/lib/rara-time.js");
   const h = getHour();
   const expected = h >= 4 && h < 10 ? "pagi" : h >= 10 && h < 15 ? "siang" : h >= 15 && h < 18 ? "sore" : "malam";
   t("1a. prompt AI sebut waktu sesuai Asia/Jakarta saat ini (" + expected + ")", url.includes("waktu " + expected), url.slice(0, 200));
@@ -99,7 +99,7 @@ console.log("\n— section 4: fallback API mati/timeout —");
   const fn = async () => { throw new Error("network down"); };
   _setGreetingHttpForTest(fn);
   const g = await getAiGreeting();
-  const { getHour } = await import(R + "/src/lib/nova-time.js");
+  const { getHour } = await import(R + "/src/lib/rara-time.js");
   const h = getHour();
   const expectWord = h >= 4 && h < 10 ? "Pagi" : h >= 10 && h < 15 ? "Siang" : h >= 15 && h < 18 ? "Sore" : "Malam";
   t("4a. API mati → fallback lokal, tetap waktu-aware Asia/Jakarta (" + expectWord + ")", g.includes(expectWord), g);

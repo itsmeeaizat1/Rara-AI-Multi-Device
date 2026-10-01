@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "paraphrase",
@@ -183,7 +183,7 @@ async function handler(m, { sock, args }) {
   const text = args.join(" ");
 
   if (!text || text.length < 20) {
-    return await m.reply(novaGuide(
+    return await m.reply(raraGuide(
       "paraphrase",
       "Ubah teks dengan synonym replacement untuk menghindari plagiarisme",
       `${m.prefix}paraphrase Penelitian ini menggunakan metode kualitatif...\n${m.prefix}paraphrase agresif teks yang sama (lebih banyak perubahan)`,
@@ -200,11 +200,11 @@ async function handler(m, { sock, args }) {
     }
 
     if (inputText.length < 20) {
-      return m.reply(novaWrap("Paraphrase", "Teks terlalu pendek! Minimal 20 karakter."));
+      return m.reply(raraWrap("Paraphrase", "Teks terlalu pendek! Minimal 20 karakter."));
     }
 
     if (inputText.length > 3000) {
-      return m.reply(novaWrap("Paraphrase", "Teks terlalu panjang! Maksimal 3000 karakter."));
+      return m.reply(raraWrap("Paraphrase", "Teks terlalu panjang! Maksimal 3000 karakter."));
     }
 
     const result = paraphraseText(inputText, intensity);
@@ -221,7 +221,7 @@ async function handler(m, { sock, args }) {
     await m.reply(txt);
   } catch (e) {
     console.error("[PARAPHRASE] Error:", e.message);
-    await m.reply(novaError("Paraphrase", `Gagal parafrase nih: ${e.message}`));
+    await m.reply(raraError("Paraphrase", `Gagal parafrase nih: ${e.message}`));
   }
 }
 

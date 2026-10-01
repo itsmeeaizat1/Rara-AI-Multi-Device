@@ -1,26 +1,26 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu.js — Menu utama (Nova box style + type 1 buttons + thumbnail menu.jpg)
-import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// menu.js — Menu utama (Rara box style + type 1 buttons + thumbnail menu.jpg)
+import { getCaseCount, getCasesByCategory } from "../../case/rara.js";
 import config from "../../config.js";
 import {
   getImportantDay,
   formatUptime,
   getTimeGreeting,
-} from "../../src/lib/nova-formatter.js";
-import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova-time.js";
+} from "../../src/lib/rara-formatter.js";
+import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/rara-time.js";
 import {
   getCommandsByCategory,
   getCategories,
   getPlugin,
-} from "../../src/lib/nova-plugins.js";
+} from "../../src/lib/rara-plugins.js";
 import fs from "fs";
 import os from "os";
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
-import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { buildNavButtons } from "../../src/lib/nova-menu-card.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, closeBoxRight, novaBox, novaMenuLayout, getAccessSymbols } from "../../src/lib/nova-menu-style.js";
-import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
+import { sendMenuCard } from "../../src/lib/rara-menu-card.js";
+import { buildNavButtons } from "../../src/lib/rara-menu-card.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, toSC, closeBoxRight, raraBox, raraMenuLayout, getAccessSymbols } from "../../src/lib/rara-menu-style.js";
+import { buildMenuInfo } from "../../src/lib/rara-info-section.js";
 
 const pluginConfig = {
   name: "menu",
@@ -85,7 +85,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     let totalActiveGroups = Object.values(allGroups).filter(g => g.isLeft !== true && g.isBanned !== true).length;
     // live count grup (request owner 13 Sep) — registry bisa kosong
     try {
-      const { countGroupsLive } = await import("../../src/lib/nova-group-registry.js");
+      const { countGroupsLive } = await import("../../src/lib/rara-group-registry.js");
       const live = await countGroupsLive(sock, db);
       if (live > 0) { totalGroups = live; totalActiveGroups = live; }
     } catch {}
@@ -117,14 +117,14 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 
     const intro = aiIntro || `${getTimeGreeting()}!`; // Pengenalan AI — berubah tiap menu dimuat
 
-    const txt = novaMenuLayout({
+    const txt = raraMenuLayout({
       intro,
-      introTitle: "Nova",
+      introTitle: "Rara",
       infoTitle: "Info",
       info,
       categories: menuCats,
       prefix,
-      footerName: botConfig?.bot?.name || "Nova AI Whatsapp Bot",
+      footerName: botConfig?.bot?.name || "Rara AI Whatsapp Bot",
     });
 
     let result = txt;
@@ -132,7 +132,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     return result;
   } catch (e) {
     console.error("[menu] buildMenuText error:", e.message);
-    return novaError("menu", e.message);
+    return raraError("menu", e.message);
   }
 }
 
@@ -140,7 +140,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
     const text = await buildMenuText(m, botConfig, db, uptime, sock);
-    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
+    const botName = botConfig.bot?.name || "Rara AI Whatsapp Bot";
 
     // 6 tombol quick access — nativeFlowMessage (proven pattern, bukan legacy type 1)
     // "Kategori" pakai single_select → klik buka popup list semua kategori
@@ -156,7 +156,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menu] handler error:", e.message);
-    try { await m.reply(novaError("Menu", "Ada error nih, coba lagi ya")); } catch {}
+    try { await m.reply(raraError("Menu", "Ada error nih, coba lagi ya")); } catch {}
   }
 }
 

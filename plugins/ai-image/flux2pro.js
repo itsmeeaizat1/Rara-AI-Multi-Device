@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // flux2pro — Edit gambar dengan AI menggunakan prompt via Flux 2 Pro
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "flux2pro",
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim() || m.args?.join(" ").trim() || "";
 
     if (!text) {
-      return m.reply(novaWrap("Flux2Pro", [
+      return m.reply(raraWrap("Flux2Pro", [
         "Edit gambar dengan AI (Flux 2 Pro)",
         "",
         "CARA PAKAI:",
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(novaWrap("Flux2Pro", "Reply/kirim foto dengan prompt .flux2pro untuk mengedit gambar."));
+      return m.reply(raraWrap("Flux2Pro", "Reply/kirim foto dengan prompt .flux2pro untuk mengedit gambar."));
     }
 
     await m.react("🕒");
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: data.result.result_url },
-        caption: novaWrap("Flux2Pro", `Prompt: ${text}`),
+        caption: raraWrap("Flux2Pro", `Prompt: ${text}`),
       }, { quoted: m });
     } else if (data?.status && data?.result) {
       // Some responses might have different structure
@@ -83,20 +83,20 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         await sock.sendMessage(m.chat, {
           image: { url: resultUrl },
-          caption: novaWrap("Flux2Pro", `Prompt: ${text}`),
+          caption: raraWrap("Flux2Pro", `Prompt: ${text}`),
         }, { quoted: m });
       } else {
         await m.react("❌");
-        await m.reply(novaWrap("Flux2Pro", "Gagal memproses gambar. Coba prompt atau foto lain."));
+        await m.reply(raraWrap("Flux2Pro", "Gagal memproses gambar. Coba prompt atau foto lain."));
       }
     } else {
       await m.react("❌");
-      await m.reply(novaWrap("Flux2Pro", data?.error || data?.message || "Gagal memproses. Coba lagi nanti."));
+      await m.reply(raraWrap("Flux2Pro", data?.error || data?.message || "Gagal memproses. Coba lagi nanti."));
     }
   } catch (e) {
     console.error("[flux2pro.js]:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("Flux2Pro", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("Flux2Pro", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

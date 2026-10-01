@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nikparser2.js — NIK Parser v2 (siputzx API)
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const PROVINSI = {
   11: "Aceh", 12: "Sumatera Utara", 13: "Sumatera Barat", 14: "Riau",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
   try {
     const nik = m.text?.replace(/\D/g, "");
     if (!nik || nik.length !== 16) {
-      return m.reply(novaWrap("nikparser2", `NIK harus 16 digit angka.\n\nContoh: ${m.prefix}nikparser2 3517072109020003`, "guide"));
+      return m.reply(raraWrap("nikparser2", `NIK harus 16 digit angka.\n\nContoh: ${m.prefix}nikparser2 3517072109020003`, "guide"));
     }
 
     await m.react("🕒");
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("nikparser2 error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("nikparser2", err.message || "Error", "error"));
+    return m.reply(raraWrap("nikparser2", err.message || "Error", "error"));
   }
 }
 

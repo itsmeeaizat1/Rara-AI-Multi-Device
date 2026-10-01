@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Raffle — Lottery ticket for a chance at big jackpot
 
 import {
   ensureRpg, addGold, removeGold, addGems, addExp,
   checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "raffle",
@@ -42,7 +42,7 @@ const PRIZES = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("rafflerpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("rafflerpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -67,23 +67,23 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 .rafflerpg buy — beli & buka tiket\n`;
       
-      return m.reply(novaRpgBox("rafflerpg", msg));
+      return m.reply(raraRpgBox("rafflerpg", msg));
     }
 
     if (action !== "buy" && action !== "beli") {
   await animGeneric(m, sock, "🎟️", "Raffle Draw");
-      return m.reply(novaRpgBox("rafflerpg", "Gunakan .rafflerpg buy atau .rafflerpg cek", "warn"));
+      return m.reply(raraRpgBox("rafflerpg", "Gunakan .rafflerpg buy atau .rafflerpg cek", "warn"));
     }
 
     const cd = checkCooldown(m, "lastRaffle");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("rafflerpg", `Cooldown raffle tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("rafflerpg", `Cooldown raffle tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.gold < TICKET_PRICE) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("rafflerpg", `Gold tidak cukup! Tiket harga *${TICKET_PRICE}*, kamu punya *${rpg.gold}*.`, "warn"));
+      return m.reply(raraRpgBox("rafflerpg", `Gold tidak cukup! Tiket harga *${TICKET_PRICE}*, kamu punya *${rpg.gold}*.`, "warn"));
     }
 
     await m.react("🕒");
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     if (!prize) {
       // Zonk
       await m.react("🐣");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "rafflerpg", icon: "🎟️",
         flavor: "💀 *ZONK!*",
         body: [
@@ -137,7 +137,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "rafflerpg", icon: "🎟️",
       flavor: `🎉 *${prize.label.toUpperCase()}*`,
       body: [
@@ -152,7 +152,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("rafflerpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("rafflerpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("rafflerpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

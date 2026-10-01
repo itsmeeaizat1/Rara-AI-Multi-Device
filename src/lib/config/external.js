@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // external.js — Config layanan eksternal (Pterodactyl, DigitalOcean, Alight Motion, Vercel)
 // API keys di-import dari apikey.js
 

@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Bank — Simpan & tarik gold dengan bunga harian
 
-import { animBank } from "../../src/lib/nova-rpg-anim.js";
+import { animBank } from "../../src/lib/rara-rpg-anim.js";
 import {
   ensureRpg, saveRpg, addGold, removeGold
-} from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import te from "../../src/lib/nova-error.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "bank",
@@ -37,7 +37,7 @@ function calcInterest(deposit, lastInterest) {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("bankrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("bankrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     }
 
     if (!action || action === "cek") {
-      return m.reply(novaRpgBox("bankrpg", [
+      return m.reply(raraRpgBox("bankrpg", [
         m.pushName || "Player",
         "---",
         `Gold di tangan : ${rpg.gold}`,
@@ -72,16 +72,16 @@ async function handler(m, { sock }) {
       const amount = parseInt(args[1]);
 
       if (!amount || amount < 1) {
-        return m.reply(novaRpgBox("bankrpg", "Jumlah tidak valid. Contoh: .bankrpg nabung 500", "warn"));
+        return m.reply(raraRpgBox("bankrpg", "Jumlah tidak valid. Contoh: .bankrpg nabung 500", "warn"));
       }
 
       if (rpg.gold < amount) {
         await m.react("🚫");
-        return m.reply(novaRpgBox("bankrpg", `Gold tidak cukup! Kamu punya *${rpg.gold}*, mau nabung *${amount}*.`, "warn"));
+        return m.reply(raraRpgBox("bankrpg", `Gold tidak cukup! Kamu punya *${rpg.gold}*, mau nabung *${amount}*.`, "warn"));
       }
 
       if (bank.deposit + amount > MAX_DEPOSIT) {
-        return m.reply(novaRpgBox("bankrpg", `Maksimal deposit *${MAX_DEPOSIT} gold*. Saldo bank: *${bank.deposit}*.`, "warn"));
+        return m.reply(raraRpgBox("bankrpg", `Maksimal deposit *${MAX_DEPOSIT} gold*. Saldo bank: *${bank.deposit}*.`, "warn"));
       }
 
       removeGold(m, amount, sock);
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
       await animBank(m, sock, "nabung");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "bankrpg", icon: "🏦",
         flavor: "✅ *BERHASIL MENABUNG!*",
         body: [
@@ -108,12 +108,12 @@ async function handler(m, { sock }) {
       const amount = parseInt(args[1]);
 
       if (!amount || amount < 1) {
-        return m.reply(novaRpgBox("bankrpg", "Jumlah tidak valid. Contoh: .bankrpg tarik 500", "warn"));
+        return m.reply(raraRpgBox("bankrpg", "Jumlah tidak valid. Contoh: .bankrpg tarik 500", "warn"));
       }
 
       if (bank.deposit < amount) {
         await m.react("🚫");
-        return m.reply(novaRpgBox("bankrpg", `Saldo bank tidak cukup! Saldo: *${bank.deposit}*, mau tarik *${amount}*.`, "warn"));
+        return m.reply(raraRpgBox("bankrpg", `Saldo bank tidak cukup! Saldo: *${bank.deposit}*, mau tarik *${amount}*.`, "warn"));
       }
 
       bank.deposit -= amount;
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
       await animBank(m, sock, "tarik");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "bankrpg", icon: "🏦",
         flavor: "💵 *BERHASIL MENARIK!*",
         body: [
@@ -134,11 +134,11 @@ async function handler(m, { sock }) {
       }));
     }
 
-    return m.reply(novaRpgBox("bankrpg", "Aksi tidak dikenal. Gunakan: nabung, tarik, atau cek", "warn"));
+    return m.reply(raraRpgBox("bankrpg", "Aksi tidak dikenal. Gunakan: nabung, tarik, atau cek", "warn"));
   } catch (err) {
     console.error("bankrpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("bankrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("bankrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

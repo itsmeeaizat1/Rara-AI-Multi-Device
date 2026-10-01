@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import config from "../../config.js";
 import * as _canvas from '@napi-rs/canvas'
 
@@ -7,8 +7,8 @@ import * as _canvas from '@napi-rs/canvas'
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "fakestory",
   alias: ["fakestory"],
@@ -238,7 +238,7 @@ async function handler(m, { sock }) {
     }
     if (!imageTopBuffer) {
       await m.react("❌");
-      return m.reply(novaError("FakeStory", "Gagal download gambar nih"));
+      return m.reply(raraError("FakeStory", "Gagal download gambar nih"));
     }
     const resultBuffer = await createFakeStory(
       username,
@@ -252,7 +252,7 @@ async function handler(m, { sock }) {
     });
   } catch (error) {
     await m.react("❌");
-    m.reply(novaWrap("fakestory", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("fakestory", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

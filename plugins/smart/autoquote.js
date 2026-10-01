@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autoquote",
@@ -81,45 +81,45 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "on" || sub === "enable") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Quote", "Khusus owner."));
+      await m.reply(raraWrap("Auto Quote", "Khusus owner."));
       return { handled: true };
     }
     const time = args[2] || cfg.time;
     if (!/^\d{2}:\d{2}$/.test(time)) {
-      await m.reply(novaWrap("Auto Quote", "Format: " + prefix + "autoquote on <HH:MM>\n💡 *Contoh:* " + prefix + "autoquote on 07:00"));
+      await m.reply(raraWrap("Auto Quote", "Format: " + prefix + "autoquote on <HH:MM>\n💡 *Contoh:* " + prefix + "autoquote on 07:00"));
       return { handled: true };
     }
     cfg.enabled = true;
     cfg.time = time;
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Auto Quote", "AKTIF!\nJam: " + time + "\nKategori: " + cfg.category + "\nBot akan kirim quote tiap hari."));
+    await m.reply(raraWrap("Auto Quote", "AKTIF!\nJam: " + time + "\nKategori: " + cfg.category + "\nBot akan kirim quote tiap hari."));
     return { handled: true };
   }
 
   if (sub === "off" || sub === "disable") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Quote", "Khusus owner."));
+      await m.reply(raraWrap("Auto Quote", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = false;
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Auto Quote", "Dimatikan."));
+    await m.reply(raraWrap("Auto Quote", "Dimatikan."));
     return { handled: true };
   }
 
   if (sub === "category" || sub === "kategori") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Quote", "Khusus owner."));
+      await m.reply(raraWrap("Auto Quote", "Khusus owner."));
       return { handled: true };
     }
     const cat = (args[2] || "").toLowerCase();
     if (!CATEGORIES[cat]) {
-      await m.reply(novaWrap("Auto Quote", "Kategori: " + Object.keys(CATEGORIES).join(", ")));
+      await m.reply(raraWrap("Auto Quote", "Kategori: " + Object.keys(CATEGORIES).join(", ")));
       return { handled: true };
     }
     cfg.category = cat;
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Auto Quote", "Kategori diset: " + cat));
+    await m.reply(raraWrap("Auto Quote", "Kategori diset: " + cat));
     return { handled: true };
   }
 
@@ -129,12 +129,12 @@ async function handler(m, { sock, db, config: botConfig }) {
     cfg.lastSent = Date.now();
     cfg.sentCount++;
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Quote Harian", quote + "\n\n_Kategori: " + cfg.category + "_"));
+    await m.reply(raraWrap("Quote Harian", quote + "\n\n_Kategori: " + cfg.category + "_"));
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek" || !sub) {
-    await m.reply(novaWrap("Auto Quote", [
+    await m.reply(raraWrap("Auto Quote", [
       "Status: " + (cfg.enabled ? "AKTIF" : "MATI"),
       "Jam: " + cfg.time,
       "Kategori: " + cfg.category,
@@ -146,7 +146,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Auto Quote", [
+  await m.reply(raraWrap("Auto Quote", [
     "AUTO QUOTE",
     "",
     prefix + "autoquote on <HH:MM>",

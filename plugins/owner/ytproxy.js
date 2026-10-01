@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/owner/ytproxy.js — PROXY YOUTUBE VIA WHATSAPP (1 Okt 2026)
 //
 // FALLBACK KEDUA buat fix bot-check YouTube (request owner: "fallback kedua
@@ -6,7 +6,7 @@
 // expire, yt-dlp bisa lewat PROXY — IP proxy gak kena blokir datacenter.
 // Owner gak perlu SSH ke VPS: cukup ketik URL proxy di chat, bot simpan ke
 // data/yt-proxy.txt dan yt-dlp otomatis pakai flag --proxy (lihat
-// src/scraper/nova-ytdlp.js getYtProxyArgs). ENV NOVA_YTDLP_PROXY tetap
+// src/scraper/rara-ytdlp.js getYtProxyArgs). ENV NOVA_YTDLP_PROXY tetap
 // menang kalau diset.
 //
 // Cara pakai:
@@ -18,8 +18,8 @@
 // URL aneh ditolak JELAS, file lama gak ketimpa.
 import fs from "fs";
 import path from "path";
-import { novaError, novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getYtProxyArgs } from "../../src/scraper/nova-ytdlp.js";
+import { raraError, raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getYtProxyArgs } from "../../src/scraper/rara-ytdlp.js";
 
 const PROXY_PATH = path.join(process.cwd(), "data", "yt-proxy.txt");
 const PROXY_RE = /^(https?|socks5):\/\/\S+$/i;
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     const st = proxyStatus();
     if (!st) {
       return m.reply(
-        novaWrap("Yt Proxy", [
+        raraWrap("Yt Proxy", [
           "🔴 *tidak ada proxy terpasang*",
           "",
           "yt-dlp nyambung langsung dari IP server.",
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
       );
     }
     return m.reply(
-      novaWrap("Yt Proxy", [
+      raraWrap("Yt Proxy", [
         "🟢 *proxy aktif*",
         `• adres : ${maskProxy(st.url)}`,
         `• sumber : ${st.source}`,
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
   if (sub === "clear" || sub === "off") {
     if (process.env.NOVA_YTDLP_PROXY) {
       return m.reply(
-        novaWrap("Yt Proxy", [
+        raraWrap("Yt Proxy", [
           "🟡 ada proxy dari env *NOVA_YTDLP_PROXY* — env ini gak bisa dihapus dari chat.",
           "Hapus lewat file .env / konfigurasi VPS lalu restart bot.",
         ].join("\n")),
@@ -113,16 +113,16 @@ async function handler(m, { sock }) {
     }
     if (fs.existsSync(PROXY_PATH)) {
       fs.unlinkSync(PROXY_PATH);
-      return m.reply(novaWrap("Yt Proxy", ["🟡 *proxy dihapus* — yt-dlp balik nyambung langsung dari IP server."].join("\n")));
+      return m.reply(raraWrap("Yt Proxy", ["🟡 *proxy dihapus* — yt-dlp balik nyambung langsung dari IP server."].join("\n")));
     }
-    return m.reply(novaWrap("Yt Proxy", ["Tidak ada proxy tersimpan — sudah bersih dari awal."].join("\n")));
+    return m.reply(raraWrap("Yt Proxy", ["Tidak ada proxy tersimpan — sudah bersih dari awal."].join("\n")));
   }
 
   // ── Jalur utama: URL proxy ──────────────────────────────────
   const raw = (args[0] || "").trim();
   if (!raw) {
     return m.reply(
-      novaGuideV2("ytproxy", {
+      raraGuideV2("ytproxy", {
         kaomoji: "(๑˃ᴗ˂)ﻭ",
         sapaan: "setel proxy yt-dlp via chat — fallback kedua .play pas bot-check",
         cara: "ketik .ytproxy diikuti URL proxy (http/https/socks5)",
@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
   const res = validateProxy(raw);
   if (!res.ok) {
     await m.react("❌");
-    return m.reply(novaError("Yt Proxy", `URL DITOLAK: ${res.reason}`));
+    return m.reply(raraError("Yt Proxy", `URL DITOLAK: ${res.reason}`));
   }
 
   // Simpan (backup file lama sekali buat jaga-jaga)
@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
     fs.writeFileSync(PROXY_PATH, res.url + "\n");
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaError("Yt Proxy", `Gagal menyimpan: ${e.message}`));
+    return m.reply(raraError("Yt Proxy", `Gagal menyimpan: ${e.message}`));
   }
 
   // bukti nyata: flag yang bakal kepake yt-dlp
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
 
   await m.react("🐣");
   return m.reply(
-    novaWrap("Yt Proxy", [
+    raraWrap("Yt Proxy", [
       "🟢 *proxy youtube terpasang* 🎉",
       `• adres : ${maskProxy(res.url)}`,
       "• tersimpan : data/yt-proxy.txt",

@@ -40,7 +40,7 @@ t("2c. sock kosong/null → senyap false gak throw", (await lib.playPetaAnim(nul
 
 
 console.log("— section 3: EKSPEDISI multi-babak (adventureCinematic — animasi terbanyak) —");
-const { sceneTotalMs } = await import(R + "/src/lib/nova-anim-runner.js");
+const { sceneTotalMs } = await import(R + "/src/lib/rara-anim-runner.js");
 const scT = lib.adventureCinematic({ eventType: "treasure", landmarks: LM, arahs: AR });
 const totF = (sc) => sc.reduce((n, x) => n + x.frames.length, 0);
 t("3a. ekspedisi 12 frame (persiapan 2 + perjalanan 6 + babak 2 + epilog 2) > peta doang 6", totF(scT) === 12 && totF(scT) > lib.petaFrames({ eventType: "treasure", landmarks: LM, arahs: AR }).length, totF(scT));

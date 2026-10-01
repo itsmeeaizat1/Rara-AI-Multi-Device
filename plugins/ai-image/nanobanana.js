@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nanobanana — Edit gambar dengan prompt via Gemini Flash (IkyyXD)
 // Original /edit/nanobanana failed all models, redirected to /edit/gemini-flash
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "nanobanana",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim() || m.args?.join(" ").trim() || "";
 
     if (!text) {
-      return m.reply(novaWrap("NanoBanana", [
+      return m.reply(raraWrap("NanoBanana", [
         "Edit gambar dengan prompt via Nano Banana AI",
         "",
         "CARA PAKAI:",
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(novaWrap("NanoBanana", "Reply/kirim foto dengan prompt .nanobanana untuk mengedit gambar."));
+      return m.reply(raraWrap("NanoBanana", "Reply/kirim foto dengan prompt .nanobanana untuk mengedit gambar."));
     }
 
     await m.react("🕒");
@@ -67,16 +67,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: novaWrap("NanoBanana", `Prompt: ${text}`),
+        caption: raraWrap("NanoBanana", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaWrap("NanoBanana", data?.error || data?.message || "Gagal memproses. Coba foto/prompt lain."));
+      await m.reply(raraWrap("NanoBanana", data?.error || data?.message || "Gagal memproses. Coba foto/prompt lain."));
     }
   } catch (e) {
     console.error("[nanobanana.js]:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("NanoBanana", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("NanoBanana", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

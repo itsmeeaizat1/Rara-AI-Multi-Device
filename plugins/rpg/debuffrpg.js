@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Debuff — Beri debuff ke musuh (reply target)
-import { ensureRpg, saveRpg, useMana, getRpgData } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg, useMana, getRpgData } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "debuff", alias: ["debuff", "debuffrpg"],
@@ -14,12 +14,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("debuffrpg", "RPG belum siap.", "error"));
-    if (!m.quoted) return m.reply(novaRpgBox("debuffrpg", "Reply target untuk diberi debuff.", "guide"));
-    if (rpg.mana < 15) return m.reply(novaRpgBox("debuffrpg", "Mana tidak cukup. Butuh 15 mana.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("debuffrpg", "RPG belum siap.", "error"));
+    if (!m.quoted) return m.reply(raraRpgBox("debuffrpg", "Reply target untuk diberi debuff.", "guide"));
+    if (rpg.mana < 15) return m.reply(raraRpgBox("debuffrpg", "Mana tidak cukup. Butuh 15 mana.", "error"));
     const targetJid = m.quoted.sender;
     const target = getRpgData({ sender: targetJid, key: { remoteJid: targetJid } });
-    if (!target) return m.reply(novaRpgBox("debuffrpg", "Target belum terdaftar RPG.", "error"));
+    if (!target) return m.reply(raraRpgBox("debuffrpg", "Target belum terdaftar RPG.", "error"));
     useMana(m, 15, sock);
     target.debuff = "burn";
     target.debuffExpire = Date.now() + 1800000;
@@ -27,9 +27,9 @@ async function handler(m, { sock }) {
     saveRpg(m, rpg);
     await m.react("🐣");
   await animGeneric(m, sock, "🤢", "Applying Debuff");
-    return m.reply(novaRpgBox("debuffrpg", `🔥 Musuh terkena efek *burn*! (-5 HP/turn selama 30 menit)`, "success"));
+    return m.reply(raraRpgBox("debuffrpg", `🔥 Musuh terkena efek *burn*! (-5 HP/turn selama 30 menit)`, "success"));
   } catch (e) {
-    return m.reply(novaRpgBox("debuffrpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("debuffrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

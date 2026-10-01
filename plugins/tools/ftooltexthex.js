@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooltexthex — teks ↔ heksadesimal (port altftool.com/tools/all/text-to-hex)
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltexthex", alias: ["texthex", "hex", "texttohex"], category: "tools",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      return m.reply(novaGuideV2("ftooltexthex", {
+      return m.reply(raraGuideV2("ftooltexthex", {
         kaomoji: "(◕ᴗ◕)",
         sapaan: "teks mau diubah ke heksadesimal? atau heksa ke teks?",
         cara: "ketik enc (teks→hex) atau dec (hex→teks) lalu isinya",
@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
       const hex = text.replace(/\s+/g, "");
       if (!/^([0-9a-fA-F]{2})+$/.test(hex)) {
         await m.react("❌");
-        return m.reply(novaSalahV2("ftooltexthex", {
+        return m.reply(raraSalahV2("ftooltexthex", {
           kaomoji: "(・_・;)",
           pesan: "string heksadesimalnya gak valid — harus pasangan digit 0-9 a-f dan genap jumlahnya",
           contoh: `${prefix}ftooltexthex dec 68616c6f`,
@@ -42,19 +42,19 @@ async function handler(m, { sock, config: botConfig }) {
       result = Buffer.from(hex, "hex").toString("utf-8");
     } else {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftooltexthex", {
+      return m.reply(raraSalahV2("ftooltexthex", {
         kaomoji: "(・_・;)",
         pesan: "pilih enc atau dec ya",
         contoh: `${prefix}ftooltexthex enc halo`,
       }), "ftooltexthex");
     }
     await m.react("🐣");
-    await m.reply(novaWrap("Text Hex", [`Hasil (${action === "enc" || action === "encode" ? "teks→hex" : "hex→teks"}):`,
+    await m.reply(raraWrap("Text Hex", [`Hasil (${action === "enc" || action === "encode" ? "teks→hex" : "hex→teks"}):`,
       "",
       "```" + (result.length > 800 ? result.substring(0, 800) + "…" : result) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("Text Hex", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("Text Hex", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

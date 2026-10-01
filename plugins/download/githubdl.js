@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import config from '../../config.js'
 import path from 'path'
 import fs from 'fs'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
     }
     
     if (!username) {
-        return m.reply(novaWrap("githubdl", [
+        return m.reply(raraWrap("githubdl", [
             "Format: " + m.prefix + "githubdl <user> <repo> <branch>",
             "",
             "💡 Contoh:",
@@ -79,14 +79,14 @@ async function handler(m, { sock }) {
     }
     
     if (!repo) {
-        { const __navText = novaWrap("githubdl", `Masukkan nama repository.\n\n💡 Contoh: .githubdl Nova-AI-Whatsapp-Bot`); return await m.reply( __navText, "githubdl"); }
+        { const __navText = raraWrap("githubdl", `Masukkan nama repository.\n\n💡 Contoh: .githubdl Rara-AI-Whatsapp-Bot`); return await m.reply( __navText, "githubdl"); }
     }
     try {
         await m.react("🕒");
         const repoInfo = await fetch(`https://api.github.com/repos/${username}/${repo}`)
         
         if (!repoInfo.ok) {
-            return m.reply(novaWrap("githubdl", `Repo ${username}/${repo} tidak ditemukan`, "error"))
+            return m.reply(raraWrap("githubdl", `Repo ${username}/${repo} tidak ditemukan`, "error"))
         }
         
         const repoData = await repoInfo.json()
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
         
         const checkRes = await fetch(zipUrl, { method: 'HEAD' })
         if (!checkRes.ok) {
-            return m.reply(novaWrap("githubdl", `Branch ${branch} tidak ditemukan. Default: ${defaultBranch}`, "error"))
+            return m.reply(raraWrap("githubdl", `Branch ${branch} tidak ditemukan. Default: ${defaultBranch}`, "error"))
         }
         
         const _cap = mediaCaption({ platformIcon: "🐙", platformName: "GitHub", title: `${repo} (${branch})`, format: "ZIP Archive", method: "github" });
@@ -107,9 +107,9 @@ async function handler(m, { sock }) {
             mimetype: 'application/zip',
             contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m })
-        await m.react("🐣"); await m.reply(novaBerhasil("Githubdl"));
+        await m.react("🐣"); await m.reply(raraBerhasil("Githubdl"));
     } catch (e) {
-        m.reply(novaGangguan("Githubdl"))
+        m.reply(raraGangguan("Githubdl"))
     }
 }
 

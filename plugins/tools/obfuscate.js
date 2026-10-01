@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .obfuscate — obfuscator JavaScript LOKAL via package javascript-obfuscator
 // (16 Sep 2026, request owner: audit dependencies — backup lokal .zobfuscate
 // zelapi, jalan tanpa API). Output pendek inline, panjang jadi file .js.
 
 import JavaScriptObfuscator from "javascript-obfuscator";
 import {
-  novaError, novaCaption, novaWrap, tipText,
-} from "../../src/lib/nova-menu-style.js";
+  raraError, raraCaption, raraWrap, tipText,
+} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "obfuscate",
@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
 
     if (!kode) {
       const text =
-        novaCaption({
+        raraCaption({
           emoji: "🛡️",
           name: "obfuscate",
           description: "Bikin kode JavaScript susah dibaca orang — proteksi script kamu",
@@ -62,11 +62,11 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     }
 
     if (kode.length < 15) {
-      await m.reply(novaError("Obfuscate", "Kode kependekan — minimal 15 karakter biar hasilnya masuk akal"), "obfuscate");
+      await m.reply(raraError("Obfuscate", "Kode kependekan — minimal 15 karakter biar hasilnya masuk akal"), "obfuscate");
       return { handled: true };
     }
     if (kode.length > 5000) {
-      await m.reply(novaError("Obfuscate", "Kode kepanjangan — maksimal 5000 karakter"), "obfuscate");
+      await m.reply(raraError("Obfuscate", "Kode kepanjangan — maksimal 5000 karakter"), "obfuscate");
       return { handled: true };
     }
 
@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
 
     if (out.length <= 3500) {
       const text =
-        novaWrap("Obfuscate", [
+        raraWrap("Obfuscate", [
           "✅ Kode berhasil di-obfuscate (lokal, tanpa API)",
           "",
           "```" + out + "```",
@@ -93,7 +93,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
         { quoted: m },
       );
       const text =
-        novaWrap("Obfuscate", [
+        raraWrap("Obfuscate", [
           "✅ Kode berhasil di-obfuscate",
           `Hasil kepanjangan (${out.length} karakter) — dikirim sebagai file *${namaFile}*`,
         ].join("\n")) +
@@ -104,7 +104,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     }
   } catch (error) {
     await m.react("❌");
-    await m.reply(novaError("Obfuscate", `Gagal obfuscate — cek sintaks kode: ${String(error?.message || error).slice(0, 120)}`), "obfuscate");
+    await m.reply(raraError("Obfuscate", `Gagal obfuscate — cek sintaks kode: ${String(error?.message || error).slice(0, 120)}`), "obfuscate");
   }
   return { handled: true };
 }

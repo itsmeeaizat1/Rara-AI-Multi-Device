@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaCaption, novaWrap, novaLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { mediaInfoCaption, fmtBytes } from "../../src/lib/nova-media-info.js";
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraCaption, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption, fmtBytes } from "../../src/lib/rara-media-info.js";
 const execAsync = promisify(exec)
 
 const pluginConfig = {
@@ -120,7 +120,7 @@ async function handler(m, { sock, config: botConfig }) {
     const isVideo = m.isVideo || (m.quoted && m.quoted.type === 'videoMessage')
     
     if (!isImage && !isVideo) {
-        await m.reply(novaCaption({
+        await m.reply(raraCaption({
             emoji: "🖼️",
             name: "Sticker Maker",
             description: "Membuat sticker dari gambar atau video",
@@ -142,7 +142,7 @@ async function handler(m, { sock, config: botConfig }) {
         }
         
         if (!buffer) {
-            await m.reply(novaGagal("Sticker"))
+            await m.reply(raraGagal("Sticker"))
             return
         }
         
@@ -162,7 +162,7 @@ async function handler(m, { sock, config: botConfig }) {
                 videoDur = duration
                 
                 if (duration > 10) {
-                    await m.reply(novaError("Sticker", `Video terlalu panjang! ${duration.toFixed(1)} detik, maksimal 10 detik`))
+                    await m.reply(raraError("Sticker", `Video terlalu panjang! ${duration.toFixed(1)} detik, maksimal 10 detik`))
                     if (fs.existsSync(tempVideo)) fs.unlinkSync(tempVideo)
                     return
                 }
@@ -171,7 +171,7 @@ async function handler(m, { sock, config: botConfig }) {
             if (fs.existsSync(tempVideo)) fs.unlinkSync(tempVideo)
         }
         
-        const packname = options.packname || botConfig.sticker?.packname || botConfig.bot?.name || 'Nova-AI'
+        const packname = options.packname || botConfig.sticker?.packname || botConfig.bot?.name || 'Rara-AI'
         const author = options.author || botConfig.sticker?.author || botConfig.owner?.name || 'Bot'
         
         const hasProcessing = options.crop || options.resize || options.circle || options.rounded
@@ -214,7 +214,7 @@ async function handler(m, { sock, config: botConfig }) {
             options.rounded && "rounded",
             options.resize && `resize ${options.resize}`,
         ].filter(Boolean).join(", ")
-        await m.reply(mediaInfoCaption({ header: "Nova Sticker", fields: [
+        await m.reply(mediaInfoCaption({ header: "Rara Sticker", fields: [
             { icon: "📥", label: "Input", value: isVideo ? "Video" : "Foto" },
             { icon: "⏱️", label: "Durasi", value: videoDur ? `${videoDur.toFixed(1)} detik` : null },
             { icon: "🎨", label: "Filter", value: filters || null },
@@ -224,7 +224,7 @@ async function handler(m, { sock, config: botConfig }) {
         ] }))
     } catch (error) {
         console.error('[sticker.js]', error.message || error)
-        m.reply(novaGangguan("Sticker"))
+        m.reply(raraGangguan("Sticker"))
     }
 }
 

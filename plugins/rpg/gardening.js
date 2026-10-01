@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Berkebon — Farm crops for gold and materials
 
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy,
   addItem, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
-  getCash, spendCash, formatRp} from "../../src/lib/nova-rpg-service.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { shapeBerkebon } from "../../src/lib/nova-rpg-shapes.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import te from "../../src/lib/nova-error.js";
+  getCash, spendCash, formatRp} from "../../src/lib/rara-rpg-service.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { shapeBerkebon } from "../../src/lib/rara-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "gardening",
@@ -51,7 +51,7 @@ const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { leve
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("berkebon", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("berkebon", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     const tool = getTool(m.sender);
     const lv = tool.level || 0;
     if (sub === "traktor" || sub === "status") {
-      return m.reply(novaRpgBox("berkebon",
+      return m.reply(raraRpgBox("berkebon",
         `🚜 TRAKTOR MINI KAMU\n\n` +
         `Level : *Lv.${lv}*\n⏱️ Grow time : −${Math.round((1 - TOOL.growFactor(lv)) * 100)}%\n🌻 Bunga Langka : ${tool.flowers || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
         `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.flowerCost(lv)}x Bunga Langka + ${formatRp(TOOL.rpCost(lv))}\nKetik: .berkebon upgrade`));
@@ -70,11 +70,11 @@ async function handler(m, { sock }) {
       const needFl = TOOL.flowerCost(lv);
       const needRp = TOOL.rpCost(lv);
       if ((tool.flowers || 0) < needFl) {
-        return m.reply(novaRpgBox("berkebon",
+        return m.reply(raraRpgBox("berkebon",
           `🌻 Upgrade Traktor ke Lv.${lv + 1} butuh:\n\n• Bunga Langka : ${needFl}x (punya ${tool.flowers || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Bunga didapat dari .berkebon panen sendiri — 30% per panen, stroberi dijamin +1!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
-        return m.reply(novaRpgBox("berkebon", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("berkebon", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = getTool(m.sender);
       fresh.flowers = (fresh.flowers || 0) - needFl;
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
       fresh.spent = (fresh.spent || 0) + needRp;
       getDatabase().setPlayerData(m.sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("berkebon",
+      return m.reply(raraRpgBox("berkebon",
         `🚜 TRAKTOR UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n⏱️ Grow time : −${Math.round((1 - TOOL.growFactor(lv + 1)) * 100)}%\n\n🌻 Material : −${needFl} Bunga Langka\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
           let msg = "";
           msg += `🌱 Tanaman siap dipanen!\n`;
           msg += `📦 ${crop.name} — ketik *.berkebon panen*\n`;
-                    return m.reply(novaRpgBox("berkebon", msg));
+                    return m.reply(raraRpgBox("berkebon", msg));
         }
       }
     }
@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
         msg += `📌 .berkebon tanam <id> untuk mulai\n`;
       }
 
-            return m.reply(novaRpgBox("berkebon", msg));
+            return m.reply(raraRpgBox("berkebon", msg));
     }
 
     if (action === "tanam" || action === "plant") {
@@ -143,16 +143,16 @@ async function handler(m, { sock }) {
       const crop = CROPS.find(c => c.id === cropId);
 
       if (!crop) {
-        return m.reply(novaRpgBox("berkebon", `Tanaman tidak dikenal. Pilih: ${CROPS.map(c => c.id).join(", ")}`, "warn"));
+        return m.reply(raraRpgBox("berkebon", `Tanaman tidak dikenal. Pilih: ${CROPS.map(c => c.id).join(", ")}`, "warn"));
       }
 
       if (rpg.farm.crop) {
-        return m.reply(novaRpgBox("berkebon", "Masih ada tanaman yang tumbuh. Panen dulu!", "warn"));
+        return m.reply(raraRpgBox("berkebon", "Masih ada tanaman yang tumbuh. Panen dulu!", "warn"));
       }
 
       if (rpg.energy < KEBON_ENERGY) {
         await m.react("🚫");
-        return m.reply(novaRpgBox("berkebon", `Energi kurang! Butuh *${KEBON_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+        return m.reply(raraRpgBox("berkebon", `Energi kurang! Butuh *${KEBON_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
       }
 
       useEnergy(m, KEBON_ENERGY, sock);
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
       await shapeBerkebon(m, sock, "tanam", crop.name);
-      return m.reply(novaRpgBox("berkebon",
+      return m.reply(raraRpgBox("berkebon",
         `🌱 BERHASIL MENANAM!\n\n` +
         `🌱 Tanaman : ${crop.name}\n⏰ Grow time : ${(effGrow / 60000).toFixed(1)} menit${effGrow < crop.growTime ? ` (traktor! aslinya ${(crop.growTime / 60000).toFixed(0)})` : ""}\n\n` +
         `Ketik .berkebon cek untuk cek progress\nKetik .berkebon panen saat sudah siap`));
@@ -175,14 +175,14 @@ async function handler(m, { sock }) {
 
     if (action === "panen" || action === "harvest") {
       if (!rpg.farm.crop) {
-        return m.reply(novaRpgBox("berkebon", "Tidak ada tanaman untuk dipanen.", "warn"));
+        return m.reply(raraRpgBox("berkebon", "Tidak ada tanaman untuk dipanen.", "warn"));
       }
 
       const crop = CROPS.find(c => c.id === rpg.farm.crop);
       if (!crop) {
         rpg.farm = { crop: null, plantedAt: 0 };
         saveRpg(m, { farm: rpg.farm });
-        return m.reply(novaRpgBox("berkebon", "Tanaman tidak dikenal. Kebon direset.", "warn"));
+        return m.reply(raraRpgBox("berkebon", "Tanaman tidak dikenal. Kebon direset.", "warn"));
       }
 
       const effGrow = rpg.farm.growTime || crop.growTime;
@@ -191,7 +191,7 @@ async function handler(m, { sock }) {
         const remaining = effGrow - elapsed;
         const mins = Math.floor(remaining / 60000);
         const secs = Math.floor((remaining % 60000) / 1000);
-        return m.reply(novaRpgBox("berkebon", `Belum siap panen! Tunggu *${mins}m ${secs}s* lagi.`, "warn"));
+        return m.reply(raraRpgBox("berkebon", `Belum siap panen! Tunggu *${mins}m ${secs}s* lagi.`, "warn"));
       }
 
       // Harvest!
@@ -218,7 +218,7 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
       await shapeBerkebon(m, sock, "panen", crop.name);
-      return m.reply(novaRpgBox("berkebon",
+      return m.reply(raraRpgBox("berkebon",
         `🌾 PANEN BERHASIL!\n\n` +
         `🌾 Tanaman : ${crop.name}\n\n` +
         `💰 Gold : +${goldGain}\n💵 Uang : Rp ${getCash(m)}\n✨ EXP : +${expGain}\n📦 Item : +${itemQty}x ${ITEM_DB[crop.item]?.name || crop.item}\n` +
@@ -227,11 +227,11 @@ async function handler(m, { sock }) {
         (lv ? `\n🚜 Traktor : Lv.${lv} (grow time −${Math.round((1 - TOOL.growFactor(lv)) * 100)}%)` : `\n💡 Traktor bisa diupgrade: .berkebon traktor`)));
     }
 
-    return m.reply(novaRpgBox("berkebon", "Aksi tidak dikenal. Gunakan: tanam, panen, atau cek", "warn"));
+    return m.reply(raraRpgBox("berkebon", "Aksi tidak dikenal. Gunakan: tanam, panen, atau cek", "warn"));
   } catch (err) {
     console.error("berkebon error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("berkebon", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("berkebon", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "futureme",
@@ -51,15 +51,15 @@ async function handler(m, { sock, db, config: botConfig }) {
     const text = args.slice(3).join(" ").trim();
 
     if (!duration || !DURATIONS[duration]) {
-      await m.reply(novaWrap("FutureMe", "Format: " + prefix + "futureme write <durasi> <pesan>\nDurasi: 1d, 1w, 2w, 1m, 3m, 6m, 1y\n💡 *Contoh:* " + prefix + "futureme write 1m Semangat ya diriku!"));
+      await m.reply(raraWrap("FutureMe", "Format: " + prefix + "futureme write <durasi> <pesan>\nDurasi: 1d, 1w, 2w, 1m, 3m, 6m, 1y\n💡 *Contoh:* " + prefix + "futureme write 1m Semangat ya diriku!"));
       return { handled: true };
     }
     if (!text || text.length < 10) {
-      await m.reply(novaWrap("FutureMe", "Pesan minimal 10 karakter. Tulis surat untuk diri kamu di masa depan."));
+      await m.reply(raraWrap("FutureMe", "Pesan minimal 10 karakter. Tulis surat untuk diri kamu di masa depan."));
       return { handled: true };
     }
     if (text.length > 1000) {
-      await m.reply(novaWrap("FutureMe", "Maksimal 1000 karakter."));
+      await m.reply(raraWrap("FutureMe", "Maksimal 1000 karakter."));
       return { handled: true };
     }
 
@@ -79,7 +79,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     });
     saveConfig(db, gid, cfg);
 
-    await m.reply(novaWrap("FutureMe", [
+    await m.reply(raraWrap("FutureMe", [
       "Surat disimpan!",
       "",
       "Dari: " + new Date().toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" }),
@@ -96,30 +96,30 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "list" || sub === "daftar" || sub === "pending") {
     const pending = udata.letters.filter(l => !l.delivered);
     if (pending.length === 0) {
-      await m.reply(novaWrap("FutureMe", "Tidak ada surat pending.\n" + prefix + "futureme write <durasi> <pesan> untuk buat."));
+      await m.reply(raraWrap("FutureMe", "Tidak ada surat pending.\n" + prefix + "futureme write <durasi> <pesan> untuk buat."));
       return { handled: true };
     }
     const list = pending.map(l => {
       const daysLeft = Math.ceil((l.deliverAt - Date.now()) / 86400000);
       return "#" + l.id + " - " + l.createdDate + " -> " + new Date(l.deliverAt).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" }) + " (" + daysLeft + " hari lagi)\n   " + l.text.slice(0, 60) + (l.text.length > 60 ? "..." : "");
     }).join("\n");
-    await m.reply(novaWrap("FutureMe - Pending", "Surat pending (" + pending.length + "):\n\n" + list));
+    await m.reply(raraWrap("FutureMe - Pending", "Surat pending (" + pending.length + "):\n\n" + list));
     return { handled: true };
   }
 
   if (sub === "read" || sub === "baca") {
     const delivered = udata.letters.filter(l => l.delivered);
     if (delivered.length === 0) {
-      await m.reply(novaWrap("FutureMe", "Belum ada surat yang sudah sampai."));
+      await m.reply(raraWrap("FutureMe", "Belum ada surat yang sudah sampai."));
       return { handled: true };
     }
     const id = parseInt(args[2] || "0", 10);
     const letter = delivered.find(l => l.id === id) || delivered[delivered.length - 1];
     if (!letter) {
-      await m.reply(novaWrap("FutureMe", "Surat tidak ditemukan."));
+      await m.reply(raraWrap("FutureMe", "Surat tidak ditemukan."));
       return { handled: true };
     }
-    await m.reply(novaWrap("FutureMe #" + letter.id, [
+    await m.reply(raraWrap("FutureMe #" + letter.id, [
       "Ditulis: " + letter.createdDate,
       "Sampai: " + new Date(letter.deliverAt).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" }),
       "Durasi: " + letter.days + " hari",
@@ -133,12 +133,12 @@ async function handler(m, { sock, db, config: botConfig }) {
     const id = parseInt(args[2] || "0", 10);
     const idx = udata.letters.findIndex(l => l.id === id && !l.delivered);
     if (idx === -1) {
-      await m.reply(novaWrap("FutureMe", "Surat tidak ditemukan atau sudah terkirim."));
+      await m.reply(raraWrap("FutureMe", "Surat tidak ditemukan atau sudah terkirim."));
       return { handled: true };
     }
     udata.letters.splice(idx, 1);
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("FutureMe", "Surat #" + id + " dibatalkan."));
+    await m.reply(raraWrap("FutureMe", "Surat #" + id + " dibatalkan."));
     return { handled: true };
   }
 
@@ -146,7 +146,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const total = udata.letters.length;
     const pending = udata.letters.filter(l => !l.delivered).length;
     const delivered = total - pending;
-    await m.reply(novaWrap("FutureMe", [
+    await m.reply(raraWrap("FutureMe", [
       "LETTER TO FUTURE SELF",
       "",
       "Total surat: " + total,
@@ -163,7 +163,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("FutureMe", [
+  await m.reply(raraWrap("FutureMe", [
     "LETTER TO FUTURE SELF",
     "",
     prefix + "futureme write <durasi> <pesan> - tulis surat",

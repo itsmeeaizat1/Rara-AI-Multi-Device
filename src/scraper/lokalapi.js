@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 lokalapi.js — API Lokal Indonesia (live verified 15 Sep 2026, dari katalog
 //   farizdotid/DAFTAR-API-LOKAL-INDONESIA — owner minta semua yang hidup):

@@ -1,4 +1,4 @@
-// e2e — nova-ai-satuan-rich: enrich vision + browsing buat AI satuan
+// e2e — rara-ai-satuan-rich: enrich vision + browsing buat AI satuan
 import fs from "node:fs"; import os from "node:os"; import path from "node:path";
 import { fileURLToPath } from "node:url";
 // FIX v24.2.2: dulu path absolut server penulis → test gagal di mesin lain.
@@ -12,11 +12,11 @@ function t(name, ok, extra) {
 const cap = (s, n) => String(s || "").length > n ? String(s).slice(0, n - 1) + "…" : String(s || "");
 
 // ── init db (GOTCHA: getDatabase tanpa initDatabase THROW) ──
-const { getDatabase, initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { getDatabase, initDatabase } = await import(R + "/src/lib/rara-database.js");
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "rich-e2e-db-"));
 await initDatabase(path.join(dbDir, "db"));
 
-const rich = await import(R + "/src/lib/nova-ai-satuan-rich.js");
+const rich = await import(R + "/src/lib/rara-ai-satuan-rich.js");
 const { enrichAiSatuan, isExcluded, AUTO_BROWSE_RE } = rich;
 
 // seams
@@ -191,7 +191,7 @@ console.log("— section 3.5: reply context + history —");
 // ═══ SECTION 3.6: jejak histori PERSISTEN — tetep ada saat restart ═══
 console.log("— section 3.6: chat history persisten —");
 {
-  const chatlog = await import(R + "/src/lib/nova-chat-log.js"); console.log("MK1");
+  const chatlog = await import(R + "/src/lib/rara-chat-log.js"); console.log("MK1");
   const cfg = { command: { prefix: "." } };
   const CHAT = "62grup@g.us";
   const mkRaw = (body, sender, type = "conversation", fromMe = false) => ({
@@ -249,7 +249,7 @@ console.log("— section 3.6: chat history persisten —");
 // ═══ SECTION 4: loader flag _usesQuotedMedia beneran ═══
 console.log("— section 4: loader flag —");
 {
-  const { loadPlugin } = await import(R + "/src/lib/nova-plugins.js");
+  const { loadPlugin } = await import(R + "/src/lib/rara-plugins.js");
   const gita = await loadPlugin(R + "/plugins/ai/gita.js");
   t("4a. gita (satuan teks) → _usesQuotedMedia false", gita?.config?._usesQuotedMedia === false, gita?.config?._usesQuotedMedia);
   const vision = await loadPlugin(R + "/plugins/ai/vision.js");
@@ -277,7 +277,7 @@ console.log("— section 5: ai-set browsing —");
   await plugin.handler(mkSetM(".ai-set browsing mungkin"), { sock: { sendMessage: async () => {} }, config: { command: { prefix: "." } } });
   // GOTCHA: reply ke-smallcaps — asersi pakai kata "ꜱᴀʟᴀʜ" kecil atau lowercase
   const salah = (replies[replies.length - 1] || "").toLowerCase();
-  t("5d. nilai selain on/off → novaSalah", /salah|ᴄᴀʀᴀ ᴘᴇᴍᴀᴋᴀɪᴀɴ/.test(salah), replies[replies.length - 1]?.slice(0, 60));
+  t("5d. nilai selain on/off → raraSalah", /salah|ᴄᴀʀᴀ ᴘᴇᴍᴀᴋᴀɪᴀɴ/.test(salah), replies[replies.length - 1]?.slice(0, 60));
 }
 
 rich._resetRichForTest();

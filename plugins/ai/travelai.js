@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // AI Travel — AI travel planner
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "travelai",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("travelai", `Mau liburan ke mana?\n\nContoh:\n${m.prefix}travelai Bali 3 hari\n${m.prefix}travelai Jogja 2 hari\n${m.prefix}travelai Tokyo 5 hari`, "guide"));
+      return m.reply(raraWrap("travelai", `Mau liburan ke mana?\n\nContoh:\n${m.prefix}travelai Bali 3 hari\n${m.prefix}travelai Jogja 2 hari\n${m.prefix}travelai Tokyo 5 hari`, "guide"));
     }
 
     await m.react("🕒");
@@ -52,11 +52,11 @@ TIPS:
 
 Gunakan bahasa Indonesia. Sesuaikan jumlah hari dengan yang diminta. Praktis dan realistis.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("travelai", "AI-nya lagi packing 🧳", "error"));
+      return m.reply(raraWrap("travelai", "AI-nya lagi packing 🧳", "error"));
     }
 
     const lines = result.answer.trim().split("\n");
@@ -104,7 +104,7 @@ Gunakan bahasa Indonesia. Sesuaikan jumlah hari dengan yang diminta. Praktis dan
   } catch (err) {
     console.error("travelai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("travelai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("travelai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

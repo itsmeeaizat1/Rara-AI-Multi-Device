@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 //
 // ============================================================
 //  LICENSE: Custom Proprietary License
@@ -18,7 +18,7 @@ import config from "./config.js";
 // console.log/error/warn sebelum modul lain di-import (biar semua log,
 // termasuk yg jalan saat startup, ikut ke-sensor). Penting kalau panel
 // hosting disewakan — penyewa lain gak boleh liat API key lewat console.
-import { installLogSanitizer } from "./src/lib/nova-log-sanitizer.js";
+import { installLogSanitizer } from "./src/lib/rara-log-sanitizer.js";
 installLogSanitizer();
 // 🔹 AI AGENT: load all AI provider keys
 import {
@@ -28,7 +28,7 @@ import {
   getOpenRouterKey, getHuggingFaceKey, getVoyageKey,
   getCloudflareKey, getStabilityKey, getJinaKey
 } from "./src/lib/config/env-loader.js";
-// 🔹 Set global keys — dipakai oleh aiagent.js & nova-ai-service.js
+// 🔹 Set global keys — dipakai oleh aiagent.js & rara-ai-service.js
 global.deepseekkey = getDeepSeekKey();
 global.groqkey = getGroqKey();
 global.xaikey = getXaiKey();
@@ -53,26 +53,26 @@ import {
   groupSettingsHandler,
   handleAntiRemoveFromUpsert,
 } from "./src/handler.js";
-import { loadPlugins, pluginStore } from "./src/lib/nova-plugins.js";
-import { initDatabase, getDatabase } from "./src/lib/nova-database.js";
+import { loadPlugins, pluginStore } from "./src/lib/rara-plugins.js";
+import { initDatabase, getDatabase } from "./src/lib/rara-database.js";
 import { syncSewaOverrides } from "./src/lib/sewa/sewa.js";
 import {
   initScheduler,
   loadScheduledMessages,
   startGroupScheduleChecker,
   startSewaChecker,
-} from "./src/lib/nova-scheduler.js";
-import { handleAntiTagSW } from "./src/lib/nova-group-protection.js";
-// import { initSholatScheduler } from "./src/lib/nova-sholat-scheduler.js";  // moved to dynamic import below
-// import { initNotifScheduler } from "./src/lib/nova-notif-scheduler.js";  // moved to dynamic import below
-// import { initWeatherScheduler } from "./src/lib/nova-weather-scheduler.js";  // moved to dynamic import below
-// import { initLokerScheduler } from "./src/lib/nova-loker-scheduler.js";  // moved to dynamic import below
-// import { initAutoJpmScheduler } from "./src/lib/nova-auto-jpm.js";  // moved to dynamic import below
-import { startMemoryMonitor, registerHdBusyCheck } from "./src/lib/nova-memory-monitor.js";
-import { startTempCleaner } from "./src/lib/nova-temp-cleaner.js";
-import { init as initCacheCleaner } from "./src/lib/nova-cache-cleaner.js";
-import { startDailyPruner } from "./src/lib/nova-data-pruner.js";
-import { preloadAssets } from "./src/lib/nova-asset-manager.js";
+} from "./src/lib/rara-scheduler.js";
+import { handleAntiTagSW } from "./src/lib/rara-group-protection.js";
+// import { initSholatScheduler } from "./src/lib/rara-sholat-scheduler.js";  // moved to dynamic import below
+// import { initNotifScheduler } from "./src/lib/rara-notif-scheduler.js";  // moved to dynamic import below
+// import { initWeatherScheduler } from "./src/lib/rara-weather-scheduler.js";  // moved to dynamic import below
+// import { initLokerScheduler } from "./src/lib/rara-loker-scheduler.js";  // moved to dynamic import below
+// import { initAutoJpmScheduler } from "./src/lib/rara-auto-jpm.js";  // moved to dynamic import below
+import { startMemoryMonitor, registerHdBusyCheck } from "./src/lib/rara-memory-monitor.js";
+import { startTempCleaner } from "./src/lib/rara-temp-cleaner.js";
+import { init as initCacheCleaner } from "./src/lib/rara-cache-cleaner.js";
+import { startDailyPruner } from "./src/lib/rara-data-pruner.js";
+import { preloadAssets } from "./src/lib/rara-asset-manager.js";
 import {
   logger,
   c,
@@ -81,9 +81,9 @@ import {
   logConnection,
   logErrorBox,
   divider,
-} from "./src/lib/nova-logger.js";
+} from "./src/lib/rara-logger.js";
 
-await import("./src/lib/nova-agent.js")
+await import("./src/lib/rara-agent.js")
   .then((m) => m.initializeAgent())
   .catch(() => { });
 
@@ -145,7 +145,7 @@ function startDevWatcher(pluginsPath) {
         if (!fs.existsSync(fullPath)) {
           fileStatCache.delete(fullPath);
           const pluginName = path.basename(filename, ".js");
-          const { unloadPlugin } = await import("./src/lib/nova-plugins.js");
+          const { unloadPlugin } = await import("./src/lib/rara-plugins.js");
           const result = unloadPlugin(pluginName);
           if (result.success) logger.warn("plugin", `removed ${filename}`);
           return;
@@ -166,7 +166,7 @@ function startDevWatcher(pluginsPath) {
           });
 
           const { hotReloadPlugin } =
-            await import("./src/lib/nova-plugins.js");
+            await import("./src/lib/rara-plugins.js");
           const result = await hotReloadPlugin(fullPath);
           if (!result.success) {
             logger.error(
@@ -238,7 +238,7 @@ function setupAntiCrash() {
     console.error(c.gray(error.stack));
     logger.system("system", "Engine is still running");
     // 🔹 DOCTOR: error kecatat ke ring buffer (self-healing, default off)
-    import("./src/lib/nova-doctor.js").then((md) => md.recordDoctorErrorAuto("uncaughtException", error)).catch(() => {});
+    import("./src/lib/rara-doctor.js").then((md) => md.recordDoctorErrorAuto("uncaughtException", error)).catch(() => {});
   });
 
   process.on("unhandledRejection", (reason, promise) => {
@@ -247,7 +247,7 @@ function setupAntiCrash() {
     logger.system("system", "Engine is still running");
     // 🔹 DOCTOR: rejection juga kecatat (self-healing, default off)
     const __docReason = reason instanceof Error ? reason : new Error(String(reason));
-    import("./src/lib/nova-doctor.js").then((md) => md.recordDoctorErrorAuto("unhandledRejection", __docReason)).catch(() => {});
+    import("./src/lib/rara-doctor.js").then((md) => md.recordDoctorErrorAuto("unhandledRejection", __docReason)).catch(() => {});
   });
 
   process.on("warning", (warning) => {
@@ -280,7 +280,7 @@ function setupAntiCrash() {
 
 async function main() {
   await playBootSequence({
-    name: config.bot?.name || "Nova-AI",
+    name: config.bot?.name || "Rara-AI",
     version: config.bot?.version || "1.0.0",
     developer: config.bot?.developer || "Developer",
     mode: config.mode || "public",
@@ -329,18 +329,18 @@ async function main() {
 
   // 🔹 AI CALL AUTO-RUN (18 Sep 2026, request owner: "aicall lngsung ke run
   // saat bot dirun") — service Go aicall/ai-call dinyalain otomatis kalau
-  // mati: pm2 restart/start nova-aicall (fallback spawn langsung), lalu
+  // mati: pm2 restart/start rara-aicall (fallback spawn langsung), lalu
   // tunggu /health OK. Fire-and-forget — gak nunda WhatsApp connect, dan
   // semua gagal-senyap-proof (bot tetap boot normal).
-  import("./src/lib/nova-aicall-autostart.js")
+  import("./src/lib/rara-aicall-autostart.js")
     .then((m) => m.ensureAicallRunning())
     .catch((e) => console.error("[aicall-autostart] gagal:", e?.message || e));
 
-  // 🔹 NOVA BRIDGE MULTI-PLATFORM (29 Sep 2026) — gateway Telegram & Discord
+  // 🔹 RARA BRIDGE MULTI-PLATFORM (29 Sep 2026) — gateway Telegram & Discord
   // nyalain otomatis kalau .bridge on sebelumnya. Fire-and-forget — bot WA tetap boot.
-  import("./src/lib/novabridge/manager.js")
+  import("./src/lib/rarabridge/manager.js")
     .then((m) => m.initBridgeFromBoot())
-    .catch((e) => console.error("[novabridge] gagal init:", e?.message || e));
+    .catch((e) => console.error("[rarabridge] gagal init:", e?.message || e));
 
   const bootTime = Date.now() - startTime;
   logger.success("boot", `System initialized in ${bootTime}ms`);
@@ -417,38 +417,38 @@ async function main() {
         initScheduler(config, sock);
         // Dynamic imports for schedulers (graceful if 'cron' package is missing)
         const schedulerInits = [
-          { name: "PingLog", fn: () => import("./src/lib/nova-pinglog.js").then(m => m.startPingLog?.(sock)) },
-          { name: "Optimizer", fn: () => import("./src/lib/nova-optimizer.js").then(m => m.initOptimizerMonitor?.(sock)) },
-          { name: "AutoJoin", fn: () => import("./src/lib/nova-autojoin.js").then(m => m.initAutoJoinScheduler?.(sock)) },
-          { name: "AnonChat", fn: () => import("./src/lib/nova-anonchat.js").then(m => m.initAnonChatSweeper?.(sock)) },
-          { name: "ChatibLobby", fn: () => import("./src/lib/nova-chatib-lobby.js").then(m => m.initChatibLobbySweeper?.(sock)) },
-          { name: "AutoJPM", fn: () => import("./src/lib/nova-auto-jpm.js").then(m => m.initAutoJpmScheduler?.(sock)) },
-          { name: "Sholat", fn: () => import("./src/lib/nova-sholat-scheduler.js").then(m => m.initSholatScheduler?.(sock)) },
-          { name: "Notif", fn: () => import("./src/lib/nova-notif-scheduler.js").then(m => m.initNotifScheduler?.(sock)) },
-          { name: "Weather", fn: () => import("./src/lib/nova-weather-scheduler.js").then(m => m.initWeatherScheduler?.(sock)) },
-          { name: "Loker", fn: () => import("./src/lib/nova-loker-scheduler.js").then(m => m.initLokerScheduler?.(sock)) },
-          { name: "BMKG", fn: () => import("./src/lib/nova-bmkg-scheduler.js").then(m => m.initBmkgScheduler?.(sock)) },
-          { name: "BMKG-Cuaca", fn: () => import("./src/lib/nova-bmkg-cuaca-scheduler.js").then(m => m.initCuacaScheduler?.(sock)) },
-          { name: "Bencana", fn: () => import("./src/lib/nova-bencana.js").then(m => m.initBencanaMonitor?.(sock)) },
+          { name: "PingLog", fn: () => import("./src/lib/rara-pinglog.js").then(m => m.startPingLog?.(sock)) },
+          { name: "Optimizer", fn: () => import("./src/lib/rara-optimizer.js").then(m => m.initOptimizerMonitor?.(sock)) },
+          { name: "AutoJoin", fn: () => import("./src/lib/rara-autojoin.js").then(m => m.initAutoJoinScheduler?.(sock)) },
+          { name: "AnonChat", fn: () => import("./src/lib/rara-anonchat.js").then(m => m.initAnonChatSweeper?.(sock)) },
+          { name: "ChatibLobby", fn: () => import("./src/lib/rara-chatib-lobby.js").then(m => m.initChatibLobbySweeper?.(sock)) },
+          { name: "AutoJPM", fn: () => import("./src/lib/rara-auto-jpm.js").then(m => m.initAutoJpmScheduler?.(sock)) },
+          { name: "Sholat", fn: () => import("./src/lib/rara-sholat-scheduler.js").then(m => m.initSholatScheduler?.(sock)) },
+          { name: "Notif", fn: () => import("./src/lib/rara-notif-scheduler.js").then(m => m.initNotifScheduler?.(sock)) },
+          { name: "Weather", fn: () => import("./src/lib/rara-weather-scheduler.js").then(m => m.initWeatherScheduler?.(sock)) },
+          { name: "Loker", fn: () => import("./src/lib/rara-loker-scheduler.js").then(m => m.initLokerScheduler?.(sock)) },
+          { name: "BMKG", fn: () => import("./src/lib/rara-bmkg-scheduler.js").then(m => m.initBmkgScheduler?.(sock)) },
+          { name: "BMKG-Cuaca", fn: () => import("./src/lib/rara-bmkg-cuaca-scheduler.js").then(m => m.initCuacaScheduler?.(sock)) },
+          { name: "Bencana", fn: () => import("./src/lib/rara-bencana.js").then(m => m.initBencanaMonitor?.(sock)) },
           { name: "WxAlert", fn: () => import("./plugins/bencana/wxalert.js").then(m => m.initWxAlertMonitor?.(sock)) },
-          { name: "Briefing", fn: () => import("./src/lib/nova-briefing.js").then(m => m.initBriefingScheduler?.(sock)) },
-          { name: "BotDoctor", fn: () => import("./src/lib/nova-botdoctor.js").then(m => m.initBotDoctorScheduler?.(sock)) },
-          { name: "RentAuto", fn: () => import("./src/lib/nova-rent-auto.js").then(m => m.initRentAutoScheduler?.(sock)) },
-          { name: "KeyPatrol", fn: () => import("./src/lib/nova-key-patrol.js").then(m => m.initKeyPatrolScheduler?.(sock)) },
-          { name: "WorldEvent", fn: () => import("./src/lib/nova-world-event.js").then(m => m.initWorldEventScheduler?.(sock)) },
-          { name: "AnimeNotifier", fn: () => import("./src/lib/nova-auto-anime-notifier.js").then(m => m.initAnimeNotifier?.(sock)) },
-          { name: "AutoAnimeWinbu", fn: () => import("./src/lib/nova-auto-anime.js").then(m => m.initAutoStart?.(sock)) },
-          { name: "MovieNotifier", fn: () => import("./src/lib/nova-movie-notifier.js").then(m => m.initMovieNotifier?.(sock)) },
-          { name: "BolaNotifier", fn: () => import("./src/lib/nova-auto-bola-notifier.js").then(m => m.initBolaNotifier?.(sock)) },
-          { name: "RainNotifier", fn: () => import("./src/lib/nova-rain-notify.js").then(m => m.initRainNotifier?.(sock)) },
-          { name: "LinkedInNotifier", fn: () => import("./src/lib/nova-linkedin-notify.js").then(m => m.initLinkedInNotifier?.(sock)) },
-          { name: "NovaWeb", fn: () => import("./src/lib/nova-web-server.js").then(m => m.initNovaWebServer?.(sock)) },
-          { name: "Dashboard", fn: () => import("./src/lib/nova-dashboard.js").then(m => m.initDashboardServer?.(sock)) },
-          { name: "Store", fn: () => import("./src/lib/nova-store.js").then(m => m.setSock?.(sock)) },
-          { name: "Family100Harvest", fn: () => import("./src/lib/nova-family100-harvest.js").then(m => m.initAutoRefresh?.(sock)) },
-          { name: "WebWatch", fn: () => import("./src/lib/nova-webwatch.js").then(m => m.initWebWatch?.(sock)) },
-          { name: "BeritaNotifier", fn: () => import("./src/lib/nova-berita-notifier.js").then(m => m.initBeritaNotifier?.(sock)) },
-          { name: "CryptoAlert", fn: () => import("./src/lib/nova-cryptoalert.js").then(m => m.initCryptoAlert?.(sock)) },
+          { name: "Briefing", fn: () => import("./src/lib/rara-briefing.js").then(m => m.initBriefingScheduler?.(sock)) },
+          { name: "BotDoctor", fn: () => import("./src/lib/rara-botdoctor.js").then(m => m.initBotDoctorScheduler?.(sock)) },
+          { name: "RentAuto", fn: () => import("./src/lib/rara-rent-auto.js").then(m => m.initRentAutoScheduler?.(sock)) },
+          { name: "KeyPatrol", fn: () => import("./src/lib/rara-key-patrol.js").then(m => m.initKeyPatrolScheduler?.(sock)) },
+          { name: "WorldEvent", fn: () => import("./src/lib/rara-world-event.js").then(m => m.initWorldEventScheduler?.(sock)) },
+          { name: "AnimeNotifier", fn: () => import("./src/lib/rara-auto-anime-notifier.js").then(m => m.initAnimeNotifier?.(sock)) },
+          { name: "AutoAnimeWinbu", fn: () => import("./src/lib/rara-auto-anime.js").then(m => m.initAutoStart?.(sock)) },
+          { name: "MovieNotifier", fn: () => import("./src/lib/rara-movie-notifier.js").then(m => m.initMovieNotifier?.(sock)) },
+          { name: "BolaNotifier", fn: () => import("./src/lib/rara-auto-bola-notifier.js").then(m => m.initBolaNotifier?.(sock)) },
+          { name: "RainNotifier", fn: () => import("./src/lib/rara-rain-notify.js").then(m => m.initRainNotifier?.(sock)) },
+          { name: "LinkedInNotifier", fn: () => import("./src/lib/rara-linkedin-notify.js").then(m => m.initLinkedInNotifier?.(sock)) },
+          { name: "RaraWeb", fn: () => import("./src/lib/rara-web-server.js").then(m => m.initNovaWebServer?.(sock)) },
+          { name: "Dashboard", fn: () => import("./src/lib/rara-dashboard.js").then(m => m.initDashboardServer?.(sock)) },
+          { name: "Store", fn: () => import("./src/lib/rara-store.js").then(m => m.setSock?.(sock)) },
+          { name: "Family100Harvest", fn: () => import("./src/lib/rara-family100-harvest.js").then(m => m.initAutoRefresh?.(sock)) },
+          { name: "WebWatch", fn: () => import("./src/lib/rara-webwatch.js").then(m => m.initWebWatch?.(sock)) },
+          { name: "BeritaNotifier", fn: () => import("./src/lib/rara-berita-notifier.js").then(m => m.initBeritaNotifier?.(sock)) },
+          { name: "CryptoAlert", fn: () => import("./src/lib/rara-cryptoalert.js").then(m => m.initCryptoAlert?.(sock)) },
           { name: "APICheck", fn: () => import("./plugins/owner/autoapicheck.js").then(m => m.startMonitor?.(sock)) },
           { name: "PluginHealth", fn: () => import("./plugins/owner/autoplugin.js").then(m => m.startPluginMonitor?.(sock)) },
           { name: "WeeklyReport", fn: () => import("./plugins/owner/autoweeklyreport.js").then(m => m.startWeeklyReport?.(sock)) },
@@ -462,13 +462,13 @@ async function main() {
           { name: "AutoSummary", fn: () => import("./plugins/owner/autosummary.js").then(m => m.startAutoSummary?.(sock)) },
           { name: "AutoTask", fn: () => import("./plugins/ai-agent/autotask.js").then(m => m.resumeAutoTasks?.(sock)) },
           { name: "AgentLoop", fn: () => import("./plugins/ai-agent/agentloop.js").then(m => m.resumeAgentLoops?.(sock)) },
-          { name: "HotReload", fn: () => import("./lib/nova-hotreload.js").then(m => m.resumeHotreload?.(sock)) },
-          { name: "9Router", fn: () => import("./src/lib/nova-9router-local.js").then(m => m.initRouter9Boot?.()) },
+          { name: "HotReload", fn: () => import("./lib/rara-hotreload.js").then(m => m.resumeHotreload?.(sock)) },
+          { name: "9Router", fn: () => import("./src/lib/rara-9router-local.js").then(m => m.initRouter9Boot?.()) },
           { name: "AutoSwgc", fn: () => import("./plugins/owner/autoswgc.js").then(m => m.startAutoSwgc?.(sock)) },
           { name: "AutoResource", fn: () => import("./plugins/owner/autoresource.js").then(m => m.startAutoResource?.(sock)) },
-          { name: "ChannelHub", fn: () => import("./src/lib/nova-saluran-hub.js").then(m => m.initSaluranHubScheduler?.(sock)) },
-          { name: "Doctor", fn: () => import("./src/lib/nova-doctor.js").then(m => m.initDoctorMonitor?.(sock)) },
-          { name: "ChatRevive", fn: () => import("./src/lib/nova-chat-revive.js").then(m => m.initChatReviveScheduler?.(sock)) },
+          { name: "ChannelHub", fn: () => import("./src/lib/rara-saluran-hub.js").then(m => m.initSaluranHubScheduler?.(sock)) },
+          { name: "Doctor", fn: () => import("./src/lib/rara-doctor.js").then(m => m.initDoctorMonitor?.(sock)) },
+          { name: "ChatRevive", fn: () => import("./src/lib/rara-chat-revive.js").then(m => m.initChatReviveScheduler?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {
@@ -482,24 +482,24 @@ async function main() {
         // hasil tes disimpan sbg tanda kecepatan server → tampil di Info Server
         // allmenu. Fire-and-forget biar gak nungguin boot.
         try {
-          const { initServerSpeedtest } = await import("./src/lib/nova-speedtest.js");
+          const { initServerSpeedtest } = await import("./src/lib/rara-speedtest.js");
           initServerSpeedtest(sock).catch(() => {});
         } catch { }
         // ── FIX v24.1.0 — HAPUS IMPORT HANTU (audit import path) ──
         // Tiga modul di bawah ini direferensikan tapi FILE-nya tidak pernah
         // ada di repo: ./plugins/religi/autosahur.js,
-        // ./src/lib/nova-order-poller.js, ./src/lib/nova-otp-poller.js.
+        // ./src/lib/rara-order-poller.js, ./src/lib/rara-otp-poller.js.
         // Karena dibungkus try/catch, kegagalannya SENYAP (fitur dikira jalan
         // padahal selalu di-skip). Order polling sudah ditangani inline oleh
         // plugins/panel/orderpanel.js (poll sampai lunas/kedaluwarsa), dan OTP
-        // dipanggil on-demand via src/lib/nova-otp-service.js. Referensi mati
+        // dipanggil on-demand via src/lib/rara-otp-service.js. Referensi mati
         // dihapus supaya tidak menyesatkan. Kalau nanti mau fitur ini sbg
         // background cron, implementasinya dibuat sebagai modul baru + didaftarkan
-        // di scheduler resmi (src/lib/nova-scheduler.js), bukan import hantu.
+        // di scheduler resmi (src/lib/rara-scheduler.js), bukan import hantu.
 
         try {
           const { getAllJadibotSessions, restartJadibotSession } =
-            await import("./src/lib/nova-jadibot-manager.js");
+            await import("./src/lib/rara-jadibot-manager.js");
           const sessions = getAllJadibotSessions();
           if (sessions.length > 0) {
             logger.info("JADIBOT", `Restoring ${sessions.length} session(s)`);
@@ -523,14 +523,14 @@ async function main() {
         startMemoryMonitor();
         // hubungin watchdog memory ke status antrian .remini — restart
         // ditunda selama ada render HD aktif (job gak boleh ilang di tengah)
-        import("./src/lib/nova-hd-pool.js")
+        import("./src/lib/rara-hd-pool.js")
           .then(({ hdQueueInfo }) => registerHdBusyCheck(() => hdQueueInfo().busy))
           .catch(() => {});
         startTempCleaner();
         startDailyPruner();
         initCacheCleaner();
         console.log("");
-        console.log("╭─「 ✦ NOVA AI ✦ 」");
+        console.log("╭─「 ✦ RARA AI ✦ 」");
         console.log("│");
         console.log("│ ✅ All subsystems fully operational" + (config.dev?.enabled ? " • dev" : ""));
         console.log("│");

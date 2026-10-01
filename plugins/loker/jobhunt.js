@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 /**
  * plugins/loker/jobhunt.js
@@ -12,7 +12,7 @@ import {
   fetchAllIndonesiaJobs,
   formatLokerMessage,
   getLokerStatus,
-} from "../../src/lib/nova-loker-scheduler.js";
+} from "../../src/lib/rara-loker-scheduler.js";
 
 const pluginConfig = {
   name: "ayokerja",
@@ -112,11 +112,11 @@ async function handler(m, { sock }) {
 
     const msg = formatLokerMessage(jobs, { label: "Hasil Pencarian", keywords: mergedKeywords });
     if (!msg) {
-      return m.reply(novaWrap("Ayokerja", "Tidak ada loker yang bisa ditampilkan."));
+      return m.reply(raraWrap("Ayokerja", "Tidak ada loker yang bisa ditampilkan."));
     }
-    return await m.reply(novaWrap("ayokerja", msg));
+    return await m.reply(raraWrap("ayokerja", msg));
   } catch (e) {
-    return m.reply(novaError("AyoKerja", `Ada error nih: ${e?.message || String(e)}`));
+    return m.reply(raraError("AyoKerja", `Ada error nih: ${e?.message || String(e)}`));
   }
 }
 

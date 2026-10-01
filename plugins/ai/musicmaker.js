@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "musicmaker",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const prompt = m.text?.trim() || m.args.join(" ");
 
   if (!prompt) {
-    return m.reply(novaGuide("MusicMaker", "Masukin deskripsi lagu nih!", ".musicmaker Lagu pop romantis yang ceria"));
+    return m.reply(raraGuide("MusicMaker", "Masukin deskripsi lagu nih!", ".musicmaker Lagu pop romantis yang ceria"));
   }
   try {
   await m.react("🕒");
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     const data = res.data;
     if (!data.status || !data.result) {
-      return m.reply(novaWrap("musicmaker", "⚠️ AI gagal membuat lagu. Coba gunakan prompt (deskripsi) yang lain."));
+      return m.reply(raraWrap("musicmaker", "⚠️ AI gagal membuat lagu. Coba gunakan prompt (deskripsi) yang lain."));
     }
 
     const r = data.result;
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     }, { quoted: m });
   } catch (error) {
     console.error("[Music Maker AI]", error.message);
-    m.reply(novaError("MusicMaker", "Ada error nih, AI mungkin lagi sibuk"));
+    m.reply(raraError("MusicMaker", "Ada error nih, AI mungkin lagi sibuk"));
   }
 }
 

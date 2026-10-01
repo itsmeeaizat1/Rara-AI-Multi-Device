@@ -44,7 +44,7 @@ let idn2Market = [
   fsItem("l2a", "PSMS Medan", "Persipura Jayapura", 100, "scheduled"), // H-100 → reminder window Apify 150 mnt
 ];
 
-import * as lib from "../../src/lib/nova-auto-bola-notifier.js";
+import * as lib from "../../src/lib/rara-auto-bola-notifier.js";
 lib.setFetcher({
   espn: async (slug) => (market[slug] || []).map((m) => norm(m, slug)),
   tsdbLeague: async (slug, tsdbId) => (tsdbId === 4790 ? idnMarket.map((m) => norm(m, slug)) : []),

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // characterai — Chat dengan AI dengan persona/karakter tertentu
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const CHARACTERS = {
   "nobita": { name: "Nobita", system: "Kamu adalah Nobita dari Doraemon. Jawab dengan gaya cengeng, manja, malas, selalu minta tolong Doraemon. Bahasa Indonesia." },
@@ -63,22 +63,22 @@ async function handler(m, { sock }) {
     }
 
     if (!charKey) {
-      return m.reply(novaWrap("characterai", `Karakter "${charName}" tidak ditemukan.\nKetik ${m.prefix}characterai list untuk lihat semua karakter.`, "guide"));
+      return m.reply(raraWrap("characterai", `Karakter "${charName}" tidak ditemukan.\nKetik ${m.prefix}characterai list untuk lihat semua karakter.`, "guide"));
     }
 
     if (!message) {
-      return m.reply(novaWrap("characterai", `Mau ngomong apa sama ${CHARACTERS[charKey].name}?\nContoh: ${m.prefix}characterai ${charKey} halo!`, "guide"));
+      return m.reply(raraWrap("characterai", `Mau ngomong apa sama ${CHARACTERS[charKey].name}?\nContoh: ${m.prefix}characterai ${charKey} halo!`, "guide"));
     }
 
     await m.react("🕒");
 
-    const result = await UnlimitedAI(message, "nova-ai", {
+    const result = await UnlimitedAI(message, "rara-ai", {
       systemPrompt: CHARACTERS[charKey].system,
     });
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("characterai", `${CHARACTERS[charKey].name} lagi offline 😅`, "error"));
+      return m.reply(raraWrap("characterai", `${CHARACTERS[charKey].name} lagi offline 😅`, "error"));
     }
 
     await m.react("🐣");
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("characterai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("characterai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("characterai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

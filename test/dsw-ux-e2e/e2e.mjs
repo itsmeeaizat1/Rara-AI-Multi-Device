@@ -1,7 +1,7 @@
 // E2E UX .dsw (16 Sep 2026, owner: "disastersystemwatch juga sama" — pola .wsw)
 // Fokus: alias pendek, kata santai dikenali, panduan MULAI CEPAT, unknown hint.
-// Lib nova-bencana di-inject state file temp biar gak nyentuh data asli.
-import { _setBencanaStateFileForTest, _setBencanaSockForTest, stopBencanaMonitor } from "../../src/lib/nova-bencana.js";
+// Lib rara-bencana di-inject state file temp biar gak nyentuh data asli.
+import { _setBencanaStateFileForTest, _setBencanaSockForTest, stopBencanaMonitor } from "../../src/lib/rara-bencana.js";
 
 const R = process.cwd();
 const STATE = "/tmp/dsw-ux-state-test.json";

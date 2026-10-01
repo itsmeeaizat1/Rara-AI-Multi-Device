@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { exec } from "child_process";
 import { promisify } from "util";
@@ -11,10 +11,10 @@ import {
   jidNormalizedUser,
 } from "nova";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const execAsync = promisify(exec);
-const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
+const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 const pluginConfig = {
   name: "pinvid",
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data?.length) {
-      return m.reply(novaError("PinVid", `Gak nemu video untuk: ${query} nih`));
+      return m.reply(raraError("PinVid", `Gak nemu video untuk: ${query} nih`));
     }
 
     const videos = res.data.data.slice(0, 5);
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     }
 
     if (mediaList.length === 0) {
-      return m.reply(novaError("PinVid", "Gagal download video nih"));
+      return m.reply(raraError("PinVid", "Gagal download video nih"));
     }
 
 
@@ -175,7 +175,7 @@ async function handler(m, { sock }) {
 
       const saluranId = config.saluran?.id || "@newsletter";
       const saluranName =
-        config.saluran?.name || config.bot?.name || "Nova-AI";
+        config.saluran?.name || config.bot?.name || "Rara-AI";
 
       for (const content of mediaList) {
         await sock.sendMessage(
@@ -194,7 +194,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[PinVid] Error:", error.message);
-    m.reply(novaWrap("pinvid", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("pinvid", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

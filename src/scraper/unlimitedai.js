@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Migrated from UnlimitedAI.chat → Google Gemini API (better data freshness)
 // Same export interface: UnlimitedAI(prompt, character) returns { status, answer, character, model }
-import { callGemini, callIkyy, resolveLatestGeminiModel } from "../lib/nova-ai-service.js";
+import { callGemini, callIkyy, resolveLatestGeminiModel } from "../lib/rara-ai-service.js";
 
 const CHARACTERS = {
-  "nova-ai": {
-    name: "Nova AI",
-    prompt: `Kamu adalah Nova AI, asisten WhatsApp bot yang ramah, cerdas, dan responsif. Kamu menjawab dalam bahasa Indonesia dengan gaya santai tapi tetap informatif. Kamu ahli dalam teknologi, programming, dan hal-hal umum. Jawab dengan singkat, jelas, dan natural. Gunakan emoji secukupnya untuk membuat percakapan lebih hidup. Kamu menyadari tanggal dan waktu saat ini. Selalu jawab dengan informasi yang akurat dan terkini.`,
+  "rara-ai": {
+    name: "Rara AI",
+    prompt: `Kamu adalah Rara AI, asisten WhatsApp bot yang ramah, cerdas, dan responsif. Kamu menjawab dalam bahasa Indonesia dengan gaya santai tapi tetap informatif. Kamu ahli dalam teknologi, programming, dan hal-hal umum. Jawab dengan singkat, jelas, dan natural. Gunakan emoji secukupnya untuk membuat percakapan lebih hidup. Kamu menyadari tanggal dan waktu saat ini. Selalu jawab dengan informasi yang akurat dan terkini.`,
   },
   "kobo-ai": {
     name: "Kobo Kanaeru",
@@ -29,11 +29,11 @@ const CHARACTERS = {
 /**
  * UnlimitedAI — sekarang pakai Google Gemini API
  * @param {string} prompt - Pertanyaan/pesan user
- * @param {string} character - Character key (nova-ai, kobo-ai, waguri-ai, jokowi-ai, prabowo-ai)
+ * @param {string} character - Character key (rara-ai, kobo-ai, waguri-ai, jokowi-ai, prabowo-ai)
  * @returns {Promise<{status: boolean, answer: string, character: string, model: string}>}
  */
-async function UnlimitedAI(prompt, character = "nova-ai") {
-  const char = CHARACTERS[character] || CHARACTERS["nova-ai"];
+async function UnlimitedAI(prompt, character = "rara-ai") {
+  const char = CHARACTERS[character] || CHARACTERS["rara-ai"];
   try {
     const answer = await callIkyy(prompt, {
       systemPrompt: char.prompt,

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 
 const pluginConfig = {
     name: 'mangatoon',
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
         const items = komikGroups.flatMap((entry) => Array.isArray(entry?.items) ? entry.items : []).slice(0, 10)
 
         if (items.length === 0) {
-            return m.reply(novaError("Mangatoon", `Gak nemu komik untuk: ${query} nih`))
+            return m.reply(raraError("Mangatoon", `Gak nemu komik untuk: ${query} nih`))
         }
 
         let caption = '📚 *mangatoon search*\n\n'
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
         }
     } catch (error) {
         console.log(error)
-        m.reply(novaWrap("mangatoon", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("mangatoon", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

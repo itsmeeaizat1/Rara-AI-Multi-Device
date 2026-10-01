@@ -16,15 +16,15 @@ function t(label, cond, extra) {
 }
 
 const R = path.resolve(".");
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/weather-otomatis-e2e/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/weather-otomatis-e2e/rara.json");
 const db = getDatabase();
 
-const { realtimeKey, conditionKey, formatWeatherUpdate, formatWeatherChange, weatherGroupOf, WEATHER_GROUPS } = await import(R + "/src/lib/nova-weather-notify.js");
-const { toSC } = await import(R + "/src/lib/nova-menu-style.js");
+const { realtimeKey, conditionKey, formatWeatherUpdate, formatWeatherChange, weatherGroupOf, WEATHER_GROUPS } = await import(R + "/src/lib/rara-weather-notify.js");
+const { toSC } = await import(R + "/src/lib/rara-menu-style.js");
 const {
   checkAndSend, getSchedulerStatus, resetAutoState, _setAutoStateForTest, _setWeatherFetcherForTest, setAutoGroupForTest,
-} = await import(R + "/src/lib/nova-weather-realtime-scheduler.js");
+} = await import(R + "/src/lib/rara-weather-realtime-scheduler.js");
 
 // ═══ 1. weatherGroupOf — deteksi per GRUP (kunci dokumen diagnosis) ═══
 out("\n— weatherGroupOf (grup cuaca) —");
@@ -283,7 +283,7 @@ t("6j. unknown → hint .wsw + MULAI CEPAT", (replies.at(-1) || "").includes(toS
 // FIX MISMATCH: scheduler dulu baca key "weathersystemwatch" padahal
 // .switch auto nyimpen di "autoweatherrealtime" → target gak pernah aktif.
 out("\n— target terpusat (.switch auto autoweatherrealtime set) —");
-const { setAutoTargetConfig, clearAutoTargetConfig, resolveAutoTargets } = await import(R + "/src/lib/nova-auto-target.js");
+const { setAutoTargetConfig, clearAutoTargetConfig, resolveAutoTargets } = await import(R + "/src/lib/rara-auto-target.js");
 // section tengah e2e nyetel _setWeatherFetcherForTest(null) → fetch asli.
 // section 7 wajib re-seed seam fakeData (GOTCHA: tanpa ini 7b/7d fetch
 // cuaca LIVE dan hasilnya gak deterministik).

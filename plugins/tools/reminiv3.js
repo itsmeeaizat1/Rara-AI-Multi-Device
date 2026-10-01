@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "reminiv3",
@@ -95,7 +95,7 @@ async function handler(m, { sock, args }) {
     let txt = `Gagal enhance gambar!\n\n`;
     txt += `Error: ${e.message}\n\n`;
     txt += `Coba \`${m.prefix}remini\` atau \`${m.prefix}reminiv2\``;
-    await m.reply(novaWrap("reminiv3", txt));
+    await m.reply(raraWrap("reminiv3", txt));
   }
 }
 

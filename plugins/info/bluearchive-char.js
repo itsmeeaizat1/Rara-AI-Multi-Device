@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "bluearchive-char",
   alias: ["bluearchive-char", "bluearchive"],
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     const char = await ba.char(name);
 
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     let caption = `🎮 *${char.name?.toUpperCase()}*\n\n`;
 
@@ -144,10 +144,10 @@ async function handler(m, { sock }) {
         { quoted: m },
       );
     } else {
-      await m.reply(novaWrap("bluearchive-char", caption));
+      await m.reply(raraWrap("bluearchive-char", caption));
     }
   } catch (error) {
-    m.reply(novaWrap("bluearchive-char", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("bluearchive-char", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

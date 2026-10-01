@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { CronJob } from "cron";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -207,7 +207,7 @@ async function generateNewsContent(topic, sock) {
     const prompt = `Kamu adalah pembawa acara berita profesional. Buatkan naskah berita singkat (3-5 kalimat) tentang: ${topic}.
 Format: Pembukaan singkat, isi berita, penutup. Gunakan bahasa Indonesia yang jelas dan profesional.
 Jangan pakai emoji. Langsung tulis naskahnya tanpa intro.`;
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
     if (result && result.success && result.response) {
       return result.response.trim();
     }
@@ -251,7 +251,7 @@ function startAutoJob(db, sock) {
 
           // Post to saluran — FIX 19 Sep 2026: dulu `saluranId.includes("@newsletter")`
           // lolos terus sama placeholder "@newsletter" → sendMessage ke JID palsu → gagal senyap.
-          const { resolveNewsletterJid } = await import("../../src/lib/nova-saluran.js");
+          const { resolveNewsletterJid } = await import("../../src/lib/rara-saluran.js");
           const saluranId = await resolveNewsletterJid(sock).catch(() => "");
           if (saluranId && /^\d+@newsletter$/.test(saluranId)) {
             await sock.sendMessage(saluranId, {
@@ -329,14 +329,14 @@ async function handler(m, { sock, db, config: botConfig }) {
       `  ${prefix}aianchor tone=marah Segera evakuasi!`,
       `  ${prefix}aianchor news gempa terkini`,
     ].join("\n");
-    await m.reply(novaWrap("AI Anchor", helpText));
+    await m.reply(raraWrap("AI Anchor", helpText));
     return { handled: true };
   }
 
   // ==================== AUTO (owner only) ====================
   if (subCmd === "auto") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("AI Anchor", "Khusus owner.", "warn"));
+      await m.reply(raraWrap("AI Anchor", "Khusus owner.", "warn"));
       return { handled: true };
     }
 
@@ -347,7 +347,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       cfg.enabled = true;
       saveAutoConfig(db, cfg);
       startAutoJob(db, sock);
-      await m.reply(novaWrap("AI Anchor",
+      await m.reply(raraWrap("AI Anchor",
         `Auto-berita AKTIF!\nCron: ${cfg.cron || "0 7,12,18 * * *"}\nBot akan generate & kirim berita otomatis ke saluran.`,
         "success"));
       return { handled: true };
@@ -358,21 +358,21 @@ async function handler(m, { sock, db, config: botConfig }) {
       cfg.enabled = false;
       saveAutoConfig(db, cfg);
       stopAutoJob();
-      await m.reply(novaWrap("AI Anchor", "Auto-berita dimatikan.", "warn"));
+      await m.reply(raraWrap("AI Anchor", "Auto-berita dimatikan.", "warn"));
       return { handled: true };
     }
 
     if (autoSub === "cron") {
       const cronExpr = args.slice(3).join(" ").trim();
       if (!cronExpr) {
-        await m.reply(novaWrap("AI Anchor", `Format: ${prefix}aianchor auto cron <cron>\n💡 *Contoh:* 0 7,12,18 * * *`, "warn"));
+        await m.reply(raraWrap("AI Anchor", `Format: ${prefix}aianchor auto cron <cron>\n💡 *Contoh:* 0 7,12,18 * * *`, "warn"));
         return { handled: true };
       }
       const cfg = getAutoConfig(db);
       cfg.cron = cronExpr;
       saveAutoConfig(db, cfg);
       if (cfg.enabled) startAutoJob(db, sock);
-      await m.reply(novaWrap("AI Anchor", `Cron diupdate: ${cronExpr}`, "success"));
+      await m.reply(raraWrap("AI Anchor", `Cron diupdate: ${cronExpr}`, "success"));
       return { handled: true };
     }
 
@@ -380,7 +380,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const topicsStr = args.slice(3).join(" ").trim();
       if (!topicsStr) {
         const cfg = getAutoConfig(db);
-        await m.reply(novaWrap("AI Anchor",
+        await m.reply(raraWrap("AI Anchor",
           `Topics saat ini: ${cfg.topics.length > 0 ? cfg.topics.join(", ") : "(kosong, auto-random)"}`, "warn"));
         return { handled: true };
       }
@@ -388,18 +388,18 @@ async function handler(m, { sock, db, config: botConfig }) {
       const cfg = getAutoConfig(db);
       cfg.topics = topics;
       saveAutoConfig(db, cfg);
-      await m.reply(novaWrap("AI Anchor", `Topics disimpan: ${topics.length} topik`, "success"));
+      await m.reply(raraWrap("AI Anchor", `Topics disimpan: ${topics.length} topik`, "success"));
       return { handled: true };
     }
 
     if (autoSub === "status") {
       const cfg = getAutoConfig(db);
-      await m.reply(novaWrap("AI Anchor Status",
+      await m.reply(raraWrap("AI Anchor Status",
         `Status: ${cfg.enabled ? "AKTIF" : "MATI"}\nCron: ${cfg.cron || "0 7,12,18 * * *"}\nTopics: ${cfg.topics.length > 0 ? cfg.topics.join(", ") : "(auto-random)"}\nJob running: ${autoJobs.has("main") ? "YA" : "TIDAK"}`));
       return { handled: true };
     }
 
-    await m.reply(novaWrap("AI Anchor", `Sub-command tidak dikenal. Ketik ${prefix}aianchor help`, "warn"));
+    await m.reply(raraWrap("AI Anchor", `Sub-command tidak dikenal. Ketik ${prefix}aianchor help`, "warn"));
     return { handled: true };
   }
 
@@ -407,7 +407,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (subCmd === "news") {
     const topic = args.slice(2).join(" ").trim();
     if (!topic) {
-      await m.reply(novaWrap("AI Anchor", `Format: ${prefix}aianchor news <topik>\n💡 *Contoh:* ${prefix}aianchor news gempa terkini`, "warn"));
+      await m.reply(raraWrap("AI Anchor", `Format: ${prefix}aianchor news <topik>\n💡 *Contoh:* ${prefix}aianchor news gempa terkini`, "warn"));
       return { handled: true };
     }
     try {
@@ -415,7 +415,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const voiceResult = await generateVoice(content, { tone: "netral" });
 
       if (!voiceResult) {
-        await m.reply(novaError("AIAnchor", "Gagal generate suara nih, coba lagi ya"));
+        await m.reply(raraError("AIAnchor", "Gagal generate suara nih, coba lagi ya"));
         return { handled: true };
       }
 
@@ -431,11 +431,11 @@ async function handler(m, { sock, db, config: botConfig }) {
       const providerLabel = voiceResult.provider === "gemini"
         ? `Gemini Voice: ${voiceResult.voice}`
         : "Google Neural TTS";
-      await m.reply(novaWrap("AI Anchor", `${content}\n\nProvider: ${providerLabel}\nNada: ${voiceResult.tone}`));
+      await m.reply(raraWrap("AI Anchor", `${content}\n\nProvider: ${providerLabel}\nNada: ${voiceResult.tone}`));
 
       try { fs.unlinkSync(filePath); } catch (e) { console.error('[aianchor.js]:', e.message); }
     } catch (err) {
-      await m.reply(novaWrap("AI Anchor", `Error: ${err.message}`, "error"));
+      await m.reply(raraWrap("AI Anchor", `Error: ${err.message}`, "error"));
     }
     return { handled: true };
   }
@@ -460,7 +460,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (!text || text.length < 2) {
     await navReply(sock, m,
-      novaWrap("AI Anchor",
+      raraWrap("AI Anchor",
         [`Penggunaan: *${prefix}aianchor <text>*`,
           `Atau: *${prefix}aianchor tone=<nada> <text>*`,
           "",
@@ -476,7 +476,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   // Validate tone
   if (!TONE_INSTRUCTIONS[tone]) {
-    await m.reply(novaWrap("AI Anchor",
+    await m.reply(raraWrap("AI Anchor",
       `Nada tidak valid: ${tone}\nTersedia: netral, lembut, marah, sedih, semangat, serius, ramah, dramatis`, "warn"));
     return { handled: true };
   }
@@ -484,7 +484,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const voiceResult = await generateVoice(text, { tone, voice });
 
     if (!voiceResult) {
-      await m.reply(novaError("AIAnchor", "Gagal generate suara nih, coba lagi ya"));
+      await m.reply(raraError("AIAnchor", "Gagal generate suara nih, coba lagi ya"));
       return { handled: true };
     }
 
@@ -501,12 +501,12 @@ async function handler(m, { sock, db, config: botConfig }) {
     const providerLabel = voiceResult.provider === "gemini"
       ? `Gemini (${voiceResult.voice})`
       : "Google Neural";
-    await m.reply(novaWrap("AI Anchor",
+    await m.reply(raraWrap("AI Anchor",
       `Teks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}\nNada: ${tone}\nProvider: ${providerLabel}`));
 
     try { fs.unlinkSync(filePath); } catch (e) { console.error('[aianchor.js]:', e.message); }
   } catch (err) {
-    await m.reply(novaWrap("AI Anchor", `Error: ${err.message}`, "error"));
+    await m.reply(raraWrap("AI Anchor", `Error: ${err.message}`, "error"));
   }
 
   return { handled: true };

@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Auto Backup to Google Drive — backup otomatis project ke Google Drive
-// Gabungan nova-auto-backup.js (ZIP creation) + uploadgdrive.js (Drive upload)
+// Gabungan rara-auto-backup.js (ZIP creation) + uploadgdrive.js (Drive upload)
 // .autobackupdrive on <interval> — enable auto backup ke Drive
 // .autobackupdrive off — disable
 // .autobackupdrive status — cek status
 // .autobackupdrive now — trigger backup manual ke Drive
 // .autobackupdrive folder <id> — set Google Drive folder ID
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { createBackup, parseInterval, formatInterval } from "../../src/lib/nova-auto-backup.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { createBackup, parseInterval, formatInterval } from "../../src/lib/rara-auto-backup.js";
 import fs from "fs";
 import path from "path";
 import { CronJob } from "cron";
@@ -122,7 +122,7 @@ async function doBackupDrive(sock, notifyJid) {
   try {
     // Step 1: Create ZIP backup
     const backup = await createBackup();
-    const fileName = `nova-backup_${backup.timestamp}.zip`;
+    const fileName = `rara-backup_${backup.timestamp}.zip`;
 
     // Step 2: Upload to Google Drive
     try {
@@ -141,7 +141,7 @@ async function doBackupDrive(sock, notifyJid) {
       msg += `Total backup: ${state.backupCount}`;
 
       if (sock && notifyJid) {
-        await sock.sendMessage(notifyJid, { text: novaWrap("Auto Backup Drive", msg) });
+        await sock.sendMessage(notifyJid, { text: raraWrap("Auto Backup Drive", msg) });
       }
       return { success: true, sizeMB, fileName, driveId: result.id };
     } catch (uploadErr) {
@@ -154,14 +154,14 @@ async function doBackupDrive(sock, notifyJid) {
         msg += `Atau set folder ID: .autobackupdrive folder <id>`;
       }
       if (sock && notifyJid) {
-        await sock.sendMessage(notifyJid, { text: novaWrap("Auto Backup Drive", msg) });
+        await sock.sendMessage(notifyJid, { text: raraWrap("Auto Backup Drive", msg) });
       }
       return { success: false, error: uploadErr.message, zipPath: backup.path };
     }
   } catch (e) {
     let msg = `Gagal membuat backup: ${e.message}`;
     if (sock && notifyJid) {
-      await sock.sendMessage(notifyJid, { text: novaWrap("Auto Backup Drive", msg) });
+      await sock.sendMessage(notifyJid, { text: raraWrap("Auto Backup Drive", msg) });
     }
     return { success: false, error: e.message };
   }
@@ -187,7 +187,7 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const ownerNum = (await import("../../config.js")).default?.owner?.number?.[0] || "Tidak diset";
-    const status = novaWrap("autobackupdrive", [
+    const status = raraWrap("autobackupdrive", [
       `Status: ${state.enabled ? "ON" : "OFF"}`,
       `Interval: ${formatInterval(state.intervalMs)} (${state.intervalStr})`,
       `Last backup: ${state.lastBackup ? new Date(state.lastBackup).toLocaleString("id-ID") : "-"}`,
@@ -195,7 +195,7 @@ async function handler(m, { sock }) {
       `Drive folder: ${state.folderId || getFolderId() || "Tidak diset"}`,
       `Notif ke: ${ownerNum}`,
     ].join("\n"));
-    return await m.reply(status + "\n\n" + novaGuide(
+    return await m.reply(status + "\n\n" + raraGuide(
       "autobackupdrive",
       "Backup otomatis database bot ke Google Drive",
       `${m.prefix}autobackupdrive on 6h\n${m.prefix}autobackupdrive off\n${m.prefix}autobackupdrive status\n${m.prefix}autobackupdrive now\n${m.prefix}autobackupdrive folder <id>`,
@@ -209,7 +209,7 @@ async function handler(m, { sock }) {
     case "start": {
       const intervalStr = args[1];
       if (!intervalStr) {
-        return m.reply(novaWrap("Auto Backup Drive", [
+        return m.reply(raraWrap("Auto Backup Drive", [
           `Interval dibutuhkan!\n\n`,
           `${m.prefix}autobackupdrive on <interval>\n`,
           `Contoh: ${m.prefix}autobackupdrive on 6h\n`,
@@ -218,11 +218,11 @@ async function handler(m, { sock }) {
       }
       const parsed = parseInterval(intervalStr);
       if (!parsed) {
-        return m.reply(novaWrap("Auto Backup Drive", `Format interval salah!\n\nFormat: 30m, 1h, 6h, 1d\nMin: 1 menit, Max: 7 hari`));
+        return m.reply(raraWrap("Auto Backup Drive", `Format interval salah!\n\nFormat: 30m, 1h, 6h, 1d\nMin: 1 menit, Max: 7 hari`));
       }
       // Cek credentials
       if (!fs.existsSync(CREDS_PATH)) {
-        return m.reply(novaWrap("Auto Backup Drive", [
+        return m.reply(raraWrap("Auto Backup Drive", [
           `Google Drive belum dikonfigurasi!\n\n`,
           `Upload file "gdrive-service-account.json" ke folder config/\n`,
           `Contoh nama file: config/gdrive-service-account.json\n\n`,
@@ -235,7 +235,7 @@ async function handler(m, { sock }) {
       state.intervalStr = parsed.str;
       saveState(state);
       startCron(sock);
-      return m.reply(novaWrap("Auto Backup Drive", [
+      return m.reply(raraWrap("Auto Backup Drive", [
         `Auto backup Drive AKTIF!\n\n`,
         `Interval: ${formatInterval(parsed.ms)} (${parsed.str})\n`,
         `Cron: ${intervalToCron(parsed.ms)}\n`,
@@ -251,7 +251,7 @@ async function handler(m, { sock }) {
       state.enabled = false;
       saveState(state);
       if (activeCronJob) { activeCronJob.stop(); activeCronJob = null; }
-      return m.reply(novaWrap("Auto Backup Drive", "Auto backup Drive DIMATIKAN."));
+      return m.reply(raraWrap("Auto Backup Drive", "Auto backup Drive DIMATIKAN."));
     }
 
     case "status": {
@@ -264,18 +264,18 @@ async function handler(m, { sock }) {
       txt += `Total backup: ${state.backupCount}\n`;
       txt += `Drive folder: ${folderId || "Tidak diset (root)"}\n`;
       txt += `Credentials: ${hasCreds ? "Ada" : "TIDAK ADA - upload gdrive-service-account.json"}\n`;
-      return m.reply(novaWrap("Auto Backup Drive", txt));
+      return m.reply(raraWrap("Auto Backup Drive", txt));
     }
 
     case "now":
     case "backup":
     case "manual": {
-      await m.reply(novaWrap("Auto Backup Drive", "Memulai backup ke Google Drive..."));
+      await m.reply(raraWrap("Auto Backup Drive", "Memulai backup ke Google Drive..."));
       const ownerNum = (await import("../../config.js")).default?.owner?.number?.[0];
       const notifyJid = m.key?.remoteJid;
       const result = await doBackupDrive(sock, notifyJid);
       if (!result.success) {
-        return m.reply(novaWrap("Auto Backup Drive", `Backup gagal: ${result.error || "Unknown error"}`));
+        return m.reply(raraWrap("Auto Backup Drive", `Backup gagal: ${result.error || "Unknown error"}`));
       }
       return;
     }
@@ -284,7 +284,7 @@ async function handler(m, { sock }) {
     case "setfolder": {
       const folderId = args[1];
       if (!folderId) {
-        return m.reply(novaWrap("Auto Backup Drive", [
+        return m.reply(raraWrap("Auto Backup Drive", [
           `Set Google Drive folder ID\n\n`,
           `${m.prefix}autobackupdrive folder <id>\n`,
           `Contoh: ${m.prefix}autobackupdrive folder 1a2b3c4d5e6f\n\n`,
@@ -297,11 +297,11 @@ async function handler(m, { sock }) {
       saveState(state);
       // Juga save ke file biar uploadgdrive.js bisa baca
       try { fs.writeFileSync(FOLDER_ID_FILE, folderId, "utf-8"); } catch {}
-      return m.reply(novaWrap("Auto Backup Drive", `Drive folder ID diset: *${folderId}*`));
+      return m.reply(raraWrap("Auto Backup Drive", `Drive folder ID diset: *${folderId}*`));
     }
 
     default:
-      return m.reply(novaWrap("Auto Backup Drive", `Command tidak dikenal.\n\nKetik: ${m.prefix}autobackupdrive`));
+      return m.reply(raraWrap("Auto Backup Drive", `Command tidak dikenal.\n\nKetik: ${m.prefix}autobackupdrive`));
   }
 }
 

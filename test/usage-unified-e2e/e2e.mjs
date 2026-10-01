@@ -1,11 +1,11 @@
 // E2E LAYOUT USAGE TERPADU (10 Sep 2026, request owner "terapin ke semua
 // usage" — detail tambah di bawah contoh, kayak AI punya model, convert
-// punya daftar format). novaGuide + novaNoInput (705+659 plugin) + novaRpgGuide
+// punya daftar format). raraGuide + raraNoInput (705+659 plugin) + raraRpgGuide
 // + convert formatListText.
 // Jalankan dari cwd DIR KOSONG:
 //   mkdir -p /tmp/usage-e2e && cd /tmp/usage-e2e && node <repo>/test/usage-unified-e2e/e2e.mjs
-import { novaGuide, novaNoInput, novaError, novaEmpty, novaSalah } from "../../src/lib/nova-menu-style.js";
-import { novaRpgGuide } from "../../src/lib/nova-games.js";
+import { raraGuide, raraNoInput, raraError, raraEmpty, raraSalah } from "../../src/lib/rara-menu-style.js";
+import { raraRpgGuide } from "../../src/lib/rara-games.js";
 import { config as convConfig, handler as convHandler } from "../../plugins/convert/convert.js";
 
 let pass = 0, fail = 0;
@@ -15,10 +15,10 @@ const SC_MAP = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h',
 // UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
 const toSC = (s) => String(s ?? "");
 
-// ─── 1. novaGuide — DESAIN V2 kaomoji (rework 25 Sep) ───
-w("\n— novaGuide (V2) —");
+// ─── 1. raraGuide — DESAIN V2 kaomoji (rework 25 Sep) ───
+w("\n— raraGuide (V2) —");
 {
-  const out = novaGuide("Mediafire DL", "Download file dari MediaFire! Kasih linknya ya!", ".mfdl https://www.mediafire.com/file/xxx", "Maksimal 200MB sekali download");
+  const out = raraGuide("Mediafire DL", "Download file dari MediaFire! Kasih linknya ya!", ".mfdl https://www.mediafire.com/file/xxx", "Maksimal 200MB sekali download");
   const lines = out.split("\n");
   check("header 「✧ mediafire dl ✧」", lines[0] === `「✧ ${toSC("mediafire dl")} ✧」`, lines[0]);
   check("kaomoji + nama!! TANPA emoji unicode (revisi owner)", /mediafire dl!!$/.test(lines[1]) && /\(/.test(lines[1]) && !/[😀-🙏🤀-🧿]/u.test(lines[1]), lines[1]);
@@ -28,33 +28,33 @@ w("\n— novaGuide (V2) —");
   check("note: baris sendiri + smallcaps + akhiran ~", lines[6] === `${toSC("Maksimal 200MB sekali download")}~`, lines[6]);
   check("gak ada lagi format lama 'Contoh: ' inline (baris tanpa 📍)", !out.split("\n").some((l) => l.startsWith("Contoh: .")));
 
-  const noNote = novaGuide("Tes", "Intro doang", ".tes abc");
+  const noNote = raraGuide("Tes", "Intro doang", ".tes abc");
   check("tanpa note → baris contoh polos, gak ada baris note/~", noNote.includes(`📍 ${toSC("Contoh")}: .tes abc`) && !noNote.includes("~"), noNote);
-  const multi = novaGuide("Welcome", "Atur pesan welcome member baru", ".welcome on", "Tipe:\n1. Welcome biasa\n2. Welcome dengan thumbnail foto profil");
+  const multi = raraGuide("Welcome", "Atur pesan welcome member baru", ".welcome on", "Tipe:\n1. Welcome biasa\n2. Welcome dengan thumbnail foto profil");
   const ml = multi.split("\n");
   check("note MULTI-BARIS: tiap baris jadi baris sendiri, ke-smallcaps", ml.includes(toSC("Tipe:")) && ml.includes(`1. ${toSC("Welcome biasa")}`) && ml.includes(`${toSC("2. Welcome dengan thumbnail foto profil")}~`), ml.join(" | "));
 
-  const bare = novaGuide("Tes");
+  const bare = raraGuide("Tes");
   check("tanpa param apapun → gak crash, header + kaomoji doang", bare.startsWith(`「✧ ${toSC("tes")} ✧」`) && /tes!!$/.test(bare.split("\n")[1] || ""), bare);
 }
 
-// ─── 2. novaNoInput — DESAIN V2 kaomoji (rework 25 Sep) ───
-w("\n— novaNoInput (V2) —");
+// ─── 2. raraNoInput — DESAIN V2 kaomoji (rework 25 Sep) ───
+w("\n— raraNoInput (V2) —");
 {
-  const out = novaNoInput("Ttp", "Kirim teks yang mau jadi sticker", ".ttp halo");
+  const out = raraNoInput("Ttp", "Kirim teks yang mau jadi sticker", ".ttp halo");
   const lines = out.split("\n");
   check("header 「✧ ttp ✧」 + kaomoji nama!! tanpa emoji unicode", lines[0] === `「✧ ${toSC("ttp")} ✧」` && /ttp!!$/.test(lines[1]) && /\(/.test(lines[1]), lines[0] + " / " + lines[1]);
   check("sapaan random cute (baris 3, tanpa emoji dekoratif)", lines[3] && lines[3].length > 5 && !/[😀-🙏🤀-🧿🫠]/u.test(lines[3]), lines[3]);
   check("📍 cara: hint smallcaps baris sendiri", lines[5] === `📍 ${toSC("Cara")}: ${toSC("Kirim teks yang mau jadi sticker")}`, lines[5]);
   check("contoh: verbatim baris sendiri", lines[6] === `${toSC("Contoh")}: .ttp halo`, lines[6]);
-  const bare = novaNoInput("Tes");
+  const bare = raraNoInput("Tes");
   check("noInput tanpa hint/example → tetap jalan (header + kaomoji + sapaan)", bare.startsWith(`「✧ ${toSC("tes")} ✧」`) && /tes!!$/.test(bare.split("\n")[1] || ""), bare);
 }
 
-// ─── 3. novaRpgGuide — label section konsisten ───
-w("\n— novaRpgGuide —");
+// ─── 3. raraRpgGuide — label section konsisten ───
+w("\n— raraRpgGuide —");
 {
-  const out = novaRpgGuide("Berburu", "Keliling hutan buat berburu hewan", ".berburu", "Cooldown 10 menit");
+  const out = raraRpgGuide("Berburu", "Keliling hutan buat berburu hewan", ".berburu", "Cooldown 10 menit");
   check("📝 cara pakai: label ada", out.includes("📝 Cara Pakai:"));
   check("💡 contoh: label ada + example", out.includes("💡 Contoh:") && out.includes(".berburu"));
   check("📍 note detail di bawah contoh", out.indexOf("📍") > out.indexOf("💡 Contoh:"));
@@ -81,28 +81,28 @@ w("\n— convert format list —");
   check("pluginConfig convert utuh", convConfig.name === "convert");
 }
 
-// ─── 4b. novaSalah — salah pemakaian versi cute V2, TANPA emoji unicode ───
-w("\n— novaSalah (V2 cute) —");
+// ─── 4b. raraSalah — salah pemakaian versi cute V2, TANPA emoji unicode ───
+w("\n— raraSalah (V2 cute) —");
 {
-  const s1 = novaSalah("Convert", "media ini audio, cuma bisa convert ke format audio");
+  const s1 = raraSalah("Convert", "media ini audio, cuma bisa convert ke format audio");
   const sl = s1.split("\n");
   check("3 baris: kaomoji + pesan + arahan ➤", sl.length === 3, JSON.stringify(sl));
   check("baris 1: (>_<) yah kak... (tanpa emoji unicode)", sl[0] === `(>_<) ${toSC("yah kak")}...`, sl[0]);
   check("baris 2: pesan custom smallcaps", sl[1] === toSC("media ini audio, cuma bisa convert ke format audio"), sl[1]);
   check("baris 3: ➤ ulangi ketik .convert ya", sl[2] === `➤ ${toSC("ulangi ketik .convert ya")}`, sl[2]);
   check("BEDA dari usage: gak ada header box 「 + gak ada 📝/💡/📍", !s1.includes("「") && !s1.includes("📝") && !s1.includes("💡") && !s1.includes("📍"));
-  const s2 = novaSalah("Convert");
+  const s2 = raraSalah("Convert");
   const s2l = s2.split("\n");
   check("tanpa pesan → tetap jalan (kaomoji + arahan)", s2l.length === 2 && s2l[0] === `(>_<) ${toSC("yah kak")}...` && s2l[1] === `➤ ${toSC("ulangi ketik .convert ya")}`, s2);
 }
 
-// ─── 5. novaError / novaEmpty TIDAK berubah (bukan usage) ───
+// ─── 5. raraError / raraEmpty TIDAK berubah (bukan usage) ───
 w("\n— error helpers tetap —");
 {
-  const e = novaError("Convert", "Format gak dikenal");
-  check("novaError tetap format ❌ (gak ada cara pakai)", e.includes("❌") && !e.includes("cara pakai"));
-  const em = novaEmpty("Convert");
-  check("novaEmpty tetap format ❌", em.includes("❌"));
+  const e = raraError("Convert", "Format gak dikenal");
+  check("raraError tetap format ❌ (gak ada cara pakai)", e.includes("❌") && !e.includes("cara pakai"));
+  const em = raraEmpty("Convert");
+  check("raraEmpty tetap format ❌", em.includes("❌"));
 }
 
 w(`\n${pass} PASS / ${fail} FAIL`);

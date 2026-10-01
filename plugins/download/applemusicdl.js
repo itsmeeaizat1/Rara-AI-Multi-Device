@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // applemusicdl — Download lagu dari Apple Music via IkyyXD
 // Primary: IkyyXD /download/applemusic | Fallback: manual info (no audio)
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { novaWrap, novaError, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraError, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -50,11 +50,11 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply(novaGuide("AppleMusic DL", "Download lagu dari Apple Music! Kasih linknya ya!", `${m.prefix}amdl https://music.apple.com/id/song/xxx`));
+    return m.reply(raraGuide("AppleMusic DL", "Download lagu dari Apple Music! Kasih linknya ya!", `${m.prefix}amdl https://music.apple.com/id/song/xxx`));
   }
 
   if (!url.match(/music\.apple\.com/i)) {
-    return m.reply(novaGuide("AppleMusic DL", "URL-nya gak valid nih! Pakai link Apple Music ya.", `${m.prefix}amdl https://music.apple.com/id/song/xxx`));
+    return m.reply(raraGuide("AppleMusic DL", "URL-nya gak valid nih! Pakai link Apple Music ya.", `${m.prefix}amdl https://music.apple.com/id/song/xxx`));
   }
 
   try {
@@ -75,16 +75,16 @@ async function handler(m, { sock }) {
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaWrap("AppleMusic DL", [
+      await m.reply(raraWrap("AppleMusic DL", [
         "Gagal download — endpoint Apple Music sedang down.",
         "Coba lagi nanti atau gunakan .applemusic untuk cari lagunya dulu.",
       ].join("\n"), "error"));
-      await m.reply(novaBerhasil("applemusicdl"));
+      await m.reply(raraBerhasil("applemusicdl"));
     }
   } catch (error) {
     console.error("[applemusicdl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaGangguan("AppleMusic DL"));
+    return m.reply(raraGangguan("AppleMusic DL"));
   }
 }
 

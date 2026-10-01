@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: AUTOSWGC — Auto SWGC terjadwal (porting JPM)
+// RARA AI WHATSAPP BOT — E2E: AUTOSWGC — Auto SWGC terjadwal (porting JPM)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -12,7 +12,7 @@ const t = (name, cond, extra = "") => {
 process.on("unhandledRejection", (e) => { console.log("UNHANDLED:", e?.stack || e); process.exit(1); });
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "autoswgc-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
 const plug = await import(R + "/plugins/owner/autoswgc.js");
@@ -144,7 +144,7 @@ console.log("— section 4: checkAutoSwgc terjadwal —");
   const cfg = ensureCfg(db);
   cfg.on = true; cfg.caption = "Terkirim terjadwal"; cfg.mediaFile = null; cfg.blacklist = [];
   // paksa jadwal = jam sekarang biar match — formatTime HH:mm realtime
-  const { formatTime } = await import(R + "/src/lib/nova-time.js");
+  const { formatTime } = await import(R + "/src/lib/rara-time.js");
   const nowHM = formatTime("HH:mm");
   cfg.time = [nowHM];
   db.save();

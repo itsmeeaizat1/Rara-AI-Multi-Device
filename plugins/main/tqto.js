@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tqto.js — Daftar kontributor + info lengkap bot (request owner 20 Sep 2026):
 // kontributor AI disamain role "AI Coding Assistant", ditambah kredit library
 // (Baileys/base), daftar pembuat Rest API yang kepakai di fitur bot, kontak
@@ -6,12 +6,12 @@
 // base, dan keterangan lisensi. Bagian panjang disembunyikan di balik
 // readmore biar teks gak langsung muncul panjang nimpa teks atas.
 
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { formatUptime } from "../../src/lib/nova-formatter.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { formatUptime } from "../../src/lib/rara-formatter.js";
 import config from '../../config.js'
 
 // readmore WhatsApp: teks setelah tanda ini ke-collapse jadi "Baca selengkapnya"
-// (pola sama kayak novaMenuLayout readMoreBeforeCategories)
+// (pola sama kayak raraMenuLayout readMoreBeforeCategories)
 const READMORE = String.fromCharCode(8206).repeat(4001);
 
 const pluginConfig = {
@@ -31,7 +31,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock, uptime }) {
-    const botName = config.bot?.name || "Nova AI Whatsapp Bot"
+    const botName = config.bot?.name || "Rara AI Whatsapp Bot"
 
     // ── Kontributor utama (yang keliatan sebelum readmore) ──
     const credits = [
@@ -66,7 +66,7 @@ async function handler(m, { sock, uptime }) {
 
     const grupLink = config.info?.grupwa || "-"
     const saluranLink = config.saluran?.link || "-"
-    const saluranName = config.saluran?.name || "Nova AI Official"
+    const saluranName = config.saluran?.name || "Rara AI Official"
     const ownerNumber = (config.owner?.number?.[0] || "628174887770").replace(/^62/, "0")
     const runtimeStr = formatUptime(uptime ?? process.uptime() * 1000)
 
@@ -98,16 +98,16 @@ ${restApis.map(r => `- ${r}`).join('\n')}
 - Bot sudah menyala tanpa mati selama ${runtimeStr}
 
 *Nama Script & Base:*
-- Base: Nova AI Multi Device
+- Base: Rara AI Multi Device
 - Baileys: Multi-Device
 
 *Keterangan Lisensi:*
 Copyright © 2024-2026 Aizat (itsmeeaizat). All Rights Reserved.
-Script Nova AI WhatsApp Bot berlisensi proprietary — dilarang menyalin,
+Script Rara AI WhatsApp Bot berlisensi proprietary — dilarang menyalin,
 menjual, atau menyebarkan sebagian maupun keseluruhan kode tanpa izin
 tertulis dari pembuat.`
 
-    await m.reply(novaWrap("tqto", navText))
+    await m.reply(raraWrap("tqto", navText))
 }
 
 export { pluginConfig as config, handler }

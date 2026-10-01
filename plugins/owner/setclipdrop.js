@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "setclipdrop",
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
   const input = m.text?.trim() || "";
 
   if (!input) {
-    return m.reply( novaWrap("Set ClipDrop API", [
+    return m.reply( raraWrap("Set ClipDrop API", [
       "Atur ClipDrop API key untuk fitur .nowm (watermark remover).",
       "",
       "CARA PAKAI:",
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
   if (sub === "status") {
     const key = config.ai?.clipdropApiKey || config.clipdropApiKey || "";
     const masked = key ? key.substring(0, 8) + "..." + key.substring(key.length - 4) : "(belum diset)";
-    return m.reply(novaWrap("ClipDrop API Status", [
+    return m.reply(raraWrap("ClipDrop API Status", [
       "API Key: " + masked,
       "Status: " + (key ? "Aktif" : "Belum diset nih"),
       "Credits: " + (key ? "Cek via .nowm" : "-"),
@@ -92,15 +92,15 @@ async function handler(m, { sock }) {
     if (ok) {
       if (config.ai) config.ai.clipdropApiKey = "";
       config.clipdropApiKey = "";
-      return m.reply(novaWrap("ClipDrop API", "API key berhasil dihapus. .nowm sekarang pakai local mode."));
+      return m.reply(raraWrap("ClipDrop API", "API key berhasil dihapus. .nowm sekarang pakai local mode."));
     }
-    return m.reply(novaWrap("ClipDrop API", "Gagal hapus nih API key. Coba lagi."));
+    return m.reply(raraWrap("ClipDrop API", "Gagal hapus nih API key. Coba lagi."));
   }
 
   // Set key
   const key = input.split(" ")[0];
   if (!key || key.length < 10) {
-    return m.reply(novaWrap("ClipDrop API", "API key tidak valid. Pastikan key benar (minimal 10 karakter)."));
+    return m.reply(raraWrap("ClipDrop API", "API key tidak valid. Pastikan key benar (minimal 10 karakter)."));
   }
 
   // Jangan tampilkan key penuh di chat
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
     config.clipdropApiKey = key;
 
     const masked = key.substring(0, 8) + "..." + key.substring(key.length - 4);
-    return m.reply(novaWrap("ClipDrop API", [
+    return m.reply(raraWrap("ClipDrop API", [
       "API key berhasil disimpan!",
       "Key: " + masked,
       "",
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
       "Coba: reply gambar + .nowm",
     ].join("\n")));
   }
-  return m.reply(novaWrap("ClipDrop API", "Gagal simpan nih API key. Pastikan config.js writable."));
+  return m.reply(raraWrap("ClipDrop API", "Gagal simpan nih API key. Pastikan config.js writable."));
 }
 
 export { pluginConfig as config, handler };

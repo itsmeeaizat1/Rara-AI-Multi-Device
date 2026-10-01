@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, bracketBox, tipText } from "../../src/lib/rara-menu-style.js";
 import {
   enableReengage,
   disableReengage,
@@ -7,11 +7,11 @@ import {
   triggerManualReengage,
   resetContacted,
   findInactiveUsers,
-} from "../../src/lib/nova-auto-reengage.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+} from "../../src/lib/rara-auto-reengage.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "autoreengage",
@@ -66,23 +66,23 @@ async function handler(m, { sock }) {
       const thresholdDays = parseInt(args[2]) || 7;
 
       if (!timeArg.match(/^\d{1,2}:\d{2}$/)) {
-        return m.reply(novaWrap("autoreengage", toSC("Format jam tidak valid! Gunakan HH:MM")));
+        return m.reply(raraWrap("autoreengage", toSC("Format jam tidak valid! Gunakan HH:MM")));
       }
 
       const [hour, minute] = timeArg.split(":").map(Number);
 
       if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        return m.reply(novaWrap("autoreengage", toSC("Jam tidak valid!")));
+        return m.reply(raraWrap("autoreengage", toSC("Jam tidak valid!")));
       }
 
       if (thresholdDays < 1) {
-        return m.reply(novaWrap("autoreengage", toSC("Threshold minimal 1 hari!")));
+        return m.reply(raraWrap("autoreengage", toSC("Threshold minimal 1 hari!")));
       }
 
       const result = enableReengage(hour, minute, thresholdDays, sock);
 
       if (!result.success) {
-        return m.reply(novaWrap("autoreengage", `❌ ${toSC(result.error)}`));
+        return m.reply(raraWrap("autoreengage", `❌ ${toSC(result.error)}`));
       }
       return m.reply(
         bracketBox("✅", toSC("Re-engagement Diaktifkan"), [
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableReengage();
-      return m.reply(novaWrap("autoreengage", toSC("Re-engagement dinonaktifkan")));
+      return m.reply(raraWrap("autoreengage", toSC("Re-engagement dinonaktifkan")));
     }
 
     case "status":
@@ -139,15 +139,15 @@ async function handler(m, { sock }) {
     case "trigger": {
       try {
         await triggerManualReengage(sock);
-        return m.reply(novaWrap("autoreengage", toSC("Re-engagement dijalankan! Cek DM untuk laporan.")));
+        return m.reply(raraWrap("autoreengage", toSC("Re-engagement dijalankan! Cek DM untuk laporan.")));
       } catch (error) {
-        return m.reply(novaWrap("autoreengage", te(m.prefix, m.command, m.pushName), "error"));
+        return m.reply(raraWrap("autoreengage", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 
     case "reset": {
       resetContacted();
-      return m.reply(novaWrap("autoreengage", toSC("List contacted di-reset. User bisa dikirimi pesan re-engage lagi.")));
+      return m.reply(raraWrap("autoreengage", toSC("List contacted di-reset. User bisa dikirimi pesan re-engage lagi.")));
     }
 
     default:

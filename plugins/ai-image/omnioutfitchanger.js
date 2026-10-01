@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .omnioutfitchanger — virtual try-on baju MULTI-ITEM (topi+baju+celana+
 // 🔹 sepatu sekaligus), cocok buat konten affiliate fashion (bukan NSFW).
@@ -10,18 +10,18 @@
 // ═════════════════════════════════════════════
 import { live3d } from "../../src/scraper/seaart.js";
 import { nanoBananaEdit, uploadToUguu } from "../../src/scraper/kuroneko.js";
-import { visionScan } from "../../src/lib/nova-vision-chain.js";
+import { visionScan } from "../../src/lib/rara-vision-chain.js";
 import { zelImageEndpoint } from "../../src/scraper/zelapi.js";
-import { novaWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
 import { boxLeft } from "../../src/lib/styler.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 import {
   MAX_ITEMS,
   getSession,
   startSession,
   addItem,
   clearSession,
-} from "../../src/lib/nova-outfit-session.js";
+} from "../../src/lib/rara-outfit-session.js";
 
 const ITEM_Q =
   "Deskripsikan pakaian/item fashion di foto ini secara singkat dan spesifik " +
@@ -135,7 +135,7 @@ async function toBuffer(result) {
 }
 
 function usageMsg(prefix, cmd) {
-  return novaWrap(
+  return raraWrap(
     "omnioutfitchanger",
     `👗 *${toSC("virtual try-on multi-item")}*\n\n` +
       `${toSC("cara cepet")}: ${toSC("reply foto orang + lampir foto pakaian + caption")} *${prefix}${cmd} pakai*\n\n` +
@@ -161,7 +161,7 @@ async function handler(m, { sock }) {
       const had = !!getSession(jid);
       clearSession(jid);
       return m.reply(
-        novaWrap("omnioutfitchanger", had ? `✅ ${toSC("session dibatalkan")}.` : `⚠️ ${toSC("gak ada session aktif")}.`, had ? "success" : "guide")
+        raraWrap("omnioutfitchanger", had ? `✅ ${toSC("session dibatalkan")}.` : `⚠️ ${toSC("gak ada session aktif")}.`, had ? "success" : "guide")
       );
     }
 
@@ -198,7 +198,7 @@ async function handler(m, { sock }) {
         startSession(jid, quotedBuf);
         await m.react("✅");
         return m.reply(
-          novaWrap(
+          raraWrap(
             "omnioutfitchanger",
             `✅ ${toSC("foto orang disimpan")}. ${toSC("sekarang kirim foto item-nya")} (${toSC("max")} ${MAX_ITEMS}), ` +
               `${toSC("atau langsung lampir foto pakaian bareng command")} *${prefix}${cmd} pakai*.`,
@@ -213,7 +213,7 @@ async function handler(m, { sock }) {
         if (attachedBuf && !sess) {
           // ada foto item tapi belum ada foto ORANG
           return m.reply(
-            novaWrap(
+            raraWrap(
               "omnioutfitchanger",
               `⚠️ ${toSC("foto pakaian kebaca, tapi belum ada foto ORANG")} — ${toSC("reply foto orang dengan")} *${prefix}${cmd}* ${toSC("dulu")}.`,
               "guide"
@@ -221,7 +221,7 @@ async function handler(m, { sock }) {
           );
         }
         return m.reply(
-          novaWrap("omnioutfitchanger", `⚠️ ${toSC("belum ada session/item")}.\n\n${usageMsg(prefix, cmd).split("\n").slice(1).join("\n")}`, "guide")
+          raraWrap("omnioutfitchanger", `⚠️ ${toSC("belum ada session/item")}.\n\n${usageMsg(prefix, cmd).split("\n").slice(1).join("\n")}`, "guide")
         );
       }
 
@@ -262,7 +262,7 @@ async function handler(m, { sock }) {
             clearSession(jid);
             await m.react("❌");
             const map = { API_KEY: "⚠️ Key zelapi belum di-set." };
-            return m.reply(novaWrap("omnioutfitchanger", map[r.error] || `⚠️ *TRY-ON GAGAL:* ${r.error}`, "error"));
+            return m.reply(raraWrap("omnioutfitchanger", map[r.error] || `⚠️ *TRY-ON GAGAL:* ${r.error}`, "error"));
           }
           const prompt = buildMultiItemPrompt([desc]);
           const result = await runEditChain(sess.personBuf, prompt);
@@ -287,7 +287,7 @@ async function handler(m, { sock }) {
         if (!descs.length) {
           clearSession(jid);
           await m.react("❌");
-          return m.reply(novaWrap("omnioutfitchanger", `⚠️ *SEMUA FOTO ITEM GAK KEDETEKSI SEBAGAI FASHION* — coba foto yang lebih jelas.`, "error"));
+          return m.reply(raraWrap("omnioutfitchanger", `⚠️ *SEMUA FOTO ITEM GAK KEDETEKSI SEBAGAI FASHION* — coba foto yang lebih jelas.`, "error"));
         }
         await m.react("🛠️");
         const prompt = buildMultiItemPrompt(descs);
@@ -336,7 +336,7 @@ async function handler(m, { sock }) {
       if (!personBuf) {
         await m.react("❌");
         return m.reply(
-          novaWrap(
+          raraWrap(
             "omnioutfitchanger",
             `⚠️ ${toSC("belum ada foto orang")} — ${toSC("reply foto orang full body bareng prompt")}, ` +
               `${toSC("atau mulai session dengan foto orang dulu")}.\n\n${toSC("contoh")}: ${toSC("reply foto orang")} + *${prefix}${cmd} ${toSC("ganti baju jadi hoodie merah")}*.`,
@@ -371,12 +371,12 @@ async function handler(m, { sock }) {
       const personBuf = await downloadQuoted(m);
       if (!personBuf) {
         await m.react("❌");
-        return m.reply(novaWrap("omnioutfitchanger", "⚠️ Gagal unduh foto orang, coba lagi.", "error"));
+        return m.reply(raraWrap("omnioutfitchanger", "⚠️ Gagal unduh foto orang, coba lagi.", "error"));
       }
       startSession(jid, personBuf);
       await m.react("✅");
       return m.reply(
-        novaWrap(
+        raraWrap(
           "omnioutfitchanger",
           `✅ ${toSC("foto orang disimpan")}. ${toSC("sekarang kirim foto item satu-satu")} (${toSC("max")} ${MAX_ITEMS}: ${toSC("topi/baju/celana/sepatu")}).\n\n` +
             `${toSC("ketik")} *${prefix}${cmd} pakai* ${toSC("kalau udah selesai kirim semua foto")}, ${toSC("atau")} *${prefix}${cmd} batal*.`,
@@ -390,12 +390,12 @@ async function handler(m, { sock }) {
       const personBuf = await downloadImage(m);
       if (!personBuf) {
         await m.react("❌");
-        return m.reply(novaWrap("omnioutfitchanger", "⚠️ Gagal unduh foto, coba lagi.", "error"));
+        return m.reply(raraWrap("omnioutfitchanger", "⚠️ Gagal unduh foto, coba lagi.", "error"));
       }
       startSession(jid, personBuf);
       await m.react("✅");
       return m.reply(
-        novaWrap(
+        raraWrap(
           "omnioutfitchanger",
           `✅ ${toSC("foto orang disimpan")}. ${toSC("sekarang kirim foto item satu-satu")} (${toSC("max")} ${MAX_ITEMS}).\n\n` +
             `${toSC("ketik")} *${prefix}${cmd} pakai* ${toSC("kalau udah selesai")}.`,
@@ -410,7 +410,7 @@ async function handler(m, { sock }) {
     clearSession(jid);
     console.error("[omnioutfitchanger]", err?.message || err);
     await m.react("❌");
-    return m.reply(novaWrap("omnioutfitchanger", te(prefix, cmd, m.pushName, err), "error"));
+    return m.reply(raraWrap("omnioutfitchanger", te(prefix, cmd, m.pushName, err), "error"));
   }
 }
 
@@ -443,7 +443,7 @@ export async function handleOutfitPhotoHook(m) {
     await m.react("✅");
     if (res.full) {
       await m.reply(
-        novaWrap(
+        raraWrap(
           "omnioutfitchanger",
           `📸 ${toSC("item ke")}-${count}/${MAX_ITEMS} ${toSC("disimpan")} — ${toSC("udah maksimal")}!\n${toSC("ketik")} *${m.prefix || "."}omnioutfitchanger pakai* ${toSC("buat proses")}.`,
           "success"
@@ -451,7 +451,7 @@ export async function handleOutfitPhotoHook(m) {
       );
     } else {
       await m.reply(
-        novaWrap(
+        raraWrap(
           "omnioutfitchanger",
           `📸 ${toSC("item ke")}-${count}/${MAX_ITEMS} ${toSC("disimpan")}. ${toSC("kirim lagi atau ketik")} *${m.prefix || "."}omnioutfitchanger pakai*.`,
           "success"

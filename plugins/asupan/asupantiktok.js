@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import { f } from "../../src/lib/nova-http.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaWrap, novaLine, toSC } from "../../src/lib/nova-menu-style.js";
+import { f } from "../../src/lib/rara-http.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraWrap, raraLine, toSC } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data) {
-      return m.reply(novaWrap("Asupantiktok", `🚩 *username tidak ditemukan*\n\nUsername: ${query}`));
+      return m.reply(raraWrap("Asupantiktok", `🚩 *username tidak ditemukan*\n\nUsername: ${query}`));
     }
 
     const video = data;
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
       contextInfo: saluranCtx(),
     });
   } catch (error) {
-    m.reply(novaWrap("Username Tidak Ditemukan", `Username: ${query}`));
+    m.reply(raraWrap("Username Tidak Ditemukan", `Username: ${query}`));
   }
 }
 

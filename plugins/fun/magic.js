@@ -1,5 +1,5 @@
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: 'sulap',
     alias: ["sulap"],
@@ -33,7 +33,7 @@ function sleep(ms) {
 
 async function handler(m, { sock }) {
 
-    const sent = await m.reply(novaWrap("sulap", `🎩 *pertunjukan sulap*\n\n` +
+    const sent = await m.reply(raraWrap("sulap", `🎩 *pertunjukan sulap*\n\n` +
             `Siapa yang ingin dihilangkan?\n\n` +
             `Reply pesan ini + mention orangnya`))
 

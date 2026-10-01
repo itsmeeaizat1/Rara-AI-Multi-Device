@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Shopping Suite — .gshopping .amz .ebay .walmart .bestbuy .shein
 // 🔹 Produk PLAIN TEXT: nama, harga, toko, rating, ongkir.
 // ═════════════════════════════════════════════
 
 import { searchApiEngine, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { sapiErrorMessage, renderShopping } from "../../src/lib/nova-sapi-render.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sapiErrorMessage, renderShopping } from "../../src/lib/rara-sapi-render.js";
 
 const SHOPS = {
   gshopping: { engine: "google_shopping", label: "GOOGLE SHOPPING" },
@@ -36,24 +36,24 @@ async function handler(m, { sock }) {
     const cmd = (m.command || "gshopping").toLowerCase();
     const shop = SHOPS[cmd];
     if (!shop) {
-      return m.reply(novaWrap("gshopping", `💡 Toko tersedia: .gshopping .amz .ebay .walmart .bestbuy .shein`));
+      return m.reply(raraWrap("gshopping", `💡 Toko tersedia: .gshopping .amz .ebay .walmart .bestbuy .shein`));
     }
     const q = (m.args || []).join(" ").trim();
     if (!q) {
-      return m.reply(novaWrap("gshopping", `🛍️ ${shop.label} — nama, harga, toko, rating.\n\nContoh: *.${cmd} ${cmd === "shein" ? "dress" : "mechanical keyboard"}*`));
+      return m.reply(raraWrap("gshopping", `🛍️ ${shop.label} — nama, harga, toko, rating.\n\nContoh: *.${cmd} ${cmd === "shein" ? "dress" : "mechanical keyboard"}*`));
     }
 
     await m.react("🧠");
     const r = await searchApiEngine(shop.engine, { q });
-    if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("gshopping", sapiErrorMessage(r.error))); }
+    if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("gshopping", sapiErrorMessage(r.error))); }
     const body = renderShopping(r.data);
-    if (!body) { await m.react("❌"); return m.reply(novaWrap("gshopping", "⚠️ Produk gak ketemu — coba kata kunci lain.")); }
+    if (!body) { await m.react("❌"); return m.reply(raraWrap("gshopping", "⚠️ Produk gak ketemu — coba kata kunci lain.")); }
     await m.react("🐣");
-    return m.reply(novaWrap("gshopping", `🛍️ *${shop.label} — ${q.toUpperCase().slice(0, 50)}*\n\n${body}`));
+    return m.reply(raraWrap("gshopping", `🛍️ *${shop.label} — ${q.toUpperCase().slice(0, 50)}*\n\n${body}`));
   } catch (err) {
     console.error("[sapishop]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("gshopping", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(raraWrap("gshopping", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

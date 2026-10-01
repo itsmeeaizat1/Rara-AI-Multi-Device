@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
-import { formatRp } from "../../src/lib/nova-rpg-service.js";
-import { rollBonus } from "../../src/lib/nova-game-rewards.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
+import { formatRp } from "../../src/lib/rara-rpg-service.js";
+import { rollBonus } from "../../src/lib/rara-game-rewards.js";
 
 const sessions = new Map();
 
@@ -58,7 +58,7 @@ async function handler(m, { sock, db }) {
         return m.reply(msg);
       } else {
         await m.react("❌");
-        return m.reply(novaGameBox({ title: "tebaksurah", icon: "📖", flavor: "❌ *BELUM TEPAT!*", body: "Jawabanmu belum benar, coba lagi ya kak!" }));
+        return m.reply(raraGameBox({ title: "tebaksurah", icon: "📖", flavor: "❌ *BELUM TEPAT!*", body: "Jawabanmu belum benar, coba lagi ya kak!" }));
       }
     }
 
@@ -71,7 +71,7 @@ async function handler(m, { sock, db }) {
 
     if (!data || data.code !== 200 || !data.data) {
       await m.react("❌");
-      return m.reply(novaWrap("tebaksurah", "Gagal mulai game. Coba lagi.", "error"));
+      return m.reply(raraWrap("tebaksurah", "Gagal mulai game. Coba lagi.", "error"));
     }
 
     const surah = data.data;
@@ -110,7 +110,7 @@ async function handler(m, { sock, db }) {
   } catch (err) {
     console.error("tebaksurah error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("tebaksurah", err.message || "Error", "error"));
+    return m.reply(raraWrap("tebaksurah", err.message || "Error", "error"));
   }
 }
 

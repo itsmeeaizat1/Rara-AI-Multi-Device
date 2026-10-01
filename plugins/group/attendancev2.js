@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "absenv2",
@@ -120,7 +120,7 @@ function autoClose(db, sock) {
         }
 
         sock.sendMessage(gid, {
-          text: novaWrap("Absensi Ditutup", lines.join("\n")),
+          text: raraWrap("Absensi Ditutup", lines.join("\n")),
         }).catch((e) => { console.error('[attendancev2.js]:', e.message); });
       }
     }
@@ -152,7 +152,7 @@ async function handler(m, { sock, config: botConfig }) {
       );
       const isOwner = m.isOwner || m.sender === botConfig.owner?.[0];
       if (!isAdmin && !isOwner) {
-        return m.reply(novaWrap("Absen v2", "Hanya admin yg bisa membuat event absensi"));
+        return m.reply(raraWrap("Absen v2", "Hanya admin yg bisa membuat event absensi"));
       }
 
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
@@ -179,7 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (dateTimeStr) {
         const parsed = parseDateTime(dateTimeStr);
         if (!parsed) {
-          return m.reply(novaWrap("Absen v2", "Format tanggal salah! Gunakan: DD-MM-YYYY HH:MM\n💡 *Contoh:* 15-08-2026 20:00"));
+          return m.reply(raraWrap("Absen v2", "Format tanggal salah! Gunakan: DD-MM-YYYY HH:MM\n💡 *Contoh:* 15-08-2026 20:00"));
         }
         eventTime = parsed;
       }
@@ -187,7 +187,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (durStr) {
         const dur = parseDuration(durStr);
         if (!dur) {
-          return m.reply(novaWrap("Absen v2", "Format durasi salah! Gunakan: 30s / 15m / 2h / 1d"));
+          return m.reply(raraWrap("Absen v2", "Format durasi salah! Gunakan: 30s / 15m / 2h / 1d"));
         }
         deadline = (dateTimeStr ? eventTime : Date.now()) + dur;
       }
@@ -232,29 +232,29 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push(prefix + "absenv2 hadir " + evId);
       lines.push(prefix + "absenv2 tidak " + evId);
       lines.push(prefix + "absenv2 mungkin " + evId);
-      return m.reply(novaWrap("Event Absensi Dibuat", lines.join("\n")));
+      return m.reply(raraWrap("Event Absensi Dibuat", lines.join("\n")));
     }
 
     // --- RESPONSE (hadir/tidak/maybe) ---
     if (action === "hadir" || action === "tidak" || action === "absen" || action === "mungkin") {
       const evId = args[1]?.toUpperCase();
       if (!evId) {
-        return m.reply(novaWrap("Absen v2", "Format: " + prefix + "absenv2 <hadir/tidak/mungkin> <ID>"));
+        return m.reply(raraWrap("Absen v2", "Format: " + prefix + "absenv2 <hadir/tidak/mungkin> <ID>"));
       }
 
       const events = getEvents(db, gid);
       const ev = events.find((e) => e.id === evId);
       if (!ev) {
-        return m.reply(novaWrap("Absen v2", "Event `" + evId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Absen v2", "Event `" + evId + "` tidak ditemukan"));
       }
       if (ev.closed) {
-        return m.reply(novaWrap("Absen v2", "Event `" + evId + "` sudah ditutup"));
+        return m.reply(raraWrap("Absen v2", "Event `" + evId + "` sudah ditutup"));
       }
       if (ev.cancelled) {
-        return m.reply(novaWrap("Absen v2", "Event `" + evId + "` sudah dibatalkan"));
+        return m.reply(raraWrap("Absen v2", "Event `" + evId + "` sudah dibatalkan"));
       }
       if (ev.deadline && Date.now() > ev.deadline) {
-        return m.reply(novaWrap("Absen v2", "Deadline respon sudah lewat untuk event `" + evId + "`"));
+        return m.reply(raraWrap("Absen v2", "Deadline respon sudah lewat untuk event `" + evId + "`"));
       }
 
       // Map action to status
@@ -277,7 +277,7 @@ async function handler(m, { sock, config: botConfig }) {
       const hadir = ev.responses.filter((r) => r.status === "hadir").length;
       const tidak = ev.responses.filter((r) => r.status === "tidak").length;
       const mungkin = ev.responses.filter((r) => r.status === "mungkin").length;
-      return m.reply(novaWrap("Respon Tercatat",
+      return m.reply(raraWrap("Respon Tercatat",
         "Status: *" + status.toUpperCase() + "*\n" +
         "Event: " + ev.title + "\n\n" +
         "Hadir: " + hadir + " | Tidak: " + tidak + " | Mungkin: " + mungkin + "\n" +
@@ -291,7 +291,7 @@ async function handler(m, { sock, config: botConfig }) {
       const active = events.filter((e) => !e.closed && !e.cancelled);
 
       if (active.length === 0) {
-        return m.reply(novaWrap("Absen v2", "Belum ada event aktif.\nBuat: " + prefix + "absenv2 create <judul> | <tgl> | <durasi>"));
+        return m.reply(raraWrap("Absen v2", "Belum ada event aktif.\nBuat: " + prefix + "absenv2 create <judul> | <tgl> | <durasi>"));
       }
 
       let lines = [];
@@ -311,20 +311,20 @@ async function handler(m, { sock, config: botConfig }) {
         );
       });
 
-      return m.reply(novaWrap("Event Absensi Aktif", lines.join("\n")));
+      return m.reply(raraWrap("Event Absensi Aktif", lines.join("\n")));
     }
 
     // --- INFO ---
     if (action === "info") {
       const evId = args[1]?.toUpperCase();
       if (!evId) {
-        return m.reply(novaWrap("Absen v2", "Format: " + prefix + "absenv2 info <ID>"));
+        return m.reply(raraWrap("Absen v2", "Format: " + prefix + "absenv2 info <ID>"));
       }
 
       const events = getEvents(db, gid);
       const ev = events.find((e) => e.id === evId);
       if (!ev) {
-        return m.reply(novaWrap("Absen v2", "Event `" + evId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Absen v2", "Event `" + evId + "` tidak ditemukan"));
       }
 
       const hadir = ev.responses.filter((r) => r.status === "hadir");
@@ -372,14 +372,14 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       lines.push("Belum Respon: " + Math.max(0, belum));
 
-      return m.reply(novaWrap("Info Absensi", lines.join("\n")));
+      return m.reply(raraWrap("Info Absensi", lines.join("\n")));
     }
 
     // --- CLOSE ---
     if (action === "close" || action === "tutup") {
       const evId = args[1]?.toUpperCase();
       if (!evId) {
-        return m.reply(novaWrap("Absen v2", "Format: " + prefix + "absenv2 close <ID>"));
+        return m.reply(raraWrap("Absen v2", "Format: " + prefix + "absenv2 close <ID>"));
       }
 
       const groupMeta = await sock.groupMetadata(gid).catch(() => null);
@@ -388,16 +388,16 @@ async function handler(m, { sock, config: botConfig }) {
       );
       const isOwner = m.isOwner || m.sender === botConfig.owner?.[0];
       if (!isAdmin && !isOwner) {
-        return m.reply(novaWrap("Absen v2", "Hanya admin yg bisa menutup event"));
+        return m.reply(raraWrap("Absen v2", "Hanya admin yg bisa menutup event"));
       }
 
       const events = getEvents(db, gid);
       const ev = events.find((e) => e.id === evId);
       if (!ev) {
-        return m.reply(novaWrap("Absen v2", "Event `" + evId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Absen v2", "Event `" + evId + "` tidak ditemukan"));
       }
       if (ev.closed) {
-        return m.reply(novaWrap("Absen v2", "Event sudah ditutup"));
+        return m.reply(raraWrap("Absen v2", "Event sudah ditutup"));
       }
 
       ev.closed = true;
@@ -425,14 +425,14 @@ async function handler(m, { sock, config: botConfig }) {
       } else {
         lines.push("Tidak ada");
       }
-      return m.reply(novaWrap("Absensi Ditutup", lines.join("\n")));
+      return m.reply(raraWrap("Absensi Ditutup", lines.join("\n")));
     }
 
     // --- CANCEL ---
     if (action === "cancel") {
       const evId = args[1]?.toUpperCase();
       if (!evId) {
-        return m.reply(novaWrap("Absen v2", "Format: " + prefix + "absenv2 cancel <ID>"));
+        return m.reply(raraWrap("Absen v2", "Format: " + prefix + "absenv2 cancel <ID>"));
       }
 
       const groupMeta = await sock.groupMetadata(gid).catch(() => null);
@@ -441,18 +441,18 @@ async function handler(m, { sock, config: botConfig }) {
       );
       const isOwner = m.isOwner || m.sender === botConfig.owner?.[0];
       if (!isAdmin && !isOwner) {
-        return m.reply(novaWrap("Absen v2", "Hanya admin yg bisa membatalkan event"));
+        return m.reply(raraWrap("Absen v2", "Hanya admin yg bisa membatalkan event"));
       }
 
       const events = getEvents(db, gid);
       const ev = events.find((e) => e.id === evId);
       if (!ev) {
-        return m.reply(novaWrap("Absen v2", "Event `" + evId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Absen v2", "Event `" + evId + "` tidak ditemukan"));
       }
 
       ev.cancelled = true;
       saveEvents(db, gid, events);
-      return m.reply(novaWrap("Absen v2", "Event *" + ev.title + "* dibatalkan"));
+      return m.reply(raraWrap("Absen v2", "Event *" + ev.title + "* dibatalkan"));
     }
 
     // --- HISTORY ---
@@ -461,7 +461,7 @@ async function handler(m, { sock, config: botConfig }) {
       const past = events.filter((e) => e.closed || e.cancelled);
 
       if (past.length === 0) {
-        return m.reply(novaWrap("Absen v2", "Belum ada riwayat event di grup ini"));
+        return m.reply(raraWrap("Absen v2", "Belum ada riwayat event di grup ini"));
       }
 
       past.sort((a, b) => (b.closedAt || b.createdAt) - (a.closedAt || a.createdAt));
@@ -477,14 +477,14 @@ async function handler(m, { sock, config: botConfig }) {
         );
       });
 
-      return m.reply(novaWrap("Riwayat Absensi", lines.join("\n")));
+      return m.reply(raraWrap("Riwayat Absensi", lines.join("\n")));
     }
 
     // --- STATS ---
     if (action === "stats") {
       const events = getEvents(db, gid);
       if (events.length === 0) {
-        return m.reply(novaWrap("Absen v2", "Belum ada data event."));
+        return m.reply(raraWrap("Absen v2", "Belum ada data event."));
       }
 
       const completed = events.filter((e) => e.closed && !e.cancelled);
@@ -531,7 +531,7 @@ async function handler(m, { sock, config: botConfig }) {
         });
       }
 
-      return m.reply(novaWrap("Statistik Absensi", lines.join("\n")));
+      return m.reply(raraWrap("Statistik Absensi", lines.join("\n")));
     }
 
     // --- HELP / default ---
@@ -552,7 +552,7 @@ async function handler(m, { sock, config: botConfig }) {
     );
   } catch (e) {
     console.error("absenv2 error:", e);
-    return m.reply(novaWrap("Absen v2", "Error: " + e.message));
+    return m.reply(raraWrap("Absen v2", "Error: " + e.message));
   }
 }
 

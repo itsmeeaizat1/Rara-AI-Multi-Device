@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "prabowo-ai",
@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(novaGuideV2("prabowo-ai", {
+    return m.reply(raraGuideV2("prabowo-ai", {
  kaomoji: "(๑•̀ㅂ•́)و✧",
  sapaan: "ngobrol sama Pak Prabowo, Pria Sawit yang tegas dan karismatik! (•̀ᴗ•́)و",
       cara: "ketik pertanyaannya sesudah command",
@@ -35,14 +35,14 @@ async function handler(m, { sock }) {
     const result = await UnlimitedAI(text, "prabowo-ai");
 
     if (!result.status) {
-      { return await m.reply(novaWrap("prabowo-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
+      { return await m.reply(raraWrap("prabowo-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
     }
     const reply = result.answer;
     await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(novaError("PrabowoAI", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraError("PrabowoAI", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

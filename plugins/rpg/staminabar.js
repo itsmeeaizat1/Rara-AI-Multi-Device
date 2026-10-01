@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // staminabar.js — Stamina system (manage energy for RPG activities)
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "staminabar",
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
       const now = Date.now();
       if (now - (data.lastRest || 0) < REST_COOLDOWN) {
         const remaining = Math.ceil((REST_COOLDOWN - (now - (data.lastRest || 0))) / 60000);
-        return m.reply(novaRpgBox("staminabar", `Baru saja istirahat! Tunggu ${remaining} menit lagi.`, "error"));
+        return m.reply(raraRpgBox("staminabar", `Baru saja istirahat! Tunggu ${remaining} menit lagi.`, "error"));
       }
 
       const restored = 30;
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
       await m.react("🐣");
   await animGeneric(m, sock, "⚡", "Checking Stamina");
       // FIX OWNER 2026-09-07: bar dikasih jarak dari kalimat
-      return m.reply(novaRpgBox("staminabar", `🛌 Istirahat berhasil! +${restored} stamina\n\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
+      return m.reply(raraRpgBox("staminabar", `🛌 Istirahat berhasil! +${restored} stamina\n\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
     }
 
     if (subCmd === "buy" || subCmd === "beli") {
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
         const gold = await db.getGold?.(m.sender) || 0;
         if (gold < cost) {
           await m.react("❌");
-          return m.reply(novaRpgBox("staminabar", `Gold kurang! ${qty} stamina = ${cost}g`, "error"));
+          return m.reply(raraRpgBox("staminabar", `Gold kurang! ${qty} stamina = ${cost}g`, "error"));
         }
         await db.minGold?.(m.sender, cost);
       } catch {}
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "stamina", data);
       await m.react("🐣");
       // FIX OWNER 2026-09-07: bar dikasih jarak dari kalimat
-      return m.reply(novaRpgBox("staminabar", `⚡ Beli ${qty} stamina (${cost}g)\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
+      return m.reply(raraRpgBox("staminabar", `⚡ Beli ${qty} stamina (${cost}g)\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
     }
 
     // STATUS (default)
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("staminabar error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("staminabar", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("staminabar", err.message || "Error", "error"));
   }
 }
 

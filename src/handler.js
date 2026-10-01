@@ -1,24 +1,24 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Multi-language: bungkus sock biar sock.sendMessage langsung pun ke-translate
-import { makeLangAwareSock } from "./lib/nova-i18n-sock.js";
-import { enrichAiSatuan } from "./lib/nova-ai-satuan-rich.js";
+import { makeLangAwareSock } from "./lib/rara-i18n-sock.js";
+import { enrichAiSatuan } from "./lib/rara-ai-satuan-rich.js";
 import fs from "fs";
 import path from "path";
-import { serialize } from "./lib/nova-serialize.js";
-import { noteChatActivity } from "./lib/nova-chat-revive.js";
-import { getPlugin, pluginStore } from "./lib/nova-plugins.js";
-import { recordPluginExecution, postExecutionCheck } from "./lib/nova-plugin-health-hook.js";
-import { getDatabase } from "./lib/nova-database.js";
-import { grantActivityExp } from "./lib/nova-activity-progress.js";
-import { ensureRpg, saveRpg } from "./lib/nova-rpg-service.js";
-import { checkPermission, checkMode, checkAccessBlocked } from "./lib/nova-middleware.js";
-import { handleAntiRemoveFromUpsert as _handleAntiRemove , novaWarning } from "./lib/nova-group-protection.js";
+import { serialize } from "./lib/rara-serialize.js";
+import { noteChatActivity } from "./lib/rara-chat-revive.js";
+import { getPlugin, pluginStore } from "./lib/rara-plugins.js";
+import { recordPluginExecution, postExecutionCheck } from "./lib/rara-plugin-health-hook.js";
+import { getDatabase } from "./lib/rara-database.js";
+import { grantActivityExp } from "./lib/rara-activity-progress.js";
+import { ensureRpg, saveRpg } from "./lib/rara-rpg-service.js";
+import { checkPermission, checkMode, checkAccessBlocked } from "./lib/rara-middleware.js";
+import { handleAntiRemoveFromUpsert as _handleAntiRemove , raraWarning } from "./lib/rara-group-protection.js";
 import config from "../config.js";
-import { c, logger, logMessage } from "./lib/nova-logger.js";
-import { trackNotFound, isNotFoundMuted, resetNotFoundTracker } from "./lib/nova-notfound-antispam.js";
+import { c, logger, logMessage } from "./lib/rara-logger.js";
+import { trackNotFound, isNotFoundMuted, resetNotFoundTracker } from "./lib/rara-notfound-antispam.js";
 import { handleMessage as _autoflowHandleMessage } from "./lib/autoflow.js";
-import { addChat as _autoRoleAddChat } from "./lib/nova-autorole.js";
-import { buildNotFoundReply } from "./lib/nova-notfound-info.js";
+import { addChat as _autoRoleAddChat } from "./lib/rara-autorole.js";
+import { buildNotFoundReply } from "./lib/rara-notfound-info.js";
 
 // Re-export handleAntiRemoveFromUpsert from group-protection
 async function handleAntiRemoveFromUpsert(msg, sock, db) {
@@ -51,7 +51,7 @@ function checkCooldown(m, plugin) {
 // Get active jadibots (for checkMode)
 function getActiveJadibots() {
   try {
-    const { getActiveJadibots: _gab } = require("./lib/nova-jadibot-manager.js");
+    const { getActiveJadibots: _gab } = require("./lib/rara-jadibot-manager.js");
     return _gab();
   } catch {
     return [];
@@ -156,7 +156,7 @@ async function messageHandler(msg, sock, jadibotCtx = {}) {
   } catch {}
   const __novaModeBlocked = __novaOnlyModeBlocked || __novaAccessModeBlocked;
 
-  // 🔹 AFK HOOKS (nova-afk.js) — WAJIB PALING AWAL: user AFK balakang →
+  // 🔹 AFK HOOKS (rara-afk.js) — WAJIB PALING AWAL: user AFK balakang →
   // kartu "AFK Berakhir" (jam mulai + total durasi); ada yang mention
   // user AFK di grup → kartu info. Dulu kepasang di bawah (automation
   // hub) → di grup yang AI-nimbrung/game-hook nyala, pesan ke-consume
@@ -164,7 +164,7 @@ async function messageHandler(msg, sock, jadibotCtx = {}) {
   // 14 Sep 2026). Fire-and-forget, gak ngeblok pipeline.
   if (!m.fromMe && !m.isNewsletter && !__novaModeBlocked) {
     try {
-      const { handleAfkHooks } = await import("./lib/nova-afk.js");
+      const { handleAfkHooks } = await import("./lib/rara-afk.js");
       handleAfkHooks(m, sock, db).catch((e) => {
         try { console.error("[AfkHook] error:", e?.message || e); } catch {}
       });
@@ -326,8 +326,8 @@ try {
       const dmSettings = db.setting("antispamDM");
       if (dmSettings?.enabled) {
         const now = Date.now();
-        if (!global.novaDmSpamTrack) global.novaDmSpamTrack = {};
-        const tracker = global.novaDmSpamTrack;
+        if (!global.raraDmSpamTrack) global.raraDmSpamTrack = {};
+        const tracker = global.raraDmSpamTrack;
 
         const sender = m.sender;
 
@@ -362,7 +362,7 @@ try {
             tracker[sender].messages = [];
 
             await sock.sendMessage(m.chat, {
-              text: novaWarning("ANTI SPAM — TINDAKAN", [
+              text: raraWarning("ANTI SPAM — TINDAKAN", [
                 ["Pengirim", "@" + sender.split("@")[0]],
                 ["Pelanggaran", "Pesan terlalu cepat dan berulang"],
                 ["Peringatan", dmSettings.maxWarn + " dari " + dmSettings.maxWarn],
@@ -376,7 +376,7 @@ try {
             const remaining = dmSettings.maxWarn - tracker[sender].warnCount;
 
             await sock.sendMessage(m.chat, {
-              text: novaWarning("ANTI SPAM — PERINGATAN", [
+              text: raraWarning("ANTI SPAM — PERINGATAN", [
                 ["Pengirim", "@" + sender.split("@")[0]],
                 ["Pelanggaran", "Pesan terlalu cepat dan berulang"],
                 ["Peringatan", tracker[sender].warnCount + " dari " + dmSettings.maxWarn],
@@ -397,7 +397,7 @@ try {
   // Check if sender has pending quiz verification in this group
   if (m.isGroup && !m.fromMe && m.body && !m.isNewsletter) {
     try {
-      const { checkMessageVerification } = await import("./lib/nova-quiz-verify.js");
+      const { checkMessageVerification } = await import("./lib/rara-quiz-verify.js");
       const verifyResult = checkMessageVerification(m.chat, m.sender, m.body);
       if (verifyResult.wasPending) {
         if (verifyResult.verified) {
@@ -442,7 +442,7 @@ try {
   // === Activity Tracker ===
   if (m.isGroup && !m.fromMe && !m.isNewsletter) {
     try {
-      const { trackActivity } = await import("./lib/nova-activity-tracker.js");
+      const { trackActivity } = await import("./lib/rara-activity-tracker.js");
       trackActivity(m, { messageType: m.type || "text" });
       try {
         const { logMessageForSummary } = await import("../plugins/owner/autosummary.js");
@@ -458,7 +458,7 @@ try {
   // === Auto-Translate ===
   if (m.isGroup && !m.isCommand && !m.fromMe && !m.isNewsletter && m.body && m.body.length >= 5) {
     try {
-      const { handleAutoTranslateMessage } = await import("./lib/nova-autotranslate.js");
+      const { handleAutoTranslateMessage } = await import("./lib/rara-autotranslate.js");
       if (typeof handleAutoTranslateMessage === "function") {
         await handleAutoTranslateMessage(m, sock);
       }
@@ -471,11 +471,11 @@ try {
   if (!m.isCommand && !m.fromMe && !m.isNewsletter && m.isGroup && !__novaSelfModeSkip) {
     try {
       // Catat aktivitas grup untuk proactive messaging
-      const { recordGroupActivity } = await import("./lib/nova-aigroupchat-proactive.js");
+      const { recordGroupActivity } = await import("./lib/rara-aigroupchat-proactive.js");
       if (typeof recordGroupActivity === "function") recordGroupActivity(m.chat);
 
       // Cek AI Grup nimbrung
-      const { handleAiGrup, isAiGrupEnabled } = await import("./lib/nova-aigroupchat.js");
+      const { handleAiGrup, isAiGrupEnabled } = await import("./lib/rara-aigroupchat.js");
       if (typeof isAiGrupEnabled === "function" && isAiGrupEnabled(jadibotCtx)) {
         const handled = await handleAiGrup(m, sock, undefined, jadibotCtx);
         if (handled) return;
@@ -533,11 +533,11 @@ try {
   }
 
   // Channel Hub — auto-react & auto-reply post di SALURAN WA utama (fitur no.1
-  // "bot masa depan" 25 Sep; engine src/lib/nova-saluran-hub.js, toggle .channelhub).
+  // "bot masa depan" 25 Sep; engine src/lib/rara-saluran-hub.js, toggle .channelhub).
   // NOTE: blok game di bawah skip isNewsletter → hook saluran WAJIB punya blok sendiri.
   if (m.isNewsletter && !m.isCommand && !m.fromMe) {
     try {
-      const { inboundHandler } = await import("../src/lib/nova-saluran-hub.js");
+      const { inboundHandler } = await import("../src/lib/rara-saluran-hub.js");
       await inboundHandler(sock, m);
     } catch (e) {
       if (config.dev?.debugLog) logger.error("saluranhub", e.message);
@@ -545,7 +545,7 @@ try {
   }
 
   // Game answer handler (non-command reply to game message) — skip in self mode for non-owner
-  // Checks all registered game sessions via nova-games + family100
+  // Checks all registered game sessions via rara-games + family100
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     // Chat anonim antar member (relay pesan sesi aktif — plugins/fun/vibychatanonymouschat.js)
     try {
@@ -696,10 +696,10 @@ try {
       if (config.dev?.debugLog) logger.error("ampro", e.message);
     }
 
-    // All other games (via nova-game-factory — shared session map in nova-game-engine)
+    // All other games (via rara-game-factory — shared session map in rara-game-engine)
     try {
-      const { games } = await import("./lib/nova-game-factory.js");
-      const { getSession } = await import("./lib/nova-game-engine.js");
+      const { games } = await import("./lib/rara-game-factory.js");
+      const { getSession } = await import("./lib/rara-game-engine.js");
       const session = getSession(m.chat);
       if (session && session.gameType) {
         const cfg = games.get(session.gameType);
@@ -810,7 +810,7 @@ try {
   // Auto React VN: jalan walau fromMe (owner testing di self-chat), asal bukan command/newsletter (skip in self mode for non-owner)
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { handleAutoreactvn, isAutoreactvnEnabled } = await import("./lib/nova-autoreactvn.js");
+      const { handleAutoreactvn, isAutoreactvnEnabled } = await import("./lib/rara-autoreactvn.js");
       if (typeof isAutoreactvnEnabled === "function" && isAutoreactvnEnabled(m, sock)) {
         const vnHandled = await handleAutoreactvn(m, sock);
         if (vnHandled) return;
@@ -864,7 +864,7 @@ try {
   // jangan pernah ngeblok pipeline pesan yang lain.
   if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { isScanVirusEnabled, handleScanVirus } = await import("./lib/nova-scanvirus.js");
+      const { isScanVirusEnabled, handleScanVirus } = await import("./lib/rara-scanvirus.js");
       if (typeof isScanVirusEnabled === "function" && (await isScanVirusEnabled(m))) {
         handleScanVirus(m, sock); // tanpa await — biar handler gak nunggu
       }
@@ -929,24 +929,24 @@ try {
   // Track activity for smartdigest
   if (!m.isNewsletter) {
     try {
-      const { trackActivity } = await import("./lib/nova-automation-hub.js");
+      const { trackActivity } = await import("./lib/rara-automation-hub.js");
       trackActivity(m);
     } catch {}
   }
   // Auto-forward & Auto-mod hooks (skip in self mode for non-owner)
   if (!m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { checkAutoForward, checkAutoMod } = await import("./lib/nova-automation-hub.js");
+      const { checkAutoForward, checkAutoMod } = await import("./lib/rara-automation-hub.js");
       await checkAutoForward(m, sock);
       await checkAutoMod(m, sock);
     } catch (e) {
       if (config.dev?.debugLog) console.error("[AutomationHub] Hook error:", e.message);
     }
 
-    // 🔹 GROUP GUARDIAN AI (nova-guardian.js): moderator AI kontekstual —
+    // 🔹 GROUP GUARDIAN AI (rara-guardian.js): moderator AI kontekstual —
     // fire-and-forget biar gak nambah latency pesan masuk
     try {
-      const { guardianJudge } = await import("./lib/nova-guardian.js");
+      const { guardianJudge } = await import("./lib/rara-guardian.js");
       guardianJudge(m, sock, db, config).catch(() => {});
     } catch (e) {
       if (config.dev?.debugLog) console.error("[Guardian] Hook error:", e.message);
@@ -959,7 +959,7 @@ try {
         if (!db.getGroup(m.chat)) {
           let gname = "";
           try { const md = await sock.groupMetadata(m.chat); gname = md?.subject || ""; } catch {}
-          const { ensureGroupRegistered } = await import("./lib/nova-group-registry.js");
+          const { ensureGroupRegistered } = await import("./lib/rara-group-registry.js");
           ensureGroupRegistered(m.chat, { name: gname, db });
         }
       } catch {}
@@ -974,7 +974,7 @@ try {
     // didengerin (STT) terus dijawab pakai suara (TTS VN) — ala telepon
     try {
       if (m.isAudio) {
-        const { isTelponOn, handleTelponVn } = await import("./lib/nova-telpon.js");
+        const { isTelponOn, handleTelponVn } = await import("./lib/rara-telpon.js");
         if (typeof isTelponOn === "function" && isTelponOn(db, m.chat)) {
           await handleTelponVn(m, sock, db, config);
           return;
@@ -985,7 +985,7 @@ try {
     }
 
     try {
-      const { handleAutoAI, isAutoAIEnabled } = await import("./lib/nova-auto-ai.js");
+      const { handleAutoAI, isAutoAIEnabled } = await import("./lib/rara-auto-ai.js");
       // FIX: dulu isAutoAIEnabled(m, sock) — lib expect chatId STRING,
       // object m jadi key "[object Object]" → selalu false → autoai
       // GAK PERNAH aktif walau di-on. Sekarang m.chat.
@@ -1005,7 +1005,7 @@ try {
   // buka via .autoai enablecommand). Owner & .autoai selalu lolos.
   // React 🚫 doang, tanpa reply — biar grup gak kebanjiran notif.
   try {
-    const { isCommandBlockedByAutoAI } = await import("./lib/nova-auto-ai.js");
+    const { isCommandBlockedByAutoAI } = await import("./lib/rara-auto-ai.js");
     if (typeof isCommandBlockedByAutoAI === "function" && isCommandBlockedByAutoAI(m)) {
       if (!m.isNewsletter) { try { await m.react("🚫"); } catch {} }
       return;
@@ -1044,9 +1044,9 @@ try {
     }
   } catch {}
 
-  // Try case handler first (case/nova.js)
+  // Try case handler first (case/rara.js)
   try {
-    const { handleCommand: handleCase } = await import("../case/nova.js");
+    const { handleCommand: handleCase } = await import("../case/rara.js");
     const caseResult = await handleCase(m, sock);
     if (caseResult?.handled) {
       try { db.incrementStat("commandsRun"); } catch {}
@@ -1074,8 +1074,8 @@ try {
       // Cari closest match — levenshtein (jarak edit) + didyoumean (skor
       // kemiripan relatif, nangkep typo jauh yang strukturnya masih mirip)
       // (16 Sep 2026, upgrade request owner: dep didyoumean)
-      const { getAllCommandNames } = await import("./lib/nova-plugins.js");
-      const { suggestCommand } = await import("./lib/nova-command-suggest.js");
+      const { getAllCommandNames } = await import("./lib/rara-plugins.js");
+      const { suggestCommand } = await import("./lib/rara-command-suggest.js");
       const closest = suggestCommand(command, getAllCommandNames());
 
       if (!m.isNewsletter) {
@@ -1452,7 +1452,7 @@ async function groupHandler(update, sock) {
 
         // === Quiz Verification for new member ===
         try {
-          const { handleNewMemberQuiz } = await import("./lib/nova-quiz-verify.js");
+          const { handleNewMemberQuiz } = await import("./lib/rara-quiz-verify.js");
           if (typeof handleNewMemberQuiz === "function") {
             await handleNewMemberQuiz(sock, update.id, [participantJid]);
           }
@@ -1534,7 +1534,7 @@ async function messageUpdateHandler(updates, sock) {
         const antiDelete = db.setting("antiDelete");
         if (antiDelete) {
           try {
-            const { handleAntiRemove } = await import("./lib/nova-group-protection.js");
+            const { handleAntiRemove } = await import("./lib/rara-group-protection.js");
             if (handleAntiRemove) {
               await handleAntiRemove(update, sock, db);
             }

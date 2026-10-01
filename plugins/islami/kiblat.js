@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 Kiblat (Qibla Direction) — kandidat langka terakhir dari backlog
 //   (request owner 13 Sep: "ide fitur yg langka" — kiblat ke-singgut
@@ -14,7 +14,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "kiblat",
@@ -50,7 +50,7 @@ async function geocodePlace(query) {
   const { data } = await get({
     params: { q: query, format: "json", limit: 1, addressdetails: 1 },
     timeout: 15000,
-    headers: { "User-Agent": "NovaBot/1.0" },
+    headers: { "User-Agent": "RaraBot/1.0" },
   });
   if (!Array.isArray(data) || !data.length) return null;
   return {
@@ -228,7 +228,7 @@ export async function renderKiblatCard({ label, lat, lon, bearing, distance, dir
   return canvas.encode("png");
 }
 
-// 🔹 resolve koordinat dari reply lokasi WA (bentuk nova-serialize:
+// 🔹 resolve koordinat dari reply lokasi WA (bentuk rara-serialize:
 // quoted.locationMessage langsung, atau nested .msg / .message)
 function resolveQuotedLocation(m) {
   const q = m.quoted;
@@ -248,7 +248,7 @@ async function handler(m, { sock }) {
     const fromLocation = resolveQuotedLocation(m);
     if (!fromLocation && !query) {
       await m.react("❌");
-      return m.reply(novaWrap("kiblat", [
+      return m.reply(raraWrap("kiblat", [
         "Mau cek arah kiblat dari mana?",
         "",
         "📍 *Cara 1:* reply pesan lokasi (kirim lokasi di WhatsApp, terus reply dengan .kiblat)",
@@ -268,7 +268,7 @@ async function handler(m, { sock }) {
 
     if (!loc) {
       await m.react("❌");
-      return m.reply(novaWrap("kiblat", `Tempat "${query}" gak ketemu — coba nama yang lebih spesifik (contoh: ${m.prefix}kiblat Monas Jakarta)`, "error"));
+      return m.reply(raraWrap("kiblat", `Tempat "${query}" gak ketemu — coba nama yang lebih spesifik (contoh: ${m.prefix}kiblat Monas Jakarta)`, "error"));
     }
 
     const bearing = qiblaBearing(loc.lat, loc.lon);
@@ -306,7 +306,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("kiblat error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("kiblat", "gagal hitung arah kiblat: " + (err?.message || "error"), "error"));
+    return m.reply(raraWrap("kiblat", "gagal hitung arah kiblat: " + (err?.message || "error"), "error"));
   }
 }
 

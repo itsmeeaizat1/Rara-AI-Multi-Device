@@ -1,14 +1,14 @@
 // E2E .douyin MERGED (rename dr .playdouyin — request owner 10 Sep): satu
 // command dua mode — keyword search (injected) + link download (injected).
 // Douyin murni, TikTok DITOLAK. Reaksi 🕒→🐣 wajib.
-import { initDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase } from "../../src/lib/rara-database.js";
 import {
   setDouyinSearchRunner,
   setDouyinResolver,
   resetPlayDouyinDeps,
   isDouyinLink,
   isTikTokLink,
-} from "../../src/lib/nova-playdouyin.js";
+} from "../../src/lib/rara-playdouyin.js";
 import { normalizeDouyinItem } from "../../src/scraper/douyin-search.js";
 
 await initDatabase("/tmp/playdouyin-e2e-db.json");
@@ -101,7 +101,7 @@ setDouyinResolver(async (url) => ({
   images: [],
   music: { url: "", title: "" },
 }));
-const { resolvePlayDouyin } = await import("../../src/lib/nova-playdouyin.js");
+const { resolvePlayDouyin } = await import("../../src/lib/rara-playdouyin.js");
 const r4 = await resolvePlayDouyin("https://v.douyin.com/abc123/");
 check("resolve link douyin (lib): video no-watermark", r4.item?.video?.noWatermark === "https://dl.example/douyin.mp4");
 // foto slide via lib
@@ -116,7 +116,7 @@ const r4b = await resolvePlayDouyin("https://v.douyin.com/slide/");
 check("resolve foto slide (lib): 2 images", r4b.item?.type === "photo" && r4b.item.images.length === 2);
 
 // 4c. fallback rantai baru: HAIDAR + SYLVATICA (level lib, injected)
-const { haidarDouyin, sylvaticaDouyin, setHaidarDouyin, setSylvaticaDouyin, resetDouyinDlDeps, resolveDouyinShortlink } = await import("../../src/lib/nova-douyin-dl.js");
+const { haidarDouyin, sylvaticaDouyin, setHaidarDouyin, setSylvaticaDouyin, resetDouyinDlDeps, resolveDouyinShortlink } = await import("../../src/lib/rara-douyin-dl.js");
 setHaidarDouyin(async () => ({ source: "Haidar", title: "Video Haidar", video: "https://dl.example/hd.mp4", audio: "https://dl.example/a.mp3", images: [] }));
 const h4 = await haidarDouyin("https://www.douyin.com/video/1");
 check("fallback haidar: video no-watermark + audio", h4?.video === "https://dl.example/hd.mp4" && h4?.audio === "https://dl.example/a.mp3");
@@ -176,7 +176,7 @@ let calls = 0;
 setDouyinSearchRunner(async () => { calls++; return [RAW_VIDEO]; });
 resetPlayDouyinDeps();
 setDouyinResolver(null);
-const { searchPlayDouyin } = await import("../../src/lib/nova-playdouyin.js");
+const { searchPlayDouyin } = await import("../../src/lib/rara-playdouyin.js");
 await searchPlayDouyin("cache-test");
 await searchPlayDouyin("cache-test");
 check("cache keyword: runner cuma dipanggil 1x", calls === 1);

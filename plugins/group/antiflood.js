@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWarning } from "../../src/lib/nova-group-protection.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWarning } from "../../src/lib/rara-group-protection.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "antiflood",
@@ -77,7 +77,7 @@ export function checkFlood(m, sock, db) {
           delete cfg.warns[sender];
           db.save();
           sock.sendMessage(groupId, {
-            text: novaWarning("ANTI FLOOD — TINDAKAN", [
+            text: raraWarning("ANTI FLOOD — TINDAKAN", [
               ["Pengirim", "@" + sender.split("@")[0]],
               ["Pelanggaran", "Flood " + tracker.count + " pesan dalam " + elapsed.toFixed(1) + " detik"],
               ["Peringatan", warnCount + " dari " + maxWarn],
@@ -88,7 +88,7 @@ export function checkFlood(m, sock, db) {
         } catch (e) { console.error('[antiflood.js]:', e.message); }
       } else {
         sock.sendMessage(groupId, {
-          text: novaWarning("ANTI FLOOD — PERINGATAN", [
+          text: raraWarning("ANTI FLOOD — PERINGATAN", [
             ["Pengirim", "@" + sender.split("@")[0]],
             ["Pelanggaran", "Flood " + tracker.count + " pesan dalam " + elapsed.toFixed(1) + " detik"],
             ["Peringatan", warnCount + " dari " + maxWarn],
@@ -127,7 +127,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (windowArg && windowArg >= 2 && windowArg <= 60) cfg.window = windowArg;
       await db.save();
 
-      return m.reply(novaWrap("Anti Flood", [
+      return m.reply(raraWrap("Anti Flood", [
         "Anti Flood DIAKTIFKAN!",
         "",
         "Limit: " + cfg.limit + " pesan dalam " + cfg.window + " detik",
@@ -146,19 +146,19 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       // Clear tracker
       if (floodTracker[groupId]) delete floodTracker[groupId];
 
-      return m.reply(novaWrap("Anti Flood", "Anti Flood DIMATIKAN.\nKetik .antiflood on untuk aktifkan lagi."));
+      return m.reply(raraWrap("Anti Flood", "Anti Flood DIMATIKAN.\nKetik .antiflood on untuk aktifkan lagi."));
     }
 
     // ACTION
     if (sub === "action" || sub === "aksi") {
       const action = (args[1] || "").toLowerCase();
       if (!["warn", "kick", "delete"].includes(action)) {
-        return m.reply(novaWrap("Anti Flood", "Pilih: warn, kick, atau delete\n💡 *Contoh:* .antiflood action kick"));
+        return m.reply(raraWrap("Anti Flood", "Pilih: warn, kick, atau delete\n💡 *Contoh:* .antiflood action kick"));
       }
       cfg.action = action;
       await db.save();
 
-      return m.reply(novaWrap("Anti Flood", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
+      return m.reply(raraWrap("Anti Flood", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
     }
 
     // STATUS
@@ -169,7 +169,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         warnList = warnedUsers.map(([jid, count]) => "@" + jid.split("@")[0] + " (" + count + "x)").join("\n");
       }
 
-      return m.reply(novaWrap("Anti Flood", [
+      return m.reply(raraWrap("Anti Flood", [
         "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Limit: " + (cfg.limit || 10) + " pesan",
         "Window: " + (cfg.window || 5) + " detik",
@@ -188,11 +188,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       cfg.warns = {};
       await db.save();
       if (floodTracker[groupId]) delete floodTracker[groupId];
-      return m.reply(novaWrap("Anti Flood", "Semua warning flood direset.", "success"));
+      return m.reply(raraWrap("Anti Flood", "Semua warning flood direset.", "success"));
     }
 
     // HELP
-    return m.reply( novaWrap("Anti Flood", [
+    return m.reply( raraWrap("Anti Flood", [
       "Deteksi banjir pesan (flood) di grup",
       "",
       "Bedanya sama antispam: antiflood fokus ke KECEPATAN pesan",
@@ -212,7 +212,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]), "antiflood");
   } catch (e) {
     console.error("[Anti Flood]", e);
-    m.reply(novaWrap("Anti Flood", "Error: " + e.message));
+    m.reply(raraWrap("Anti Flood", "Error: " + e.message));
   }
 }
 

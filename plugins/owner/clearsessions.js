@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'clearsessions',
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
         )
         
     } catch (error) {
-        await m.reply(novaWrap("clearsessions", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(raraWrap("clearsessions", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

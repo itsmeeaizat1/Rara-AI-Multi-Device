@@ -67,7 +67,7 @@ w("\n— builder lokal, gak pakai lib bersama —");
 {
   const fs = await import("fs");
   const src = fs.readFileSync(new URL("../../plugins/search/playspotify.js", import.meta.url), "utf-8");
-  check("3a. gak ada import nova-spotify-play-card.js (lib bersama udah dihapus)", !src.includes("nova-spotify-play-card"));
+  check("3a. gak ada import rara-spotify-play-card.js (lib bersama udah dihapus)", !src.includes("rara-spotify-play-card"));
   check("3b. buildPlaySpotifyInfoCard didefinisikan lokal di file ini", src.includes("export function buildPlaySpotifyInfoCard"));
 }
 

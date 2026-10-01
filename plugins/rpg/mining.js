@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Mining — Mine ore for materials and gold (animated)
 
 import {
@@ -6,13 +6,13 @@ import {
   addItem, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
-  getCash, removeItem, spendCash, formatRp} from "../../src/lib/nova-rpg-service.js";
-import { getRpgWeather, rpgWeatherTag } from "../../src/lib/nova-rpg-weather.js";
-import { shapeMining } from "../../src/lib/nova-rpg-shapes.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import te from "../../src/lib/nova-error.js";
+  getCash, removeItem, spendCash, formatRp} from "../../src/lib/rara-rpg-service.js";
+import { getRpgWeather, rpgWeatherTag } from "../../src/lib/rara-rpg-weather.js";
+import { shapeMining } from "../../src/lib/rara-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "mining",
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("mining", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("mining", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // ── subcommand khas mining: upgrade & status beliung ──
     const sub = (m.args?.[0] || "").toLowerCase();
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
       const needMat = TOOL.matCost(lv);
       const haveMat = (ensureRpg(m, m.pushName).inventory || {})[TOOL.matId]?.qty || 0;
       if (haveMat < needMat) {
-        return m.reply(novaRpgBox("mining",
+        return m.reply(raraRpgBox("mining",
           `🔩 Upgrade Beliung ke Lv.${lv + 1} butuh:
 
 • Bijih Besi : ${needMat}x (punya ${haveMat}x)
@@ -77,19 +77,19 @@ async function handler(m, { sock }) {
 💡 Bijih Besi didapat dari .mining sendiri — gali terus!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
-        return m.reply(novaRpgBox("mining", `💵 Upgrade butuh *${formatRp(needRp)}*.
+        return m.reply(raraRpgBox("mining", `💵 Upgrade butuh *${formatRp(needRp)}*.
 Uang kamu: ${formatRp(getCash(m))}
 💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       if (!removeItem(m, TOOL.matId, needMat, sock)) {
-        return m.reply(novaRpgBox("mining", "🔩 Material gak bisa diambil. Coba lagi.", "error"));
+        return m.reply(raraRpgBox("mining", "🔩 Material gak bisa diambil. Coba lagi.", "error"));
       }
       const fresh = getTool(m.sender);
       fresh.level = (fresh.level || 0) + 1;
       fresh.spent = (fresh.spent || 0) + needRp;
       getDatabase().setPlayerData(m.sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("mining",
+      return m.reply(raraRpgBox("mining",
         `⛏️ BELIUNG UPGRADED!
 
 Level : Lv.${lv} → Lv.${lv + 1}
@@ -101,7 +101,7 @@ Level : Lv.${lv} → Lv.${lv + 1}
     if (sub === "status" || sub === "tool" || sub === "beliung") {
       const lv = tool.level || 0;
       const haveMat = (ensureRpg(m, m.pushName).inventory || {})[TOOL.matId]?.qty || 0;
-      return m.reply(novaRpgBox("mining",
+      return m.reply(raraRpgBox("mining",
         `⛏️ BELIUNG KAMU
 
 Level : *Lv.${lv}*
@@ -115,12 +115,12 @@ Ketik: .mining upgrade`));
     const cd = checkCooldown(m, "lastMine");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("mining", `Cooldown mining tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("mining", `Cooldown mining tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < MINE_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("mining", `Energi kurang! Butuh *${MINE_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
+      return m.reply(raraRpgBox("mining", `Energi kurang! Butuh *${MINE_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
     }
 
     useEnergy(m, MINE_ENERGY, sock);
@@ -158,7 +158,7 @@ Ketik: .mining upgrade`));
     const lv = tool.level || 0;
 
     await m.react("🐣");
-    return m.reply(novaRpgBox("mining",
+    return m.reply(raraRpgBox("mining",
       `⛏️ TAMBANG BERHASIL
 
 ` +
@@ -178,7 +178,7 @@ ${dropText}
   } catch (err) {
     console.error("mining error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("mining", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("mining", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

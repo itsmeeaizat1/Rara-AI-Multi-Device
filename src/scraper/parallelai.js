@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Parallel AI API wrapper - https://api.parallel.ai/v1/responses
 
 const PARALLEL_API = "https://api.parallel.ai/v1/responses";

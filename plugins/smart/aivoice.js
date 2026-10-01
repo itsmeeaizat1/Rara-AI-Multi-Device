@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
-import {  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
+import {  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const text = m.text?.trim();
     if (!text) {
-      { const __navText = (novaCaption({
+      { const __navText = (raraCaption({
   emoji: "🎙️",
   name: "aivoicefuture",
   description: "Text ke suara realistik multi-bahasa",

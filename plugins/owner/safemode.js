@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "safemode",
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
     lines.push("");
     lines.push("Untuk matikan: .safemode off");
 
-    return m.reply(novaWrap("Safe Mode", lines, "success"));
+    return m.reply(raraWrap("Safe Mode", lines, "success"));
   }
 
   // ===== OFF =====
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     await db.save();
 
     if (deactivated.length === 0) {
-      return m.reply(novaWrap("Safe Mode", "Tidak ada proteksi yang aktif untuk dimatikan."));
+      return m.reply(raraWrap("Safe Mode", "Tidak ada proteksi yang aktif untuk dimatikan."));
     }
 
     let lines = [
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
     lines.push("Hati-hati — semua proteksi grup sekarang nonaktif!");
     lines.push("Untuk aktifkan lagi: .safemode on");
 
-    return m.reply(novaWrap("Safe Mode", lines, "warn"));
+    return m.reply(raraWrap("Safe Mode", lines, "warn"));
   }
 
   // ===== STATUS =====
@@ -196,11 +196,11 @@ async function handler(m, { sock }) {
     lines.push("Aktifkan semua: .safemode on");
     lines.push("Matikan semua: .safemode off");
 
-    return m.reply(novaWrap("Safe Mode", lines));
+    return m.reply(raraWrap("Safe Mode", lines));
   }
 
   // ===== HELP =====
-  return m.reply( novaWrap("Safe Mode", [
+  return m.reply( raraWrap("Safe Mode", [
     "Mode darurat — aktifkan/matikan SEMUA proteksi sekaligus",
     "",
     "CARA PAKAI:",

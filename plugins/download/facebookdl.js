@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // facebookdl — Download video Facebook
 // Primary: IkyyXD /download/facebook → all-in-one | Fallback: btch-downloader
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { fbdown } from "btch-downloader";
-import te from "../../src/lib/nova-error.js";
-import { novaGuideV2, novaWrap, novaLine, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraGuideV2, raraWrap, raraLine, toSC, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -51,7 +51,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuideV2("facebook", {
+    return m.reply(raraGuideV2("facebook", {
  kaomoji: "(◕‿◕)",
  sapaan: "video facebook keren nih? tempel linknya! (◍'◡'◍)",
       cara: "tempel link video facebooknya sesudah command",
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     }));
   }
   if (!url.match(/facebook\.com|fb\.watch|fb\.com/i)) {
-    return m.reply(novaGuide("Facebook DL", "URL-nya gak valid nih! Pakai link Facebook ya.", `${m.prefix}facebookdl https://www.facebook.com/watch?v=xxx`));
+    return m.reply(raraGuide("Facebook DL", "URL-nya gak valid nih! Pakai link Facebook ya.", `${m.prefix}facebookdl https://www.facebook.com/watch?v=xxx`));
   }
 
   try {
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
             type: "video",
             contextInfo: { forwardingScore: 0, isForwarded: false },
           });
-          await m.reply(novaBerhasil("facebookdl"));
+          await m.reply(raraBerhasil("facebookdl"));
           return;
         }
       }
@@ -100,11 +100,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("❌");
-    return m.reply(novaGagal("Facebook DL"));
+    return m.reply(raraGagal("Facebook DL"));
   } catch (error) {
     console.error("[facebookdl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaError("Facebook DL", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraError("Facebook DL", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

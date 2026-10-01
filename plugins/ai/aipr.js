@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aipr — Foto soal/PR/tugas → AI baca + jawab
 import { GeminiVision } from "../../src/scraper/geminiVision.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "aipr",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
     if (!isImage) {
       return m.reply(
-        novaGuide(
+        raraGuide(
           "aipr",
           "Foto soal → AI jawab + jelasin\n" +
           "Kirim/reply foto soal + caption mata pelajaran (opsional)",
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
 
     if (!buffer) {
       await m.react("❌");
-      return m.reply(novaWrap("aipr", "Gagal download foto. Coba kirim ulang.", "error"));
+      return m.reply(raraWrap("aipr", "Gagal download foto. Coba kirim ulang.", "error"));
     }
 
     // Get subject jika ada
@@ -79,7 +79,7 @@ Jika gambar bukan soal, jelaskan apa isi gambar.`;
     if (!visionResult.status) {
       // Fallback ke UnlimitedAI jika Gemini key belum di-set
       const fallbackPrompt = `Saya punya tugas/soal tapi tidak bisa dibaca AI. Tolong berikan saran cara mengerjakan tugas dengan kategori: "${subject || 'umum'}". Berikan tips belajar yang efektif.`;
-      const res = await UnlimitedAI(fallbackPrompt, "nova-ai");
+      const res = await UnlimitedAI(fallbackPrompt, "rara-ai");
       if (res.status) {
         await m.react("🐣");
         return m.reply(
@@ -90,7 +90,7 @@ Jika gambar bukan soal, jelaskan apa isi gambar.`;
         );
       }
       await m.react("❌");
-      return m.reply(novaWrap("aipr", visionResult.error || "Gagal membaca foto", "error"));
+      return m.reply(raraWrap("aipr", visionResult.error || "Gagal membaca foto", "error"));
     }
 
     // Step 2: AI jawab soal berdasarkan transkrip
@@ -109,7 +109,7 @@ Jika soal pilihan ganda, sebutkan huruf jawaban yang benar.
 Jika soal essay, berikan jawaban lengkap.
 Gunakan bahasa Indonesia.`;
 
-    const solveResult = await UnlimitedAI(solvePrompt, "nova-ai");
+    const solveResult = await UnlimitedAI(solvePrompt, "rara-ai");
 
     if (!solveResult.status || !solveResult.answer) {
       // Kalpa AI solver gagal, kirim transkrip aja
@@ -117,7 +117,7 @@ Gunakan bahasa Indonesia.`;
       return m.reply(
         `Berhasil baca soal, tapi AI solver lagi down\n\n` +
         `${visionResult.text}\n\n` +
-        `Copy soal di atas, paste ke ${prefix}nova-ai untuk jawaban`
+        `Copy soal di atas, paste ke ${prefix}rara-ai untuk jawaban`
       );
     }
 
@@ -127,13 +127,13 @@ Gunakan bahasa Indonesia.`;
     if (subject) msg += `Mapel: *${subject}*\n`;
     msg += `Status: Soal berhasil dibaca\n\n`;
     msg += `Jawaban:\n${solveResult.answer.trim()}\n\n`;
-    msg += `Butuh bantuan lebih? ${prefix}nova-ai <pertanyaan>`;
+    msg += `Butuh bantuan lebih? ${prefix}rara-ai <pertanyaan>`;
 
     return m.reply(msg);
   } catch (err) {
     console.error("aipr error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("aipr", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("aipr", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

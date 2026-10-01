@@ -20,7 +20,7 @@ const {
   buildMultiItemPrompt,
   _setOmniOutfitDepsForTest,
 } = await import(R + "/plugins/ai-image/omnioutfitchanger.js");
-const { _resetAllSessionsForTest, getSession } = await import(R + "/src/lib/nova-outfit-session.js");
+const { _resetAllSessionsForTest, getSession } = await import(R + "/src/lib/rara-outfit-session.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s || ""));
 

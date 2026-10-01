@@ -8,8 +8,8 @@ import path from "path";
 import { Canvas, loadImage, FontLibrary } from "skia-canvas";
 import sharp from "sharp";
 import { config } from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Register Anton font (Impact-like, free Google Font)
 const FONT_PATH = path.join(process.cwd(), "assets", "fonts", "Anton.ttf");
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
       (m.quoted && (m.quoted.isSticker || m.quoted.type === "stickerMessage"));
 
     if (!isImage && !isSticker) {
-      const help = novaWrap(
+      const help = raraWrap(
         "smemev2",
         [
           "Meme Sticker Lokal (tanpa API)",
@@ -162,7 +162,7 @@ async function handler(m, { sock }) {
     } else if (input.length > 0) {
       topText = input;
     } else {
-      const help = novaWrap(
+      const help = raraWrap(
         "smemev2",
         [
           "Format: .smemev2 top|bottom",
@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
     }
 
     if (!mediaBuffer) {
-      await m.reply(novaGagal("SmemeV2"));
+      await m.reply(raraGagal("SmemeV2"));
       return;
     }
 
@@ -203,7 +203,7 @@ async function handler(m, { sock }) {
       memeBuffer = await generateMeme(mediaBuffer, topText, bottomText);
     } catch (e) {
       console.error("[SMEMEV2] Generate failed:", e.message);
-      await m.reply(novaGagal("SmemeV2"));
+      await m.reply(raraGagal("SmemeV2"));
       return;
     }
 
@@ -225,14 +225,14 @@ async function handler(m, { sock }) {
 
     // Send as sticker
     await sock.sendImageAsSticker(m.chat, stickerBuffer, m, {
-      packname: config.sticker?.packname || "Nova-AI",
+      packname: config.sticker?.packname || "Rara-AI",
       author: config.sticker?.author || "Bot",
     });
       await m.react("🐣");
-      await m.reply(novaBerhasil("smemev2"));
+      await m.reply(raraBerhasil("smemev2"));
   } catch (error) {
     console.error("[SMEMEV2] Error:", error.message);
-    await m.reply(novaGangguan("smemev2"));
+    await m.reply(raraGangguan("smemev2"));
   }
 }
 

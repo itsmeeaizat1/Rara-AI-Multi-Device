@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // AI Fortune — AI fortune teller with personality
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "ramalanai",
@@ -51,7 +51,7 @@ Gunakan bahasa Indonesia santai. Ramalan harus positif, jangan menakut-nakuti.`;
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("ramalanai", "Dukunnya lagi sholat 🕌", "error"));
+      return m.reply(raraWrap("ramalanai", "Dukunnya lagi sholat 🕌", "error"));
     }
 
     const lines = result.answer.trim().split("\n");
@@ -105,7 +105,7 @@ ${t.replace("PESAN:", "").trim()}\n`;
   } catch (err) {
     console.error("ramalanai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("ramalanai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("ramalanai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

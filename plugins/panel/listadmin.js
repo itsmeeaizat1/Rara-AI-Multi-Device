@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import config from '../../config.js'
-import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
+import te from '../../src/lib/rara-error.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const allCommands = VALID_SERVERS.slice(0, 5).map(v => `listadmin${v}`)
 const allAliases = VALID_SERVERS.map(v => `admins${v}`)
 
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(novaWrap("listadmin", `❌ *akses ditolak*\n\n` +
+        return m.reply(raraWrap("listadmin", `❌ *akses ditolak*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
         } else {
             txt += `Isi di \`config.js\` bagian \`pterodactyl.server1\``
         }
-        return m.reply(novaWrap("listadmin", txt))
+        return m.reply(raraWrap("listadmin", txt))
     }
     
     try {
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
         const admins = users.filter(u => u.attributes.root_admin)
         
         if (admins.length === 0) {
-            return m.reply(novaWrap("listadmin", `📋 *Daftar Admin [${serverLabel}]*\n\nTidak ada admin terdaftar.`))
+            return m.reply(raraWrap("listadmin", `📋 *Daftar Admin [${serverLabel}]*\n\nTidak ada admin terdaftar.`))
         }
         
         let txt = `📋 *Daftar Admin [${serverLabel}]*\n\n`
@@ -110,10 +110,10 @@ async function handler(m, { sock }) {
             txt += `   └ ID: \`${attr.id}\` | Email: \`${attr.email}\`\n`
         })
         
-        return m.reply(novaWrap("listadmin", txt))
+        return m.reply(raraWrap("listadmin", txt))
         
     } catch (err) {
-        return m.reply(novaWrap("listadmin", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("listadmin", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

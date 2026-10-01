@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "sholatjenazah",
@@ -127,16 +127,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("");
       lines.push("Cara: " + usedPrefix + "sholatjenazah <nomor>");
       lines.push("Contoh: " + usedPrefix + "sholatjenazah 5 (Doa mayat)");
-      return m.reply(novaWrap("Sholat Jenazah", lines.join("\n")));
+      return m.reply(raraWrap("Sholat Jenazah", lines.join("\n")));
     }
 
     const t = TAHAPAN[input - 1];
 
     if (t.isi) {
-      return m.reply(novaWrap("Sholat Jenazah - " + t.judul, t.isi.join("\n")));
+      return m.reply(raraWrap("Sholat Jenazah - " + t.judul, t.isi.join("\n")));
     }
 
-    return m.reply(novaWrap("Sholat Jenazah - " + t.judul, [
+    return m.reply(raraWrap("Sholat Jenazah - " + t.judul, [
       "Teks Arab:",
       t.arab,
       "",
@@ -150,7 +150,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       t.keterangan,
     ].join("\n")));
   } catch (e) {
-    return m.reply(novaWrap("Sholat Jenazah", "Error: " + e.message));
+    return m.reply(raraWrap("Sholat Jenazah", "Error: " + e.message));
   }
 }
 

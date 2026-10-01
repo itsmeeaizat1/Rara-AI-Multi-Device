@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aio2dl.js — receiver TERSEMBUNYI pilihan popup .aio2 (porting pola
 // .gvid/.gaud/.gimg dari script JPM APENBOTZ). GAK dipanggil manual —
 // id row popup ngirim `.aio2dl ext|mime|url`. Guard: URL WAJIB terdaftar
 // di sesi popup chat itu (anti abuse orang pakai bot buat unduh URL
 // sembarangan), TTL 20 menit.
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
-import { isChoiceAllowed } from "../../src/lib/nova-aio2-session.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { isChoiceAllowed } from "../../src/lib/rara-aio2-session.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aio2dl",
@@ -25,17 +25,17 @@ async function handler(m, { sock }) {
   const raw = String(m.text || "").trim();
   const parts = raw.split("|");
   if (parts.length < 3) {
-    return m.reply(novaWrap("AIO v2", "Format pilihan gak valid — pilih ulang dari popup .aio2.", "error"));
+    return m.reply(raraWrap("AIO v2", "Format pilihan gak valid — pilih ulang dari popup .aio2.", "error"));
   }
   const ext = String(parts[0]).toLowerCase().replace(/[^a-z0-9]/g, "") || "bin";
   const mime = String(parts[1]) || "application/octet-stream";
   const url = parts.slice(2).join("|").trim();
 
   if (!/^https?:\/\//i.test(url)) {
-    return m.reply(novaWrap("AIO v2", "Link pilihan gak valid.", "error"));
+    return m.reply(raraWrap("AIO v2", "Link pilihan gak valid.", "error"));
   }
   if (!isChoiceAllowed(m.chat, url)) {
-    return m.reply(novaWrap("AIO v2", "Pilihan itu udah kedaluwarsa (sesi 20 menit). Ketik .aio2 <link> ulang ya.", "error"));
+    return m.reply(raraWrap("AIO v2", "Pilihan itu udah kedaluwarsa (sesi 20 menit). Ketik .aio2 <link> ulang ya.", "error"));
   }
 
   try {
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     return { handled: true };
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("AIO v2", `Gagal unduh file pilihan: ${e?.message || e}`, "error"));
+    return m.reply(raraWrap("AIO v2", `Gagal unduh file pilihan: ${e?.message || e}`, "error"));
   }
 }
 

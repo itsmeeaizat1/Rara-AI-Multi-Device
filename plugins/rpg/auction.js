@@ -1,6 +1,6 @@
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "auction",
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
       if (!targetId || isNaN(bidAmount) || bidAmount <= 0) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "auction",
             `Format bid tidak valid!\n\nContoh: ${m.prefix}auction bid AUC-101 6000`,
             "error"
@@ -121,20 +121,20 @@ async function handler(m, { sock }) {
       const itemIndex = auctionData.items.findIndex((i) => i.id === targetId);
       if (itemIndex === -1) {
         await m.react('❌');
-        return m.reply(novaRpgBox("auction", `Lelang dengan ID \`${targetId}\` tidak ditemukan!`, "error"));
+        return m.reply(raraRpgBox("auction", `Lelang dengan ID \`${targetId}\` tidak ditemukan!`, "error"));
       }
 
       const targetAuction = auctionData.items[itemIndex];
 
       if (Date.now() >= targetAuction.endTime) {
         await m.react('❌');
-        return m.reply(novaRpgBox("auction", `Lelang \`${targetId}\` sudah berakhir!`, "error"));
+        return m.reply(raraRpgBox("auction", `Lelang \`${targetId}\` sudah berakhir!`, "error"));
       }
 
       if (bidAmount <= targetAuction.currentBid) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "auction",
             `Tawaran kamu (${bidAmount} Gold) harus lebih tinggi dari tawaran saat ini (${targetAuction.currentBid} Gold)!`,
             "error"
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
       if ((userWallet.gold || 0) < bidAmount) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "auction",
             `Gold kamu tidak cukup untuk menawar ${bidAmount} Gold!\n\nGold kamu: ${userWallet.gold || 0} Gold`,
             "error"
@@ -179,7 +179,7 @@ async function handler(m, { sock }) {
       if (!itemName || isNaN(startPrice) || startPrice <= 0) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "auction",
             `Format penjualan tidak valid!\n\nContoh: ${m.prefix}auction sell Cincin Emas 1000`,
             "error"
@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
 
     await m.react('❌');
     return m.reply(
-      novaRpgBox(
+      raraRpgBox(
         "auction",
         `Perintah tidak dikenali!\n\nGunakan:\n• ${m.prefix}auction list\n• ${m.prefix}auction bid <id> <jumlah>\n• ${m.prefix}auction sell <item> <harga_awal>`,
         "guide"
@@ -225,7 +225,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("auction error:", err);
     await m.react('❌');
-    return m.reply(novaRpgBox("auction", err.message || "Terjadi kesalahan pada Rumah Lelang.", "error"));
+    return m.reply(raraRpgBox("auction", err.message || "Terjadi kesalahan pada Rumah Lelang.", "error"));
   }
 }
 

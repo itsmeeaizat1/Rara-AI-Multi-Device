@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "techstack",
@@ -66,7 +66,7 @@ const TECH_SIGNATURES = {
 async function detectTech(url) {
   const target = url.startsWith("http") ? url : "https://" + url;
   const res = await fetch(target, {
-    headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
+    headers: { "User-Agent": "Mozilla/5.0 (Rara Bot)" },
     signal: AbortSignal.timeout(12000),
     redirect: "follow",
   });
@@ -107,7 +107,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await detectTech(text);
 
     if (result.detected.length === 0) {
-      return m.reply(novaWrap("TechStack: " + text.replace(/^https?:\/\//, ""), [
+      return m.reply(raraWrap("TechStack: " + text.replace(/^https?:\/\//, ""), [
         "Status: " + result.status,
         "Tidak ada teknologi terdeteksi",
         "",
@@ -144,11 +144,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     await m.react("🐣");
-    return m.reply(novaWrap("TechStack: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
+    return m.reply(raraWrap("TechStack: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("techstack error:", e);
-    return m.reply(novaWrap("TechStack", "Error: " + e.message));
+    return m.reply(raraWrap("TechStack", "Error: " + e.message));
   }
 }
 

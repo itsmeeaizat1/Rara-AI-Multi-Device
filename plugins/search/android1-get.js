@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "android1-get",
   alias: ["android1-get", "android1"],
@@ -19,13 +19,13 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
+const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url || !url.includes("an1.com")) {
-    return m.reply(novaError("Android1Get", "URL gak valid nih! Harus dari an1.com"));
+    return m.reply(raraError("Android1Get", "URL gak valid nih! Harus dari an1.com"));
   }
   try {
     const { data } = await axios.get(
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
 
     const app = data.data;
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
     if (app.url) {
       await sock.sendMessage(
         m.chat,
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     }
   } catch (err) {
     console.log(err);
-    return m.reply(novaWrap("android1-get", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("android1-get", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

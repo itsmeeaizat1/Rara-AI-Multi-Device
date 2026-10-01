@@ -2,7 +2,7 @@
 import {
   askSalaam, setSalaamHttp, resetSalaamHttp, resetSalaamSession,
   resolveSalaamAssistant, cleanSalaamReply, SALAAM_ASSISTANTS,
-} from "../../src/lib/nova-salaamai.js";
+} from "../../src/lib/rara-salaamai.js";
 import { toSC } from "../../src/lib/styler.js";
 
 let pass = 0, fail = 0;
@@ -207,7 +207,7 @@ behavior = {
 replies.length = 0; reactions = [];
 await handler(mockM("tes down"), {});
 check("plugin: server down → reply fallback", replies.length === 1 && reactions.includes("❌"));
-check("plugin: fallback kasih opsi .ai", /ᴀɪ|ai|novaai/i.test(replies[0]));
+check("plugin: fallback kasih opsi .ai", /ᴀɪ|ai|raraai/i.test(replies[0]));
 
 // pertanyaan kosong setelah strip asisten
 replies.length = 0;

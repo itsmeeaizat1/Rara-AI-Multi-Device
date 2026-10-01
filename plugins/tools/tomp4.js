@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import sharp from "sharp";
 import fs from "fs";
 import path from "path";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import ffmpeg from "fluent-ffmpeg";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
     }
 
     if (!downloadFn) {
-      return m.reply(novaWrap("tomp4", "Reply atau kirim stiker animasi untuk diubah menjadi MP4.", "guide"));
+      return m.reply(raraWrap("tomp4", "Reply atau kirim stiker animasi untuk diubah menjadi MP4.", "guide"));
     }
 
     await m.react("🕒");
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     const buffer = await downloadFn();
     if (!buffer || buffer.length === 0) {
       await m.react("❌");
-      return m.reply(novaWrap("tomp4", "❌ Gagal mengunduh stiker."));
+      return m.reply(raraWrap("tomp4", "❌ Gagal mengunduh stiker."));
     }
 
     const animated = isAnimatedWebp(buffer);
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
     const gifBuffer = await webpToGif(buffer);
     if (!gifBuffer) {
       await m.react("❌");
-      return m.reply(novaWrap("tomp4", "❌ Stiker tidak dapat dikonversi."));
+      return m.reply(raraWrap("tomp4", "❌ Stiker tidak dapat dikonversi."));
     }
 
     const mp4Buffer = await gifToMp4(gifBuffer);
@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("tomp4 error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("tomp4", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("tomp4", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

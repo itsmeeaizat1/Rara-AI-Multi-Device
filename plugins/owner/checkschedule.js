@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
-import { getFullSchedulerStatus, formatTimeRemaining, getMsUntilTime } from '../../src/lib/nova-scheduler.js'
-import { initSholatScheduler, stopSholatScheduler } from '../../src/lib/nova-sholat-scheduler.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { getTodaySchedule, extractPrayerTimes } from '../../src/lib/nova-sholat-api.js'
-import te from '../../src/lib/nova-error.js'
+import { getFullSchedulerStatus, formatTimeRemaining, getMsUntilTime } from '../../src/lib/rara-scheduler.js'
+import { initSholatScheduler, stopSholatScheduler } from '../../src/lib/rara-sholat-scheduler.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { getTodaySchedule, extractPrayerTimes } from '../../src/lib/rara-sholat-api.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'cekschedule',
     alias: ["cekschedule"],
@@ -95,10 +95,10 @@ async function handler(m, { sock }) {
         text += `Gunakan \`.stopschedule <key>\` untuk stop\n`;
         text += `Gunakan \`.startschedule <key>\` untuk start`;
 
-        await m.reply(novaWrap("cekschedule", text));
+        await m.reply(raraWrap("cekschedule", text));
     } catch (error) {
         console.error('[CekSchedule Error]', error);
-        await m.reply(novaWrap("cekschedule", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(raraWrap("cekschedule", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 

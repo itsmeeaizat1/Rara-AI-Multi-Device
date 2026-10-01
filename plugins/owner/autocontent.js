@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autocontent — Auto-Content Scheduler
  *
@@ -33,9 +33,9 @@
  */
 
 import { CronJob } from "cron";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -235,11 +235,11 @@ async function sendContentToGroup(sock, schedule) {
       timeZone: "Asia/Jakarta",
     });
 
-    const msg = novaBox(`${icon} ${ct?.name || schedule.type}`, [
+    const msg = raraBox(`${icon} ${ct?.name || schedule.type}`, [
       content,
       "---",
       `${now} WIB`,
-      `Scheduled by Nova AI`,
+      `Scheduled by Rara AI`,
     ]);
 
     // Send to group
@@ -357,7 +357,7 @@ async function handler(m, { sock, config: botConfig }) {
       const status = settings.enabled ? "ON" : "OFF";
       const activeSchedules = settings.schedules.filter((s) => s.enabled).length;
 
-      const msg = novaBox("AUTO-CONTENT SCHEDULER", [
+      const msg = raraBox("AUTO-CONTENT SCHEDULER", [
         `Status: ${status}`,
         `Schedules: ${settings.schedules.length} (${activeSchedules} aktif)`,
         `Default time: ${settings.defaultTime} WIB`,
@@ -369,7 +369,7 @@ async function handler(m, { sock, config: botConfig }) {
         `| Last Run: ${settings.stats.lastRun || "Belum ada"}`,
       ]);
 
-      await m.reply(msg + "\n\n" + novaBox("COMMANDS", [
+      await m.reply(msg + "\n\n" + raraBox("COMMANDS", [
         `${prefix}autocontent on/off`,
         `${prefix}autocontent add <type> <HH:MM> <gid>`,
         `${prefix}autocontent custom <HH:MM> <gid> <prompt>`,
@@ -391,7 +391,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.enabled = true;
       db.db.write();
       startAllCronJobs(sock);
-      await m.reply(novaBox("AUTO-CONTENT", [
+      await m.reply(raraBox("AUTO-CONTENT", [
         "Status: ON",
         "Auto-content scheduler aktif",
         `${settings.schedules.filter((s) => s.enabled).length} schedule aktif`,
@@ -405,7 +405,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.db.write();
       Object.values(cronJobs).forEach((job) => job?.stop?.());
       cronJobs = {};
-      await m.reply(novaBox("AUTO-CONTENT", ["Status: OFF", "Auto-content scheduler dimatikan"]));
+      await m.reply(raraBox("AUTO-CONTENT", ["Status: OFF", "Auto-content scheduler dimatikan"]));
       return { handled: true };
     }
 
@@ -416,7 +416,7 @@ async function handler(m, { sock, config: botConfig }) {
       const target = args[3];
 
       if (!type || !time || !target) {
-        await m.reply(novaBox("AUTO-CONTENT", [
+        await m.reply(raraBox("AUTO-CONTENT", [
           `Format: ${prefix}autocontent add <type> <HH:MM> <gid>`,
           `Contoh: ${prefix}autocontent add islamic 05:00 120363xxx@g.us`,
           `Ketik ${prefix}autocontent types untuk daftar tipe`,
@@ -425,7 +425,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       if (!CONTENT_TYPES[type]) {
-        await m.reply(novaBox("AUTO-CONTENT", [
+        await m.reply(raraBox("AUTO-CONTENT", [
           `Tipe tidak dikenal: ${type}`,
           `Ketik ${prefix}autocontent types untuk daftar`,
         ]));
@@ -433,12 +433,12 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       if (!/^\d{2}:\d{2}$/.test(time)) {
-        await m.reply(novaBox("AUTO-CONTENT", ["Format waktu: HH:MM (24 jam)", `Contoh: 05:00`]));
+        await m.reply(raraBox("AUTO-CONTENT", ["Format waktu: HH:MM (24 jam)", `Contoh: 05:00`]));
         return { handled: true };
       }
 
       if (!target.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-CONTENT", ["Target harus grup (@g.us)", `Contoh: 120363xxx@g.us`]));
+        await m.reply(raraBox("AUTO-CONTENT", ["Target harus grup (@g.us)", `Contoh: 120363xxx@g.us`]));
         return { handled: true };
       }
 
@@ -468,7 +468,7 @@ async function handler(m, { sock, config: botConfig }) {
         startCronJob(sock, newSchedule);
       }
 
-      await m.reply(novaBox("AUTO-CONTENT", [
+      await m.reply(raraBox("AUTO-CONTENT", [
         `Schedule ditambahkan!`,
         `ID: ${scheduleId}`,
         `Type: ${CONTENT_TYPES[type].name}`,
@@ -486,7 +486,7 @@ async function handler(m, { sock, config: botConfig }) {
       const prompt = args.slice(3).join(" ");
 
       if (!time || !target || !prompt) {
-        await m.reply(novaBox("AUTO-CONTENT", [
+        await m.reply(raraBox("AUTO-CONTENT", [
           `Format: ${prefix}autocontent custom <HH:MM> <gid> <prompt>`,
           `Contoh: ${prefix}autocontent custom 09:00 120363xxx@g.us Bagikan resep masakan hari ini`,
           `Variabel: {group}, {date}, {time}`,
@@ -495,7 +495,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       if (!/^\d{2}:\d{2}$/.test(time)) {
-        await m.reply(novaBox("AUTO-CONTENT", ["Format waktu: HH:MM"]));
+        await m.reply(raraBox("AUTO-CONTENT", ["Format waktu: HH:MM"]));
         return { handled: true };
       }
 
@@ -525,7 +525,7 @@ async function handler(m, { sock, config: botConfig }) {
         startCronJob(sock, newSchedule);
       }
 
-      await m.reply(novaBox("AUTO-CONTENT", [
+      await m.reply(raraBox("AUTO-CONTENT", [
         `Custom schedule ditambahkan!`,
         `ID: ${scheduleId}`,
         `Time: ${time} WIB (daily)`,
@@ -540,7 +540,7 @@ async function handler(m, { sock, config: botConfig }) {
       const scheduleId = args[1];
       const idx = settings.schedules.findIndex((s) => s.id === scheduleId);
       if (idx === -1) {
-        await m.reply(novaBox("AUTO-CONTENT", [`Schedule tidak ditemukan: ${scheduleId}`]));
+        await m.reply(raraBox("AUTO-CONTENT", [`Schedule tidak ditemukan: ${scheduleId}`]));
         return { handled: true };
       }
       settings.schedules.splice(idx, 1);
@@ -549,14 +549,14 @@ async function handler(m, { sock, config: botConfig }) {
         cronJobs[scheduleId].stop();
         delete cronJobs[scheduleId];
       }
-      await m.reply(novaBox("AUTO-CONTENT", [`Schedule ${scheduleId} dihapus`]));
+      await m.reply(raraBox("AUTO-CONTENT", [`Schedule ${scheduleId} dihapus`]));
       return { handled: true };
     }
 
     // ─── LIST SCHEDULES ───
     if (sub === "list") {
       if (settings.schedules.length === 0) {
-        await m.reply(novaBox("AUTO-CONTENT", [
+        await m.reply(raraBox("AUTO-CONTENT", [
           "Belum ada schedule",
           `Ketik: ${prefix}autocontent add <type> <time> <gid>`,
         ]));
@@ -569,7 +569,7 @@ async function handler(m, { sock, config: botConfig }) {
           `| ${typeName} | ${s.time} WIB | ${s.interval}`,
           `| Target: ${s.groupName || s.target?.slice(0, 20)}`;
       }).join("\n| \n| ");
-      await m.reply(novaBox("AUTO-CONTENT — SCHEDULES", [
+      await m.reply(raraBox("AUTO-CONTENT — SCHEDULES", [
         `Total: ${settings.schedules.length}`,
         "---",
         list,
@@ -582,7 +582,7 @@ async function handler(m, { sock, config: botConfig }) {
       const types = Object.entries(CONTENT_TYPES).map(
         ([key, val]) => `${val.icon} ${key} = ${val.name}`
       ).join("\n| ");
-      await m.reply(novaBox("AUTO-CONTENT — CONTENT TYPES", [
+      await m.reply(raraBox("AUTO-CONTENT — CONTENT TYPES", [
         `| ${types}`,
         "---",
         `Custom: ketik ${prefix}autocontent custom <time> <gid> <prompt>`,
@@ -595,10 +595,10 @@ async function handler(m, { sock, config: botConfig }) {
       const scheduleId = args[1];
       const schedule = settings.schedules.find((s) => s.id === scheduleId);
       if (!schedule) {
-        await m.reply(novaBox("AUTO-CONTENT", [`Schedule tidak ditemukan: ${scheduleId}`]));
+        await m.reply(raraBox("AUTO-CONTENT", [`Schedule tidak ditemukan: ${scheduleId}`]));
         return { handled: true };
       }
-      await m.reply(novaBox("AUTO-CONTENT", [
+      await m.reply(raraBox("AUTO-CONTENT", [
         `Generating content untuk ${schedule.id}...`,
         `Type: ${CONTENT_TYPES[schedule.type]?.name || "Custom"}`,
       ]));
@@ -608,9 +608,9 @@ async function handler(m, { sock, config: botConfig }) {
         settings.stats.byType[schedule.type] = (settings.stats.byType[schedule.type] || 0) + 1;
         settings.stats.lastRun = new Date().toISOString();
         db.db.write();
-        await m.reply(novaBox("AUTO-CONTENT", [`Content terkirim ke ${schedule.groupName}`]));
+        await m.reply(raraBox("AUTO-CONTENT", [`Content terkirim ke ${schedule.groupName}`]));
       } else {
-        await m.reply(novaBox("AUTO-CONTENT", [`Gagal kirim content`]));
+        await m.reply(raraBox("AUTO-CONTENT", [`Gagal kirim content`]));
       }
       return { handled: true };
     }
@@ -619,12 +619,12 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "analyze") {
       const targetGid = args[1] || gid;
       if (!targetGid.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO-CONTENT", ["Target harus grup (@g.us)"]));
+        await m.reply(raraBox("AUTO-CONTENT", ["Target harus grup (@g.us)"]));
         return { handled: true };
       }
       const bestTimes = analyzeBestTime(targetGid);
       if (!bestTimes) {
-        await m.reply(novaBox("AUTO-CONTENT", [
+        await m.reply(raraBox("AUTO-CONTENT", [
           "Belum cukup data untuk analisis",
           "Bot perlu track aktivitas grup minimal 10 pesan",
           `Data saat ini: ${activityTracker[targetGid]?.totalMessages || 0} pesan`,
@@ -632,7 +632,7 @@ async function handler(m, { sock, config: botConfig }) {
         return { handled: true };
       }
       const timeList = bestTimes.map((t) => `${String(t.hour).padStart(2, "0")}:00 (${t.count} msg)`).join("\n| ");
-      await m.reply(novaBox("AUTO-CONTENT — GROUP ANALYSIS", [
+      await m.reply(raraBox("AUTO-CONTENT — GROUP ANALYSIS", [
         `Grup: ${targetGid.slice(0, 20)}...`,
         `Total pesan tracked: ${activityTracker[targetGid].totalMessages}`,
         "---",
@@ -650,11 +650,11 @@ async function handler(m, { sock, config: botConfig }) {
       const interval = (args[2] || "").toLowerCase();
       const schedule = settings.schedules.find((s) => s.id === scheduleId);
       if (!schedule) {
-        await m.reply(novaBox("AUTO-CONTENT", [`Schedule tidak ditemukan: ${scheduleId}`]));
+        await m.reply(raraBox("AUTO-CONTENT", [`Schedule tidak ditemukan: ${scheduleId}`]));
         return { handled: true };
       }
       if (!["daily", "weekly", "monthly"].includes(interval)) {
-        await m.reply(novaBox("AUTO-CONTENT", [
+        await m.reply(raraBox("AUTO-CONTENT", [
           `Interval saat ini: ${schedule.interval}`,
           `Pilihan: daily, weekly, monthly`,
           `Ketik: ${prefix}autocontent interval <id> <daily/weekly/monthly>`,
@@ -666,7 +666,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (settings.enabled && schedule.enabled) {
         startCronJob(sock, schedule);
       }
-      await m.reply(novaBox("AUTO-CONTENT", [
+      await m.reply(raraBox("AUTO-CONTENT", [
         `Schedule ${scheduleId}`,
         `Interval: ${interval}`,
       ]));
@@ -685,7 +685,7 @@ async function handler(m, { sock, config: botConfig }) {
         .map(([g, count]) => `${g.slice(0, 15)}...: ${count}x`)
         .join("\n| ") || "Belum ada";
 
-      await m.reply(novaBox("AUTO-CONTENT — STATISTIK", [
+      await m.reply(raraBox("AUTO-CONTENT — STATISTIK", [
         `Total Sent: ${settings.stats.totalSent}`,
         `Total Failed: ${settings.stats.totalFailed}`,
         `Last Run: ${settings.stats.lastRun || "Belum ada"}`,
@@ -703,7 +703,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "reset") {
       settings.stats = { totalSent: 0, totalFailed: 0, byType: {}, byGroup: {}, lastRun: null };
       db.db.write();
-      await m.reply(novaBox("AUTO-CONTENT", ["Statistik direset"]));
+      await m.reply(raraBox("AUTO-CONTENT", ["Statistik direset"]));
       return { handled: true };
     }
 
@@ -711,7 +711,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "settime") {
       const time = args[1];
       if (!time || !/^\d{2}:\d{2}$/.test(time)) {
-        await m.reply(novaBox("AUTO-CONTENT", [
+        await m.reply(raraBox("AUTO-CONTENT", [
           `Default time: ${settings.defaultTime} WIB`,
           `Ketik: ${prefix}autocontent settime HH:MM`,
         ]));
@@ -719,12 +719,12 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.defaultTime = time;
       db.db.write();
-      await m.reply(novaBox("AUTO-CONTENT", [`Default time: ${time} WIB`]));
+      await m.reply(raraBox("AUTO-CONTENT", [`Default time: ${time} WIB`]));
       return { handled: true };
     }
 
     // ─── UNKNOWN ───
-    await m.reply(novaBox("AUTO-CONTENT", [
+    await m.reply(raraBox("AUTO-CONTENT", [
       `Command tidak dikenal: ${sub}`,
       `Ketik ${prefix}autocontent untuk dashboard`,
     ]));
@@ -732,7 +732,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   } catch (error) {
     console.error("[autocontent] handler error:", error.message);
-    await m.reply(novaError("AutoContent", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("AutoContent", "Gagal nih, coba lagi ya"));
     return { handled: true };
   }
 }

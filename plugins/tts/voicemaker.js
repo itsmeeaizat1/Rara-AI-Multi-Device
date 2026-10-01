@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaGuide } from "../../src/lib/nova-menu-style.js";
+import { raraGuide } from "../../src/lib/rara-menu-style.js";
 import { haidarTTS } from "../../src/scraper/haidar-ai.js";
 
 const pluginConfig = {
@@ -32,7 +32,7 @@ const VOICES = [
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaGuide("VoiceMaker", "Mau bikin voice dari teks? Pilih voice-nya ya!", `${m.prefix}voicemaker id-ID-ArdiNeural Halo dunia`));
+    return m.reply(raraGuide("VoiceMaker", "Mau bikin voice dari teks? Pilih voice-nya ya!", `${m.prefix}voicemaker id-ID-ArdiNeural Halo dunia`));
   }
 
   let voice = "id-ID-ArdiNeural";

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // smartdigest.js — Activity Digest (integrated with automation hub)
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "smartdigest",
@@ -84,14 +84,14 @@ async function handler(m, { sock }) {
     if (subCmd === "auto") {
       const toggle = args[1]?.toLowerCase()
       if (toggle === "on") { cfg.autoEnabled = true; save(db);
-        return m.reply(novaWrap("smartdigest", "Auto-digest: ON\nJam kirim: " + cfg.sendTime + " WIB\nDikirim ke PM owner otomatis")) }
+        return m.reply(raraWrap("smartdigest", "Auto-digest: ON\nJam kirim: " + cfg.sendTime + " WIB\nDikirim ke PM owner otomatis")) }
       if (toggle === "off") { cfg.autoEnabled = false; save(db);
-        return m.reply(novaWrap("smartdigest", "Auto-digest: OFF")) }
+        return m.reply(raraWrap("smartdigest", "Auto-digest: OFF")) }
     }
 
     if (subCmd === "settime") {
       cfg.sendTime = args[1] || "08:00"; save(db);
-      return m.reply(novaWrap("smartdigest", "Jam kirim: " + cfg.sendTime + " WIB"))
+      return m.reply(raraWrap("smartdigest", "Jam kirim: " + cfg.sendTime + " WIB"))
     }
 
     if (subCmd === "reset") {
@@ -100,14 +100,14 @@ async function handler(m, { sock }) {
         messages: 0, errors: 0, newMembers: 0, startedAt: Date.now(),
       }
       save(db);
-      return m.reply(novaWrap("smartdigest", "Stats direset."))
+      return m.reply(raraWrap("smartdigest", "Stats direset."))
     }
 
     // Default: now
     return m.reply(generateDigest(getStats(db)))
   } catch (e) {
     console.error("[smartdigest] error:", e.message)
-    return m.reply(novaWrap("smartdigest", "Gagal proses. Coba lagi.", "error"))
+    return m.reply(raraWrap("smartdigest", "Gagal proses. Coba lagi.", "error"))
   }
 }
 

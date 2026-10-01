@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import * as _canvas from '@napi-rs/canvas'
 import axios from "axios";
 import path from "path";
 import fs from "fs";
 
 
-import { uploadTo0x0 } from "../../src/lib/nova-tmpfiles.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { uploadTo0x0 } from "../../src/lib/rara-tmpfiles.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "fakeml",
   alias: ["fakeml"],
@@ -44,13 +44,13 @@ async function handler(m, { sock }) {
     try {
       buffer = await m.quoted.download();
     } catch (e) {
-      m.reply(novaWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
+      m.reply(raraWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
     }
   } else if (m.isMedia && m.type === "imageMessage") {
     try {
       buffer = await m.download();
     } catch (e) {
-      m.reply(novaWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
+      m.reply(raraWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
     }
   } else {
     try {
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     }
   }
   if (!buffer) {
-    return m.reply(novaError("FakeML", "Kirim/reply gambar dulu nih!"));
+    return m.reply(raraError("FakeML", "Kirim/reply gambar dulu nih!"));
   }
   try {
     await m.react("🕒");
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (error) {
     await m.react("❌");
-    m.reply(novaWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Voice Note Captcha Interrogation — Ujian suara untuk bukti manusia asli
 // Hook ke daftarotomatis: setelah captcha teks benar, user harus kirim VN baca kalimat acak
 // Bot verify via Gemini multimodal: cek suara manusia + cek konten kalimat cocok
 // .vncaptcha on/off — Toggle (default OFF saat pairing)
 // .vncaptcha status — Cek status
 // .vncaptcha strict on/off — Strict mode (VN wajib, gagal = block)
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getApiKey, hasApiKey } from "../../src/lib/rara-api-keys.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "vncaptcha",
@@ -83,7 +83,7 @@ async function handler(m, { sock, config: botConfig }) {
         strict: cfg[gid]?.strict ?? false,
       };
       db.db.write();
-      const text = novaWrap("VN Captcha Interrogation", [
+      const text = raraWrap("VN Captcha Interrogation", [
         "Status: ON",
         "Strict: " + (cfg[gid].strict ? "ON (gagal VN = block 24jam)" : "OFF (gagal VN = retry 3x)"),
         "",
@@ -107,12 +107,12 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
-      const text = novaWrap("VN Captcha Interrogation", ["Status: OFF", "Verifikasi suara dimatikan, kembali ke captcha teks saja"].join("\n"));
+      const text = raraWrap("VN Captcha Interrogation", ["Status: OFF", "Verifikasi suara dimatikan, kembali ke captcha teks saja"].join("\n"));
       await m.reply( text, "vncaptcha");
     } else if (args[0] === "strict") {
       const strictOpt = args[1];
       if (strictOpt !== "on" && strictOpt !== "off") {
-        const text = novaWrap("VN Captcha Interrogation", "Pilih: on (gagal = block 24jam) atau off (gagal = retry 3x)");
+        const text = raraWrap("VN Captcha Interrogation", "Pilih: on (gagal = block 24jam) atau off (gagal = retry 3x)");
         await m.reply( text, "vncaptcha");
         return { handled: true };
       }
@@ -120,7 +120,7 @@ async function handler(m, { sock, config: botConfig }) {
       cfg[gid].strict = strictOpt === "on";
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
-      const text = novaWrap("VN Captcha Interrogation", [
+      const text = raraWrap("VN Captcha Interrogation", [
         "Strict: " + (cfg[gid].strict ? "ON (gagal VN = block 24jam)" : "OFF (gagal VN = retry 3x)"),
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
@@ -128,7 +128,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const strict = cfg[gid]?.strict ? "ON (block 24jam)" : "OFF (retry 3x)";
-      const text = novaWrap("VN Captcha Interrogation", [
+      const text = raraWrap("VN Captcha Interrogation", [
         "Status: " + status,
         "Strict: " + strict,
         "Default: OFF (tidak aktif saat pairing)",
@@ -142,7 +142,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "vncaptcha");
     }
   } catch (e) {
-    await m.reply(novaWrap("vncaptcha", "Gagal proses. Coba lagi.", "error"));
+    await m.reply(raraWrap("vncaptcha", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }
@@ -192,7 +192,7 @@ export async function startVnCaptchaChallenge(m, sock, registrationData) {
         if (global.vnCaptchaSessions[jid]) {
           delete global.vnCaptchaSessions[jid];
           sock.sendMessage(jid, {
-            text: novaWrap("VN Captcha Interrogation", [
+            text: raraWrap("VN Captcha Interrogation", [
               "Waktu habis!",
               "Verifikasi suara gagal. Silakan coba lagi dengan .daftarotomatis",
             ].join("\n")),
@@ -201,7 +201,7 @@ export async function startVnCaptchaChallenge(m, sock, registrationData) {
       }, 120000), // 2 menit timeout
     };
 
-    const text = novaWrap("VN Captcha Interrogation", [
+    const text = raraWrap("VN Captcha Interrogation", [
       "Captcha teks berhasil!",
       "",
       "Sekarang verifikasi tahap 2: UJIAN SUARA",
@@ -244,7 +244,7 @@ export async function verifyVnCaptcha(m, sock) {
       // Not a VN, remind user
       if (!m.isCommand) {
         await sock.sendMessage(jid, {
-          text: novaWrap("VN Captcha Interrogation", [
+          text: raraWrap("VN Captcha Interrogation", [
             "Kirim VOICE NOTE, bukan teks!",
             "Tekan tombol mic di WhatsApp dan baca kalimat:",
             "",
@@ -337,7 +337,7 @@ export async function verifyVnCaptcha(m, sock) {
         try { await sock.sendReaction(jid, "🐣", m.key); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
 
         await sock.sendMessage(jid, {
-          text: novaWrap("VN Captcha Interrogation", [
+          text: raraWrap("VN Captcha Interrogation", [
             "Hasil: LULS",
             "",
             "Suara: Terdeteksi manusia asli",
@@ -380,7 +380,7 @@ export async function verifyVnCaptcha(m, sock) {
             db.db.write();
 
             await sock.sendMessage(jid, {
-              text: novaWrap("VN Captcha Interrogation", [
+              text: raraWrap("VN Captcha Interrogation", [
                 "Hasil: GAGAL",
                 "",
                 "Suara: " + (result.is_human_voice ? "Manusia" : "Robot/TTS"),
@@ -392,7 +392,7 @@ export async function verifyVnCaptcha(m, sock) {
             }, { quoted: m });
           } else {
             await sock.sendMessage(jid, {
-              text: novaWrap("VN Captcha Interrogation", [
+              text: raraWrap("VN Captcha Interrogation", [
                 "Hasil: GAGAL (3x)",
                 "",
                 "Suara: " + (result.is_human_voice ? "Manusia" : "Robot/TTS"),
@@ -410,7 +410,7 @@ export async function verifyVnCaptcha(m, sock) {
           session.sentence = newSentence;
 
           await sock.sendMessage(jid, {
-            text: novaWrap("VN Captcha Interrogation", [
+            text: raraWrap("VN Captcha Interrogation", [
               "Hasil: GAGAL (" + session.attempts + "/" + session.maxAttempts + ")",
               "",
               "Suara: " + (result.is_human_voice ? "Manusia" : "Robot/TTS"),

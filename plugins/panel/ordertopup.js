@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ordertopup.js — AUTO ORDER TOPUP PanelPedia (buyer): pilih layanan dari
 // panelpediatopup.com → bayar QRIS Pakasir → lunas → order ke API PanelPedia
 // OTOMATIS + pantau status (Proses/Sukses/Gagal/Refund) → struk ke DM buyer.
@@ -8,18 +8,18 @@
 // Harga = modal API (sesuai level akun: basic/gold/platinum) + markup owner
 // (.autoorder markuptopup). Kredensial API owner: .autoorder pediatopup.
 import { config } from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import {
   ensureOrderCfg, buildPakasir, fmtRupiah, getOrderTimings,
   _setPakasirFactoryForTest, _resetPakasirFactoryForTest,
   _setOrderTimingsForTest, _resetOrderTimingsForTest,
-} from "../../src/lib/nova-auto-order.js";
+} from "../../src/lib/rara-auto-order.js";
 import {
   pediaProfile, pediaPriceKey, pediaServices, pediaFindService,
   pediaOrder, pediaStatus, pediaOrderId,
   _setPediaHttpForTest, _resetPediaHttpForTest,
-} from "../../src/lib/nova-pediatopup.js";
+} from "../../src/lib/rara-pediatopup.js";
 
 const pluginConfig = {
   name: "ordertopup",
@@ -61,15 +61,15 @@ function cleanServer(v) { return String(v || "").trim().replace(/\D/g, "").slice
 async function listServices(m, { db }, keyword) {
   const cfg = ensureOrderCfg(db);
   if (!cfg.pediatopup.apiId || !cfg.pediatopup.apiKey) {
-    return m.reply(novaWrap("Auto Order TopUp", "Layanan belum siap (owner belum set API PanelPedia).", "error"));
+    return m.reply(raraWrap("Auto Order TopUp", "Layanan belum siap (owner belum set API PanelPedia).", "error"));
   }
   const r = await pediaServices(cfg);
-  if (!r.ok) return m.reply(novaWrap("Auto Order TopUp", `Gak bisa ambil layanan: ${r.error}`, "error"));
+  if (!r.ok) return m.reply(raraWrap("Auto Order TopUp", `Gak bisa ambil layanan: ${r.error}`, "error"));
   let list = r.list;
   const kw = String(keyword || "").toLowerCase().trim();
   if (kw) list = list.filter((s) => s.game.toLowerCase().includes(kw) || s.name.toLowerCase().includes(kw));
   const total = r.list.length;
-  if (!list.length) return m.reply(novaWrap("Auto Order TopUp", `Gak ada layanan${kw ? ` yang cocok "${keyword}"` : ""}. Coba keyword lain.`));
+  if (!list.length) return m.reply(raraWrap("Auto Order TopUp", `Gak ada layanan${kw ? ` yang cocok "${keyword}"` : ""}. Coba keyword lain.`));
   const profKey = await (async () => { const p = await pediaProfile(cfg); return p.ok ? pediaPriceKey(p.data.role) : "basic"; })();
   const markup = Number(cfg.pediatopup.markup || 0);
   const shown = list.slice(0, 15);
@@ -77,7 +77,7 @@ async function listServices(m, { db }, keyword) {
     const modal = Number(s.harga?.[profKey] ?? s.harga?.basic ?? 0);
     return `• [${s.id}] ${s.game} — ${s.name}\n   Harga: ${fmtRupiah((Number.isFinite(modal) ? modal : 0) + markup)}`;
   });
-  return m.reply(novaWrap("Auto Order TopUp", [
+  return m.reply(raraWrap("Auto Order TopUp", [
     `Total layanan aktif: ${total}${kw ? ` · cocok "${keyword}": ${list.length}` : ""} (tampil maks 15)`,
     ...(kw ? [] : ["", `Cari: .topuplist <keyword> (contoh: .topuplist mobile legends)`]),
     "",
@@ -95,24 +95,24 @@ async function listServices(m, { db }, keyword) {
 async function statusOrder(m, { sock, db }, orderId) {
   const cfg = ensureOrderCfg(db);
   const id = String(orderId || "").trim();
-  if (!id) return m.reply(novaWrap("Auto Order TopUp", novaGuide(".topupstatus <order_id>", ["Order ID ada di struk/DM pesanan kamu."])));
+  if (!id) return m.reply(raraWrap("Auto Order TopUp", raraGuide(".topupstatus <order_id>", ["Order ID ada di struk/DM pesanan kamu."])));
   const rec = cfg.topupOrders?.[id];
   const isOwner = m.sender === ownerJid();
   if (!rec && !isOwner) {
-    return m.reply(novaWrap("Auto Order TopUp", `Order ${id} gak ketemu di catatan bot. Cek ID-nya lagi ya.`, "error"));
+    return m.reply(raraWrap("Auto Order TopUp", `Order ${id} gak ketemu di catatan bot. Cek ID-nya lagi ya.`, "error"));
   }
   if (rec && rec.buyer !== m.sender && !isOwner) {
-    return m.reply(novaWrap("Auto Order TopUp", "Order itu bukan punya kamu — cek pakai order_id kamu sendiri ya.", "error"));
+    return m.reply(raraWrap("Auto Order TopUp", "Order itu bukan punya kamu — cek pakai order_id kamu sendiri ya.", "error"));
   }
   if (!cfg.pediatopup.apiId || !cfg.pediatopup.apiKey) {
-    return m.reply(novaWrap("Auto Order TopUp", "API PanelPedia belum di-set owner.", "error"));
+    return m.reply(raraWrap("Auto Order TopUp", "API PanelPedia belum di-set owner.", "error"));
   }
   const r = await pediaStatus(cfg, id);
-  if (!r.ok) return m.reply(novaWrap("Auto Order TopUp", `Cek status gagal: ${r.error}`, "error"));
+  if (!r.ok) return m.reply(raraWrap("Auto Order TopUp", `Cek status gagal: ${r.error}`, "error"));
   const d = r.data;
   const map = { sukses: "✅ SUKSES", gagal: "❌ GAGAL (hubungi owner buat refund)", refund: "↩️ REFUND (saldo dikembalikan provider)", proses: "⏳ MASIH DIPROSES" };
   const st = String(d.status || "").toLowerCase();
-  return m.reply(novaWrap("Status Order TopUp", [
+  return m.reply(raraWrap("Status Order TopUp", [
     `Order ID: ${d.order_id || id}`,
     `Layanan: ${d.service || "-"}`,
     `Data: ${d.data_id || "-"}`,
@@ -130,15 +130,15 @@ async function runTopup(m, { sock, db }, raw) {
   const buyer = m.sender;
   const chat = m.chat;
 
-  if (!cfg.on) return m.reply(novaWrap("Auto Order TopUp", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
+  if (!cfg.on) return m.reply(raraWrap("Auto Order TopUp", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
   if (!cfg.pakasir.slug || !cfg.pakasir.apikey) {
-    return m.reply(novaWrap("Auto Order TopUp", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
+    return m.reply(raraWrap("Auto Order TopUp", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
   }
   if (!cfg.pediatopup.apiId || !cfg.pediatopup.apiKey) {
-    return m.reply(novaWrap("Auto Order TopUp", "Layanan belum siap (owner belum set API PanelPedia).", "error"));
+    return m.reply(raraWrap("Auto Order TopUp", "Layanan belum siap (owner belum set API PanelPedia).", "error"));
   }
   if (pendingTopups.has(buyer)) {
-    return m.reply(novaWrap("Auto Order TopUp", "Kamu masih punya order berjalan. Tunggu selesai dulu ya.", "error"));
+    return m.reply(raraWrap("Auto Order TopUp", "Kamu masih punya order berjalan. Tunggu selesai dulu ya.", "error"));
   }
 
   const [svcRaw, targetRaw, serverRaw] = String(raw || "").split("|").map((v) => (v || "").trim());
@@ -146,13 +146,13 @@ async function runTopup(m, { sock, db }, raw) {
   const targetId = cleanTarget(targetRaw);
   const targetServer = cleanServer(serverRaw);
   if (!serviceId) {
-    return m.reply(novaWrap("Auto Order TopUp", novaGuide(".ordertopup <id_layanan>|<id_game>[|<server>]", [
+    return m.reply(raraWrap("Auto Order TopUp", raraGuide(".ordertopup <id_layanan>|<id_game>[|<server>]", [
       "Lihat daftar layanan: .topuplist",
       "Contoh: .ordertopup 12|98765432|2147",
     ])));
   }
   if (!targetId || targetId.length < 4) {
-    return m.reply(novaWrap("Auto Order TopUp", "ID game/target minimal 4 karakter (angka/huruf). Contoh: .ordertopup 12|98765432|2147", "error"));
+    return m.reply(raraWrap("Auto Order TopUp", "ID game/target minimal 4 karakter (angka/huruf). Contoh: .ordertopup 12|98765432|2147", "error"));
   }
 
   pendingTopups.add(buyer);
@@ -163,7 +163,7 @@ async function runTopup(m, { sock, db }, raw) {
     if (!prof.ok) throw new Error(`cek profile gagal: ${prof.error}`);
     const priceKey = pediaPriceKey(prof.data.role);
     const svc = await pediaFindService(cfg, serviceId);
-    if (!svc.ok) return m.reply(novaWrap("Auto Order TopUp", svc.error, "error"));
+    if (!svc.ok) return m.reply(raraWrap("Auto Order TopUp", svc.error, "error"));
     const modal = Number(svc.svc.harga?.[priceKey] ?? svc.svc.harga?.basic ?? 0);
     if (!Number.isFinite(modal) || modal <= 0) throw new Error("harga layanan gak valid di API");
     const markup = Number(cfg.pediatopup.markup || 0);
@@ -196,8 +196,8 @@ async function runTopup(m, { sock, db }, raw) {
       "",
       `Order kedaluwarsa otomatis ${Math.round(timeoutMs / 60000)} menit. Lunas = pesanan langsung dikirim ke sistem.`,
     ].join("\n");
-    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: novaWrap("Invoice TopUp", invoiceTextBody) }, { quoted: m });
-    else await m.reply(novaWrap("Invoice TopUp", invoiceTextBody));
+    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: raraWrap("Invoice TopUp", invoiceTextBody) }, { quoted: m });
+    else await m.reply(raraWrap("Invoice TopUp", invoiceTextBody));
 
     // poll sampai lunas/kedaluwarsa
     const t0 = Date.now();
@@ -212,21 +212,21 @@ async function runTopup(m, { sock, db }, raw) {
     }
 
     if (status === "canceled") {
-      await m.reply(novaWrap("Auto Order TopUp", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
+      await m.reply(raraWrap("Auto Order TopUp", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
       return;
     }
     if (status !== "completed") {
-      await m.reply(novaWrap("Auto Order TopUp", `Order ${orderId} kedaluwarsa (belum dibayar). Pesanan tidak dibuat.`));
+      await m.reply(raraWrap("Auto Order TopUp", `Order ${orderId} kedaluwarsa (belum dibayar). Pesanan tidak dibuat.`));
       return;
     }
 
     // LUNAS → order ke PanelPedia
-    await m.reply(novaWrap("Auto Order TopUp", `Pembayaran diterima! Mengirim pesanan ${produk} ke sistem…`));
+    await m.reply(raraWrap("Auto Order TopUp", `Pembayaran diterima! Mengirim pesanan ${produk} ke sistem…`));
     const ord = await pediaOrder(cfg, { orderId, serviceId, targetId, targetServer });
     if (!ord.ok) {
       const msgFail = `Order ${orderId} LUNAS tapi pengiriman ke PanelPedia GAGAL: ${ord.error}. Dana diproses manual — owner sudah dihubungi.`;
       await dm(sock, ownerJid(), `[AUTO ORDER TOPUP] Order ${orderId} (${produk}, ${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}) LUNAS tapi API gagal: ${ord.error}. Mohon proses manual/refund.`);
-      return m.reply(novaWrap("Auto Order TopUp", msgFail, "error"));
+      return m.reply(raraWrap("Auto Order TopUp", msgFail, "error"));
     }
 
     // catat order (buat .topupstatus)
@@ -259,25 +259,25 @@ async function runTopup(m, { sock, db }, raw) {
         "",
         `Cek kapan pun: .topupstatus ${orderId}`,
       ].join("\n");
-      const sentDm = await dm(sock, buyer, novaWrap("TopUp Berhasil", receipt));
+      const sentDm = await dm(sock, buyer, raraWrap("TopUp Berhasil", receipt));
       if (!sentDm) {
-        await m.reply(novaWrap("Auto Order TopUp", `TopUp kamu SUKSES tapi bot gak bisa DM kamu — chat bot dulu (kirim "halo"), lalu cek .topupstatus ${orderId}.`));
+        await m.reply(raraWrap("Auto Order TopUp", `TopUp kamu SUKSES tapi bot gak bisa DM kamu — chat bot dulu (kirim "halo"), lalu cek .topupstatus ${orderId}.`));
       } else if (m.isGroup) {
-        await m.reply(novaWrap("Auto Order TopUp", `TopUp SUKSES — struk dikirim ke DM kamu ya (${orderId}).`));
+        await m.reply(raraWrap("Auto Order TopUp", `TopUp SUKSES — struk dikirim ke DM kamu ya (${orderId}).`));
       }
       await dm(sock, ownerJid(), `[AUTO ORDER TOPUP] Order ${orderId} SUKSES: ${produk} ${fmtRupiah(price)} — buyer ${buyer.split("@")[0]}.`);
     } else if (stLower.includes("gagal")) {
-      await m.reply(novaWrap("Auto Order TopUp", `Order ${orderId} DINYATAKAN GAGAL oleh sistem. Owner sudah dihubungi buat proses refund ya.`, "error"));
+      await m.reply(raraWrap("Auto Order TopUp", `Order ${orderId} DINYATAKAN GAGAL oleh sistem. Owner sudah dihubungi buat proses refund ya.`, "error"));
       await dm(sock, ownerJid(), `[AUTO ORDER TOPUP] Order ${orderId} GAGAL di provider (${produk}, ${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}). Mohon proses refund buyer.`);
     } else if (stLower.includes("refund")) {
-      await m.reply(novaWrap("Auto Order TopUp", `Order ${orderId} di-REFUND oleh sistem (saldo dikembalikan). Cek .topupstatus ${orderId}.`));
+      await m.reply(raraWrap("Auto Order TopUp", `Order ${orderId} di-REFUND oleh sistem (saldo dikembalikan). Cek .topupstatus ${orderId}.`));
       await dm(sock, ownerJid(), `[AUTO ORDER TOPUP] Order ${orderId} REFUND di provider (${produk}, buyer ${buyer.split("@")[0]}).`);
     } else {
-      await m.reply(novaWrap("Auto Order TopUp", `Pesanan ${orderId} masih DIPROSES provider (biasanya beberapa menit). Cek statusnya nanti: .topupstatus ${orderId}`));
+      await m.reply(raraWrap("Auto Order TopUp", `Pesanan ${orderId} masih DIPROSES provider (biasanya beberapa menit). Cek statusnya nanti: .topupstatus ${orderId}`));
       await dm(sock, ownerJid(), `[AUTO ORDER TOPUP] Order ${orderId} masih Proses di provider (${produk}, buyer ${buyer.split("@")[0]}).`);
     }
   } catch (e) {
-    await m.reply(novaWrap("Auto Order TopUp", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
+    await m.reply(raraWrap("Auto Order TopUp", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
   } finally {
     pendingTopups.delete(buyer);
   }

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -29,7 +29,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const isVideo = m.isVideo || (m.quoted && m.quoted.isVideo) || (m.quoted && m.quoted.type === 'videoMessage')
     if (!isVideo) {
-        return m.reply(novaWrap("smemevid", [
+        return m.reply(raraWrap("smemevid", [
         "Reply atau kirim video dengan caption",
         "",
         "💡 Contoh: " + m.prefix + "smemevid Top|Bottom",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     const input = m.args.join(' ')
     if (!input || !input.includes('|')) {
-        { return await m.reply(novaWrap("smemevid", [
+        { return await m.reply(raraWrap("smemevid", [
             "📌 Format: top|bottom",
             "",
             "💡 Contoh: " + m.prefix + "smemevid WIDTH OR HEIGHT|WHY NOT BOTH?",
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         }
 
         if (!mediaBuffer) {
-            return m.reply(novaGagal("SmemeVid"))
+            return m.reply(raraGagal("SmemeVid"))
         }
 
         const tempId = Date.now()
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
                 .on('error', (err) => reject(err))
         })
 
-        const stickerConfig = config.sticker || { packname: 'Nova-AI', author: 'Bot' }
+        const stickerConfig = config.sticker || { packname: 'Rara-AI', author: 'Bot' }
 
         await sock.sendVideoAsSticker(m.chat, outputVideo, m, {
             packname: stickerConfig.packname,
@@ -146,9 +146,9 @@ async function handler(m, { sock }) {
         } catch (e) { console.error('[smemevid.js]:', e.message); }
 
         await m.react("🐣");
-        await m.reply(novaBerhasil("Smemevid"));
+        await m.reply(raraBerhasil("Smemevid"));
     } catch (error) {
-        m.reply(novaGangguan("SmemeVid"))
+        m.reply(raraGangguan("SmemeVid"))
     }
 }
 

@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Command: .alldl4 (alias: alldownloader4, allv4, adl4, all4)
 // All Downloader V4 — engine NixDL (nixdl-5-1.vercel.app, resolver publik
 // 22 platform dengan fallback chain upstream ala v3, tapi satu pintu API).
 // V1/V2/V3 gak disentuh sama sekali.
 
 import axios from "axios";
-import { novaWrap, novaGuide, toSC } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraGuide, toSC } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -163,7 +163,7 @@ async function handler(m, { sock, args }) {
   // guide
   if (!args.length) {
     return m.reply(
-      novaGuide(
+      raraGuide(
         "alldl4",
         "Universal downloader v4 — engine NixDL, 22 platform, auto-detect dari link",
         `${m.command || ".alldl4"} https://vt.tiktok.com/xxx\n${m.command || ".alldl4"} link1 link2 (batch max 5)\n${m.command || ".alldl4"} platforms`,
@@ -175,14 +175,14 @@ async function handler(m, { sock, args }) {
   // daftar platform
   if (first === "platforms" || first === "list" || first === "site") {
     const lines = PLATFORMS.map((p) => `${p.icon} ${p.name} — ${p.id}`).join("\n");
-    return m.reply(novaWrap("All Downloader V4 — NixDL", `22 platform didukung:\n\n${lines}`));
+    return m.reply(raraWrap("All Downloader V4 — NixDL", `22 platform didukung:\n\n${lines}`));
   }
 
   // kumpulin semua URL dari args (batch)
   const urls = args.filter((a) => /^https?:\/\//i.test(a)).slice(0, 5);
   if (!urls.length) {
     await m.react("❗");
-    return m.reply(novaGuide("alldl4", "Link-nya gak kebaca — masukkan URL lengkap diawali http:// atau https://", `${m.command || ".alldl4"} https://vt.tiktok.com/xxx`));
+    return m.reply(raraGuide("alldl4", "Link-nya gak kebaca — masukkan URL lengkap diawali http:// atau https://", `${m.command || ".alldl4"} https://vt.tiktok.com/xxx`));
   }
 
   await m.react("🕒");
@@ -248,7 +248,7 @@ async function handler(m, { sock, args }) {
   if (urls.length > 1 && fail) {
     await m.react(fail && !ok ? "❌" : "🐣");
     return m.reply(
-      novaWrap(
+      raraWrap(
         "All Downloader V4",
         `Berhasil ${ok}/${urls.length} link.` + (errors.length ? `\n\nGagal:\n${errors.join("\n")}` : "")
       )
@@ -257,7 +257,7 @@ async function handler(m, { sock, args }) {
 
   if (!ok) {
     await m.react("❌");
-    return m.reply(novaWrap("All Downloader V4", `Gagal: ${errors[0] || "link gak bisa diproses"}\n\nCoba ulang beberapa detik lagi (resolver publik kadang cold start), atau pakai .alldl / .alldownloader / .alldl3 sebagai alternatif.`));
+    return m.reply(raraWrap("All Downloader V4", `Gagal: ${errors[0] || "link gak bisa diproses"}\n\nCoba ulang beberapa detik lagi (resolver publik kadang cold start), atau pakai .alldl / .alldownloader / .alldl3 sebagai alternatif.`));
   }
 
   await m.react("🐣");

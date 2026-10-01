@@ -8,13 +8,13 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase(mkdtempSync(path.join(tmpdir(), "groupreg-e2e-db-")) + "/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase(mkdtempSync(path.join(tmpdir(), "groupreg-e2e-db-")) + "/rara.json");
 const db = getDatabase();
 
 const {
   ensureGroupRegistered, syncGroupRegistry, countGroupsLive, setLiveCacheForTest,
-} = await import(R + "/src/lib/nova-group-registry.js");
+} = await import(R + "/src/lib/rara-group-registry.js");
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");

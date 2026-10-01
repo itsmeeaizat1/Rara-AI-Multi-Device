@@ -1,16 +1,16 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Pomodoro Timer
  * Fitur: Timer belajar Pomodoro — sekarang PERSIST (tahan restart),
  *        live ticker 🕒 edit-in-place tiap fase + scheduler otomatis
- *        ganti fokus⇄istirahat (engine: src/lib/nova-pomodoro.js)
+ *        ganti fokus⇄istirahat (engine: src/lib/rara-pomodoro.js)
  */
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 import {
   getSession, createSession, endSession,
   buildPhaseCard, firePhaseTicker, ensurePomodoroScheduler,
   phaseEndTs, phaseMs, recomputeIfMissed,
-} from "../../src/lib/nova-pomodoro.js";
+} from "../../src/lib/rara-pomodoro.js";
 
 const pluginConfig = {
   name: "pomodoro",
@@ -46,7 +46,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   // .pomodoro start [focus_min] [break_min]
   if (sub === "start" || sub === "mulai") {
     if (getSession(sender)) {
-      return m.reply( novaWrap("Pomodoro", [
+      return m.reply( raraWrap("Pomodoro", [
         "Sesi sedang berjalan!",
         `Ketik ${prefix}pomodoro status untuk cek`,
         `Ketik ${prefix}pomodoro stop untuk berhenti`,
@@ -69,7 +69,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     ensurePomodoroScheduler(sock);
 
     // kartu mulai + live ticker 🕒 sampai fokus selesai
-    await m.reply( novaWrap("Pomodoro — Mulai", [
+    await m.reply( raraWrap("Pomodoro — Mulai", [
       "🍅 *SESI FOKUS DIMULAI!*",
       "",
       `⏱ Fokus: *${focusMin} menit*`,
@@ -85,7 +85,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   if (sub === "status" || sub === "cek") {
     let s = getSession(sender);
     if (!s) {
-      return m.reply( novaWrap("Pomodoro", [
+      return m.reply( raraWrap("Pomodoro", [
         "Belum ada sesi aktif.",
         `Ketik ${prefix}pomodoro start untuk mulai`,
       ].join("\n")), { commandName: "pomodoro" });
@@ -102,12 +102,12 @@ async function handler(m, { sock, args, config: botConfig }) {
   if (sub === "stop" || sub === "berhenti") {
     const s = getSession(sender);
     if (!s) {
-      return m.reply( novaWrap("Pomodoro", [
+      return m.reply( raraWrap("Pomodoro", [
         "Tidak ada sesi aktif.",
       ].join("\n")), { commandName: "pomodoro" });
     }
     const res = endSession(sender); // ticker fase lama otomatis kebatalin (isCancelled)
-    return m.reply( novaWrap("Pomodoro — Selesai", [
+    return m.reply( raraWrap("Pomodoro — Selesai", [
       "⏹ *Sesi dihentikan.*",
       "",
       `🔁 Cycle: ${res.cycles}x`,
@@ -118,7 +118,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   }
 
   // Default: help
-  const txt = novaWrap("Pomodoro Timer", [
+  const txt = raraWrap("Pomodoro Timer", [
     `Timer belajar Pomodoro: fokus ${DEFAULT_FOCUS} menit + istirahat ${DEFAULT_BREAK} menit`,
     "",
     `Perintah:`,

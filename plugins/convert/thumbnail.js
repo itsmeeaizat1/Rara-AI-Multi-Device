@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .thumbnail — ambil frame dari video sebagai thumbnail (request owner 11 Sep
 // 2026: "cara thumbnail mp4", varian no 1: frame otomatis di 20% durasi).
 // REVISI 11 Sep (owner: "kyk gaya thumbnail gambar saat ini cn versi video kyk
@@ -11,8 +11,8 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import { exec } from "child_process";
-import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
+import { raraError, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "thumbnail",
@@ -55,7 +55,7 @@ async function handler(m, { sock, args }) {
     if (!fromQuoted && !fromDirect) {
       await m.react("❗");
       return m.reply(
-        novaGuide(
+        raraGuide(
           "Thumbnail",
           "Unggah atau reply video (mp4/webm/mkv) dengan caption .thumbnail — hasilnya foto frame; tambah kata video buat thumbnail animasi",
           `${m.prefix}thumbnail\n${m.prefix}thumbnail 8\n${m.prefix}thumbnail video\n${m.prefix}thumbnail video 4 3`,
@@ -76,10 +76,10 @@ async function handler(m, { sock, args }) {
     const buffer = fromQuoted ? await q.download() : await m.download();
     if (!buffer || !buffer.length) {
       await m.react("❌");
-      return m.reply(novaError("Thumbnail", "Gagal download video. Coba kirim ulang."));
+      return m.reply(raraError("Thumbnail", "Gagal download video. Coba kirim ulang."));
     }
 
-    const tmpDir = path.join(os.tmpdir(), "nova-thumbnail");
+    const tmpDir = path.join(os.tmpdir(), "rara-thumbnail");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const tag = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     inputPath = path.join(tmpDir, `in-${tag}.mp4`);
@@ -105,14 +105,14 @@ async function handler(m, { sock, args }) {
         );
       } catch {
         await m.react("❌");
-        return m.reply(novaError("Thumbnail", "Gagal bikin clip animasi — mungkin video rusak / codec gak didukung. Coba .thumbnail video <detik> lain."));
+        return m.reply(raraError("Thumbnail", "Gagal bikin clip animasi — mungkin video rusak / codec gak didukung. Coba .thumbnail video <detik> lain."));
       }
 
       try { fs.unlinkSync(inputPath); inputPath = null; } catch {}
 
       if (!fs.existsSync(clipPath) || fs.statSync(clipPath).size === 0) {
         await m.react("❌");
-        return m.reply(novaError("Thumbnail", "Gagal bikin clip animasi — mungkin video rusak / codec gak didukung. Coba .thumbnail video <detik> lain."));
+        return m.reply(raraError("Thumbnail", "Gagal bikin clip animasi — mungkin video rusak / codec gak didukung. Coba .thumbnail video <detik> lain."));
       }
 
       const clipBuf = fs.readFileSync(clipPath);
@@ -142,14 +142,14 @@ async function handler(m, { sock, args }) {
       );
     } catch {
       await m.react("❌");
-      return m.reply(novaError("Thumbnail", "Gagal ambil frame — mungkin video rusak / codec gak didukung. Coba .thumbnail <detik> lain."));
+      return m.reply(raraError("Thumbnail", "Gagal ambil frame — mungkin video rusak / codec gak didukung. Coba .thumbnail <detik> lain."));
     }
 
     try { fs.unlinkSync(inputPath); inputPath = null; } catch {}
 
     if (!fs.existsSync(outputPath) || fs.statSync(outputPath).size === 0) {
       await m.react("❌");
-      return m.reply(novaError("Thumbnail", "Gagal ambil frame — mungkin codec gak didukung. Coba .thumbnail <detik> lain."));
+      return m.reply(raraError("Thumbnail", "Gagal ambil frame — mungkin codec gak didukung. Coba .thumbnail <detik> lain."));
     }
 
     const thumbBuf = fs.readFileSync(outputPath);
@@ -167,7 +167,7 @@ async function handler(m, { sock, args }) {
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaError("Thumbnail", e?.message || "Yah gagal kak, coba lagi 😩"));
+    return m.reply(raraError("Thumbnail", e?.message || "Yah gagal kak, coba lagi 😩"));
   } finally {
     try { if (inputPath && fs.existsSync(inputPath)) fs.unlinkSync(inputPath); } catch {}
     try { if (outputPath && fs.existsSync(outputPath)) fs.unlinkSync(outputPath); } catch {}

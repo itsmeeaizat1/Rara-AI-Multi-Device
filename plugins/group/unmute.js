@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'unmute',
     alias: ["unmute"],
@@ -24,10 +24,10 @@ function handler(m, { sock }) {
     const group = db.getGroup(m.chat) || {}
     const groupName = m.groupMetadata.subject
 
-    if (!group.mute) return m.reply(novaWrap("Unmute", '❌ Grup tidak sedang di-mute.'))
+    if (!group.mute) return m.reply(raraWrap("Unmute", '❌ Grup tidak sedang di-mute.'))
 
     db.setGroup(m.chat, { ...group, mute: false })
-    m.reply(novaWrap("Unmute", `Grup ${groupName} berhasil di-unmute oleh @${m.sender.split('@')[0]}\nSemua member sekarang bisa mengirim pesan.`, "success"), { mentions: [m.sender] })
+    m.reply(raraWrap("Unmute", `Grup ${groupName} berhasil di-unmute oleh @${m.sender.split('@')[0]}\nSemua member sekarang bisa mengirim pesan.`, "success"), { mentions: [m.sender] })
 }
 
 export { pluginConfig as config, handler }

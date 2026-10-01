@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .htmltetris — game Tetris HTML self-contained (kategori HTML, port altftool "Tetris Clone")
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "htmltetris", alias: ["tetrisnya"], category: "html",
@@ -22,11 +22,11 @@ async function handler(m, { sock, config }) {
     await sock.sendMessage(m.chat, {
       document: html,
       mimetype: "text/html",
-      fileName: "nova-tetris.html",
-      caption: novaWrap("HTML Game — Tetris", [
+      fileName: "rara-tetris.html",
+      caption: raraWrap("HTML Game — Tetris", [
         "🧱 GAME TETRIS SIAP MAIN",
         "",
-        "1. Buka lampiran nova-tetris.html",
+        "1. Buka lampiran rara-tetris.html",
         "2. Pilih buka di browser (Chrome/Safari)",
         "3. Main! Tombol ◀ ▶ ⟳ ⤓ di layar",
         "",
@@ -36,7 +36,7 @@ async function handler(m, { sock, config }) {
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("HTML Game — Tetris", ["ERROR: gagal menyiapkan game — " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("HTML Game — Tetris", ["ERROR: gagal menyiapkan game — " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

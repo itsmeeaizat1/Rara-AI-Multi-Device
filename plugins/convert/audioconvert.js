@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -34,14 +34,14 @@ const FORMATS = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(novaWrap("Audio Convert", "Reply audio yang mau di-convert."));
+    if (!quoted) return m.reply(raraWrap("Audio Convert", "Reply audio yang mau di-convert."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage || quoted.documentMessage;
-    if (!audioMsg) return m.reply(novaWrap("Audio Convert", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(raraWrap("Audio Convert", "Reply harus audio/voice note!"));
 
     const format = (args[0] || "").toLowerCase();
     if (!format || !FORMATS[format]) {
       const list = Object.entries(FORMATS).map(([k, v]) => k + " - " + v.desc).join("\n");
-      return m.reply(novaWrap("Audio Convert", [
+      return m.reply(raraWrap("Audio Convert", [
         "Format tujuan harus diisi!",
         "Format tersedia:",
         list,
@@ -52,7 +52,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const fmt = FORMATS[format];
     const isPttInput = !!quoted.pttMessage;
-    const tmpDir = path.join(os.tmpdir(), 'nova-audioconvert');
+    const tmpDir = path.join(os.tmpdir(), 'rara-audioconvert');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputExt = isPttInput ? "ogg" : (quoted.audioMessage?.mimetype?.split("/")[1] || "mp3");
@@ -71,7 +71,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -c:a ' + fmt.codec + extraFlags + ' -q:a 2 "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
-      return m.reply(novaGagal("AudioConvert"));
+      return m.reply(raraGagal("AudioConvert"));
     }
 
     const buf = fs.readFileSync(outputPath);
@@ -80,7 +80,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: fmt.mime,
       ptt: isPtt,
-      caption: novaWrap("Audio Convert", [
+      caption: raraWrap("Audio Convert", [
         "Berhasil convert!",
         "Format: " + format.toUpperCase() + " (" + fmt.desc + ")",
         "Codec: " + fmt.codec,
@@ -90,10 +90,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
-    await m.reply(novaBerhasil("AudioConvert"));
+    await m.reply(raraBerhasil("AudioConvert"));
   } catch (e) {
     console.error("audioconvert error:", e);
-    return m.reply(novaGangguan("AudioConvert"));
+    return m.reply(raraGangguan("AudioConvert"));
   }
 }
 

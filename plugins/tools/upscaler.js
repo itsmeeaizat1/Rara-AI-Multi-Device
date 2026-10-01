@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +35,7 @@ async function handler(m, { sock, config: botConfig }) {
     const media = extractImage(m);
     if (!media) {
       const text =
-        novaWrap("Upscaler", ["Kirim gambar + caption .upscaler",
+        raraWrap("Upscaler", ["Kirim gambar + caption .upscaler",
           "Atau reply gambar dengan .upscaler",
           "Format: PNG, JPG, WEBP"].join("\n")) +
         "\n" +
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     fs.writeFileSync(filePath, buffer);
 
     const text =
-      novaWrap("Upscaler", ["Efek: *HD/2x*",
+      raraWrap("Upscaler", ["Efek: *HD/2x*",
         "Status: *success*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -69,7 +69,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Tools", "Gagal nih, coba lagi ya");
+      raraError("Tools", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "upscaler");
   }

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
-import { startAiStatus } from "../../src/lib/nova-ai-status.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { callAI, callIkyy } from "../../src/lib/rara-ai-service.js";
+import { startAiStatus } from "../../src/lib/rara-ai-status.js";
 
 const pluginConfig = {
   name: "aibrowse",
@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🤖",
   name: "aibrowse",
   description: "Telusuri topik dan buat ringkasan riset singkat",
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      novaWrap("AI Browse", [`Pertanyaan: *${prompt.slice(0, 200)}${prompt.length > 200 ? "..." : ""}*`,
+      raraWrap("AI Browse", [`Pertanyaan: *${prompt.slice(0, 200)}${prompt.length > 200 ? "..." : ""}*`,
         `Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aibrowse <pertanyaan> untuk cari lagi`) +
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AIBrowse", "Gagal nih, coba lagi ya");
+      raraError("AIBrowse", "Gagal nih, coba lagi ya");
 
     if (aiStatus) await aiStatus.fail("AI Browse gagal — coba lagi ya");
     else { await m.react("❌"); await m.reply(text, "aibrowse"); }

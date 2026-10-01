@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
 
     if (!isVideo) {
       return m.reply(
-        novaGuide(
+        raraGuide(
           "fotolive",
           `Ubah video jadi foto live WhatsApp\nReply video lalu ketik ${m.prefix}fotolive`,
           `${m.prefix}fotolive — default (3s, 480p, 15fps)\n${m.prefix}fotolive 5 — 5 detik\n${m.prefix}fotolive 5 720 — 5 detik, 720p\n${m.prefix}fotolive 3 720 20 — 3 detik, 720p, 20fps`,
@@ -103,22 +103,22 @@ async function handler(m, { sock }) {
     } else if (m.quoted && m.quoted.download) {
       mediaBuffer = await m.quoted.download();
     } else {
-      return m.reply(novaWrap("fotolive", "Gagal download video. Coba reply video yang valid."));
+      return m.reply(raraWrap("fotolive", "Gagal download video. Coba reply video yang valid."));
     }
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
-      return m.reply(novaWrap("fotolive", "Buffer video tidak valid."));
+      return m.reply(raraWrap("fotolive", "Buffer video tidak valid."));
     }
 
     if (mediaBuffer.length > MAX_VIDEO_SIZE) {
-      return m.reply(novaWrap("fotolive", `Video terlalu besar: ${formatSize(mediaBuffer.length)}\nMaksimal: 25 MB`));
+      return m.reply(raraWrap("fotolive", `Video terlalu besar: ${formatSize(mediaBuffer.length)}\nMaksimal: 25 MB`));
     }
 
     // Save video to temp untuk cek durasi
     const tmpdir = os.tmpdir();
     const ts = Date.now();
-    const inputPath = path.join(tmpdir, `nova_vlive_${ts}.mp4`);
-    const outputPath = path.join(tmpdir, `nova_vlive_out_${ts}.mp4`);
+    const inputPath = path.join(tmpdir, `rara_vlive_${ts}.mp4`);
+    const outputPath = path.join(tmpdir, `rara_vlive_out_${ts}.mp4`);
 
     fs.writeFileSync(inputPath, mediaBuffer);
 
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
 
     if (srcDuration === 0) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
-      return m.reply(novaWrap("fotolive", "Tidak bisa membaca durasi video. Pastikan video valid."));
+      return m.reply(raraWrap("fotolive", "Tidak bisa membaca durasi video. Pastikan video valid."));
     }
 
     // Validasi durasi video sumber — MINIMAL

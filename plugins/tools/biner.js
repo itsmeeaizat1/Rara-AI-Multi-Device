@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "biner",
@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const parts = text.split(/\s+/);
     if (parts.length < 2) {
-      return m.reply(novaWrap("Biner", "Format: " + prefix + "biner <nilai> <dari> [ke]"));
+      return m.reply(raraWrap("Biner", "Format: " + prefix + "biner <nilai> <dari> [ke]"));
     }
 
     const value = parts[0];
@@ -93,13 +93,13 @@ async function handler(m, { sock, config: botConfig }) {
       (fromKey === "decimal" ? BASES.dec : null) || (fromKey === "hexadecimal" ? BASES.hex : null) ||
       (fromKey === "octal" ? BASES.oct : null);
     if (!fromBase) {
-      return m.reply(novaWrap("Biner", "Base sumber tidak dikenal!\nValid: bin, oct, dec, hex"));
+      return m.reply(raraWrap("Biner", "Base sumber tidak dikenal!\nValid: bin, oct, dec, hex"));
     }
 
     // Validate value for source base
     const validation = validateValue(value, fromBase.radix);
     if (!validation.valid) {
-      return m.reply(novaWrap("Biner", validation.error));
+      return m.reply(raraWrap("Biner", validation.error));
     }
     // If target specified, convert only to that
     if (toKey) {
@@ -107,14 +107,14 @@ async function handler(m, { sock, config: botConfig }) {
         (toKey === "decimal" ? BASES.dec : null) || (toKey === "hexadecimal" ? BASES.hex : null) ||
         (toKey === "octal" ? BASES.oct : null);
       if (!toBase) {
-        return m.reply(novaWrap("Biner", "Base target tidak dikenal!\nValid: bin, oct, dec, hex"));
+        return m.reply(raraWrap("Biner", "Base target tidak dikenal!\nValid: bin, oct, dec, hex"));
       }
 
       const conv = convertBase(value, fromBase.radix, toBase.radix);
       if (conv.error) {
-        return m.reply(novaWrap("Biner", conv.error));
+        return m.reply(raraWrap("Biner", conv.error));
       }
-      return m.reply(novaWrap("Base Convert", [
+      return m.reply(raraWrap("Base Convert", [
         "Input: " + value + " (" + fromBase.name + ")",
         "Hasil: " + conv.result + " (" + toBase.name + ")",
         "Decimal: " + conv.decimal,
@@ -138,11 +138,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     await m.react("🐣");
-    return m.reply(novaWrap("Base Convert (All)", lines.join("\n")));
+    return m.reply(raraWrap("Base Convert (All)", lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("biner error:", e);
-    return m.reply(novaWrap("Biner", "Error: " + e.message));
+    return m.reply(raraWrap("Biner", "Error: " + e.message));
   }
 }
 

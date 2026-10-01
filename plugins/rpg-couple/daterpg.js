@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Mulai berpacaran (dengan RPG stats)
 
-import { ensureRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, novaRpgBox, novaRpgGuide } from "../../src/lib/nova-games.js";
-import { getCintaData, startDating, DATING_MIN_LEVEL, formatDurasi } from "../../src/lib/nova-rpg-cinta.js";
+import { ensureRpg, getRpgData } from "../../src/lib/rara-rpg-service.js";
+import { raraGameBox, gameCTA, raraRpgBox, raraRpgGuide } from "../../src/lib/rara-games.js";
+import { getCintaData, startDating, DATING_MIN_LEVEL, formatDurasi } from "../../src/lib/rara-rpg-cinta.js";
 
 const pluginConfig = {
   name: "jadianmatch",
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     const cinta = getCintaData(m);
 
     if (cinta.spouse) {
-      return m.reply(novaRpgBox("RPG Cinta", [
+      return m.reply(raraRpgBox("RPG Cinta", [
         `Eh udah punya pacar nih! Sama ${cinta.spouseName}`,
         `Affection: ${cinta.affection || 0}`,
         `Putus? ${m.prefix}putusmatch`,
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     }
 
     if ((rpg.level || 1) < DATING_MIN_LEVEL) {
-      return m.reply(novaRpgBox("RPG Cinta", [
+      return m.reply(raraRpgBox("RPG Cinta", [
         `Levelmu belum cukup nih!`,
         `Butuh minimal: ${DATING_MIN_LEVEL}`,
         `Level kamu: ${rpg.level || 1}`,
@@ -55,22 +55,22 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-      return m.reply(novaRpgGuide("rpgcouple", "Mau jadian? Tag orangnya atau reply pesannya ya!", `${m.prefix}rpgcouple @tag`, "Atau reply pesannya + .rpgcouple"));
+      return m.reply(raraRpgGuide("rpgcouple", "Mau jadian? Tag orangnya atau reply pesannya ya!", `${m.prefix}rpgcouple @tag`, "Atau reply pesannya + .rpgcouple"));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(novaRpgBox("RPG Cinta", "Tidak bisa pacaran dengan diri sendiri!", "error"));
+      return m.reply(raraRpgBox("RPG Cinta", "Tidak bisa pacaran dengan diri sendiri!", "error"));
     }
 
     ensureRpg({ sender: targetJid, pushName: targetJid.split("@")[0] }, targetJid.split("@")[0]);
     const targetCinta = getCintaData({ sender: targetJid, pushName: targetJid.split("@")[0] });
     if (targetCinta.spouse) {
-      return m.reply(novaRpgBox("RPG Cinta", `@${targetJid.split("@")[0]} sudah punya pasangan!`, "warn"));
+      return m.reply(raraRpgBox("RPG Cinta", `@${targetJid.split("@")[0]} sudah punya pasangan!`, "warn"));
     }
 
     const targetRpg = getRpgData({ sender: targetJid, pushName: targetJid.split("@")[0] });
     if ((targetRpg.level || 1) < DATING_MIN_LEVEL) {
-      return m.reply(novaRpgBox("RPG Cinta", [
+      return m.reply(raraRpgBox("RPG Cinta", [
         `Level @${targetJid.split("@")[0]} belum cukup!`,
         `Butuh minimal level ${DATING_MIN_LEVEL}`,
       ], "error"));
@@ -78,13 +78,13 @@ async function handler(m, { sock }) {
 
     // Auto-match
     if (targetCinta.tembakTarget === m.sender) {
-      const { getDatabase } = await import("../../src/lib/nova-database.js");
+      const { getDatabase } = await import("../../src/lib/rara-database.js");
       const db = getDatabase();
       const targetName = db.getUser(targetJid)?.name || targetJid.split("@")[0];
       startDating(m, targetJid, targetName);
       startDating({ sender: targetJid, pushName: targetName }, m.sender, m.pushName || "Player");
 
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
       title: "rpg cinta", icon: "💕",
       flavor: "💕 *CIE CIE, RESMI JADIAN!*",
       body: [
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
 
     // Simpan tembakan
     cinta.tembakTarget = targetJid;
-    const { getDatabase } = await import("../../src/lib/nova-database.js");
+    const { getDatabase } = await import("../../src/lib/rara-database.js");
     const db = getDatabase();
     rpg.cinta = cinta;
     db.setUser(m.sender, rpg);
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
       timestamp: Date.now(),
     };
 
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "rpg cinta", icon: "💘",
       flavor: "🏹 *PANAH CUPID TERKIRIM!*",
       body: [
@@ -146,7 +146,7 @@ async function answerHandler(m, sock) {
     const [sessKey, sess] = valid;
     const shooter = sess.shooter;
 
-    const { getDatabase } = await import("../../src/lib/nova-database.js");
+    const { getDatabase } = await import("../../src/lib/rara-database.js");
     const db = getDatabase();
     const shooterName = db.getUser(shooter)?.name || shooter.split("@")[0];
     const myName = m.pushName || m.sender.split("@")[0];
@@ -156,7 +156,7 @@ async function answerHandler(m, sock) {
       startDating(m, shooter, shooterName);
       delete global.rpgCintaSessions[sessKey];
       await m.react("💕");
-      await m.reply(novaGameBox({
+      await m.reply(raraGameBox({
         title: "rpg cinta", icon: "💕",
         flavor: "💕 *CIE CIE, RESMI JADIAN!*",
         body: [
@@ -178,7 +178,7 @@ async function answerHandler(m, sock) {
       db.save();
       delete global.rpgCintaSessions[sessKey];
       await m.react("💔");
-      await m.reply(novaRpgBox("RPG Cinta", [
+      await m.reply(raraRpgBox("RPG Cinta", [
         `💔 @${m.sender.split("@")[0]} menolak @${shooter.split("@")[0]}`,
         "Sabar ya, tingkatkan level dulu!",
       ], "warn"));

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -27,20 +27,20 @@ const MODES = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(novaWrap("Audio Normalize", `Reply audio/voice note yang mau di-normalize.`));
+    if (!quoted) return m.reply(raraWrap("Audio Normalize", `Reply audio/voice note yang mau di-normalize.`));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(novaWrap("Audio Normalize", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(raraWrap("Audio Normalize", "Reply harus audio/voice note!"));
 
     const mode = (args[0] || "default").toLowerCase();
     if (!MODES[mode]) {
-      return m.reply(novaWrap("Audio Normalize", [
+      return m.reply(raraWrap("Audio Normalize", [
         `Mode: ${Object.keys(MODES).join(", ")}`,
         `Contoh: ${usedPrefix}audionormalize loud`,
       ].join("\n")));
     }
 
     const isPtt = !!quoted.pttMessage;
-    const tmpDir = path.join(os.tmpdir(), 'nova-normalize');
+    const tmpDir = path.join(os.tmpdir(), 'rara-normalize');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, `input_${Date.now()}.mp3`);
@@ -53,7 +53,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -af "${filter}" -c:a libopus -b:a 64k "${outputPath}"`);
 
     if (!fs.existsSync(outputPath)) {
-      return m.reply(novaGagal("AudioNormalize"));
+      return m.reply(raraGagal("AudioNormalize"));
     }
 
     const buf = fs.readFileSync(outputPath);
@@ -61,7 +61,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: novaWrap("Audio Normalize", [
+      caption: raraWrap("Audio Normalize", [
         `Berhasil normalize!`,
         `Mode: ${mode}`,
         `Filter: ${MODES[mode].desc}`,
@@ -70,10 +70,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
-      await m.reply(novaBerhasil("audionormalize"));
+      await m.reply(raraBerhasil("audionormalize"));
   } catch (e) {
     console.error("audionormalize error:", e);
-    return m.reply(novaGangguan("audionormalize"));
+    return m.reply(raraGangguan("audionormalize"));
   }
 }
 

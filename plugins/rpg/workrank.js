@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Rank Kerja RPG — Player ranking by total gold
 
 import {
   ensureRpg, getLeaderboard
-} from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "workrank",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("rankkerja", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("rankkerja", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // Board: default gold | "uang"/"cash" → ranking uang (request owner 8 Sep 2026)
     const mode = (m.args?.[0] || "").toLowerCase();
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     if (!leaderboard || leaderboard.length === 0) {
       await m.react("🐣");
   await animGeneric(m, sock, "🏹", "Loading");
-      return m.reply(novaRpgBox("rankkerja", "Belum ada pemain RPG yang terdaftar.", "info"));
+      return m.reply(raraRpgBox("rankkerja", "Belum ada pemain RPG yang terdaftar.", "info"));
     }
 
     const medal = ["🥇", "🥈", "🥉"];
@@ -63,11 +63,11 @@ async function handler(m, { sock }) {
 
 
     await m.react("🐣");
-    return m.reply(novaRpgBox("rankkerja", msg, "success"));
+    return m.reply(raraRpgBox("rankkerja", msg, "success"));
   } catch (err) {
     console.error("rankkerja error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("rankkerja", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("rankkerja", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

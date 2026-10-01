@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "webarchive",
@@ -21,7 +21,7 @@ const WAYBACK_API = "https://archive.org/wayback/available?url=";
 
 async function checkArchive(url) {
   const apiRes = await fetch(WAYBACK_API + encodeURIComponent(url), {
-    headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
+    headers: { "User-Agent": "Mozilla/5.0 (Rara Bot)" },
     signal: AbortSignal.timeout(12000),
   });
 
@@ -39,7 +39,7 @@ async function listSnapshots(url) {
     "&output=json&limit=20&fl=timestamp,statuscode,digest&sort=timestamp";
 
   const res = await fetch(cdxUrl, {
-    headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
+    headers: { "User-Agent": "Mozilla/5.0 (Rara Bot)" },
     signal: AbortSignal.timeout(15000),
   });
 
@@ -95,7 +95,7 @@ async function handler(m, { sock, config: botConfig }) {
       const data = await checkArchive(url);
 
       if (!data.archived_snapshots || !data.archived_snapshots.closest) {
-        return m.reply(novaWrap("WebArchive: " + baseDomain, [
+        return m.reply(raraWrap("WebArchive: " + baseDomain, [
           "URL: " + url,
           "Status: No snapshots found",
           "Website ini belum pernah di-archive di Wayback Machine",
@@ -115,14 +115,14 @@ async function handler(m, { sock, config: botConfig }) {
         "Archive URL:",
         archiveUrl,
       ];
-      return m.reply(novaWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
+      return m.reply(raraWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
     }
 
     // List mode
     const snapshots = await listSnapshots(url);
 
     if (!snapshots || snapshots.length < 2) {
-      return m.reply(novaWrap("WebArchive: " + baseDomain, "Tidak ada snapshot ditemukan"));
+      return m.reply(raraWrap("WebArchive: " + baseDomain, "Tidak ada snapshot ditemukan"));
     }
 
     // First row is headers
@@ -150,11 +150,11 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push("");
     lines.push("Full archive: https://web.archive.org/web/*/" + url);
     await m.react("🐣");
-    return m.reply(novaWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
+    return m.reply(raraWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("webarchive error:", e);
-    return m.reply(novaWrap("WebArchive", "Error: " + e.message));
+    return m.reply(raraWrap("WebArchive", "Error: " + e.message));
   }
 }
 

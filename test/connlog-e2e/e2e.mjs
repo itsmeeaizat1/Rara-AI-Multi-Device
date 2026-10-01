@@ -1,4 +1,4 @@
-// E2E nova-conn-journal + plugin .connlog
+// E2E rara-conn-journal + plugin .connlog
 // Fitur: jurnal koneksi persist — catat disconnect (kode+alasan), connect,
 // watchdog; analisis pola (interval antar-putus, penyebab terbanyak);
 // command .connlog (owner) nampilin riwayat + analisis.
@@ -7,7 +7,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 
-// ── handler uncaught supaya test gak mati senyap (gotcha nova-lid) ──
+// ── handler uncaught supaya test gak mati senyap (gotcha rara-lid) ──
 process.on("uncaughtException", (e) => {
   console.error("[UNCAUGHT]", e);
   process.exit(1);
@@ -38,7 +38,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "connlog-e2e-"));
 const jfile = path.join(tmp, "connlog.json");
 
 // seam journal file
-const j = await import("../../src/lib/nova-conn-journal.js");
+const j = await import("../../src/lib/rara-conn-journal.js");
 j._setJournalFileForTest(jfile);
 
 console.log("— section 1: record + persist —");
@@ -104,7 +104,7 @@ ok("penyebab terbanyak 515 × 3", Object.entries(a.byReason).some(([k, v]) => k.
 console.log("— section 4: plugin handler .connlog —");
 // mock m (pola repo) + config
 const sent = [];
-// mirror nova-serialize: m.text = TANPA command (".connlog clear" → "clear")
+// mirror rara-serialize: m.text = TANPA command (".connlog clear" → "clear")
 const m = {
   text: "",
   reply: (txt) => {

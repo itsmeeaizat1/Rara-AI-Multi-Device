@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * tools/fix-unicode.js
  * Auto-convert \uXXXX escape sequences back to readable Unicode characters.

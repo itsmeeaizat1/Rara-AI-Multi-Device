@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { Client } from 'ssh2'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'installtemaenigma',
     alias: ["installtemaenigma"],
@@ -66,7 +66,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply(novaGuide(
+        return m.reply(raraGuide(
             "installtemaenigma",
             "Install tema Enigma ke VPS",
             `${m.prefix}installtemaenigma 192.168.1.1|pass|https://wa.me/628xxx|https://t.me/group|https://t.me/channel`
@@ -108,14 +108,14 @@ function handler(m, { sock }) {
             ])
 
                         await execSSH(conn, BUILD_CMD)
-            await m.reply(novaWrap("installtemaenigma", `✅ Status: *Terinstall*\nIP: ${ipvps}\n\n_Tema Enigma + dependencies berhasil diinstall!_`))
+            await m.reply(raraWrap("installtemaenigma", `✅ Status: *Terinstall*\nIP: ${ipvps}\n\n_Tema Enigma + dependencies berhasil diinstall!_`))
         } catch (err) {
-            m.reply(novaWrap("installtemaenigma", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(raraWrap("installtemaenigma", te(m.prefix, m.command, m.pushName), "error"))
         } finally {
             conn.end()
         }
     }).on('error', (err) => {
-        m.reply(novaWrap("installtemaenigma", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
+        m.reply(raraWrap("installtemaenigma", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
     }).connect(connSettings)
 }
 

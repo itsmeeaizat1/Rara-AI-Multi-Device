@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // rss.js — Generic RSS feed reader (rss-parser, no API key)
 import RSSParser from 'rss-parser'
-import { novaGuide } from "../../src/lib/nova-menu-style.js"
+import { raraGuide } from "../../src/lib/rara-menu-style.js"
 
 const pluginConfig = {
     name: "rss",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
         const url = (m.text || "").trim()
 
         if (!url || (!url.startsWith("http://") && !url.startsWith("https://"))) {
-            return m.reply(novaGuide("RSS Reader", "Mau baca RSS feed? Kirim URL-nya ya! Bisa juga pakai shortcut: detik, kompas, cnn, tribun.", `${m.prefix}rss detik`))
+            return m.reply(raraGuide("RSS Reader", "Mau baca RSS feed? Kirim URL-nya ya! Bisa juga pakai shortcut: detik, kompas, cnn, tribun.", `${m.prefix}rss detik`))
         }
         const SHORTCUTS = {
             detik: "https://rss.detik.com/index.php/detiknews",

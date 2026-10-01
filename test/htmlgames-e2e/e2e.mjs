@@ -1,6 +1,6 @@
 // E2E — htmlgames (.htmlsnake/.htmltetris/.htmldino/.htmlpong) + kategori HTML di menu
 // Game HTML dikirim sebagai dokumen .html self-contained — chat WA gak bisa render HTML.
-// GOTCHA: novaWrap = smallcaps → asersi teks WAJIB fromSC.
+// GOTCHA: raraWrap = smallcaps → asersi teks WAJIB fromSC.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,7 +16,7 @@ const root = path.resolve(__dirname, "../..");
 
 // ═══ 1. FILE GAME HTML ═══
 w("\n— file game html —");
-const games = [["snake", "nova-snake"], ["tetris", "nova-tetris"], ["dino", "nova-dino"], ["pong", "nova-pong"]];
+const games = [["snake", "rara-snake"], ["tetris", "rara-tetris"], ["dino", "rara-dino"], ["pong", "rara-pong"]];
 for (const [g, fname] of games) {
   const p = path.join(root, "src/htmlgames", g + ".html");
   const ok = fs.existsSync(p);
@@ -88,7 +88,7 @@ w("\n— kategori html di menu —");
 // ═══ 5. REGISTRI PLUGIN LOADER ═══
 w("\n— loader —");
 {
-  const { loadPlugins } = await import("../../src/lib/nova-plugin-loader.js").catch(() => ({ loadPlugins: null }));
+  const { loadPlugins } = await import("../../src/lib/rara-plugin-loader.js").catch(() => ({ loadPlugins: null }));
   if (loadPlugins) {
     const store = loadPlugins(path.join(root, "plugins"));
     const htmlCmds = [...store.keys()].filter((k) => k.startsWith("html"));

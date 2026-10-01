@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
@@ -6,8 +6,8 @@ import { exec } from 'child_process'
 import { promisify } from 'util'
 import { downloadMediaMessage } from 'nova'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const run = promisify(exec)
 
@@ -59,10 +59,10 @@ async function handler(m, { sock }) {
     // → kirim ke JID palsu → gagal senyap. Sekarang resolve dari link invite.
     let chId = args[0]?.includes("@newsletter") ? args.shift() : null
     if (!chId) {
-        const { resolveNewsletterJid } = await import("../../src/lib/nova-saluran.js")
+        const { resolveNewsletterJid } = await import("../../src/lib/rara-saluran.js")
         chId = await resolveNewsletterJid(sock).catch(() => config?.saluran?.id)
     }
-    const chName = config?.saluran?.name || config?.bot?.name || "Nova-AI"
+    const chName = config?.saluran?.name || config?.bot?.name || "Rara-AI"
     const caption = args.join(" ").trim()
 
     const quoted = m.quoted || m
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     try {
         if (!isMedia && caption) {
             await sock.sendMessage(chId, { text: caption })
-            return m.reply(novaWrap("Upch", `✅ Teks berhasil dikirim ke saluran`))
+            return m.reply(raraWrap("Upch", `✅ Teks berhasil dikirim ke saluran`))
         }
 
         const mediaBuf = await downloadMediaMessage(quoted, "buffer", {})
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
                 image: mediaBuf,
                 caption: caption || undefined
             })
-            return m.reply(novaWrap("Upch", "✅ Gambar berhasil dikirim ke saluran"))
+            return m.reply(raraWrap("Upch", "✅ Gambar berhasil dikirim ke saluran"))
         }
 
         if (isVideo) {
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
                 video: mediaBuf,
                 caption: caption || undefined
             })
-            return m.reply(novaWrap("Upch", "✅ Video berhasil dikirim ke saluran"))
+            return m.reply(raraWrap("Upch", "✅ Video berhasil dikirim ke saluran"))
         }
 
         if (isAudio) {
@@ -116,13 +116,13 @@ async function handler(m, { sock }) {
                 ptt: true,
                 waveform: Array.from(waveform)
             })
-            return m.reply(novaWrap("Upch", "✅ Audio berhasil dikirim ke saluran"))
+            return m.reply(raraWrap("Upch", "✅ Audio berhasil dikirim ke saluran"))
         }
 
         { const __navText = "❌ Tipe media tidak didukung"; await m.reply(__navText); }
     } catch (e) {
         console.error("[UpCh]", e)
-        await m.reply(novaWrap("upch", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(raraWrap("upch", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

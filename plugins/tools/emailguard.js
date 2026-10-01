@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "emailguard",
@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
   const email = m.args.join(" ").trim();
 
   if (!email) {
-    return m.reply( novaWrap("Email Guard", [
+    return m.reply( raraWrap("Email Guard", [
       "Validasi email + deteksi disposable/temp mail",
       "",
       "CARA PAKAI:",
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
     const result = analyzeEmail(email);
 
     if (!result.valid) {
-      return m.reply(novaWrap("Email Guard", [
+      return m.reply(raraWrap("Email Guard", [
         "Email: " + email,
         "Status: *tidak valid*",
         "",
@@ -213,10 +213,10 @@ async function handler(m, { sock }) {
     }
 
     await m.react(result.riskScore >= 35 ? "⚠️" : "✅");
-    return m.reply(novaWrap("Email Guard", lines));
+    return m.reply(raraWrap("Email Guard", lines));
   } catch (e) {
     console.error("[Email Guard]", e);
-    return m.reply(novaWrap("Email Guard", "Error: " + e.message));
+    return m.reply(raraWrap("Email Guard", "Error: " + e.message));
   }
 }
 

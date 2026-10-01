@@ -1,4 +1,4 @@
-// E2E NOVA DOCTOR — Self-Healing Bot (12 Sep 2026)
+// E2E RARA DOCTOR — Self-Healing Bot (12 Sep 2026)
 // Stub aiChat + repoRoot via setDoctorDeps. Deterministik tanpa network.
 // Jalankan: node <repo>/test/doctor-e2e/e2e.mjs
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, readdirSync } from "fs";
@@ -8,7 +8,7 @@ import {
   setDoctorDeps, resetDoctorDeps, getDoctorData, isDoctorOn, isDoctorAuto,
   setDoctorOn, setDoctorAuto, recordDoctorError, extractRepoFrame,
   doctorScan, doctorClean, doctorHeal, recordDoctorErrorAuto, initDoctorMonitor,
-} from "../../src/lib/nova-doctor.js";
+} from "../../src/lib/rara-doctor.js";
 import { config as docConfig, handler as docHandler } from "../../plugins/bot/doctor.js";
 
 let pass = 0, fail = 0;

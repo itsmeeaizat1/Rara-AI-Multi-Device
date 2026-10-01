@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config, { getOwnerName } from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { sendMenuCard, buildNavButtons } from "../../src/lib/nova-menu-card.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendMenuCard, buildNavButtons } from "../../src/lib/rara-menu-card.js";
 
 const pluginConfig = {
   name: "owner",
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
   const configOwners = botConfig.owner?.number || [];
   const dbOwners = db.data.owner || [];
   const ownerNumbers = [...new Set([...configOwners, ...dbOwners])];
-  const botName = botConfig.bot?.name || "Nova-AI";
+  const botName = botConfig.bot?.name || "Rara-AI";
   const ownerNames = ownerNumbers.map((n) => getOwnerName(n)).join(", ");
   const totalOwners = ownerNumbers.length;
 
@@ -51,7 +51,7 @@ async function handler(m, { sock, config: botConfig }) {
     ].join("\n");
     // FIX OWNER 2026-09-07: card owner = plain text + thumbnail externalAdReply
     await sendMenuCard(sock, m, {
-      text: novaWrap("👨‍💻 Owner", followUpText),
+      text: raraWrap("👨‍💻 Owner", followUpText),
       footer: "",
       plain: true,
       title: botName,
@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
     ].join("\n");
 
     await sendMenuCard(sock, m, {
-      text: novaWrap("👨‍💻 Owner", ownerText),
+      text: raraWrap("👨‍💻 Owner", ownerText),
       footer: "",
       buttons: buildNavButtons(m, db, "."),
       title: botName,

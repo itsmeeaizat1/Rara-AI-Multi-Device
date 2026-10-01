@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "hutang",
@@ -85,12 +85,12 @@ async function handler(m, { sock, config: botConfig }) {
       const [person, amountStr, desc, dueStr] = parts;
       const amount = parseInt(amountStr.replace(/[^\d]/g, ""));
       if (isNaN(amount) || amount <= 0) {
-        return m.reply(novaWrap("Hutang", "Jumlah tidak valid!"));
+        return m.reply(raraWrap("Hutang", "Jumlah tidak valid!"));
       }
 
       const dueDate = dueStr ? parseDate(dueStr) : null;
       if (dueStr && !dueDate) {
-        return m.reply(novaWrap("Hutang", "Format tanggal salah! Gunakan: DD-MM-YYYY\n💡 *Contoh:* 30-08-2026"));
+        return m.reply(raraWrap("Hutang", "Format tanggal salah! Gunakan: DD-MM-YYYY\n💡 *Contoh:* 30-08-2026"));
       }
 
       const debts = getDebts(db, sender);
@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       lines.push("ID: `" + id + "`");
 
-      return m.reply(novaWrap("Hutang Baru", lines.join("\n")));
+      return m.reply(raraWrap("Hutang Baru", lines.join("\n")));
     }
 
     // --- ADD PIUTANG (someone owes you) ---
@@ -143,12 +143,12 @@ async function handler(m, { sock, config: botConfig }) {
       const [person, amountStr, desc, dueStr] = parts;
       const amount = parseInt(amountStr.replace(/[^\d]/g, ""));
       if (isNaN(amount) || amount <= 0) {
-        return m.reply(novaWrap("Piutang", "Jumlah tidak valid!"));
+        return m.reply(raraWrap("Piutang", "Jumlah tidak valid!"));
       }
 
       const dueDate = dueStr ? parseDate(dueStr) : null;
       if (dueStr && !dueDate) {
-        return m.reply(novaWrap("Piutang", "Format tanggal salah! DD-MM-YYYY"));
+        return m.reply(raraWrap("Piutang", "Format tanggal salah! DD-MM-YYYY"));
       }
 
       const debts = getDebts(db, sender);
@@ -182,7 +182,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       lines.push("ID: `" + id + "`");
 
-      return m.reply(novaWrap("Piutang Baru", lines.join("\n")));
+      return m.reply(raraWrap("Piutang Baru", lines.join("\n")));
     }
 
     // --- LIST ---
@@ -191,7 +191,7 @@ async function handler(m, { sock, config: botConfig }) {
       const active = debts.filter((d) => !d.settled);
 
       if (active.length === 0) {
-        return m.reply(novaWrap("Hutang", "Tidak ada hutang/piutang aktif.\nTambah: " + prefix + "hutang add <nama> | <jumlah> | <keterangan>"));
+        return m.reply(raraWrap("Hutang", "Tidak ada hutang/piutang aktif.\nTambah: " + prefix + "hutang add <nama> | <jumlah> | <keterangan>"));
       }
 
       let hutangLines = [];
@@ -228,30 +228,30 @@ async function handler(m, { sock, config: botConfig }) {
       const net = totalPiutang - totalHutang;
       lines.push("Saldo Bersih: " + (net >= 0 ? "+" : "") + formatRupiah(net));
 
-      return m.reply(novaWrap("Daftar Hutang & Piutang", lines.join("\n")));
+      return m.reply(raraWrap("Daftar Hutang & Piutang", lines.join("\n")));
     }
 
     // --- LUNAS ---
     if (action === "lunas" || action === "bayar" || action === "settle") {
       const id = args[1]?.toUpperCase();
       if (!id) {
-        return m.reply(novaWrap("Hutang", "Format: " + prefix + "hutang lunas <ID>"));
+        return m.reply(raraWrap("Hutang", "Format: " + prefix + "hutang lunas <ID>"));
       }
 
       const debts = getDebts(db, sender);
       const debt = debts.find((d) => d.id === id);
       if (!debt) {
-        return m.reply(novaWrap("Hutang", "Record `" + id + "` tidak ditemukan"));
+        return m.reply(raraWrap("Hutang", "Record `" + id + "` tidak ditemukan"));
       }
       if (debt.settled) {
-        return m.reply(novaWrap("Hutang", "Record `" + id + "` sudah lunas"));
+        return m.reply(raraWrap("Hutang", "Record `" + id + "` sudah lunas"));
       }
 
       debt.settled = true;
       debt.settledAt = Date.now();
       saveDebts(db, sender, debts);
       const typeLabel = debt.type === "hutang" ? "Hutang ke" : "Piutang dari";
-      return m.reply(novaWrap("Lunas",
+      return m.reply(raraWrap("Lunas",
         "Berhasil dilunasi!\n" +
         typeLabel + ": *" + debt.person + "*\n" +
         "Jumlah: *" + formatRupiah(debt.amount) + "*\n" +
@@ -264,13 +264,13 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "info") {
       const id = args[1]?.toUpperCase();
       if (!id) {
-        return m.reply(novaWrap("Hutang", "Format: " + prefix + "hutang info <ID>"));
+        return m.reply(raraWrap("Hutang", "Format: " + prefix + "hutang info <ID>"));
       }
 
       const debts = getDebts(db, sender);
       const debt = debts.find((d) => d.id === id);
       if (!debt) {
-        return m.reply(novaWrap("Hutang", "Record `" + id + "` tidak ditemukan"));
+        return m.reply(raraWrap("Hutang", "Record `" + id + "` tidak ditemukan"));
       }
 
       const typeLabel = debt.type === "hutang" ? "Hutang ke" : "Piutang dari";
@@ -297,26 +297,26 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("Lunas pada: " + formatDate(debt.settledAt));
       }
 
-      return m.reply(novaWrap("Info Hutang", lines.join("\n")));
+      return m.reply(raraWrap("Info Hutang", lines.join("\n")));
     }
 
     // --- REMOVE ---
     if (action === "remove" || action === "hapus" || action === "del") {
       const id = args[1]?.toUpperCase();
       if (!id) {
-        return m.reply(novaWrap("Hutang", "Format: " + prefix + "hutang remove <ID>"));
+        return m.reply(raraWrap("Hutang", "Format: " + prefix + "hutang remove <ID>"));
       }
 
       const debts = getDebts(db, sender);
       const idx = debts.findIndex((d) => d.id === id);
       if (idx === -1) {
-        return m.reply(novaWrap("Hutang", "Record `" + id + "` tidak ditemukan"));
+        return m.reply(raraWrap("Hutang", "Record `" + id + "` tidak ditemukan"));
       }
 
       const removed = debts[idx];
       debts.splice(idx, 1);
       saveDebts(db, sender, debts);
-      return m.reply(novaWrap("Hutang", "Record *" + removed.person + "* (" + formatRupiah(removed.amount) + ") dihapus"));
+      return m.reply(raraWrap("Hutang", "Record *" + removed.person + "* (" + formatRupiah(removed.amount) + ") dihapus"));
     }
 
     // --- TOTAL ---
@@ -361,7 +361,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(p.person + " (" + label + ") - " + formatRupiah(p.total) + " (" + p.count + "x)");
       });
 
-      return m.reply(novaWrap("Ringkasan Hutang", lines.join("\n")));
+      return m.reply(raraWrap("Ringkasan Hutang", lines.join("\n")));
     }
 
     // --- HISTORY ---
@@ -370,7 +370,7 @@ async function handler(m, { sock, config: botConfig }) {
       const settled = debts.filter((d) => d.settled);
 
       if (settled.length === 0) {
-        return m.reply(novaWrap("Hutang", "Belum ada riwayat pelunasan."));
+        return m.reply(raraWrap("Hutang", "Belum ada riwayat pelunasan."));
       }
 
       settled.sort((a, b) => (b.settledAt || 0) - (a.settledAt || 0));
@@ -385,7 +385,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       lines.push("Total dilunasi: *" + formatRupiah(totalSettled) + "*");
 
-      return m.reply(novaWrap("Riwayat Pelunasan", lines.join("\n")));
+      return m.reply(raraWrap("Riwayat Pelunasan", lines.join("\n")));
     }
 
     // --- HELP / default ---
@@ -403,7 +403,7 @@ async function handler(m, { sock, config: botConfig }) {
     );
   } catch (e) {
     console.error("hutang error:", e);
-    return m.reply(novaWrap("Hutang", "Error: " + e.message));
+    return m.reply(raraWrap("Hutang", "Error: " + e.message));
   }
 }
 

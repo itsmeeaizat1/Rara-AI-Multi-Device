@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // twittertrend.js — Trending Twitter/X (getdaytrends.com scrape)
 import axios from "axios";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "twittertrend",
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
 
     if (!trends || trends.length === 0) {
       await m.react("❌");
-      return m.reply(novaWrap("twittertrend", "Gagal ambil trending. Coba lagi nanti.", "error"));
+      return m.reply(raraWrap("twittertrend", "Gagal ambil trending. Coba lagi nanti.", "error"));
     }
 
     await m.react("🐣");
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("twittertrend error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("twittertrend", err.message || "Error", "error"));
+    return m.reply(raraWrap("twittertrend", err.message || "Error", "error"));
   }
 }
 

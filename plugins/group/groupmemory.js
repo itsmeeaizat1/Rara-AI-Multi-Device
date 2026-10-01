@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,   separator,
-  tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,   separator,
+  tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "groupmemory",
@@ -45,11 +45,11 @@ function buildMemoryBook(prefix, groupName) {
   const topMembers = randomTopMembers();
 
   return (
-    novaWrap("Group Memory Book", [`Grup: *${groupName || "Grup ini"}*`,
+    raraWrap("Group Memory Book", [`Grup: *${groupName || "Grup ini"}*`,
       `Vibe: *${vibe}*`,
       `Momen: *${highlight}*`].join("\n")) +
     "\n" +
-    novaWrap("Top Member", topMembers) +
+    raraWrap("Top Member", topMembers) +
     "\n\n" +
     
     tipText("Catatan: ini versi statis simulasi dulu") +
@@ -66,10 +66,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text = buildMemoryBook(prefix, m.chatName || m.subject || "Grup ini");
 
-    await m.reply(novaWrap("groupmemory", text));
+    await m.reply(raraWrap("groupmemory", text));
   } catch (error) {
     const text =
-    await m.reply(novaError("GroupMemory", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("GroupMemory", "Gagal nih, coba lagi ya"));
   }
 
   return { handled: true };

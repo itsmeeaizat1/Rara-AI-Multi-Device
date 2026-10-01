@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
 
   // No args — show help
   if (args.length === 0) {
-    return m.reply(novaBox("Cheat RPG", [
+    return m.reply(raraBox("Cheat RPG", [
       "Owner only — tambah RPG stats langsung",
       "---",
       "Cara pakai:",
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
   const targetJid = extractTarget(m) || m.sender;
 
   if (!cheatType || !CHEAT_TYPES[cheatType]) {
-    return m.reply(novaBox("Cheat RPG", [
+    return m.reply(raraBox("Cheat RPG", [
       "❌ Type: " + (cheatType || "kosong") + " tidak ditemukan",
       "---",
       "Ketik .cheatrpg untuk lihat daftar lengkap",
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
   }
 
   if (amount === 0) {
-    return m.reply(novaBox("Cheat RPG", [
+    return m.reply(raraBox("Cheat RPG", [
       "❌ Jumlah harus lebih dari 0 (bisa negatif)",
       "---",
       "Contoh: .cheatrpg " + cheatType + " 999999 @user",
@@ -186,7 +186,7 @@ async function handler(m, { sock }) {
   const isAdd = amount > 0;
   const sign = isAdd ? "+" : "";
 
-  const txt = novaBox("Cheat RPG", [
+  const txt = raraBox("Cheat RPG", [
     "✅ Berhasil " + (isAdd ? "menambah" : "mengurangi") + " stats",
     "---",
     "Target: @" + targetPhone,

@@ -13,8 +13,8 @@ function t(label, cond, extra) {
 
 const R = path.resolve(".");
 fs.rmSync("/tmp/nexai-e2e-db", { recursive: true, force: true });
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/nexai-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/nexai-e2e-db/rara.json");
 const db = getDatabase();
 
 const {
@@ -57,10 +57,10 @@ t("2b. chat: default model GLM dipakai (alias glm resolve)", calls.at(-1)?.body 
 t("2c. chat: Bearer key di header", (calls.at(-1)?.headers?.Authorization || "").startsWith("Bearer sk-"));
 
 // 2b. system prompt ikut kekirim
-await nexaiChat("tes", { systemPrompt: "kamu Nova AI" });
+await nexaiChat("tes", { systemPrompt: "kamu Rara AI" });
 t("2d. systemPrompt masuk messages", (() => {
   const b = JSON.parse(calls.at(-1).body);
-  return b.messages[0]?.role === "system" && b.messages[0]?.content === "kamu Nova AI" && b.messages.at(-1)?.role === "user";
+  return b.messages[0]?.role === "system" && b.messages[0]?.content === "kamu Rara AI" && b.messages.at(-1)?.role === "user";
 })());
 
 // 2c. reasoning_content fallback (GLM/deepseek kadang content kosong)

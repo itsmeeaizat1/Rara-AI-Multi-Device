@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -34,9 +34,9 @@ const PRESETS = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(novaWrap("Audio EQ", "Reply audio yang mau di-EQ."));
+    if (!quoted) return m.reply(raraWrap("Audio EQ", "Reply audio yang mau di-EQ."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(novaWrap("Audio EQ", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(raraWrap("Audio EQ", "Reply harus audio/voice note!"));
 
     let bassGain, midGain, trebleGain;
     const sub = (args[0] || "").toLowerCase();
@@ -45,7 +45,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const presetName = (args[1] || "").toLowerCase();
       if (!PRESETS[presetName]) {
         const list = Object.entries(PRESETS).map(([k, v]) => k + " - " + v.desc).join("\n");
-        return m.reply(novaWrap("Audio EQ", [
+        return m.reply(raraWrap("Audio EQ", [
           "Preset tersedia:",
           list,
           "",
@@ -60,13 +60,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const list = Object.entries(PRESETS).map(([k, v]) => 
         k + " | bass:" + v.bass + " mid:" + v.mid + " treble:" + v.treble + " | " + v.desc
       ).join("\n");
-      return m.reply(novaWrap("Audio EQ", ["Presets:", "", list].join("\n")));
+      return m.reply(raraWrap("Audio EQ", ["Presets:", "", list].join("\n")));
     } else {
       bassGain = parseInt(args[0]);
       midGain = parseInt(args[1]);
       trebleGain = parseInt(args[2]);
       if (isNaN(bassGain) || isNaN(midGain) || isNaN(trebleGain)) {
-        return m.reply(novaWrap("Audio EQ", [
+        return m.reply(raraWrap("Audio EQ", [
           "Format: " + usedPrefix + "audioeq <bass> <mid> <treble>",
           "Range: -12 sampai +12 dB",
           "",
@@ -78,11 +78,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (bassGain < -12 || bassGain > 12 || midGain < -12 || midGain > 12 || trebleGain < -12 || trebleGain > 12) {
-      return m.reply(novaWrap("Info", "Setiap gain harus -12 sampai +12 dB."));
+      return m.reply(raraWrap("Info", "Setiap gain harus -12 sampai +12 dB."));
     }
 
     const isPtt = !!quoted.pttMessage;
-    const tmpDir = path.join(os.tmpdir(), 'nova-eq');
+    const tmpDir = path.join(os.tmpdir(), 'rara-eq');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, "input_" + Date.now() + ".ogg");
@@ -101,7 +101,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
-      return m.reply(novaGagal("AudioEQ"));
+      return m.reply(raraGagal("AudioEQ"));
     }
 
     const buf = fs.readFileSync(outputPath);
@@ -109,7 +109,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: novaWrap("Audio EQ", [
+      caption: raraWrap("Audio EQ", [
         "Berhasil!",
         "Bass: " + (bassGain >= 0 ? "+" : "") + bassGain + " dB (100Hz)",
         "Mid: " + (midGain >= 0 ? "+" : "") + midGain + " dB (1kHz)",
@@ -119,10 +119,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
-      await m.reply(novaBerhasil("audioeq"));
+      await m.reply(raraBerhasil("audioeq"));
   } catch (e) {
     console.error("audioeq error:", e);
-    return m.reply(novaGangguan("audioeq"));
+    return m.reply(raraGangguan("audioeq"));
   }
 }
 

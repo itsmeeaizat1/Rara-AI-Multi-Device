@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Begal — Rob other players for gold (risky)
 
 import {
   ensureRpg, saveRpg, addGold, removeGold, addExp,
   checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animBegal } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animBegal } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "highwayrobber",
@@ -38,39 +38,39 @@ async function handler(m, { sock }) {
     if (!targetJid && m.quoted) targetJid = m.quoted.sender;
 
     if (!targetJid) {
-      return m.reply(novaRpgBox("begalrpg", "Tag target! Contoh: .begalrpg @user", "warn"));
+      return m.reply(raraRpgBox("begalrpg", "Tag target! Contoh: .begalrpg @user", "warn"));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(novaRpgBox("begalrpg", "Nggak bisa begal diri sendiri 😅", "warn"));
+      return m.reply(raraRpgBox("begalrpg", "Nggak bisa begal diri sendiri 😅", "warn"));
     }
 
     await m.react("🕒");
     await animBegal(m, sock);
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("begalrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("begalrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastBegal");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("begalrpg", `Cooldown begal tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("begalrpg", `Cooldown begal tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < BEGAL_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("begalrpg", `Energi kurang! Butuh *${BEGAL_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(raraRpgBox("begalrpg", `Energi kurang! Butuh *${BEGAL_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     // Init target
     const targetRpg = ensureRpg({ sender: targetJid }, targetJid.split("@")[0]);
     if (!targetRpg) {
-      return m.reply(novaRpgBox("begalrpg", "Target belum terdaftar RPG.", "warn"));
+      return m.reply(raraRpgBox("begalrpg", "Target belum terdaftar RPG.", "warn"));
     }
 
     if (targetRpg.gold < 10) {
       await m.react("❌");
-      return m.reply(novaRpgBox("begalrpg", `Target *${targetJid.split("@")[0]}* terlalu miskin untuk dirampok 😅`, "warn"));
+      return m.reply(raraRpgBox("begalrpg", `Target *${targetJid.split("@")[0]}* terlalu miskin untuk dirampok 😅`, "warn"));
     }
 
     // Success rate: base 50% + level difference bonus
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("🐣");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "begalrpg", icon: "🗡️",
         flavor: "🥷 *BERHASIL MERAMPOK!*",
         body: [
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("❌");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "begalrpg", icon: "🗡️",
         flavor: "🚨 *KETAHUAN! KAMU DITANGKAP!*",
         body: [
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("begalrpg error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("begalrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("begalrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

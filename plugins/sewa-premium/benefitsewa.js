@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/sewa-premium/benefitsewa.js — Kartu manfaat sewa bot (pasangan .benefitpremium)
 // Harga live dari src/lib/sewa/sewa.js (ikutin override .setsewa otomatis)
-// Sistem sewa: sewaChecker (nova-scheduler.js) cek tiap 10 mnt — expired → bot auto keluar grup
+// Sistem sewa: sewaChecker (rara-scheduler.js) cek tiap 10 mnt — expired → bot auto keluar grup
 import config from '../../config.js'
 import { sewaPrice } from '../../src/lib/sewa/sewa.js'
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: 'benefitsewa',
@@ -64,7 +64,7 @@ async function handler(m) {
     `---\n\n` +
     `Mau sewa? bayar langsung via .buysewa atau hubungi owner\n${config.owner.number.map(num => `- wa.me/${num}`).join('\n')}`
 
-  await m.reply(novaWrap("benefitsewa", message))
+  await m.reply(raraWrap("benefitsewa", message))
 }
 
 export { pluginConfig as config, handler }

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'toimg',
     alias: ["toimg"],
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
 
         if (buffer.length < 100) {
             await m.react("🐣");
-            await m.reply(novaWrap("toimg", `❌ *file korup*\n\n` +
+            await m.reply(raraWrap("toimg", `❌ *file korup*\n\n` +
                 `File sticker tidak valid atau rusak.\n` +
                 `Coba kirim ulang stickernya.`))
             return

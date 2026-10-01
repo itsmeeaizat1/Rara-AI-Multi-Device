@@ -5,7 +5,7 @@ const w = (s) => process.stdout.write(s + "\n");
 let pass = 0, fail = 0;
 const check = (name, ok) => { w((ok ? "  ✅ " : "  ❌ ") + name); ok ? pass++ : fail++; };
 
-import * as lib from "../../src/lib/nova-totp.js";
+import * as lib from "../../src/lib/rara-totp.js";
 
 const SECRET = "JBSWY3DPEHPK3PXP"; // secret test standar (RFC 4226)
 
@@ -61,7 +61,7 @@ check("20. state file tersimpan", fs.existsSync("src/database/user/totp.json"));
 // ────────── handler e2e ──────────
 fs.rmSync("src/database/user/totp.json");
 // reset state in-memory: re-import module fresh
-const libUrl = new URL("../../src/lib/nova-totp.js", import.meta.url).href + "?t=" + Date.now();
+const libUrl = new URL("../../src/lib/rara-totp.js", import.meta.url).href + "?t=" + Date.now();
 const lib2 = await import(libUrl);
 const { config, handler } = await import("../../plugins/tools/totp.js");
 

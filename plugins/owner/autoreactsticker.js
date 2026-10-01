@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { getApiKey, hasApiKey } from "../../src/lib/rara-api-keys.js";
 
 const pluginConfig = {
   name: "autoreactsticker",
@@ -90,7 +90,7 @@ async function aiVisionTagSticker(buffer) {
 
 async function handler(m, { sock, args }) {
   if (!m.isOwner) {
-    return m.reply(novaWrap("AutoReactSticker", "Fitur ini khusus owner!"));
+    return m.reply(raraWrap("AutoReactSticker", "Fitur ini khusus owner!"));
   }
 
   const db = getDatabase();
@@ -118,14 +118,14 @@ async function handler(m, { sock, args }) {
       txt += "AI Vision: " + m.prefix + "autoreactsticker autosave on\n";
       txt += "Raw collect: " + m.prefix + "autoreactsticker saveall on";
     }
-    return m.reply(novaWrap("AutoReactSticker", txt));
+    return m.reply(raraWrap("AutoReactSticker", txt));
   }
 
   // OFF
   if (action === "off") {
     db.setting("autoreactstickerEnabled", false);
     await db.save();
-    return m.reply(novaWrap("AutoReactSticker", [
+    return m.reply(raraWrap("AutoReactSticker", [
       "❌ AUTOREACT STICKER DINONAKTIFKAN",
       "",
       "Bot tidak akan auto-reply sticker",
@@ -138,7 +138,7 @@ async function handler(m, { sock, args }) {
     if (!subArg || !["on", "off"].includes(subArg)) {
       const status = db.setting("autoreactstickerAutosave") || false;
       const hasGemini = hasApiKey("gemini");
-      return m.reply(novaWrap("AutoReactSticker", [
+      return m.reply(raraWrap("AutoReactSticker", [
         "AUTOSAVE — AI VISION AUTO-TAG",
         "",
         "Status: " + (status ? "✅ Aktif" : "❌ Nonaktif"),
@@ -155,7 +155,7 @@ async function handler(m, { sock, args }) {
     }
 
     if (subArg === "on" && !hasApiKey("gemini")) {
-      return m.reply(novaWrap("AutoReactSticker", [
+      return m.reply(raraWrap("AutoReactSticker", [
         "⚠️ Gemini API Key belum diset!",
         "",
         "AI Vision butuh Gemini API key.",
@@ -170,7 +170,7 @@ async function handler(m, { sock, args }) {
       db.setting("autoreactstickerSaveall", false);
     }
     await db.save();
-    return m.reply(novaWrap("AutoReactSticker", [
+    return m.reply(raraWrap("AutoReactSticker", [
       subArg === "on"
         ? "✅ AUTOSAVE AI VISION DIAKTIFKAN"
         : "❌ AUTOSAVE AI VISION DINONAKTIFKAN",
@@ -188,7 +188,7 @@ async function handler(m, { sock, args }) {
     const subArg = (args[1] || "").toLowerCase();
     if (!subArg || !["on", "off"].includes(subArg)) {
       const status = db.setting("autoreactstickerSaveall") || false;
-      return m.reply(novaWrap("AutoReactSticker", [
+      return m.reply(raraWrap("AutoReactSticker", [
         "SAVEALL — RAW COLLECT",
         "",
         "Status: " + (status ? "✅ Aktif" : "❌ Nonaktif"),
@@ -209,7 +209,7 @@ async function handler(m, { sock, args }) {
       db.setting("autoreactstickerAutosave", false);
     }
     await db.save();
-    return m.reply(novaWrap("AutoReactSticker", [
+    return m.reply(raraWrap("AutoReactSticker", [
       subArg === "on"
         ? "✅ SAVEALL DIAKTIFKAN"
         : "❌ SAVEALL DINONAKTIFKAN",
@@ -226,7 +226,7 @@ async function handler(m, { sock, args }) {
   if (action === "set") {
     const rawTriggers = args.slice(1).join(" ").trim();
     if (!rawTriggers) {
-      return m.reply(novaWrap("AutoReactSticker", [
+      return m.reply(raraWrap("AutoReactSticker", [
         "Format salah!",
         "",
         "Reply sticker dengan caption:",
@@ -244,7 +244,7 @@ async function handler(m, { sock, args }) {
       .filter((t) => t.length > 0);
 
     if (triggerList.length === 0) {
-      return m.reply(novaWrap("AutoReactSticker", "Trigger tidak boleh kosong!"));
+      return m.reply(raraWrap("AutoReactSticker", "Trigger tidak boleh kosong!"));
     }
 
     const isSticker =
@@ -259,18 +259,18 @@ async function handler(m, { sock, args }) {
       triggerList.forEach((t, i) => {
         txt += "  " + (i + 1) + ". " + t + "\n";
       });
-      return m.reply(novaWrap("AutoReactSticker", txt));
+      return m.reply(raraWrap("AutoReactSticker", txt));
     }
 
     let buffer;
     try {
       buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
     } catch (e) {
-      return m.reply(novaWrap("autoreactsticker", "Gagal download sticker. Coba lagi.", "error"));
+      return m.reply(raraWrap("autoreactsticker", "Gagal download sticker. Coba lagi.", "error"));
     }
 
     if (!buffer || buffer.length === 0) {
-      return m.reply(novaWrap("AutoReactSticker", "Sticker kosong, coba lagi!"));
+      return m.reply(raraWrap("AutoReactSticker", "Sticker kosong, coba lagi!"));
     }
 
     ensureDir();
@@ -314,19 +314,19 @@ async function handler(m, { sock, args }) {
     });
     resultTxt += "\nTotal triggers: " + triggers.length;
 
-    return m.reply(novaWrap("AutoReactSticker", resultTxt));
+    return m.reply(raraWrap("AutoReactSticker", resultTxt));
   }
 
   // DEL TRIGGER
   if (action === "deltrigger" || action === "rmttrigger") {
     const trigger = args.slice(1).join(" ").trim().toLowerCase();
     if (!trigger) {
-      return m.reply(novaWrap("Usage", "Masukkan trigger yang mau dihapus!\n\n" + m.prefix + "autoreactsticker deltrigger <trigger>"));
+      return m.reply(raraWrap("Usage", "Masukkan trigger yang mau dihapus!\n\n" + m.prefix + "autoreactsticker deltrigger <trigger>"));
     }
 
     const index = triggers.findIndex((t) => t.trigger === trigger);
     if (index === -1) {
-      return m.reply(novaWrap("Info", "❌ Trigger \"" + trigger + "\" tidak ditemukan!"));
+      return m.reply(raraWrap("Info", "❌ Trigger \"" + trigger + "\" tidak ditemukan!"));
     }
 
     const stickerFile = triggers[index].stickerFile;
@@ -344,7 +344,7 @@ async function handler(m, { sock, args }) {
     db.setting("autoreactstickerTriggers", triggers);
     await db.save();
 
-    return m.reply(novaWrap("AutoReactSticker", [
+    return m.reply(raraWrap("AutoReactSticker", [
       "🗑 TRIGGER DIHAPUS",
       "",
       "Trigger: " + trigger,
@@ -359,7 +359,7 @@ async function handler(m, { sock, args }) {
       (m.quoted && m.quoted.type === "stickerMessage");
 
     if (!isSticker) {
-      return m.reply(novaWrap("AutoReactSticker", [
+      return m.reply(raraWrap("AutoReactSticker", [
         "Tidak ada sticker!",
         "",
         "Cara tambah ke random pool:",
@@ -372,11 +372,11 @@ async function handler(m, { sock, args }) {
     try {
       buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
     } catch (e) {
-      return m.reply(novaWrap("autoreactsticker", "Gagal download sticker. Coba lagi.", "error"));
+      return m.reply(raraWrap("autoreactsticker", "Gagal download sticker. Coba lagi.", "error"));
     }
 
     if (!buffer || buffer.length === 0) {
-      return m.reply(novaWrap("AutoReactSticker", "Sticker kosong, coba lagi!"));
+      return m.reply(raraWrap("AutoReactSticker", "Sticker kosong, coba lagi!"));
     }
 
     const fileName = "sticker_" + Date.now() + ".webp";
@@ -391,7 +391,7 @@ async function handler(m, { sock, args }) {
 
     db.setting("autoreactstickerCollection", collection);
     await db.save();
-    return m.reply(novaWrap("AutoReactSticker", [
+    return m.reply(raraWrap("AutoReactSticker", [
       "✅ STICKER DITAMBAHKAN KE RANDOM POOL",
       "",
       "File: " + fileName,
@@ -408,7 +408,7 @@ async function handler(m, { sock, args }) {
       const trigger = args.slice(2).join(" ").trim().toLowerCase();
       const index = triggers.findIndex((t) => t.trigger === trigger);
       if (index === -1) {
-        return m.reply(novaWrap("Info", "❌ Trigger \"" + trigger + "\" tidak ditemukan!"));
+        return m.reply(raraWrap("Info", "❌ Trigger \"" + trigger + "\" tidak ditemukan!"));
       }
       const stickerFile = triggers[index].stickerFile;
       if (stickerFile) {
@@ -423,7 +423,7 @@ async function handler(m, { sock, args }) {
       triggers.splice(index, 1);
       db.setting("autoreactstickerTriggers", triggers);
       await db.save();
-      return m.reply(novaWrap("AutoReactSticker", [
+      return m.reply(raraWrap("AutoReactSticker", [
         "🗑 TRIGGER DIHAPUS",
         "",
         "Trigger: " + trigger,
@@ -433,7 +433,7 @@ async function handler(m, { sock, args }) {
 
     const num = parseInt(args[1] || "0");
     if (isNaN(num) || num < 1 || num > collection.length) {
-      return m.reply(novaWrap("AutoReactSticker", [
+      return m.reply(raraWrap("AutoReactSticker", [
         "Nomor tidak valid!",
         "",
         "Cek list: " + m.prefix + "autoreactsticker list",
@@ -451,7 +451,7 @@ async function handler(m, { sock, args }) {
     db.setting("autoreactstickerCollection", collection);
     await db.save();
 
-    return m.reply(novaWrap("AutoReactSticker", [
+    return m.reply(raraWrap("AutoReactSticker", [
       "🗑 STICKER DIHAPUS (random pool)",
       "",
       "Nomor: " + num,
@@ -486,7 +486,7 @@ async function handler(m, { sock, args }) {
     txt += "\nHapus random: " + m.prefix + "autoreactsticker del <nomor>\n";
     txt += "Hapus trigger: " + m.prefix + "autoreactsticker deltrigger <kata>";
 
-    return m.reply(novaWrap("AutoReactSticker", txt));
+    return m.reply(raraWrap("AutoReactSticker", txt));
   }
 
   // JEDA
@@ -496,7 +496,7 @@ async function handler(m, { sock, args }) {
     if (!subArg) {
       const privMs = db.setting("autoreactstickerJedaPrivate") ?? 5000;
       const grpMs = db.setting("autoreactstickerJedaGrup") ?? 15000;
-      return m.reply(novaWrap("AutoReactSticker", [
+      return m.reply(raraWrap("AutoReactSticker", [
         "JEDA STICKER REPLY",
         "",
         "Private: " + (privMs / 1000).toFixed(1) + " detik",
@@ -510,12 +510,12 @@ async function handler(m, { sock, args }) {
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 3) {
-      return m.reply(novaWrap("Info", "\u26a0\ufe0f Jeda minimal 3 detik!\n\n" + m.prefix + "autoreactsticker jeda 10"));
+      return m.reply(raraWrap("Info", "\u26a0\ufe0f Jeda minimal 3 detik!\n\n" + m.prefix + "autoreactsticker jeda 10"));
     }
 
     db.setting("autoreactstickerJedaPrivate", seconds * 1000);
     await db.save();
-    return m.reply(novaWrap("AutoReactSticker", [
+    return m.reply(raraWrap("AutoReactSticker", [
       "✅ JEDA PRIVATE DISET",
       "",
       "Private: " + seconds + " detik",
@@ -529,7 +529,7 @@ async function handler(m, { sock, args }) {
 
     if (!subArg) {
       const grpMs = db.setting("autoreactstickerJedaGrup") ?? 15000;
-      return m.reply(novaWrap("AutoReactSticker", [
+      return m.reply(raraWrap("AutoReactSticker", [
         "Jeda Grup: " + (grpMs / 1000).toFixed(1) + " detik",
         "",
         "Set: " + m.prefix + "autoreactsticker jedagrup 30",
@@ -538,12 +538,12 @@ async function handler(m, { sock, args }) {
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 3) {
-      return m.reply(novaWrap("Info", "\u26a0\ufe0f Jeda minimal 3 detik!\n\n" + m.prefix + "autoreactsticker jedagrup 30"));
+      return m.reply(raraWrap("Info", "\u26a0\ufe0f Jeda minimal 3 detik!\n\n" + m.prefix + "autoreactsticker jedagrup 30"));
     }
 
     db.setting("autoreactstickerJedaGrup", seconds * 1000);
     await db.save();
-    return m.reply(novaWrap("AutoReactSticker", [
+    return m.reply(raraWrap("AutoReactSticker", [
       "✅ JEDA GRUP DISET",
       "",
       "Grup: " + seconds + " detik",
@@ -574,7 +574,7 @@ async function handler(m, { sock, args }) {
     db.setting("autoreactstickerAutosave", false);
     db.setting("autoreactstickerSaveall", false);
     await db.save();
-    return m.reply(novaWrap("AutoReactSticker", [
+    return m.reply(raraWrap("AutoReactSticker", [
       "🗑 SEMUA STICKER & TRIGGER DIHAPUS",
       "",
       "Koleksi & trigger dikosongkan, fitur dimatikan",
@@ -588,7 +588,7 @@ async function handler(m, { sock, args }) {
   const privMs = db.setting("autoreactstickerJedaPrivate") ?? 5000;
   const grpMs = db.setting("autoreactstickerJedaGrup") ?? 15000;
 
-  return m.reply(novaWrap("AutoReactSticker", [
+  return m.reply(raraWrap("AutoReactSticker", [
     "AUTO REACT STICKER",
     "",
     "Status: " + (enabled ? "✅ Aktif" : "❌ Nonaktif"),

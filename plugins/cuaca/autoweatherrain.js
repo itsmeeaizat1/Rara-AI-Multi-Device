@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // autoweatherrain.js — Notifikasi "akan segera hujan dalam X menit" (request owner
 // 15 Sep 2026: "upgrade fitur cuaca klo mau hujan didaerah saya mncul notif
 // akan segera hujan dalam x menit mendatang" — konsep notif cuaca Bing,
 // data curah hujan per-menit OpenWeatherMap One Call 3.0).
 //
-// Engine: src/lib/nova-rain-notify.js (anti-spam cooldown 2 jam, cek tiap
+// Engine: src/lib/rara-rain-notify.js (anti-spam cooldown 2 jam, cek tiap
 // 10 menit, window 30 menit, kalimat saran dibantu AI). Perintah:
 //   • .hujannotif on/off — langganan / berhenti di chat ini
 //   • .hujannotif set <tempat | lat,lon | reply lokasi WA> — set lokasi
@@ -16,8 +16,8 @@ import {
   setEnabled, getStatus, isTarget, addTarget, removeTarget,
   getLocation, setLocation, geocodePlace, runRainCheck, rainNowCard,
   setIntervalMenit, setCooldownMenit, setRainSock, syncRainMonitor,
-} from "../../src/lib/nova-rain-notify.js";
-import { novaError, novaGuide, novaGuideV2, novaSuccess } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-rain-notify.js";
+import { raraError, raraGuide, raraGuideV2, raraSuccess } from "../../src/lib/rara-menu-style.js";
 
 // seam buat e2e offline
 const __http = { geocode: null };
@@ -67,17 +67,17 @@ async function handler(m, { sock, args }) {
     if (fromLoc) {
       setLocation(fromLoc);
       await m.react("🐣");
-      return m.reply(novaSuccess(pluginConfig.name, "lokasi nowcast diset dari pesan lokasi WA: *" + fromLoc.name + "* (" + fromLoc.lat.toFixed(4) + ", " + fromLoc.lon.toFixed(4) + ") — notif hujan bakal muncul untuk titik ini"));
+      return m.reply(raraSuccess(pluginConfig.name, "lokasi nowcast diset dari pesan lokasi WA: *" + fromLoc.name + "* (" + fromLoc.lat.toFixed(4) + ", " + fromLoc.lon.toFixed(4) + ") — notif hujan bakal muncul untuk titik ini"));
     }
     const q = (args?.slice(1).join(" ") || "").trim();
-    if (!q) return m.reply(novaGuide(pluginConfig.name, "cara set lokasi: reply pesan lokasi WA, atau ketik nama tempat, atau koordinat 'lat,lon'", ".hujannotif set Serang\n.hujannotif set -6.1203,106.1504\natau reply lokasi WA lalu .hujannotif set"));
+    if (!q) return m.reply(raraGuide(pluginConfig.name, "cara set lokasi: reply pesan lokasi WA, atau ketik nama tempat, atau koordinat 'lat,lon'", ".hujannotif set Serang\n.hujannotif set -6.1203,106.1504\natau reply lokasi WA lalu .hujannotif set"));
     // koordinat langsung "lat,lon"
     const coord = q.match(/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/);
     if (coord) {
       const loc = { name: "Titik " + Number(coord[1]).toFixed(3) + "," + Number(coord[2]).toFixed(3), lat: Number(coord[1]), lon: Number(coord[2]) };
       setLocation(loc);
       await m.react("🐣");
-      return m.reply(novaSuccess(pluginConfig.name, "lokasi nowcast diset ke koordinat *" + loc.name + "*"));
+      return m.reply(raraSuccess(pluginConfig.name, "lokasi nowcast diset ke koordinat *" + loc.name + "*"));
     }
     try {
       const loc = __http.geocode
@@ -85,14 +85,14 @@ async function handler(m, { sock, args }) {
         : await geocodePlace(q);
       if (!loc) {
         await m.react("❌");
-        return m.reply(novaError(pluginConfig.name, "tempat '" + q + "' gak ketemu — coba nama yang lebih spesifik (mis. 'Serang, Banten') atau pakai koordinat 'lat,lon'"));
+        return m.reply(raraError(pluginConfig.name, "tempat '" + q + "' gak ketemu — coba nama yang lebih spesifik (mis. 'Serang, Banten') atau pakai koordinat 'lat,lon'"));
       }
       setLocation(loc);
       await m.react("🐣");
-      return m.reply(novaSuccess(pluginConfig.name, "lokasi nowcast diset: *" + loc.name + "* (" + loc.lat.toFixed(4) + ", " + loc.lon.toFixed(4) + ")\n\nsekarang ketik *.hujannotif on* buat mulai langganan notif hujan"));
+      return m.reply(raraSuccess(pluginConfig.name, "lokasi nowcast diset: *" + loc.name + "* (" + loc.lat.toFixed(4) + ", " + loc.lon.toFixed(4) + ")\n\nsekarang ketik *.hujannotif on* buat mulai langganan notif hujan"));
     } catch (e) {
       await m.react("❌");
-      return m.reply(novaError(pluginConfig.name, "gagal cari tempat: " + e.message));
+      return m.reply(raraError(pluginConfig.name, "gagal cari tempat: " + e.message));
     }
   }
 
@@ -102,7 +102,7 @@ async function handler(m, { sock, args }) {
     const loc = getLocation();
     if (!loc) {
       await m.react("❌");
-      return m.reply(novaGuide(pluginConfig.name, "lokasi belum diset — ketik .hujannotif set <tempat> dulu", ".hujannotif set Serang"));
+      return m.reply(raraGuide(pluginConfig.name, "lokasi belum diset — ketik .hujannotif set <tempat> dulu", ".hujannotif set Serang"));
     }
     try {
       const card = await rainNowCard(loc);
@@ -111,7 +111,7 @@ async function handler(m, { sock, args }) {
         contextInfo: {
           externalAdReply: {
             title: card.an.willRain ? "AKAN SEGERA HUJAN" : "NOWCAST AMAN",
-            body: "nova rain notifier • sumber " + card.source,
+            body: "rara rain notifier • sumber " + card.source,
             sourceUrl: "https://openweathermap.org/",
             mediaType: 1,
             renderLargerThumbnail: true,
@@ -122,14 +122,14 @@ async function handler(m, { sock, args }) {
       await m.react("🐣");
     } catch (e) {
       await m.react("❌");
-      return m.reply(novaError(pluginConfig.name, "gagal ambil nowcast: " + e.message));
+      return m.reply(raraError(pluginConfig.name, "gagal ambil nowcast: " + e.message));
     }
     return;
   }
 
   if (sub === "on") {
-    if (!getLocation()) return m.reply(novaGuide(pluginConfig.name, "set lokasi dulu sebelum langganan", ".hujannotif set Serang\nlalu .hujannotif on"));
-    if (isTarget(m.chat)) return m.reply(novaSuccess(pluginConfig.name, "chat ini udah langganan notif hujan"));
+    if (!getLocation()) return m.reply(raraGuide(pluginConfig.name, "set lokasi dulu sebelum langganan", ".hujannotif set Serang\nlalu .hujannotif on"));
+    if (isTarget(m.chat)) return m.reply(raraSuccess(pluginConfig.name, "chat ini udah langganan notif hujan"));
     addTarget(m.chat);
     setEnabled(true);
     syncRainMonitor();
@@ -146,7 +146,7 @@ async function handler(m, { sock, args }) {
 
   if (sub === "off") {
     removeTarget(m.chat);
-    return m.reply(novaSuccess(pluginConfig.name, "chat ini berhenti langganan notif hujan"));
+    return m.reply(raraSuccess(pluginConfig.name, "chat ini berhenti langganan notif hujan"));
   }
 
   if (sub === "status") {
@@ -174,7 +174,7 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(novaGuideV2(pluginConfig.name, {
+      return m.reply(raraGuideV2(pluginConfig.name, {
         kaomoji: "(´･ω･`)",
         sapaan: "cek nowcast sekarang tiap " + st.intervalMenit + " menit — mau diatur?",
         cara: "ketik .hujannotif interval <menit> (5–60)",
@@ -183,15 +183,15 @@ async function handler(m, { sock, args }) {
       }));
     }
     const res = setIntervalMenit(val);
-    if (!res) return m.reply(novaError(pluginConfig.name, "interval harus 5–60 menit"));
-    return m.reply(novaSuccess(pluginConfig.name, "interval cek nowcast sekarang *tiap " + res + " menit*"));
+    if (!res) return m.reply(raraError(pluginConfig.name, "interval harus 5–60 menit"));
+    return m.reply(raraSuccess(pluginConfig.name, "interval cek nowcast sekarang *tiap " + res + " menit*"));
   }
 
   if (sub === "cooldown") {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(novaGuideV2(pluginConfig.name, {
+      return m.reply(raraGuideV2(pluginConfig.name, {
         kaomoji: "(´･ω･`)",
         sapaan: "anti-spam sekarang 1 notif maks tiap " + st.cooldownMenit + " menit per chat",
         cara: "ketik .hujannotif cooldown <menit> (30–720)",
@@ -200,12 +200,12 @@ async function handler(m, { sock, args }) {
       }));
     }
     const res = setCooldownMenit(val);
-    if (!res) return m.reply(novaError(pluginConfig.name, "cooldown harus 30–720 menit"));
-    return m.reply(novaSuccess(pluginConfig.name, "cooldown anti-spam sekarang *" + res + " menit*"));
+    if (!res) return m.reply(raraError(pluginConfig.name, "cooldown harus 30–720 menit"));
+    return m.reply(raraSuccess(pluginConfig.name, "cooldown anti-spam sekarang *" + res + " menit*"));
   }
 
   return m.reply(
-    novaGuide(
+    raraGuide(
       pluginConfig.name,
       "notifikasi otomatis 'akan segera hujan dalam X menit' — nowcast curah hujan per-menit (OpenWeatherMap One Call 3.0, fallback Open-Meteo)",
       ".hujannotif set <tempat|lat,lon> — set lokasi (atau reply lokasi WA)\n.hujannotif on — langganan chat ini\n.hujannotif off — berhenti\n.hujannotif cek — nowcast sekarang\n.hujannotif status — lihat status\n.hujannotif interval <5-60> — kecepatan cek\n.hujannotif cooldown <30-720> — jeda anti-spam",

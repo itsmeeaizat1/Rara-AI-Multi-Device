@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'cecanvietnam',
     alias: ["cecanvietnam"],
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
             type: 'image'
         })
     } catch (e) {
-        m.reply(novaWrap("cecanvietnam", te(m.prefix, m.command, m.pushName), "error"))}
+        m.reply(raraWrap("cecanvietnam", te(m.prefix, m.command, m.pushName), "error"))}
 }
 
 export { pluginConfig as config, handler }

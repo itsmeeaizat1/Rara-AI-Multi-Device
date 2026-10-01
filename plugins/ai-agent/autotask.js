@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autotask — Agent tugas otonom berjangka (saran fitur #5 owner, 21 Sep 2026).
  * "kerjakan X lalu lapor" → AI memecah jadi tahapan (milestone), dikerjain
- * SATU PER SATU di background pakai engine yang sama kayak .novaagent /
- * .aisuperagent (nova-agent.js runAgent: penalaran + browsing/riset web),
+ * SATU PER SATU di background pakai engine yang sama kayak .raraagent /
+ * .aisuperagent (rara-agent.js runAgent: penalaran + browsing/riset web),
  * laporan tiap milestone dikirim ke DM owner. Tugas persisten di db —
  * bot restart pun bisa dilanjut (resume otomatis pas boot).
  *
- * BUKAN upgrade perilaku novaagent/autonovaagent/aisuperagent (mereka tetap
+ * BUKAN upgrade perilaku raraagent/autonovaagent/aisuperagent (mereka tetap
  * one-shot) — ini lapisan orkestrasi baru yang numpang engine mereka.
  *
  * Commands (owner-only):
@@ -21,12 +21,12 @@
  *   .autotask laporan <id>        — kirim ulang semua laporan ke DM
  */
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaBox } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
-import { runAgent } from "../../src/lib/nova-agent.js";
-import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
-import { skillsBlock } from "../../src/lib/nova-askills.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraBox } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
+import { runAgent } from "../../src/lib/rara-agent.js";
+import { memoryBlock, extractMemories } from "../../src/lib/rara-memory.js";
+import { skillsBlock } from "../../src/lib/rara-askills.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -59,7 +59,7 @@ const running = new Set(); // id yang loop-nya lagi hidup di proses ini
 // seams buat e2e
 let _planner = null;   // override pembuat tahapan
 let _stageRunner = null; // override eksekusi tahap
-let _extractor = null; // override ekstraksi memori (nova-memory.js)
+let _extractor = null; // override ekstraksi memori (rara-memory.js)
 
 // ────────────────────────────────────────────────────────────────────────────
 // STORE
@@ -141,7 +141,7 @@ async function planStages(task) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// EKSEKUSI TAHAP — engine sama kayak .novaagent/.aisuperagent
+// EKSEKUSI TAHAP — engine sama kayak .raraagent/.aisuperagent
 // ────────────────────────────────────────────────────────────────────────────
 
 function stageContext(task, stageIdx) {
@@ -163,8 +163,8 @@ async function runStage(task, stageIdx) {
       return null;
     } catch { return null; }
   };
-  // 🔹 MEMORY LAYER: fakta durabel user (nova-memory.js — store sama kayak
-  // .novaai/.novaagent) di-inject ke prompt tahap biar tugas inget owner
+  // 🔹 MEMORY LAYER: fakta durabel user (rara-memory.js — store sama kayak
+  // .raraai/.raraagent) di-inject ke prompt tahap biar tugas inget owner
   const memLine = task.sender ? memoryBlock(getDatabase(), task.sender, task.task) : "";
   const skillLine = skillsBlock(task.task);
   const prompt =
@@ -295,7 +295,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
   const prefix = botConfig?.command?.prefix || ".";
   const raw = (m.text || "").trim();
   if (!raw) {
-    await m.reply(novaBox("AUTOTASK — AGENT TUGAS OTONOM", [
+    await m.reply(raraBox("AUTOTASK — AGENT TUGAS OTONOM", [
       `Cara pakai:`,
       `${prefix}autotask <tugas> — kerjain bertahap, lapor tiap tahap ke DM`,
       `${prefix}autotask <tugas> jeda N — jeda N menit antar tahap`,
@@ -304,7 +304,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
       `${prefix}autotask stop/pause/lanjut <id>`,
       `${prefix}autotask laporan <id> — kirim ulang hasil ke DM`,
       "---",
-      `Engine sama kayak .novaagent/.aisuperagent`,
+      `Engine sama kayak .raraagent/.aisuperagent`,
       `(penalaran + browsing), tapi berjalan lama di`,
       `background dan bertahap. Persisten — restart`,
       `pun tugas dilanjut otomatis.`,
@@ -320,14 +320,14 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
   if (sub === "list") {
     const ids = Object.keys(st.tasks);
     if (!ids.length) {
-      await m.reply(novaBox("AUTOTASK", ["Belum ada tugas.", `Buat: ${prefix}autotask <tugas>`]));
+      await m.reply(raraBox("AUTOTASK", ["Belum ada tugas.", `Buat: ${prefix}autotask <tugas>`]));
       return { handled: true };
     }
     const lines = ids.map((id) => {
       const t = st.tasks[id];
       return `| ${id.toUpperCase()} ${statusLine(t)} — ${String(t.task).slice(0, 45)}`;
     });
-    await m.reply(novaBox("DAFTAR TUGAS", lines));
+    await m.reply(raraBox("DAFTAR TUGAS", lines));
     return { handled: true };
   }
 
@@ -336,13 +336,13 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
     const id = (args[1] || "").toLowerCase();
     const task = id ? st.tasks[id] : Object.values(st.tasks).find((t) => t.status === "running") || Object.values(st.tasks).slice(-1)[0];
     if (!task) {
-      await m.reply(novaBox("AUTOTASK", ["Tugas gak ketemu."]));
+      await m.reply(raraBox("AUTOTASK", ["Tugas gak ketemu."]));
       return { handled: true };
     }
     const stageLines = task.stages.map((s, i) =>
       `| ${i + 1}. ${STATUS_ICON[s.status] || "•"} ${s.title}${s.finishedAt ? " (" + fmtAt(s.finishedAt) + ")" : ""}`
     );
-    await m.reply(novaBox("STATUS TUGAS " + task.id.toUpperCase(), [
+    await m.reply(raraBox("STATUS TUGAS " + task.id.toUpperCase(), [
       `Tugas: ${String(task.task).slice(0, 60)}`,
       `Status: ${statusLine(task)}`,
       `Jeda antar tahap: ${task.jedaMin || 0} menit`,
@@ -358,30 +358,30 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
     const id = (args[1] || "").toLowerCase();
     const task = st.tasks[id];
     if (!task) {
-      await m.reply(novaBox("AUTOTASK", [`Tugas ${id || "?"} gak ketemu.`]));
+      await m.reply(raraBox("AUTOTASK", [`Tugas ${id || "?"} gak ketemu.`]));
       return { handled: true };
     }
     if (sub === "stop") {
       task.status = "stopped";
       task.stoppedAt = Date.now();
       save();
-      await m.reply(novaBox("AUTOTASK", [`${id.toUpperCase()} dihentikan.`, `Tahap selesai: ${task.stages.filter((s) => s.status === "done").length}/${task.stages.length}`]));
+      await m.reply(raraBox("AUTOTASK", [`${id.toUpperCase()} dihentikan.`, `Tahap selesai: ${task.stages.filter((s) => s.status === "done").length}/${task.stages.length}`]));
     } else if (sub === "pause") {
       if (task.status !== "running") {
-        await m.reply(novaBox("AUTOTASK", [`${id.toUpperCase()} gak lagi jalan (${task.status}).`]));
+        await m.reply(raraBox("AUTOTASK", [`${id.toUpperCase()} gak lagi jalan (${task.status}).`]));
         return { handled: true };
       }
       task.status = "paused";
       save();
-      await m.reply(novaBox("AUTOTASK", [`${id.toUpperCase()} dijeda.`, `Lanjut: ${prefix}autotask lanjut ${id}`]));
+      await m.reply(raraBox("AUTOTASK", [`${id.toUpperCase()} dijeda.`, `Lanjut: ${prefix}autotask lanjut ${id}`]));
     } else {
       if (task.status !== "paused") {
-        await m.reply(novaBox("AUTOTASK", [`${id.toUpperCase()} gak dalam jeda (${task.status}).`]));
+        await m.reply(raraBox("AUTOTASK", [`${id.toUpperCase()} gak dalam jeda (${task.status}).`]));
         return { handled: true };
       }
       task.status = "running";
       save();
-      await m.reply(novaBox("AUTOTASK", [`${id.toUpperCase()} dilanjut dari tahap ${task.cur + 1}.`]));
+      await m.reply(raraBox("AUTOTASK", [`${id.toUpperCase()} dilanjut dari tahap ${task.cur + 1}.`]));
       runTaskLoop(sock, task.id);
     }
     return { handled: true };
@@ -392,7 +392,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
     const id = (args[1] || "").toLowerCase();
     const task = st.tasks[id];
     if (!task || !task.reports.length) {
-      await m.reply(novaBox("AUTOTASK", [`${id || "?"} gak punya laporan.`]));
+      await m.reply(raraBox("AUTOTASK", [`${id || "?"} gak punya laporan.`]));
       return { handled: true };
     }
     const ok = await dmOwner(sock,
@@ -401,7 +401,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
         `${i + 1}. ${r.ok ? "✅" : "⚠️"} ${r.title} (${fmtAt(r.at)})\n${r.result || "(gagal)"}`
       ).join("\n\n")
     );
-    await m.reply(novaBox("AUTOTASK", [
+    await m.reply(raraBox("AUTOTASK", [
       ok ? `Semua laporan dikirim ke DM kamu.` : `Gagal kirim DM (bot gak kenal nomor owner?).`,
     ]));
     return { handled: true };
@@ -416,7 +416,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
     taskText = taskText.replace(jedaMatch[0], "").trim();
   }
   if (taskText.length < 8) {
-    await m.reply(novaBox("AUTOTASK", ["Tugasnya kependekan bos.", `Contoh: ${prefix}autotask riset tren AI minggu ini lalu rangkum jadi 5 poin`]));
+    await m.reply(raraBox("AUTOTASK", ["Tugasnya kependekan bos.", `Contoh: ${prefix}autotask riset tren AI minggu ini lalu rangkum jadi 5 poin`]));
     return { handled: true };
   }
 
@@ -426,7 +426,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
   st.tasks[id] = {
     id,
     task: taskText,
-    sender: m.sender || null, // buat memory layer (nova-memory.js per-user)
+    sender: m.sender || null, // buat memory layer (rara-memory.js per-user)
     stages: stages.map((s) => ({ ...s, status: "pending", result: null, finishedAt: null })),
     status: "running",
     cur: 0,
@@ -436,7 +436,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
   };
   save();
 
-  await m.reply(novaBox("TUGAS BARU — " + id.toUpperCase(), [
+  await m.reply(raraBox("TUGAS BARU — " + id.toUpperCase(), [
     `Tugas: ${taskText.slice(0, 60)}`,
     `Tahap: ${stages.length}`,
     `Jeda antar tahap: ${jedaMin} menit`,

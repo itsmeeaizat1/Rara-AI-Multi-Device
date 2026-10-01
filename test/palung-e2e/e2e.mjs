@@ -1,8 +1,8 @@
 // E2E palung — Palung Misteri: 4 zona, oksigen, risiko, event, toko, boss Titik Terdalam, prestasi
 import path from "node:path";
 import fs from "node:fs";
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
-import { ensureRpg, saveRpg, getCash } from "../../src/lib/nova-rpg-service.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
+import { ensureRpg, saveRpg, getCash } from "../../src/lib/rara-rpg-service.js";
 
 process.env.PALUNG_SELAM_CD_MS = "0"; // e2e anti-flaky
 process.env.PALUNG_ANIM_MS = "0";
@@ -130,7 +130,7 @@ t("10a. subcommand tak dikenal → menu bantuan", some("PALUNG MISTERI"));
 
 console.log("— section C: ANIMASI CINEMATIC (lib libtrenchdiverrpg, gaya Nintendo) —");
 const animLib2 = await import(R + "/src/lib/libanimationrpg/libtrenchdiverrpg.js");
-const { sceneTotalMs } = await import(R + "/src/lib/nova-anim-runner.js");
+const { sceneTotalMs } = await import(R + "/src/lib/rara-anim-runner.js");
 const animFramesP = [];
 const animSockP = { sendMessage: async (jid, content) => {
   if (content?.edit) { animFramesP.push({ edit: true, text: content.text }); return { key: { id: "p1" } }; }

@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // img2style — foto → 80+ GAYA (Haidar img2style) — Studio Ghibli, Disney,
 // Pixar, Demon Slayer, Genshin-Like, Minecraft, Lego, Van Gogh, Manga, dll.
 // Fallback: KuroNeko toonmix (free prompt). Key: apikeys.json haidar.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 import { haidarImg2style, HAIDAR_STYLES } from "../../src/scraper/haidar-ai.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
 
@@ -43,17 +43,17 @@ async function handler(m, { sock }) {
   // .img2style list — tampil semua gaya
   const sub = (rawArgs[0] || "").toLowerCase();
   if (sub === "list" || sub === "gaya") {
-    return m.reply(novaWrap("img2style", `Ada ${HAIDAR_STYLES.length} gaya yang bisa dipakai!\n\n${HAIDAR_STYLES.map((s) => `• ${s}`).join("\n")}\n\nCARA PAKAI: ${m.prefix}img2style <gaya> lalu reply foto\nContoh: ${m.prefix}img2style ghibli (reply foto)`, "guide"));
+    return m.reply(raraWrap("img2style", `Ada ${HAIDAR_STYLES.length} gaya yang bisa dipakai!\n\n${HAIDAR_STYLES.map((s) => `• ${s}`).join("\n")}\n\nCARA PAKAI: ${m.prefix}img2style <gaya> lalu reply foto\nContoh: ${m.prefix}img2style ghibli (reply foto)`, "guide"));
   }
 
   // alias gaya: .ghibli (reply foto) — command alias langsung jadi gaya
   let style = rawArgs.join(" ").trim();
   if (!style && STYLE_ALIASES[m.command]) style = STYLE_ALIASES[m.command];
   if (!style) {
-    return m.reply(novaWrap("img2style", `Mau diubah ke gaya apa?\n\nContoh: ${m.prefix}img2style ghibli (reply foto)\n${m.prefix}img2style Demon Slayer (reply foto)\n\nKetik ${m.prefix}img2style list buat lihat ${HAIDAR_STYLES.length} gaya\n\nGaya populer: ghibli, disney, pixar, manga, demonslayer, genshin, minecraft, lego, vangogh, chibi`, "guide"));
+    return m.reply(raraWrap("img2style", `Mau diubah ke gaya apa?\n\nContoh: ${m.prefix}img2style ghibli (reply foto)\n${m.prefix}img2style Demon Slayer (reply foto)\n\nKetik ${m.prefix}img2style list buat lihat ${HAIDAR_STYLES.length} gaya\n\nGaya populer: ghibli, disney, pixar, manga, demonslayer, genshin, minecraft, lego, vangogh, chibi`, "guide"));
   }
   if (!isImage) {
-    return m.reply(novaWrap("img2style", `Reply/kirim foto dulu!\n\nContoh: ${m.prefix}img2style ${style} (reply foto)`, "guide"));
+    return m.reply(raraWrap("img2style", `Reply/kirim foto dulu!\n\nContoh: ${m.prefix}img2style ${style} (reply foto)`, "guide"));
   }
 
   // resolve alias → style resmi
@@ -94,12 +94,12 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: buf,
-      caption: novaWrap("img2style", `🎨 Foto diubah gaya!\n\n✨ Gaya: *${resolved || style}*\n${engineNote}`),
+      caption: raraWrap("img2style", `🎨 Foto diubah gaya!\n\n✨ Gaya: *${resolved || style}*\n${engineNote}`),
     }, { quoted: m });
   } catch (err) {
     console.error("img2style error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("img2style", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("img2style", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "antiremove",
     alias: ["antiremove"],
@@ -38,11 +38,11 @@ async function handler(m, { sock, db }) {
 
     if (action === 'off') {
         db.setGroup(m.chat, { ...group, antiremove: 'off' })
-        await m.reply(novaWrap("Antiremove", `antiremove dinonaktifkan`, "error"))
+        await m.reply(raraWrap("Antiremove", `antiremove dinonaktifkan`, "error"))
         return
     }
 
-    await m.reply(novaWrap("Anti remove", `Gunakan \`.antiremove on\` atau \`.antiremove off\``, "error"))
+    await m.reply(raraWrap("Anti remove", `Gunakan \`.antiremove on\` atau \`.antiremove off\``, "error"))
 }
 
 export { pluginConfig as config, handler }

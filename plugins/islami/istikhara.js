@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "istikhara",
@@ -126,16 +126,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "istikhara <nomor>")
       lines.push("Contoh: " + usedPrefix + "istikhara 3 (Doa Istikhara)")
-      return m.reply(novaWrap("Sholat Istikhara", lines.join("\n")))
+      return m.reply(raraWrap("Sholat Istikhara", lines.join("\n")))
     }
 
     const item = ISTIKHARA[input - 1]
 
     if (item.isi) {
-      return m.reply(novaWrap("Istikhara - " + item.judul, item.isi.join("\n")))
+      return m.reply(raraWrap("Istikhara - " + item.judul, item.isi.join("\n")))
     }
 
-    return m.reply(novaWrap("Istikhara - " + item.judul, [
+    return m.reply(raraWrap("Istikhara - " + item.judul, [
       "Teks Arab:",
       item.arab,
       "",
@@ -149,7 +149,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       item.keterangan,
     ].join("\n")))
   } catch (e) {
-    return m.reply(novaWrap("Istikhara", "Error: " + e.message))
+    return m.reply(raraWrap("Istikhara", "Error: " + e.message))
   }
 }
 

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: CHAT ANONIM ANTAR MEMBER + GUARD LINK
+// RARA AI WHATSAPP BOT — E2E: CHAT ANONIM ANTAR MEMBER + GUARD LINK
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -12,10 +12,10 @@ const t = (name, cond, extra = "") => {
 process.on("unhandledRejection", (e) => { console.log("UNHANDLED:", e?.stack || e); process.exit(1); });
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "anonchat-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const lib = await import(R + "/src/lib/nova-anonchat.js");
+const lib = await import(R + "/src/lib/rara-anonchat.js");
 const plug = await import(R + "/plugins/fun/vibychatanonymouschat.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const sc = (s) => fromSC(String(s || "")).toLowerCase();

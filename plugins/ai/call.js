@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 TELPON — Voice Agent (request owner 12 Sep 2026, ide fitur no 2)
 // 🔹 .telpon on → semua VN kamu dijawab pakai suara (STT → AI → TTS)
 // 🔹 .telpon <teks> → jawab satu kali pakai VN
 // 🔹 .telpon suara <nama> → ganti voice (Gadis/Ardi/Siti/dll)
 // ============================================================
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   isTelponOn, setTelponMode, getTelponVoice, setTelponVoice,
   telponSpeak, handleTelponVn,
-} from "../../src/lib/nova-telpon.js";
+} from "../../src/lib/rara-telpon.js";
 import { HAIDAR_VOICES } from "../../src/scraper/haidar-ai.js";
 
 const pluginConfig = {
@@ -37,26 +37,26 @@ async function handler(m, { sock, db, config } = {}) {
   // ── on / off ──
   if (sub === "on" || sub === "off") {
     if (sub === "on" && on) {
-      return m.reply(novaWrap("Telpon", [`📞 Mode telepon udah AKTIF di chat ini.`]));
+      return m.reply(raraWrap("Telpon", [`📞 Mode telepon udah AKTIF di chat ini.`]));
     }
     setTelponMode(db, m.chat, sub === "on");
     await m.react("🐣");
     if (sub === "on") {
-      return m.reply(novaWrap("Telpon", [
+      return m.reply(raraWrap("Telpon", [
         `📞 Mode telepon AKTIF!`,
         ``,
-        `Kirim voice note apa aja — aku dengerin terus jawab pakai suara. Otaknya sama kayak .novaagent: inget obrolan + kenangan kamu.`,
+        `Kirim voice note apa aja — aku dengerin terus jawab pakai suara. Otaknya sama kayak .raraagent: inget obrolan + kenangan kamu.`,
         `Matikan: ${m.prefix}telpon off`,
       ]));
     }
-    return m.reply(novaWrap("Telpon", [`📴 Mode telepon mati. Ngobrol lagi: ${m.prefix}telpon on`]));
+    return m.reply(raraWrap("Telpon", [`📴 Mode telepon mati. Ngobrol lagi: ${m.prefix}telpon on`]));
   }
 
   // ── suara <nama> ──
   if (sub === "suara" || sub === "voice") {
     const picked = (args[1] || "").replace(/^./, (c) => c.toUpperCase());
     if (!picked || !HAIDAR_VOICES.includes(picked)) {
-      return m.reply(novaWrap("Telpon", [
+      return m.reply(raraWrap("Telpon", [
         `🎤 Voice kamu sekarang: ${voice}`,
         ``,
         `Pilihan voice:`,
@@ -67,7 +67,7 @@ async function handler(m, { sock, db, config } = {}) {
     }
     setTelponVoice(db, m.sender, picked);
     await m.react("🐣");
-    return m.reply(novaWrap("Telpon", [`✅ Voice diganti jadi ${picked}.`]));
+    return m.reply(raraWrap("Telpon", [`✅ Voice diganti jadi ${picked}.`]));
   }
 
   // ── teks → dijawab VN (one-shot) ──
@@ -82,7 +82,7 @@ async function handler(m, { sock, db, config } = {}) {
   }
 
   // ── default: status + panduan ──
-  return m.reply(novaWrap("Telpon", [
+  return m.reply(raraWrap("Telpon", [
     `📞 Voice agent — ngobrol pakai suara ala telepon.`,
     ``,
     `Status chat ini: ${on ? "🟢 AKTIF — semua VN dijawab suara" : "🔴 mati"}`,

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/group/autorole.js — Auto Role Assignment System
 // Command: .autorole (toggle) | .profile | .roleboard | .addpoint | .setrole
 
@@ -6,8 +6,8 @@ import {
   isEnabled, toggle, getUser, addChat, addPoints,
   setManualRole, getLeaderboard, getRoleInfo, resolveRole,
   formatProfile, ROLES,
-} from "../../src/lib/nova-autorole.js";
-import { bracketBox } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-autorole.js";
+import { bracketBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autorole",

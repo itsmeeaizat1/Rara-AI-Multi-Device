@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import sharp from "sharp";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "imgcompress",
@@ -29,7 +29,7 @@ async function downloadFile(url) {
 }
 
 function getTmpFile(ext) {
-  return path.join(os.tmpdir(), "nova_imgcmp_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8) + "." + ext);
+  return path.join(os.tmpdir(), "rara_imgcmp_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8) + "." + ext);
 }
 
 function formatSize(bytes) {
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
   const media = await getMediaBuffer(m);
 
   if (!media) {
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "imgcompress",
       "Kompres gambar untuk mengurangi ukuran file",
       ".imgcompress (reply gambar) — kompres default 70%\n.imgcompress 50 (reply gambar) — kompres level 50%\n.imgcompress max (reply gambar) — kompres maksimal\n.imgcompress info (reply gambar) — info detail gambar",
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
   const isImage = (media.mime || "").startsWith("image/");
 
   if (!isImage) {
-    return m.reply(novaWrap("Imgcompress", "File bukan gambar. Reply gambar dengan .imgcompress"));
+    return m.reply(raraWrap("Imgcompress", "File bukan gambar. Reply gambar dengan .imgcompress"));
   }
 
   // === INFO ===

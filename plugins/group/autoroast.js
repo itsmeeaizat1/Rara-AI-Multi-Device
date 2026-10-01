@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autoroast",
@@ -112,7 +112,7 @@ export function startAutoRoast(groupId, sock, db) {
       msg += roast;
       msg += "\n\nMode: Otomatis tiap " + g.interval + " menit";
 
-      const payload = { text: novaWrap("Auto Roast", msg, "warn") };
+      const payload = { text: raraWrap("Auto Roast", msg, "warn") };
       if (target) payload.mentions = [target.id];
 
       await sock.sendMessage(groupId, payload);
@@ -156,7 +156,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       startAutoRoast(groupId, conn, db);
 
-      return m.reply(novaWrap("Auto Roast", [
+      return m.reply(raraWrap("Auto Roast", [
         "Roast otomatis DIAKTIFKAN!",
         "",
         "Interval: " + interval + " menit",
@@ -173,7 +173,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await db.save();
       stopAutoRoast(groupId);
 
-      return m.reply(novaWrap("Auto Roast", "Roast otomatis DIMATIKAN.\nKetik .autoroast on untuk aktifkan lagi."));
+      return m.reply(raraWrap("Auto Roast", "Roast otomatis DIMATIKAN.\nKetik .autoroast on untuk aktifkan lagi."));
     }
 
     // STATUS
@@ -181,7 +181,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
       const lastTargetStr = cfg.lastTarget ? "@" + cfg.lastTarget.split("@")[0] : "Belum ada";
 
-      return m.reply(novaWrap("Auto Roast", [
+      return m.reply(raraWrap("Auto Roast", [
         "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit",
         "Total roast: " + (cfg.totalSent || 0),
@@ -214,21 +214,21 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (target) msg = "Roast untuk @" + target.id.split("@")[0] + ":\n\n" + roast;
       msg += "\n\nTotal roast: " + cfg.totalSent;
 
-      const payload = { text: novaWrap("Auto Roast", msg, "warn") };
+      const payload = { text: raraWrap("Auto Roast", msg, "warn") };
       if (target) payload.mentions = [target.id];
 
       return m.reply(payload);
     }
 
     // HELP
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "Auto Roast",
       "Bot roast member grup acak secara otomatis tiap interval.\n\nCommands:\n- .autoroast on [menit]\n- .autoroast off\n- .autoroast status\n- .autoroast now",
       `${usedPrefix}autoroast on 30`
     ));
   } catch (e) {
     console.error("[Auto Roast]", e);
-    m.reply(novaError("Auto Roast", "Terjadi kendala: " + (e.message || "coba lagi nanti ya")));
+    m.reply(raraError("Auto Roast", "Terjadi kendala: " + (e.message || "coba lagi nanti ya")));
   }
 }
 

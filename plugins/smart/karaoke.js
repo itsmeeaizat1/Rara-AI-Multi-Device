@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "karaoke",
@@ -91,7 +91,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "start" || sub === "mulai") {
     if (game && game.status === "active") {
-      await m.reply(novaWrap("Karaoke", "Game masih aktif. Ketik " + prefix + "karaoke stop."));
+      await m.reply(raraWrap("Karaoke", "Game masih aktif. Ketik " + prefix + "karaoke stop."));
       return { handled: true };
     }
     const query = args.slice(2).join(" ").trim().toLowerCase();
@@ -106,7 +106,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       history: [],
     };
     saveConfig(db, gid, data);
-    await m.reply(novaWrap("Karaoke", [
+    await m.reply(raraWrap("Karaoke", [
       "KARAOKE DIMULAI!",
       "Lagu: " + song.title + " - " + song.artist,
       "",
@@ -122,16 +122,16 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "next" || sub === "giliran") {
     if (!game || game.status !== "active") {
-      await m.reply(novaWrap("Karaoke", "Belum ada game. Ketik " + prefix + "karaoke start."));
+      await m.reply(raraWrap("Karaoke", "Belum ada game. Ketik " + prefix + "karaoke start."));
       return { handled: true };
     }
     if (game.currentTurn && game.currentTurn !== m.sender) {
-      await m.reply(novaWrap("Karaoke", "Bukan giliranmu! Giliran @" + game.currentTurn.split("@")[0] + "."), { mentions: [game.currentTurn] });
+      await m.reply(raraWrap("Karaoke", "Bukan giliranmu! Giliran @" + game.currentTurn.split("@")[0] + "."), { mentions: [game.currentTurn] });
       return { handled: true };
     }
     game.currentTurn = m.sender;
     const line = game.song.lines[game.currentLine];
-    await m.reply(novaWrap("Karaoke", [
+    await m.reply(raraWrap("Karaoke", [
       "Giliran @" + m.sender.split("@")[0] + "!",
       "Baris " + (game.currentLine + 1) + "/" + game.song.lines.length,
       "",
@@ -145,11 +145,11 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "sing" || sub === "nyanyi") {
     if (!game || game.status !== "active") {
-      await m.reply(novaWrap("Karaoke", "Belum ada game."));
+      await m.reply(raraWrap("Karaoke", "Belum ada game."));
       return { handled: true };
     }
     if (game.currentTurn !== m.sender) {
-      await m.reply(novaWrap("Karaoke", "Bukan giliranmu! Ketik " + prefix + "karaoke next."));
+      await m.reply(raraWrap("Karaoke", "Bukan giliranmu! Ketik " + prefix + "karaoke next."));
       return { handled: true };
     }
     const userLine = args.slice(2).join(" ").trim().toLowerCase();
@@ -168,7 +168,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         saveConfig(db, gid, game);
         const sorted = Object.entries(game.scores).sort((a, b) => b[1] - a[1]);
         const list = sorted.map(([jid, score], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + score + " baris").join("\n");
-        await m.reply(novaWrap("Karaoke Selesai!", [
+        await m.reply(raraWrap("Karaoke Selesai!", [
           "Lagu: " + game.song.title,
           "Total baris: " + game.song.lines.length,
           "",
@@ -177,7 +177,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         ].join("\n")), { mentions: sorted.map(([jid]) => jid) });
         delConfig(db, gid);
       } else {
-        await m.reply(novaWrap("Karaoke", "Lirik diterima! +1 poin\nBaris " + (game.currentLine + 1) + " siap.\nKetik " + prefix + "karaoke next untuk ambil giliran."));
+        await m.reply(raraWrap("Karaoke", "Lirik diterima! +1 poin\nBaris " + (game.currentLine + 1) + " siap.\nKetik " + prefix + "karaoke next untuk ambil giliran."));
       }
       return { handled: true };
     }
@@ -195,7 +195,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       saveConfig(db, gid, game);
       const sorted = Object.entries(game.scores).sort((a, b) => b[1] - a[1]);
       const list = sorted.map(([jid, score], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + score + " poin").join("\n");
-      await m.reply(novaWrap("Karaoke Selesai!", [
+      await m.reply(raraWrap("Karaoke Selesai!", [
         "Lagu: " + game.song.title,
         "Akurasi kamu: " + Math.floor(similarity * 100) + "%",
         "Skor:",
@@ -203,14 +203,14 @@ async function handler(m, { sock, db, config: botConfig }) {
       ].join("\n")), { mentions: sorted.map(([jid]) => jid) });
       delConfig(db, gid);
     } else {
-      await m.reply(novaWrap("Karaoke", "Akurasi: " + Math.floor(similarity * 100) + "% | +" + points + " poin\nBaris " + (game.currentLine + 1) + " siap.\nKetik " + prefix + "karaoke next."));
+      await m.reply(raraWrap("Karaoke", "Akurasi: " + Math.floor(similarity * 100) + "% | +" + points + " poin\nBaris " + (game.currentLine + 1) + " siap.\nKetik " + prefix + "karaoke next."));
     }
     return { handled: true };
   }
 
   if (sub === "skip" || sub === "lewat") {
     if (!game || game.status !== "active") {
-      await m.reply(novaWrap("Karaoke", "Belum ada game."));
+      await m.reply(raraWrap("Karaoke", "Belum ada game."));
       return { handled: true };
     }
     game.currentLine++;
@@ -219,30 +219,30 @@ async function handler(m, { sock, db, config: botConfig }) {
     if (game.currentLine >= game.song.lines.length) {
       game.status = "completed";
       saveConfig(db, gid, game);
-      await m.reply(novaWrap("Karaoke", "Skipped. Lagu selesai."));
+      await m.reply(raraWrap("Karaoke", "Skipped. Lagu selesai."));
       delConfig(db, gid);
     } else {
-      await m.reply(novaWrap("Karaoke", "Baris dilewati. Baris " + (game.currentLine + 1) + " siap.\nKetik " + prefix + "karaoke next."));
+      await m.reply(raraWrap("Karaoke", "Baris dilewati. Baris " + (game.currentLine + 1) + " siap.\nKetik " + prefix + "karaoke next."));
     }
     return { handled: true };
   }
 
   if (sub === "stop" || sub === "batal") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Karaoke", "Khusus admin/owner."));
+      await m.reply(raraWrap("Karaoke", "Khusus admin/owner."));
       return { handled: true };
     }
     delConfig(db, gid);
-    await m.reply(novaWrap("Karaoke", "Game dibatalkan."));
+    await m.reply(raraWrap("Karaoke", "Game dibatalkan."));
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek" || !sub) {
     if (!game) {
-      await m.reply(novaWrap("Karaoke", "Belum ada game.\n" + prefix + "karaoke start [judul lagu]\nLagu: " + LYRICS_DB.map(s => s.title).join(", ")));
+      await m.reply(raraWrap("Karaoke", "Belum ada game.\n" + prefix + "karaoke start [judul lagu]\nLagu: " + LYRICS_DB.map(s => s.title).join(", ")));
       return { handled: true };
     }
-    await m.reply(novaWrap("Karaoke", [
+    await m.reply(raraWrap("Karaoke", [
       "Lagu: " + game.song.title,
       "Baris: " + (game.currentLine + 1) + "/" + game.song.lines.length,
       "Status: " + game.status,
@@ -251,7 +251,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Karaoke", [
+  await m.reply(raraWrap("Karaoke", [
     "KARAOKE MODE",
     "",
     prefix + "karaoke start [judul] - mulai",

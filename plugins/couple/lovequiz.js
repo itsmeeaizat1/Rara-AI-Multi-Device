@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
-import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { raraGameBox, gameCTA } from '../../src/lib/rara-games.js'
 
 const pluginConfig = {
   name: "cintaquiz",
@@ -65,18 +65,18 @@ async function handler(m, { conn, text, args, usedPrefix, command, sender }) {
       lines.push("d. " + q.d)
       lines.push("")
       lines.push("Ketik: " + usedPrefix + "cintaquiz <a/b/c/d>")
-      return m.reply(novaWrap("Kuis Cinta #1", lines.join("\n")))
+      return m.reply(raraWrap("Kuis Cinta #1", lines.join("\n")))
     }
 
     // Answer question
     const state = userState.get(userId)
     if (!state) {
-      return m.reply(novaWrap("Kuis Cinta", "Belum mulai kuis. Ketik: " + usedPrefix + "cintaquiz mulai"))
+      return m.reply(raraWrap("Kuis Cinta", "Belum mulai kuis. Ketik: " + usedPrefix + "cintaquiz mulai"))
     }
 
     const ans = input.toLowerCase().charAt(0)
     if (!["a", "b", "c", "d"].includes(ans)) {
-      return m.reply(novaWrap("Kuis Cinta", "Jawab dengan a, b, c, atau d saja."))
+      return m.reply(raraWrap("Kuis Cinta", "Jawab dengan a, b, c, atau d saja."))
     }
 
     // Score: a=10, b=8, c=7, d=9 (weighted)
@@ -103,7 +103,7 @@ async function handler(m, { conn, text, args, usedPrefix, command, sender }) {
         `│ • 💭 ${hasil.deskripsi}`,
       ]
 
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "hasil kuis cinta", icon: "💘",
         flavor: "💘 *KUIS CINTA SELESAI!*",
         body: rows.join("\n"),
@@ -125,10 +125,10 @@ async function handler(m, { conn, text, args, usedPrefix, command, sender }) {
     lines.push("Ketik: " + usedPrefix + "cintaquiz <a/b/c/d>")
 
     await m.react("🐣");
-    return m.reply(novaWrap("Kuis Cinta #" + (state.qIndex + 1), lines.join("\n")))
+    return m.reply(raraWrap("Kuis Cinta #" + (state.qIndex + 1), lines.join("\n")))
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("Kuis Cinta", "Error: " + e.message))
+    return m.reply(raraWrap("Kuis Cinta", "Error: " + e.message))
   }
 }
 

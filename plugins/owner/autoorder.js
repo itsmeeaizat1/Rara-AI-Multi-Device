@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // autoorder.js — config AUTO ORDER PANEL (owner-only): on/off, slot panel,
 // kredensial Pakasir, harga per paket. Dengan ini fitur orderpanel bisa
 // dinyalakan/dimatikan & diatur harganya dari WA.
 import { config } from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   RAM_PACKAGES, ensureOrderCfg, packagePrice, getOrderPanelCfg, fmtRupiah,
-} from "../../src/lib/nova-auto-order.js";
+} from "../../src/lib/rara-auto-order.js";
 
 const pluginConfig = {
   name: "autoorder",
@@ -27,7 +27,7 @@ const pluginConfig = {
 
 function statusText(cfg, panelOk) {
   const rows = Object.keys(RAM_PACKAGES).map((k) => `• ${k.toUpperCase()}: ${fmtRupiah(packagePrice(cfg, k))}`);
-  return novaWrap("Config Auto Order", [
+  return raraWrap("Config Auto Order", [
     `Status: ${cfg.on ? "🟢 AKTIF" : "🔴 MATI"}`,
     `Panel: v${cfg.panel} ${panelOk ? "(terkonfigurasi)" : "(BELUM ada domain/apikey!)"}`,
     `Pakasir: ${cfg.pakasir.slug ? `slug "${cfg.pakasir.slug}" tersimpan` : "BELUM di-set"}`,
@@ -55,122 +55,122 @@ async function handler(m, { sock, db: _db }) {
     db.save();
     const panelOk = !!getOrderPanelCfg(cfg.panel);
     if (cfg.on && (!panelOk || !cfg.pakasir.slug)) {
-      return m.reply(novaWrap("Config Auto Order", `AutoSWGC nyala, TAPI ada yang belum siap: ${!panelOk ? `panel v${cfg.panel} belum dikonfigurasi` : ""}${!panelOk && !cfg.pakasir.slug ? " · " : ""}${!cfg.pakasir.slug ? "Pakasir belum di-set" : ""}. Order bakal ditolak sampai lengkap.`));
+      return m.reply(raraWrap("Config Auto Order", `AutoSWGC nyala, TAPI ada yang belum siap: ${!panelOk ? `panel v${cfg.panel} belum dikonfigurasi` : ""}${!panelOk && !cfg.pakasir.slug ? " · " : ""}${!cfg.pakasir.slug ? "Pakasir belum di-set" : ""}. Order bakal ditolak sampai lengkap.`));
     }
-    return m.reply(novaWrap("Config Auto Order", `Auto Order ${cfg.on ? "DIHIDUPKAN 🟢" : "DIMATIKAN 🔴"}`));
+    return m.reply(raraWrap("Config Auto Order", `Auto Order ${cfg.on ? "DIHIDUPKAN 🟢" : "DIMATIKAN 🔴"}`));
   }
 
   if (sub === "panel") {
     const n = parseInt(String(args[1] || "").replace(/^v/i, ""), 10);
-    if (!(n >= 1 && n <= 100)) return m.reply(novaWrap("Config Auto Order", "Panel antara v1-v100 ya, contoh: .autoorder panel v2", "error"));
+    if (!(n >= 1 && n <= 100)) return m.reply(raraWrap("Config Auto Order", "Panel antara v1-v100 ya, contoh: .autoorder panel v2", "error"));
     cfg.panel = n;
     db.save();
     const ok = !!getOrderPanelCfg(n);
-    return m.reply(novaWrap("Config Auto Order", `Slot panel auto order: v${n} ${ok ? "(domain+apikey ketemu)" : "(slot kosong — set dulu via .setpanel v" + n + ")"}`));
+    return m.reply(raraWrap("Config Auto Order", `Slot panel auto order: v${n} ${ok ? "(domain+apikey ketemu)" : "(slot kosong — set dulu via .setpanel v" + n + ")"}`));
   }
 
   if (sub === "pakasir") {
     const slug = (args[1] || "").trim();
     const apikey = (args[2] || "").trim();
     if (!slug || !apikey || slug.length < 3 || apikey.length < 8) {
-      return m.reply(novaWrap("Config Auto Order", "Format: .autoorder pakasir <slug-project> <apikey>\nAmbil di app.pakasir.com/projects", "error"));
+      return m.reply(raraWrap("Config Auto Order", "Format: .autoorder pakasir <slug-project> <apikey>\nAmbil di app.pakasir.com/projects", "error"));
     }
     cfg.pakasir.slug = slug;
     cfg.pakasir.apikey = apikey;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Pakasir tersimpan: slug "${slug}", apikey ${apikey.slice(0, 6)}…`));
+    return m.reply(raraWrap("Config Auto Order", `Pakasir tersimpan: slug "${slug}", apikey ${apikey.slice(0, 6)}…`));
   }
 
   if (sub === "pediatopup") {
     const apiId = (args[1] || "").trim();
     const apiKey = (args[2] || "").trim();
     if (!apiId || !apiKey || apiId.length < 4 || apiKey.length < 8) {
-      return m.reply(novaWrap("Config Auto Order", "Format: .autoorder pediatopup <api_id> <api_key>\nAmbil di panelpediatopup.com (menu profil → API).", "error"));
+      return m.reply(raraWrap("Config Auto Order", "Format: .autoorder pediatopup <api_id> <api_key>\nAmbil di panelpediatopup.com (menu profil → API).", "error"));
     }
     cfg.pediatopup.apiId = apiId;
     cfg.pediatopup.apiKey = apiKey;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `PanelPedia TopUp tersimpan: api id ${apiId}, api key ${apiKey.slice(0, 6)}…\nTes koneksi: .topuplist`));
+    return m.reply(raraWrap("Config Auto Order", `PanelPedia TopUp tersimpan: api id ${apiId}, api key ${apiKey.slice(0, 6)}…\nTes koneksi: .topuplist`));
   }
 
   if (sub === "markuptopup") {
     const v = parseInt(args[1], 10);
-    if (!Number.isFinite(v) || v < 0 || v > 100000) return m.reply(novaWrap("Config Auto Order", "Markup topup angka rupiah 0-100000 ya, contoh: .autoorder markuptopup 2000", "error"));
+    if (!Number.isFinite(v) || v < 0 || v > 100000) return m.reply(raraWrap("Config Auto Order", "Markup topup angka rupiah 0-100000 ya, contoh: .autoorder markuptopup 2000", "error"));
     cfg.pediatopup.markup = v;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Markup topup: ${fmtRupiah(v)} (ditambah ke harga modal PanelPedia tiap layanan)`));
+    return m.reply(raraWrap("Config Auto Order", `Markup topup: ${fmtRupiah(v)} (ditambah ke harga modal PanelPedia tiap layanan)`));
   }
 
   if (sub === "pacific") {
     const apiKey = (args[1] || "").trim();
     if (!apiKey || apiKey.length < 8) {
-      return m.reply(novaWrap("Config Auto Order", "Format: .autoorder pacific <api_key>\nAmbil di api.pacific-pedia.co.id (menu profil).", "error"));
+      return m.reply(raraWrap("Config Auto Order", "Format: .autoorder pacific <api_key>\nAmbil di api.pacific-pedia.co.id (menu profil).", "error"));
     }
     cfg.pacific.apiKey = apiKey;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Pacific SMM tersimpan: apikey ${apiKey.slice(0, 6)}…\nTes koneksi: .smmlist`));
+    return m.reply(raraWrap("Config Auto Order", `Pacific SMM tersimpan: apikey ${apiKey.slice(0, 6)}…\nTes koneksi: .smmlist`));
   }
 
   if (sub === "markupsmm") {
     const v = parseInt(args[1], 10);
-    if (!Number.isFinite(v) || v < 0 || v > 100) return m.reply(novaWrap("Config Auto Order", "Markup SMM persen 0-100 ya, contoh: .autoorder markupsmm 25", "error"));
+    if (!Number.isFinite(v) || v < 0 || v > 100) return m.reply(raraWrap("Config Auto Order", "Markup SMM persen 0-100 ya, contoh: .autoorder markupsmm 25", "error"));
     cfg.pacific.markupPct = v;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Markup SMM: +${v}% di atas harga modal Pacific tiap layanan`));
+    return m.reply(raraWrap("Config Auto Order", `Markup SMM: +${v}% di atas harga modal Pacific tiap layanan`));
   }
 
   if (sub === "premku") {
     const apiKey = (args[1] || "").trim();
     if (!apiKey || apiKey.length < 8) {
-      return m.reply(novaWrap("Config Auto Order", "Format: .autoorder premku <api_key>\nAmbil di premku.com (menu profil/API).", "error"));
+      return m.reply(raraWrap("Config Auto Order", "Format: .autoorder premku <api_key>\nAmbil di premku.com (menu profil/API).", "error"));
     }
     cfg.premku.apiKey = apiKey;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Premku tersimpan: apikey ${apiKey.slice(0, 6)}…\nTes koneksi: .premkulist`));
+    return m.reply(raraWrap("Config Auto Order", `Premku tersimpan: apikey ${apiKey.slice(0, 6)}…\nTes koneksi: .premkulist`));
   }
 
   if (sub === "markupprem") {
     const v = parseInt(args[1], 10);
-    if (!Number.isFinite(v) || v < 0 || v > 100000) return m.reply(novaWrap("Config Auto Order", "Markup prem angka rupiah 0-100000 ya, contoh: .autoorder markupprem 2000", "error"));
+    if (!Number.isFinite(v) || v < 0 || v > 100000) return m.reply(raraWrap("Config Auto Order", "Markup prem angka rupiah 0-100000 ya, contoh: .autoorder markupprem 2000", "error"));
     cfg.premku.markup = v;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Markup app premium: ${fmtRupiah(v)} (ditambah ke harga produk Premku tiap pesanan)`));
+    return m.reply(raraWrap("Config Auto Order", `Markup app premium: ${fmtRupiah(v)} (ditambah ke harga produk Premku tiap pesanan)`));
   }
 
   if (sub === "nokos") {
     const apiKey = (args[1] || "").trim();
     if (!apiKey || apiKey.length < 8) {
-      return m.reply(novaWrap("Config Auto Order", "Format: .autoorder nokos <api_token>\nAmbil di 5sim.net (login → menu Profile → API keys).", "error"));
+      return m.reply(raraWrap("Config Auto Order", "Format: .autoorder nokos <api_token>\nAmbil di 5sim.net (login → menu Profile → API keys).", "error"));
     }
     cfg.nokos.apiKey = apiKey;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Nokos 5SIM tersimpan: token ${apiKey.slice(0, 6)}…\nTes koneksi: .nokoslist`));
+    return m.reply(raraWrap("Config Auto Order", `Nokos 5SIM tersimpan: token ${apiKey.slice(0, 6)}…\nTes koneksi: .nokoslist`));
   }
 
   if (sub === "markupnokos") {
     const v = parseInt(args[1], 10);
-    if (!Number.isFinite(v) || v < 0 || v > 100) return m.reply(novaWrap("Config Auto Order", "Markup nokos persen 0-100 ya, contoh: .autoorder markupnokos 25", "error"));
+    if (!Number.isFinite(v) || v < 0 || v > 100) return m.reply(raraWrap("Config Auto Order", "Markup nokos persen 0-100 ya, contoh: .autoorder markupnokos 25", "error"));
     cfg.nokos.markupPct = v;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Markup nokos: +${v}% di atas harga modal 5SIM tiap nomor`));
+    return m.reply(raraWrap("Config Auto Order", `Markup nokos: +${v}% di atas harga modal 5SIM tiap nomor`));
   }
 
   if (sub === "hargaadmin") {
     const v = parseInt(args[1], 10);
-    if (!Number.isFinite(v) || v < 500) return m.reply(novaWrap("Config Auto Order", "Harga admin minimal Rp500 ya.", "error"));
+    if (!Number.isFinite(v) || v < 500) return m.reply(raraWrap("Config Auto Order", "Harga admin minimal Rp500 ya.", "error"));
     cfg.adminPrice = v;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Harga Admin Panel 1 Bulan: ${fmtRupiah(v)}`));
+    return m.reply(raraWrap("Config Auto Order", `Harga Admin Panel 1 Bulan: ${fmtRupiah(v)}`));
   }
 
   if (sub === "harga") {
     const key = (args[1] || "").toLowerCase();
     const v = parseInt(args[2], 10);
-    if (!RAM_PACKAGES[key]) return m.reply(novaWrap("Config Auto Order", `Paket nggak dikenal. Pilihan: ${Object.keys(RAM_PACKAGES).join(", ")}`, "error"));
-    if (!Number.isFinite(v) || v < 500) return m.reply(novaWrap("Config Auto Order", "Harga minimal Rp500 ya.", "error"));
+    if (!RAM_PACKAGES[key]) return m.reply(raraWrap("Config Auto Order", `Paket nggak dikenal. Pilihan: ${Object.keys(RAM_PACKAGES).join(", ")}`, "error"));
+    if (!Number.isFinite(v) || v < 500) return m.reply(raraWrap("Config Auto Order", "Harga minimal Rp500 ya.", "error"));
     cfg.prices[key] = v;
     db.save();
-    return m.reply(novaWrap("Config Auto Order", `Harga ${key.toUpperCase()}: ${fmtRupiah(v)}`));
+    return m.reply(raraWrap("Config Auto Order", `Harga ${key.toUpperCase()}: ${fmtRupiah(v)}`));
   }
 
   return m.reply(statusText(cfg, !!getOrderPanelCfg(cfg.panel)));

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // felov2 — Felo AI v2 (search + answer with sources)
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "felov2", alias: ["felov2"], aliases: ["felov2", "feloaiv2"],
@@ -24,7 +24,7 @@ async function feloSearch(query) {
 async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
-    if (!text) return m.reply(novaWrap("felov2", `Mau nanya apa?\nContoh: ${m.prefix}felov2 sejarah Indonesia merdeka`, "guide"));
+    if (!text) return m.reply(raraWrap("felov2", `Mau nanya apa?\nContoh: ${m.prefix}felov2 sejarah Indonesia merdeka`, "guide"));
     await m.react("🕒");
     const result = await feloSearch(text);
     let msg = result.answer;
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
 
     console.error("felov2 error:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("felov2", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(raraWrap("felov2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

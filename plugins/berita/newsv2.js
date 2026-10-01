@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT - BERITAV2 PLUGIN
+// RARA AI WHATSAPP BOT - BERITAV2 PLUGIN
 import axios from 'axios';
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 import * as cheerio from 'cheerio';
 
 const pluginConfig = {

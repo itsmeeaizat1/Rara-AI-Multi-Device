@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { spawn } from 'child_process'
 import path from 'path'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'restart',
     alias: ["restart"],
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
         }, 2000)
         
     } catch (error) {
-        await m.reply(novaWrap("restart", te(m.prefix, m.command, m.pushName), "error"))}
+        await m.reply(raraWrap("restart", te(m.prefix, m.command, m.pushName), "error"))}
 }
 
 export { pluginConfig as config, handler }

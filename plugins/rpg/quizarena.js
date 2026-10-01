@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // quizarena.js — ARENA KUIS RPG: jawaban soal = senjata! (request owner 21 Sep 2026)
 // Bank soal 2003 (src/data/arenakuis.json, generator test/quizarena-e2e/generate.mjs).
 // MODE SOLO: tiap wave 1 soal — jawab BENAR = damage ke musuh, SALAH/timeout =
@@ -11,10 +11,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "url";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
-import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
-import { addGameCash, ensureRpg } from "../../src/lib/nova-rpg-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
+import { addExpWithLevelCheck } from "../../src/lib/rara-level.js";
+import { addGameCash, ensureRpg } from "../../src/lib/rara-rpg-service.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -112,7 +112,7 @@ function qText(s, q) {
 function ask(m, sock, s, prefix) {
   clearTimeout(s.timer);
   s.timer = setTimeout(() => onTimeout(m, sock, s), Q_MS);
-  return (prefix ? sock.sendMessage(m.chat, { text: novaGameBox({ title: "kuisarena", icon: prefix.icon, flavor: prefix.flavor, body: prefix.body }) }).catch(() => {}).then(() => sock.sendMessage(m.chat, { text: novaGameBox({ title: "kuisarena", icon: "⚔️", flavor: `🎯 *RONDE ${s.round}!*`, body: qText(s, s.current) }) }).catch(() => {})) : sock.sendMessage(m.chat, { text: novaGameBox({ title: "kuisarena", icon: "⚔️", flavor: `🎯 *RONDE ${s.round}!*`, body: qText(s, s.current) }) }).catch(() => {}));
+  return (prefix ? sock.sendMessage(m.chat, { text: raraGameBox({ title: "kuisarena", icon: prefix.icon, flavor: prefix.flavor, body: prefix.body }) }).catch(() => {}).then(() => sock.sendMessage(m.chat, { text: raraGameBox({ title: "kuisarena", icon: "⚔️", flavor: `🎯 *RONDE ${s.round}!*`, body: qText(s, s.current) }) }).catch(() => {})) : sock.sendMessage(m.chat, { text: raraGameBox({ title: "kuisarena", icon: "⚔️", flavor: `🎯 *RONDE ${s.round}!*`, body: qText(s, s.current) }) }).catch(() => {}));
 }
 
 function advance(m, sock, s) {
@@ -155,7 +155,7 @@ function endRun(m, sock, s, closing) {
     `💰 EXP dikumpulkan: ${s.expGained}`,
     `💵 Uang dikumpulkan: ${s.cashGained}`,
   ].join("\n");
-  return sock.sendMessage(m.chat, { text: novaGameBox({ title: "kuisarena", icon: "🏁", flavor: "🏁 *RUN SELESAI!*", body }) }).catch(() => {});
+  return sock.sendMessage(m.chat, { text: raraGameBox({ title: "kuisarena", icon: "🏁", flavor: "🏁 *RUN SELESAI!*", body }) }).catch(() => {});
 }
 
 // ── timeout ronde ──
@@ -238,7 +238,7 @@ export async function answerHandler(m, sock) {
         `🎁 +${r.exp} EXP, +${r.cashGain} uang`,
         `📊 Total ronde: ${s.round}`,
       ].join("\n");
-      return sock.sendMessage(m.chat, { text: novaGameBox({ title: "kuisarena", icon: "🏆", flavor: "🏆 *DUEL SELESAI!*", body }) }).catch(() => {});
+      return sock.sendMessage(m.chat, { text: raraGameBox({ title: "kuisarena", icon: "🏆", flavor: "🏆 *DUEL SELESAI!*", body }) }).catch(() => {});
     }
     s.round++;
     s.current = buildQuestion(s.usedIds);
@@ -248,7 +248,7 @@ export async function answerHandler(m, sock) {
   // salah di pvp: gak dikonsumsi pelanggaran — orang yang sama boleh coba lagi? tidak: 1x per ronde
   const bothAnswered = s.answeredThisRound.size >= 2;
   if (bothAnswered) return advance(m, sock, s, { icon: "❌", flavor: "⏳ *RONDE SERI!*", body: `Dua-duanya meleset! Jawaban benar: ${q.a}` });
-  return sock.sendMessage(m.chat, { text: novaGameBox({ title: "kuisarena", icon: "❌", flavor: "❌ *MELESET!*", body: `${attacker.name} salah! ${defender.name} masih punya kesempatan…` }) }).catch(() => {});
+  return sock.sendMessage(m.chat, { text: raraGameBox({ title: "kuisarena", icon: "❌", flavor: "❌ *MELESET!*", body: `${attacker.name} salah! ${defender.name} masih punya kesempatan…` }) }).catch(() => {});
 }
 
 // ── command .kuisarena ──
@@ -256,15 +256,15 @@ async function handler(m, { sock, config }) {
   const sub = (m.args?.[0] || "").toLowerCase();
 
   if (sessions.get(m.chat)) {
-    if (sub !== "stop") return m.reply(novaGameBox({ title: "kuisarena", icon: "⚔️", flavor: "⏳ *GAME SEDANG BERJALAN!*", body: "Arena kuis lagi jalan di chat ini! Balas soalnya (A/B/C/D) atau ketik .kuisarena stop" }));
+    if (sub !== "stop") return m.reply(raraGameBox({ title: "kuisarena", icon: "⚔️", flavor: "⏳ *GAME SEDANG BERJALAN!*", body: "Arena kuis lagi jalan di chat ini! Balas soalnya (A/B/C/D) atau ketik .kuisarena stop" }));
     const s = sessions.get(m.chat);
     clearTimeout(s.timer);
     sessions.delete(m.chat);
     if (s.mode === "solo") recordRun(m, s.wave, s.bestStreak, s.correct);
-    return m.reply(novaGameBox({ title: "kuisarena", icon: "🛑", flavor: "🛑 *ARENA DIBUBARKAN!*", body: s.mode === "solo" ? `Berhenti di wave ${s.wave}. Sampai jumpa lagi!` : "Duel dibatalkan." }));
+    return m.reply(raraGameBox({ title: "kuisarena", icon: "🛑", flavor: "🛑 *ARENA DIBUBARKAN!*", body: s.mode === "solo" ? `Berhenti di wave ${s.wave}. Sampai jumpa lagi!` : "Duel dibatalkan." }));
   }
 
-  if (sub === "stop") return m.reply(novaGameBox({ title: "kuisarena", icon: "🤔", flavor: "❓ *GAK ADA GAME!*", body: "Belum ada arena kuis yang jalan di chat ini!" }));
+  if (sub === "stop") return m.reply(raraGameBox({ title: "kuisarena", icon: "🤔", flavor: "❓ *GAK ADA GAME!*", body: "Belum ada arena kuis yang jalan di chat ini!" }));
 
   if (sub === "rank" || sub === "top") {
     const rec = ensureRecords();
@@ -275,7 +275,7 @@ async function handler(m, { sock, config }) {
     const body = rows.length
       ? rows.map((r, i) => `${i + 1}. @${r.jid.split("@")[0]}\n   🏰 Wave ${r.bestWave} · 🔥 ${r.bestStreak} · ✅ ${r.totalCorrect}`).join("\n\n")
       : "Belum ada yang berani masuk arena! Ketik .kuisarena";
-    return m.reply(novaGameBox({ title: "kuisarena", icon: "🏆", flavor: "🏆 *TOP PETARUNG ARENA*", body }));
+    return m.reply(raraGameBox({ title: "kuisarena", icon: "🏆", flavor: "🏆 *TOP PETARUNG ARENA*", body }));
   }
 
   if (sub === "stat" || sub === "status") {
@@ -285,7 +285,7 @@ async function handler(m, { sock, config }) {
     const best = Object.values(rec.perUser).reduce((a, u) => Math.max(a, u.bestWave), 0);
     const cats = {};
     for (const q of bank) cats[q.cat] = (cats[q.cat] || 0) + 1;
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "kuisarena", icon: "📊",
       flavor: "📊 *ARENA KUIS RPG*",
       body: [
@@ -305,9 +305,9 @@ async function handler(m, { sock, config }) {
   // ── MODE PVP ──
   if (sub === "pvp" || sub === "duel") {
     const target = (m.mentionedJid?.length ? m.mentionedJid : null) || null;
-    if (!target || !target.length) return m.reply(novaGameBox({ title: "kuisarena", icon: "🤜", flavor: "❓ *FORMAT SALAH!*", body: "Tag lawanmu! Contoh: .kuisarena pvp @user" }));
-    if (target[0] === m.sender) return m.reply(novaGameBox({ title: "kuisarena", icon: "🤦", flavor: "😅 *SENDIRI?*", body: "Gak bisa duel sama diri sendiri!" }));
-    if (target[0] === (config?.botNumber || "").replace(/[^0-9]/g, "") + "@s.whatsapp.net") return m.reply(novaGameBox({ title: "kuisarena", icon: "🤖", flavor: "🤖 *MELAWAN BOT?*", body: "Duel lawan manusia aja kak!" }));
+    if (!target || !target.length) return m.reply(raraGameBox({ title: "kuisarena", icon: "🤜", flavor: "❓ *FORMAT SALAH!*", body: "Tag lawanmu! Contoh: .kuisarena pvp @user" }));
+    if (target[0] === m.sender) return m.reply(raraGameBox({ title: "kuisarena", icon: "🤦", flavor: "😅 *SENDIRI?*", body: "Gak bisa duel sama diri sendiri!" }));
+    if (target[0] === (config?.botNumber || "").replace(/[^0-9]/g, "") + "@s.whatsapp.net") return m.reply(raraGameBox({ title: "kuisarena", icon: "🤖", flavor: "🤖 *MELAWAN BOT?*", body: "Duel lawan manusia aja kak!" }));
     const name = (jid) => (jid === m.sender ? (m.pushName || "Kamu") : "@" + jid.split("@")[0]);
     const s = {
       mode: "pvp", chat: m.chat,
@@ -318,7 +318,7 @@ async function handler(m, { sock, config }) {
     sessions.set(m.chat, s);
     if (m.react) { try { await m.react("🧠"); } catch {} }
     return sock.sendMessage(m.chat, {
-      text: novaGameBox({ title: "kuisarena", icon: "⚔️", flavor: "🤜 *DUEL KUIS DIMULAI!*", body: qText(s, s.current) }),
+      text: raraGameBox({ title: "kuisarena", icon: "⚔️", flavor: "🤜 *DUEL KUIS DIMULAI!*", body: qText(s, s.current) }),
       mentions: target,
     }).catch(() => {});
   }
@@ -337,7 +337,7 @@ async function handler(m, { sock, config }) {
   s.current = buildQuestion(s.usedIds);
   sessions.set(m.chat, s);
   if (m.react) { try { await m.react("🧠"); } catch {} }
-  return m.reply(novaGameBox({ title: "kuisarena", icon: "⚔️", flavor: "⚔️ *ARENA KUIS DIMULAI!*", body: qText(s, s.current) }));
+  return m.reply(raraGameBox({ title: "kuisarena", icon: "⚔️", flavor: "⚔️ *ARENA KUIS DIMULAI!*", body: qText(s, s.current) }));
 }
 
 export { handler, loadSoal };

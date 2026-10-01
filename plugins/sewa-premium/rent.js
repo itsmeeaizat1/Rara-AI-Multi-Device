@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText, bracketBox } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getCategories, getCommandsByCategory } from "../../src/lib/nova-plugins.js";
-import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText, bracketBox } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getCategories, getCommandsByCategory } from "../../src/lib/rara-plugins.js";
+import { getCaseCount, getCasesByCategory } from "../../case/rara.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 import config from "../../config.js";
 import { sewaPrice } from "../../src/lib/sewa/sewa.js";
-import { sendMenuCard, buildNavButtons } from "../../src/lib/nova-menu-card.js";
+import { sendMenuCard, buildNavButtons } from "../../src/lib/rara-menu-card.js";
 import fs from "fs";
 
 const pluginConfig = {
@@ -150,7 +150,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const ownerName = botConfig.owner?.name || "Owner";
     const ownerNumbers = botConfig.owner?.number || [];
     const ownerNumber = ownerNumbers[0] || "628174887770";
-    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
+    const botName = botConfig.bot?.name || "Rara AI Whatsapp Bot";
     const botVersion = botConfig.bot?.version || "21.2.0";
 
     // ── BAGIAN 1: STATUS SEWA GRUP ──
@@ -254,7 +254,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       text: fullText,
       footer: "",
       buttons: buildNavButtons(m, db, prefix),
-      title: botConfig.bot?.name || "Nova AI",
+      title: botConfig.bot?.name || "Rara AI",
     });
 
     // Auto-reply QRIS image kalau tersedia
@@ -277,7 +277,7 @@ async function handler(m, { sock, config: botConfig, db }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     await m.reply(
-      novaWrap("Gagal", [
+      raraWrap("Gagal", [
         "Status: *gagal*",
         "Alasan: *" + error.message + "*",
         "Coba lagi nanti atau hubungi owner",

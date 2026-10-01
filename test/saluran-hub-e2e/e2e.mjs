@@ -1,20 +1,20 @@
-// NOVA — E2E: SALURAN HUB (25 Sep 2026). Fitur no.1 "bot masa depan": paket
+// RARA — E2E: SALURAN HUB (25 Sep 2026). Fitur no.1 "bot masa depan": paket
 // komplit integrasi Saluran WA — autopost AI harian, inbound auto-react +
 // auto-reply keyword, analitik follower (snapshot/growth/milestone/kartu 🕒).
-// Mock sock = metadata saluran bentuk MENTAH fork nova (pelajaran bug viewer_role).
+// Mock sock = metadata saluran bentuk MENTAH fork rara (pelajaran bug viewer_role).
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-saluranhub-db-" + Date.now();
+const DB_DIR = "/tmp/rara-saluranhub-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
 
-const engine = await import(R + "/src/lib/nova-saluran-hub.js");
+const engine = await import(R + "/src/lib/rara-saluran-hub.js");
 const plugin = await import(R + "/plugins/owner/channelhub.js");
 const config = (await import(R + "/config.js")).default;
 const { fromSC } = await import(R + "/src/lib/styler.js");
@@ -48,8 +48,8 @@ const sock = {
         id: MAIN_JID,
         state: { type: "Active" },
         thread_metadata: {
-          name: { text: "Nova Official" },
-          description: { text: "Saluran resmi Nova AI" },
+          name: { text: "Rara Official" },
+          description: { text: "Saluran resmi Rara AI" },
           subscribers_count: curFollowers,
           verification: { verified: false },
           invite: "TESTCODE",
@@ -72,8 +72,8 @@ const sock = {
 };
 
 // deterministik: config runtime salat utama + reset cache resolver
-config.saluran = { id: MAIN_JID, link: "", name: "Nova Official" };
-const saluranLib = await import(R + "/src/lib/nova-saluran.js");
+config.saluran = { id: MAIN_JID, link: "", name: "Rara Official" };
+const saluranLib = await import(R + "/src/lib/rara-saluran.js");
 saluranLib._resetSaluranCacheForTest();
 
 const db = getDatabase();
@@ -192,8 +192,8 @@ w("\n— 5. kartu stat —");
     { ts: T - 24 * 3600_000, count: 950 },
     { ts: T - 5 * MIN, count: 1000 },
   ];
-  const card = engine.buildStatCard(s, "Nova Official");
-  check("5a. kartu 🕒 + boxLeft", card.includes("🕒") && card.includes("Nova Official"));
+  const card = engine.buildStatCard(s, "Rara Official");
+  check("5a. kartu 🕒 + boxLeft", card.includes("🕒") && card.includes("Rara Official"));
   check("5b. follower 1.000 (format id)", card.includes("1.000"));
   check("5c. delta harian/mingguan/bulanan", card.includes("+50") && card.includes("+100") && card.includes("+200"));
   check("5d. sparkline render", /[▁▂▃▄▅▆▇█]/.test(card));
@@ -363,11 +363,11 @@ w("\n— 9. plugin .channelhub —");
 w("\n— 10. wiring statis —");
 {
   const h = fs.readFileSync(R + "/src/handler.js", "utf8");
-  check("10a. hook inbound handler.js kepasang", h.includes("nova-saluran-hub.js") && h.includes("inboundHandler"));
+  check("10a. hook inbound handler.js kepasang", h.includes("rara-saluran-hub.js") && h.includes("inboundHandler"));
   const ix = fs.readFileSync(R + "/index.js", "utf8");
   check("10b. scheduler index.js kepasang", ix.includes('"ChannelHub"') && ix.includes("initSaluranHubScheduler"));
-  const eng = fs.readFileSync(R + "/src/lib/nova-saluran-hub.js", "utf8");
-  check("10c. engine gak duplikasi resolusi (numpang nova-saluran)", eng.includes('from "./nova-saluran.js"') && eng.includes('from "./nova-saluran-safe.js"'));
+  const eng = fs.readFileSync(R + "/src/lib/rara-saluran-hub.js", "utf8");
+  check("10c. engine gak duplikasi resolusi (numpang rara-saluran)", eng.includes('from "./rara-saluran.js"') && eng.includes('from "./rara-saluran-safe.js"'));
 }
 
 engine._resetSaluranHubSeamsForTest();

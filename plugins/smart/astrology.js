@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "astrologi",
@@ -84,13 +84,13 @@ async function handler(m, { sock, db, config: botConfig }) {
   const dateStr = (args[1] || "").trim();
 
   if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-    await m.reply(novaWrap("Astrologi", "Format: " + prefix + "astrologi <YYYY-MM-DD>\n💡 *Contoh:* " + prefix + "astrologi 2000-05-15"));
+    await m.reply(raraWrap("Astrologi", "Format: " + prefix + "astrologi <YYYY-MM-DD>\n💡 *Contoh:* " + prefix + "astrologi 2000-05-15"));
     return { handled: true };
   }
 
   const date = new Date(dateStr + "T00:00:00+07:00");
   if (isNaN(date)) {
-    await m.reply(novaError("Astrologi", "Tanggal gak valid nih"));
+    await m.reply(raraError("Astrologi", "Tanggal gak valid nih"));
     return { handled: true };
   }
 
@@ -101,7 +101,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const lifePath = getLifePath(dateStr);
   const lifePathMeaning = LIFE_PATHS[lifePath] || "Unik & bermakna";
 
-  await m.reply(novaWrap("Astrologi: " + dateStr, [
+  await m.reply(raraWrap("Astrologi: " + dateStr, [
     "Zodiac: " + zodiac.name + " (" + zodiac.symbol + ")",
     "Element: " + zodiac.element,
     "Quality: " + zodiac.quality,

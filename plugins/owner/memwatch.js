@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .memwatch — kontrol memory watchdog bot (OWNER ONLY, default OFF).
 // Watchdog = fitur yang matiin bot (process.exit) kalau RAM kepake
 // kelewat batas — bagus buat panen memory leak, TAPI ganggu .remini
@@ -7,8 +7,8 @@
 //   .memwatch on       → nyalain watchdog, limit default 2048MB
 //   .memwatch on 1536  → nyalain dengan limit custom (MB)
 //   .memwatch off      → matiin watchdog (kembali default)
-import { novaBox, novaError } from "../../src/lib/nova-menu-style.js";
-import { getState, setState } from "../../src/lib/nova-memory-monitor.js";
+import { raraBox, raraError } from "../../src/lib/rara-menu-style.js";
+import { getState, setState } from "../../src/lib/rara-memory-monitor.js";
 
 const pluginConfig = {
   name: "memwatch",
@@ -40,14 +40,14 @@ async function handler(m, { args }) {
       "---",
       "Hint     : .memwatch on / .memwatch on 1536 / .memwatch off",
     ];
-    return m.reply(novaBox("Memory Watchdog", lines));
+    return m.reply(raraBox("Memory Watchdog", lines));
   }
 
   if (arg === "on") {
     const custom = Number(args?.[1]);
     const limitMB = custom > 256 ? Math.round(custom) : state.limitMB;
     await setState({ enabled: true, limitMB });
-    return m.reply(novaBox("Memory Watchdog", [
+    return m.reply(raraBox("Memory Watchdog", [
       "Status   : ON",
       "Limit    : " + limitMB + "MB",
       "RAM now  : " + rssMB + "MB RSS",
@@ -58,7 +58,7 @@ async function handler(m, { args }) {
 
   if (arg === "off") {
     await setState({ enabled: false, limitMB: state.limitMB });
-    return m.reply(novaBox("Memory Watchdog", [
+    return m.reply(raraBox("Memory Watchdog", [
       "Status   : OFF (kembali default)",
       "Limit    : " + state.limitMB + "MB (kesimpen, kepake kalau on lagi)",
       "---",
@@ -66,7 +66,7 @@ async function handler(m, { args }) {
     ]));
   }
 
-  return m.reply(novaError("memwatch", "Argumen gak dikenal. Pakai: on / off / (kosong)"));
+  return m.reply(raraError("memwatch", "Argumen gak dikenal. Pakai: on / off / (kosong)"));
 }
 
 export { pluginConfig as config, handler };

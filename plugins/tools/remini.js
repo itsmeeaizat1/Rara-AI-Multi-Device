@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Remini — AI Photo Enhancer ala app Remini asli
 // ENGINE UTAMA (request owner 17 Sep 2026 "cba fitur remini ganti pakai api
 // ini" — ihancer.com): IHANCER AI → pass poles FFmpeg (denoise tipis + unsharp
@@ -20,15 +20,15 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 // Worker thread pool: inference Swin2SR jalan di thread terpisah — bot tetap
 // responsif selama render (dulu ngeblok event loop total, command lain mati)
-import { enhanceLocalAsync, hdQueueInfo, isModelCached } from "../../src/lib/nova-hd-pool.js";
+import { enhanceLocalAsync, hdQueueInfo, isModelCached } from "../../src/lib/rara-hd-pool.js";
 // Engine utama (request owner 12 Sep 2026 revisi: "balik lagi pakai Photiu, cm
 // poles dikit agar jernih"): PHOTIU AI + pass poles FFmpeg. Pipeline FFmpeg
 // upscale penuh tetep ada buat .remini 2/4/6/8 + fallback.
-import { upscaleImage as ffmpegUpscale, polishImage, HD_PRESETS as FFMPEG_PRESETS } from "../../src/lib/nova-remini-ffmpeg.js";
+import { upscaleImage as ffmpegUpscale, polishImage, HD_PRESETS as FFMPEG_PRESETS } from "../../src/lib/rara-remini-ffmpeg.js";
 // Photiu AI — engine utama (request owner 11 Sep, dibalikin 12 Sep)
 import { photiuUpscale } from "../../src/scraper/photiu.js";
 // Ihancer AI — ENGINE UTAMA BARU (request owner 17 Sep 2026: "cba fitur remini
@@ -303,7 +303,7 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && (m.quoted.type === "imageMessage" || m.quoted.isImage));
 
   if (!img) {
-    return m.reply(novaWrap("remini", "Reply atau kirim gambar dengan caption .remini untuk face restore ala Remini asli, tanpa watermark. Mode: face (default), hd, real (restore 4x local), atau bp hd/16k/product/text/concert (BeautyPlus, bisa ada watermark).", "guide"), "remini");
+    return m.reply(raraWrap("remini", "Reply atau kirim gambar dengan caption .remini untuk face restore ala Remini asli, tanpa watermark. Mode: face (default), hd, real (restore 4x local), atau bp hd/16k/product/text/concert (BeautyPlus, bisa ada watermark).", "guide"), "remini");
   }
 
   try {
@@ -332,7 +332,7 @@ async function handler(m, { sock, args }) {
     if (targetOut > 1920 && !m.isOwner) {
       await m.react("🚫");
       return m.reply(
-        novaWrap("remini", "Ukuran di atas 1080p hanya untuk Owner. User biasa bisa pakai .remini biasa (face restore) atau .remini real.", "error"),
+        raraWrap("remini", "Ukuran di atas 1080p hanya untuk Owner. User biasa bisa pakai .remini biasa (face restore) atau .remini real.", "error"),
         "remini"
       );
     }
@@ -346,12 +346,12 @@ async function handler(m, { sock, args }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer) || mediaBuffer.length < 100) {
       await m.react("❌");
-      return m.reply(novaWrap("remini", "Gagal mengunduh gambar. Coba reply gambarnya lagi.", "error"), "remini");
+      return m.reply(raraWrap("remini", "Gagal mengunduh gambar. Coba reply gambarnya lagi.", "error"), "remini");
     }
 
     if (mediaBuffer.length > 15 * 1024 * 1024) {
       await m.react("❌");
-      return m.reply(novaWrap("remini", "Ukuran gambar maksimal 15MB untuk fitur ini.", "error"), "remini");
+      return m.reply(raraWrap("remini", "Ukuran gambar maksimal 15MB untuk fitur ini.", "error"), "remini");
     }
 
     let resultBuffer;
@@ -366,11 +366,11 @@ async function handler(m, { sock, args }) {
       const q = hdQueueInfo();
       if (q.busy) {
         try { await m.react("🕒"); } catch {}
-        m.reply(novaWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""} — kamu antrian ke-${q.ahead + 1}. Mohon tunggu, hasil otomatis dikirim setelah selesai.`));
+        m.reply(raraWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""} — kamu antrian ke-${q.ahead + 1}. Mohon tunggu, hasil otomatis dikirim setelah selesai.`));
       }
       if (!isModelCached(mode)) {
         try { await m.react("🧠"); } catch {}
-        m.reply(novaWrap("remini", "Model AI lokal belum ada di server — sedang diunduh otomatis (±59MB, cukup sekali saja). Proses pertama lebih lama dari biasanya, mohon tunggu ya."));
+        m.reply(raraWrap("remini", "Model AI lokal belum ada di server — sedang diunduh otomatis (±59MB, cukup sekali saja). Proses pertama lebih lama dari biasanya, mohon tunggu ya."));
       }
       const opts = targetOut
         ? { maxSide: Math.max(128, Math.round(targetOut / (mode === "real" ? 4 : 2))), enlarge: true }
@@ -554,7 +554,7 @@ async function handler(m, { sock, args }) {
           : e.message === "process_failed"
             ? "AI gagal memproses gambar. Coba gambar lain, atau mode .remini real."
             : te(m.prefix, m.command, m.pushName);
-    return m.reply(novaWrap("remini", msg, "error"), "remini");
+    return m.reply(raraWrap("remini", msg, "error"), "remini");
   }
 }
 

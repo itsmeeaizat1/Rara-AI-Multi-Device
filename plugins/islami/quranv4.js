@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // quranv4.js - Plugin Al-Quran via equran.id API v2
 
 const pluginConfig = {
@@ -17,7 +17,7 @@ const pluginConfig = {
     isEnabled: true
 };
 
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const API_BASE = "https://equran.id/api/v2/surat";
 
@@ -59,13 +59,13 @@ async function handler(m, { text, args }) {
             lines.push(`💡 Contoh: .quranv4 1`);
 
             await m.react("🐣");
-            return await m.reply(novaWrap("Al-Quran V4", lines.join("\n")));
+            return await m.reply(raraWrap("Al-Quran V4", lines.join("\n")));
         }
 
         const surahNum = parseInt(rawInput, 10);
         if (isNaN(surahNum) || surahNum < 1 || surahNum > 114) {
             await m.react("❗");
-            return await m.reply(novaWrap("Al-Quran V4", [
+            return await m.reply(raraWrap("Al-Quran V4", [
                 "Nomor surat tidak valid kak!",
                 "",
                 "📌 Masukkan nomor 1 sampai 114.",
@@ -111,7 +111,7 @@ async function handler(m, { text, args }) {
     } catch (error) {
         console.error("[QuranV4]", error.message);
         await m.react("❌");
-        return await m.reply(novaWrap("Al-Quran V4", "Gagal memproses permintaan Al-Quran kak, coba lagi nanti ya 😥", "error"));
+        return await m.reply(raraWrap("Al-Quran V4", "Gagal memproses permintaan Al-Quran kak, coba lagi nanti ya 😥", "error"));
     }
 }
 

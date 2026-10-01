@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: "notiflimit",
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
 
     const newStatus = db.setting("notiflimit") ? "AKTIF ✅" : "MATI ❌";
 
-    await m.reply(novaWrap("NOTIFIKASI LIMIT (GLOBAL)", `Status saat ini: *${newStatus}*\n\nKetika aktif, bot akan selalu memberitahu sisa limit SEMUA PENGGUNA setiap kali ada pemotongan saat menggunakan fitur bot.`));
+    await m.reply(raraWrap("NOTIFIKASI LIMIT (GLOBAL)", `Status saat ini: *${newStatus}*\n\nKetika aktif, bot akan selalu memberitahu sisa limit SEMUA PENGGUNA setiap kali ada pemotongan saat menggunakan fitur bot.`));
 }
 
 export { pluginConfig as config, handler };

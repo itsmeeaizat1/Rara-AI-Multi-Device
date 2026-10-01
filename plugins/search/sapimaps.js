@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Maps Suite — .gmaps .gmapsreviews .grute
 // 🔹 Info tempat PLAIN TEXT: alamat, rating, jam buka, telepon, situs.
@@ -6,8 +6,8 @@
 // ═════════════════════════════════════════════
 
 import { searchApiEngine, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { sapiErrorMessage } from "../../src/lib/nova-sapi-render.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sapiErrorMessage } from "../../src/lib/rara-sapi-render.js";
 
 const pluginConfig = {
   name: "sapimaps",
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         : cmd === "grute"
           ? `🗺️ Rute langkah-demi-langkah.\n\nFormat: *.grute <dari> | <ke> [| cara]*\nCara: mobil (default), jalan kaki, sepeda, bis\n\nContoh: .grute stasiun gambir | monas`
           : `📍 Info tempat (alamat, rating, jam buka, telepon).\n\nContoh: *.gmaps kafe jakarta*`;
-      return m.reply(novaWrap("gmaps", usage));
+      return m.reply(raraWrap("gmaps", usage));
     }
 
     await m.react("🧠");
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
       const parts = q.split("|").map((s) => s.trim()).filter(Boolean);
       if (parts.length < 2) {
         await m.react("❌");
-        return m.reply(novaWrap("gmaps", `💡 Format: *.grute <dari> | <ke> [| cara]*\n\nContoh: .grute stasiun gambir | monas | jalan kaki`));
+        return m.reply(raraWrap("gmaps", `💡 Format: *.grute <dari> | <ke> [| cara]*\n\nContoh: .grute stasiun gambir | monas | jalan kaki`));
       }
       const from = parts[0];
       const to = parts[1];
@@ -57,10 +57,10 @@ async function handler(m, { sock }) {
 
     if (!r.ok) {
       await m.react("❌");
-      return m.reply(novaWrap("gmaps", sapiErrorMessage(r.error)));
+      return m.reply(raraWrap("gmaps", sapiErrorMessage(r.error)));
     }
 
-    const { renderPlaces, renderReviews, renderDirections } = await import("../../src/lib/nova-sapi-render.js");
+    const { renderPlaces, renderReviews, renderDirections } = await import("../../src/lib/rara-sapi-render.js");
     let body = null;
     if (cmd === "gmaps") body = renderPlaces(r.data);
     else if (cmd === "gmapsreviews") body = renderReviews(r.data);
@@ -68,14 +68,14 @@ async function handler(m, { sock }) {
 
     if (!body) {
       await m.react("❌");
-      return m.reply(novaWrap("gmaps", "⚠️ Gak ada hasil — coba nama tempat lebih spesifik."));
+      return m.reply(raraWrap("gmaps", "⚠️ Gak ada hasil — coba nama tempat lebih spesifik."));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("gmaps", body));
+    return m.reply(raraWrap("gmaps", body));
   } catch (err) {
     console.error("[sapimaps]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("gmaps", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(raraWrap("gmaps", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

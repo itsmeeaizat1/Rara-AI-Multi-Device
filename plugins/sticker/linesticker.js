@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // linesticker.js — Download sticker pack LINE (direct scrape store.line.me, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";
 import config from "../../config.js";
-import { novaWrap, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "linesticker",
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
   const url = m.args?.[0]?.trim();
 
   if (!url || !url.includes("store.line.me")) {
-    return m.reply(novaWrap("linesticker", `Download LINE sticker pack!\n\nContoh: ${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "guide"));
+    return m.reply(raraWrap("linesticker", `Download LINE sticker pack!\n\nContoh: ${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "guide"));
   }
 
   try {
@@ -69,11 +69,11 @@ async function handler(m, { sock }) {
 
     if (!data.stickerUrls.length) {
       await m.react("❌");
-      return m.reply(novaError("LineSticker", "Tidak ada sticker ditemukan di URL tersebut!"));
+      return m.reply(raraError("LineSticker", "Tidak ada sticker ditemukan di URL tersebut!"));
     }
 
     // Send info
-    await m.reply(novaWrap("LINE Sticker", [
+    await m.reply(raraWrap("LINE Sticker", [
       `Title: ${data.title}`,
       `Author: ${data.author}`,
       `Animated: ${data.isAnimated ? "Ya" : "Tidak"}`,
@@ -108,17 +108,17 @@ async function handler(m, { sock }) {
     }
 
     if (sent > 0) {
-      await m.reply(novaWrap("Linesticker", `Berhasil kirim ${sent}/${data.stickerUrls.length} sticker`));
+      await m.reply(raraWrap("Linesticker", `Berhasil kirim ${sent}/${data.stickerUrls.length} sticker`));
       await m.react("🐣");
-    await m.reply(novaBerhasil("linesticker"));
+    await m.reply(raraBerhasil("linesticker"));
     } else {
       await m.react("❌");
-      m.reply(novaGagal("LineSticker"));
+      m.reply(raraGagal("LineSticker"));
     }
   } catch (err) {
     console.error("[LineSticker]", err);
     await m.react("❌");
-    m.reply(novaWrap("linesticker", "Gagal download sticker LINE. Pastikan URL valid!", "error"));
+    m.reply(raraWrap("linesticker", "Gagal download sticker LINE. Pastikan URL valid!", "error"));
   }
 }
 

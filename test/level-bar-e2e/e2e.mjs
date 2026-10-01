@@ -11,14 +11,14 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-levelbar-db-" + Date.now();
+const DB_DIR = "/tmp/rara-levelbar-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 const db = getDatabase();
 
 // seam kartu canvas — biar .levelinfo gak nyamber jaringan saat gambar kartu
-const { _setLevelCardLoadImageForTest } = await import(R + "/src/lib/nova-level.js");
+const { _setLevelCardLoadImageForTest } = await import(R + "/src/lib/rara-level.js");
 _setLevelCardLoadImageForTest(async () => ({ width: 4, height: 4 }));
 
 let pass = 0, fail = 0;

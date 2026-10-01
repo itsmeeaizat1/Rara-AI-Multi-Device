@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Mood-Driven Auto Theme Switcher — Bot baca emosi dari cara mengetik
 // Analisis: kecepatan kirim, panjang pesan, rasio kapital, tanda baca, emoji
 // Deteksi mood -> ubah gaya jawaban AI (ringkas/santai/empatik/etc)
 // .moodtheme on/off — Toggle (default OFF saat pairing)
 // .moodtheme status — Lihat mood saat ini & analisis
 // .moodtheme sensitivity <low/medium/high> — Sensitivitas deteksi
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { getApiKey } from "../../src/lib/nova-api-keys.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 
 const pluginConfig = {
   name: "moodtheme",
@@ -330,7 +330,7 @@ async function handler(m, { sock, config: botConfig }) {
         sensitivity: cfg[gid]?.sensitivity || "medium",
       };
       db.db.write();
-      const text = novaWrap("Mood-Driven Theme Switcher", [
+      const text = raraWrap("Mood-Driven Theme Switcher", [
         "Status: ON",
         "Sensitivity: " + cfg[gid].sensitivity,
         "",
@@ -356,12 +356,12 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
-      const text = novaWrap("Mood-Driven Theme Switcher", ["Status: OFF", "Bot kembali ke gaya jawaban standar"].join("\n"));
+      const text = raraWrap("Mood-Driven Theme Switcher", ["Status: OFF", "Bot kembali ke gaya jawaban standar"].join("\n"));
       await m.reply( text, "moodtheme");
     } else if (args[0] === "sensitivity") {
       const sens = args[1] || "medium";
       if (!["low", "medium", "high"].includes(sens)) {
-        const text = novaWrap("Mood-Driven Theme Switcher", "Pilih: low (kalem), medium (seimbang), high (sensitif)");
+        const text = raraWrap("Mood-Driven Theme Switcher", "Pilih: low (kalem), medium (seimbang), high (sensitif)");
         await m.reply( text, "moodtheme");
         return { handled: true };
       }
@@ -374,7 +374,7 @@ async function handler(m, { sock, config: botConfig }) {
         medium: "Deteksi seimbang (rekomendasi)",
         high: "Sangat sensitif, deteksi mood dari perubahan kecil",
       };
-      const text = novaWrap("Mood-Driven Theme Switcher", [
+      const text = raraWrap("Mood-Driven Theme Switcher", [
         "Sensitivity: " + sens,
         sensDesc[sens],
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
@@ -423,12 +423,12 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("Pesan terkumpul: " + (userData?.messages?.length || 0) + "/2");
       }
 
-      const text = novaWrap("Mood-Driven Theme Switcher", lines.join("\n"));
+      const text = raraWrap("Mood-Driven Theme Switcher", lines.join("\n"));
       await m.reply( text, "moodtheme");
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const sens = cfg[gid]?.sensitivity || "medium";
-      const text = novaWrap("Mood-Driven Theme Switcher", [
+      const text = raraWrap("Mood-Driven Theme Switcher", [
         "Status: " + status,
         "Sensitivity: " + sens,
         "Default: OFF (tidak aktif saat pairing)",
@@ -444,7 +444,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "moodtheme");
     }
   } catch (e) {
-    await m.reply(novaWrap("moodtheme", "Gagal proses. Coba lagi.", "error"));
+    await m.reply(raraWrap("moodtheme", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }

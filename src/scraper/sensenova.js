@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // sensenova.js — SenseNova AI (SenseTime) — OpenAI-compatible
 // Endpoint: https://token.sensenova.ai/v1/chat/completions
-// Key: apikeys.json novaai.sensenova (fallback env SENSENOVA_API_KEY)
+// Key: apikeys.json raraai.sensenova (fallback env SENSENOVA_API_KEY)
 //
 // Model tersedia (verified live 8 Sep 2026, key owner):
 //   - sensenova-6.8-flash-lite — MULTIMODAL VISION (input text+image), 256K ctx, gratis

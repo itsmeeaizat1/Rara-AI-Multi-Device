@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const NOTULEN_PROMPT = `Kamu adalah asisten notulen meeting profesional. Susun ulang catatan meeting kasar menjadi notulen yang rapi dan terstruktur.
 
@@ -83,7 +83,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   if (!input || input.trim().length < 10) {
-    const help = novaWrap("Notulen", [
+    const help = raraWrap("Notulen", [
       `AI Notulen Meeting → Text + PDF`,
       ``,
       `📌 Format:`,
@@ -98,14 +98,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "notulen");
   }
-  m.reply(novaWrap("Notulen", "AI lagi nyusun notulen meeting..."));
+  m.reply(raraWrap("Notulen", "AI lagi nyusun notulen meeting..."));
 
   try {
     await m.react("🕒");
-    const result = await UnlimitedAI(NOTULEN_PROMPT.replace("__INPUT__", input), "nova-ai");
+    const result = await UnlimitedAI(NOTULEN_PROMPT.replace("__INPUT__", input), "rara-ai");
 
     if (!result || result.trim().length < 20) {
-      return m.reply(novaWrap("Notulen", "❌ Gagal generate notulen. Coba dengan catatan yang lebih lengkap."));
+      return m.reply(raraWrap("Notulen", "❌ Gagal generate notulen. Coba dengan catatan yang lebih lengkap."));
     }
 
     const text = result.trim();
@@ -113,10 +113,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     // Send text result
     let preview = text;
     if (preview.length > 3500) preview = preview.substring(0, 3500) + "\n\n... (lanjutan di PDF)";
-    await m.reply(novaWrap("Notulen Meeting", preview));
+    await m.reply(raraWrap("Notulen Meeting", preview));
 
     // Also generate PDF
-    m.reply(novaWrap("Notulen", "Render notulen ke PDF..."));
+    m.reply(raraWrap("Notulen", "Render notulen ke PDF..."));
     const pdfBuffer = await renderNotulenPDF(text);
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
@@ -127,7 +127,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   } catch (error) {
     await m.react("❌");
     console.error("notulen error:", error);
-    m.reply(novaWrap("Notulen", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
+    m.reply(raraWrap("Notulen", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }
 
   return { handled: true };

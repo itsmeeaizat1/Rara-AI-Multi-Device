@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { addExifToWebp, isAnimatedWebp, DEFAULT_METADATA } from '../../src/lib/nova-exif.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { addExifToWebp, isAnimatedWebp, DEFAULT_METADATA } from '../../src/lib/rara-exif.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'swm',
@@ -24,19 +24,19 @@ async function handler(m, { sock, config: botConfig }) {
     const quoted = m.quoted
     
     if (!quoted) {
-        return m.reply(novaWrap("swm", [
+        return m.reply(raraWrap("swm", [
             "Reply sticker dengan caption:",
             m.prefix + "swm packname",
             "",
             "💡 Contoh:",
-            m.prefix + "swm Nova-AI",
-            m.prefix + "swm Nova-AI|LuckyArchz (packname + author)",
+            m.prefix + "swm Rara-AI",
+            m.prefix + "swm Rara-AI|LuckyArchz (packname + author)",
         ]))
     }
     
     const isSticker = quoted.type === 'stickerMessage' || quoted.isSticker
     if (!isSticker) {
-        return m.reply(novaError("SWM", "Reply pesan sticker dulu, bukan media lain"))
+        return m.reply(raraError("SWM", "Reply pesan sticker dulu, bukan media lain"))
     }
     
     const input = m.text?.trim()
@@ -44,8 +44,8 @@ async function handler(m, { sock, config: botConfig }) {
         return m.reply( `❌ *gagal*\n\n` +
             `Masukkan packname\n\n` +
             `*contoh:*\n` +
-            `\`${m.prefix}swm Nova-AI\`\n` +
-            `\`${m.prefix}swm Nova-AI|LuckyArchz\` _(+ author)_`, "swm")
+            `\`${m.prefix}swm Rara-AI\`\n` +
+            `\`${m.prefix}swm Rara-AI|LuckyArchz\` _(+ author)_`, "swm")
     }
     
     let packname, author
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
         const buffer = await quoted.download()
         
         if (!buffer || buffer.length === 0) {
-            return m.reply(novaGagal("SWM"))
+            return m.reply(raraGagal("SWM"))
         }
         
         const exifOpts = { packname, author, emojis: ['🤖'] }
@@ -88,10 +88,10 @@ async function handler(m, { sock, config: botConfig }) {
             }
         }
         await m.react("🐣");
-        await m.reply(novaBerhasil("Swm"));
+        await m.reply(raraBerhasil("Swm"));
     } catch (error) {
         console.error('[SWM] Error:', error.message)
-        m.reply(novaGangguan("Swm"))
+        m.reply(raraGangguan("Swm"))
     }
 }
 

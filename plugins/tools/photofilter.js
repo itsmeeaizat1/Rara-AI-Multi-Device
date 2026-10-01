@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Filter — 15 filter foto via sharp (local, no API needed)
 // Efek: grayscale, sepia, invert, blur, sharpen, vintage, cold, warm, dark, bright, neon, vintage2, dramatik, pastel, noir
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "photofilter",
@@ -165,13 +165,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push(usedPrefix + "photofilter <efek>");
       lines.push("");
       lines.push("Contoh: " + usedPrefix + "photofilter vintage");
-      return m.reply(novaWrap("Photo Filter", lines, "info"));
+      return m.reply(raraWrap("Photo Filter", lines, "info"));
     }
 
     // Validate filter
     if (!FILTERS[input]) {
       const available = Object.keys(FILTERS).join(", ");
-      return m.reply(novaWrap("Photo Filter", [
+      return m.reply(raraWrap("Photo Filter", [
         "Efek tidak ditemukan: " + input,
         "",
         "Tersedia: " + available,
@@ -184,7 +184,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const q = m.quoted || m;
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(novaWrap("Photo Filter", [
+      return m.reply(raraWrap("Photo Filter", [
         "Reply gambar dulu, lalu ketik:",
         usedPrefix + "photofilter " + input,
         "",
@@ -193,11 +193,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // Download image
-    m.reply(novaWrap("Photo Filter", "Sedang processing " + FILTERS[input].label + "..."));
+    m.reply(raraWrap("Photo Filter", "Sedang processing " + FILTERS[input].label + "..."));
 
     const imgBuffer = await q.download();
     if (!imgBuffer || imgBuffer.length === 0) {
-      return m.reply(novaWrap("Photo Filter", "Gagal download gambar. Coba lagi.", "warn"));
+      return m.reply(raraWrap("Photo Filter", "Gagal download gambar. Coba lagi.", "warn"));
     }
 
     // Apply filter
@@ -205,7 +205,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (!result || result.length === 0) {
       await m.react("🐣");
-      return m.reply(novaWrap("Photo Filter", "Gagal processing filter. Format gambar tidak didukung.", "warn"));
+      return m.reply(raraWrap("Photo Filter", "Gagal processing filter. Format gambar tidak didukung.", "warn"));
     }
 
     // Send result
@@ -213,7 +213,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       m.key.remoteJid,
       {
         image: result,
-        caption: novaWrap("Photo Filter", [
+        caption: raraWrap("Photo Filter", [
           "Filter: " + FILTERS[input].label,
           "Efek: " + input,
           "Powered by sharp (local)",
@@ -224,7 +224,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[PhotoFilter]", e);
-    m.reply(novaWrap("Photo Filter", [
+    m.reply(raraWrap("Photo Filter", [
       "Error: " + e.message,
       "",
       "Kemungkinan:",

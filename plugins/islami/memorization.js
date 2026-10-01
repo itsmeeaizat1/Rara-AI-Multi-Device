@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { runLiveTicker } from "../../src/lib/nova-countdown.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { runLiveTicker } from "../../src/lib/rara-countdown.js";
 
 const pluginConfig = {
   name: "hafalan",
@@ -273,7 +273,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const surah = findSurah(surahInput);
       if (!surah) {
-        return m.reply(novaWrap("Hafalan", "Surah tidak ditemukan! Ketik nama atau nomor surah (1-114)"));
+        return m.reply(raraWrap("Hafalan", "Surah tidak ditemukan! Ketik nama atau nomor surah (1-114)"));
       }
 
       // Parse ayat range
@@ -291,7 +291,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       if (isNaN(ayatStart) || isNaN(ayatEnd) || ayatStart < 1 || ayatEnd > surah.totalAyat || ayatStart > ayatEnd) {
-        return m.reply(novaWrap("Hafalan", "Range ayat tidak valid! Surah " + surah.name + " punya " + surah.totalAyat + " ayat (1-" + surah.totalAyat + ")"));
+        return m.reply(raraWrap("Hafalan", "Range ayat tidak valid! Surah " + surah.name + " punya " + surah.totalAyat + " ayat (1-" + surah.totalAyat + ")"));
       }
 
       const totalAyat = ayatEnd - ayatStart + 1;
@@ -304,7 +304,7 @@ async function handler(m, { sock, config: botConfig }) {
       });
 
       if (isDuplicate) {
-        return m.reply(novaWrap("Hafalan", "Range ayat ini sudah ada di hafalan kamu! Cek dengan " + prefix + "hafalan list"));
+        return m.reply(raraWrap("Hafalan", "Range ayat ini sudah ada di hafalan kamu! Cek dengan " + prefix + "hafalan list"));
       }
 
       const item = {
@@ -324,7 +324,7 @@ async function handler(m, { sock, config: botConfig }) {
       data.items.push(item);
       updateStreak(data);
       saveHafalan(db, sender, data);
-      await m.reply(novaWrap("Hafalan",
+      await m.reply(raraWrap("Hafalan",
         "Hafalan ditambahkan!\n" +
         "Surah: *" + surah.name + "* (" + surah.num + ")\n" +
         "Ayat: " + ayatStart + "-" + ayatEnd + " (" + totalAyat + " ayat)\n" +
@@ -341,7 +341,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "list") {
       const data = getHafalan(db, sender);
       if (data.items.length === 0) {
-        return m.reply(novaWrap("Hafalan", "Belum ada hafalan.\nTambah: " + prefix + "hafalan add <surah> <ayat>"));
+        return m.reply(raraWrap("Hafalan", "Belum ada hafalan.\nTambah: " + prefix + "hafalan add <surah> <ayat>"));
       }
 
       const now = Date.now();
@@ -373,7 +373,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(tipText("Ketik " + prefix + "hafalan review untuk mulai review"));
       }
 
-      const res = await m.reply(novaWrap("Daftar Hafalan", lines.join("\n")));
+      const res = await m.reply(raraWrap("Daftar Hafalan", lines.join("\n")));
       fireHafalanTicker(db, sender, findNextUpcomingReview(data, now), sock, m, prefix); // 🔹 ≤24 jam → live countdown
       return res;
     }
@@ -388,10 +388,10 @@ async function handler(m, { sock, config: botConfig }) {
         const now = Date.now();
         const dueItems = data.items.filter((item) => item.nextReview <= now);
         if (dueItems.length === 0) {
-          return m.reply(novaWrap("Hafalan", "Tidak ada hafalan yg perlu di-review sekarang."));
+          return m.reply(raraWrap("Hafalan", "Tidak ada hafalan yg perlu di-review sekarang."));
         }
         const next = dueItems.sort((a, b) => a.nextReview - b.nextReview)[0];
-        return m.reply(novaWrap("Review Hafalan",
+        return m.reply(raraWrap("Review Hafalan",
           "Hafalan untuk di-review:\n" +
           "Surah: *" + next.surahName + "* (" + next.surahNum + ")\n" +
           "Ayat: " + next.ayatStart + "-" + next.ayatEnd + " (" + next.totalAyat + " ayat)\n" +
@@ -406,7 +406,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const item = data.items.find((it) => it.id === itemId);
       if (!item) {
-        return m.reply(novaWrap("Hafalan", "Hafalan `" + itemId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Hafalan", "Hafalan `" + itemId + "` tidak ditemukan"));
       }
 
       const result = args[2]?.toLowerCase() || "";
@@ -420,7 +420,7 @@ async function handler(m, { sock, config: botConfig }) {
 
         updateStreak(data);
         saveHafalan(db, sender, data);
-        await m.reply(novaWrap("Review Selesai",
+        await m.reply(raraWrap("Review Selesai",
           "MasyaAllah! Review tercatat.\n" +
           "Surah: *" + item.surahName + "* " + item.ayatStart + "-" + item.ayatEnd + "\n" +
           "Review ke: " + item.reviewCount + "\n" +
@@ -439,7 +439,7 @@ async function handler(m, { sock, config: botConfig }) {
         item.mastery = Math.max(0, item.mastery - 20);
 
         saveHafalan(db, sender, data);
-        return m.reply(novaWrap("Review Diulang",
+        return m.reply(raraWrap("Review Diulang",
           "Tidak apa-apa, tetap semangat!\n" +
           "Surah: *" + item.surahName + "* " + item.ayatStart + "-" + item.ayatEnd + "\n" +
           "Review direset ke awal\n" +
@@ -449,7 +449,7 @@ async function handler(m, { sock, config: botConfig }) {
         ));
       } else {
         // Show review prompt
-        return m.reply(novaWrap("Review Hafalan",
+        return m.reply(raraWrap("Review Hafalan",
           "Surah: *" + item.surahName + "* (" + item.surahNum + ")\n" +
           "Ayat: " + item.ayatStart + "-" + item.ayatEnd + " (" + item.totalAyat + " ayat)\n" +
           "Review ke: " + (item.reviewCount + 1) + "\n" +
@@ -465,7 +465,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "progress") {
       const data = getHafalan(db, sender);
       if (data.items.length === 0) {
-        return m.reply(novaWrap("Hafalan", "Belum ada hafalan. Mulai dengan " + prefix + "hafalan add <surah> <ayat>"));
+        return m.reply(raraWrap("Hafalan", "Belum ada hafalan. Mulai dengan " + prefix + "hafalan add <surah> <ayat>"));
       }
 
       const totalAyat = data.items.reduce((sum, item) => sum + item.totalAyat, 0);
@@ -505,7 +505,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push(buildStreakBar(data.streak.count));
       lines.push("");
 
-      const res = await m.reply(novaWrap("Progress Hafalan", lines.join("\n")));
+      const res = await m.reply(raraWrap("Progress Hafalan", lines.join("\n")));
       fireHafalanTicker(db, sender, findNextUpcomingReview(data, now), sock, m, prefix); // 🔹 ≤24 jam → live countdown
       return res;
     }
@@ -514,19 +514,19 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "remove") {
       const itemId = args[1]?.toUpperCase();
       if (!itemId) {
-        return m.reply(novaWrap("Hafalan", "Format: " + prefix + "hafalan remove <ID>"));
+        return m.reply(raraWrap("Hafalan", "Format: " + prefix + "hafalan remove <ID>"));
       }
 
       const data = getHafalan(db, sender);
       const idx = data.items.findIndex((it) => it.id === itemId);
       if (idx === -1) {
-        return m.reply(novaWrap("Hafalan", "Hafalan `" + itemId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Hafalan", "Hafalan `" + itemId + "` tidak ditemukan"));
       }
 
       const removed = data.items[idx];
       data.items.splice(idx, 1);
       saveHafalan(db, sender, data);
-      return m.reply(novaWrap("Hafalan", "Hafalan *" + removed.surahName + " " + removed.ayatStart + "-" + removed.ayatEnd + "* dihapus"));
+      return m.reply(raraWrap("Hafalan", "Hafalan *" + removed.surahName + " " + removed.ayatStart + "-" + removed.ayatEnd + "* dihapus"));
     }
 
     // --- STREAK ---
@@ -555,7 +555,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(tipText("Ketik " + prefix + "hafalan add atau " + prefix + "hafalan review untuk lanjut streak!"));
       }
 
-      const res = await m.reply(novaWrap("Streak Hafalan", lines.join("\n")));
+      const res = await m.reply(raraWrap("Streak Hafalan", lines.join("\n")));
       fireHafalanTicker(db, sender, findNextUpcomingReview(data, Date.now()), sock, m, prefix); // 🔹 ≤24 jam → live countdown
       return res;
     }
@@ -574,7 +574,7 @@ async function handler(m, { sock, config: botConfig }) {
     );
   } catch (e) {
     console.error("hafalan error:", e);
-    return m.reply(novaWrap("Hafalan", "Error: " + e.message));
+    return m.reply(raraWrap("Hafalan", "Error: " + e.message));
   }
 }
 

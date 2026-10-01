@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Nonton Anime Hub — .nonton
 // 🔹 Sumber zelapi.eu.cc/docs/anime (24 endpoint, 5 situs sumber).
@@ -10,7 +10,7 @@
 // 🔹 STRICT: error asli dari upstream ditampilkan, no fallback ngasal.
 // ═════════════════════════════════════════════
 import { zelAnimeGet, _setZelAnimeHttpForTest, _setZelAnimeKeyForTest, _setZelAnimeSleepForTest } from "../../src/scraper/zelanime.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   renderAnibiplayHome,
   renderAnibiplaySearch,
@@ -21,7 +21,7 @@ import {
   renderAnimeloversList,
   renderAnimeloversDetail,
   renderAnimeloversStream,
-} from "../../src/lib/nova-anime-render.js";
+} from "../../src/lib/rara-anime-render.js";
 
 const pluginConfig = {
   name: "nonton",
@@ -65,19 +65,19 @@ async function handler(m) {
     const rest = args.slice(2).join(" ").trim();
 
     if (!source || source === "list" || source === "help") {
-      return m.reply(novaWrap("nonton", usageText(), "guide"));
+      return m.reply(raraWrap("nonton", usageText(), "guide"));
     }
 
     if (source === "wotanim") {
-      return m.reply(novaWrap("nonton",
+      return m.reply(raraWrap("nonton",
         `⏳ Sumber *wotanim* belum dipasang — upstream-nya diblokir total (403) di semua percobaan.\nDitunda sampai sumbernya stabil.`, "info"));
     }
     if (source === "animekompi") {
-      return m.reply(novaWrap("nonton", `❌ Sumber *animekompi* mati total (server down), gak dipasang.`, "error"));
+      return m.reply(raraWrap("nonton", `❌ Sumber *animekompi* mati total (server down), gak dipasang.`, "error"));
     }
 
     if (!["anibiplay", "otakudesu", "animelovers"].includes(source)) {
-      return m.reply(novaWrap("nonton", `Sumber gak dikenal. Pakai: anibiplay, animelovers, otakudesu.\n\n${usageText()}`, "guide"));
+      return m.reply(raraWrap("nonton", `Sumber gak dikenal. Pakai: anibiplay, animelovers, otakudesu.\n\n${usageText()}`, "guide"));
     }
 
     await m.react("🧠");
@@ -87,101 +87,101 @@ async function handler(m) {
       const r = await zelAnimeGet("otakudesu", { action: "complete" });
       if (!r.ok) {
         await m.react("❌");
-        return m.reply(novaWrap("nonton", `❌ Otakudesu gagal: ${r.error}`, "error"));
+        return m.reply(raraWrap("nonton", `❌ Otakudesu gagal: ${r.error}`, "error"));
       }
       await m.react("🐣");
-      return m.reply(novaWrap("nonton", renderOtakudesuList(r.data).join("\n"), "info"));
+      return m.reply(raraWrap("nonton", renderOtakudesuList(r.data).join("\n"), "info"));
     }
 
     // ── ANIMELOVERS (retry 2x, anti-bot flaky) ──
     if (source === "animelovers") {
-      if (!action) return m.reply(novaWrap("nonton", `Contoh: .nonton animelovers ongoing\n\n${usageText()}`, "guide"));
+      if (!action) return m.reply(raraWrap("nonton", `Contoh: .nonton animelovers ongoing\n\n${usageText()}`, "guide"));
 
       if (ANIMELOVERS_LIST_MODES[action]) {
         const r = await zelAnimeGet(`animelovers/${action}`, {}, { retries: 3 });
-        if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("nonton", `❌ AnimeLovers gagal (upstream blokir): ${r.error}\n\n_Coba lagi beberapa saat lagi._`, "error")); }
+        if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("nonton", `❌ AnimeLovers gagal (upstream blokir): ${r.error}\n\n_Coba lagi beberapa saat lagi._`, "error")); }
         await m.react("🐣");
-        return m.reply(novaWrap("nonton", renderAnimeloversList(r.data, ANIMELOVERS_LIST_MODES[action]).join("\n"), "info"));
+        return m.reply(raraWrap("nonton", renderAnimeloversList(r.data, ANIMELOVERS_LIST_MODES[action]).join("\n"), "info"));
       }
 
       if (action === "cari" || action === "search") {
-        if (!rest) return m.reply(novaWrap("nonton", "Contoh: .nonton animelovers cari one piece", "guide"));
+        if (!rest) return m.reply(raraWrap("nonton", "Contoh: .nonton animelovers cari one piece", "guide"));
         const r = await zelAnimeGet("animelovers/search", { q: rest }, { retries: 3 });
-        if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("nonton", `❌ Pencarian gagal (upstream blokir): ${r.error}\n\n_Coba lagi beberapa saat lagi._`, "error")); }
+        if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("nonton", `❌ Pencarian gagal (upstream blokir): ${r.error}\n\n_Coba lagi beberapa saat lagi._`, "error")); }
         await m.react("🐣");
-        return m.reply(novaWrap("nonton", renderAnimeloversList(r.data, `Cari "${rest}"`).join("\n"), "info"));
+        return m.reply(raraWrap("nonton", renderAnimeloversList(r.data, `Cari "${rest}"`).join("\n"), "info"));
       }
 
       if (action === "detail") {
         const slug = (args[2] || "").trim();
-        if (!slug) return m.reply(novaWrap("nonton", "Contoh: .nonton animelovers detail <slug>", "guide"));
+        if (!slug) return m.reply(raraWrap("nonton", "Contoh: .nonton animelovers detail <slug>", "guide"));
         const r = await zelAnimeGet("animelovers/detail", { slug }, { retries: 3 });
-        if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("nonton", `❌ Detail gagal (upstream blokir): ${r.error}\n\n_Coba lagi beberapa saat lagi._`, "error")); }
+        if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("nonton", `❌ Detail gagal (upstream blokir): ${r.error}\n\n_Coba lagi beberapa saat lagi._`, "error")); }
         await m.react("🐣");
-        return m.reply(novaWrap("nonton", renderAnimeloversDetail(r.data).join("\n"), "info"));
+        return m.reply(raraWrap("nonton", renderAnimeloversDetail(r.data).join("\n"), "info"));
       }
 
       if (action === "nonton" || action === "stream") {
         const slug = (args[2] || "").trim();
-        if (!slug) return m.reply(novaWrap("nonton", "Contoh: .nonton animelovers nonton <slug>", "guide"));
+        if (!slug) return m.reply(raraWrap("nonton", "Contoh: .nonton animelovers nonton <slug>", "guide"));
         const r = await zelAnimeGet("animelovers/stream", { slug }, { retries: 3 });
-        if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("nonton", `❌ Streaming gagal (upstream blokir): ${r.error}\n\n_Coba lagi beberapa saat lagi._`, "error")); }
+        if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("nonton", `❌ Streaming gagal (upstream blokir): ${r.error}\n\n_Coba lagi beberapa saat lagi._`, "error")); }
         await m.react("🐣");
-        return m.reply(novaWrap("nonton", renderAnimeloversStream(r.data).join("\n"), "info"));
+        return m.reply(raraWrap("nonton", renderAnimeloversStream(r.data).join("\n"), "info"));
       }
 
-      return m.reply(novaWrap("nonton", `Aksi *${action}* gak dikenal buat animelovers.\n\n${usageText()}`, "guide"));
+      return m.reply(raraWrap("nonton", `Aksi *${action}* gak dikenal buat animelovers.\n\n${usageText()}`, "guide"));
     }
 
     // ── ANIBIPLAY ──
     if (action === "home" || !action) {
       const r = await zelAnimeGet("anibiplay/home");
-      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("nonton", `❌ Gagal ambil home: ${r.error}`, "error")); }
+      if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("nonton", `❌ Gagal ambil home: ${r.error}`, "error")); }
       await m.react("🐣");
-      return m.reply(novaWrap("nonton", renderAnibiplayHome(r.data).join("\n"), "info"));
+      return m.reply(raraWrap("nonton", renderAnibiplayHome(r.data).join("\n"), "info"));
     }
 
     if (action === "cari" || action === "search") {
-      if (!rest) return m.reply(novaWrap("nonton", "Contoh: .nonton anibiplay cari one piece", "guide"));
+      if (!rest) return m.reply(raraWrap("nonton", "Contoh: .nonton anibiplay cari one piece", "guide"));
       const r = await zelAnimeGet("anibiplay/search", { q: rest });
-      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("nonton", `❌ Pencarian gagal: ${r.error}`, "error")); }
+      if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("nonton", `❌ Pencarian gagal: ${r.error}`, "error")); }
       await m.react("🐣");
-      return m.reply(novaWrap("nonton", renderAnibiplaySearch(r.data).join("\n"), "info"));
+      return m.reply(raraWrap("nonton", renderAnibiplaySearch(r.data).join("\n"), "info"));
     }
 
     if (action === "detail") {
       const slug = (args[2] || "").trim();
-      if (!slug) return m.reply(novaWrap("nonton", "Contoh: .nonton anibiplay detail one-piece", "guide"));
+      if (!slug) return m.reply(raraWrap("nonton", "Contoh: .nonton anibiplay detail one-piece", "guide"));
       const r = await zelAnimeGet(`anibiplay/detail/${encodeURIComponent(slug)}`);
-      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("nonton", `❌ Detail gagal: ${r.error}`, "error")); }
+      if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("nonton", `❌ Detail gagal: ${r.error}`, "error")); }
       await m.react("🐣");
-      return m.reply(novaWrap("nonton", renderAnibiplayDetail(r.data).join("\n"), "info"));
+      return m.reply(raraWrap("nonton", renderAnibiplayDetail(r.data).join("\n"), "info"));
     }
 
     if (action === "episode" || action === "ep") {
       const slug = (args[2] || "").trim();
       const ep = (args[3] || "").trim();
-      if (!slug || !ep) return m.reply(novaWrap("nonton", "Contoh: .nonton anibiplay episode one-piece 1", "guide"));
+      if (!slug || !ep) return m.reply(raraWrap("nonton", "Contoh: .nonton anibiplay episode one-piece 1", "guide"));
       const r = await zelAnimeGet("anibiplay/episode", { slug, ep });
-      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("nonton", `❌ Episode gagal: ${r.error}`, "error")); }
+      if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("nonton", `❌ Episode gagal: ${r.error}`, "error")); }
       await m.react("🐣");
-      return m.reply(novaWrap("nonton", renderAnibiplayEpisode(r.data).join("\n"), "info"));
+      return m.reply(raraWrap("nonton", renderAnibiplayEpisode(r.data).join("\n"), "info"));
     }
 
     if (action === "explore" || action === "genre") {
       const genre = (args[2] || "").trim();
       const page = (args[3] || "1").trim();
       const r = await zelAnimeGet("anibiplay/explore", { genre, page });
-      if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("nonton", `❌ Explore gagal: ${r.error}`, "error")); }
+      if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("nonton", `❌ Explore gagal: ${r.error}`, "error")); }
       await m.react("🐣");
-      return m.reply(novaWrap("nonton", renderAnibiplayExplore(r.data).join("\n"), "info"));
+      return m.reply(raraWrap("nonton", renderAnibiplayExplore(r.data).join("\n"), "info"));
     }
 
-    return m.reply(novaWrap("nonton", `Aksi *${action}* gak dikenal buat anibiplay.\n\n${usageText()}`, "guide"));
+    return m.reply(raraWrap("nonton", `Aksi *${action}* gak dikenal buat anibiplay.\n\n${usageText()}`, "guide"));
   } catch (err) {
     await m.react("❌");
     console.error("[nonton]", err?.message);
-    return m.reply(novaWrap("nonton", `❌ *GAGAL: ${err?.message || "error"}*`, "error"));
+    return m.reply(raraWrap("nonton", `❌ *GAGAL: ${err?.message || "error"}*`, "error"));
   }
 }
 

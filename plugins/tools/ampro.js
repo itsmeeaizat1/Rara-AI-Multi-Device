@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .ampro/.amrefresh — aktifin AlightMotion premium via magic link email (port engine lama alightmotion.js)
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ampro",
@@ -115,7 +115,7 @@ async function refreshAndActivate(refreshToken) {
   } catch (e) { return { ok: false, why: bad(e) }; }
 }
 
-// sesi per owner — file lokal (bukan db Nova biar gak nyampur)
+// sesi per owner — file lokal (bukan db Rara biar gak nyampur)
 const FILE = path.join(process.cwd(), "data", "ampro-sessions.json");
 function loadSessions() { try { return JSON.parse(fs.readFileSync(FILE, "utf8") || "{}"); } catch { return {}; } }
 function saveSession(email, data) {
@@ -152,7 +152,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!raw) {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "ampro",
         "Aktifin AlightMotion premium gratis via magic link email (port engine lama).",
         prefix + "ampro nama@gmail.com",
@@ -164,7 +164,7 @@ async function handler(m, { sock, config: botConfig }) {
     const email = raw.toLowerCase().replace(/^.*\s/, "").trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       await m.react("❌");
-      await m.reply(novaError("Ampro", "Format email gak valid"));
+      await m.reply(raraError("Ampro", "Format email gak valid"));
       return { handled: true };
     }
 
@@ -172,19 +172,19 @@ async function handler(m, { sock, config: botConfig }) {
       const sess = loadSessions()[email];
       if (!sess?.ref) {
         await m.react("❌");
-        await m.reply(novaError("Amrefresh", "Gak ada sesi tersimpan untuk " + email + " — kirim link dulu: " + prefix + "ampro " + email));
+        await m.reply(raraError("Amrefresh", "Gak ada sesi tersimpan untuk " + email + " — kirim link dulu: " + prefix + "ampro " + email));
         return { handled: true };
       }
       await m.react("🛠️");
       const r = await refreshAndActivate(sess.ref);
       if (!r.ok) {
         await m.react("❌");
-        await m.reply(novaError("Amrefresh", "Gagal: " + String(r.why).slice(0, 150) + "\n\nCoba lagi: " + prefix + "ampro " + email));
+        await m.reply(raraError("Amrefresh", "Gagal: " + String(r.why).slice(0, 150) + "\n\nCoba lagi: " + prefix + "ampro " + email));
         return { handled: true };
       }
       saveSession(email, { ...sess, ref: r.newRef || sess.ref });
       await m.react("⚡");
-      await m.reply(novaWrap("AM Premium", ["Premium " + email + " ke-update!", "Order: " + r.orderId].join("\n")));
+      await m.reply(raraWrap("AM Premium", ["Premium " + email + " ke-update!", "Order: " + r.orderId].join("\n")));
       return { handled: true };
     }
 
@@ -193,12 +193,12 @@ async function handler(m, { sock, config: botConfig }) {
     const r = await sendMagicLink(email);
     if (!r.ok) {
       await m.react("❌");
-      await m.reply(novaError("Ampro", "Gagal kirim link: " + String(r.why).slice(0, 150)));
+      await m.reply(raraError("Ampro", "Gagal kirim link: " + String(r.why).slice(0, 150)));
       return { handled: true };
     }
     savePending(m.sender, { email, at: Date.now(), chat: m.chat });
     await m.react("⚡");
-    await m.reply(novaWrap("Ampro", [
+    await m.reply(raraWrap("Ampro", [
       "Magic link ke " + email + " udah dikirim!",
       "",
       "Buka email kamu, copy link dari AlightMotion,",
@@ -207,7 +207,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[ampro]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("Ampro", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("Ampro", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }
@@ -226,12 +226,12 @@ export async function answerHandler(m, { sock }) {
   if (Date.now() - st.at > TTL) {
     deletePending(m.sender);
     await m.react("\u274C");
-    await m.reply(novaError("Ampro", "Sesi link kedaluwarsa (maks 10 menit). Kirim ulang: .ampro " + st.email));
+    await m.reply(raraError("Ampro", "Sesi link kedaluwarsa (maks 10 menit). Kirim ulang: .ampro " + st.email));
     return true;
   }
   if (!code) {
     await m.react("\u274C");
-    await m.reply(novaError("Ampro", "Link-nya gak bisa dibaca — kode oobCode gak ketemu.\n\nCopy link UTUH dari tombol di email AlightMotion (jangan cuma teksnya), terus reply lagi di sini."));
+    await m.reply(raraError("Ampro", "Link-nya gak bisa dibaca — kode oobCode gak ketemu.\n\nCopy link UTUH dari tombol di email AlightMotion (jangan cuma teksnya), terus reply lagi di sini."));
     return true;
   }
   deletePending(m.sender);
@@ -240,19 +240,19 @@ export async function answerHandler(m, { sock }) {
     const v = await verifyLink(st.email, rawLink);
     if (!v.ok) {
       await m.react("❌");
-      await m.reply(novaError("Ampro", "Verifikasi gagal: " + String(v.why).slice(0, 150) + "\n\nKirim ulang: .ampro " + st.email));
+      await m.reply(raraError("Ampro", "Verifikasi gagal: " + String(v.why).slice(0, 150) + "\n\nKirim ulang: .ampro " + st.email));
       return true;
     }
     const p = await activatePremium(v.id);
     if (!p.ok) {
       saveSession(st.email, { id: v.id, ref: v.ref, uid: v.uid });
       await m.react("❌");
-      await m.reply(novaError("Ampro", "Login OK tapi aktivasi gagal: " + String(p.why).slice(0, 150) + "\n\nCoba: .amrefresh " + st.email));
+      await m.reply(raraError("Ampro", "Login OK tapi aktivasi gagal: " + String(p.why).slice(0, 150) + "\n\nCoba: .amrefresh " + st.email));
       return true;
     }
     saveSession(st.email, { id: v.id, ref: v.ref, uid: v.uid });
     await m.react("⚡");
-    await m.reply(novaWrap("AM Premium Aktif!", [
+    await m.reply(raraWrap("AM Premium Aktif!", [
       "Email: " + st.email,
       "Order: " + p.orderId,
       v.new ? "Akun baru dibuat" : "Akun lama di-update",
@@ -262,7 +262,7 @@ export async function answerHandler(m, { sock }) {
   } catch (e) {
     console.error("[ampro]:", e.message);
     await m.react("❌");
-    await m.reply(novaError("Ampro", "Gagal: " + String(e.message).slice(0, 120)));
+    await m.reply(raraError("Ampro", "Gagal: " + String(e.message).slice(0, 120)));
   }
   return true;
 }

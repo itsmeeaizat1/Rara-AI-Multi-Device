@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "auracheck",
@@ -91,7 +91,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (cfg[m.sender].checkedToday) {
-    await m.reply(novaWrap("Aura Check", [
+    await m.reply(raraWrap("Aura Check", [
       "Kamu udah cek aura hari ini!",
       "Score: " + cfg[m.sender].score + "/100",
       "Warna: " + cfg[m.sender].color,
@@ -122,7 +122,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   const bar = "▰".repeat(Math.floor(score / 10)) + "▱".repeat(10 - Math.floor(score / 10));
 
-  await m.reply(novaWrap("Aura Reading", [
+  await m.reply(raraWrap("Aura Reading", [
     "@" + m.sender.split("@")[0],
     "",
     "Score: " + score + "/100",

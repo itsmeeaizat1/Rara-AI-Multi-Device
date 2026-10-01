@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaHeader,
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraHeader,
     separator,
-  tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
-import { fetchPrayerTimes, buildPrayerMessage, PRAYER_LABELS, PRAYER_EMOJIS, ADVANCE_REMINDER_MINUTES } from "../../src/lib/nova-sholat-scheduler.js";
+  tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
+import { fetchPrayerTimes, buildPrayerMessage, PRAYER_LABELS, PRAYER_EMOJIS, ADVANCE_REMINDER_MINUTES } from "../../src/lib/rara-sholat-scheduler.js";
 
 const pluginConfig = {
   name: "sholatscheduler",
@@ -156,7 +156,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (isControlCommand(lower) && db && !isAuthorized(m, db)) {
       const text =
-        novaWrap("Auto Sholat", ["Kamu tidak punya izin untuk mengubah pengaturan Auto Sholat.",
+        raraWrap("Auto Sholat", ["Kamu tidak punya izin untuk mengubah pengaturan Auto Sholat.",
           "Izin saat ini: *" + (SHOLAT_PERMISSION_LABELS[db.getGroup?.(m.chat)?.sholat?.permission] || "Owner only") + "*",
           "Hubungi owner untuk mengaktifkan atau mematikan fitur ini."].join("\n")) +
         "\n" +
@@ -177,7 +177,7 @@ async function handler(m, { sock, config: botConfig }) {
       const chatLabel = chatTarget.type === "group" ? "Grup" : "Chat Pribadi";
 
       const text =
-        novaWrap("Auto Sholat", [`Jadwal: *${prefix}jadwalsholat <kota>*`,
+        raraWrap("Auto Sholat", [`Jadwal: *${prefix}jadwalsholat <kota>*`,
           `Lokasi: *${prefix}lokasijadwalsholat <kota>*`,
           `Aktifkan: *${prefix}jadwalsholat aktif <kota>*`,
           `Matikan: *${prefix}jadwalsholat off*`,
@@ -185,13 +185,13 @@ async function handler(m, { sock, config: botConfig }) {
           `Contoh: *${prefix}jadwalsholat Jakarta*`,
           `Contoh: *${prefix}jadwalsholat Serang*`].join("\n")) +
         "\n" +
-        novaWrap("sTatus", [`Chat: *${chatLabel}*`, `Status: *${currentStatus}*`, `Kota: *${currentCity}*`, `Izin: *${permissionLabel}*`].join("\n")) +
+        raraWrap("sTatus", [`Chat: *${chatLabel}*`, `Status: *${currentStatus}*`, `Kota: *${currentCity}*`, `Izin: *${permissionLabel}*`].join("\n")) +
         "\n\n" +
         
-        novaWrap("Fitur", ["🔔 Reminder 5 menit sebelum", "🕌 Notifikasi waktu sholat", "📿 Info iqamah/jamaah", "🤲 Auto pengingat harian"].join("\n")) +
+        raraWrap("Fitur", ["🔔 Reminder 5 menit sebelum", "🕌 Notifikasi waktu sholat", "📿 Info iqamah/jamaah", "🤲 Auto pengingat harian"].join("\n")) +
         "\n\n" +
         
-        novaWrap("Izin", ["🔒 owner: hanya owner", "👤 user: semua user", "🔑 owner+user: owner + user", "🛡️ owner+admin: owner + admin grup (bot harus admin)"].join("\n")) +
+        raraWrap("Izin", ["🔒 owner: hanya owner", "👤 user: semua user", "🔑 owner+user: owner + user", "🛡️ owner+admin: owner + admin grup (bot harus admin)"].join("\n")) +
         "\n\n" +
         
         tipText("Fitur default: OFF sampai owner menyalakan") +
@@ -206,11 +206,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (lower === "off") {
       if (!db) {
-        await m.reply(novaWrap("sholat", "❌ Database tidak tersedia."));
+        await m.reply(raraWrap("sholat", "❌ Database tidak tersedia."));
         return { handled: true };
       }
       if (!isAuthorized(m, db)) {
-        await m.reply(novaWrap("sholat", "❌ Kamu tidak punya izin untuk mematikan Auto Sholat."));
+        await m.reply(raraWrap("sholat", "❌ Kamu tidak punya izin untuk mematikan Auto Sholat."));
         return { handled: true };
       }
       if (chatTarget.type === "group") {
@@ -220,7 +220,7 @@ async function handler(m, { sock, config: botConfig }) {
         db.setUser?.(chatTarget.id, { sholat: { enabled: false, city: null } });
       }
       const text =
-        novaWrap("Auto Sholat", ["Fitur: *auto sholat*",
+        raraWrap("Auto Sholat", ["Fitur: *auto sholat*",
           "Status: *off*",
           `Chat: *${m.chatName || chatTarget.id}*`].join("\n")) +
         "\n" +
@@ -233,15 +233,15 @@ async function handler(m, { sock, config: botConfig }) {
     if (lower.startsWith("aktif ")) {
       const city = lower.slice(6).trim();
       if (!city) {
-        await m.reply(novaWrap("sholat", `❌ Format salah. Gunakan: ${prefix}jadwalsholat aktif <kota>`));
+        await m.reply(raraWrap("sholat", `❌ Format salah. Gunakan: ${prefix}jadwalsholat aktif <kota>`));
         return { handled: true };
       }
       if (!db) {
-        await m.reply(novaWrap("sholat", "❌ Database tidak tersedia."));
+        await m.reply(raraWrap("sholat", "❌ Database tidak tersedia."));
         return { handled: true };
       }
       if (!isAuthorized(m, db)) {
-        await m.reply(novaWrap("sholat", "❌ Kamu tidak punya izin untuk menyalakan Auto Sholat."));
+        await m.reply(raraWrap("sholat", "❌ Kamu tidak punya izin untuk menyalakan Auto Sholat."));
         return { handled: true };
       }
       if (chatTarget.type === "group") {
@@ -252,7 +252,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       const modeText = chatTarget.type === "group" ? "👥 Grup" : "💬 Chat Pribadi";
       const text =
-        novaWrap("Auto Sholat", ["Fitur: *auto sholat*",
+        raraWrap("Auto Sholat", ["Fitur: *auto sholat*",
           "Status: *ON*",
           `Mode: *${modeText}*`,
           `Kota: *${city}*`,
@@ -269,26 +269,26 @@ async function handler(m, { sock, config: botConfig }) {
     if (lower.startsWith("setting ")) {
       const permissionRaw = lower.slice(8).trim().toLowerCase();
       if (!db) {
-        await m.reply(novaWrap("sholat", "❌ Database tidak tersedia."));
+        await m.reply(raraWrap("sholat", "❌ Database tidak tersedia."));
         return { handled: true };
       }
       if (!m.isOwner) {
-        await m.reply(novaWrap("sholat", "❌ Hanya owner yang bisa mengubah izin Auto Sholat."));
+        await m.reply(raraWrap("sholat", "❌ Hanya owner yang bisa mengubah izin Auto Sholat."));
         return { handled: true };
       }
       if (!Object.values(SHOLAT_PERMISSIONS).includes(permissionRaw)) {
-        await m.reply(novaWrap("sholat", `❌ Izin tidak valid. Gunakan: ${prefix}jadwalsholat setting <owner|user|owner+user|owner+admin>`));
+        await m.reply(raraWrap("sholat", `❌ Izin tidak valid. Gunakan: ${prefix}jadwalsholat setting <owner|user|owner+user|owner+admin>`));
         return { handled: true };
       }
       if (chatTarget.type !== "group") {
-        await m.reply(novaWrap("sholat", "❌ Izin hanya bisa diubah di grup."));
+        await m.reply(raraWrap("sholat", "❌ Izin hanya bisa diubah di grup."));
         return { handled: true };
       }
       const groupData = db.getGroup?.(m.chat) || {};
       db.setGroup?.(m.chat, { sholat: { enabled: groupData?.sholat?.enabled ?? false, city: groupData?.sholat?.city || null, permission: permissionRaw } });
       const label = SHOLAT_PERMISSION_LABELS[permissionRaw] || permissionRaw;
       const text =
-        novaWrap("Auto Sholat", ["Fitur: *auto sholat*",
+        raraWrap("Auto Sholat", ["Fitur: *auto sholat*",
           `Izin: *${label}*`,
           `Chat: *${m.chatName || m.chat}*`].join("\n")) +
         "\n" +
@@ -302,7 +302,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const city = lower;
     if (!city) {
-      await m.reply(novaWrap("sholat", `❌ Format salah. Gunakan: ${prefix}jadwalsholat <kota>`));
+      await m.reply(raraWrap("sholat", `❌ Format salah. Gunakan: ${prefix}jadwalsholat <kota>`));
       return { handled: true };
     }
 
@@ -312,7 +312,7 @@ async function handler(m, { sock, config: botConfig }) {
       timings = await fetchPrayerTimes(city);
     } catch (apiError) {
       const text =
-        novaError("Religi", ["Status: *gagal mengambil data*",
+        raraError("Religi", ["Status: *gagal mengambil data*",
           `Alasan: *${apiError.message}*`].join("\n")) +
         "\n" +
         tipText("Pastikan nama kota benar dan coba lagi");
@@ -338,9 +338,9 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      novaHeader(`Jadwal Sholat - ${city}`, "🕌") +
+      raraHeader(`Jadwal Sholat - ${city}`, "🕌") +
       "\n\n" +
-      novaWrap(next.label, [
+      raraWrap(next.label, [
         `Waktu: *${formatTime24(next.time)}*`,
         `Sisa: *${next.remainingMinutes} menit*`,
       ]) +
@@ -348,10 +348,10 @@ async function handler(m, { sock, config: botConfig }) {
       reminderText +
       "\n\n" +
       
-      novaWrap("Jadwal Adzan", prayerLines) +
+      raraWrap("Jadwal Adzan", prayerLines) +
       "\n\n" +
       
-      novaWrap("Jadwal Iqamah", iqamahLines) +
+      raraWrap("Jadwal Iqamah", iqamahLines) +
       "\n\n" +
       
       tipText("Auto reminder: 5 menit sebelum setiap sholat") +
@@ -363,7 +363,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(text, "sholat");
   } catch (error) {
     const text =
-      novaError("Religi", [`Status: *gagal*`,
+      raraError("Religi", [`Status: *gagal*`,
         `Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
-import novaApi from "../../src/lib/nova-apimanager.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from "../../src/lib/rara-error.js";
+import raraApi from "../../src/lib/rara-apimanager.js";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "gpt4o",
   alias: ["gpt4o"],
@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(novaGuideV2("gpt4o", {
+    return m.reply(raraGuideV2("gpt4o", {
  kaomoji: "(≧▽≦)",
  sapaan: "tanya apa aja ke GPT-4O! (◕‿◕)",
       cara: "ketik pertanyaannya sesudah command",
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
   } catch (error) {
 
     console.log(error);
-    m.reply(novaWrap("gpt4o", te(m.prefix, m.command, m.pushName, error), "error"));
+    m.reply(raraWrap("gpt4o", te(m.prefix, m.command, m.pushName, error), "error"));
   }
 }
 

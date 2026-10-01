@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // buyrpgitem.js — Beli ITEM GAME dari ITEM_DB (JALUR ITEM)
 // Item yang sama dipakai di semua game RPG (material, senjata, armor, consumable, dll).
-// Harga per item berdasarkan value di ITEM_DB (terpusat: nova-store.js calcRpgItemPrice).
+// Harga per item berdasarkan value di ITEM_DB (terpusat: rara-store.js calcRpgItemPrice).
 import fs from "fs";
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
-import { ITEM_DB } from "../../src/lib/nova-rpg-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, bracketBox, tipText, toSC } from "../../src/lib/rara-menu-style.js";
+import { ITEM_DB } from "../../src/lib/rara-rpg-service.js";
 import {
   ensureTopups,
   calcRpgItemPrice,
@@ -15,7 +15,7 @@ import {
   MIN_TOPUP_PRICE,
   RPG_ITEM_RATE,
   topupCancelHint,
-} from "../../src/lib/store/nova-store.js";
+} from "../../src/lib/store/rara-store.js";
 
 const pluginConfig = {
   name: "buyrpgitem",
@@ -89,11 +89,11 @@ async function handler(m, { sock }) {
   if (["batal", "cancel"].includes((args[0] || "").toLowerCase())) {
     const pending = topups.pending[sender];
     if (!pending || pending.status !== "pending" || pending.type !== "rpgitem") {
-      return m.reply(novaWrap("buyrpgitem", "Tidak ada pesanan item game yang pending."));
+      return m.reply(raraWrap("buyrpgitem", "Tidak ada pesanan item game yang pending."));
     }
     delete topups.pending[sender];
     db.db.write();
-    return m.reply(novaWrap("buyrpgitem", "Pesanan item game dibatalkan."));
+    return m.reply(raraWrap("buyrpgitem", "Pesanan item game dibatalkan."));
   }
 
   // ── tanpa argumen: katalog item (dikelompokin per tipe) ──
@@ -140,16 +140,16 @@ async function handler(m, { sock }) {
   const qtyRaw = args.length > 1 ? Number(args[1]) : RPG_ITEM_MIN_QTY;
   const itemDef = ITEM_DB[itemId];
   if (!itemDef) {
-    return m.reply(novaWrap("buyrpgitem", `Item ${itemId} tidak ada di katalog\n\n📌 Ketik ${prefix}buyrpgitem buat lihat semua item`, "info"));
+    return m.reply(raraWrap("buyrpgitem", `Item ${itemId} tidak ada di katalog\n\n📌 Ketik ${prefix}buyrpgitem buat lihat semua item`, "info"));
   }
   if (!Number.isInteger(qtyRaw) || qtyRaw < RPG_ITEM_MIN_QTY || qtyRaw > RPG_ITEM_MAX_QTY) {
-    return m.reply(novaWrap("buyrpgitem", `Jumlah harus angka bulat ${RPG_ITEM_MIN_QTY}-${RPG_ITEM_MAX_QTY}\n\n📌 Contoh: ${prefix}buyrpgitem ${itemId} 5`, "info"));
+    return m.reply(raraWrap("buyrpgitem", `Jumlah harus angka bulat ${RPG_ITEM_MIN_QTY}-${RPG_ITEM_MAX_QTY}\n\n📌 Contoh: ${prefix}buyrpgitem ${itemId} 5`, "info"));
   }
 
   const price = calcRpgItemPrice(itemId, qtyRaw);
   const pending = topups.pending[sender];
   if (pending && pending.status === "pending" && pending.type !== "rpgitem") {
-    return m.reply(novaWrap("buyrpgitem", `Masih ada pesanan ${pending.itemName || pending.name} pending\nSelesaikan / batal dulu: .${topupCancelHint(pending.type)} batal`, "info"));
+    return m.reply(raraWrap("buyrpgitem", `Masih ada pesanan ${pending.itemName || pending.name} pending\nSelesaikan / batal dulu: .${topupCancelHint(pending.type)} batal`, "info"));
   }
   const isReplace = pending && pending.status === "pending";
 

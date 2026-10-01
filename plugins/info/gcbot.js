@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaHeader,  separator, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraHeader,  separator, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getSupportStatus } from "../../src/lib/support/support.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Section Join Grup Resmi — link dari src/lib/support/support.js
     const st = getSupportStatus();
     const joinSection = st.groupSet
-      ? novaWrap("Join Grup Resmi", [
+      ? raraWrap("Join Grup Resmi", [
           `Nama: ${st.raw.group.name}`,
           `Link: ${st.raw.group.link}`,
           "",
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
       : "";
 
     const text =
-      novaWrap("Grup Bot", ["👥", "---", ...lines]) +
+      raraWrap("Grup Bot", ["👥", "---", ...lines]) +
       "\n\n" +
       joinSection +
       tipText(`Total grup: ${groups.length}`) +
@@ -74,7 +74,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("GcBot", "Gagal nih, coba lagi ya");
+      raraError("GcBot", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "gcbot");
   }

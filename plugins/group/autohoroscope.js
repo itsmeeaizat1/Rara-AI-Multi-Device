@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autohoroscope",
@@ -83,7 +83,7 @@ export function startAutoHoroscope(groupId, sock, db) {
       g.lastZodiac = zodiac.name; g.lastHoroscope = horoscope; g.lastSent = Date.now(); g.totalSent = (g.totalSent || 0) + 1;
       await db2.save();
       const msg = "Zodiak Hari Ini: " + zodiac.name + "\nPeriode: " + zodiac.dates + "\nElemen: " + zodiac.element + "\nSifat: " + zodiac.traits + "\n\nRamalan: " + horoscope + "\n\nMode: Otomatis tiap " + g.interval + " menit";
-      await sock.sendMessage(groupId, { text: novaWrap("Auto Horoscope", msg, "info") });
+      await sock.sendMessage(groupId, { text: raraWrap("Auto Horoscope", msg, "info") });
     } catch (e) { console.error("[AutoHoroscope interval]", e); }
   }, intervalMs);
 }
@@ -111,25 +111,25 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const interval = intervalArg && intervalArg >= MIN_INTERVAL && intervalArg <= MAX_INTERVAL ? intervalArg : DEFAULT_INTERVAL;
       cfg.enabled = true; cfg.interval = interval; cfg.activatedBy = sender; cfg.activatedAt = Date.now();
       await db.save(); startAutoHoroscope(groupId, conn, db);
-      return m.reply(novaWrap("Auto Horoscope", ["Ramalan zodiak otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "12 zodiak, " + HOROSCOPES.length + " ramalan", "", "Ketik .autohoroscope off untuk matikan.", "Ketik .autohoroscope now untuk kirim sekarang."], "success"));
+      return m.reply(raraWrap("Auto Horoscope", ["Ramalan zodiak otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "12 zodiak, " + HOROSCOPES.length + " ramalan", "", "Ketik .autohoroscope off untuk matikan.", "Ketik .autohoroscope now untuk kirim sekarang."], "success"));
     }
     if (sub === "off" || sub === "mati" || sub === "nonaktif") {
       cfg.enabled = false; await db.save(); stopAutoHoroscope(groupId);
-      return m.reply(novaWrap("Auto Horoscope", "Ramalan zodiak otomatis DIMATIKAN.\nKetik .autohoroscope on untuk aktifkan lagi."));
+      return m.reply(raraWrap("Auto Horoscope", "Ramalan zodiak otomatis DIMATIKAN.\nKetik .autohoroscope on untuk aktifkan lagi."));
     }
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
-      return m.reply(novaWrap("Auto Horoscope", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Zodiak terakhir: " + (cfg.lastZodiac || "Belum ada")]));
+      return m.reply(raraWrap("Auto Horoscope", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Zodiak terakhir: " + (cfg.lastZodiac || "Belum ada")]));
     }
     if (sub === "now" || sub === "sekarang") {
       const zodiac = ZODIACS[Math.floor(Math.random() * ZODIACS.length)];
       const horoscope = HOROSCOPES[Math.floor(Math.random() * HOROSCOPES.length)];
       cfg.lastZodiac = zodiac.name; cfg.lastHoroscope = horoscope; cfg.lastSent = Date.now(); cfg.totalSent = (cfg.totalSent || 0) + 1;
       await db.save();
-      return m.reply(novaWrap("Auto Horoscope", ["Zodiak: " + zodiac.name, "Periode: " + zodiac.dates, "Elemen: " + zodiac.element, "Sifat: " + zodiac.traits, "", "Ramalan: " + horoscope, "", "Total terkirim: " + cfg.totalSent]));
+      return m.reply(raraWrap("Auto Horoscope", ["Zodiak: " + zodiac.name, "Periode: " + zodiac.dates, "Elemen: " + zodiac.element, "Sifat: " + zodiac.traits, "", "Ramalan: " + horoscope, "", "Total terkirim: " + cfg.totalSent]));
     }
-    return m.reply(novaWrap("Auto Horoscope", ["Kirim ramalan zodiak random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "autohoroscope on [menit] — Aktifkan (default 120, min 30, max 720)", usedPrefix + "autohoroscope off — Matikan", usedPrefix + "autohoroscope status — Lihat status", usedPrefix + "autohoroscope now — Kirim sekarang", "", "CONTOH:", usedPrefix + "autohoroscope on 60", usedPrefix + "autohoroscope off"]));
-  } catch (e) { console.error("[Auto Horoscope]", e); m.reply(novaWrap("Auto Horoscope", "Error: " + e.message)); }
+    return m.reply(raraWrap("Auto Horoscope", ["Kirim ramalan zodiak random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "autohoroscope on [menit] — Aktifkan (default 120, min 30, max 720)", usedPrefix + "autohoroscope off — Matikan", usedPrefix + "autohoroscope status — Lihat status", usedPrefix + "autohoroscope now — Kirim sekarang", "", "CONTOH:", usedPrefix + "autohoroscope on 60", usedPrefix + "autohoroscope off"]));
+  } catch (e) { console.error("[Auto Horoscope]", e); m.reply(raraWrap("Auto Horoscope", "Error: " + e.message)); }
 }
 
 export { pluginConfig as config, handler };

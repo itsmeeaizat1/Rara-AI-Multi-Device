@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
-import { pinterestdl } from "../../src/lib/nova-pinterest.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
+import { pinterestdl } from "../../src/lib/rara-pinterest.js";
 import path from "path";
-import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
+import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { f } from "../../src/lib/nova-http.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { f } from "../../src/lib/rara-http.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -60,10 +60,10 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuide("Pinterest DL", "Masukkan URL Pinterest yang ingin kamu unduh!", `${m.prefix}pindl https://pin.it/xxx`));
+    return m.reply(raraGuide("Pinterest DL", "Masukkan URL Pinterest yang ingin kamu unduh!", `${m.prefix}pindl https://pin.it/xxx`));
   }
   if (!url.includes("pinterest") && !url.includes("pin.it")) {
-    return m.reply(novaError("Pinterest DL", "URL tidak valid. Pastikan pakai link Pinterest (pin.it atau pinterest.com)!"));
+    return m.reply(raraError("Pinterest DL", "URL tidak valid. Pastikan pakai link Pinterest (pin.it atau pinterest.com)!"));
   }
   try {
         await m.react("🕒");
@@ -87,13 +87,13 @@ async function handler(m, { sock }) {
         break;
       }
       return;
-      await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("Pinterest"));
+      await m.react("🐣"); await m.react("🐣"); m.reply(raraBerhasil("Pinterest"));
     }
 
     // Fallback to builtin scraper
     const result = await pinterestdl(url);
     if (!result || !result.media || result.media.length === 0) {
-      return m.reply(novaEmpty("Pinterest DL", "Tidak ada media yang ditemukan dari link Pinterest tersebut."));
+      return m.reply(raraEmpty("Pinterest DL", "Tidak ada media yang ditemukan dari link Pinterest tersebut."));
     }
     const fbCaption = mediaCaption({
       platformIcon: "📌", platformName: "Pinterest",
@@ -151,10 +151,10 @@ async function handler(m, { sock }) {
         }
       }
     }
-    await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("Pinterest"));
+    await m.react("🐣"); await m.react("🐣"); m.reply(raraBerhasil("Pinterest"));
   } catch (error) {
     console.error("[PinDL] Error:", error);
-    m.reply(novaGangguan("Pinterest DL"));
+    m.reply(raraGangguan("Pinterest DL"));
   }
 }
 export { pluginConfig as config, handler };

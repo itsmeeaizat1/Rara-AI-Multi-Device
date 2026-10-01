@@ -14,15 +14,15 @@ const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
 
 const dbDir = mkdtempSync(path.join(tmpdir(), "wxalert-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 const db = getDatabase();
-const { toSC } = await import(R + "/src/lib/nova-menu-style.js");
+const { toSC } = await import(R + "/src/lib/rara-menu-style.js");
 
 const plug = await import(R + "/plugins/cuaca/wxalert.js");
 const handler = plug.handler;
 
-// novaWrap output kecil-semua (smallcaps) — bandingkan pakai toSC biar gak gotcha
+// raraWrap output kecil-semua (smallcaps) — bandingkan pakai toSC biar gak gotcha
 const has = (s, x) => {
   const l = String(s).toLowerCase();
   const e = String(x).toLowerCase();

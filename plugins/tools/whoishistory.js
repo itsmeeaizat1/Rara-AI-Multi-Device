@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "whoishistory",
@@ -27,7 +27,7 @@ async function getWhois(domain) {
   for (const url of rdapUrls) {
     try {
       const res = await fetch(url, {
-        headers: { "Accept": "application/rdap+json", "User-Agent": "Mozilla/5.0 (Nova Bot)" },
+        headers: { "Accept": "application/rdap+json", "User-Agent": "Mozilla/5.0 (Rara Bot)" },
         signal: AbortSignal.timeout(12000),
       });
 
@@ -42,7 +42,7 @@ async function getWhois(domain) {
   // Fallback: try WHOISJSON API
   try {
     const res = await fetch("https://whoisjson.com/api/v1/whois?domain=" + encodeURIComponent(domain), {
-      headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
+      headers: { "User-Agent": "Mozilla/5.0 (Rara Bot)" },
       signal: AbortSignal.timeout(10000),
     });
     if (res.ok) {
@@ -149,12 +149,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     const domain = text.replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "").trim();
     if (!domain) {
-      return m.reply(novaWrap("WhoisHistory", "Domain tidak boleh kosong!"));
+      return m.reply(raraWrap("WhoisHistory", "Domain tidak boleh kosong!"));
     }
     const raw = await getWhois(domain);
 
     if (raw.error) {
-      return m.reply(novaWrap("WhoisHistory", raw.error));
+      return m.reply(raraWrap("WhoisHistory", raw.error));
     }
 
     const info = raw.fallback ? raw.data : parseRdap(raw.data);
@@ -222,11 +222,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     await m.react("🐣");
-    return m.reply(novaWrap("WHOIS: " + domain, lines.join("\n")));
+    return m.reply(raraWrap("WHOIS: " + domain, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("whoishistory error:", e);
-    return m.reply(novaWrap("WhoisHistory", "Error: " + e.message));
+    return m.reply(raraWrap("WhoisHistory", "Error: " + e.message));
   }
 }
 

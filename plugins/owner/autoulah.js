@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, bracketBox, tipText } from "../../src/lib/rara-menu-style.js";
 import {
   enableAutoBirthday,
   disableAutoBirthday,
@@ -8,11 +8,11 @@ import {
   getBirthday,
   checkTodayBirthdays,
   triggerManualBirthday,
-} from "../../src/lib/nova-auto-birthday.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+} from "../../src/lib/rara-auto-birthday.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "autoulah",
@@ -79,13 +79,13 @@ async function handler(m, { sock }) {
       const [hour, minute] = timeArg.split(":").map(Number);
 
       if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        return m.reply(novaWrap("autoulah", toSC("Jam tidak valid!")));
+        return m.reply(raraWrap("autoulah", toSC("Jam tidak valid!")));
       }
 
       const result = enableAutoBirthday(hour, minute, sock);
 
       if (!result.success) {
-        return m.reply(novaWrap("autoulah", `❌ ${toSC(result.error || "Gagal")}`));
+        return m.reply(raraWrap("autoulah", `❌ ${toSC(result.error || "Gagal")}`));
       }
       return m.reply(
         bracketBox("✅", toSC("Auto Birthday Diaktifkan"), [
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableAutoBirthday();
-      return m.reply(novaWrap("autoulah", toSC("Auto Birthday dinonaktifkan")));
+      return m.reply(raraWrap("autoulah", toSC("Auto Birthday dinonaktifkan")));
     }
 
     case "status":
@@ -137,9 +137,9 @@ async function handler(m, { sock }) {
     case "trigger": {
       try {
         await triggerManualBirthday(sock);
-        return m.reply(novaWrap("autoulah", toSC("Cek birthday dijalankan! User yang ultah hari ini sudah dikirim ucapan.")));
+        return m.reply(raraWrap("autoulah", toSC("Cek birthday dijalankan! User yang ultah hari ini sudah dikirim ucapan.")));
       } catch (error) {
-        return m.reply(novaWrap("autoulah", te(m.prefix, m.command, m.pushName), "error"));
+        return m.reply(raraWrap("autoulah", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 

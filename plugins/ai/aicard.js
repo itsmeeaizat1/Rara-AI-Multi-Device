@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .aicard — kartu GenAI native WhatsApp (engine: src/lib/nova-airich-hi.js)
-// SATU-SATUNYA engine AI rich Nova (GenAI card port) — HTML bubble NIXCODE udah dihapus total 29 Sep.
-import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
-import { AIRich } from "../../src/lib/nova-airich-hi.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// Plugin .aicard — kartu GenAI native WhatsApp (engine: src/lib/rara-airich-hi.js)
+// SATU-SATUNYA engine AI rich Rara (GenAI card port) — HTML bubble NIXCODE udah dihapus total 29 Sep.
+import { raraGuide, raraError } from "../../src/lib/rara-menu-style.js";
+import { AIRich } from "../../src/lib/rara-airich-hi.js";
 
 const pluginConfig = {
   name: "aicard",
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!bodyText) {
       await m.react("🐣");
       await m.reply(
-        novaGuide(
+        raraGuide(
           "aicard",
           "Kartu GenAI native WhatsApp: markdown, hyperlink, LaTeX, dan code block tersorot keren kayak balasan Meta AI.",
           `${prefix}aicard Halo semua`,
@@ -85,7 +85,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[aicard]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("AIcard", "Gagal kirim kartu GenAI, coba lagi ya"));
+    await m.reply(raraError("AIcard", "Gagal kirim kartu GenAI, coba lagi ya"));
   }
 
   return { handled: true };

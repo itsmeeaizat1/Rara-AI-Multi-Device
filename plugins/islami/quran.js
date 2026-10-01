@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as cheerio from 'cheerio'
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "quran",
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply(novaWrap("quran", [
+    return m.reply(raraWrap("quran", [
       "Bacaan Al-Quran per surah beserta terjemahan.",
       "",
       `📌 Format: ${m.prefix}quran <nama surah>`,
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
 
     if (!data.ayat?.length) {
       await m.react("❌");
-      return m.reply(novaWrap("quran", `❌ Surah *${query}* tidak ditemukan`));
+      return m.reply(raraWrap("quran", `❌ Surah *${query}* tidak ditemukan`));
     }
 
     let teks = `📖 *${data.surah}*\n${data.info}\n\n`;
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
     }
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("quran", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("quran", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

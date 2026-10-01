@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "setujugabung",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetNumber) {
-    return m.reply(novaWrap(".setujugabung <nomor> <linkgrup>", "Format: *.setujugabung <nomor> <linkgrup>*\n\n" +
+    return m.reply(raraWrap(".setujugabung <nomor> <linkgrup>", "Format: *.setujugabung <nomor> <linkgrup>*\n\n" +
       "Contoh: .setujugabung 628xxx https://chat.whatsapp.com/xxxxx"));
   }
 
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
   }
 
   if (!groupInput) {
-    return m.reply(novaWrap("setujugabung", "Link grup tidak ditemukan.\n\n" +
+    return m.reply(raraWrap("setujugabung", "Link grup tidak ditemukan.\n\n" +
       "Format: .setujugabung <nomor> <linkgrup>\n" +
       "Contoh: .setujugabung 628xxx https://chat.whatsapp.com/xxxxx"));
   }
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
   } else {
     const code = extractInviteCode(groupInput);
     if (!code) {
-      return m.reply(novaWrap("setujugabung", "Link grup tidak valid.\n\n" +
+      return m.reply(raraWrap("setujugabung", "Link grup tidak valid.\n\n" +
         "Format link: https://chat.whatsapp.com/xxxxx"));
     }
 
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
       groupId = info.id;
       groupName = info.subject || "Grup";
     } catch (e) {
-      return m.reply(novaWrap("setujugabung", "Gagal dapet nih info grup dari link.\n\n" +
+      return m.reply(raraWrap("setujugabung", "Gagal dapet nih info grup dari link.\n\n" +
         "Error: " + (e.message || "Unknown error") + "\n\n" +
         "Pastikan link grup valid dan bot masih anggota grup."));
     }
@@ -91,12 +91,12 @@ async function handler(m, { sock }) {
       } catch (e) { console.error('[approvejoin.js]:', e.message); }
     }
 
-    return m.reply(novaWrap("setujugabung", "BERHASIL SETUJUI JOIN REQUEST\n\n" +
+    return m.reply(raraWrap("setujugabung", "BERHASIL SETUJUI JOIN REQUEST\n\n" +
       "User: " + targetNumber + "\n" +
       "Grup: " + groupName + "\n" +
       "Status: Disetujui"));
   } catch (error) {
-    return m.reply(novaWrap("setujugabung", "Gagal menyetujui join request.\n\n" +
+    return m.reply(raraWrap("setujugabung", "Gagal menyetujui join request.\n\n" +
       "Error: " + (error.message || "Unknown error") + "\n\n" +
       "Pastikan bot adalah admin grup dan user masih pending."));
   }

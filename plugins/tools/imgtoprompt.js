@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * @file plugins/tools/imgtoprompt.js
  * @description Plugin untuk mengubah gambar menjadi prompt AI
@@ -7,8 +7,8 @@
 import imgtoprompt from '../../src/scraper/img2prompt.js'
 import fs from 'fs'
 import path from 'path'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'imgtoprompt',
     alias: ["imgtoprompt"],
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     try {
         const isImage = m.isImage || (m.quoted && m.quoted.isImage);
         if (!isImage) {
-            return m.reply(novaWrap("Imgtoprompt", '❌ *gambar dibutuhkan*\n\nReply atau kirim gambar dengan caption .imgtoprompt'));
+            return m.reply(raraWrap("Imgtoprompt", '❌ *gambar dibutuhkan*\n\nReply atau kirim gambar dengan caption .imgtoprompt'));
         }
         
         await m.react("🕒");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         }
         
         if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
-            return m.reply(novaWrap("Imgtoprompt", '❌ Buffer gambar tidak valid'));
+            return m.reply(raraWrap("Imgtoprompt", '❌ Buffer gambar tidak valid'));
         }
         const tmpDir = path.join(process.cwd(), 'temp');
         if (!fs.existsSync(tmpDir)) {
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
             fs.unlinkSync(tmpFile);
         } catch (e) { console.error('[imgtoprompt.js]:', e.message); }
         if (result.status === 'eror' || !result.prompt) {
-            return await m.reply(novaWrap("Imgtoprompt", `❌ *gagal*\n\n${result.msg || 'Tidak dapat menghasilkan prompt dari gambar ini'}`));
+            return await m.reply(raraWrap("Imgtoprompt", `❌ *gagal*\n\n${result.msg || 'Tidak dapat menghasilkan prompt dari gambar ini'}`));
         }
         const responseText = `🎨 *image to prompt*\n\n` +
             `\`\`\`${result.prompt}\`\`\`\n\n` +
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
         await m.reply(responseText);
     } catch (error) {
         console.error('[ImgToPrompt Error]', error);
-        m.reply(novaWrap("imgtoprompt", te(m.prefix, m.command, m.pushName), "error"));
+        m.reply(raraWrap("imgtoprompt", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 

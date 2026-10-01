@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 
 const pluginConfig = {
     name: 'mcpedl',
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         const items = result.results.slice(0, 10)
 
         if (items.length === 0) {
-            return m.reply(novaError("MCPEDL", `Gak nemu hasil untuk: ${query} nih`))
+            return m.reply(raraError("MCPEDL", `Gak nemu hasil untuk: ${query} nih`))
         }
 
         let caption = '🧱 *mcpedl search*\n\n'
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
         }
     } catch (error) {
         console.log(error)
-        m.reply(novaWrap("mcpedl", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("mcpedl", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -13,11 +13,11 @@ import fs from "node:fs"
 fs.rmSync("/tmp/haribesar-e2e-db", { recursive: true, force: true })
 
 const R = path.resolve(".")
-const { initDatabase } = await import(R + "/src/lib/nova-database.js")
-await initDatabase("/tmp/haribesar-e2e-db/nova.json")
+const { initDatabase } = await import(R + "/src/lib/rara-database.js")
+await initDatabase("/tmp/haribesar-e2e-db/rara.json")
 const config = (await import(R + "/config.js")).default
 
-const L = await import(R + "/src/lib/nova-haribesar.js")
+const L = await import(R + "/src/lib/rara-haribesar.js")
 const {
   getHariBesar, addCustomDay, removeCustomDay, listCustomDays,
   setSubscribed, setAllGroups, getAllGroups, getSubs, isSubscribed,

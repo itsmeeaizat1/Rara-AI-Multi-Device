@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // gpt4v2 — GPT-4 v2 (multi fallback: blackbox + unlimitedai)
 import { blackboxAI } from "../../src/scraper/blackbox-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "gpt4v2",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("gpt4v2", `Mau nanya apa ke GPT-4 v2?\n\nContoh: ${m.prefix}gpt4v2 jelaskan neural network\n${m.prefix}gpt4v2 buat ringkasan perang dunia 2`, "guide"));
+      return m.reply(raraWrap("gpt4v2", `Mau nanya apa ke GPT-4 v2?\n\nContoh: ${m.prefix}gpt4v2 jelaskan neural network\n${m.prefix}gpt4v2 buat ringkasan perang dunia 2`, "guide"));
     }
 
     await m.react("🕒");
@@ -35,14 +35,14 @@ async function handler(m, { sock }) {
     });
 
     if (!result.status) {
-      result = await UnlimitedAI(text, "nova-ai", {
+      result = await UnlimitedAI(text, "rara-ai", {
         systemPrompt: "Jawab dengan gaya GPT-4 — concise, accurate, well-structured. Bahasa Indonesia.",
       });
     }
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("gpt4v2", "GPT-4 v2 lagi offline 🤖", "error"));
+      return m.reply(raraWrap("gpt4v2", "GPT-4 v2 lagi offline 🤖", "error"));
     }
 
     await m.react("🐣");
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("gpt4v2 error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("gpt4v2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("gpt4v2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

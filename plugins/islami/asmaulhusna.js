@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
-import { getRandomItem, getItemByIndex, searchItem, getAllData } from '../../src/lib/nova-game-engine.js'
+import { getRandomItem, getItemByIndex, searchItem, getAllData } from '../../src/lib/rara-game-engine.js'
 const pluginConfig = {
     name: "asmaulhusna",
     alias: ["asmaulhusna"],
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
         text += `Halaman 1/3\n\n`;
         text += `_Gunakan .asmaulhusna [nomor] untuk detail_`;
         
-        await m.reply(novaWrap("asmaulhusna", text));
+        await m.reply(raraWrap("asmaulhusna", text));
         return;
     } else {
         name = searchItem('asmaulhusna.json', query, 'latin');
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     text += `🇮🇩 Arti (ID): ${name.translation_id}\n`;
     text += `🇬🇧 Arti (EN): ${name.translation_en}`;
     
-    await m.reply(novaWrap("asmaulhusna", text));
+    await m.reply(raraWrap("asmaulhusna", text));
 }
 
 export { pluginConfig as config, handler }

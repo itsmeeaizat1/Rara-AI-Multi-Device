@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "antilinkall",
@@ -29,7 +29,7 @@ function handler(m, { sock }) {
     const status = groupData.antilinkall || "off";
     const mode = groupData.antilinkallMode || "remove";
 
-    return m.reply(novaWrap("Antilink All", 
+    return m.reply(raraWrap("Antilink All", 
         `Status: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n` +
         `Mode: *${mode.toUpperCase()}*\n\n` +
         `*DETEKSI:*\n` +
@@ -46,39 +46,39 @@ function handler(m, { sock }) {
 
   if (option === "on") {
     db.setGroup(m.chat, { antilinkall: "on" });
-    return m.reply(novaWrap("antilinkall", `✅ *Antilink All Aktif*\n\n` +
+    return m.reply(raraWrap("antilinkall", `✅ *Antilink All Aktif*\n\n` +
         `Semua link akan dideteksi otomatis\nMendeteksi domain extension, bukan hanya http/https`));
   }
 
   if (option === "off") {
     db.setGroup(m.chat, { antilinkall: "off" });
-    return m.reply(novaWrap("Antilinkall", `Antilink All Nonaktif\n\nLink tidak akan difilter lagi`, "error"));
+    return m.reply(raraWrap("Antilinkall", `Antilink All Nonaktif\n\nLink tidak akan difilter lagi`, "error"));
   }
 
   if (option.startsWith("metode")) {
     const method = m.args?.[1]?.toLowerCase();
     if (method === "kick") {
       db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "kick" });
-      return m.reply(novaWrap("Antilinkall", `Antilink All — Mode Kick\n\nUser yang kirim link akan di-kick`, "success"));
+      return m.reply(raraWrap("Antilinkall", `Antilink All — Mode Kick\n\nUser yang kirim link akan di-kick`, "success"));
     } else if (method === "remove" || method === "delete") {
       db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "remove" });
-      return m.reply(novaWrap("Antilinkall", `Antilink All — Mode Delete\n\nPesan dengan link akan dihapus`, "success"));
+      return m.reply(raraWrap("Antilinkall", `Antilink All — Mode Delete\n\nPesan dengan link akan dihapus`, "success"));
     } else {
-      return m.reply(novaWrap("Antilinkall", `Metode Tidak Valid\n\nGunakan kick atau remove\n💡 Contoh: ${m.prefix}antilinkall metode kick`, "error"));
+      return m.reply(raraWrap("Antilinkall", `Metode Tidak Valid\n\nGunakan kick atau remove\n💡 Contoh: ${m.prefix}antilinkall metode kick`, "error"));
     }
   }
 
   if (option === "kick") {
     db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "kick" });
-    return m.reply(novaWrap("Antilinkall", `Antilink All — Mode Kick\n\nUser yang kirim link akan di-kick`, "success"));
+    return m.reply(raraWrap("Antilinkall", `Antilink All — Mode Kick\n\nUser yang kirim link akan di-kick`, "success"));
   }
 
   if (option === "remove" || option === "delete") {
     db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "remove" });
-    return m.reply(novaWrap("Antilinkall", `Antilink All — Mode Delete\n\nPesan dengan link akan dihapus`, "success"));
+    return m.reply(raraWrap("Antilinkall", `Antilink All — Mode Delete\n\nPesan dengan link akan dihapus`, "success"));
   }
 
-  return m.reply(novaWrap("Antilinkall", `Opsi Tidak Valid\n\nGunakan on, off, metode kick, atau metode remove`, "error"));
+  return m.reply(raraWrap("Antilinkall", `Opsi Tidak Valid\n\nGunakan on, off, metode kick, atau metode remove`, "error"));
 }
 
 export { pluginConfig as config, handler };

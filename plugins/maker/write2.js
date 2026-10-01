@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // write2.js — Nulis v2 (nexray maker API, tulis tangan)
 import axios from "axios";
 import { nexrayNulis } from "../../src/scraper/nexray-maker.js";
-import { novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "nulis2",
@@ -19,10 +19,10 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("nulis2", `Mau nulis apa?\n\n💡 Contoh: ${m.prefix}nulis2 Halo dunia`, "guide"));
+      return m.reply(raraWrap("nulis2", `Mau nulis apa?\n\n💡 Contoh: ${m.prefix}nulis2 Halo dunia`, "guide"));
     }
     if (text.length > 300) {
-      return m.reply(novaWrap("nulis2", "Teks terlalu panjang! Maksimal 300 karakter.", "error"));
+      return m.reply(raraWrap("nulis2", "Teks terlalu panjang! Maksimal 300 karakter.", "error"));
     }
 
     await m.react("🕒");
@@ -30,16 +30,16 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.buffer) {
       await m.react("❌");
-      return m.reply(novaWrap("nulis2", "Gagal generate tulisan. Coba lagi.", "error"));
+      return m.reply(raraWrap("nulis2", "Gagal generate tulisan. Coba lagi.", "error"));
     }
 
     await m.react("🐣");
-    const caption = novaBerhasil() + `\nTeks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}`;
+    const caption = raraBerhasil() + `\nTeks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}`;
     return await sock.sendMessage(m.chat, { image: result.buffer, caption });
   } catch (err) {
     console.error("nulis2 error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("nulis2", err.message || "Error", "error"));
+    return m.reply(raraWrap("nulis2", err.message || "Error", "error"));
   }
 }
 

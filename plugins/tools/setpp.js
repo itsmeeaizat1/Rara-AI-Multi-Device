@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "setpp",
     alias: ["setpp"],
@@ -22,19 +22,19 @@ async function handler(m, { sock }) {
         try {
             buffer = await m.quoted.download()
         } catch (e) {
-            await m.reply(novaWrap("setpp", `❌ Gagal mengambil gambar.`))
+            await m.reply(raraWrap("setpp", `❌ Gagal mengambil gambar.`))
             return
         }
     } else if (m.isImage) {
         try {
             buffer = await m.download()
         } catch (e) {
-            await m.reply(novaWrap("setpp", `❌ Gagal mengambil gambar.`))
+            await m.reply(raraWrap("setpp", `❌ Gagal mengambil gambar.`))
             return
         }
     }
     if (!buffer) {
-        await m.reply(novaWrap("setpp", [
+        await m.reply(raraWrap("setpp", [
             `Ubah foto profil bot.`,
             ``,
             `📌 Format: ${m.prefix}setpp (reply gambar) atau kirim gambar + caption ${m.prefix}setpp`,
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
         const botJid = sock.user?.id
         if (!botJid) {
-            { const __navText = novaWrap("setpp", `❌ Bot JID tidak ditemukan.`); await m.reply(__navText); }
+            { const __navText = raraWrap("setpp", `❌ Bot JID tidak ditemukan.`); await m.reply(__navText); }
             return
         }
         

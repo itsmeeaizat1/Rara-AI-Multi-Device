@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/lib/apikey/ai-chain.js — KONFIG MULTI-PROVIDER AI (single source of truth)
 // File config: src/lib/apikey/apikeys.json → section "aiMultiprovider"
-// (struktur baru: aiSatuan / aiMultiprovider / novaai dipisah di SATU file).
+// (struktur baru: aiSatuan / aiMultiprovider / raraai dipisah di SATU file).
 // File lama ai-providers.json masih dibaca sebagai fallback kalau section gak ada.
-//   - "chain"  : urutan prioritas rantai (.novaai/.autonovaai/autoflow aichat)
+//   - "chain"  : urutan prioritas rantai (.raraai/.autonovaai/autoflow aichat)
 //   - "providers": key tiap AI — owner TINGGAL ISI "apikey"-nya doang.
 //     apikey kosong = di-skip otomatis dari rantai (bukan error).
 //   - Provider free/source-ikyy udah preset key "kyzz" — gak perlu diisi,
@@ -42,13 +42,15 @@ function loadLegacyCfg() {
 }
 
 function readLegacyKeys() {
-  // tampilan flat: root + 3 section (aiSatuan/aiMultiprovider/novaai)
+  // tampilan flat: root + 3 section (aiSatuan/aiMultiprovider/raraai)
   // supaya LEGACY_SLOTS (groqkey, deepseekkey, google, ikyyxd, dll) tetap resolve
   try {
     const raw = JSON.parse(fs.readFileSync(APIKEYS_FILE, "utf8"));
     const flat = {};
     for (const [k, v] of Object.entries(raw)) if (typeof v === "string") flat[k] = v;
-    for (const sec of ["aiSatuan", "novaai"]) {
+    // LEGACY SHIM (migrasi nova->rara 2 Okt 2026): apikeys.json di VPS bisa
+    // masih punya section "novaai" (hasil edit live owner sebelum migrasi).
+    for (const sec of ["aiSatuan", "raraai", "novaai"]) {
       for (const [k, v] of Object.entries(raw[sec] || {})) {
         if (k.startsWith("_")) continue;
         flat[k] = typeof v === "string" ? v : "";

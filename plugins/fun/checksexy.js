@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { runCekAnim } from "../../src/lib/nova-cek-anim.js";
-import { cekFunAI } from "../../src/lib/nova-fun-ai.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { runCekAnim } from "../../src/lib/rara-cek-anim.js";
+import { cekFunAI } from "../../src/lib/rara-fun-ai.js";
 const pluginConfig = {
     name: 'ceksexy',
     alias: ["ceksexy"],
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
          `Tingkat kesexyan dia: ${percent}%`,
          `"${desc}"`].join("\n")
     
-    await runCekAnim(m, sock, novaWrap("ceksexy", txt), { mentions: [mentioned] }, { subject: m.command });
+    await runCekAnim(m, sock, raraWrap("ceksexy", txt), { mentions: [mentioned] }, { subject: m.command });
 }
 
 export { pluginConfig as config, handler }

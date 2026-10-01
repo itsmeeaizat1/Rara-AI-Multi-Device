@@ -9,11 +9,11 @@ function t(label, cond, extra) {
 }
 
 const R = path.resolve(".")
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js")
-await initDatabase("/tmp/welcome-e2e-db/nova.json")
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js")
+await initDatabase("/tmp/welcome-e2e-db/rara.json")
 const db = getDatabase()
 
-const { _setWelcomeCardAiForTest } = await import(R + "/src/lib/nova-welcome-canvas.js")
+const { _setWelcomeCardAiForTest } = await import(R + "/src/lib/rara-welcome-canvas.js")
 _setWelcomeCardAiForTest(async () => "Terima kasih atas setiap momennya di sini.")
 
 const { handler: switchHandler } = await import(R + "/plugins/owner/switch.js")
@@ -125,7 +125,7 @@ await new Promise((r) => setTimeout(r, 300))
 t("6a. pp private → kartu avatar inisial + preview", sent.length === 1 && !!sent[0].msg?.text && !!sent[0].msg?.contextInfo?.externalAdReply?.thumbnail, "sent=" + sent.length)
 
 // ═══ 6b. UNIT: kartu canvas welcome/goodbye render bener (PNG valid) ═══
-const { generateWelcomeCard, generateGoodbyeCard } = await import(R + "/src/lib/nova-welcome-canvas.js")
+const { generateWelcomeCard, generateGoodbyeCard } = await import(R + "/src/lib/rara-welcome-canvas.js")
 const cardW = await generateWelcomeCard({ groupName: "Grup Test", ppBuffer: null, name: "Budi", memberKe: 5, totalMember: 5 })
 const cardB = await generateGoodbyeCard({ groupName: "Grup Test", ppBuffer: null, name: "Budi", apresiasi: "Terima kasih atas setiap momennya di sini." })
 t("6b. kartu welcome render (PNG > 10KB)", cardW.length > 10000, cardW.length + "B")

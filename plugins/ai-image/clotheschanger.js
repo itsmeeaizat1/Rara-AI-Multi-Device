@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // clotheschanger — Keluarga fitur edit foto AI 1 command:
 // .aiclotheschanger (ganti baju — prompt/preset/gambar baju)
 // .aiclotheschangerfaceswap (tukar wajah 2 foto)
@@ -9,10 +9,10 @@
 import { Img2Img } from "../../src/scraper/img2img.js";
 import { live3d } from "../../src/scraper/seaart.js";
 import { nanoBananaEdit, uploadToUguu } from "../../src/scraper/kuroneko.js";
-import { visionScan } from "../../src/lib/nova-vision-chain.js";
-import { polishImage, upscaleImage } from "../../src/lib/nova-remini-ffmpeg.js";
-import { novaWrap, toSC } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { visionScan } from "../../src/lib/rara-vision-chain.js";
+import { polishImage, upscaleImage } from "../../src/lib/rara-remini-ffmpeg.js";
+import { raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "aiclotheschanger",
@@ -415,7 +415,7 @@ async function handler(m, { sock }) {
       }
       if (!targetBuf || !faceBuf) {
         await m.react("❌");
-        return m.reply(novaWrap(typed,
+        return m.reply(raraWrap(typed,
           `Butuh 2 foto!\n\n` +
           `1. ${toSC("reply")} foto *${toSC("target")}* (orang yang mau diganti wajahnya)\n` +
           `2. ${toSC("kirim")} foto *${toSC("sumber wajah")}* sambil ketik ${prefix}${typed}\n\n` +
@@ -428,7 +428,7 @@ async function handler(m, { sock }) {
       const faceDesc = res?.status ? parseFaceDesc(res.text) : null;
       if (!faceDesc) {
         await m.react("❌");
-        return m.reply(novaWrap(typed,
+        return m.reply(raraWrap(typed,
           res?.status
             ? `${toSC("gambarnya gak kedeteksi ada wajah")} — ${toSC("kirim foto yang wajahnya jelas")}.`
             : `${toSC("gagal baca foto wajah, coba lagi")}.`, "error"));
@@ -501,10 +501,10 @@ async function handler(m, { sock }) {
 
       if (!editPrompt) {
         await m.react("❌");
-        return m.reply(novaWrap(typed, meta.guide, "guide"));
+        return m.reply(raraWrap(typed, meta.guide, "guide"));
       }
       if (!buf) {
-        return m.reply(novaWrap(typed, `Kirim/reply foto orangnya dulu!\n\n${meta.guide.split("\n").filter(l => l.startsWith("Contoh"))[0] || ""}`, "guide"));
+        return m.reply(raraWrap(typed, `Kirim/reply foto orangnya dulu!\n\n${meta.guide.split("\n").filter(l => l.startsWith("Contoh"))[0] || ""}`, "guide"));
       }
 
       await m.react("🧠");
@@ -582,7 +582,7 @@ async function handler(m, { sock }) {
     if (!prompt && !clothesBuf) {
       await m.react("❌");
       return m.reply(
-        novaWrap(cmd,
+        raraWrap(cmd,
           `Kasih *${toSC("prompt baju")}*, *${toSC("preset")}*, ATAU *${toSC("kirim gambar bajunya")}*!\n\n` +
           `${toSC("preset")}: formal, casual, party, street, sport, vacation, winter, korea, batik, kebaya\n` +
           `${toSC("contoh prompt")}: ${prefix}${cmd} change the shirt to red\n` +
@@ -604,7 +604,7 @@ async function handler(m, { sock }) {
       clothesDesc = res?.status ? parseClothesDesc(res.text) : null;
       if (!clothesDesc) {
         await m.react("❌");
-        return m.reply(novaWrap(cmd,
+        return m.reply(raraWrap(cmd,
           res?.status
             ? `${toSC("gambarnya gak kedeteksi sebagai baju")} — ${toSC("kirim foto baju yang jelas, atau pakai prompt")}.`
             : `${toSC("gagal baca gambar baju")} — ${toSC("pakai prompt aja")}: ${prefix}${cmd} change the shirt to red`, "error"));
@@ -633,11 +633,11 @@ async function handler(m, { sock }) {
   } catch (err) {
     if (err && err.message === "semua engine down") {
       await m.react("❌");
-      return m.reply(novaWrap((m.command || "aiclotheschanger").toLowerCase(), "Semua engine edit gambar lagi down. Coba lagi beberapa menit.", "error"));
+      return m.reply(raraWrap((m.command || "aiclotheschanger").toLowerCase(), "Semua engine edit gambar lagi down. Coba lagi beberapa menit.", "error"));
     }
     console.error("clotheschanger error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("aiclotheschanger", (te.novaError && te.novaError(err)) || "Gagal memproses, coba lagi.", "error"));
+    return m.reply(raraWrap("aiclotheschanger", (te.raraError && te.raraError(err)) || "Gagal memproses, coba lagi.", "error"));
   }
 }
 

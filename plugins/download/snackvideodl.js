@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { snackvideo } from 'btch-downloader'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -54,18 +54,18 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
     
     if (!url) {
-        return m.reply(novaNoInput("SnackVideo", "Kirim URL SnackVideo yang mau didownload!", `${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx`))
+        return m.reply(raraNoInput("SnackVideo", "Kirim URL SnackVideo yang mau didownload!", `${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx`))
     }
     
     if (!url.match(/snackvideo\.com/i)) {
-        return m.reply(novaGuide("SnackVideo", "URL-nya gak valid nih! Pastikan dari SnackVideo ya.", `${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx`))
+        return m.reply(raraGuide("SnackVideo", "URL-nya gak valid nih! Pastikan dari SnackVideo ya.", `${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx`))
     }
     try {
         await m.react("🕒")
         const data = await snackvideo(url)
         
         if (!data?.status || !data?.result?.videoUrl) {
-            return m.reply(novaEmpty("SnackVideo", "Gagal mengambil video SnackVideo. Coba link lain ya!"))
+            return m.reply(raraEmpty("SnackVideo", "Gagal mengambil video SnackVideo. Coba link lain ya!"))
         }
         
         const result = data.result
@@ -83,9 +83,9 @@ async function handler(m, { sock }) {
             contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m })
         
-        await m.reply(novaBerhasil("snackvideodl"));
+        await m.reply(raraBerhasil("snackvideodl"));
     } catch (err) {
-        return m.reply(novaGagal("SnackVideo"))
+        return m.reply(raraGagal("SnackVideo"))
     }
 }
 

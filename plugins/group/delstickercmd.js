@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { getQuotedStickerHash, deleteStickerCommand, listStickerCommands, findByCommand } from '../../src/lib/nova-sticker-command.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { getQuotedStickerHash, deleteStickerCommand, listStickerCommands, findByCommand } from '../../src/lib/rara-sticker-command.js'
 
 const pluginConfig = {
     name: 'delstickercmd',
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
         const existingCmds = listStickerCommands()
         if (existingCmds.length === 0) {
             return m.reply(
-                novaEmpty("DelStickerCmd", `Tidak ada sticker command yang terdaftar saat ini.\nTambahkan dulu dengan \`${pfx}addcmdsticker\``)
+                raraEmpty("DelStickerCmd", `Tidak ada sticker command yang terdaftar saat ini.\nTambahkan dulu dengan \`${pfx}addcmdsticker\``)
             )
         }
         
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
         txt += `\`${pfx}delstickercmd <command>\`\n`
         txt += `atau reply sticker + \`${pfx}delstickercmd\``
         
-        return await m.reply(novaWrap("delstickercmd", txt))
+        return await m.reply(raraWrap("delstickercmd", txt))
     }
     
     let deleted = false
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
             }
         } else {
             return m.reply(
-                novaEmpty("DelStickerCmd", `Command sticker \`${cleanCmd}\` tidak ditemukan nih!\nKetik \`${pfx}delstickercmd\` untuk lihat daftar.`)
+                raraEmpty("DelStickerCmd", `Command sticker \`${cleanCmd}\` tidak ditemukan nih!\nKetik \`${pfx}delstickercmd\` untuk lihat daftar.`)
             )
         }
     }
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
         )
     } else {
         await m.reply(
-            novaError("DelStickerCmd", `Gagal menghapus sticker command!\nReply stiker yang mau dihapus, atau ketik nama command: \`${pfx}delstickercmd menu\``)
+            raraError("DelStickerCmd", `Gagal menghapus sticker command!\nReply stiker yang mau dihapus, atau ketik nama command: \`${pfx}delstickercmd menu\``)
         )
     }
 }

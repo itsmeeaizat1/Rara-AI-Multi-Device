@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ikyydl.js — Shared helper for IkyyXD downloader endpoints
 // Fallback chain: IkyyXD specific → IkyyXD all-in-one → null (caller handles builtin)
 

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // warungtycoon.js — WARUNG TYCOON (request owner 25 Sep 2026, game RPG baru, standar Game Designer)
 // Simulasi jualan kuliner: masak menu dari bahan baku → buka warung → pelanggan antre → omzet.
 // TIERS: 🛒 Gerobak (lvl 1) → 🏕️ Kios (5) → 🏪 Warung (10) → 🏠 Rumah Makan (15) → 🏛️ Restoran (20).
@@ -17,12 +17,12 @@
 // SCENE 5 kas berdetak naik Rp sepertiga→dua pertiga→FULL + bintang rating. DURASI OTOMATIS nyesuaikan situasi:
 // warung kosong ±8 dtk · ramai penuh ±10 dtk · ada event ±11,5 dtk (via editSceneAnim, fallback senyap).
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
-import { addCash, spendCash, getCash } from "../../src/lib/nova-rpg-service.js";
-import { editFramesAnim, editSceneAnim, sceneTotalMs } from "../../src/lib/nova-anim-runner.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
+import { addCash, spendCash, getCash } from "../../src/lib/rara-rpg-service.js";
+import { editFramesAnim, editSceneAnim, sceneTotalMs } from "../../src/lib/rara-anim-runner.js";
 import { bukaCinematic, masakCinematic } from "../../src/lib/libanimationrpg/libwarungtycoonrpg.js";
-import { getLocalDateObject } from "../../src/lib/nova-time.js";
+import { getLocalDateObject } from "../../src/lib/rara-time.js";
 
 // ── knob (pattern: !== undefined biar 0 tetap valid) ──
 const STAMINA_MAX = process.env.WARUNG_STAMINA_MAX !== undefined ? Number(process.env.WARUNG_STAMINA_MAX) : 10;
@@ -118,7 +118,7 @@ function newUser(m) {
 }
 function saveDb() { try { getDatabase().save(); } catch (e) { console.error("[warung] gagal simpan:", e); } }
 
-const box = (icon, flavor, body) => novaGameBox({ title: "warung tycoon", icon, flavor, body });
+const box = (icon, flavor, body) => raraGameBox({ title: "warung tycoon", icon, flavor, body });
 
 function bahanStr(u) {
   return "🌾 beras ×" + (u.bahan.beras || 0) + " · 🍗 ayam ×" + (u.bahan.ayam || 0) + " · 🌶️ cabe ×" + (u.bahan.cabe || 0);

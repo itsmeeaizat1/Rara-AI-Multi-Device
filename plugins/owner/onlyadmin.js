@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'onlyadmin',
     alias: ["onlyadmin"],
@@ -23,12 +23,12 @@ async function handler(m, { sock }) {
     if (cmd === 'selfadmin') {
         if (current) {
             db.setting('onlyAdmin', false)
-            return m.reply(novaWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\nBot bisa diakses semua orang'))
+            return m.reply(raraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\nBot bisa diakses semua orang'))
         }
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
-        return m.reply(novaWrap("Onlyadmin", [
+        return m.reply(raraWrap("Onlyadmin", [
             "*Onlyadmin Aktif*",
             "✅ Admin grup",
             "✅ Owner bot",
@@ -41,12 +41,12 @@ async function handler(m, { sock }) {
     if (cmd === 'publicadmin') {
         if (current) {
             db.setting('onlyAdmin', false)
-            return m.reply(novaWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\nBot bisa diakses semua orang'))
+            return m.reply(raraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\nBot bisa diakses semua orang'))
         }
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
-        return m.reply(novaWrap("Onlyadmin", [
+        return m.reply(raraWrap("Onlyadmin", [
             "*Onlyadmin Aktif*",
             "✅ Admin grup",
             "✅ Owner bot",
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     }
 
     if (!args || args === 'status') {
-        return m.reply(novaWrap("Onlyadmin", [
+        return m.reply(raraWrap("Onlyadmin", [
             `Status : ${current ? "✅ Aktif" : "❌ Nonaktif"}`,
             "---",
             `📌 \`${m.prefix}onlyadmin on\` — Aktifkan`,
@@ -69,11 +69,11 @@ async function handler(m, { sock }) {
     }
 
     if (args === 'on') {
-        if (current) return m.reply(novaWrap("Onlyadmin", '⚠️ OnlyAdmin sudah aktif.'))
+        if (current) return m.reply(raraWrap("Onlyadmin", '⚠️ OnlyAdmin sudah aktif.'))
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
-        return m.reply(novaWrap("Onlyadmin", [
+        return m.reply(raraWrap("Onlyadmin", [
             "*Onlyadmin Aktif*",
             "✅ Admin grup",
             "✅ Owner bot",
@@ -83,12 +83,12 @@ async function handler(m, { sock }) {
     }
 
     if (args === 'off') {
-        if (!current) return m.reply(novaWrap("Onlyadmin", '⚠️ OnlyAdmin sudah nonaktif.'))
+        if (!current) return m.reply(raraWrap("Onlyadmin", '⚠️ OnlyAdmin sudah nonaktif.'))
         db.setting('onlyAdmin', false)
-        return m.reply(novaWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\nBot bisa diakses semua orang'))
+        return m.reply(raraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\nBot bisa diakses semua orang'))
     }
 
-    return m.reply(novaWrap("Onlyadmin", '❌ Argumen tidak valid. Gunakan: `on` atau `off`'))
+    return m.reply(raraWrap("Onlyadmin", '❌ Argumen tidak valid. Gunakan: `on` atau `off`'))
 }
 
 export { pluginConfig as config, handler }

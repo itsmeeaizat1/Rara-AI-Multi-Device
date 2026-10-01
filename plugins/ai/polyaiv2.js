@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // polyaiv2 — Poly AI v2 (polybuzz.ai)
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "polyaiv2", alias: ["polyaiv2"], aliases: ["polyaiv2", "polybuzzv2"],
@@ -13,7 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
-    if (!text) return m.reply(novaWrap("polyaiv2", `Tanya apa?\nContoh: ${m.prefix}polyaiv2 ceritakan dongeng`, "guide"));
+    if (!text) return m.reply(raraWrap("polyaiv2", `Tanya apa?\nContoh: ${m.prefix}polyaiv2 ceritakan dongeng`, "guide"));
     await m.react("🕒");
     const form = new URLSearchParams();
     form.append("currentChatStyleId", "1");
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     console.error("polyaiv2 error:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("polyaiv2", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(raraWrap("polyaiv2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

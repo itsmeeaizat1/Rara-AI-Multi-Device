@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "weton",
@@ -34,7 +34,7 @@ const PASARAN = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     if (!args[0]) {
-      return m.reply(novaWrap("Weton Jawa", [
+      return m.reply(raraWrap("Weton Jawa", [
         "Cek karakter weton Jawa berdasarkan hari & pasaran.",
         "",
         "Cara: " + usedPrefix + "weton <hari> <pasaran>",
@@ -52,11 +52,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const pasaran = PASARAN[pasaranInput]
 
     if (!hari) {
-      return m.reply(novaWrap("Weton", "Hari tidak valid: " + hariInput + "\nGunakan: minggu, senin, selasa, rabu, kamis, jumat, sabtu"))
+      return m.reply(raraWrap("Weton", "Hari tidak valid: " + hariInput + "\nGunakan: minggu, senin, selasa, rabu, kamis, jumat, sabtu"))
     }
 
     if (!pasaran) {
-      return m.reply(novaWrap("Weton", "Pasaran tidak valid: " + pasaranInput + "\nGunakan: legi, pahing, pon, wage, kliwon")
+      return m.reply(raraWrap("Weton", "Pasaran tidak valid: " + pasaranInput + "\nGunakan: legi, pahing, pon, wage, kliwon")
       )
     }
 
@@ -105,9 +105,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("Hari Naas (hari peringatan):")
     lines.push(hariNaas)
 
-    return m.reply(novaWrap("Weton " + wetonNama, lines.join("\n")))
+    return m.reply(raraWrap("Weton " + wetonNama, lines.join("\n")))
   } catch (e) {
-    return m.reply(novaWrap("Weton", "Error: " + e.message))
+    return m.reply(raraWrap("Weton", "Error: " + e.message))
   }
 }
 

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 const pluginConfig = {
     name: 'claninfo',
     alias: ["claninfo"],
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const clan = db.db.data.clans[clanId]
         || Object.values(db.db.data.clans).find(c => c.name.toLowerCase() === clanId.toLowerCase())
         || Object.values(db.db.data.clans).find(c => c.id.toLowerCase() === clanId.toLowerCase())
-    if (!clan) return m.reply(novaWrap("claninfo", `❌ Clan tidak ditemukan`))
+    if (!clan) return m.reply(raraWrap("claninfo", `❌ Clan tidak ditemukan`))
 
     const totalGames = (clan.wins || 0) + (clan.losses || 0)
     const winRate = totalGames > 0

@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Media Suite — .gnews .gjobs .gevents .gimages .sapiyts .sapireddit
 // 🔹 Berita/lowongan/acara/gambar/video PLAIN TEXT — info lengkap tanpa klik link.
 // ═════════════════════════════════════════════
 
 import { searchApiEngine, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { sapiErrorMessage, renderNews, renderJobs, renderEvents, renderImages, renderVideos, renderOrganic } from "../../src/lib/nova-sapi-render.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sapiErrorMessage, renderNews, renderJobs, renderEvents, renderImages, renderVideos, renderOrganic } from "../../src/lib/rara-sapi-render.js";
 
 const CMDS = {
   gnews: { engine: "google_news", render: renderNews, label: "BERITA", emoji: "📰", hint: "topik berita", extra: { gl: "id" } },
@@ -33,24 +33,24 @@ async function handler(m, { sock }) {
     const cmd = (m.command || "gnews").toLowerCase();
     const spec = CMDS[cmd];
     if (!spec) {
-      return m.reply(novaWrap("gnews", `💡 Command: .gnews .gjobs .gevents .gimages .sapiyts .sapireddit`));
+      return m.reply(raraWrap("gnews", `💡 Command: .gnews .gjobs .gevents .gimages .sapiyts .sapireddit`));
     }
     const q = (m.args || []).join(" ").trim();
     if (!q) {
-      return m.reply(novaWrap("gnews", `${spec.emoji} ${spec.label} — plain text lengkap.\n\nContoh: *.${cmd} ${spec.hint}*`));
+      return m.reply(raraWrap("gnews", `${spec.emoji} ${spec.label} — plain text lengkap.\n\nContoh: *.${cmd} ${spec.hint}*`));
     }
 
     await m.react("🧠");
     const r = await searchApiEngine(spec.engine, { q, ...(spec.extra || {}) });
-    if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("gnews", sapiErrorMessage(r.error))); }
+    if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("gnews", sapiErrorMessage(r.error))); }
     const body = spec.render(r.data);
-    if (!body) { await m.react("❌"); return m.reply(novaWrap("gnews", "⚠️ Gak ada hasil — coba kata kunci lain.")); }
+    if (!body) { await m.react("❌"); return m.reply(raraWrap("gnews", "⚠️ Gak ada hasil — coba kata kunci lain.")); }
     await m.react("🐣");
-    return m.reply(novaWrap("gnews", `${spec.emoji} *${spec.label} — ${q.toUpperCase().slice(0, 50)}*\n\n${body}`));
+    return m.reply(raraWrap("gnews", `${spec.emoji} *${spec.label} — ${q.toUpperCase().slice(0, 50)}*\n\n${body}`));
   } catch (err) {
     console.error("[sapimedia]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("gnews", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(raraWrap("gnews", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

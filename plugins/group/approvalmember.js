@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
-function novaWrap(title, text) {
+function raraWrap(title, text) {
   const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   const body = Array.isArray(text) ? text.join("\n") : text;
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     });
 
     if (!botParticipant || !botParticipant.admin) {
-      return formatAndReply(novaWrap("approvalmember", "Bot bukan admin di grup ini.\n\nJadikan bot admin dulu untuk menggunakan fitur ini."));
+      return formatAndReply(raraWrap("approvalmember", "Bot bukan admin di grup ini.\n\nJadikan bot admin dulu untuk menggunakan fitur ini."));
     }
     // WhatsApp group setting: membership_approval_mode
     // Baileys: groupSettingUpdate with memberApprovalMode
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
 
     return await formatAndReply( text, "approvalmember");
   } catch (error) {
-    return m.reply(novaError("ApprovalMember", "Gagal ubah pengaturan nih — pastikan bot admin grup"));
+    return m.reply(raraError("ApprovalMember", "Gagal ubah pengaturan nih — pastikan bot admin grup"));
   }
 }
 

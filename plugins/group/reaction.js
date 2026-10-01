@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, raraWrap, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🔥"];
 
@@ -26,12 +26,12 @@ async function handler(m, { sock, config: botConfig }) {
     const emoji = m.text?.trim();
 
     if (!emoji) {
-      await m.reply(novaNoInput("Reaction", "Masukkan emoji untuk memberi reaksi ke pesan", `${prefix}reaction 🔥`));
+      await m.reply(raraNoInput("Reaction", "Masukkan emoji untuk memberi reaksi ke pesan", `${prefix}reaction 🔥`));
       return { handled: true };
     }
 
     const text =
-      novaWrap("Reaction", [`Emoji: *${emoji}*`,
+      raraWrap("Reaction", [`Emoji: *${emoji}*`,
         "Status: *terkirim*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}reaction <emoji> untuk reaksi lain`) +
@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(text, "reaction");
   } catch (error) {
-    await m.reply(novaError("Reaction", `Gagal beri reaksi: ${error.message}`));
+    await m.reply(raraError("Reaction", `Gagal beri reaksi: ${error.message}`));
   }
 
   return { handled: true };

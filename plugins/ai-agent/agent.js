@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // agent — AI AGENT OTONOM MULTI-LANGKAH (request owner 11 Sep 2026 "buatkan no 1"
 // + revisi "biar ai agentnya bisa browsing dan automation kayak kick org cm dari
 // nama, tutup grup dll"):
@@ -8,22 +8,22 @@
 //  • act — otomasi WhatsApp grup: kick CUMA DARI NAMA (resolve via sock.getName
 //    + participants), tutup/buka grup, promote/demote, rename/desc, tagall,
 //    link, lockedit. Gate: user wajib admin/owner + bot wajib admin (pola
-//    nova-auto-ai executeAction). Progress live edit-in-place per fase.
-import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
-import { runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
-import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
-import { skillsBlock } from "../../src/lib/nova-askills.js";
+//    rara-auto-ai executeAction). Progress live edit-in-place per fase.
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { runAgent, generatePlugin } from "../../src/lib/rara-agent.js";
+import { memoryBlock, extractMemories } from "../../src/lib/rara-memory.js";
+import { skillsBlock } from "../../src/lib/rara-askills.js";
 import { smallcapsText } from "../../src/lib/styler.js";
-import { callImageGenChain } from "../../src/lib/nova-ai-service.js";
-import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
-import { visionScan } from "../../src/lib/nova-vision-chain.js";
-import { getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
-import { getAllSkills, awaitSkillPacks } from "../../src/lib/nova-skills.js";
-import { getMcpTools } from "../../src/lib/nova-mcp.js";
-import { searchYoutubeAndSend, detectYtSearchIntent } from "../../src/lib/nova-yt-search.js";
+import { callImageGenChain } from "../../src/lib/rara-ai-service.js";
+import { aiChainChat } from "../../src/lib/rara-ai-fallback.js";
+import { visionScan } from "../../src/lib/rara-vision-chain.js";
+import { getLeaderboard } from "../../src/lib/rara-activity-tracker.js";
+import { getAllSkills, awaitSkillPacks } from "../../src/lib/rara-skills.js";
+import { getMcpTools } from "../../src/lib/rara-mcp.js";
+import { searchYoutubeAndSend, detectYtSearchIntent } from "../../src/lib/rara-yt-search.js";
 import { splitChatChunks } from "../../src/lib/aiagent.js";
-import { searchSiteAndSend, detectSiteSearchIntent } from "../../src/lib/nova-site-search.js";
+import { searchSiteAndSend, detectSiteSearchIntent } from "../../src/lib/rara-site-search.js";
 
 // 💻 system prompt coder — request owner 11 Sep: "klo suruh buatkan kode html,
 // javascript dll pintar coding agent membuatkan dgn kepintarannya"
@@ -146,7 +146,7 @@ async function execAction(a, ctx, m, sock) {
     let jid = null;
     let gname = "";
     if (a.target) {
-      const { resolveGroupByName } = await import("../../src/lib/nova-group-registry.js");
+      const { resolveGroupByName } = await import("../../src/lib/rara-group-registry.js");
       const r = await resolveGroupByName(sock, a.target);
       if (!r) return { ok: false, msg: `Grup "${a.target}" gak ketemu — tulis nama grupnya persis kayak yang tertera di info grup` };
       if (r.ambiguous) return { ok: false, msg: `Nama "${a.target}" ambigu (${r.ambiguous.join(", ")}) — tulis lebih spesifik` };
@@ -189,13 +189,13 @@ async function execAction(a, ctx, m, sock) {
     }
     case "rename": {
       const g = gate(); if (g) return { ok: false, msg: g };
-      if (!a.value) return { ok: false, msg: "Sebutin nama grup barunya (contoh: ubah nama grup jadi Nova Squad)" };
+      if (!a.value) return { ok: false, msg: "Sebutin nama grup barunya (contoh: ubah nama grup jadi Rara Squad)" };
       await setGroupMeta({ subject: a.value.slice(0, 100) });
       return { ok: true, msg: `Nama grup diubah jadi: ${a.value.slice(0, 100)}` };
     }
     case "desc": {
       const g = gate(); if (g) return { ok: false, msg: g };
-      if (!a.value) return { ok: false, msg: "Sebutin deskripsi grup barunya (contoh: ganti deskripsi grup jadi grup resmi Nova Squad)" };
+      if (!a.value) return { ok: false, msg: "Sebutin deskripsi grup barunya (contoh: ganti deskripsi grup jadi grup resmi Rara Squad)" };
       await setGroupMeta({ description: a.value.slice(0, 500) });
       return { ok: true, msg: "Deskripsi grup diperbarui: " + a.value.slice(0, 80) };
     }
@@ -217,14 +217,14 @@ async function execAction(a, ctx, m, sock) {
       return { ok: true, msg: `🔗 Link invite grup: https://chat.whatsapp.com/${code}` };
     }
     // toggle fitur automod grup (antilink/antibadword/antisticker/antivoice/
-    // antispam) — request owner 12 Sep 2026: "novaagent klo disuruh aktifkan
+    // antispam) — request owner 12 Sep 2026: "raraagent klo disuruh aktifkan
     // fitur ada yg gak tau" (sebelumnya "aktifkan antilink" malah kesasar ke
-    // action "link"/ambil link grup — sudah dibenerin di nova-agent.js plan
+    // action "link"/ambil link grup — sudah dibenerin di rara-agent.js plan
     // + filter, sekarang action ini beneran ada eksekutornya).
     case "antilink": case "antibadword": case "antisticker": case "antivoice": case "antispam": {
       const g = gate(false); if (g) return { ok: false, msg: g }; // bot gak perlu admin, ini cuma setting internal bot
       const on = String(a.value || "on").toLowerCase() !== "off";
-      const { setAutomodRule } = await import("../../src/lib/nova-automation-hub.js");
+      const { setAutomodRule } = await import("../../src/lib/rara-automation-hub.js");
       const label = { antilink: "Anti-Link", antibadword: "Anti-Badword", antisticker: "Anti-Sticker", antivoice: "Anti-Voice Note", antispam: "Anti-Spam" }[a.action];
       try {
         setAutomodRule(m.chat, a.action, on);
@@ -258,7 +258,7 @@ export async function gateCommandAccess(cmd, m) {
   if (!c) return null;
   let pc = null;
   try {
-    const { getPlugin } = await import("../../src/lib/nova-plugins.js");
+    const { getPlugin } = await import("../../src/lib/rara-plugins.js");
     pc = getPlugin(c)?.config || null;
   } catch { pc = null; }
   if (!pc) return null; // gak ada di registry → biarkan messageHandler jawab
@@ -287,7 +287,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
   //    (gates/cooldown/energi middleware tetap jalan — konsisten)
   const command = deps.command || (async (t) => {
     const cmd = String(t.cmd || "").toLowerCase().trim();
-    if (!cmd || cmd === "agent" || cmd === "aisuperagent" || cmd === "novaagent" || cmd === "9router") return { ok: false, msg: "Command gak valid / gak boleh manggil agent dari dalam agent (loop)" };
+    if (!cmd || cmd === "agent" || cmd === "aisuperagent" || cmd === "raraagent" || cmd === "9router") return { ok: false, msg: "Command gak valid / gak boleh manggil agent dari dalam agent (loop)" };
     // 🔒 gate akses (owner 25 Sep): non-owner gak boleh nyuruh agent
     // jalanin fitur owner/premium/partner-only — agent jawab jujur
     const denied = await gateCommandAccess(cmd, m);
@@ -393,13 +393,13 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     const ext = EXT[langKey] || "txt";
     // FIX OWNER 12 Sep 2026 ("knp agent suruh buat kode login web topup
     // isi kodenya gak lengkap cm singkat"): dulu satu-shot tanpa cek — sekarang
-    // generator khusus nova-codegen: prompt quality bar + LOOP AUTO-LANJUT
+    // generator khusus rara-codegen: prompt quality bar + LOOP AUTO-LANJUT
     // sampai kode komplet (placeholder/tag gak ketutup/bracket gak balance
     // dideteksi, lalu AI disuruh lanjutin PERSIS dari baris terakhir).
     let codeBody = "", explain = "", rounds = 0, complete = true;
     try {
       const chat = deps.aiChat || aiChainChat; // seam deps.aiChat buat e2e
-      const { generateCompleteCode } = await import("../../src/lib/nova-codegen.js");
+      const { generateCompleteCode } = await import("../../src/lib/rara-codegen.js");
       const gen = await generateCompleteCode({
         spec, ext, lang: langKey,
         aiChat: (p, o) => chat(p, { ...o, timeoutMs: 60000 }),
@@ -470,7 +470,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     try {
       const gen = await generatePlugin({ name: nm, spec: sp, ...(deps.pluginDir ? { targetDir: deps.pluginDir } : {}) });
       // pasang: register ke plugin store — command langsung nyala tanpa restart
-      const { loadPlugin, registerPlugin } = await import("../../src/lib/nova-plugins.js");
+      const { loadPlugin, registerPlugin } = await import("../../src/lib/rara-plugins.js");
       const plugin = await loadPlugin(gen.path, true);
       if (!plugin || !registerPlugin(plugin)) throw new Error("plugin ke-tulis tapi gak ke-register");
       return { ok: true, msg: `Fitur BARU .${nm} berhasil DIBUAT + TERPASANG! Ketik .${nm} buat nyoba` };
@@ -501,12 +501,12 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
 
   // 🎯 skill — pakai skill built-in + skill pack (kbbi/gempa/hoki/lirik/
   // calc/translate/kurs/qr/wiki/cuaca/dll) — request owner 12 Sep: ".aisuperagent
-  // upgrade ... dilengkapi mcp, skills dan tool tambahan kyk novaagent"
+  // upgrade ... dilengkapi mcp, skills dan tool tambahan kyk raraagent"
   const skill = deps.skill || (async (t) => {
     const name = String(t.skill || t.name || "").toLowerCase().trim();
-    if (!name) return { ok: false, msg: "Sebutin skill-nya yang mau dipakai (lihat daftar: " + m.prefix + "novaagent)" };
+    if (!name) return { ok: false, msg: "Sebutin skill-nya yang mau dipakai (lihat daftar: " + m.prefix + "raraagent)" };
     try {
-      const { getAllSkills, awaitSkillPacks } = await import("../../src/lib/nova-skills.js");
+      const { getAllSkills, awaitSkillPacks } = await import("../../src/lib/rara-skills.js");
       await awaitSkillPacks(); // skill pack siap (kbbi/gempa/hoki/lirik)
       const reg = getAllSkills();
       const s = reg[name] || Object.values(reg).find((x) => x && x.name === name);
@@ -528,7 +528,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     const tool = String(t.mcpTool || "").trim();
     if (!server || !tool) return { ok: false, msg: "Sebutin server + tool MCP-nya (contoh: server deepwiki, mcpTool ask_question)" };
     try {
-      const { mcpCallTool } = await import("../../src/lib/nova-mcp.js");
+      const { mcpCallTool } = await import("../../src/lib/rara-mcp.js");
       const args = (t.data && typeof t.data === "object" && !Array.isArray(t.data)) ? t.data : {};
       const text = await mcpCallTool(server, tool, args);
       return { ok: true, msg: "MCP " + server + "." + tool + " dijalankan", evidence: "Hasil MCP " + server + "." + tool + ":\n" + String(text).slice(0, 6000) };
@@ -544,10 +544,10 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     const base = (String(t.name || "file").trim() || "file").replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 40) || "file";
     const fileName = /\.[a-z0-9]{1,6}$/i.test(base) ? base : base + ".txt";
     // FIX OWNER 12 Sep: createfile kode (html/js/dll) yang kepotong →
-    // dilengkapi otomatis via nova-codegen loop biar file-nya beneran jadi
+    // dilengkapi otomatis via rara-codegen loop biar file-nya beneran jadi
     try {
       const extGuess = (fileName.match(/\.([a-z0-9]{1,6})$/i) || [])[1]?.toLowerCase() || "";
-      const { CODE_EXTS, looksIncomplete, generateCompleteCode } = await import("../../src/lib/nova-codegen.js");
+      const { CODE_EXTS, looksIncomplete, generateCompleteCode } = await import("../../src/lib/rara-codegen.js");
       if (CODE_EXTS.has(extGuess) && looksIncomplete(content, extGuess)) {
         onStatus?.("melengkapi kode yang kepotong");
         const chat = deps.aiChat || aiChainChat;
@@ -578,14 +578,14 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     const url = String(t.url || t.link || t.args || "").trim();
     if (!/^https?:\/\//i.test(url)) return { ok: false, msg: "Kasih link URL-nya (http/https)" };
     try {
-      const { fetchPagePreview } = await import("../../src/lib/nova-websearch.js");
+      const { fetchPagePreview } = await import("../../src/lib/rara-websearch.js");
       let page = await fetchPagePreview(url).catch(() => null);
       // 🔹 UPGRADE 30 Sep (owner: "klo ga tau browsing lewat puppeteer") —
       // halaman ngeblok fetch biasa / butuh JS → buka BENERAN di chromium
       // (browserPageFacts) — pola fallback sama kayak search engine-nya
       if (!page?.text || !String(page.text).trim()) {
         try {
-          const { browserPageFacts } = await import("../../src/scraper/nova-web-browser.js");
+          const { browserPageFacts } = await import("../../src/scraper/rara-web-browser.js");
           const facts = await Promise.race([
             browserPageFacts(url),
             new Promise((resolve) => setTimeout(() => resolve(null), 25000)),
@@ -636,7 +636,7 @@ function getAgentHistory(db, chat) {
 // sumber/link yang gak bisa diucap) — fungsi ini cuma ngirim VN-nya.
 async function sendVoiceReply(m, sock, text, voiceId) {
   try {
-    const { speakVoiceNote } = await import("../../src/lib/nova-voice-reply.js");
+    const { speakVoiceNote } = await import("../../src/lib/rara-voice-reply.js");
     return await speakVoiceNote(sock, m.chat, text, voiceId, { quoted: m });
   } catch {
     return false;
@@ -645,7 +645,7 @@ async function sendVoiceReply(m, sock, text, voiceId) {
 
 // 🧰 TOOLBOX BUILDER — daftar skill + tool MCP terpasang buat planner
 // (request owner 12 Sep: aisuperagent "dilengkapi mcp, skills dan tool
-// tambahan kyk novaagent") — planner cuma boleh milih yang ke-list di sini.
+// tambahan kyk raraagent") — planner cuma boleh milih yang ke-list di sini.
 export async function buildToolbox() {
   try { await awaitSkillPacks(); } catch {}
   let skillLines = [];
@@ -676,16 +676,16 @@ async function handler(m, { sock, db, deps } = {}) {
   // subcommand exact-match, pertanyaan biasa yang mengandung kata "suara"
   // TIDAK ditelan (lanjut ke agent flow).
   try {
-    const { voiceSubReply, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
+    const { voiceSubReply, VOICE_KEYS } = await import("../../src/lib/rara-voice-reply.js");
     const subReply = voiceSubReply(db, m.chat, task.toLowerCase(), VOICE_KEYS.aisuperagent);
-    if (subReply) return m.reply(novaWrap("superagent", subReply));
+    if (subReply) return m.reply(raraWrap("superagent", subReply));
   } catch {}
 
   if (!task) {
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "agent",
       "AI agent otonom — dia sendiri yang nyari ke web, baca halamannya, terus nyusun jawaban lengkap + sumber.",
-      `${m.prefix}agent <tugas apa pun>\n${m.prefix}agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi\n${m.prefix}agent kick orang yang bernama Budi\n${m.prefix}agent tutup grup dan ubah nama grup jadi Nova Squad`,
+      `${m.prefix}agent <tugas apa pun>\n${m.prefix}agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi\n${m.prefix}agent kick orang yang bernama Budi\n${m.prefix}agent tutup grup dan ubah nama grup jadi Rara Squad`,
       [`${smallcapsText("mode suara")}: ${m.prefix}aisuperagent pakai suara → jawabanku dibacakan jadi voice note • ${m.prefix}aisuperagent suara ardi → ganti suara • ${m.prefix}aisuperagent suara off`,
        `${smallcapsText("8 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | 🔎 ${smallcapsText("cari video youtube — thumbnail preview + deskripsi")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar, generate gambar, jalanin fitur, cek aktivitas")} | ⬇️ ${smallcapsText("unduh file — apk/zip dari link")} | 💻 ${smallcapsText("coding — bikin kode html/js/python dikirim jadi file")} | 🎭 ${smallcapsText("persona — jadi anak kecil, pacar, siapa pun")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
        `${smallcapsText("bermain peran/persona")}: ${m.prefix}agent jadi anak kecil umur 5 tahun yang sok jagoan | ${m.prefix}agent jadi pacarku yang manja`,
@@ -736,9 +736,9 @@ async function handler(m, { sock, db, deps } = {}) {
 
     // ── DETEKSI LOKAL: cari video YouTube → INSTAN (request owner 14 Sep:
     // ".aisuperagent juga di-upgrade — dua agent bermasalah ngbug" — akar
-    // yang sama kaya .novaagent: request 'cairkan/carikan X di youtube' gak
+    // yang sama kaya .raraagent: request 'cairkan/carikan X di youtube' gak
     // pernah ke-detect, planner AI milih tool salah / jawab halusinasi.
-    // Sekarang dideteksi lokal via LIB BERSAMA nova-yt-search.js → langsung
+    // Sekarang dideteksi lokal via LIB BERSAMA rara-yt-search.js → langsung
     // browser beneran + thumbnail preview, TANPA lewat planner AI).
     const ytIntent = detectYtSearchIntent(norm(task), task);
     if (ytIntent) {
@@ -751,7 +751,7 @@ async function handler(m, { sock, db, deps } = {}) {
         await m.react("🐣");
       } catch (e) {
         await m.react("❌");
-        const em = novaWrap("superagent", "gagal cari video youtube: " + (e?.message || "error"), "error");
+        const em = raraWrap("superagent", "gagal cari video youtube: " + (e?.message || "error"), "error");
         if (statusKey) { try { await sock.sendMessage(m.chat, { text: em, edit: statusKey }); return; } catch {} }
         await m.reply(em);
       }
@@ -762,7 +762,7 @@ async function handler(m, { sock, db, deps } = {}) {
     // — INSTAN (request owner 14 Sep: "cba tes klo disuruh cari kayak
     // carikan aplikasi whatsapp di apkmiror" — tes live planner milih
     // tool download → 403, salah total). Chromium beneran buka web-nya
-    // via LIB BERSAMA nova-site-search.js, TANPA lewat planner AI).
+    // via LIB BERSAMA rara-site-search.js, TANPA lewat planner AI).
     const siteIntent = detectSiteSearchIntent(norm(task), task);
     if (siteIntent) {
       await reactPhase("🔍");
@@ -774,7 +774,7 @@ async function handler(m, { sock, db, deps } = {}) {
         await m.react("🐣");
       } catch (e) {
         await m.react("❌");
-        const em = novaWrap("superagent", "gagal cari di " + siteIntent.site + ": " + (e?.message || "error"), "error");
+        const em = raraWrap("superagent", "gagal cari di " + siteIntent.site + ": " + (e?.message || "error"), "error");
         if (statusKey) { try { await sock.sendMessage(m.chat, { text: em, edit: statusKey }); return; } catch {} }
         await m.reply(em);
       }
@@ -796,9 +796,9 @@ async function handler(m, { sock, db, deps } = {}) {
       execTools: executors,
       toolbox,
       history: getAgentHistory(db, m.chat),
-      // 🔹 MEMORY LAYER: fakta durabel tentang user (store sama dengan .novaai/
-      // .novaagent) — biar superagent juga inget user antar sesi (owner 25 Sep:
-      // "harusnya nyambung ke dua ai agent novaagent dan aisuperagent")
+      // 🔹 MEMORY LAYER: fakta durabel tentang user (store sama dengan .raraai/
+      // .raraagent) — biar superagent juga inget user antar sesi (owner 25 Sep:
+      // "harusnya nyambung ke dua ai agent raraagent dan aisuperagent")
       memBlock: memoryBlock(db, m.sender, task),
       skillBlock: skillsBlock(task),
       context: {
@@ -823,7 +823,7 @@ async function handler(m, { sock, db, deps } = {}) {
 
     if (res?.error) {
       await m.react("❌");
-      const errMsg = novaWrap("superagent", res.error, "error");
+      const errMsg = raraWrap("superagent", res.error, "error");
       if (statusKey) { try { await sock.sendMessage(m.chat, { text: errMsg, edit: statusKey }); return; } catch {} }
       return m.reply(errMsg);
     }
@@ -851,7 +851,7 @@ async function handler(m, { sock, db, deps } = {}) {
       }
       // VN: keyword request, flag planner AI, ATAU mode suara per chat
       try {
-        const { wantsVoice, getVoiceCfg, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
+        const { wantsVoice, getVoiceCfg, VOICE_KEYS } = await import("../../src/lib/rara-voice-reply.js");
         const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task)
           || wantsVoice(db, m.chat, task, VOICE_KEYS.aisuperagent);
         if (wantVoice) {
@@ -882,7 +882,7 @@ async function handler(m, { sock, db, deps } = {}) {
     }
     // VN: keyword request, flag planner AI, ATAU mode suara per chat
     try {
-      const { wantsVoice, getVoiceCfg, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
+      const { wantsVoice, getVoiceCfg, VOICE_KEYS } = await import("../../src/lib/rara-voice-reply.js");
       const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task)
         || wantsVoice(db, m.chat, task, VOICE_KEYS.aisuperagent);
       if (wantVoice) {
@@ -897,7 +897,7 @@ async function handler(m, { sock, db, deps } = {}) {
   } catch (e) {
     console.error("agent error:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("superagent", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("superagent", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

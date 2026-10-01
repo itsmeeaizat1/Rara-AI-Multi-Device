@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // achievement.js — Achievement System (unlock badges & rewards)
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { replyWithCardPreview } from "../../src/lib/nova-level.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
+import { replyWithCardPreview } from "../../src/lib/rara-level.js";
 
 const pluginConfig = {
   name: "achievement",
@@ -48,23 +48,23 @@ async function handler(m, { sock }) {
     if (subCmd === "claim") {
       const achId = m.args[1]?.toLowerCase();
       if (!achId) {
-        return m.reply(novaRpgBox("achievement", `Mau klaim achievement mana?\n\nContoh: ${m.prefix}achievement claim first_blood`, "guide"));
+        return m.reply(raraRpgBox("achievement", `Mau klaim achievement mana?\n\nContoh: ${m.prefix}achievement claim first_blood`, "guide"));
       }
 
       const ach = ACHIEVEMENTS.find(a => a.id === achId);
       if (!ach) {
         await m.react("❌");
-        return m.reply(novaRpgBox("achievement", "Achievement tidak ditemukan.", "error"));
+        return m.reply(raraRpgBox("achievement", "Achievement tidak ditemukan.", "error"));
       }
 
       if (claimed.includes(achId)) {
-        return m.reply(novaRpgBox("achievement", `Achievement "${ach.name}" sudah diklaim.`, "error"));
+        return m.reply(raraRpgBox("achievement", `Achievement "${ach.name}" sudah diklaim.`, "error"));
       }
 
       if (!ach.check(allData)) {
         await m.react("❌");
         const prog = ach.progress ? `\n\n📊 Progress:\n${progBar(...ach.progress(allData))}` : "";
-        const txt = novaRpgBox("achievement", `Belum memenuhi syarat: ${ach.desc}${prog}`, "error");
+        const txt = raraRpgBox("achievement", `Belum memenuhi syarat: ${ach.desc}${prog}`, "error");
         let sent = false;
         if (ach.progress) {
           const [cur, target] = ach.progress(allData);
@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("achievement error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("achievement", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("achievement", err.message || "Error", "error"));
   }
 }
 

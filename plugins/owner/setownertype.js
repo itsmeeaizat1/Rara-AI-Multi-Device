@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import fs from 'fs'
 import path from 'path'
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'setownertype',
     alias: ["setownertype"],
@@ -35,7 +35,7 @@ async function handler(m, { sock, db }) {
         db.setting('ownerType', id)
         await db.save()
 
-        await m.reply(novaWrap("V${id}", `✅ Owner type diubah ke *V${id}*\n\n` +
+        await m.reply(raraWrap("V${id}", `✅ Owner type diubah ke *V${id}*\n\n` +
             `*${VARIANTS[id].name}*\n` +
             `_${VARIANTS[id].desc}_`))
         return
@@ -69,7 +69,7 @@ async function handler(m, { sock, db }) {
 
     await sock.sendMessage(m.chat, {
         text: `🎨 *sEt Owner Type*\n\nType saat ini: *V${current}*\n_${VARIANTS[current].name}_\n\nPilih variant owner:`,
-        footer: config.bot?.name || 'Nova-AI',
+        footer: config.bot?.name || 'Rara-AI',
         contextInfo: {
             mentionedJid: [m.sender],
             isForwarded: false,

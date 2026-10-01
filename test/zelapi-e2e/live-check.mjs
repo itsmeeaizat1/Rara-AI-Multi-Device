@@ -2,7 +2,7 @@ import fs from "fs";
 fs.rmSync("/tmp/zel-live", { recursive: true, force: true });
 fs.mkdirSync("/tmp/zel-live", { recursive: true });
 process.env.NOVA_DB_DIR = "/tmp/zel-live";
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase("/tmp/zel-live/db.json");
 const scr = await import("../../src/scraper/zelapi.js");
 const wait = (ms) => new Promise((s) => setTimeout(s, ms));

@@ -1,7 +1,7 @@
 // E2E — ztools2 (backup z-variant: zqr/zreadqr/zmorse/zkurs/zshortlink/ztinyurl/zepho/zwhatanime/zimg2prompt/zgist/zpastebin)
 import fs from "node:fs";
 fs.rmSync(new URL("./e2e-db.json", import.meta.url), { recursive: true, force: true });
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(new URL("./e2e-db.json", import.meta.url).pathname);
 
 const { ZEL_EPHOTO_EFFECTS, _setZelToolsHttpForTest, _setZelToolsKeyForTest } = await import("../../src/scraper/zeltools.js");
@@ -46,15 +46,15 @@ t("  .ztools2 → usage 11 backup", m.replyed.length === 1 && sc(m.replyed[0]).i
 
 // zqr — binary png
 _setZelToolsHttpForTest(async (u) => { lastUrl = u; return { status: 200, headers: { "content-type": "image/png" }, json: async () => { throw new Error("bukan json"); }, arrayBuffer: async () => new Uint8Array([137, 80, 78, 71, 1, 2, 3, 4, 5, 6]).buffer }; });
-m = mkM("zqr", ["halo", "dari", "nova"]);
+m = mkM("zqr", ["halo", "dari", "rara"]);
 await plugin.handler(m, { sock: m.sock });
 t("  zqr → /tools/text2qr?text= + image terkirim", lastUrl.includes("/tools/text2qr?") && lastUrl.includes("text=") && m.sends.length === 1 && m.sends[0].image);
 
 // zreadqr — reply image → uguu → qr2text
-_setZelToolsHttpForTest(async (u) => { lastUrl = u; return { status: 200, json: async () => ({ status: true, data: { text: "halo-nova" } }) }; });
+_setZelToolsHttpForTest(async (u) => { lastUrl = u; return { status: 200, json: async () => ({ status: true, data: { text: "halo-rara" } }) }; });
 m = mkM("zreadqr", [], { quoted: { isImage: true, download: async () => Buffer.alloc(2048, 7) } });
 await plugin.handler(m, { sock: m.sock });
-t("  zreadqr reply foto → decode teks", lastUrl.includes("/tools/qr2text?") && lastUrl.includes("uguu") && m.replyed.length === 1 && sc(m.replyed[0]).includes("halo-nova"));
+t("  zreadqr reply foto → decode teks", lastUrl.includes("/tools/qr2text?") && lastUrl.includes("uguu") && m.replyed.length === 1 && sc(m.replyed[0]).includes("halo-rara"));
 
 // zreadqr tanpa gambar → petunjuk
 m = mkM("zreadqr", []);
@@ -93,10 +93,10 @@ t("  zepho list → 30 efek", m.replyed.length === 1 && sc(m.replyed[0]).include
 // zepho efek valid → image
 _setZelToolsHttpForTest(async (u) => { lastUrl = u; return { status: 200, json: async () => ({ status: true, result: "https://e2.yotools.net/images/hasil.jpg" }) }; });
 // mock fetchImg via global? — fetchImg pakai fetch asli; uguu/yotools gak bisa. Seam: skip fetch — cek url build aja via ephoto error path:
-m = mkM("zepho", ["glitch", "NOVA"]);
+m = mkM("zepho", ["glitch", "RARA"]);
 try { await plugin.handler(m, { sock: m.sock }); } catch {}
 const lu = decodeURIComponent(lastUrl).toLowerCase();
-t("  zepho → /tools/ephoto?effect=glitch&text=NOVA", lu.includes("/tools/ephoto?") && lu.includes("effect=glitch") && lu.includes("text=nova"));
+t("  zepho → /tools/ephoto?effect=glitch&text=RARA", lu.includes("/tools/ephoto?") && lu.includes("effect=glitch") && lu.includes("text=rara"));
 
 // zepho efek invalid → EFFECT_INVALID
 m = mkM("zepho", ["bogus", "x"]);

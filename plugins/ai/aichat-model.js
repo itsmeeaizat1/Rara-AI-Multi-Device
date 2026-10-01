@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, 
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, 
   separator,
-  tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
-import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/nova-ai-service.js";
+  tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
+import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "aichat-model",
@@ -36,10 +36,10 @@ async function handler(m, { sock, config: botConfig }) {
       });
 
       const text =
-        novaWrap("AI Model", [...lines.flatMap((line, index) => [line, index < lines.length - 1 ? "" : null].join("\n")).filter(Boolean),
+        raraWrap("AI Model", [...lines.flatMap((line, index) => [line, index < lines.length - 1 ? "" : null].join("\n")).filter(Boolean),
         ]) +
         "\n\n" +
-        novaWrap("aichat-model", [
+        raraWrap("aichat-model", [
           `${prefix}aichat-model list — lihat daftar model`,
           `${prefix}aichat-model <provider> <model> — ganti model aktif`,
           "",
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     const provider = resolveProvider(providerArg, {});
     if (!provider) {
       const text =
-        novaWrap("Tidak Dikenal", [`Provider *${providerArg}* tidak dikenali.`,
+        raraWrap("Tidak Dikenal", [`Provider *${providerArg}* tidak dikenali.`,
           `Ketik *${prefix}aichat-model list* untuk lihat daftar.`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!modelArg || !(provider.models || []).includes(modelArg)) {
       const text =
-        novaWrap("Model Tidak Valid", [`Model *${modelArg || ""}* tidak tersedia untuk provider *${providerArg}*.`,
+        raraWrap("Model Tidak Valid", [`Model *${modelArg || ""}* tidak tersedia untuk provider *${providerArg}*.`,
           `Model tersedia: *${(provider.models || [].join("\n")).join(", ")}*`,
         ]) +
         "\n" +
@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!m.isOwner) {
       const text =
-        novaWrap("aichat-model", "Perintah ini khusus owner — hanya owner yang bisa mengganti model ai.", "error") +
+        raraWrap("aichat-model", "Perintah ini khusus owner — hanya owner yang bisa mengganti model ai.", "error") +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -94,7 +94,7 @@ async function handler(m, { sock, config: botConfig }) {
     botConfig.aiHelp.model = modelArg;
 
     const text =
-      novaWrap("AI Model", [`Provider: *${providerArg}*`,
+      raraWrap("AI Model", [`Provider: *${providerArg}*`,
         `Model: *${modelArg}*`,
         "Perubahan akan berlaku setelah config reload."].join("\n")) +
       "\n" +
@@ -104,7 +104,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AIChatModel", "Gagal nih, coba lagi ya");
+      raraError("AIChatModel", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "aichat-model");
   }

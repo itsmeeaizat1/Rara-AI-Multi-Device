@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // autoforward.js — Auto-forward pesan berdasarkan keyword ke PM owner
 // Integrated with automation hub (checkAutoForward hook)
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autoforward",
@@ -39,28 +39,28 @@ async function handler(m, { sock }) {
 
     if (subCmd === "add") {
       const keyword = args.slice(1).join(" ").toLowerCase().trim()
-      if (!keyword) { return m.reply(novaBox("Auto Forward", ["❌ Masukkan keyword!", "---", "Contoh: .autoforward add <keyword>"])) }
-      if (cfg.keywords.includes(keyword)) { return m.reply(novaBox("Auto Forward", ["❌ Keyword sudah ada."])) }
+      if (!keyword) { return m.reply(raraBox("Auto Forward", ["❌ Masukkan keyword!", "---", "Contoh: .autoforward add <keyword>"])) }
+      if (cfg.keywords.includes(keyword)) { return m.reply(raraBox("Auto Forward", ["❌ Keyword sudah ada."])) }
       cfg.keywords.push(keyword); save(db);
-      return m.reply(novaBox("Auto Forward", ["✅ Keyword ditambah: " + keyword, "Total: " + cfg.keywords.length, "Status: " + (cfg.enabled ? "ON" : "OFF")]))
+      return m.reply(raraBox("Auto Forward", ["✅ Keyword ditambah: " + keyword, "Total: " + cfg.keywords.length, "Status: " + (cfg.enabled ? "ON" : "OFF")]))
     }
 
     if (subCmd === "del") {
       const keyword = args.slice(1).join(" ").toLowerCase().trim()
       cfg.keywords = cfg.keywords.filter(k => k !== keyword); save(db);
-      return m.reply(novaWrap("autoforward", "Keyword dihapus: " + keyword + "\nSisa: " + cfg.keywords.length))
+      return m.reply(raraWrap("autoforward", "Keyword dihapus: " + keyword + "\nSisa: " + cfg.keywords.length))
     }
 
     if (subCmd === "on" || subCmd === "off") {
       cfg.enabled = subCmd === "on"; save(db);
-      return m.reply(novaWrap("autoforward", "Status: " + (cfg.enabled ? "ON" : "OFF") + "\nScope: " + cfg.scope + "\nKeywords: " + cfg.keywords.length))
+      return m.reply(raraWrap("autoforward", "Status: " + (cfg.enabled ? "ON" : "OFF") + "\nScope: " + cfg.scope + "\nKeywords: " + cfg.keywords.length))
     }
 
     if (subCmd === "scope") {
       const scope = args[1]?.toLowerCase()
       if (scope === "all" || scope === "gc" || scope === "pc") {
         cfg.scope = scope; save(db);
-        return m.reply(novaWrap("autoforward", "Scope: " + scope + "\nall=semua, gc=grup, pc=private"))
+        return m.reply(raraWrap("autoforward", "Scope: " + scope + "\nall=semua, gc=grup, pc=private"))
       }
     }
 
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     return m.reply(text)
   } catch (e) {
     console.error("[autoforward] error:", e.message)
-    return m.reply(novaWrap("autoforward", "Gagal proses. Coba lagi.", "error"))
+    return m.reply(raraWrap("autoforward", "Gagal proses. Coba lagi.", "error"))
   }
 }
 

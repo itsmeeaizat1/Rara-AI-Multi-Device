@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
-import novaApi from "../../src/lib/nova-apimanager.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from "../../src/lib/rara-error.js";
+import raraApi from "../../src/lib/rara-apimanager.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "sendngl",
   alias: ["sendngl"],
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
     return m.reply( `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
   try {
     await m.react("🕒");
-    await novaApi.cuki.sendNgl(
+    await raraApi.cuki.sendNgl(
       {
         link,
         text: kata,
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     await m.react("❌");
-    m.reply(novaWrap("sendngl", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("sendngl", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

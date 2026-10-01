@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // AI Quiz — AI generates quiz questions with multiple choice
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "quizai",
@@ -42,11 +42,11 @@ PENJELASAN: [penjelasan singkat kenapa jawaban itu benar]
 
 Pastikan soal menantang tapi tidak terlalu sulit. Hanya 1 soal saja.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("quizai", "AI-nya lagi malas bikin soal 😅", "error"));
+      return m.reply(raraWrap("quizai", "AI-nya lagi malas bikin soal 😅", "error"));
     }
 
     // Parse the response
@@ -96,7 +96,7 @@ Pastikan soal menantang tapi tidak terlalu sulit. Hanya 1 soal saja.`;
   } catch (err) {
     console.error("quizai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("quizai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("quizai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

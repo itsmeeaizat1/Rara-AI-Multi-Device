@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "gag",
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
 
     const data = res.data;
     if (!data.status || !data.result) {
-      return m.reply(novaError("GAG", "Gagal ambil info Grow a Garden nih"));
+      return m.reply(raraError("GAG", "Gagal ambil info Grow a Garden nih"));
     }
 
     const r = data.result;
@@ -61,10 +61,10 @@ async function handler(m, { sock }) {
       });
     }
 
-    { const __navText = novaWrap(caption.trim().split("\n")); await m.reply(__navText); };
+    { const __navText = raraWrap(caption.trim().split("\n")); await m.reply(__navText); };
   } catch (error) {
     console.error("[GAG Info]", error.message);
-    m.reply(novaError("GAG", "Ada error nih, coba lagi ya"));
+    m.reply(raraError("GAG", "Ada error nih, coba lagi ya"));
   }
 }
 

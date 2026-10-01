@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, rgb } from "pdf-lib";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 async function saveTemp(buffer, ext) {
   const tmpdir = os.tmpdir();
-  const name = `nova_ttd_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const name = `rara_ttd_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const filepath = path.join(tmpdir, name);
   fs.writeFileSync(filepath, buffer);
   return filepath;
@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   // Check: is user replying to a PDF?
   if (!isPdfReplied && !pdfMime.includes("pdf")) {
-    const help = novaWrap("Ttd", [
+    const help = raraWrap("Ttd", [
       `Tanda Tangan Digital di PDF`,
       ``,
       `*Mode Gambar (ttd gambar):*`,
@@ -138,14 +138,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     // Download the PDF from replied message
     const pdfBuffer = await m.quoted.download();
     if (!pdfBuffer || pdfBuffer.length === 0) {
-      return m.reply(novaWrap("Ttd", "❌ Gagal download PDF."));
+      return m.reply(raraWrap("Ttd", "❌ Gagal download PDF."));
     }
 
     let resultBuffer;
 
     if (isImageMode) {
       // Image signature mode
-      m.reply(novaWrap("Ttd", "Stamp tanda tangan gambar ke PDF..."));
+      m.reply(raraWrap("Ttd", "Stamp tanda tangan gambar ke PDF..."));
       let sigBuffer;
       if (m.quoted && m.quoted.isMedia && m.quoted.type === "imageMessage") {
         // Signature is the quoted image, PDF is the quoted-of-quoted (not possible in WA)
@@ -156,7 +156,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       }
 
       if (!sigBuffer || sigBuffer.length === 0) {
-        return m.reply(novaWrap("Ttd", "❌ Gagal download gambar tanda tangan."));
+        return m.reply(raraWrap("Ttd", "❌ Gagal download gambar tanda tangan."));
       }
 
       // Convert to PNG if needed (pdf-lib needs PNG for transparency)
@@ -181,14 +181,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       }
     } else if (cleanArgs.length > 0) {
       // Text signature mode
-      m.reply(novaWrap("Ttd", "Tambah tanda tangan teks ke PDF..."));
+      m.reply(raraWrap("Ttd", "Tambah tanda tangan teks ke PDF..."));
       resultBuffer = await addTextSignaturePDF(pdfBuffer, cleanArgs, opts);
     } else {
-      return m.reply(novaWrap("Ttd", `❌ Kirim gambar ttd atau ketik nama. Contoh: ${prefix}ttd Budi Santoso`));
+      return m.reply(raraWrap("Ttd", `❌ Kirim gambar ttd atau ketik nama. Contoh: ${prefix}ttd Budi Santoso`));
     }
 
     if (!resultBuffer) {
-      return m.reply(novaWrap("Ttd", "❌ Gagal menambahkan tanda tangan."));
+      return m.reply(raraWrap("Ttd", "❌ Gagal menambahkan tanda tangan."));
     }
 
     await m.react("🐣");
@@ -200,7 +200,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   } catch (error) {
     await m.react("❌");
     console.error("ttd error:", error);
-    m.reply(novaWrap("Ttd", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
+    m.reply(raraWrap("Ttd", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }
 
   return { handled: true };

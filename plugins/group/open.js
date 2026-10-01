@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { getAiGroupAnnounce, buildFallbackAnnounce } from "../../src/lib/nova-group-announce-ai.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { getAiGroupAnnounce, buildFallbackAnnounce } from "../../src/lib/rara-group-announce-ai.js";
 const pluginConfig = {
     name: "open",
     alias: ["open", "opengc"],
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
         
         if (!groupMeta.announce) {
             await m.reply(
-                novaError("Open Group", "Grup sudah dalam keadaan terbuka kok! Semua member sudah bisa kirim pesan.")
+                raraError("Open Group", "Grup sudah dalam keadaan terbuka kok! Semua member sudah bisa kirim pesan.")
             );
             return;
         }
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
         await m.reply(successMsg, { mentions: [m.sender] });
         
     } catch (error) {
-        await m.reply(novaError("Open Group", `Gagal membuka grup: ${error.message}`));
+        await m.reply(raraError("Open Group", `Gagal membuka grup: ${error.message}`));
     }
 }
 

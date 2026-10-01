@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, raraWrap, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupname",
@@ -8,7 +8,7 @@ const pluginConfig = {
   category: "group",
   description: "Ganti nama grup",
   usage: ".setgroupname <nama baru>",
-  example: ".setgroupname Grup RPG Nova",
+  example: ".setgroupname Grup RPG Rara",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -24,14 +24,14 @@ async function handler(m, { sock, config: botConfig }) {
     const name = m.text?.trim();
 
     if (!name) {
-      await m.reply(novaNoInput("SetGroupName", "Masukkan nama baru untuk grup ini", `${prefix}setgroupname Grup RPG Nova`));
+      await m.reply(raraNoInput("SetGroupName", "Masukkan nama baru untuk grup ini", `${prefix}setgroupname Grup RPG Rara`));
       return { handled: true };
     }
 
     await sock.groupMetadataUpdate(m.chat, { subject: name });
 
     const text =
-      novaWrap("Set Group Name", [`Nama Baru: *${name}*`,
+      raraWrap("Set Group Name", [`Nama Baru: *${name}*`,
         `Group: *${m.chat}*`,
         "Status: *success*"].join("\n")) +
       "\n" +
@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(text, "setgroupname");
   } catch (error) {
-    await m.reply(novaError("SetGroupName", `Gagal ganti nama grup: ${error.message}`));
+    await m.reply(raraError("SetGroupName", `Gagal ganti nama grup: ${error.message}`));
   }
 
   return { handled: true };

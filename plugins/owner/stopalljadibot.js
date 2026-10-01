@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { stopAllJadibots, getActiveJadibots } from '../../src/lib/nova-jadibot-manager.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { stopAllJadibots, getActiveJadibots } from '../../src/lib/rara-jadibot-manager.js'
+import te from '../../src/lib/rara-error.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'stopalljadibot',
     alias: ["stopalljadibot"],
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
             mentions: stopped.map(id => id + '@s.whatsapp.net')
         }, { quoted: m })
     } catch (error) {
-        await m.reply(novaWrap("stopalljadibot", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(raraWrap("stopalljadibot", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

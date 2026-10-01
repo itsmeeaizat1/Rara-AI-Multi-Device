@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // xnxxsearch.js — Search video NSFW
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "xnxxsearch",
@@ -19,11 +19,11 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕠");
     const query = m.args?.join(" ").trim();
-    if (!query) return m.reply(novaWrap("xnxxsearch", "Masukkan kata kunci!", "guide"));
+    if (!query) return m.reply(raraWrap("xnxxsearch", "Masukkan kata kunci!", "guide"));
 
     const res = await axios.get(`https://api.siputzx.my.id/api/s/xnxx?q=${encodeURIComponent(query)}`, { timeout: 15000 });
     const data = res.data?.data || res.data?.result || [];
-    if (!data.length) return m.reply(novaWrap("xnxxsearch", "Tidak ada hasil!", "error"));
+    if (!data.length) return m.reply(raraWrap("xnxxsearch", "Tidak ada hasil!", "error"));
 
     let _lines = [];
     _lines.push(`Query: ${query}`);
@@ -34,12 +34,12 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
-    let msg = novaBox("XNXX SEARCH", _lines);
+    let msg = raraBox("XNXX SEARCH", _lines);
     return m.reply(msg);
   } catch (err) {
     console.error("xnxxsearch error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("xnxxsearch", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("xnxxsearch", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

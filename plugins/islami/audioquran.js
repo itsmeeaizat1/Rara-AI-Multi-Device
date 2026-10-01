@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "audioquran",
@@ -309,7 +309,7 @@ async function handler(m, { sock, args }) {
     
     if (mode === "audio") {
       if (args.length < 3) {
-        return m.reply(novaWrap("audioquran", "❌ Format salah! Contoh: `.audio-quran audio sudais 1`"));
+        return m.reply(raraWrap("audioquran", "❌ Format salah! Contoh: `.audio-quran audio sudais 1`"));
       }
       
       const surahId = parseInt(args.pop());
@@ -319,7 +319,7 @@ async function handler(m, { sock, args }) {
       const res = await mp3quran(input);
       
       if (!res.Status) {
-        return m.reply(novaWrap("audioquran", `❌ ${res.Error}`));
+        return m.reply(raraWrap("audioquran", `❌ ${res.Error}`));
       }
       
       const r = res.Result;
@@ -333,7 +333,7 @@ async function handler(m, { sock, args }) {
       caption += `*surah:* ke-${surahId}\n\n`;
       caption += `Sedang mengirim audio...`;
       
-      await m.reply(novaWrap("audioquran", caption));
+      await m.reply(raraWrap("audioquran", caption));
       
       await sock.sendMessage(m.chat, {
         audio: { url: audioUrl },
@@ -348,7 +348,7 @@ async function handler(m, { sock, args }) {
     const res = await mp3quran(input);
     
     if (!res.Status) {
-      return m.reply(novaWrap("audioquran", `❌ ${res.Error}`));
+      return m.reply(raraWrap("audioquran", `❌ ${res.Error}`));
     }
     
     const r = res.Result;
@@ -372,11 +372,11 @@ async function handler(m, { sock, args }) {
         txt += `- #${rd.id} *${rd.name}*\n  Link: ${rd.url}\n`;
       }
     }
-    return await m.reply(novaWrap("audioquran", txt));
+    return await m.reply(raraWrap("audioquran", txt));
     
   } catch (err) {
     console.error("[AudioQuran]", err.message);
-    m.reply(novaWrap("audioquran", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("audioquran", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

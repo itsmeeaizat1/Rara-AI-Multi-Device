@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Roleplay — Ekspresikan aksi RP
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "roleplay", alias: ["roleplay", "roleplayrpg", "rp"],
@@ -13,11 +13,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
-    if (!text) return m.reply(novaRpgBox("roleplayrpg", `Ketik teks RP-mu.\nContoh: ${m.prefix}roleplayrpg aku memeluk naga yang terluka...`, "guide"));
+    if (!text) return m.reply(raraRpgBox("roleplayrpg", `Ketik teks RP-mu.\nContoh: ${m.prefix}roleplayrpg aku memeluk naga yang terluka...`, "guide"));
   await animGeneric(m, sock, "🎭", "Role Play");
-    return m.reply(novaRpgBox("roleplayrpg", `🎭 *${m.pushName} beraksi:*\n_${text}_`, "info"));
+    return m.reply(raraRpgBox("roleplayrpg", `🎭 *${m.pushName} beraksi:*\n_${text}_`, "info"));
   } catch (e) {
-    return m.reply(novaRpgBox("roleplayrpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("roleplayrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

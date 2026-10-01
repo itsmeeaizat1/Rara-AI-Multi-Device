@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autolang — Auto Language Detect & Translate
  *
@@ -35,8 +35,8 @@
  */
 
 import { CronJob } from "cron";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaGuide, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraGuide, toSC, raraBox } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -262,7 +262,7 @@ async function autoLangListener(m, { sock, config: botConfig }) {
     const flag = getFlag(lang);
     const targetFlag = getFlag(targetLang);
 
-    let msg = novaBox("AUTO TRANSLATE", [
+    let msg = raraBox("AUTO TRANSLATE", [
       `${flag} ${langName} -> ${targetFlag} ${targetName}`,
       `Confidence: ${confidence}%`,
       `Teks Asli: ${text.slice(0, 200)}`,
@@ -326,7 +326,7 @@ function startCronJob(sock) {
           .map(([lang, count]) => `${getFlag(lang)} ${LANG_NAMES[lang] || lang}: ${count}x`)
           .join("\n| ");
 
-        const report = novaBox("AUTO LANG — DAILY REPORT", [
+        const report = raraBox("AUTO LANG — DAILY REPORT", [
           `Total Deteksi: ${settings.stats.totalDetected}`,
           `Total Translate: ${settings.stats.totalTranslated}`,
           `Top Bahasa:`,
@@ -390,7 +390,7 @@ async function handler(m, { sock, config: botConfig }) {
         .map(([lang, count]) => `${getFlag(lang)} ${LANG_NAMES[lang] || lang}: ${count}x`)
         .join(" | ") || "Belum ada";
 
-      const msg = novaBox("AUTO LANG DETECT & TRANSLATE", [
+      const msg = raraBox("AUTO LANG DETECT & TRANSLATE", [
         `Status: ${status}`,
         `Target: ${targetFlag} ${targetName}`,
         `Respond in user lang: ${settings.respondInUserLang ? "ON" : "OFF"}`,
@@ -405,7 +405,7 @@ async function handler(m, { sock, config: botConfig }) {
         `Top: ${topLangs}`,
       ]);
 
-      await m.reply(msg + "\n\n" + novaBox("COMMANDS", [
+      await m.reply(msg + "\n\n" + raraBox("COMMANDS", [
         `${prefix}autolang on/off`,
         `${prefix}autolang group on/off`,
         `${prefix}autolang target <kode>`,
@@ -430,7 +430,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.db.write();
       if (cronJob) cronJob.stop();
       startCronJob(sock);
-      await m.reply(novaBox("AUTO LANG", [
+      await m.reply(raraBox("AUTO LANG", [
         "Status: ON",
         "Bot akan auto-detect & translate pesan asing",
         `Target: ${getFlag(settings.targetLang)} ${LANG_NAMES[settings.targetLang] || settings.targetLang}`,
@@ -443,7 +443,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.enabled = false;
       db.db.write();
       if (cronJob) cronJob.stop();
-      await m.reply(novaBox("AUTO LANG", [
+      await m.reply(raraBox("AUTO LANG", [
         "Status: OFF",
         "Auto-translate dimatikan",
       ]));
@@ -454,7 +454,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "group") {
       const action = (args[1] || "").toLowerCase();
       if (!gid.endsWith("@g.us")) {
-        await m.reply(novaBox("AUTO LANG", ["Command ini hanya untuk grup"]));
+        await m.reply(raraBox("AUTO LANG", ["Command ini hanya untuk grup"]));
         return { handled: true };
       }
       if (action === "on") {
@@ -462,7 +462,7 @@ async function handler(m, { sock, config: botConfig }) {
         settings.groupSettings[gid].enabled = true;
         settings.groupSettings[gid].targetLang = settings.groupSettings[gid].targetLang || settings.targetLang;
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Grup ini: ON`,
           `Target: ${getFlag(settings.groupSettings[gid].targetLang)} ${LANG_NAMES[settings.groupSettings[gid].targetLang] || settings.groupSettings[gid].targetLang}`,
           "Auto-translate aktif di grup ini",
@@ -471,10 +471,10 @@ async function handler(m, { sock, config: botConfig }) {
         if (!settings.groupSettings[gid]) settings.groupSettings[gid] = {};
         settings.groupSettings[gid].enabled = false;
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", ["Grup ini: OFF", "Auto-translate dimatikan di grup ini"]));
+        await m.reply(raraBox("AUTO LANG", ["Grup ini: OFF", "Auto-translate dimatikan di grup ini"]));
       } else {
         const gStatus = settings.groupSettings[gid]?.enabled ? "ON" : "OFF";
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Grup ini: ${gStatus}`,
           `Ketik: ${prefix}autolang group on/off`,
         ]));
@@ -486,7 +486,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "target") {
       const lang = (args[1] || "").toLowerCase();
       if (!lang) {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Target saat ini: ${getFlag(settings.targetLang)} ${LANG_NAMES[settings.targetLang] || settings.targetLang}`,
           `Ketik: ${prefix}autolang target <kode>`,
           `Contoh: ${prefix}autolang target en`,
@@ -494,7 +494,7 @@ async function handler(m, { sock, config: botConfig }) {
         return { handled: true };
       }
       if (!LANG_NAMES[lang]) {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Kode bahasa tidak dikenal: ${lang}`,
           `Ketik ${prefix}autolang list untuk daftar bahasa`,
         ]));
@@ -502,7 +502,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.targetLang = lang;
       db.db.write();
-      await m.reply(novaBox("AUTO LANG", [
+      await m.reply(raraBox("AUTO LANG", [
         `Target diubah ke: ${getFlag(lang)} ${LANG_NAMES[lang]}`,
         "Semua pesan asing akan di-translate ke bahasa ini",
       ]));
@@ -515,13 +515,13 @@ async function handler(m, { sock, config: botConfig }) {
       if (action === "on") {
         settings.respondInUserLang = true;
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", ["Respond in user lang: ON", "Bot akan respond dalam bahasa user"]));
+        await m.reply(raraBox("AUTO LANG", ["Respond in user lang: ON", "Bot akan respond dalam bahasa user"]));
       } else if (action === "off") {
         settings.respondInUserLang = false;
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", ["Respond in user lang: OFF", "Bot hanya translate"]));
+        await m.reply(raraBox("AUTO LANG", ["Respond in user lang: OFF", "Bot hanya translate"]));
       } else {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Respond: ${settings.respondInUserLang ? "ON" : "OFF"}`,
           `Ketik: ${prefix}autolang respond on/off`,
         ]));
@@ -535,13 +535,13 @@ async function handler(m, { sock, config: botConfig }) {
       if (action === "on") {
         settings.smartMode = true;
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", ["Smart mode: ON", `Hanya translate jika confidence >= ${settings.confidenceThreshold}%`]));
+        await m.reply(raraBox("AUTO LANG", ["Smart mode: ON", `Hanya translate jika confidence >= ${settings.confidenceThreshold}%`]));
       } else if (action === "off") {
         settings.smartMode = false;
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", ["Smart mode: OFF", "Semua pesan asing akan di-translate"]));
+        await m.reply(raraBox("AUTO LANG", ["Smart mode: OFF", "Semua pesan asing akan di-translate"]));
       } else {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Smart mode: ${settings.smartMode ? "ON" : "OFF"}`,
           `Confidence: ${settings.confidenceThreshold}%`,
           `Ketik: ${prefix}autolang smart on/off`,
@@ -554,7 +554,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "confidence") {
       const val = parseInt(args[1]);
       if (isNaN(val) || val < 0 || val > 100) {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Confidence: ${settings.confidenceThreshold}%`,
           `Ketik: ${prefix}autolang confidence <0-100>`,
         ]));
@@ -562,7 +562,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.confidenceThreshold = val;
       db.db.write();
-      await m.reply(novaBox("AUTO LANG", [
+      await m.reply(raraBox("AUTO LANG", [
         `Confidence threshold: ${val}%`,
         `Hanya pesan confidence >= ${val}% yang akan di-translate`,
       ]));
@@ -578,23 +578,23 @@ async function handler(m, { sock, config: botConfig }) {
           settings.whitelist.push(lang);
           db.db.write();
         }
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Whitelist: ${settings.whitelist.length} bahasa`,
           settings.whitelist.join(", "),
         ]));
       } else if (action === "del" && lang) {
         settings.whitelist = settings.whitelist.filter((l) => l !== lang);
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Whitelist: ${settings.whitelist.length} bahasa`,
           settings.whitelist.length > 0 ? settings.whitelist.join(", ") : "Semua bahasa",
         ]));
       } else if (action === "clear") {
         settings.whitelist = [];
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", ["Whitelist dikosongkan — semua bahasa diterjemahkan"]));
+        await m.reply(raraBox("AUTO LANG", ["Whitelist dikosongkan — semua bahasa diterjemahkan"]));
       } else {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Whitelist: ${settings.whitelist.length} bahasa`,
           settings.whitelist.length > 0 ? settings.whitelist.join(", ") : "Semua bahasa (no filter)",
           `Ketik: ${prefix}autolang whitelist add/del <kode>`,
@@ -612,23 +612,23 @@ async function handler(m, { sock, config: botConfig }) {
           settings.blacklist.push(lang);
           db.db.write();
         }
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Blacklist: ${settings.blacklist.length} bahasa`,
           settings.blacklist.join(", "),
         ]));
       } else if (action === "del" && lang) {
         settings.blacklist = settings.blacklist.filter((l) => l !== lang);
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Blacklist: ${settings.blacklist.length} bahasa`,
           settings.blacklist.length > 0 ? settings.blacklist.join(", ") : "Tidak ada",
         ]));
       } else if (action === "clear") {
         settings.blacklist = [];
         db.db.write();
-        await m.reply(novaBox("AUTO LANG", ["Blacklist dikosongkan"]));
+        await m.reply(raraBox("AUTO LANG", ["Blacklist dikosongkan"]));
       } else {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Blacklist: ${settings.blacklist.length} bahasa`,
           settings.blacklist.length > 0 ? settings.blacklist.join(", ") : "Tidak ada",
           `Ketik: ${prefix}autolang blacklist add/del <kode>`,
@@ -641,7 +641,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "cooldown") {
       const val = parseInt(args[1]);
       if (isNaN(val) || val < 0) {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Cooldown: ${settings.cooldown}s`,
           `Ketik: ${prefix}autolang cooldown <detik>`,
         ]));
@@ -649,7 +649,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.cooldown = val;
       db.db.write();
-      await m.reply(novaBox("AUTO LANG", [`Cooldown: ${val}s per user`]));
+      await m.reply(raraBox("AUTO LANG", [`Cooldown: ${val}s per user`]));
       return { handled: true };
     }
 
@@ -661,7 +661,7 @@ async function handler(m, { sock, config: botConfig }) {
         .map(([lang, count]) => `${getFlag(lang)} ${LANG_NAMES[lang] || lang}: ${count}x`)
         .join("\n| ") || "Belum ada data";
 
-      await m.reply(novaBox("AUTO LANG — STATISTIK", [
+      await m.reply(raraBox("AUTO LANG — STATISTIK", [
         `Total Deteksi: ${settings.stats.totalDetected}`,
         `Total Translate: ${settings.stats.totalTranslated}`,
         `Top Bahasa:`,
@@ -676,7 +676,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.stats = { totalDetected: 0, totalTranslated: 0, byLanguage: {}, byGroup: {}, lastReport: null };
       settings._cooldowns = {};
       db.db.write();
-      await m.reply(novaBox("AUTO LANG", ["Statistik & cooldown direset"]));
+      await m.reply(raraBox("AUTO LANG", ["Statistik & cooldown direset"]));
       return { handled: true };
     }
 
@@ -684,7 +684,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "test") {
       const testText = args.slice(1).join(" ");
       if (!testText) {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Ketik: ${prefix}autolang test <teks>`,
           `Contoh: ${prefix}autolang test Hello world`,
         ]));
@@ -692,11 +692,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
       const { lang, confidence } = await detectLanguage(testText);
       if (!lang) {
-        await m.reply(novaBox("AUTO LANG", ["Gagal deteksi bahasa"]));
+        await m.reply(raraBox("AUTO LANG", ["Gagal deteksi bahasa"]));
         return { handled: true };
       }
       const result = await translateText(testText, lang, settings.targetLang);
-      await m.reply(novaBox("AUTO LANG — TEST", [
+      await m.reply(raraBox("AUTO LANG — TEST", [
         `Teks: ${testText.slice(0, 200)}`,
         `Deteksi: ${getFlag(lang)} ${LANG_NAMES[lang] || lang}`,
         `Confidence: ${confidence}%`,
@@ -710,7 +710,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "list") {
       const common = COMMON_LANGS.map((l) => `${getFlag(l)} ${l} = ${LANG_NAMES[l] || l}`).join("\n| ");
       const all = Object.entries(LANG_NAMES).map(([code, name]) => `${code} = ${name}`).join("\n| ");
-      await m.reply(novaBox("AUTO LANG — DAFTAR BAHASA", [
+      await m.reply(raraBox("AUTO LANG — DAFTAR BAHASA", [
         "Bahasa umum:",
         `| ${common}`,
         "",
@@ -724,7 +724,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "settime") {
       const time = args[1];
       if (!time || !/^\d{2}:\d{2}$/.test(time)) {
-        await m.reply(novaBox("AUTO LANG", [
+        await m.reply(raraBox("AUTO LANG", [
           `Report time: ${settings.reportTime} WIB`,
           `Ketik: ${prefix}autolang settime HH:MM`,
           `Contoh: ${prefix}autolang settime 20:00`,
@@ -737,12 +737,12 @@ async function handler(m, { sock, config: botConfig }) {
         if (cronJob) cronJob.stop();
         startCronJob(sock);
       }
-      await m.reply(novaBox("AUTO LANG", [`Report time: ${time} WIB`, "Auto-report harian diupdate"]));
+      await m.reply(raraBox("AUTO LANG", [`Report time: ${time} WIB`, "Auto-report harian diupdate"]));
       return { handled: true };
     }
 
     // ─── UNKNOWN ───
-    await m.reply(novaBox("AUTO LANG", [
+    await m.reply(raraBox("AUTO LANG", [
       `Command tidak dikenal: ${sub}`,
       `Ketik ${prefix}autolang untuk dashboard`,
     ]));
@@ -750,7 +750,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   } catch (error) {
     console.error("[autolang] handler error:", error.message);
-    await m.reply(novaError("AutoLang", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("AutoLang", "Gagal nih, coba lagi ya"));
     return { handled: true };
   }
 }

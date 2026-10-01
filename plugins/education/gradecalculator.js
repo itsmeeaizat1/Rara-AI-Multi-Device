@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "kalkulatornilai",
@@ -69,7 +69,7 @@ async function handler(m, { sock, args }) {
     if (cmd === "final" || cmd === "akhir" || cmd === "hitung") {
       const inputArgs = cmdArgs;
       if (inputArgs.length < 2 || inputArgs.length % 2 !== 0) {
-        return m.reply(novaWrap("kalkulatornilai", "Format salah!\n\n💡 *Contoh:* `.nilai final 80 30 75 30 60 40`\n\nFormat: <nilai> <bobot%> <nilai> <bobot%> ...\nBobot total harus 100."));
+        return m.reply(raraWrap("kalkulatornilai", "Format salah!\n\n💡 *Contoh:* `.nilai final 80 30 75 30 60 40`\n\nFormat: <nilai> <bobot%> <nilai> <bobot%> ...\nBobot total harus 100."));
       }
 
       let totalWeighted = 0;
@@ -80,10 +80,10 @@ async function handler(m, { sock, args }) {
         const score = parseFloat(inputArgs[i]);
         const weight = parseFloat(inputArgs[i + 1]);
         if (isNaN(score) || score < 0 || score > 100) {
-          return m.reply(novaError("KalkulatorNilai", `Nilai gak valid nih! Harus 0-100`));
+          return m.reply(raraError("KalkulatorNilai", `Nilai gak valid nih! Harus 0-100`));
         }
         if (isNaN(weight) || weight < 0) {
-          return m.reply(novaError("KalkulatorNilai", `Bobot gak valid nih!`));
+          return m.reply(raraError("KalkulatorNilai", `Bobot gak valid nih!`));
         }
         totalWeighted += score * weight;
         totalWeight += weight;
@@ -91,7 +91,7 @@ async function handler(m, { sock, args }) {
       }
 
       if (totalWeight !== 100) {
-        return m.reply(novaWrap("Kalkulatornilai", `Total bobot = ${totalWeight}%, harus 100%!\n\nSesuaikan bobot komponen.`));
+        return m.reply(raraWrap("Kalkulatornilai", `Total bobot = ${totalWeight}%, harus 100%!\n\nSesuaikan bobot komponen.`));
       }
 
       const finalScore = totalWeighted / 100;
@@ -118,11 +118,11 @@ async function handler(m, { sock, args }) {
       const remainingWeight = parseFloat(cmdArgs[3]);
 
       if (isNaN(target) || isNaN(currentScore) || isNaN(currentWeight) || isNaN(remainingWeight)) {
-        return m.reply(novaWrap("kalkulatornilai", "Format salah!\n\n💡 *Contoh:* `.nilai needed 70 75 40 60`\n\nFormat: <target nilai> <nilai sudah> <bobot sudah %> <bobot sisa %>"));
+        return m.reply(raraWrap("kalkulatornilai", "Format salah!\n\n💡 *Contoh:* `.nilai needed 70 75 40 60`\n\nFormat: <target nilai> <nilai sudah> <bobot sudah %> <bobot sisa %>"));
       }
 
       if (currentWeight + remainingWeight !== 100) {
-        return m.reply(novaWrap("Kalkulatornilai", `Total bobot = ${currentWeight + remainingWeight}%, harus 100%!`));
+        return m.reply(raraWrap("Kalkulatornilai", `Total bobot = ${currentWeight + remainingWeight}%, harus 100%!`));
       }
 
       // Formula: target = (currentScore * currentWeight + neededScore * remainingWeight) / 100
@@ -155,12 +155,12 @@ async function handler(m, { sock, args }) {
     else if (cmd === "convert" || cmd === "konversi") {
       const grade = cmdArgs[0]?.toUpperCase().replace(".", "");
       if (!grade) {
-        return m.reply(novaWrap("Kalkulatornilai", "Masukkan nilai huruf!\n\n💡 *Contoh:* `.nilai convert AB`\n\nPilihan: A, AB, B, BC, C, CD, D, E"));
+        return m.reply(raraWrap("Kalkulatornilai", "Masukkan nilai huruf!\n\n💡 *Contoh:* `.nilai convert AB`\n\nPilihan: A, AB, B, BC, C, CD, D, E"));
       }
 
       const gpa = GRADE_MAP[grade];
       if (gpa === undefined) {
-        return m.reply(novaError("KalkulatorNilai", `Nilai gak valid nih! Pilihan: A, AB, B, BC, C, CD, D, E`));
+        return m.reply(raraError("KalkulatorNilai", `Nilai gak valid nih! Pilihan: A, AB, B, BC, C, CD, D, E`));
       }
 
       let txt = `Konversi Nilai\n\n`;
@@ -182,7 +182,7 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[KALKULATORNILAI] Error:", e.message);
-    await m.reply(novaWrap("kalkulatornilai", `Error: ${e.message}`));
+    await m.reply(raraWrap("kalkulatornilai", `Error: ${e.message}`));
   }
 }
 

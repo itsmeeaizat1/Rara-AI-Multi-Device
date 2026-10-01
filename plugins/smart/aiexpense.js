@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaHeader, separator, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraHeader, separator, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "aiexpense", alias: ["aiexpense"], category: "smart",
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const input = m.text?.trim();
     if (!input) {
-      await m.reply(novaCaption({
+      await m.reply(raraCaption({
   emoji: "💰",
   name: "aiexpense",
   description: "Catat pengeluaran dengan bahasa natural",
@@ -40,20 +40,20 @@ async function handler(m, { sock, config: botConfig }) {
     
     if (input === "list") {
       const expenses = db.expenses[sender];
-      if (!expenses.length) { await m.reply(novaWrap("aiexpense", "Belum ada pengeluaran.")); return { handled: true }; }
-      let total = 0; let text = novaWrap("Pengeluaran", "💰") + "\n\n";
+      if (!expenses.length) { await m.reply(raraWrap("aiexpense", "Belum ada pengeluaran.")); return { handled: true }; }
+      let total = 0; let text = raraWrap("Pengeluaran", "💰") + "\n\n";
       expenses.slice(-20).forEach((e, i) => { text += `${i+1}. ${e.desc} - *Rp${e.amount.toLocaleString("id-ID")}*\n`; total += e.amount; });
       text += `\n*Total: Rp${total.toLocaleString("id-ID")}*`;
       await m.reply(text);
       return { handled: true };
     }
-    if (input === "clear") { db.expenses[sender] = []; db.write(); await m.reply(novaWrap("aiexpense", "Pengeluaran direset.")); return { handled: true }; }
+    if (input === "clear") { db.expenses[sender] = []; db.write(); await m.reply(raraWrap("aiexpense", "Pengeluaran direset.")); return { handled: true }; }
     
     const amount = parseAmount(input);
     const desc = input.replace(/\d+\s*(rb|ribu|k|jt|juta|k)?/gi, "").trim() || input;
     db.expenses[sender].push({ desc, amount, date: Date.now() });
     db.write();
-    await m.reply(novaWrap("AI Expense", [`Item: *${desc}*`, `Nominal: *Rp${amount.toLocaleString("id-ID")}*`].join("\n")));
+    await m.reply(raraWrap("AI Expense", [`Item: *${desc}*`, `Nominal: *Rp${amount.toLocaleString("id-ID")}*`].join("\n")));
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "balogo",
     alias: ["balogo"],
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     try {
         await m.react("🕒")
         const apiUrl = `https://api.nexray.web.id/maker/balogo?text=${encodeURIComponent(textL)} ${encodeURIComponent(textR)}`
-        // FIX 14 Sep 2026 (audit canvas): helper bersama f() (nova-http.js, undici
+        // FIX 14 Sep 2026 (audit canvas): helper bersama f() (rara-http.js, undici
         // request()) TIDAK follow HTTP redirect — endpoint ini 301 redirect ke
         // domain gambar asli, jadinya f() balikin ArrayBuffer 0 byte (gambar blank
         // gagal kirim, tapi try/catch gak nangkep karena gak throw). axios follow
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
         })
     } catch (error) {
         await m.react("❌")
-        m.reply(novaWrap("balogo", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("balogo", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

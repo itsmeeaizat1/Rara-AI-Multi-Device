@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
-import { enableAutoBackup, disableAutoBackup, getBackupStatus, triggerManualBackup, formatInterval } from '../../src/lib/nova-auto-backup.js'
-import * as timeHelper from '../../src/lib/nova-time.js'
+import { enableAutoBackup, disableAutoBackup, getBackupStatus, triggerManualBackup, formatInterval } from '../../src/lib/rara-auto-backup.js'
+import * as timeHelper from '../../src/lib/rara-time.js'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
   name: "autobackup",
   alias: ["autobackup"],
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
     txt += `*Contoh:*\n`;
     txt += `\`${m.prefix}autobackup on 6h\` - backup setiap 6 jam`;
 
-    return await m.reply(novaWrap("Autobackup", txt));
+    return await m.reply(raraWrap("Autobackup", txt));
   }
 
   switch (action) {
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
       const result = enableAutoBackup(interval, sock);
 
       if (!result.success) {
-        return m.reply(novaWrap("autobackup", `❌ *Gagal*\n\n${result.error}`));
+        return m.reply(raraWrap("autobackup", `❌ *Gagal*\n\n${result.error}`));
       }
 
       const ownerNum = config.owner?.number?.[0] || "Owner #1";
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
       txt += `📤 Target: ${ownerNum}\n`;
       txt += `---`;
 
-      return await m.reply(novaWrap("autobackup", txt));
+      return await m.reply(raraWrap("autobackup", txt));
     }
 
     case "now":
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
           `✅ *Backup sElesai*\n\nBackup telah dikirim ke owner!`,
         );
       } catch (error) {
-        await m.reply(novaWrap("autobackup", te(m.prefix, m.command, m.pushName), "error"));
+        await m.reply(raraWrap("autobackup", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 

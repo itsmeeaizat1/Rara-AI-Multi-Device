@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spotifyv2.js — Info track Spotify via spotify-url-info (parse URL)
 import spotifyUrlInfo from 'spotify-url-info'
-import { novaError, novaEmpty, novaNoInput, novaGuide } from '../../src/lib/nova-menu-style.js'
+import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
     name: "spotifyv2",
@@ -24,13 +24,13 @@ async function handler(m, { sock }) {
         const url = (m.text || "").trim()
 
         if (!url || !url.includes("spotify.com")) {
-            return m.reply(novaGuide('Spotify v2', 'Kirim link Spotify track yang mau kamu intip detailnya ya!', pluginConfig.example))
+            return m.reply(raraGuide('Spotify v2', 'Kirim link Spotify track yang mau kamu intip detailnya ya!', pluginConfig.example))
         }
         const spotify = spotifyUrlInfo("https://open.spotify.com")
         const data = await spotify.getData(url)
 
         if (!data) {
-            return m.reply(novaEmpty('Spotify v2', 'Gak dapet info track-nya nih 🧐 Pastiin link Spotify valid ya!'))
+            return m.reply(raraEmpty('Spotify v2', 'Gak dapet info track-nya nih 🧐 Pastiin link Spotify valid ya!'))
         }
 
         const track = data.type === "track" ? data : (data.tracks?.items?.[0] || data)
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
         return m.reply(text)
     } catch (e) {
         console.error("[spotifyv2] error:", e.message)
-        return m.reply(novaError('Spotify v2', e.message))
+        return m.reply(raraError('Spotify v2', e.message))
     }
 }
 

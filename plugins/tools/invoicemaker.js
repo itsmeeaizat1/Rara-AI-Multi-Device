@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "invoicemaker",
   alias: ["invoicemaker"],
@@ -20,7 +20,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
+const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 async function handler(m, { sock }) {
   const args = m.args || [];
@@ -44,13 +44,13 @@ async function handler(m, { sock }) {
   const parts = text.split("|").map((p) => p.trim());
 
   if (parts.length < 6) {
-    return m.reply(novaWrap("Invoicemaker", `❌ Format tidak lengkap! Butuh 6 parameter (toko|invoice|tanggal|status|items|total)`));
+    return m.reply(raraWrap("Invoicemaker", `❌ Format tidak lengkap! Butuh 6 parameter (toko|invoice|tanggal|status|items|total)`));
   }
 
   const [store, invoice, date, status, itemsRaw, totalRaw] = parts;
 
   if (!["paid", "unpaid"].includes(status.toLowerCase())) {
-    return m.reply(novaWrap("Invoicemaker", `❌ Status harus 'paid' atau 'unpaid'!`));
+    return m.reply(raraWrap("Invoicemaker", `❌ Status harus 'paid' atau 'unpaid'!`));
   }
 
   const itemsArr = itemsRaw.split(",").map((item) => {
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
   });
 
   if (itemsArr.length === 0 || itemsArr.some((i) => !i.name)) {
-    return m.reply(novaWrap("invoicemaker", `❌ Format items salah! Gunakan: Nama:unit:harga (pisah koma untuk multiple)`));
+    return m.reply(raraWrap("invoicemaker", `❌ Format items salah! Gunakan: Nama:unit:harga (pisah koma untuk multiple)`));
   }
 
   const total =
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     const data = response.data.data;
 
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     let caption = `🧾 *invoice generated*\n\n`;
         caption += `🏪 Toko: *${data.store}*\n`;
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
     );
   } catch (err) {
     await m.react("❌");
-    return m.reply(novaWrap("invoicemaker", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("invoicemaker", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

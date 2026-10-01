@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as _canvas from '@napi-rs/canvas'
 import axios from "axios";
 
 
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "colongpp",
   alias: ["colongpp"],
@@ -34,7 +34,7 @@ async function resizeForPP(buffer) {
 async function handler(m, { sock }) {
   const targetJid = m.quoted?.sender || m.mentions?.[0];
   if (!targetJid) {
-    return m.reply(novaWrap("colongpp", [
+    return m.reply(raraWrap("colongpp", [
       "Colong foto profil target dan pasang jadi PP bot.",
       "",
       `📌 Format: reply pesan target, lalu ketik ${m.prefix}colongpp`,
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     await sock.updateProfilePicture(botJid, processed);
     await m.react("🐣");
     const targetNumber = targetJid.split("@")[0];
-    return m.reply(novaWrap("colongpp", [
+    return m.reply(raraWrap("colongpp", [
       "PP berhasil dicolong!",
       "",
       `Target: @${targetNumber}`,
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[ColongPP] Error:", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("colongpp", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("colongpp", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

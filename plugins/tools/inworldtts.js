@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // inworldtts.js — Inworld AI: suara HD 200+ bahasa (platform.inworld.ai).
 // .inworldtts [voice]|<teks>   — teks → voice note (voice opsional, default = voice custom workspace / katalog)
 // .inworldvoice <deskripsi>|<teks> — DESAIN SUARA dari deskripsi bebas ("pria hangat kayak penyiar radio malam")
@@ -7,10 +7,10 @@
 // Model: inworld-tts-2 (flagship, steering natural-language dalam [kurung siku],
 // contoh: "Halo semuanya [nada antusias dan ceria] apa kabar?").
 // Key: .setkey inworld <key> (dari https://platform.inworld.ai/api-keys)
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   inworldSynthesize, inworldListVoices, resolveDefaultVoice, inworldTranscribe, getInworldKey,
-} from "../../src/lib/nova-inworld.js";
+} from "../../src/lib/rara-inworld.js";
 
 const pluginConfig = {
   name: "inworldtts",
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   const text = args.join(" ").trim();
 
   if (!getInworldKey()) {
-    return m.reply(novaWrap("Inworld AI", "API key Inworld belum di-set.\n\nCara: .setkey inworld <key>\nAmbil key: https://platform.inworld.ai/api-keys"));
+    return m.reply(raraWrap("Inworld AI", "API key Inworld belum di-set.\n\nCara: .setkey inworld <key>\nAmbil key: https://platform.inworld.ai/api-keys"));
   }
 
   try {
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
         String(v.voiceId || "").toLowerCase().includes(kw) ||
         String(v.description || "").toLowerCase().includes(kw)
       );
-      if (!filtered.length) return m.reply(novaWrap("Inworld AI", `Gak ada voice cocok buat: ${text}`));
+      if (!filtered.length) return m.reply(raraWrap("Inworld AI", `Gak ada voice cocok buat: ${text}`));
       const custom = filtered.filter(v => v.isCustom);
       const catalog = filtered.filter(v => !v.isCustom);
       let out = "";
@@ -69,18 +69,18 @@ async function handler(m, { sock }) {
         out += `• ${v.voiceId}${langs ? ` (${langs})` : ""} — ${String(v.description || v.displayName || "").slice(0, 60)}\n`;
       });
       if (catalog.length > 25) out += `\n... dan ${catalog.length - 25} lagi — filter: .inworldvoices <keyword>\n`;
-      return m.reply(novaWrap("Inworld AI", out));
+      return m.reply(raraWrap("Inworld AI", out));
     }
 
     // ── STT: reply voice note → transkrip ──
     if (cmd === "inworldstt" || cmd === "inwstt") {
       const q = m.quoted;
       const isAudio = q && ((q.mtype === "audioMessage") || q.msg?.ptt || (q.msg && q.msg.audioMessage));
-      if (!isAudio) return m.reply(novaWrap("Inworld AI", "Reply voice note / audio-nya dulu ya.\n\nContoh: reply vn ketik .inworldstt"));
+      if (!isAudio) return m.reply(raraWrap("Inworld AI", "Reply voice note / audio-nya dulu ya.\n\nContoh: reply vn ketik .inworldstt"));
       const b = await q.download();
-      if (!b || !b.length) return m.reply(novaWrap("Inworld AI", "Audio-nya gak kebaca, coba reply ulang."));
+      if (!b || !b.length) return m.reply(raraWrap("Inworld AI", "Audio-nya gak kebaca, coba reply ulang."));
       const res = await inworldTranscribe({ audioB64: b.toString("base64"), encoding: "OGG_OPUS", language: "id" });
-      if (!res.transcript) return m.reply(novaWrap("Inworld AI", "Gak ada ucapan yang kebaca di audio itu."));
+      if (!res.transcript) return m.reply(raraWrap("Inworld AI", "Gak ada ucapan yang kebaca di audio itu."));
       let out = `📝 Transkrip:\n"${res.transcript}"\n`;
       const p = res.profile || {};
       const bits = [];
@@ -89,14 +89,14 @@ async function handler(m, { sock }) {
       if (p.emotion) bits.push("emosi: " + p.emotion);
       if (p.accent) bits.push("aksen: " + p.accent);
       if (bits.length) out += `\n🎙️ Profil suara: ${bits.join(" · ")}\n`;
-      return m.reply(novaWrap("Inworld AI", out));
+      return m.reply(raraWrap("Inworld AI", out));
     }
 
     // ── voice design: deskripsi suara bebas → TTS ──
     if (cmd === "inworldvoice" || cmd === "inwvoice") {
       const [desc, ...rest] = text.split("|");
       if (!rest.length || !String(desc).trim()) {
-        return m.reply(novaWrap("Inworld AI",
+        return m.reply(raraWrap("Inworld AI",
           "Desain suara dari deskripsi bebas!\n\n" +
           "Format: .inworldvoice <deskripsi suara>|<teks>\n\n" +
           "Contoh:\n" +
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
           "Deskripsi 7-1000 karakter. Bahasa Indonesia bisa!"));
       }
       const teks = rest.join("|").trim().slice(0, MAX_TEXT);
-      if (!teks) return m.reply(novaWrap("Inworld AI", "Teksnya kosong."));
+      if (!teks) return m.reply(raraWrap("Inworld AI", "Teksnya kosong."));
       const res = await inworldSynthesize({ text: teks, designPrompt: String(desc).trim() });
       await sendVn(m, sock, res.buffer);
       return;
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
       teks = rest.join("|").trim();
     }
     if (!teks) {
-      return m.reply(novaWrap("Inworld AI",
+      return m.reply(raraWrap("Inworld AI",
         "Teks → voice note kualitas HD (200+ bahasa, steering emosi di [kurung siku]).\n\n" +
         "Format:\n" +
         "• .inworldtts <teks>\n" +
@@ -139,7 +139,7 @@ async function handler(m, { sock }) {
     const res = await inworldSynthesize({ text: teks, voiceId });
     await sendVn(m, sock, res.buffer);
   } catch (e) {
-    m.reply(novaWrap("Inworld AI", String(e?.message || e), "error"));
+    m.reply(raraWrap("Inworld AI", String(e?.message || e), "error"));
   }
 }
 

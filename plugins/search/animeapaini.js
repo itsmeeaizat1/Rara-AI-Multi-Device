@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 import axios from 'axios'
 import config from '../../config.js'
 import { downloadContentFromMessage } from 'nova'
-import te from '../../src/lib/nova-error.js'
-const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
+import te from '../../src/lib/rara-error.js'
+const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-RaraMD'
 
 const pluginConfig = {
     name: "animeapaini",
@@ -24,8 +24,8 @@ const pluginConfig = {
 }
 
 
-// Upload via engine nova-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
-import { uploadImage } from "../../src/lib/nova-uploader.js"
+// Upload via engine rara-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
+import { uploadImage } from "../../src/lib/rara-uploader.js"
 
 async function uploadToTempfiles(buffer) {
     return uploadImage(buffer, 'image.jpg')
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
         }
         
         if (!imageBuffer || imageBuffer.length < 100) {
-            return m.reply(novaError("AnimeApaini", "Gagal ambil gambar nih, coba kirim ulang"))
+            return m.reply(raraError("AnimeApaini", "Gagal ambil gambar nih, coba kirim ulang"))
         }
         const imageUrl = await uploadToTempfiles(imageBuffer)
         
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
         })
         
         if (!res.data?.status || !res.data?.data) {
-            return m.reply(novaError("AnimeApaini", "Anime gak nemu nih, coba screenshot yang lebih jelas"))
+            return m.reply(raraError("AnimeApaini", "Anime gak nemu nih, coba screenshot yang lebih jelas"))
         }
         
         const d = res.data.data
@@ -111,11 +111,11 @@ async function handler(m, { sock }) {
                 type: 'image'
             })
         } else {
-            await m.reply(novaWrap("animeapaini", caption))
+            await m.reply(raraWrap("animeapaini", caption))
         }
         
     } catch (error) {
-        m.reply(novaWrap("animeapaini", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("animeapaini", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

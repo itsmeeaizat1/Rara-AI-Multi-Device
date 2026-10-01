@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { scSearch } from "./soundcloud.js";
 import scdl from "../../src/scraper/soundclouddl.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "playsoundcloud",
@@ -28,12 +28,12 @@ async function handler(m, { args, sock }) {
     txt += `👉 \`${m.prefix}playsc <judul lagu>\`\n\n`;
     txt += `*contoh:*\n`;
     txt += `\`${m.prefix}playsc Only We Know\``;
-    return await m.reply(novaWrap("playsoundcloud", txt));
+    return await m.reply(raraWrap("playsoundcloud", txt));
   }
   try {
     const searchResults = await scSearch(args.join(" "));
     if (!searchResults.length) {
-      return m.reply(novaError("PlaySoundcloud", "Lagunya gak nemu nih! Coba judul lain ya"));
+      return m.reply(raraError("PlaySoundcloud", "Lagunya gak nemu nih! Coba judul lain ya"));
     }
 
     const track = searchResults[0];
@@ -53,7 +53,7 @@ async function handler(m, { args, sock }) {
     await sock.sendMedia(m.chat, downloadInfo.thumbnail || track.artwork, txt.trim(), m, { type: "image" });
     await sock.sendMedia(m.chat, downloadInfo.download_url, downloadInfo.title, m, { type: "audio" });
   } catch (e) {
-    m.reply(novaError("PlaySoundcloud", `Gagal download lagu nih: ${e.message}`));
+    m.reply(raraError("PlaySoundcloud", `Gagal download lagu nih: ${e.message}`));
   }
 }
 

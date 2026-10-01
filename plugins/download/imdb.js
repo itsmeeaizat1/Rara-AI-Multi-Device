@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // imdb.js — Info film dari IMDB
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaBox, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraBox, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "imdb",
@@ -20,11 +20,11 @@ async function handler(m, { sock }) {
     const from = m.key.remoteJid;
     await m.react("🕒");
     const query = m.args?.join(" ").trim();
-    if (!query) return m.reply(novaWrap("imdb", `Masukkan judul film!\n\nContoh: .imdb Inception`, "guide"));
+    if (!query) return m.reply(raraWrap("imdb", `Masukkan judul film!\n\nContoh: .imdb Inception`, "guide"));
 
     const res = await axios.get(`https://www.omdbapi.com/?t=${encodeURIComponent(query)}&apikey=af9b9e87`);
     const d = res.data;
-    if (d.Response === "False") return m.reply(novaWrap("imdb", `Film "${query}" tidak ditemukan!`, "error"));
+    if (d.Response === "False") return m.reply(raraWrap("imdb", `Film "${query}" tidak ditemukan!`, "error"));
 
     let _lines = [];
       _lines.push(`🎬 Title: ${d.Title}`);
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
       _lines.push(`🎭 Actors: ${d.Actors}`);
       _lines.push(`📝 Plot: ${d.Plot}`);
       _lines.push(`⏱️ Runtime: ${d.Runtime}`);
-    let msg = novaBox("IMDB", _lines);
+    let msg = raraBox("IMDB", _lines);
 
     if (d.Poster && d.Poster !== "N/A") {
       await sock.sendMessage(from, { image: { url: d.Poster }, caption: msg }, { quoted: m });
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("imdb error:", err);
     await m.react("❌");
-    return m.reply(novaGangguan("imdb"));
+    return m.reply(raraGangguan("imdb"));
   }
 }
 

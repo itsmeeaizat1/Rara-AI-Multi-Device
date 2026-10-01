@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Honeymoon: bulan madu bareng pasangan (khusus nikah), sekali sebulan (revival dari RPG lama)
 
-import { ensureRpg, getRpgData, addExp, addGold } from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
-import { getCintaData, addAffection, saveCintaData } from "../../src/lib/nova-rpg-cinta.js";
+import { ensureRpg, getRpgData, addExp, addGold } from "../../src/lib/rara-rpg-service.js";
+import { raraGameBox, gameCTA, renderStatBar, raraRpgBox } from "../../src/lib/rara-games.js";
+import { getCintaData, addAffection, saveCintaData } from "../../src/lib/rara-rpg-cinta.js";
 
 const pluginConfig = {
   name: "honeymoon",
@@ -43,7 +43,7 @@ async function handler(m) {
     // Harus married
     if (!cinta.spouse || !cinta.married) {
       await m.react("❗");
-      return m.reply(novaRpgBox("Honeymoon", [
+      return m.reply(raraRpgBox("Honeymoon", [
         "Bulan madu cuma buat yang udah menikah! 💍",
         `Nikah dulu: ${m.prefix}nikahmatch`,
       ], "error"));
@@ -55,7 +55,7 @@ async function handler(m) {
     if (lastHoneymoon > 0 && elapsed < HONEYMOON_COOLDOWN) {
       const daysLeft = Math.ceil((HONEYMOON_COOLDOWN - elapsed) / 86400000);
       await m.react("🕒");
-      return m.reply(novaRpgBox("Honeymoon", [
+      return m.reply(raraRpgBox("Honeymoon", [
         `Udah bulan madu bulan ini!`,
         `Tunggu: ${daysLeft} hari lagi`,
         `Sambil nunggu, ramein hubungan: ${m.prefix}rpgkencan`,
@@ -91,7 +91,7 @@ async function handler(m) {
     pCinta.lastHoneymoon = Date.now();
     saveCintaData(partner, pCinta);
 
-    const msg = novaGameBox({
+    const msg = raraGameBox({
       title: "rpg cinta", icon: "🏖️",
       flavor: `🏖️ *BULAN MADU KE ${spot.toUpperCase()}!*`,
       body: [
@@ -111,7 +111,7 @@ async function handler(m) {
   } catch (e) {
     console.error("[honeymoon] Error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("Honeymoon", "Yah gagal kak, coba lagi 😩", "error"));
+    return m.reply(raraRpgBox("Honeymoon", "Yah gagal kak, coba lagi 😩", "error"));
   }
 }
 

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "eduleaderboard",
@@ -58,7 +58,7 @@ async function handler(m, { sock, args }) {
   // === GLOBAL LEADERBOARD (split PG & Essay) ===
   if (!cmd || cmd === "global" || cmd === "all" || cmd === "semua") {
     if (allUsers.length === 0) {
-      return m.reply(novaWrap("eduleaderboard", "Belum ada data leaderboard.\n\nMain quiz dulu: .soal sd matematika 5"));
+      return m.reply(raraWrap("eduleaderboard", "Belum ada data leaderboard.\n\nMain quiz dulu: .soal sd matematika 5"));
     }
 
     // PG ranking (by MC accuracy)
@@ -111,7 +111,7 @@ async function handler(m, { sock, args }) {
   // === PG LEADERBOARD (detailed) ===
   if (cmd === "pg" || cmd === "abcd" || cmd === "pilihanganda") {
     if (allUsers.length === 0) {
-      return m.reply(novaWrap("eduleaderboard", "Belum ada data.\n\nMain quiz dulu: .soal sd matematika 5"));
+      return m.reply(raraWrap("eduleaderboard", "Belum ada data.\n\nMain quiz dulu: .soal sd matematika 5"));
     }
 
     const pgRanked = [...allUsers]
@@ -119,7 +119,7 @@ async function handler(m, { sock, args }) {
       .sort((a, b) => getMCAccuracy(b) - getMCAccuracy(a));
 
     if (pgRanked.length === 0) {
-      return m.reply(novaWrap("eduleaderboard", "Belum ada data pilihan ganda.\n\nMain: .soal sd matematika 5 mc"));
+      return m.reply(raraWrap("eduleaderboard", "Belum ada data pilihan ganda.\n\nMain: .soal sd matematika 5 mc"));
     }
 
     let txt = `Leaderboard Pilihan Ganda\n\n`;
@@ -143,7 +143,7 @@ async function handler(m, { sock, args }) {
   // === ESSAY LEADERBOARD (detailed) ===
   if (cmd === "essay" || cmd === "uraian") {
     if (allUsers.length === 0) {
-      return m.reply(novaWrap("eduleaderboard", "Belum ada data.\n\nMain quiz dulu: .soal sd matematika 5 essay"));
+      return m.reply(raraWrap("eduleaderboard", "Belum ada data.\n\nMain quiz dulu: .soal sd matematika 5 essay"));
     }
 
     const essayRanked = [...allUsers]
@@ -151,7 +151,7 @@ async function handler(m, { sock, args }) {
       .sort((a, b) => getEssayAvg(b) - getEssayAvg(a));
 
     if (essayRanked.length === 0) {
-      return m.reply(novaWrap("eduleaderboard", "Belum ada data essay.\n\nMain: .soal sd matematika 5 essay"));
+      return m.reply(raraWrap("eduleaderboard", "Belum ada data essay.\n\nMain: .soal sd matematika 5 essay"));
     }
 
     let txt = `Leaderboard Essay\n\n`;
@@ -185,7 +185,7 @@ async function handler(m, { sock, args }) {
       }
 
       if (Object.keys(subjectMap).length === 0) {
-        return m.reply(novaWrap("eduleaderboard", "Belum ada data per mapel.\n\nMain quiz dulu: .soal sd matematika 5"));
+        return m.reply(raraWrap("eduleaderboard", "Belum ada data per mapel.\n\nMain quiz dulu: .soal sd matematika 5"));
       }
 
       let txt = `Ranking Per Mapel\n\n`;
@@ -206,7 +206,7 @@ async function handler(m, { sock, args }) {
       });
 
     if (subjectUsers.length === 0) {
-      return m.reply(novaWrap("eduleaderboard", `Belum ada data untuk mapel "${mapel}".\n\nMain: .soal sd ${mapel} 5`));
+      return m.reply(raraWrap("eduleaderboard", `Belum ada data untuk mapel "${mapel}".\n\nMain: .soal sd ${mapel} 5`));
     }
 
     // PG per subject
@@ -265,7 +265,7 @@ async function handler(m, { sock, args }) {
       .map(u => ({ ...u, jCount: u.jenjang[jenjangKey].count }));
 
     if (jenjangUsers.length === 0) {
-      return m.reply(novaWrap("eduleaderboard", `Belum ada data untuk jenjang ${jenjangKey}.\n\nMain: .soal ${jenjang} matematika 5`));
+      return m.reply(raraWrap("eduleaderboard", `Belum ada data untuk jenjang ${jenjangKey}.\n\nMain: .soal ${jenjang} matematika 5`));
     }
 
     const pgRanked = [...jenjangUsers]
@@ -312,7 +312,7 @@ async function handler(m, { sock, args }) {
     const u = allScores[sender];
 
     if (!u) {
-      return m.reply(novaWrap("eduleaderboard", "Kamu belum main quiz sama sekali!\n\nMulai: .soal sd matematika 5"));
+      return m.reply(raraWrap("eduleaderboard", "Kamu belum main quiz sama sekali!\n\nMulai: .soal sd matematika 5"));
     }
 
     const mcAcc = getMCAccuracy(u);
@@ -365,7 +365,7 @@ async function handler(m, { sock, args }) {
   // === STATS ===
   if (cmd === "stats" || cmd === "statistik") {
     if (allUsers.length === 0) {
-      return m.reply(novaWrap("eduleaderboard", "Belum ada data."));
+      return m.reply(raraWrap("eduleaderboard", "Belum ada data."));
     }
 
     const totalMC = allUsers.reduce((s, u) => s + (u.mcTotal || 0), 0);
@@ -416,11 +416,11 @@ async function handler(m, { sock, args }) {
   // === RESET (owner only) ===
   if (cmd === "reset" || cmd === "clear") {
     if (!m.isOwner) {
-      return m.reply(novaWrap("eduleaderboard", "Khusus owner!"));
+      return m.reply(raraWrap("eduleaderboard", "Khusus owner!"));
     }
     db.db.data.eduScores = {};
     db.write();
-    await m.reply(novaWrap("Eduleaderboard", "Leaderboard belajar direset!"));
+    await m.reply(raraWrap("Eduleaderboard", "Leaderboard belajar direset!"));
     return;
   }
 

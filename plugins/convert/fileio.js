@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .fileio / .tmpfiles — upload media ke file.io (temporary, one-time download)
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const FILEIO_URL = "https://file.io/uploads";
 const FILEIO_EXPIRES = "14d";
@@ -38,7 +38,7 @@ function mediaFilename(target) {
   if (name) return String(name).replace(/[\\/\0]/g, "_").slice(0, 180) || "file";
   const mime = String(target?.mimetype || target?.msg?.mimetype || "application/octet-stream").split(";")[0];
   const ext = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "video/mp4": "mp4", "audio/mpeg": "mp3", "audio/ogg": "ogg" }[mime] || "bin";
-  return `nova-upload.${ext}`;
+  return `rara-upload.${ext}`;
 }
 
 async function uploadToFileio(buffer, filename, mime) {
@@ -48,7 +48,7 @@ async function uploadToFileio(buffer, filename, mime) {
     method: "POST",
     body: form,
     signal: AbortSignal.timeout(60000),
-    headers: { Accept: "application/json", "User-Agent": "Nova-WhatsApp-Bot/1.0" },
+    headers: { Accept: "application/json", "User-Agent": "Rara-WhatsApp-Bot/1.0" },
   });
   let data;
   try { data = await res.json(); } catch { data = null; }
@@ -61,7 +61,7 @@ async function uploadToFileio(buffer, filename, mime) {
 async function handler(m) {
   const target = getMediaTarget(m);
   if (!target) {
-    return m.reply(novaWrap("file.io", `Reply atau kirim media dengan caption ${m.prefix}fileio. File.io menghapus file setelah diunduh atau setelah masa berlaku habis.`, "guide"));
+    return m.reply(raraWrap("file.io", `Reply atau kirim media dengan caption ${m.prefix}fileio. File.io menghapus file setelah diunduh atau setelah masa berlaku habis.`, "guide"));
   }
 
   try {
@@ -72,11 +72,11 @@ async function handler(m) {
     const filename = mediaFilename(target);
     const data = await uploadToFileio(buffer, filename, mime);
     await m.react("🐣");
-    return m.reply(novaWrap("file.io", `File berhasil di-upload.\nNama: ${filename}\nLink: ${data.link}\nBerlaku: ${data.expiry || FILEIO_EXPIRES}\nCatatan: file.io menghapus file setelah diunduh.`, "success"));
+    return m.reply(raraWrap("file.io", `File berhasil di-upload.\nNama: ${filename}\nLink: ${data.link}\nBerlaku: ${data.expiry || FILEIO_EXPIRES}\nCatatan: file.io menghapus file setelah diunduh.`, "success"));
   } catch (e) {
     console.error("fileio error:", e?.message || e);
     await m.react("❌");
-    return m.reply(novaWrap("file.io", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("file.io", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import te from "../../src/lib/nova-error.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import te from "../../src/lib/rara-error.js";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "publicthisgc",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   const isPublicGroup = publicGroups.includes(m.chat);
 
   if (isPublicGroup && !isSelfGroup) {
-    return m.reply(novaWrap("Grup Ini sUdah Mode Public", 
+    return m.reply(raraWrap("Grup Ini sUdah Mode Public", 
         `Bot merespon semua member di grup ini\n\n` +
         `_Gunakan ${m.prefix}selfthisgc untuk menutup akses_`));
   }
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     db.setting("publicGroups", [...publicGroups, m.chat]);
   }
 
-  return m.reply(novaWrap("Mode Public Diaktifkasi", 
+  return m.reply(raraWrap("Mode Public Diaktifkasi", 
       `Bot sekarang merespon semua member di grup ini\n` +
       `Override mode global aktif untuk grup ini\n\n` +
       `📋 *grup lain tidak terpengaruh*\n\n` +

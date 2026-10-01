@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/rara-countdown.js";
 
 const pluginConfig = {
   name: "tugas",
@@ -108,11 +108,11 @@ function buildTaskTickCard(t, remMs) {
   lines.push(`🕒 Sisa: *${formatRemaining(remMs)}*`);
   lines.push("");
   lines.push("_udah dikerjain belum nih?_ ✨");
-  return novaWrap("Deadline Terdekat", lines.join("\n"));
+  return raraWrap("Deadline Terdekat", lines.join("\n"));
 }
 
 function buildTaskFinalCard(t) {
-  return novaWrap("Deadline Terdekat", [
+  return raraWrap("Deadline Terdekat", [
     "⌛ *WAKTU HABIS!*",
     "",
     `🔴 ${t.id} — ${t.name}`,
@@ -123,7 +123,7 @@ function buildTaskFinalCard(t) {
 }
 
 function buildTaskCancelledCard(t) {
-  return novaWrap("Deadline Terdekat", [
+  return raraWrap("Deadline Terdekat", [
     "✅ *COUNTDOWN DIBATALKAN*",
     "",
     `${t.id} — ${t.name}`,
@@ -205,12 +205,12 @@ async function handler(m, { sock, args, db }) {
       const input = cmdArgs.join(" ");
       const parts = input.split("|").map(s => s.trim());
       if (parts.length < 2) {
-        return m.reply(novaWrap("tugas", "Format salah!\n\n💡 *Contoh:* `.tugas add 25/12 | Essay Filsafat | Filsafat Umum`\n\nFormat: <deadline> | <nama tugas> | <matkul (opsional)>"));
+        return m.reply(raraWrap("tugas", "Format salah!\n\n💡 *Contoh:* `.tugas add 25/12 | Essay Filsafat | Filsafat Umum`\n\nFormat: <deadline> | <nama tugas> | <matkul (opsional)>"));
       }
 
       const deadline = parseDate(parts[0]);
       if (!deadline) {
-        return m.reply(novaWrap("tugas", `Format tanggal salah!\n\nGunakan: DD/MM atau DD/MM/YYYY\n💡 *Contoh:* 25/12 atau 25/12/2026`));
+        return m.reply(raraWrap("tugas", `Format tanggal salah!\n\nGunakan: DD/MM atau DD/MM/YYYY\n💡 *Contoh:* 25/12 atau 25/12/2026`));
       }
 
       const name = parts[1] || "Tanpa nama";
@@ -243,7 +243,7 @@ async function handler(m, { sock, args, db }) {
     else if (cmd === "list" || cmd === "all" || cmd === "semua") {
       const tasks = getTasks(database, sender);
       if (tasks.length === 0) {
-        return m.reply(novaWrap("tugas", "Belum ada tugas tersimpan.\n\nKetik `.tugas add` untuk menambah."));
+        return m.reply(raraWrap("tugas", "Belum ada tugas tersimpan.\n\nKetik `.tugas add` untuk menambah."));
       }
 
       // Sort by deadline
@@ -276,7 +276,7 @@ async function handler(m, { sock, args, db }) {
       const tasks = getTasks(database, sender);
       const pending = tasks.filter(t => t.status === "pending");
       if (pending.length === 0) {
-        return m.reply(novaWrap("Tugas", "Tidak ada tugas pending. Semua selesai!"));
+        return m.reply(raraWrap("Tugas", "Tidak ada tugas pending. Semua selesai!"));
       }
 
       pending.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
@@ -304,14 +304,14 @@ async function handler(m, { sock, args, db }) {
       const tasks = getTasks(database, sender);
       const task = tasks.find(t => t.id === id);
       if (!task) {
-        return m.reply(novaWrap("Tugas", `Tugas *${id || "?"}* gak ketemu.\n\nCek ID di \`${prefix}tugas list\``));
+        return m.reply(raraWrap("Tugas", `Tugas *${id || "?"}* gak ketemu.\n\nCek ID di \`${prefix}tugas list\``));
       }
       if (task.status === "done") {
-        return m.reply(novaWrap("Tugas", `Tugas *${task.id}* udah DONE duluan.`));
+        return m.reply(raraWrap("Tugas", `Tugas *${task.id}* udah DONE duluan.`));
       }
       task.status = "done";
       saveStore(database);
-      await m.reply(novaWrap("Tugas", `Tugas selesai!\n\n${task.id} - ${task.name}\nGood job! 🎉`));
+      await m.reply(raraWrap("Tugas", `Tugas selesai!\n\n${task.id} - ${task.name}\nGood job! 🎉`));
     }
 
     // === DELETE ===
@@ -320,11 +320,11 @@ async function handler(m, { sock, args, db }) {
       const tasks = getTasks(database, sender);
       const idx = tasks.findIndex(t => t.id === id);
       if (idx === -1) {
-        return m.reply(novaWrap("Tugas", `Tugas *${id || "?"}* gak ketemu.\n\nCek ID di \`${prefix}tugas list\``));
+        return m.reply(raraWrap("Tugas", `Tugas *${id || "?"}* gak ketemu.\n\nCek ID di \`${prefix}tugas list\``));
       }
       const removed = tasks.splice(idx, 1)[0];
       saveStore(database);
-      await m.reply(novaWrap("Tugas", `Tugas dihapus!\n\n${removed.id} - ${removed.name}`));
+      await m.reply(raraWrap("Tugas", `Tugas dihapus!\n\n${removed.id} - ${removed.name}`));
     }
 
     // === CLEAR ===
@@ -333,7 +333,7 @@ async function handler(m, { sock, args, db }) {
       const n = tasks.length;
       tasks.length = 0;
       saveStore(database);
-      await m.reply(novaWrap("Tugas", n > 0 ? `Semua tugas dihapus (${n})!` : "Belum ada tugas yang perlu dihapus."));
+      await m.reply(raraWrap("Tugas", n > 0 ? `Semua tugas dihapus (${n})!` : "Belum ada tugas yang perlu dihapus."));
     }
 
     else {
@@ -341,7 +341,7 @@ async function handler(m, { sock, args, db }) {
     }
   } catch (e) {
     console.error("[TUGAS] Error:", e.message);
-    await m.reply(novaWrap("tugas", `Error: ${e.message}`));
+    await m.reply(raraWrap("tugas", `Error: ${e.message}`));
   }
 }
 

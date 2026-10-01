@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'clancreate',
     alias: ["clancreate"],
@@ -48,26 +48,26 @@ async function handler(m, { sock }) {
     }
 
     if (clanName.length > MAX_CLAN_NAME) {
-        return m.reply(novaWrap("Clancreate", `❌ Nama clan maksimal ${MAX_CLAN_NAME} karakter`))
+        return m.reply(raraWrap("Clancreate", `❌ Nama clan maksimal ${MAX_CLAN_NAME} karakter`))
     }
 
     if (!/^[a-zA-Z0-9\s]+$/.test(clanName)) {
-        return m.reply(novaWrap("Clancreate", `❌ Nama clan hanya boleh huruf, angka, dan spasi`))
+        return m.reply(raraWrap("Clancreate", `❌ Nama clan hanya boleh huruf, angka, dan spasi`))
     }
 
     if (!db.db.data.clans) db.db.data.clans = {}
 
     if (user.clanId) {
-        return m.reply(novaWrap("Clancreate", `❌ Kamu sudah punya clan\nKeluar dulu: *.clanleave*`))
+        return m.reply(raraWrap("Clancreate", `❌ Kamu sudah punya clan\nKeluar dulu: *.clanleave*`))
     }
 
     const existingClan = Object.values(db.db.data.clans).find(c => c.name.toLowerCase() === clanName.toLowerCase())
     if (existingClan) {
-        return m.reply(novaWrap("Clancreate", `❌ Nama *${clanName}* sudah dipakai`))
+        return m.reply(raraWrap("Clancreate", `❌ Nama *${clanName}* sudah dipakai`))
     }
 
     if ((user.koin || 0) < CLAN_CREATE_COST) {
-        return m.reply(novaWrap("Rp ${CLAN_CREATE_COST.toLocaleString('id-ID')}", `❌ Koin tidak cukup\n\n` +
+        return m.reply(raraWrap("Rp ${CLAN_CREATE_COST.toLocaleString('id-ID')}", `❌ Koin tidak cukup\n\n` +
             `Butuh: *Rp ${CLAN_CREATE_COST.toLocaleString('id-ID')}*\n` +
             `Punya: *Rp ${(user.koin || 0).toLocaleString('id-ID')}*`))
     }
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     db.setUser(m.sender, { clanId })
     await db.save()
 
-    await m.reply(novaWrap("CLAN CREATED", 
+    await m.reply(raraWrap("CLAN CREATED", 
         `*${clanName}*\n` +
         `Leader: @${m.sender.split('@')[0]}\n` +
         `Status: Open · 1/50 members\n\n` +

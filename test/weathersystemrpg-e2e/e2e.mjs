@@ -4,12 +4,12 @@
 //   mkdir -p /tmp/weathersystemrpg-e2e && cd /tmp/weathersystemrpg-e2e &&
 //   node <repo>/test/weathersystemrpg-e2e/e2e.mjs
 import path from "node:path";
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
 import {
   RPG_WEATHER_KINDS, getRpgWeather, getRpgWeatherForecast,
   applyWeatherToFishWeights, rpgWeatherTag,
   _setRpgWeatherForTest,
-} from "../../src/lib/nova-rpg-weather.js";
+} from "../../src/lib/rara-rpg-weather.js";
 import { config as wsConfig, handler as wsHandler } from "../../plugins/rpg/weathersystemrpg.js";
 
 let pass = 0, fail = 0;
@@ -17,7 +17,7 @@ const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "✅" : "❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 
 // db init (cwd kosong)
-await initDatabase(path.join(process.cwd(), "nova.json"));
+await initDatabase(path.join(process.cwd(), "rara.json"));
 
 // ─── 1. LIB: kinds + multiplier ───
 check("1. 5 jenis cuaca terdefinisi", Object.keys(RPG_WEATHER_KINDS).length === 5);

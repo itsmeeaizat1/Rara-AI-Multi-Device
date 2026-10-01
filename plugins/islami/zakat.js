@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Kalkulator Zakat
  * Fitur: .zakat — hitung zakat penghasilan / maal / emas / fidyah
  *        dengan harga emas LIVE (gold-api.com + kurs USD open.er-api.com)
  *        → nisab real-time, status wajib/belum, jumlah zakat.
  */
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "zakat",
@@ -84,7 +84,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (!sub || sub === "info" || sub === "menu") {
     const { perGram, live } = await getHargaEmasPerGram();
     const nisab = perGram * NISAB_GRAM;
-    return m.reply(novaWrap("Zakat", [
+    return m.reply(raraWrap("Zakat", [
       "🕌 *Kalkulator Zakat*",
       "",
       `💰 Harga emas: ${rp(perGram)}/gram ${live ? "_(live)_" : "_(estimasi — API down)_"}`,
@@ -109,12 +109,12 @@ async function handler(m, { sock, config: botConfig }) {
       const income = parseRp(arg);
       if (!Number.isFinite(income) || income <= 0) {
         await m.react("❌");
-        return m.reply(novaWrap("Zakat", `Format: ${prefix}zakat penghasilan 5jt (gaji/omzet per bulan)`));
+        return m.reply(raraWrap("Zakat", `Format: ${prefix}zakat penghasilan 5jt (gaji/omzet per bulan)`));
       }
       const nisabBulanan = nisab / 12;
       const wajib = income >= nisabBulanan;
       await m.react("🐣");
-      return m.reply(novaWrap("Zakat", [
+      return m.reply(raraWrap("Zakat", [
         "💼 *Zakat Penghasilan*",
         "",
         `💵 Penghasilan/bulan: ${rp(income)}`,
@@ -132,11 +132,11 @@ async function handler(m, { sock, config: botConfig }) {
       const harta = parseRp(arg);
       if (!Number.isFinite(harta) || harta <= 0) {
         await m.react("❌");
-        return m.reply(novaWrap("Zakat", `Format: ${prefix}zakat maal 150jt (total tabungan/aset bersih yang udah dimiliki 1 tahun)`));
+        return m.reply(raraWrap("Zakat", `Format: ${prefix}zakat maal 150jt (total tabungan/aset bersih yang udah dimiliki 1 tahun)`));
       }
       const wajib = harta >= nisab;
       await m.react("🐣");
-      return m.reply(novaWrap("Zakat", [
+      return m.reply(raraWrap("Zakat", [
         "🏦 *Zakat Maal (Harta)*",
         "",
         `💼 Total harta bersih: ${rp(harta)}`,
@@ -154,12 +154,12 @@ async function handler(m, { sock, config: botConfig }) {
       const gram = Number(String(arg).replace(/[^\d.,]/g, "").replace(",", "."));
       if (!Number.isFinite(gram) || gram <= 0) {
         await m.react("❌");
-        return m.reply(novaWrap("Zakat", `Format: ${prefix}zakat emas 90 (jumlah gram emas yang kamu simpan)`));
+        return m.reply(raraWrap("Zakat", `Format: ${prefix}zakat emas 90 (jumlah gram emas yang kamu simpan)`));
       }
       const nilai = gram * perGram;
       const wajib = gram >= NISAB_GRAM;
       await m.react("🐣");
-      return m.reply(novaWrap("Zakat", [
+      return m.reply(raraWrap("Zakat", [
         "🪙 *Zakat Emas*",
         "",
         `🪙 Emas: ${gram} gram ≈ ${rp(nilai)}`,
@@ -177,10 +177,10 @@ async function handler(m, { sock, config: botConfig }) {
       const hari = parseInt(String(arg).replace(/\D/g, ""), 10);
       if (!Number.isFinite(hari) || hari <= 0) {
         await m.react("❌");
-        return m.reply(novaWrap("Zakat", `Format: ${prefix}zakat fidyah 30 (jumlah hari yang gak bisa puasa)`));
+        return m.reply(raraWrap("Zakat", `Format: ${prefix}zakat fidyah 30 (jumlah hari yang gak bisa puasa)`));
       }
       await m.react("🐣");
-      return m.reply(novaWrap("Zakat", [
+      return m.reply(raraWrap("Zakat", [
         "🍚 *Fidyah Puasa*",
         "",
         `📅 Hari yang ditinggalkan: ${hari} hari`,
@@ -193,11 +193,11 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     await m.react("❌");
-    return m.reply(novaWrap("Zakat", `Subcommand gak dikenal: "${sub}".\n\nKetik ${prefix}zakat buat lihat menu.`));
+    return m.reply(raraWrap("Zakat", `Subcommand gak dikenal: "${sub}".\n\nKetik ${prefix}zakat buat lihat menu.`));
   } catch (e) {
     console.error("[zakat]", e.message || e);
     await m.react("❌");
-    await m.reply(novaWrap("Zakat", "❌ Gagal hitung zakat — coba lagi bentar lagi ya."));
+    await m.reply(raraWrap("Zakat", "❌ Gagal hitung zakat — coba lagi bentar lagi ya."));
   }
 }
 

@@ -1,5 +1,5 @@
 // hi-web-db.js — shim database gaya engine lama buat web dashboard (db.data / loadDatabase)
-// File JSON sendiri di src/database/panel/hiweb-db.json — gak nyampur db Nova. Auto-save 10 dtk.
+// File JSON sendiri di src/database/panel/hiweb-db.json — gak nyampur db Rara. Auto-save 10 dtk.
 import fs from "fs";
 import path from "path";
 

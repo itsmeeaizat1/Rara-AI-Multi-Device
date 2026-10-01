@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import fs from 'fs'
 import path from 'path'
 import config from '../../config.js'
-import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
+import { isLid, lidToJid } from '../../src/lib/rara-lid.js'
 const CPANEL_DIR = path.join(process.cwd(), "src", "database", "panel", 'cpanel')
 const VALID_SERVERS = ['v1', 'v2', 'v3', 'v4', 'v5']
 
@@ -108,7 +108,7 @@ function handler(m, { sock }) {
     if (action === 'add') {
         const current = loadGcSeller(version)
         if (current === m.chat) {
-            return m.reply(novaWrap("gcseller", `❌ Grup ini sudah terdaftar sebagai GC Seller *${serverLabel}*.`))
+            return m.reply(raraWrap("gcseller", `❌ Grup ini sudah terdaftar sebagai GC Seller *${serverLabel}*.`))
         }
 
         saveGcSeller(version, m.chat)
@@ -122,13 +122,13 @@ function handler(m, { sock }) {
         }
         txt += `\n`
         txt += `Semua member grup ini sekarang bisa create server ${serverLabel}.`
-        return m.reply(novaWrap("gcseller", txt))
+        return m.reply(raraWrap("gcseller", txt))
     }
 
     if (action === 'reset') {
         const current = loadGcSeller(version)
         if (!current) {
-            return m.reply(novaWrap("${serverLabel}", `❌ Belum ada GC Seller terdaftar untuk *${serverLabel}*.`))
+            return m.reply(raraWrap("${serverLabel}", `❌ Belum ada GC Seller terdaftar untuk *${serverLabel}*.`))
         }
 
         saveGcSeller(version, null)

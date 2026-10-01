@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ytmp4v3.js — YouTube MP4 v3 (@distube/ytdl-core, direct engine)
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
   try {
     const url = m.args.join(" ").trim();
     if (!url || !url.match(/youtu\.?be/i)) {
-      return m.reply(novaWrap("ytmp4v3", `Kirim URL YouTube yang valid.\n\nContoh: ${m.prefix}ytmp4v3 https://youtu.be/dQw4w9WgXcQ`, "guide"));
+      return m.reply(raraWrap("ytmp4v3", `Kirim URL YouTube yang valid.\n\nContoh: ${m.prefix}ytmp4v3 https://youtu.be/dQw4w9WgXcQ`, "guide"));
     }
 
     await m.react("🕒");
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     const format = ytdl.chooseFormat(info.formats, { quality: "highestvideo", filter: "videoandaudio" });
     if (!format) {
       await m.react("❌");
-      return m.reply(novaWrap("ytmp4v3", "Gagal mendapatkan video stream.", "error"));
+      return m.reply(raraWrap("ytmp4v3", "Gagal mendapatkan video stream.", "error"));
     }
 
     // Download
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     // WhatsApp max ~64MB for video
     if (buffer.length > 64 * 1024 * 1024) {
       await m.react("❌");
-      return m.reply(novaWrap("ytmp4v3", "Video terlalu besar (>64MB). Coba video yang lebih pendek.", "error"));
+      return m.reply(raraWrap("ytmp4v3", "Video terlalu besar (>64MB). Coba video yang lebih pendek.", "error"));
     }
 
     await m.react("🐣");
@@ -111,11 +111,11 @@ async function handler(m, { sock }) {
         },
       },
     });
-    await m.reply(novaBerhasil("ytmp4v3"));
+    await m.reply(raraBerhasil("ytmp4v3"));
   } catch (err) {
     console.error("ytmp4v3 error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("ytmp4v3", err.message || "Error. Mungkin video private/age-restricted.", "error"));
+    return m.reply(raraWrap("ytmp4v3", err.message || "Error. Mungkin video private/age-restricted.", "error"));
   }
 }
 

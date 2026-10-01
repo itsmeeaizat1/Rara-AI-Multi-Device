@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -47,7 +47,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const content = args.slice(1).join(" ").trim();
 
     if (!lang || lang === "list" || !content) {
-      return m.reply(novaWrap("TTS Voice", [
+      return m.reply(raraWrap("TTS Voice", [
         "Text To Speech dengan pilihan bahasa.",
         "",
         "Format: " + usedPrefix + "ttsvoice <lang> <teks>",
@@ -64,14 +64,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!VOICES[lang]) {
-      return m.reply(novaWrap("TTS Voice", [
+      return m.reply(raraWrap("TTS Voice", [
         "Bahasa tidak tersedia: " + lang,
         "Daftar: " + Object.keys(VOICES).join(", "),
       ].join("\n")));
     }
 
     if (content.length > 500) {
-      return m.reply(novaWrap("TTS Voice", "Teks maksimal 500 karakter."));
+      return m.reply(raraWrap("TTS Voice", "Teks maksimal 500 karakter."));
     }
 
     const voiceCode = VOICES[lang].code;
@@ -84,10 +84,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
 
     if (!res.data || res.data.length < 100) {
-      return m.reply(novaWrap("TTS Voice", "Gagal generate audio. Coba lagi."));
+      return m.reply(raraWrap("TTS Voice", "Gagal generate audio. Coba lagi."));
     }
 
-    const tmpDir = path.join(os.tmpdir(), 'nova-ttsvoice');
+    const tmpDir = path.join(os.tmpdir(), 'rara-ttsvoice');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const outPath = path.join(tmpDir, 'tts_' + Date.now() + '.mp3');
     fs.writeFileSync(outPath, res.data);
@@ -97,7 +97,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: await toVoiceNote(audioBuf),
       mimetype: "audio/ogg; codecs=opus",
       ptt: true,
-      caption: novaWrap("TTS Voice", [
+      caption: raraWrap("TTS Voice", [
         "Berhasil!",
         "Bahasa: " + VOICES[lang].name + " (" + lang + ")",
         "Teks: " + content.slice(0, 50) + (content.length > 50 ? "..." : ""),
@@ -107,7 +107,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     fs.unlinkSync(outPath);
   } catch (e) {
     console.error("ttsvoice error:", e.message);
-    return m.reply(novaWrap("TTS Voice", "Error: " + e.message));
+    return m.reply(raraWrap("TTS Voice", "Error: " + e.message));
   }
 }
 

@@ -10,8 +10,8 @@ import {
   getCookingPlayer, saveCooking, cookDish, buyIngredient, buyTool, restCook,
   hasIngredients, toolBonusMult, getRecipeLoose, getIngredientLoose,
   setCookingStatePath,
-} from "../../src/lib/nova-cooking.js";
-import { formatRp } from "../../src/lib/nova-rpg-service.js";
+} from "../../src/lib/rara-cooking.js";
+import { formatRp } from "../../src/lib/rara-rpg-service.js";
 import { config as cookConfig, handler as cookHandler } from "../../plugins/rpg/cooking.js";
 
 let pass = 0, fail = 0;

@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Boss Raid — Fight powerful bosses (needs key, high reward)
 
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy, addGems,
   addItem, getEquipStats, rollDrop, ITEM_DB,
   checkCooldown, setCooldown, formatTime, MONSTER_DB,
-  getCash} from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
+  getCash} from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animBattle, rpgSleep } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "bossraid",
@@ -42,22 +42,22 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("bossraid", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("bossraid", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (rpg.level < MIN_LEVEL) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("bossraid", `Butuh minimal *Level ${MIN_LEVEL}* untuk raid boss. Level kamu: *${rpg.level}*.`, "warn"));
+      return m.reply(raraRpgBox("bossraid", `Butuh minimal *Level ${MIN_LEVEL}* untuk raid boss. Level kamu: *${rpg.level}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastBossRaid");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("bossraid", `Cooldown boss raid tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(raraRpgBox("bossraid", `Cooldown boss raid tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < BOSS_ENERGY) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("bossraid", `Energi kurang! Butuh *${BOSS_ENERGY} energy*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(raraRpgBox("bossraid", `Energi kurang! Butuh *${BOSS_ENERGY} energy*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     // Pilih boss sesuai level
@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
       }
 
       await m.react("🐣");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "bossraid", icon: "👹",
         flavor: "🏆 *BOSS DIKALAHKAN!*",
         body: [
@@ -183,7 +183,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBossRaid", BOSS_COOLDOWN);
 
       await m.react("❌");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "bossraid", icon: "👹",
         flavor: "💀 *KALAH DARI BOSS!*",
         body: [
@@ -202,7 +202,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("bossraid error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("bossraid", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("bossraid", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

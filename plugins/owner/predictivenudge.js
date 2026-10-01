@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Predictive Life-Nudge — Bot belajar kebiasaan user, kirim pengingat proaktif
 // Track: pola chat, jam aktif, durasi aktivitas, emosi -> prediksi kebutuhan
 // .predictivenudge on/off — Toggle (default OFF saat pairing)
@@ -6,10 +6,10 @@
 // .predictivenudge nudge now — Test kirim nudge manual
 // .predictivenudge reset — Reset data pola
 // .predictivenudge voice on/off — Nudge pakai VN suara neural atau teks
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getApiKey, hasApiKey } from "../../src/lib/rara-api-keys.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -44,7 +44,7 @@ const pluginConfig = {
   defaultOff: true,
 };
 
-const NUDGE_SYSTEM_PROMPT = `Kamu adalah Nova, teman yang sangat perhatian dan peduli. Kamu sudah mempelajari pola kebiasaan user dan akan mengirim "nudge" — pengingat proaktif yang terasa kayak teman dekat yang peduli, bukan robot.
+const NUDGE_SYSTEM_PROMPT = `Kamu adalah Rara, teman yang sangat perhatian dan peduli. Kamu sudah mempelajari pola kebiasaan user dan akan mengirim "nudge" — pengingat proaktif yang terasa kayak teman dekat yang peduli, bukan robot.
 
 Aturan nudge:
 1. Natural, kasual, santai. Kayak teman deket yang peduli, bukan asisten formal
@@ -485,7 +485,7 @@ async function handler(m, { sock, config: botConfig }) {
         voiceLang: cfg[gid]?.voiceLang || "id-ID-GadisNeural",
       };
       db.db.write();
-      const text = novaWrap("Predictive Life-Nudge", [
+      const text = raraWrap("Predictive Life-Nudge", [
         "Status: ON",
         "Voice: " + (cfg[gid].voice ? "ON (Gadis neural)" : "OFF (teks)"),
         "",
@@ -509,7 +509,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
-      const text = novaWrap("Predictive Life-Nudge", ["Status: OFF", "Pengingat proaktif dimatikan"].join("\n"));
+      const text = raraWrap("Predictive Life-Nudge", ["Status: OFF", "Pengingat proaktif dimatikan"].join("\n"));
       await m.reply( text, "predictivenudge");
     } else if (args[0] === "voice") {
       const voiceOpt = args[1];
@@ -520,13 +520,13 @@ async function handler(m, { sock, config: botConfig }) {
       } else if (voiceOpt === "off") {
         cfg[gid].voice = false;
       } else {
-        const text = novaWrap("Predictive Life-Nudge", "Pilih: on (VN neural) atau off (teks)");
+        const text = raraWrap("Predictive Life-Nudge", "Pilih: on (VN neural) atau off (teks)");
         await m.reply( text, "predictivenudge");
         return { handled: true };
       }
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
-      const text = novaWrap("Predictive Life-Nudge", [
+      const text = raraWrap("Predictive Life-Nudge", [
         "Voice: " + (cfg[gid].voice ? "ON (Gadis neural VN)" : "OFF (teks)"),
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
@@ -558,7 +558,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       lines.push(prefix + "predictivenudge nudge now — Test nudge");
 
-      const text = novaWrap("Predictive Life-Nudge", lines.join("\n"));
+      const text = raraWrap("Predictive Life-Nudge", lines.join("\n"));
       await m.reply( text, "predictivenudge");
     } else if (args[0] === "nudge" && args[1] === "now") {
       // Manual test nudge
@@ -602,11 +602,11 @@ async function handler(m, { sock, config: botConfig }) {
         db.db.data.predictiveNudgeData[uid] = { messages: [], nudges: [], createdAt: Date.now() };
         db.db.write();
       }
-      const text = novaWrap("Predictive Life-Nudge", ["Data pola direset", "Bot akan belajar ulang dari awal"].join("\n"));
+      const text = raraWrap("Predictive Life-Nudge", ["Data pola direset", "Bot akan belajar ulang dari awal"].join("\n"));
       await m.reply( text, "predictivenudge");
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
-      const text = novaWrap("Predictive Life-Nudge", [
+      const text = raraWrap("Predictive Life-Nudge", [
         "Status: " + status,
         "Voice: " + (cfg[gid]?.voice !== false ? "ON (Gadis neural)" : "OFF (teks)"),
         "Default: OFF (tidak aktif saat pairing)",
@@ -621,7 +621,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "predictivenudge");
     }
   } catch (e) {
-    await m.reply(novaWrap("predictivenudge", "Gagal proses. Coba lagi.", "error"));
+    await m.reply(raraWrap("predictivenudge", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }

@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zhonesty — Honesty Score Game dari zelapi /games/honesty (live 15 Sep 2026).
 // 🔹 .zhonesty <pertanyaan> | <jujur|tidak jujur|ragu> → skor + level + feedback.
 // ═════════════════════════════════════════════
 
 import { zelHonesty, ZEL_HONESTY_ANSWERS, _setZelGamesHttpForTest, _setZelGamesKeyForTest } from "../../src/scraper/zelgames.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "zhonesty",
@@ -19,7 +19,7 @@ const pluginConfig = {
 };
 
 function usageCard() {
-  return novaWrap("zhonesty", [
+  return raraWrap("zhonesty", [
     "🔍 HONESTY SCORE (zelapi):",
     "",
     "▸ .zhonesty <pertanyaan> | <jujur / tidak jujur / ragu>",
@@ -35,15 +35,15 @@ async function handler(m, { sock }) {
     if (!raw) return m.reply(usageCard());
     if (!raw.includes("|")) return m.reply(usageCard());
     const [q, a] = raw.split("|").map((s) => s.trim());
-    if (!q) { await m.react("❌"); return m.reply(novaWrap("zhonesty", "Pertanyaannya kosong — .zhonesty <pertanyaan> | <jawaban>")); }
+    if (!q) { await m.react("❌"); return m.reply(raraWrap("zhonesty", "Pertanyaannya kosong — .zhonesty <pertanyaan> | <jawaban>")); }
     if (!ZEL_HONESTY_ANSWERS.includes(String(a || "").toLowerCase())) {
       await m.react("❌");
-      return m.reply(novaWrap("zhonesty", `Jawaban cuma boleh: ${ZEL_HONESTY_ANSWERS.join(" / ")}`));
+      return m.reply(raraWrap("zhonesty", `Jawaban cuma boleh: ${ZEL_HONESTY_ANSWERS.join(" / ")}`));
     }
 
     await m.react("🧠");
     const r = await zelHonesty(q, a);
-    if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zhonesty", `Honesty bermasalah: ${r.error}`)); }
+    if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zhonesty", `Honesty bermasalah: ${r.error}`)); }
     const d = r.result;
     const score = Number(d.honesty_score);
     const bar = "▰".repeat(Math.max(0, Math.min(10, Math.round(score)))) + "▱".repeat(Math.max(0, 10 - Math.round(score)));
@@ -57,11 +57,11 @@ async function handler(m, { sock }) {
       `🏅 Level: ${d.honesty_level || "-"}`,
     ];
     if (d.feedback) lines.push("", `💬 ${String(d.feedback).trim()}`);
-    await m.reply(novaWrap("zhonesty", lines.join("\n")));
+    await m.reply(raraWrap("zhonesty", lines.join("\n")));
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(novaWrap("zhonesty", `fitur error: ${e?.message || e}`));
+    await m.reply(raraWrap("zhonesty", `fitur error: ${e?.message || e}`));
   }
 }
 

@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // lib/autoflow.js — MESIN eksekusi rule automation (ESM)
 // Membaca rule dari database/autoflow.json (file yang sama dengan .autonovaai)
 
-import { foldHistory, appendTurn, clearSession, clearSessionPrefix } from "./nova-ai-session.js";
+import { foldHistory, appendTurn, clearSession, clearSessionPrefix } from "./rara-ai-session.js";
 import fs from "fs";
-import { memoryBlock, extractMemories } from "./nova-memory.js";
-import { getDatabase } from "./nova-database.js";
+import { memoryBlock, extractMemories } from "./rara-memory.js";
+import { getDatabase } from "./rara-database.js";
 
 const DB = "./src/database/ai/autoflow.json";
 // 🔹 ANTI-SPAM COOLDOWN DIHAPUS TOTAL (owner 29 Sep: "fitur anti spam
@@ -68,7 +68,7 @@ function pushMem(key, userText, aiText) {
 }
 // reset memory: (ruleId, chat, sender) — semua opsional, kosong = reset SEMUA
 export function clearAichatMemory(ruleId, chat, sender) {
-  // 🔹 memori sekarang TERPADU di nova-ai-session.js (key "agent:<sender>")
+  // 🔹 memori sekarang TERPADU di rara-ai-session.js (key "agent:<sender>")
   // — key lama rule:chat:sender di file lama ikut dibersihin biar gak nyangkut
   let n = 0;
   if (sender) {
@@ -156,7 +156,7 @@ async function execute(conn, m, rule, extra = {}) {
           // → key mati = pollinations. Sekarang rantai nano-banana (commit
           // 72ce717a) biar engine utamanya nano banana, pollinations cuma
           // penyelamat terakhir.
-          const { callImageGenChain } = await import("./nova-ai-service.js");
+          const { callImageGenChain } = await import("./rara-ai-service.js");
           const prompt = String(a.value || "").replace(/@user/g, senderName).trim() || "sesuatu yang menarik";
           const img = await callImageGenChain(prompt);
           await send({
@@ -187,22 +187,22 @@ async function execute(conn, m, rule, extra = {}) {
         // ke runAgent() ENGINE PENUH SAMA dengan .aisuperagent: plan otomatis
         // pilih mode persona/research(browsing beneran)/tools, skill 183 +
         // mcp terpasang, gaya natural tanpa diktat & anti-sapaan-template
-        // (lihat personaPrompt()/SYS_ANSWER di nova-agent.js).
+        // (lihat personaPrompt()/SYS_ANSWER di rara-agent.js).
         // a.value = gaya bicara custom dari owner (opsional, boleh kosong).
         const userText = m?.text || m?.body || "";
         if (!userText.trim()) break;
         const persona = a.value?.trim() || "";
 
-        // 🔹 MEMORY PER-USER TERPADU: key "agent:<sender>" — SAMA dengan .novaai
-        // → obrolan di .novaai diterusin di aichat autoflow & sebaliknya (1 sistem)
+        // 🔹 MEMORY PER-USER TERPADU: key "agent:<sender>" — SAMA dengan .raraai
+        // → obrolan di .raraai diterusin di aichat autoflow & sebaliknya (1 sistem)
         const senderName = m?.pushName || (user ? user.split("@")[0] : "user");
         const memKey = `agent:${user || "anon"}`;
         const historyCtx = foldHistory(memKey, { userName: senderName });
 
         // 🔹 MEMORY JANGKA PANJANG (upgrade #2, owner 25 Sep 2026: "autonovaagent
         // juga harusnya punya memory jangka panjang krna itu ai otomatis") —
-        // fakta durabel user (nova-memory.js, STORE SAMA dengan .novaai/
-        // .novaagent/.aisuperagent) di-inject ke prompt + diekstrak ulang tiap
+        // fakta durabel user (rara-memory.js, STORE SAMA dengan .raraai/
+        // .raraagent/.aisuperagent) di-inject ke prompt + diekstrak ulang tiap
         // jawaban. Rule aichat = AI OTOMATIS — dia wajib inget user kayak agent manual.
         const db = getDatabase();
         let memSys = "";
@@ -215,9 +215,9 @@ async function execute(conn, m, rule, extra = {}) {
         const task = `${styleNote}${historyCtx}${userText}`;
 
         // 🔹 UPGRADE 29 Sep #2 (owner: "gimana biar anovaagent ini kyk ai
-        // agent novaagent dan aisuperagent bisa browsing dan melakukan
+        // agent raraagent dan aisuperagent bisa browsing dan melakukan
         // apapun") — engine (runAgent/toolbox/executors) SUDAH SAMA persis
-        // dengan .novaagent/.aisuperagent sejak upgrade sebelumnya (browsing
+        // dengan .raraagent/.aisuperagent sejak upgrade sebelumnya (browsing
         // real, tools, skill 183, mcp semua kepakai). Gap yang KETEMU pas
         // dibandingin baris-per-baris sama plugins/ai-agent/agent.js:
         // (1) vision — reply/attach gambar gak ke-scan (mediaBuffer selalu
@@ -234,9 +234,9 @@ async function execute(conn, m, rule, extra = {}) {
         } catch {}
 
         try {
-          const { runAgent } = await import("./nova-agent.js");
+          const { runAgent } = await import("./rara-agent.js");
           const { execAction, buildExecutors, buildToolbox } = await import("../../plugins/ai-agent/agent.js");
-          const { skillsBlock } = await import("./nova-askills.js");
+          const { skillsBlock } = await import("./rara-askills.js");
           const { splitChatChunks } = await import("./aiagent.js");
           const toolbox = await buildToolbox();
           const executors = buildExecutors(m, conn, db, mediaBuffer, {}, null);
@@ -279,7 +279,7 @@ async function execute(conn, m, rule, extra = {}) {
           // mode suara (VOICE_KEYS.anovaagent, per chat) — keyword request
           // ATAU toggle .anovaagent suara on, sama pola .aisuperagent
           try {
-            const { wantsVoice, getVoiceCfg, speakVoiceNote, VOICE_KEYS } = await import("./nova-voice-reply.js");
+            const { wantsVoice, getVoiceCfg, speakVoiceNote, VOICE_KEYS } = await import("./rara-voice-reply.js");
             const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(userText)
               || wantsVoice(db, chat, userText, VOICE_KEYS.anovaagent);
             if (wantVoice && res?.answer) {

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "clone",
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!m.isGroup) {
       const text =
-        novaWrap("Clone", ["Perintah ini hanya untuk grup."].join("\n")) +
+        raraWrap("Clone", ["Perintah ini hanya untuk grup."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!picture) {
       const text =
-        novaWrap("Clone", ["Grup ini belum memiliki foto profil."].join("\n")) +
+        raraWrap("Clone", ["Grup ini belum memiliki foto profil."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      novaWrap("Clone", [`Group: *${m.chat}*`,
+      raraWrap("Clone", [`Group: *${m.chat}*`,
         "Status: *SUCCESS*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Owner", "Gagal nih, coba lagi ya");
+      raraError("Owner", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "clone");
   }

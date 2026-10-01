@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .vexfile — upload file ke vexfile.com (file host PPD, file tersimpan permanen di akun owner,
 // link share https://vexfile.com/download/XXXX). API vexfile = REMOTE upload: bot staging file
 // ke tmpfiles.org dulu → kirim URL-nya → vexfile nyedot → link permanen.
 // Format arsip/APK/ISO/dst aja (43 format) — format lain otomatis dibungkus .zip.
 // Key: .setkey vexfile <key> — OWNER-ONLY (file masuk akun vexfile owner, PPD = duit owner).
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   getVexfileToken, stageToTmpfiles, vexfileRemoteUpload, vexZipWrap,
   isVexAllowedFormat, STAGING_MAX_BYTES,
-} from "../../src/lib/nova-vexfile.js";
+} from "../../src/lib/rara-vexfile.js";
 
 const pluginConfig = {
   name: "vexfile",
@@ -42,7 +42,7 @@ function mediaFilename(target) {
   if (name) return String(name).replace(/[\\/\0]/g, "_").slice(0, 180) || "file";
   const mime = String(target?.mimetype || target?.msg?.mimetype || "application/octet-stream").split(";")[0];
   const ext = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "video/mp4": "mp4", "audio/mpeg": "mp3", "audio/ogg": "ogg" }[mime] || "bin";
-  return `nova-upload.${ext}`;
+  return `rara-upload.${ext}`;
 }
 
 function formatSize(bytes) {
@@ -54,12 +54,12 @@ function formatSize(bytes) {
 async function handler(m) {
   const token = getVexfileToken();
   if (!token) {
-    return m.reply(novaWrap("vexfile", `API key belum diset.\nOwner ketik: ${m.prefix}setkey vexfile <api-key>\nAmbil key dari dashboard akun vexfile.com kamu.`, "guide"));
+    return m.reply(raraWrap("vexfile", `API key belum diset.\nOwner ketik: ${m.prefix}setkey vexfile <api-key>\nAmbil key dari dashboard akun vexfile.com kamu.`, "guide"));
   }
 
   const target = getMediaTarget(m);
   if (!target) {
-    return m.reply(novaWrap("vexfile", `Reply atau kirim file dengan caption ${m.prefix}vexfile.\n\nDiterima: arsip/paket game (zip, rar, 7z, apk, xapk, obb, aab, iso, jar, pak, dll) sampai 100 MB.\nFormat lain (foto, mp4, pdf, dokumen) otomatis dibungkus .zip.\nFile tersimpan permanen di akun vexfile.com kamu — tiap download dapat poin PPD.`, "guide"));
+    return m.reply(raraWrap("vexfile", `Reply atau kirim file dengan caption ${m.prefix}vexfile.\n\nDiterima: arsip/paket game (zip, rar, 7z, apk, xapk, obb, aab, iso, jar, pak, dll) sampai 100 MB.\nFormat lain (foto, mp4, pdf, dokumen) otomatis dibungkus .zip.\nFile tersimpan permanen di akun vexfile.com kamu — tiap download dapat poin PPD.`, "guide"));
   }
 
   try {
@@ -68,7 +68,7 @@ async function handler(m) {
     if (!Buffer.isBuffer(buffer) || buffer.length === 0) throw new Error("media kosong");
     if (buffer.length > STAGING_MAX_BYTES) {
       await m.react("❌");
-      return m.reply(novaWrap("vexfile", `Ukuran file ${formatSize(buffer.length)} melebihi 100 MB (batas staging). VexFile sendiri menerima 5 GB, tapi jalur bot lewat relay sementara yang dibatasi 100 MB.`, "error"));
+      return m.reply(raraWrap("vexfile", `Ukuran file ${formatSize(buffer.length)} melebihi 100 MB (batas staging). VexFile sendiri menerima 5 GB, tapi jalur bot lewat relay sementara yang dibatasi 100 MB.`, "error"));
     }
     let filename = mediaFilename(target);
     const mime = String(target.mimetype || target.msg?.mimetype || "application/octet-stream").split(";")[0];
@@ -89,11 +89,11 @@ async function handler(m) {
     ];
     if (up.id) lines.push(`ID file: ${up.id}`);
     lines.push("File tersimpan permanen di akun vexfile.com kamu — tiap download menghasilkan poin.");
-    return m.reply(novaWrap("vexfile", lines.join("\n"), "success"));
+    return m.reply(raraWrap("vexfile", lines.join("\n"), "success"));
   } catch (e) {
     console.error("vexfile error:", e?.message || e);
     await m.react("❌");
-    return m.reply(novaWrap("vexfile", `Upload gagal: ${String(e?.message || e).slice(0, 200)}`, "error"));
+    return m.reply(raraWrap("vexfile", `Upload gagal: ${String(e?.message || e).slice(0, 200)}`, "error"));
   }
 }
 

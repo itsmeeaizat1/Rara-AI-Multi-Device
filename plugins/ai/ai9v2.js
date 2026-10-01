@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ai9v2.js — 9ROUTER V2 CLOUD (17 Sep 2026, request owner "cba buat fitur
 // 9router v2 jgn gnttin yg udh ada"): chat AI via hosted gateway
 // 9router.cloudku.us.kg (21 model: gemini-3.8/claude/gpt-oss/agent).
 // MODUL: src/scraper/router9v2.js — key pusat apikeys.json providers.router9v2.
 // FITUR .ai9 LAMA TETAP UTUH (gak digantiin) — ini tambahan baru.
-import { novaBox } from "../../src/lib/nova-menu-style.js";
+import { raraBox } from "../../src/lib/rara-menu-style.js";
 import { getTioEndpoint, setTioEndpoint, resetTioEndpoint } from "../../src/lib/config/env-loader.js";
 import { splitChatChunks } from "../../src/lib/aiagent.js";
-import { appendTurn, toMessages } from "../../src/lib/nova-ai-session.js";
+import { appendTurn, toMessages } from "../../src/lib/rara-ai-session.js";
 import {
   router9v2ChatSmart, router9v2Models, router9v2Key, router9v2Ping,
   getRouter9v2Pref, setRouter9v2Pref,
@@ -40,7 +40,7 @@ async function handler(m, { sock, args }) {
   const argList = (args || []).map(String);
   const sub = argList[0]?.toLowerCase();
   if (!router9v2Key()) {
-    return m.reply(novaBox("9Router V2", ["Key belum di-set — isi di apikeys.json (router9v2) atau env ROUTER_API_KEY."]));
+    return m.reply(raraBox("9Router V2", ["Key belum di-set — isi di apikeys.json (router9v2) atau env ROUTER_API_KEY."]));
   }
 
   // ── .ai9v2 endpoint — lihat/ganti endpoint 9router (OWNER SAJA) ──
@@ -51,12 +51,12 @@ async function handler(m, { sock, args }) {
   // gateway lokal tanpa edit kode, persist di apikeys.json.
   if (sub === "endpoint") {
     if (!m.isOwner) {
-      return m.reply(novaBox("9Router V2 — Endpoint", ["Khusus owner."]));
+      return m.reply(raraBox("9Router V2 — Endpoint", ["Khusus owner."]));
     }
     const val = argList[1]?.toLowerCase();
     // lihat endpoint aktif
     if (!val) {
-      return m.reply(novaBox("9Router V2 — Endpoint", [
+      return m.reply(raraBox("9Router V2 — Endpoint", [
         "Aktif : " + getTioEndpoint(),
         "---",
         "Ganti : .ai9v2 endpoint <url>",
@@ -71,7 +71,7 @@ async function handler(m, { sock, args }) {
     if (val === "default") {
       const r = resetTioEndpoint();
       await m.react(r.ok ? "\u26a1" : "\u274c");
-      return m.reply(novaBox("9Router V2 — Endpoint", [
+      return m.reply(raraBox("9Router V2 — Endpoint", [
         r.ok ? "Balik ke default." : "GAGAL: " + r.error,
         "Aktif: " + r.endpoint,
       ]));
@@ -82,7 +82,7 @@ async function handler(m, { sock, args }) {
       : argList.slice(1).join(" ");
     const r = setTioEndpoint(url);
     await m.react(r.ok ? "\u26a1" : "\u274c");
-    return m.reply(novaBox("9Router V2 — Endpoint", [
+    return m.reply(raraBox("9Router V2 — Endpoint", [
       r.ok ? "Berhasil diganti — seluruh rantai 9router bot ikut (tanpa restart)." : "GAGAL: " + r.error,
       "Aktif: " + (r.ok ? r.endpoint : getTioEndpoint()),
     ]));
@@ -93,7 +93,7 @@ async function handler(m, { sock, args }) {
     await m.react("🧠");
     const p = await router9v2Ping();
     await m.react(p.errors ? "❌" : "🐣");
-    return m.reply(novaBox("9Router V2 — Ping", [
+    return m.reply(raraBox("9Router V2 — Ping", [
       ...p.lines,
       "---",
       "Total: " + p.totalMs + "ms",
@@ -111,10 +111,10 @@ async function handler(m, { sock, args }) {
       const lines = [`Total model: ${total}`, `Default chat ini: ${pref}`, "---"];
       for (const id of models) lines.push((id === pref ? "→ " : "• ") + id);
       lines.push("---", "Ganti: .ai9v2 model <id>");
-      return m.reply(novaBox("9Router V2 — Model", lines.slice(0, 40)));
+      return m.reply(raraBox("9Router V2 — Model", lines.slice(0, 40)));
     } catch (e) {
       await m.react("❌");
-      return m.reply(novaBox("9Router V2", ["Gagal ambil daftar model: " + String(e.message).slice(0, 140)]));
+      return m.reply(raraBox("9Router V2", ["Gagal ambil daftar model: " + String(e.message).slice(0, 140)]));
     }
   }
 
@@ -124,7 +124,7 @@ async function handler(m, { sock, args }) {
     const rest = argList.slice(2).join(" ").trim();
     if (!target) {
       const pref = getRouter9v2Pref(m.chat) || ROUTER9V2_DEFAULT_MODEL;
-      return m.reply(novaBox("9Router V2", [
+      return m.reply(raraBox("9Router V2", [
         `Model default chat ini: ${pref}`,
         "Model bawaan bot: " + ROUTER9V2_DEFAULT_MODEL,
         "---",
@@ -139,20 +139,20 @@ async function handler(m, { sock, args }) {
       const found = models.find((x) => x.toLowerCase() === target.toLowerCase())
         || models.find((x) => x.toLowerCase().endsWith("/" + target.toLowerCase()));
       if (!found) {
-        return m.reply(novaBox("9Router V2", [
+        return m.reply(raraBox("9Router V2", [
           `Model "${target}" gak ada di gateway.`,
           "Cek nama pas: .ai9v2 list",
         ]));
       }
       if (!rest) {
         setRouter9v2Pref(m.chat, found);
-        return m.reply(novaBox("9Router V2", [`Model default chat ini → ${found}`]));
+        return m.reply(raraBox("9Router V2", [`Model default chat ini → ${found}`]));
       }
       // one-shot: model <id> <pesan>
       return await chatReply(m, sock, rest, found);
     } catch (e) {
       await m.react("❌");
-      return m.reply(novaBox("9Router V2", ["Gagal validasi model: " + String(e.message).slice(0, 140)]));
+      return m.reply(raraBox("9Router V2", ["Gagal validasi model: " + String(e.message).slice(0, 140)]));
     }
   }
 
@@ -162,7 +162,7 @@ async function handler(m, { sock, args }) {
   const userMsg = quotedText
     ? `${text}\n\n[User membalas pesan ini — jadikan konteks]: ${quotedText.slice(0, 500)}`
     : text;
-  if (!userMsg.trim()) return m.reply(novaBox("9Router V2", HELP));
+  if (!userMsg.trim()) return m.reply(raraBox("9Router V2", HELP));
 
   const model = getRouter9v2Pref(m.chat) || ROUTER9V2_DEFAULT_MODEL;
   return await chatReply(m, sock, userMsg, model);
@@ -194,7 +194,7 @@ async function chatReply(m, sock, userMsg, model) {
   } catch (e) {
     console.error("[ai9v2]:", e.message);
     await m.react("❌");
-    return m.reply(novaBox("9Router V2", [
+    return m.reply(raraBox("9Router V2", [
       "Chat gagal: " + String(e.message).slice(0, 160),
       "---",
       "Coba model lain: .ai9v2 list",

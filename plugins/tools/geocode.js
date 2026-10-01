@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaHeader,  separator, tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraHeader,  separator, tipText, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const query = m.text?.trim();
     if (!query) {
-      await m.reply(novaCaption({
+      await m.reply(raraCaption({
   emoji: "🛠️",
   name: "geocode",
   description: "Alamat ke koordinat GPS",
@@ -27,15 +27,15 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const { data } = await axios.get("https://nominatim.openstreetmap.org/search", {
       params: { q: query, format: "json", limit: 3 }, timeout: 10000,
-      headers: { "User-Agent": "NovaBot/1.0" },
+      headers: { "User-Agent": "RaraBot/1.0" },
     });
     if (!data?.length) {
-      await m.reply(novaWrap("Geocode", [`Tempat: *${query}*`].join("\n")));
+      await m.reply(raraWrap("Geocode", [`Tempat: *${query}*`].join("\n")));
       return { handled: true };
     }
-    let text = novaWrap("Geocode", "📍") + "\n\n";
+    let text = raraWrap("Geocode", "📍") + "\n\n";
     data.forEach((r, i) => {
-      text += novaWrap(`HAsIL ${i+1}`, [
+      text += raraWrap(`HAsIL ${i+1}`, [
         `Nama: *${r.display_name.substring(0,60)}*`,
         `Lat: *${r.lat}*`, `Lon: *${r.lon}*`,
         `Peta: https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lon}`,
@@ -46,7 +46,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(text, "geocode");
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaError("Tools", "Gagal nih"));
+    await m.reply(raraError("Tools", "Gagal nih"));
   }
   return { handled: true };
 }

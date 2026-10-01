@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, bracketBox, tipText } from "../../src/lib/rara-menu-style.js";
 import {
   enableRenewalReminder,
   disableRenewalReminder,
   getRenewalStatus,
   triggerManualRenewal,
   findExpiringUsers,
-} from "../../src/lib/nova-auto-renewal.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+} from "../../src/lib/rara-auto-renewal.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "autorenewal",
@@ -64,23 +64,23 @@ async function handler(m, { sock }) {
       const reminderDays = parseInt(args[2]) || 3;
 
       if (!timeArg.match(/^\d{1,2}:\d{2}$/)) {
-        return m.reply(novaWrap("autorenewal", toSC("Format jam tidak valid! Gunakan HH:MM")));
+        return m.reply(raraWrap("autorenewal", toSC("Format jam tidak valid! Gunakan HH:MM")));
       }
 
       const [hour, minute] = timeArg.split(":").map(Number);
 
       if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        return m.reply(novaWrap("autorenewal", toSC("Jam tidak valid!")));
+        return m.reply(raraWrap("autorenewal", toSC("Jam tidak valid!")));
       }
 
       if (reminderDays < 1 || reminderDays > 30) {
-        return m.reply(novaWrap("autorenewal", toSC("Reminder days harus 1-30!")));
+        return m.reply(raraWrap("autorenewal", toSC("Reminder days harus 1-30!")));
       }
 
       const result = enableRenewalReminder(hour, minute, reminderDays, sock);
 
       if (!result.success) {
-        return m.reply(novaWrap("autorenewal", `❌ ${toSC(result.error)}`));
+        return m.reply(raraWrap("autorenewal", `❌ ${toSC(result.error)}`));
       }
       return m.reply(
         bracketBox("✅", toSC("Renewal Reminder Diaktifkan"), [
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableRenewalReminder();
-      return m.reply(novaWrap("autorenewal", toSC("Renewal Reminder dinonaktifkan")));
+      return m.reply(raraWrap("autorenewal", toSC("Renewal Reminder dinonaktifkan")));
     }
 
     case "status":
@@ -130,9 +130,9 @@ async function handler(m, { sock }) {
     case "check": {
       try {
         await triggerManualRenewal(sock);
-        return m.reply(novaWrap("autorenewal", toSC("Renewal check dijalankan! Cek DM untuk laporan.")));
+        return m.reply(raraWrap("autorenewal", toSC("Renewal check dijalankan! Cek DM untuk laporan.")));
       } catch (error) {
-        return m.reply(novaWrap("autorenewal", te(m.prefix, m.command, m.pushName), "error"));
+        return m.reply(raraWrap("autorenewal", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 
@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
       const expiring = status.expiring;
 
       if (expiring.length === 0) {
-        return m.reply(novaWrap("autorenewal", toSC("Tidak ada premium user yang akan expired dalam H-") + status.reminderDays));
+        return m.reply(raraWrap("autorenewal", toSC("Tidak ada premium user yang akan expired dalam H-") + status.reminderDays));
       }
 
       const lines = expiring.map((u, i) => `${i + 1}. ${u.name} — H-${u.daysLeft} (${u.expiryDate})`);

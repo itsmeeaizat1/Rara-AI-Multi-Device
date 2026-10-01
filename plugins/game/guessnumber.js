@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // guessnumber.js — Tebak angka 1-100 dengan hint lebih besar/kecil (no API)
 
-import { novaError } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
+import { raraError } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
-import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
-import { formatRp } from "../../src/lib/nova-rpg-service.js";
-import { rollBonus } from "../../src/lib/nova-game-rewards.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { addExpWithLevelCheck } from "../../src/lib/rara-level.js";
+import { formatRp } from "../../src/lib/rara-rpg-service.js";
+import { rollBonus } from "../../src/lib/rara-game-rewards.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "guessnumber",
@@ -37,7 +37,7 @@ async function handler(m, { args, prefix }) {
   // Start game
   if (arg === "mulai" || arg === "start" || !arg) {
     if (activeGames.has(chatId)) {
-      return m.reply(novaError("TebakAngka", "Game lagi jalan nih! Ketik angka tebakanmu"));
+      return m.reply(raraError("TebakAngka", "Game lagi jalan nih! Ketik angka tebakanmu"));
     }
     const target = Math.floor(Math.random() * 100) + 1;
     activeGames.set(chatId, { target, attempts: 0, maxAttempts: 10 });
@@ -53,7 +53,7 @@ async function handler(m, { args, prefix }) {
   // Check if game is active
   const game = activeGames.get(chatId);
   if (!game) {
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "tebak angka",
       icon: "🔢",
       flavor: "🔢 *TEBAK ANGKA!*",
@@ -65,7 +65,7 @@ async function handler(m, { args, prefix }) {
   // Parse guess
   const guess = parseInt(arg);
   if (isNaN(guess) || guess < 1 || guess > 100) {
-    return m.reply(novaError("TebakAngka", "Masukin angka 1-100 nih!"));
+    return m.reply(raraError("TebakAngka", "Masukin angka 1-100 nih!"));
   }
 
   game.attempts++;

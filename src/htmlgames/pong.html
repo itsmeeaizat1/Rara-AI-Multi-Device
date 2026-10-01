@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Nova Arcade — Pong</title>
+<title>Rara Arcade — Pong</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { background:#0b1220; color:#e8eefc; font-family:system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:12px; touch-action:none; }
@@ -15,14 +15,14 @@
 </style>
 </head>
 <body>
-<h1>🏓 NOVA PONG</h1>
+<h1>🏓 RARA PONG</h1>
 <div class="sub">Geser jari di layar untuk gerakkan paddle · lomba sampai 7 poin lawan AI</div>
 <div id="score">Kamu 0 — 0 AI</div>
 <canvas id="c" width="320" height="200"></canvas>
 <div id="msg"></div>
 <script>
 const C=document.getElementById("c"),X=C.getContext("2d"),W=320,H=200,PW=8,PH=48;
-let py,ay,bx,by,vx,vy,ps,as,dead,raf,wins=+(localStorage.novaPongWins||0);
+let py,ay,bx,by,vx,vy,ps,as,dead,raf,wins=+(localStorage.raraPongWins||0);
 const scoreEl=document.getElementById("score"), msgEl=document.getElementById("msg");
 function reset(){ py=H/2-PH/2; ay=H/2-PH/2; ps=0; as=0; dead=false; msgEl.textContent=""; serve(1); loop(); }
 function serve(d){ bx=W/2; by=H/2; vx=4*d; vy=(Math.random()*4-2); }
@@ -44,7 +44,7 @@ function loop(){
   raf=requestAnimationFrame(loop);
 }
 function check(){ if(ps>=7||as>=7){ dead=true; cancelAnimationFrame(raf);
-  if(ps>=7){ wins++; localStorage.novaPongWins=wins; }
+  if(ps>=7){ wins++; localStorage.raraPongWins=wins; }
   msgEl.textContent=ps>=7?"🏆 KAMU MENANG "+ps+"-"+as+"! (total menang: "+wins+") Ketuk untuk main lagi":"💀 AI MENANG "+as+"-"+ps+". Ketuk untuk main lagi";
   X.fillStyle="rgba(0,0,0,.55)"; X.fillRect(0,0,W,H);
   X.fillStyle="#fff"; X.font="bold 22px system-ui"; X.textAlign="center";

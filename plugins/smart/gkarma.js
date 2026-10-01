@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "gkarma",
@@ -68,7 +68,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const data = getKarma(db, gid);
     const user = data.users[m.sender] || { points: 0, given: 0, received: 0 };
     const lvl = getLevel(user.points);
-    await m.reply(novaWrap("Group Karma", [
+    await m.reply(raraWrap("Group Karma", [
       "User: " + (m.pushName || "@" + m.sender.split("@")[0]),
       "Karma: " + user.points,
       "Diterima: +" + user.received,
@@ -82,11 +82,11 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "give" || sub === "+" || sub === "kasih") {
     const target = m.mentionedJid?.[0];
     if (!target) {
-      await m.reply(novaWrap("Group Karma", "Format: " + prefix + "gkarma give @member [alasan]"));
+      await m.reply(raraWrap("Group Karma", "Format: " + prefix + "gkarma give @member [alasan]"));
       return { handled: true };
     }
     if (target === m.sender) {
-      await m.reply(novaWrap("Group Karma", "Tidak bisa kasih karma ke diri sendiri."));
+      await m.reply(raraWrap("Group Karma", "Tidak bisa kasih karma ke diri sendiri."));
       return { handled: true };
     }
     // Cooldown: 1 user can only give once per hour
@@ -99,7 +99,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const reason = args.slice(m.mentionedJid.length + 2).join(" ").trim() || "Kontribusi bagus";
     const pts = addKarma(db, gid, target, 1, reason);
     addKarma(db, gid, m.sender, -1, "Memberi karma");
-    await m.reply(novaWrap("Group Karma", "@" + target.split("@")[0] + " dapat +1 karma!\nAlasan: " + reason + "\nTotal karma: " + pts), { mentions: [target] });
+    await m.reply(raraWrap("Group Karma", "@" + target.split("@")[0] + " dapat +1 karma!\nAlasan: " + reason + "\nTotal karma: " + pts), { mentions: [target] });
     return { handled: true };
   }
 
@@ -110,14 +110,14 @@ async function handler(m, { sock, db, config: botConfig }) {
       .sort((a, b) => b[1].points - a[1].points)
       .slice(0, 10);
     if (sorted.length === 0) {
-      await m.reply(novaWrap("Group Karma", "Belum ada karma. Ketik " + prefix + "gkarma give @member."));
+      await m.reply(raraWrap("Group Karma", "Belum ada karma. Ketik " + prefix + "gkarma give @member."));
       return { handled: true };
     }
     const list = sorted.map(([jid, u], i) => {
       const medal = i === 0 ? "1" : i === 1 ? "2" : i === 2 ? "3" : (i + 1) + ".";
       return medal + " @" + jid.split("@")[0] + " - " + u.points + " karma";
     }).join("\n");
-    await m.reply(novaWrap("Karma Leaderboard", list), { mentions: sorted.map(([jid]) => jid) });
+    await m.reply(raraWrap("Karma Leaderboard", list), { mentions: sorted.map(([jid]) => jid) });
     return { handled: true };
   }
 
@@ -126,30 +126,30 @@ async function handler(m, { sock, db, config: botConfig }) {
     const data = getKarma(db, gid);
     const user = data.users[m.sender];
     if (!user || user.history.length === 0) {
-      await m.reply(novaWrap("Group Karma", "Belum ada riwayat karma."));
+      await m.reply(raraWrap("Group Karma", "Belum ada riwayat karma."));
       return { handled: true };
     }
     const list = user.history.slice(-5).map(h => {
       const sign = h.amount > 0 ? "+" : "";
       return sign + h.amount + " - " + h.reason;
     }).join("\n");
-    await m.reply(novaWrap("Karma History", "5 terakhir:\n" + list));
+    await m.reply(raraWrap("Karma History", "5 terakhir:\n" + list));
     return { handled: true };
   }
 
   // ==================== RESET (owner)
   if (sub === "reset") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Group Karma", "Khusus owner."));
+      await m.reply(raraWrap("Group Karma", "Khusus owner."));
       return { handled: true };
     }
     saveKarma(db, gid, { users: {}, lastReset: Date.now() });
-    await m.reply(novaWrap("Group Karma", "Karma grup direset."));
+    await m.reply(raraWrap("Group Karma", "Karma grup direset."));
     return { handled: true };
   }
 
   // ==================== HELP
-  await m.reply(novaWrap("Group Karma", [
+  await m.reply(raraWrap("Group Karma", [
     "GROUP KARMA",
     "",
     "Cara pakai:",

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolasciitext — teks ↔ kode ASCII/Unicode (port altftool.com/tools/all/text-ascii)
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolasciitext", alias: ["asciitext", "kodeascii", "textascii"], category: "tools",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      return m.reply(novaGuideV2("ftoolasciitext", {
+      return m.reply(raraGuideV2("ftoolasciitext", {
         kaomoji: "(◕ᴗ◕)",
         sapaan: "teks mau diubah ke kode angka? atau kode ke teks?",
         cara: "ketik enc (teks→kode) atau dec (kode→teks) lalu isinya",
@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
       const nums = text.split(/[\s,]+/).filter(Boolean);
       if (!nums.every((n) => /^\d+$/.test(n) && Number(n) <= 0x10ffff)) {
         await m.react("❌");
-        return m.reply(novaSalahV2("ftoolasciitext", {
+        return m.reply(raraSalahV2("ftoolasciitext", {
           kaomoji: "(・_・;)",
           pesan: "kodenya harus angka dipisah spasi atau koma",
           contoh: `${prefix}ftoolasciitext dec 104 97 108 111`,
@@ -42,19 +42,19 @@ async function handler(m, { sock, config: botConfig }) {
       result = nums.map((n) => String.fromCodePoint(Number(n))).join("");
     } else {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftoolasciitext", {
+      return m.reply(raraSalahV2("ftoolasciitext", {
         kaomoji: "(・_・;)",
         pesan: "pilih enc atau dec ya",
         contoh: `${prefix}ftoolasciitext enc abc`,
       }), "ftoolasciitext");
     }
     await m.react("🐣");
-    await m.reply(novaWrap("ASCII Text", [`Hasil (${action.startsWith("e") ? "encode" : "decode"}):`,
+    await m.reply(raraWrap("ASCII Text", [`Hasil (${action.startsWith("e") ? "encode" : "decode"}):`,
       "",
       "```" + (result.length > 800 ? result.substring(0, 800) + "…" : result) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("ASCII Text", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("ASCII Text", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

@@ -5,7 +5,7 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 
-const b = await import("../../src/lib/nova-aicall-bridge.js");
+const b = await import("../../src/lib/rara-aicall-bridge.js");
 const { matchVoiceCommand, normalizeVoiceText, startAicallVoiceBridge, _setBridgeMessageHandlerForTest, _clearBridgeMessageHandlerForTest, _setBridgeOwnerCheckForTest, _clearBridgeOwnerCheckForTest, _setBridgePremiumCheckForTest, _clearBridgePremiumCheckForTest, callerAcl, VOICE_REJECT_TXT } = b;
 
 // ═══ 1. matcher peta perintah suara ═══

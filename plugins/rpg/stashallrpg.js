@@ -1,6 +1,6 @@
-import { ensureRpg, saveRpg, addItem, removeItem, getItemCount } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg, addItem, removeItem, getItemCount } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 const pluginConfig = {
   name: "stashall", alias: ["stashall", "stashallrpg"],
   category: "rpg", description: "Pindah semua item ke storage",
@@ -10,11 +10,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("stashallrpg", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("stashallrpg", "RPG belum siap.", "error"));
     const inv = rpg.inventory || {};
     const items = Object.keys(inv).filter(k => inv[k] > 0);
   await animGeneric(m, sock, "📦", "Stashing Items");
-    if (!items.length) return m.reply(novaRpgBox("stashallrpg", "Inventory kosong.", "info"));
+    if (!items.length) return m.reply(raraRpgBox("stashallrpg", "Inventory kosong.", "info"));
     let count = 0;
     for (const item of items) {
       const qty = inv[item];
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     }
     saveRpg(m, rpg);
     await m.react("🐣");
-    return m.reply(novaRpgBox("stashallrpg", `📦 ${count} item dipindah ke storage.`, "success"));
-  } catch (e) { return m.reply(novaRpgBox("stashallrpg", "Error.", "error")); }
+    return m.reply(raraRpgBox("stashallrpg", `📦 ${count} item dipindah ke storage.`, "success"));
+  } catch (e) { return m.reply(raraRpgBox("stashallrpg", "Error.", "error")); }
 }
 export { pluginConfig as config, handler };

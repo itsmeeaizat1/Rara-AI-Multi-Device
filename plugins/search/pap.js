@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import {
   generateWAMessage,
   generateWAMessageFromContent,
   prepareWAMessageMedia,
 } from "nova";
-import te from "../../src/lib/nova-error.js";
-import { f } from "../../src/lib/nova-http.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { f } from "../../src/lib/rara-http.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "pap",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   const validTypes = ["cewe", "cowo", "femboy"];
 
   if (!arg || !validTypes.includes(arg)) {
-    return m.reply( novaGuide("Pap", "Pilih tipe pap: cewe, cowo, atau femboy", ".pap cewe"), { commandName: "pap" });
+    return m.reply( raraGuide("Pap", "Pilih tipe pap: cewe, cowo, atau femboy", ".pap cewe"), { commandName: "pap" });
   }
   try {
     const query = arg;
@@ -40,14 +40,14 @@ async function handler(m, { sock }) {
 
     const results = data?.data;
     if (!results || results.length === 0) {
-      return m.reply(novaError("Pap", `Pap ${query} lagi kosong nih, coba lagi ya`));
+      return m.reply(raraError("Pap", `Pap ${query} lagi kosong nih, coba lagi ya`));
     }
 
     const randomItem = results[Math.floor(Math.random() * results.length)];
     const imageUrl = randomItem.image_url;
 
     if (!imageUrl) {
-      return m.reply(novaWrap("Pap", "⚠️ Gambar tidak tersedia."));
+      return m.reply(raraWrap("Pap", "⚠️ Gambar tidak tersedia."));
     }
 
     const mediaMessage = await prepareWAMessageMedia({
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
     });
   } catch (error) {
     console.error("[PAP Search]", error.message);
-    m.reply(novaError("Pap", "Gagal load PAP nih, server lagi bermasalah"));
+    m.reply(raraError("Pap", "Gagal load PAP nih, server lagi bermasalah"));
   }
 }
 

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 // ============================================================
 // Nomor Kosong Plugin v2
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
   if (sub === "cek" || sub === "wa" || sub === "check") {
     const num = arg1.replace(/[^0-9]/g, "");
     if (!num || num.length < 8) {
-      return m.reply( novaWrap("Nomor Kosong",
+      return m.reply( raraWrap("Nomor Kosong",
         `Masukkan nomor yang ingin dicek!\n\nContoh:\n.nokos cek 08123456789\n.nokos cek 628123456789`
       ), "nokos");
     }
@@ -175,9 +175,9 @@ async function handler(m, { sock }) {
       } else {
         body += `\nNomor ini KOSONG!\nBisa digunakan untuk registrasi WA baru.\n\nCatatan: Kamu harus punya akses ke nomor ini untuk menerima OTP via SMS.`;
       }
-      return m.reply( novaWrap("Nomor Kosong", body), "nokos");
+      return m.reply( raraWrap("Nomor Kosong", body), "nokos");
     } catch {
-      return m.reply(novaWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
@@ -185,7 +185,7 @@ async function handler(m, { sock }) {
   if (sub === "prefix") {
     const prefix = arg1.replace(/[^0-9]/g, "");
     if (!prefix || prefix.length < 4) {
-      return m.reply( novaWrap("Nomor Kosong",
+      return m.reply( raraWrap("Nomor Kosong",
         `Masukkan prefix minimal 4 digit!\n\nContoh:\n.nokos prefix 0852 5\n.nokos prefix 62813 10`
       ), "nokos");
     }
@@ -210,9 +210,9 @@ async function handler(m, { sock }) {
       } else {
         body += `Semua nomor terdaftar. Coba lagi!\n.nokos prefix ${prefix} ${count}`;
       }
-      return m.reply( novaWrap("Nomor Kosong", body), "nokos");
+      return m.reply( raraWrap("Nomor Kosong", body), "nokos");
     } catch {
-      return m.reply(novaWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
@@ -235,12 +235,12 @@ async function handler(m, { sock }) {
       data.numbers.push(...newNums);
       data.lastUpdate = new Date().toISOString();
       saveSaved(data);
-      return m.reply( novaWrap("Nomor Kosong",
+      return m.reply( raraWrap("Nomor Kosong",
         `Hasil Save Nomor Kosong\n\nDicek: ${count} nomor\nDitemukan kosong: ${kosong.length}\nBaru disimpan: ${newNums.length}\nTotal tersimpan: ${data.numbers.length}\n\nGunakan .nokos list untuk melihat semua nomor tersimpan.`
       ), "nokos");
     } catch {
     await m.react("❌");
-      return m.reply(novaWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
@@ -248,7 +248,7 @@ async function handler(m, { sock }) {
   if (sub === "list") {
     const data = loadSaved();
     if (data.numbers.length === 0) {
-      return m.reply( novaWrap("Nomor Kosong",
+      return m.reply( raraWrap("Nomor Kosong",
         `Belum ada nomor kosong tersimpan.\n\nGunakan .nokos save [jumlah] [provider] untuk mulai menyimpan.`
       ), "nokos");
     }
@@ -260,13 +260,13 @@ async function handler(m, { sock }) {
     });
     if (data.numbers.length > 30) body += `\n...dan ${data.numbers.length - 30} nomor lainnya.`;
     body += `\n\n.nokos clear untuk hapus semua\n.nokos export untuk export ke txt`;
-    return m.reply( novaWrap("Nomor Kosong", body), "nokos");
+    return m.reply( raraWrap("Nomor Kosong", body), "nokos");
   }
 
   // --- CLEAR ---
   if (sub === "clear") {
     saveSaved({ numbers: [], lastUpdate: null });
-    return m.reply( novaWrap("Nomor Kosong",
+    return m.reply( raraWrap("Nomor Kosong",
       `Database nomor kosong berhasil dihapus.`
     ), "nokos");
   }
@@ -275,7 +275,7 @@ async function handler(m, { sock }) {
   if (sub === "export") {
     const data = loadSaved();
     if (data.numbers.length === 0) {
-      return m.reply( novaWrap("Nomor Kosong",
+      return m.reply( raraWrap("Nomor Kosong",
         `Tidak ada nomor untuk diexport.`
       ), "nokos");
     }
@@ -294,7 +294,7 @@ async function handler(m, { sock }) {
       let body = `Export Nomor Kosong (${data.numbers.length} nomor)\n\n`;
       body += data.numbers.map((n, i) => `${i + 1}. ${n}`).join("\n");
       body += `\n\nKirim file gagal. Copy manual di atas.`;
-      return m.reply( novaWrap("Nomor Kosong", body), "nokos");
+      return m.reply( raraWrap("Nomor Kosong", body), "nokos");
     }
     return;
   }
@@ -311,7 +311,7 @@ async function handler(m, { sock }) {
     body += `.nokos clear\n  Hapus semua nomor tersimpan\n\n`;
     body += `Provider: telkomsel, indosat, xl, tri, axis, smartfren, all\n`;
     body += `Max 30 nomor per command`;
-    return m.reply( novaWrap("Nomor Kosong", body), "nokos");
+    return m.reply( raraWrap("Nomor Kosong", body), "nokos");
   }
 
   // --- DEFAULT: generate with optional provider ---
@@ -343,10 +343,10 @@ async function handler(m, { sock }) {
     } else {
       body += `Semua nomor terdaftar. Coba lagi!\n.nokos ${count} ${prov}`;
     }
-    return m.reply( novaWrap("Nomor Kosong", body), "nokos");
+    return m.reply( raraWrap("Nomor Kosong", body), "nokos");
   } catch {
     await m.react("🐣");
-    return m.reply(novaWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

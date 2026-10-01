@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // schedulers.js — Konfigurasi cuaca, scheduler notifikasi cuaca & loker
 
 // Konfigurasi Cuaca (untuk info section menu + .weather)

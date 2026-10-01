@@ -4,7 +4,7 @@ const w = (s) => process.stdout.write(s + "\n");
 let pass = 0, fail = 0;
 const check = (name, ok) => { w((ok ? "  ✅ " : "  ❌ ") + name); ok ? pass++ : fail++; };
 
-import { pdfToImages, parsePagesArg, MAX_PAGES } from "../../src/lib/nova-pdftoimg.js";
+import { pdfToImages, parsePagesArg, MAX_PAGES } from "../../src/lib/rara-pdftoimg.js";
 // baca IHDR langsung dari bytes PNG (offset 16: width, 20: height, big-endian)
 function pngSize(buf) { return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) }; }
 

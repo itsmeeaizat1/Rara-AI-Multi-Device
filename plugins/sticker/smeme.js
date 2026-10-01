@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import FormData from 'form-data'
 import _sharp from 'sharp'
 import axios from "axios";
@@ -9,8 +9,8 @@ function getSharp() {
 import fs from "fs";
 import path from "path";
 import { config } from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "smeme",
   alias: ["smeme"],
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     m.isSticker ||
     (m.quoted && (m.quoted.isSticker || m.quoted.type === "stickerMessage"));
   if (!isImage && !isSticker) {
-    return m.reply(novaWrap("smeme", [
+    return m.reply(raraWrap("smeme", [
       "Reply atau kirim gambar/sticker dengan caption",
       "",
       "💡 Contoh: " + m.prefix + "smeme Top|Bottom",
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   }
   const input = m.args.join(" ");
   if (!input || !input.includes("|")) {
-    return m.reply(novaWrap("smeme", [
+    return m.reply(raraWrap("smeme", [
       "📌 Format: top|bottom",
       "",
       "💡 Contoh: " + m.prefix + "smeme Ketika|Kamu Lupa",
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
       mediaBuffer = await m.download();
     }
     if (!mediaBuffer) {
-      return m.reply(novaGagal("Smeme"));
+      return m.reply(raraGagal("Smeme"));
     }
     let imageBuffer;
     try {
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
       }
     }
     if (!imageUrl) {
-      return m.reply(novaGagal("Smeme"));
+      return m.reply(raraGagal("Smeme"));
     }
     console.log("[SMEME] Image uploaded:", imageUrl);
     const encodeText = (text) => {
@@ -147,14 +147,14 @@ async function handler(m, { sock }) {
     });
     const buffer = Buffer.from(response.data);
     await sock.sendImageAsSticker(m.chat, buffer, m, {
-      packname: config.sticker?.packname || "Nova-AI",
+      packname: config.sticker?.packname || "Rara-AI",
       author: config.sticker?.author || "Bot",
     });
       await m.react("🐣");
-      await m.reply(novaBerhasil("smeme"));
+      await m.reply(raraBerhasil("smeme"));
   } catch (error) {
     console.log("[SMEME] Error:", error.message);
-    m.reply(novaGangguan("smeme"));
+    m.reply(raraGangguan("smeme"));
   }
 }
 export { pluginConfig as config, handler };

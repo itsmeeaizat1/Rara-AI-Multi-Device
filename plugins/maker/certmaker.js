@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraBerhasil } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -25,7 +25,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
   try {
     const input = text.trim();
     if (!input || !input.includes("|")) {
-      return m.reply(novaWrap("certmaker", [
+      return m.reply(raraWrap("certmaker", [
         "Buat sertifikat custom.",
         "",
         "📌 Format: " + usedPrefix + "certmaker <nama>|<judul>|<pemberi>|<tanggal>",
@@ -38,10 +38,10 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     const parts = input.split("|").map(s => s.trim());
     const name = parts[0] || "Nama";
     const title = parts[1] || "Certificate of Achievement";
-    const issuer = parts[2] || "Nova AI";
+    const issuer = parts[2] || "Rara AI";
     const date = parts[3] || new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-    if (name.length > 40) return m.reply(novaWrap("certmaker", "Nama maksimal 40 karakter."));
+    if (name.length > 40) return m.reply(raraWrap("certmaker", "Nama maksimal 40 karakter."));
 
     const canvas = await getCanvas();
     const W = 1000, H = 700;
@@ -120,7 +120,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     ctx.textAlign = 'right';
     ctx.font = 'bold 18px serif';
     ctx.fillStyle = '#1a1a2e';
-    ctx.fillText('Nova AI', W - 120, 600);
+    ctx.fillText('Rara AI', W - 120, 600);
     ctx.strokeStyle = '#333333';
     ctx.beginPath();
     ctx.moveTo(W - 300, 610);
@@ -133,9 +133,9 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     ctx.textAlign = 'center';
     ctx.font = 'bold 14px sans-serif';
     ctx.fillStyle = '#c9a227';
-    ctx.fillText('Nova AI Bot', W / 2, H - 45);
+    ctx.fillText('Rara AI Bot', W / 2, H - 45);
 
-    const tmpDir = path.join(os.tmpdir(), 'nova-certmaker');
+    const tmpDir = path.join(os.tmpdir(), 'rara-certmaker');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const outPath = path.join(tmpDir, 'cert_' + Date.now() + '.png');
     const buf = cv.toBuffer('image/png');
@@ -144,13 +144,13 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: buf,
-      caption: novaBerhasil(),
+      caption: raraBerhasil(),
     });
 
     fs.unlinkSync(outPath);
   } catch (e) {
     console.error("certmaker error:", e);
-    return m.reply(novaWrap("certmaker", "Gagal buat sertifikat. Coba lagi.", "error"));
+    return m.reply(raraWrap("certmaker", "Gagal buat sertifikat. Coba lagi.", "error"));
   }
 }
 

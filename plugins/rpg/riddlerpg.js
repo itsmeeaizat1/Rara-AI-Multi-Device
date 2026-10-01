@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Riddle — Tebak-tebakan harian
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "riddle", alias: ["riddle", "riddlerpg", "tebak"],
@@ -22,9 +22,9 @@ async function handler(m, { sock }) {
   try {
     const riddle = RIDDLES[Math.floor(Math.random() * RIDDLES.length)];
   await animGeneric(m, sock, "🧩", "Riddle");
-    return m.reply(novaRpgBox("riddlerpg", `❓ *TEKA-TEKI RPG*\n\n${riddle}`, "info"));
+    return m.reply(raraRpgBox("riddlerpg", `❓ *TEKA-TEKI RPG*\n\n${riddle}`, "info"));
   } catch (e) {
-    return m.reply(novaRpgBox("riddlerpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("riddlerpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

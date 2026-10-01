@@ -1,17 +1,17 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ping — cek performa & status sistem.
 // REWORK 2026-09-11 (owner: "fitur .ping itu rusak, hps ping2"):
 // - .ping2 DIHAPUS total (duplikat, plugins/main/ping2.js di-git rm)
 // - .ping lama RUSAK: tiap run upload gambar ke pixhost.to (node-upload-
-//   images) + bikin product card AIRich + baca config.assets.nova2 via
+//   images) + bikin product card AIRich + baca config.assets.rara2 via
 //   node-webpmux — upload/aset gagal = error. AI Rich juga cuma boleh
-//   buat .web. Sekarang: pure stats + novaInfoSections, TANPA upload.
-import { novaError, novaInfoSections } from "../../src/lib/nova-menu-style.js";
+//   buat .web. Sekarang: pure stats + raraInfoSections, TANPA upload.
+import { raraError, raraInfoSections } from "../../src/lib/rara-menu-style.js";
 import os from "os";
 import fs from "fs";
 import { performance } from "perf_hooks";
 import { execSync } from "child_process";
-import { fetchTrace } from "../../src/lib/nova-speedtest.js";
+import { fetchTrace } from "../../src/lib/rara-speedtest.js";
 
 // IP lokal pertama (non-internal IPv4) — fail-safe
 function getLocalIp() {
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     const diskPct = disk.ok ? ((disk.used / disk.total) * 100).toFixed(1) : null;
     const loadAvg = os.loadavg();
 
-    // panel — label smallcaps otomatis via novaInfoSections, value verbatim
+    // panel — label smallcaps otomatis via raraInfoSections, value verbatim
     const info = [
       "Sistem",
       { label: "OS", value: `${os.type()} (${os.release()})` },
@@ -149,9 +149,9 @@ async function handler(m, { sock }) {
       { label: "DNS", value: getDnsServers() }
     );
 
-    await m.reply(`🏓 pong! (${execTime}ms)\n\n` + novaInfoSections(info));
+    await m.reply(`🏓 pong! (${execTime}ms)\n\n` + raraInfoSections(info));
   } catch (error) {
-    await m.reply(novaError("ping", error.message));
+    await m.reply(raraError("ping", error.message));
   }
   return { handled: true };
 }

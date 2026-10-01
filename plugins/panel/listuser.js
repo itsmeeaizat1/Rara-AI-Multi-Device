@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import config from '../../config.js'
-import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
+import te from '../../src/lib/rara-error.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const allCommands = VALID_SERVERS.slice(0, 5).map(v => `listuser${v}`)
 const allAliases = [
     ...VALID_SERVERS.map(v => `users${v}`),
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(novaWrap("listuser", `❌ *akses ditolak*\n\n` +
+        return m.reply(raraWrap("listuser", `❌ *akses ditolak*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
         } else {
             txt += `Isi config pterodactyl di \`config.js\``
         }
-        return m.reply(novaWrap("listuser", txt))
+        return m.reply(raraWrap("listuser", txt))
     }
     
     try {
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
         const users = res.data.data || []
         
         if (users.length === 0) {
-            return m.reply(novaWrap("listuser", `📋 *Daftar User [${serverLabel}]*\n\nTidak ada user terdaftar.`))
+            return m.reply(raraWrap("listuser", `📋 *Daftar User [${serverLabel}]*\n\nTidak ada user terdaftar.`))
         }
         
         let txt = `📋 *Daftar User [${serverLabel}]*\n\n`
@@ -124,10 +124,10 @@ async function handler(m, { sock }) {
             txt += `\n\nServer lain: *${available.filter(s => s !== serverVersion).join(', ')}*`
         }
         
-        return m.reply(novaWrap("listuser", txt))
+        return m.reply(raraWrap("listuser", txt))
         
     } catch (err) {
-        return m.reply(novaWrap("listuser", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("listuser", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

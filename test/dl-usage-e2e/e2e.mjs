@@ -3,7 +3,7 @@
 // layout downloader BEDA dari usage AI (tanpa section model).
 // Jalankan dari cwd DIR KOSONG:
 //   mkdir -p /tmp/dlusage-e2e && cd /tmp/dlusage-e2e && node <repo>/test/dl-usage-e2e/e2e.mjs
-import { novaDlUsage, novaAiUsage } from "../../src/lib/nova-menu-style.js";
+import { raraDlUsage, raraAiUsage } from "../../src/lib/rara-menu-style.js";
 import { config as playConfig, handler as playHandler } from "../../plugins/search/play.js";
 import { config as igConfig, handler as igHandler } from "../../plugins/download/instagramdl.js";
 import { config as yt3Config, handler as yt3Handler } from "../../plugins/download/ytmp3.js";
@@ -16,9 +16,9 @@ const SC_MAP = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h',
 const toSC = (s) => String(s ?? "");
 
 // ─── 1. RENDER .play — persis contoh owner ───
-w("\n— novaDlUsage Play (contoh owner) —");
+w("\n— raraDlUsage Play (contoh owner) —");
 {
-  const out = novaDlUsage("Play", {
+  const out = raraDlUsage("Play", {
     prefix: ".",
     command: "play",
     cara: [".play [judul]"],
@@ -29,15 +29,15 @@ w("\n— novaDlUsage Play (contoh owner) —");
   check("📝 cara pakai: + .play [judul] verbatim", lines[1] === `📝 ${toSC("Cara Pakai")}:` && lines[2] === ".play [judul]", lines[1] + " / " + lines[2]);
   check("💡 contoh: + .play Faded Alan Walker", lines[4] === `💡 ${toSC("Contoh")}:` && lines[5] === ".play Faded Alan Walker", lines[4] + " / " + lines[5]);
   check("gak ada section model (beda dari usage AI)", !out.includes("✨") && !out.includes("📋"));
-  check("layout BEDA dari novaAiUsage output", !out.includes(toSC("Model Tersedia")));
+  check("layout BEDA dari raraAiUsage output", !out.includes(toSC("Model Tersedia")));
 }
 
 // ─── 2. DEFAULTS + MODE LINK ───
 w("\n— default & mode link —");
 {
-  const d = novaDlUsage("Tiktok", { prefix: "!", command: "tiktok" });
+  const d = raraDlUsage("Tiktok", { prefix: "!", command: "tiktok" });
   check("default cara = !tiktok [judul] + default contoh Faded", d.includes("!tiktok [judul]") && d.includes("!tiktok Faded Alan Walker"));
-  const two = novaDlUsage("Douyin", {
+  const two = raraDlUsage("Douyin", {
     prefix: ".",
     command: "douyin",
     cara: [".douyin [keyword]", ".douyin [link]"],
@@ -75,7 +75,7 @@ w("\n— handler plugins —");
   check(".instagramdl → contoh link reel", r2.includes(".instagramdl https://www.instagram.com/reel/xxx"));
   const m2b = mkM("instagramdl", "bukanlink");
   await igHandler(m2b, {});
-  check(".instagramdl link invalid → novaSalahV2 cute (bukan kartu usage)", !m2b._replies[0].startsWith(`「✧ ${toSC("instagram")} ✧」`) && m2b._replies[0].includes(toSC("linknya bukan link instagram nih, cek lagi ya~")) && m2b._replies[0].includes("➤ .instagramdl link instagram"), m2b._replies[0]);
+  check(".instagramdl link invalid → raraSalahV2 cute (bukan kartu usage)", !m2b._replies[0].startsWith(`「✧ ${toSC("instagram")} ✧」`) && m2b._replies[0].includes(toSC("linknya bukan link instagram nih, cek lagi ya~")) && m2b._replies[0].includes("➤ .instagramdl link instagram"), m2b._replies[0]);
 
   const m3 = mkM("ytmp3", "");
   await yt3Handler(m3, {});

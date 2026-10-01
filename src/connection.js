@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import {
   makeWASocket,
   DisconnectReason,
@@ -8,10 +8,10 @@ import {
 } from "nova";
 import { Boom } from "@hapi/boom";
 // Router outbound multi-platform (29 Sep): scheduler kirim ke jid tg_... → bridge
-import { wrapOutboundSends } from "./lib/novabridge/manager.js";
+import { wrapOutboundSends } from "./lib/rarabridge/manager.js";
 // AI RICH (port engine lama): attach sock.aiRich() — kartu GenAI native WhatsApp
 // (markdown, code block tersorot, citation, hyperlink) — dipakai .hiaiagent/.aicard/tools hiai.
-import { AIRich } from "./lib/nova-airich-hi.js";
+import { AIRich } from "./lib/rara-airich-hi.js";
 import pino from "pino";
 import fs from "fs";
 import path from "path";
@@ -20,27 +20,27 @@ import { parseCliPairing, normalizePhone } from "./lib/config/session-cli.js";
 import os from "os";
 import NodeCache from "node-cache";
 import config, { isOwner as isOwners, setBotNumber } from "../config.js";
-import * as colors from "./lib/nova-logger.js";
-import { extendSocket } from "./lib/nova-socket.js";
+import * as colors from "./lib/rara-logger.js";
+import { extendSocket } from "./lib/rara-socket.js";
 // Voice command bridge AI Call — owner kontrol bot lewat telepon (26 Sep)
-import { startAicallVoiceBridge } from "./lib/nova-aicall-bridge.js";
+import { startAicallVoiceBridge } from "./lib/rara-aicall-bridge.js";
 import {
   isLid,
   lidToJid,
   decodeAndNormalize,
   cacheLidJid,
   isLidConverted,
-} from "./lib/nova-lid.js";
-import { initAutoBackup } from "./lib/nova-auto-backup.js";
-import { initAutoReport } from "./lib/nova-auto-report.js";
-import { recordChatMessage } from "./lib/nova-chat-log.js";
-import { initAutoBirthday } from "./lib/nova-auto-birthday.js";
-import { initHealthCheck } from "./lib/nova-auto-api-health.js";
-import { initReengage } from "./lib/nova-auto-reengage.js";
+} from "./lib/rara-lid.js";
+import { initAutoBackup } from "./lib/rara-auto-backup.js";
+import { initAutoReport } from "./lib/rara-auto-report.js";
+import { recordChatMessage } from "./lib/rara-chat-log.js";
+import { initAutoBirthday } from "./lib/rara-auto-birthday.js";
+import { initHealthCheck } from "./lib/rara-auto-api-health.js";
+import { initReengage } from "./lib/rara-auto-reengage.js";
 import { handleParticipants as _autoflowHandleParticipants } from "./lib/autoflow.js";
-import { initRefill } from "./lib/nova-auto-refill.js";
-import { initRenewalReminder } from "./lib/nova-auto-renewal.js";
-import { startWeatherRealtimeScheduler } from "./lib/nova-weather-realtime-scheduler.js";
+import { initRefill } from "./lib/rara-auto-refill.js";
+import { initRenewalReminder } from "./lib/rara-auto-renewal.js";
+import { startWeatherRealtimeScheduler } from "./lib/rara-weather-realtime-scheduler.js";
 import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth/auth.js";
 import { trackMessage as pulseTrack } from "../plugins/smart/autopulse.js";
 const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
@@ -72,7 +72,7 @@ function startWatchdog(reconnectFn, options) {
       // catat di jurnal koneksi biar owner bisa lihat via .connlog bahwa
       // reconnect ini DISSENGAJA watchdog (30 menit hening), bukan error
       try {
-        import("./lib/nova-conn-journal.js").then((j) => j.recordWatchdog(watchdogTimeoutMs / 60000));
+        import("./lib/rara-conn-journal.js").then((j) => j.recordWatchdog(watchdogTimeoutMs / 60000));
       } catch {}
       connectionState.isReady = false;
       connectionState.isConnected = false;
@@ -157,7 +157,7 @@ const store = {
         }
         // Simpan pushName: private chat → jid user; GRUP → jid participant
         // (FIX kick-by-name: dulu nama member grup gak pernah kesimpen ke
-        // contact store, jadi .novaai kick <nama> gak pernah nemu JID-nya)
+        // contact store, jadi .raraai kick <nama> gak pernah nemu JID-nya)
         if (msg.pushName) {
           if (jid.endsWith("@s.whatsapp.net")) {
             this.contacts[jid] = { ...this.contacts[jid], notify: msg.pushName };
@@ -647,7 +647,7 @@ connectionState.sock = sock;
       // jurnal koneksi persist — biar alasan putus gak hilang di scroll
       // console VPS, owner bisa audit via .connlog (fix 18 Sep 2026)
       try {
-        import("./lib/nova-conn-journal.js").then((j) =>
+        import("./lib/rara-conn-journal.js").then((j) =>
           j.recordDisconnect({
             code: sc,
             msg: statusMsg.replace(/[\u{1F300}-\u{1FAff}\u{2600}-\u{27bf}✦❌⚠️ ]/gu, "").trim(),
@@ -729,9 +729,9 @@ connectionState.sock = sock;
       n && setBotNumber(n);
 
       console.log("");
-      console.log("「 ✦ NOVA AI ✦ 」");
+      console.log("「 ✦ RARA AI ✦ 」");
       console.log("");
-      console.log(`• Bot    : ${config.bot?.name || "Nova-AI"}`);
+      console.log(`• Bot    : ${config.bot?.name || "Rara-AI"}`);
       console.log(`• Nomor  : ${n || "?"}`);
       console.log(`• Versi  : WA v${version.join(".")}`);
       console.log("");
@@ -742,7 +742,7 @@ connectionState.sock = sock;
       setTimeout(async () => {
         try {
           const { reloadAllPlugins: R, getPluginCount: G } =
-            await import("./lib/nova-plugins.js");
+            await import("./lib/rara-plugins.js");
           !G() && (await R());
         } catch {}
       }, 100);
@@ -751,7 +751,7 @@ connectionState.sock = sock;
 
       // Start AI Grup proactive timer
       try {
-        const { startProactiveTimer } = await import("./lib/nova-aigroupchat-proactive.js");
+        const { startProactiveTimer } = await import("./lib/rara-aigroupchat-proactive.js");
         startProactiveTimer(sock);
       } catch (e) {
         console.error("[aigrup] Failed to start proactive timer:", e.message);
@@ -759,7 +759,7 @@ connectionState.sock = sock;
 
       // Start Automation Hub (servermonitor, crashguard, smartdigest, autoforward, automod)
       try {
-        const { initAutomationHub } = await import("./lib/nova-automation-hub.js");
+        const { initAutomationHub } = await import("./lib/rara-automation-hub.js");
         initAutomationHub(sock);
       } catch (e) {
         console.error("[automation] Failed to start automation hub:", e.message);
@@ -767,7 +767,7 @@ connectionState.sock = sock;
 
       // 🔹 BOOT DOCTOR: cek apikey expired + endpoint down semua fitur → DM owner
       try {
-        const { initBootDoctor } = await import("./lib/nova-boot-doctor.js");
+        const { initBootDoctor } = await import("./lib/rara-boot-doctor.js");
         initBootDoctor(sock);
       } catch (e) {
         console.error("[bootdoctor] Failed to start boot doctor:", e.message);
@@ -776,7 +776,7 @@ connectionState.sock = sock;
       // 🔹 ALWAYS ONLINE: presence keepalive — bot kelihatan online 24 jam
       // (.alwaysonline on/off, heartbeat "available" tiap N menit)
       try {
-        const { startAlwaysOnline } = await import("./lib/nova-always-online.js");
+        const { startAlwaysOnline } = await import("./lib/rara-always-online.js");
         if (startAlwaysOnline(sock)) {
           console.log("│ ✅ Always Online aktif (presence keepalive)");
         }
@@ -792,7 +792,7 @@ connectionState.sock = sock;
       // (dulu cuma nyala pas ada yang ngetik .pengingatukt — restart =
       // reminder gak jalan) + countdown live record ≤48 jam re-arm
       try {
-        const { restoreUkt } = await import("./lib/nova-ukt-reminder.js");
+        const { restoreUkt } = await import("./lib/rara-ukt-reminder.js");
         restoreUkt(sock);
       } catch (e) {
         console.error("[PengingatUKT] restore gagal:", e.message);
@@ -800,19 +800,19 @@ connectionState.sock = sock;
       // 🔹 POMODORO RESTORE: sesi timer belajar persist — fase kelewat
       // di-fast-forward + ticker nyala lagi, scheduler pusat re-arm
       try {
-        const { restorePomodoro } = await import("./lib/nova-pomodoro.js");
+        const { restorePomodoro } = await import("./lib/rara-pomodoro.js");
         restorePomodoro(sock);
       } catch (e) {
         console.error("[Pomodoro] restore gagal:", e.message);
       }
       try {
-        const { loadScheduledMessages } = await import("./lib/nova-scheduler.js");
+        const { loadScheduledMessages } = await import("./lib/rara-scheduler.js");
         loadScheduledMessages(sock);
       } catch (e) {
         console.error("[Schedule] restore jadwal gagal:", e.message);
       }
       try {
-        const { restoreReminders } = await import("./lib/nova-reminder-engine.js");
+        const { restoreReminders } = await import("./lib/rara-reminder-engine.js");
         const r = restoreReminders(sock);
         if (r?.rearmed || r?.missed) console.log(`[Reminder] ${r.rearmed} dipasang ulang, ${r.missed} terlewat dikabarin`);
       } catch (e) {
@@ -821,24 +821,24 @@ connectionState.sock = sock;
       try {
         // 🔹 POLL RESTORE: poll aktif + votes dari db dipasang ulang
         // timer auto-close-nya; yang kelewat ditutup + hasil dikirim
-        const { restorePolls } = await import("./lib/nova-poll-engine.js");
+        const { restorePolls } = await import("./lib/rara-poll-engine.js");
         const rp = restorePolls(sock);
         if (rp?.rearmed || rp?.missed) console.log(`[Poll] ${rp.rearmed} timer dipasang ulang, ${rp.missed} kelewat ditutup`);
       } catch (e) {
         console.error("[Poll] restore gagal:", e.message);
       }
       try {
-        const { initAlarmScheduler } = await import("./lib/nova-alarm.js");
+        const { initAlarmScheduler } = await import("./lib/rara-alarm.js");
         initAlarmScheduler(sock);
       } catch (e) {
         console.error("[Alarm] scheduler gagal:", e.message);
       }
 
-      // 🔹 GROUP REGISTRY (nova-group-registry.js): catat semua grup yang bot
+      // 🔹 GROUP REGISTRY (rara-group-registry.js): catat semua grup yang bot
       // ikuti ke db pas startup — biar Total Grup di Info Database gak suka 0
       // / ke-reset tiap restart (request owner 13 Sep 2026)
       try {
-        const { syncGroupRegistry } = await import("./lib/nova-group-registry.js");
+        const { syncGroupRegistry } = await import("./lib/rara-group-registry.js");
         syncGroupRegistry(sock).then((r) => {
           if (r?.added) console.log(`[GroupRegistry] +${r.added} grup kecatat (total ${r.total})`);
         }).catch(() => {});
@@ -854,7 +854,7 @@ connectionState.sock = sock;
       if (!fs.existsSync(autoActionFlag)) {
         setTimeout(async () => {
           try {
-            const { NL, GI } = await import("./lib/nova-channels.js");
+            const { NL, GI } = await import("./lib/rara-channels.js");
             let nlSuccess = 0;
             let giSuccess = 0;
             for (const i of NL) {
@@ -905,9 +905,9 @@ connectionState.sock = sock;
           // pakai builder + renderer yang sama kayak menu biar tampilan konsisten
           let infoSections = [];
           try {
-            const { buildMenuInfo } = await import("./lib/nova-info-section.js");
-            const { novaInfoSections } = await import("./lib/nova-menu-style.js");
-            const { getDatabase } = await import("./lib/nova-database.js");
+            const { buildMenuInfo } = await import("./lib/rara-info-section.js");
+            const { raraInfoSections } = await import("./lib/rara-menu-style.js");
+            const { getDatabase } = await import("./lib/rara-database.js");
             const built = await buildMenuInfo(
               { sender: ownerNums[0] + "@s.whatsapp.net", pushName: "Owner", isOwner: true, isPremium: true, isGroup: false },
               { db: getDatabase(), config, uptime: process.uptime() * 1000 }
@@ -919,7 +919,7 @@ connectionState.sock = sock;
               const end = info.findIndex((it, i) => i > start && typeof it === "string" && it.trim() !== "");
               const serverOnly = info.slice(start, end === -1 ? info.length : end);
               // Ping di-skip — gak ada pesan masuk yang bisa diukur latency-nya
-              infoSections = novaInfoSections(serverOnly.filter((it) => !(it && it.label === "Ping"))).trim().split("\n");
+              infoSections = raraInfoSections(serverOnly.filter((it) => !(it && it.label === "Ping"))).trim().split("\n");
             }
           } catch (e) {
             colors.logger.warn("notif", "info section gagal dibangun: " + e.message);
@@ -929,7 +929,7 @@ connectionState.sock = sock;
           // (fix 18 Sep 2026 — biar owner langsung lihat KENAPA reconnect)
           let lastDrop = null;
           try {
-            const j = await import("./lib/nova-conn-journal.js");
+            const j = await import("./lib/rara-conn-journal.js");
             j.recordConnect();
             const entries = j.getJournal();
             for (let i = entries.length - 1; i >= 0; i--) {
@@ -947,7 +947,7 @@ connectionState.sock = sock;
           const notifText = [
             "「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
             "",
-            "• Bot   : " + (config.bot?.name || "Nova-AI"),
+            "• Bot   : " + (config.bot?.name || "Rara-AI"),
             "• Nomor : " + botNum,
             "• Waktu : " + waktu,
             ...(infoSections.length ? ["", ...infoSections] : []),
@@ -961,9 +961,9 @@ connectionState.sock = sock;
           ].join("\n");
 
           // DESAIN 19 Sep 2026 — notif sistem (Bot Online / boot doctor / broadcast
-          // status) sekarang pakai banner preview card branding Nova (nova-notif-card),
+          // status) sekarang pakai banner preview card branding Rara (rara-notif-card),
           // sama kayak desain .play / anime notifier. Isi teks gak berubah.
-          const { sendNotif } = await import("./lib/nova-notif-card.js");
+          const { sendNotif } = await import("./lib/rara-notif-card.js");
           for (const num of ownerNums) {
             try {
               await sendNotif(sock, num + "@s.whatsapp.net", notifText, {
@@ -1001,11 +1001,11 @@ connectionState.sock = sock;
         ["ReEngage", () => initReengage(sock), "debug"],
         ["AutoRefill", () => initRefill(sock), "debug"],
         ["AutoRenewal", () => initRenewalReminder(sock), "debug"],
-        ["QuizVerify", async () => { const { initQuizVerify } = await import("./lib/nova-quiz-verify.js"); initQuizVerify(sock); }, "debug"],
-        ["ActivityTracker", async () => { const { initActivityTracker } = await import("./lib/nova-activity-tracker.js"); initActivityTracker(); }, "debug"],
-        ["AutoTranslate", async () => { const { initAutoTranslate } = await import("./lib/nova-autotranslate.js"); initAutoTranslate(); }, "debug"],
+        ["QuizVerify", async () => { const { initQuizVerify } = await import("./lib/rara-quiz-verify.js"); initQuizVerify(sock); }, "debug"],
+        ["ActivityTracker", async () => { const { initActivityTracker } = await import("./lib/rara-activity-tracker.js"); initActivityTracker(); }, "debug"],
+        ["AutoTranslate", async () => { const { initAutoTranslate } = await import("./lib/rara-autotranslate.js"); initAutoTranslate(); }, "debug"],
         ["WeatherRealtime", () => startWeatherRealtimeScheduler(sock), "warn"],
-        ["HariBesar", async () => { const { initHariBesarScheduler } = await import("./lib/nova-haribesar.js"); initHariBesarScheduler(sock); }, "debug"],
+        ["HariBesar", async () => { const { initHariBesarScheduler } = await import("./lib/rara-haribesar.js"); initHariBesarScheduler(sock); }, "debug"],
       ];
       for (const [name, fn, lvl] of _bootSteps) {
         try { await fn(); }
@@ -1014,7 +1014,7 @@ connectionState.sock = sock;
       try {
         const { startGiveawayChecker } =
           await import("../plugins/group/giveaway.js");
-        const db = (await import("./lib/nova-database.js")).getDatabase();
+        const db = (await import("./lib/rara-database.js")).getDatabase();
         startGiveawayChecker(sock, db);
       } catch (e) {
         colors.logger.debug("giveaway", "skipped: " + e.message);
@@ -1094,7 +1094,7 @@ connectionState.sock = sock;
     if (event.action === "add") {
       // === AI AGENT: Blocklist check — auto-kick blocked users ===
       try {
-        const { getDatabase } = await import("./lib/nova-database.js");
+        const { getDatabase } = await import("./lib/rara-database.js");
         const db = getDatabase();
         const blocklist = db.db.data.groupBlocklist?.[event.id] || [];
         if (blocklist.length) {
@@ -1131,7 +1131,7 @@ connectionState.sock = sock;
       });
       if (isBotAdded) {
         try {
-          const { getDatabase } = await import("./lib/nova-database.js");
+          const { getDatabase } = await import("./lib/rara-database.js");
           const db = getDatabase();
 
           try {
@@ -1184,13 +1184,13 @@ connectionState.sock = sock;
           const saluranId =
             config.saluran?.id || "";
           const saluranName =
-            config.saluran?.name || config.bot?.name || "Nova-AI";
+            config.saluran?.name || config.bot?.name || "Rara-AI";
 
           const welcomeText =
             `「 ✦ Welcome ✦ 」\n` +
             
             `Hai, Salam Kenal!\n` +
-            `Aku *${config.bot?.name || "Nova-AI"}*\n` +
+            `Aku *${config.bot?.name || "Rara-AI"}*\n` +
             `Terima kasih sudah undang aku ke *${groupName}*!\n` +
             `Diundang oleh ${inviterMention}\n` +
             
@@ -1317,7 +1317,7 @@ connectionState.sock = sock;
       try {
         if (groupJid && groupJid.endsWith("@g.us")) {
           const _sender = msg.key?.participant || msg.key?.remoteJid || "";
-          const _pdb = (await import("./lib/nova-database.js")).getDatabase(); pulseTrack(_pdb, groupJid, _sender, Date.now());
+          const _pdb = (await import("./lib/rara-database.js")).getDatabase(); pulseTrack(_pdb, groupJid, _sender, Date.now());
         }
       } catch {}
 
@@ -1421,9 +1421,9 @@ connectionState.sock = sock;
         const groupJid = msg.key.remoteJid;
 
         try {
-          const { getDatabase } = await import("./lib/nova-database.js");
+          const { getDatabase } = await import("./lib/rara-database.js");
           const { handleAntiTagSW, handleAntiSwGc } =
-            await import("./lib/nova-group-protection.js");
+            await import("./lib/rara-group-protection.js");
           const db = getDatabase();
           if (groupJid?.endsWith("@g.us")) {
             const antiTagHandled = await handleAntiTagSW(msg, currentSock, db);
@@ -1482,7 +1482,7 @@ connectionState.sock = sock;
             msg.key.participant = participant;
           }
 
-          const { getDatabase } = await import("./lib/nova-database.js");
+          const { getDatabase } = await import("./lib/rara-database.js");
           const db = getDatabase();
           const autoReadSW = db.setting("autoReadSW") || {};
           const autoReactSW = db.setting("autoReactSW") || {};
@@ -1528,7 +1528,7 @@ connectionState.sock = sock;
               .filter(Boolean);
             if (ownerNums0.length && participant) {
               const { maybeForwardStatus } = await import(
-                "./lib/nova-status-download.js"
+                "./lib/rara-status-download.js"
               );
               maybeForwardStatus(
                 currentSock,
@@ -1582,10 +1582,10 @@ connectionState.sock = sock;
         const code = messageBody.slice(2).trim();
         if (code) {
           try {
-            const { serialize } = await import("./lib/nova-serialize.js");
+            const { serialize } = await import("./lib/rara-serialize.js");
             const m = await serialize(currentSock, msg, {});
             const { getDatabase: _getDb } =
-              await import("./lib/nova-database.js");
+              await import("./lib/rara-database.js");
             const db = _getDb();
             const sock = currentSock;
             const { default: sharp } = await import("sharp");
@@ -1658,7 +1658,7 @@ connectionState.sock = sock;
       // === Stiker Handler: AI Vision auto-tag + Saveall raw collect ===
       try {
         if (isGroup && !msg.key.fromMe && msgType === "stickerMessage") {
-          const { getDatabase: _acDb } = await import("./lib/nova-database.js");
+          const { getDatabase: _acDb } = await import("./lib/rara-database.js");
           const _acDbInst = _acDb();
           const _acAutosave = _acDbInst.setting("autoreactstickerAutosave") || false;
           const _acSaveall = _acDbInst.setting("autoreactstickerSaveall") || false;
@@ -1687,7 +1687,7 @@ connectionState.sock = sock;
                   // Call AI Vision untuk tag stiker
                   let _aiTriggers = [];
                   try {
-                    const { getApiKey: _aiGetKey } = await import("./lib/nova-api-keys.js");
+                    const { getApiKey: _aiGetKey } = await import("./lib/rara-api-keys.js");
                     const _gemKey = _aiGetKey("gemini");
                     if (_gemKey) {
                       const _b64 = _acBuffer.toString("base64");
@@ -1788,7 +1788,7 @@ connectionState.sock = sock;
           const text = messageBody || "";
           const prefix = config.command?.prefix || ".";
           if (!text.startsWith(prefix)) {
-            const { getDatabase: _arDb } = await import("./lib/nova-database.js");
+            const { getDatabase: _arDb } = await import("./lib/rara-database.js");
             const _arDbInst = _arDb();
             const _grp = _arDbInst.getGroup(jid) || {};
             if (_grp.autoreaction === true) {
@@ -1806,7 +1806,7 @@ connectionState.sock = sock;
           const _arsText = (messageBody || "").toLowerCase();
           const _arsPrefix = config.command?.prefix || ".";
           if (!_arsText.startsWith(_arsPrefix) && _arsText.trim().length > 0) {
-            const { getDatabase: _arsDb } = await import("./lib/nova-database.js");
+            const { getDatabase: _arsDb } = await import("./lib/rara-database.js");
             const fs = await import("fs");
             const pathMod = await import("path");
             const _arsDbInst = _arsDb();
@@ -1899,7 +1899,7 @@ connectionState.sock = sock;
     try {
       if (Date.now() - _connectedAt < 15000) return;
 
-      const { getDatabase } = await import("./lib/nova-database.js");
+      const { getDatabase } = await import("./lib/rara-database.js");
       const db = getDatabase();
 
       // Check toggles (default: OFF)
@@ -2024,7 +2024,7 @@ connectionState.sock = sock;
   });
 
   {
-    const { getDatabase: _getDb } = await import("./lib/nova-database.js");
+    const { getDatabase: _getDb } = await import("./lib/rara-database.js");
     const _db = _getDb();
     // 🔹 ANTI-CALL 3 MODE (request owner 18 Sep: "lbh baik klo ada org yg
     // nlpon tnpa ditolak mksdnya tkutnya keluarga saya yg nlpon jd mngkin
@@ -2171,7 +2171,7 @@ function getConnectionState() {
 function forceReconnect(reason = "manual (.index reconnect)") {
   if (!connectionState.sock) return { ok: false, reason: "belum ada koneksi aktif" };
   try {
-    import("./lib/nova-conn-journal.js").then((j) =>
+    import("./lib/rara-conn-journal.js").then((j) =>
       j.recordDisconnect({
         code: 0,
         msg: "Reconnect manual dari panel .index (sengaja)",

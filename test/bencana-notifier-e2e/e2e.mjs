@@ -5,16 +5,16 @@
 // 4. Dedup tahan restart — ID event dipersist HANYA setelah pesan terkirim
 // 5. Tombol tes — .bencanawatch test paksa kirim tanpa syarat
 // + RADIUS BEBAS: 50-20000 km (20000 = seluruh dunia, > jarak maksimum antar 2 titik di bumi)
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
 import fs from "node:fs";
 
-await initDatabase("/tmp/bencana-notifier-e2e/nova.json");
+await initDatabase("/tmp/bencana-notifier-e2e/rara.json");
 const db = getDatabase();
 const dbPath = "/tmp/bencana-notifier-e2e/state.json";
 fs.rmSync("/tmp/bencana-notifier-e2e", { recursive: true, force: true });
 fs.mkdirSync("/tmp/bencana-notifier-e2e", { recursive: true });
 
-const L = await import("../../src/lib/nova-bencana.js");
+const L = await import("../../src/lib/rara-bencana.js");
 const {
   _setBencanaStateFileForTest, _setBencanaSourcesForTest, _bencanaRunTickForTest,
   initBencanaMonitor, startBencanaMonitor, stopBencanaMonitor, getMonitorHealth,

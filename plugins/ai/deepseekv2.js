@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 /**
  * plugins/ai/deepseekv2.js
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
 
   if (!text) {
-    return m.reply(novaGuideV2("deepseekv2", {
+    return m.reply(raraGuideV2("deepseekv2", {
  kaomoji: "(◍'◡'◍)",
  sapaan: "ngobrol sama DeepSeek v3.2, si jenius matematika! (◕ᴗ◕)",
       cara: "kirim pertanyaannya setelah command",
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
   await m.react("🕒");
     const reply = await callDeepSeekV2(text);
     await m.react("🐣");
-    return m.reply(novaWrap("DeepSeek v3.2", reply));
+    return m.reply(raraWrap("DeepSeek v3.2", reply));
   } catch (error) {
     // IkyyXD fallback
     try {
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
       console.error("[deepseekv2.js] IkyyXD fallback failed:", ikyyErr.message);
     }
 
-    return m.reply(novaWrap("DeepSeek v3.2 Error", error.message || "Gagal hubungin AI nih"));
+    return m.reply(raraWrap("DeepSeek v3.2 Error", error.message || "Gagal hubungin AI nih"));
   }
 }
 

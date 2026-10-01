@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolreplace — ganti potongan teks massal (port altftool.com/tools/all/find-and-replace)
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolreplace", alias: ["replace", "gantiteks", "findreplace"], category: "tools",
@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     const raw = (m.text || "").trim();
     const parts = raw.split("|");
     if (parts.length < 3 || !parts[0].trim()) {
-      return m.reply(novaGuideV2("ftoolreplace", {
+      return m.reply(raraGuideV2("ftoolreplace", {
         kaomoji: "(¬‿¬)",
         sapaan: "teks mau diganti massal? pisahin pakai tanda |",
         cara: "ketik teks yang dicari, tanda |, penggantinya, tanda |, lalu teks aslinya",
@@ -30,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
     const from = dari.trim(), to = ke;
     if (!teks.trim()) {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftoolreplace", {
+      return m.reply(raraSalahV2("ftoolreplace", {
         kaomoji: "(・_・;)",
         pesan: "teks aslinya kosong",
         contoh: `${prefix}ftoolreplace kucing|anjing|kucing hitam`,
@@ -39,12 +39,12 @@ async function handler(m, { sock, config: botConfig }) {
     const count = teks.split(from).length - 1;
     const out = count ? teks.split(from).join(to) : teks;
     await m.react("🐣");
-    await m.reply(novaWrap("Find & Replace", [`"${from}" → "${to}" (${count}x diganti)`,
+    await m.reply(raraWrap("Find & Replace", [`"${from}" → "${to}" (${count}x diganti)`,
       "",
       "```" + (out.length > 800 ? out.substring(0, 800) + "…" : out) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("Find & Replace", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("Find & Replace", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

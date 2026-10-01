@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import { clearRegistrationSession } from "./register.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "bataldaftar",
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
   if (canceled) {
     return m.reply(
-      novaWrap("bataldaftar",
+      raraWrap("bataldaftar",
         `✅ Sesi pendaftaran berhasil dibatalkan.\n\nMulai lagi dengan: \`${m.prefix}daftar\``
       )
     );
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
   const user = db.getUser(m.sender);
   if (user?.isRegistered) {
     return m.reply(
-      novaWrap("bataldaftar",
+      raraWrap("bataldaftar",
         `ℹ️ Kamu sudah terdaftar!\n\n` +
         `Untuk menghapus data pendaftaran:\n` +
         `\`${m.prefix}unreg\` atau \`${m.prefix}bataldaftar\`\n\n` +
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
   }
 
   return m.reply(
-    novaWrap("bataldaftar",
+    raraWrap("bataldaftar",
       `❌ Kamu tidak punya sesi pendaftaran aktif dan belum terdaftar.\n\nDaftar dengan: \`${m.prefix}daftar\``
     )
   );

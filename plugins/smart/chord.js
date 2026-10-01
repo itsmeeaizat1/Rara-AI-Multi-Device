@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -54,16 +54,16 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "transpose" || sub === "naik" || sub === "turun") {
     const song = CHORD_DB.find(s => s.title.toLowerCase().includes(query));
     if (!song) {
-      await m.reply(novaWrap("Chord", "Lagu tidak ditemukan.\nKetik " + prefix + "chord list untuk daftar lagu."));
+      await m.reply(raraWrap("Chord", "Lagu tidak ditemukan.\nKetik " + prefix + "chord list untuk daftar lagu."));
       return { handled: true };
     }
     const semitones = parseInt(args[args.length - 1] || "0", 10);
     if (isNaN(semitones) || semitones < -6 || semitones > 6) {
-      await m.reply(novaWrap("Chord", "Semitones: -6 sampai +6\n💡 *Contoh:* " + prefix + "chord transpose " + song.title.toLowerCase().split(" ")[0] + " 2"));
+      await m.reply(raraWrap("Chord", "Semitones: -6 sampai +6\n💡 *Contoh:* " + prefix + "chord transpose " + song.title.toLowerCase().split(" ")[0] + " 2"));
       return { handled: true };
     }
     const transposedChords = transposeText(song.chords, semitones);
-    await m.reply(novaWrap("Chord: " + song.title, [
+    await m.reply(raraWrap("Chord: " + song.title, [
       "Artist: " + song.artist,
       "Original Key: " + song.key,
       "Transpose: " + (semitones >= 0 ? "+" : "") + semitones,
@@ -76,7 +76,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "list" || sub === "daftar") {
     const list = CHORD_DB.map((s, i) => (i + 1) + ". " + s.title + " - " + s.artist + " (Key: " + s.key + ")").join("\n");
-    await m.reply(novaWrap("Chord List", "Lagu tersedia:\n" + list));
+    await m.reply(raraWrap("Chord List", "Lagu tersedia:\n" + list));
     return { handled: true };
   }
 
@@ -84,7 +84,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const search = (sub + " " + query).trim().toLowerCase();
   const song = CHORD_DB.find(s => s.title.toLowerCase().includes(search) || s.title.toLowerCase().includes(query)) || CHORD_DB.find(s => s.title.toLowerCase().includes(sub));
   if (song) {
-    await m.reply(novaWrap("Chord: " + song.title, [
+    await m.reply(raraWrap("Chord: " + song.title, [
       "Artist: " + song.artist,
       "Key: " + song.key,
       "",
@@ -99,7 +99,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Chord", [
+  await m.reply(raraWrap("Chord", [
     "CHORD & LIRIK LAGU",
     "",
     "Cara pakai:",

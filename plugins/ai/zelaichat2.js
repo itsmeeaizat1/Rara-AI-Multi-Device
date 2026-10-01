@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 ZelAI Chat 2 — suite .z dari zelapi.eu.cc
 // 🔹 Semua AI command prefix "z" biar kelihatan asal zelapi.
@@ -6,9 +6,9 @@
 // ═════════════════════════════════════════════
 
 import { zelAiChat, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { sendImage } from "../../src/lib/nova-message.js";
-import { fetchBuffer } from "../../src/lib/nova-utils.js";
+import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { sendImage } from "../../src/lib/rara-message.js";
+import { fetchBuffer } from "../../src/lib/rara-utils.js";
 
 // seam test: mock unduh gambar
 let _fetchBufferForTest;
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     const cmd = (m.command || "").toLowerCase();
     const text = (m.args || []).join(" ").trim();
 
-    if (!text) return m.reply(novaGuideV2("zelaichat2", {
+    if (!text) return m.reply(raraGuideV2("zelaichat2", {
  kaomoji: "(๑˃ᴗ˂)ﻭ",
  sapaan: "AI zelapi jawab apa aja, reply foto juga bisa mode vision! (≧∇≦)ﾉ",
       cara: "ketik pertanyaannya sesudah command" + (m.quoted?.isImage ? " (atau reply foto + pertanyaan, mode vision)" : ""),
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
       } catch {}
       if (!imageUrl) {
         await m.react("❌");
-        return m.reply(novaWrap("zelai", "⚠️ Gagal upload foto — coba kirim ulang."));
+        return m.reply(raraWrap("zelai", "⚠️ Gagal upload foto — coba kirim ulang."));
       }
     }
 
@@ -66,22 +66,22 @@ async function handler(m, { sock }) {
         VISION_NOIMAGE: "⚠️ AI ini mode vision — reply foto + pertanyaan.\n\nContoh: reply foto terus ketik *.${cmd} ini gambar apa*",
         TEXT_KOSONG: "⚠️ Pesan kosong.",
       };
-      return m.reply(novaWrap("zelai", map[r.error] || `⚠️ *${cmd.toUpperCase()} MATI:* ${r.error}`));
+      return m.reply(raraWrap("zelai", map[r.error] || `⚠️ *${cmd.toUpperCase()} MATI:* ${r.error}`));
     }
     await m.react("🐣");
     if (r.images?.length) {
       // AI balikin gambar juga (misal zcici) → kirim teks dulu, gambar nyusul
-      await m.reply(novaWrap("zelai", `⚡ *${cmd.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
+      await m.reply(raraWrap("zelai", `⚡ *${cmd.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
       for (const u of r.images.slice(0, 2)) {
         try { await sendImage(sock, m.chat, await getBuf(u), "", { quoted: m }); } catch {}
       }
       return;
     }
-    return m.reply(novaWrap("zelai", `⚡ *${cmd.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
+    return m.reply(raraWrap("zelai", `⚡ *${cmd.toUpperCase()} (ZELAPI)*\n\n${r.text.slice(0, 3800)}`));
   } catch (err) {
     console.error("[zelaichat]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("zelai", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(raraWrap("zelai", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

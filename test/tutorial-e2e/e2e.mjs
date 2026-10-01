@@ -20,14 +20,14 @@ t("1a. config name=tutorial alias carapakai/panduan", cfg.name === "tutorial" &&
 const replies = [];
 await handler(
   { text: "tutorial", prefix: ".", reply: async (x) => replies.push(String(x)) },
-  { config: { bot: { name: "Nova-AI" } } }
+  { config: { bot: { name: "Rara-AI" } } }
 );
 const r = fromSC(replies[0] || "");
 
 t("2a. ada 12 contoh penggunaan (nomor 1..12)", ["1.","2.","3.","4.","5.","6.","7.","8.","9.","10.","11.","12."].every((n) => r.includes("\n" + n + " ") || r.includes("\n" + n + " ")));
 
 t("3a. pengenalan (menu/allmenu)", /\.menu/i.test(r) && /\.allmenu/i.test(r));
-t("3b. AI (.novaagent)", /\.novaagent/i.test(r));
+t("3b. AI (.raraagent)", /\.raraagent/i.test(r));
 t("3c. stiker (.sticker)", /\.sticker/i.test(r));
 t("3d. lagu (.play)", /\.play/i.test(r));
 t("3e. downloader (.tiktok/.ytmp4/.alldl)", /\.tiktok/i.test(r) && /\.ytmp4/i.test(r) && /\.alldl/i.test(r));
@@ -49,7 +49,7 @@ for (const dir of fs.readdirSync(path.join(REPO, "plugins"), { withFileTypes: tr
 }
 const allSrc = files.map((f) => { try { return fs.readFileSync(f, "utf8"); } catch { return ""; } }).join("\n");
 const cmds = [...new Set([...r.matchAll(/\.([a-z0-9]+)/gi)].map((x) => x[1].toLowerCase()))];
-const known = ["menu","allmenu","novaagent","sticker","play","tiktok","ytmp4","alldl","hd","remini","toanime","tagall","kick","welcome","groupinfo","antispam","antisticker","antilinkgc","antitoxic","switch","dailyreward","adventure","berburu","levelinfo","rules","owner","donasi","tutorial"];
+const known = ["menu","allmenu","raraagent","sticker","play","tiktok","ytmp4","alldl","hd","remini","toanime","tagall","kick","welcome","groupinfo","antispam","antisticker","antilinkgc","antitoxic","switch","dailyreward","adventure","berburu","levelinfo","rules","owner","donasi","tutorial"];
 // cocokin name: 'x' / name: ["x",...] / alias array — semua bentuk pluginConfig
 const missing = known.filter((c) =>
   !new RegExp("name:\\s*(['\"]" + c + "['\"]|\\[[^\\]]*['\"]" + c + "['\"])").test(allSrc) &&

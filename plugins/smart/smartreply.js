@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "smartreplyfuture", alias: ["smartreplyfuture", "smartreply"], category: "smart",
@@ -19,13 +19,13 @@ async function handler(m, { sock, config: botConfig }) {
     const gid = m.key?.remoteJid || "";
     if (arg === "on") {
       db.smartReply[gid] = true; db.write();
-      await m.reply(novaWrap("Smart Reply", ["AI akan bales chat otomatis di grup ini",
+      await m.reply(raraWrap("Smart Reply", ["AI akan bales chat otomatis di grup ini",
         "Hanya chat yang mention bot atau reply"].join("\n")));
     } else if (arg === "off") {
       delete db.smartReply[gid]; db.write();
-      await m.reply(novaWrap("Smart Reply", ["Smart reply dimatikan"].join("\n")));
+      await m.reply(raraWrap("Smart Reply", ["Smart reply dimatikan"].join("\n")));
     } else {
-      await m.reply(novaWrap("Smart Reply", [`Status: *${db.smartReply[gid] ? "ON" : "OFF"}*`,
+      await m.reply(raraWrap("Smart Reply", [`Status: *${db.smartReply[gid] ? "ON" : "OFF"}*`,
         `Ketik: *${prefix}smartreply on/off*`].join("\n")));
     }
   } catch (e) { await m.reply("Error: " + e.message); }

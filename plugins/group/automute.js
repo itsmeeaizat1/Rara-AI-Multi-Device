@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "automute",
@@ -31,7 +31,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const startTime = args[1];
       const endTime = args[2];
       if (!startTime || !endTime) {
-        return m.reply(novaWrap("Auto Mute", [
+        return m.reply(raraWrap("Auto Mute", [
           `Cara: ${usedPrefix}automute set <mulai> <selesai>`,
           `Contoh: ${usedPrefix}automute set 23:00 06:00`,
           `Format jam: HH:MM (24 jam)`,
@@ -39,7 +39,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
       const timeRegex = /^([01]?\d|2[0-3]):([0-5]\d)$/;
       if (!timeRegex.test(startTime) || !timeRegex.test(endTime)) {
-        return m.reply(novaWrap("Auto Mute", "Format jam salah! Gunakan HH:MM (contoh: 23:00, 06:00)"));
+        return m.reply(raraWrap("Auto Mute", "Format jam salah! Gunakan HH:MM (contoh: 23:00, 06:00)"));
       }
       const existing = data.schedules.findIndex(s => s.start === startTime && s.end === endTime);
       if (existing >= 0) {
@@ -49,7 +49,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         data.schedules.push({ start: startTime, end: endTime });
       }
       await db.save();
-      return m.reply(novaWrap("Auto Mute", [
+      return m.reply(raraWrap("Auto Mute", [
         `Jadwal auto-mute disimpan!`,
         `Mute: ${startTime}`,
         `Unmute: ${endTime}`,
@@ -60,17 +60,17 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "on") {
       if (data.schedules.length === 0) {
-        return m.reply(novaWrap("Auto Mute", `Belum ada jadwal. Set dulu dengan ${usedPrefix}automute set <mulai> <selesai>`, "info"));
+        return m.reply(raraWrap("Auto Mute", `Belum ada jadwal. Set dulu dengan ${usedPrefix}automute set <mulai> <selesai>`, "info"));
       }
       data.enabled = true;
       await db.save();
-      return m.reply(novaWrap("Auto Mute", `Auto-mute diaktifkan! ${data.schedules.length} jadwal aktif.`, "info"));
+      return m.reply(raraWrap("Auto Mute", `Auto-mute diaktifkan! ${data.schedules.length} jadwal aktif.`, "info"));
     }
 
     if (sub === "off") {
       data.enabled = false;
       await db.save();
-      return m.reply(novaWrap("Auto Mute", "Auto-mute dimatikan."));
+      return m.reply(raraWrap("Auto Mute", "Auto-mute dimatikan."));
     }
 
     if (sub === "status") {
@@ -78,7 +78,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const scheduleList = data.schedules.length > 0
         ? data.schedules.map((s, i) => `${i + 1}. Mute ${s.start} - Unmute ${s.end}`).join("\n")
         : "Belum ada jadwal.";
-      return m.reply(novaWrap("Auto Mute", [
+      return m.reply(raraWrap("Auto Mute", [
         `Status: ${status}`,
         `Jadwal:`,
         scheduleList,
@@ -88,14 +88,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "del" || sub === "remove") {
       const idx = parseInt(args[1]) - 1;
       if (isNaN(idx) || idx < 0 || idx >= data.schedules.length) {
-        return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}automute del <nomor>`, "info"));
+        return m.reply(raraWrap("Usage", `Cara: ${usedPrefix}automute del <nomor>`, "info"));
       }
       data.schedules.splice(idx, 1);
       await db.save();
-      return m.reply(novaWrap("Auto Mute", `Jadwal ${idx + 1} dihapus.`, "info"));
+      return m.reply(raraWrap("Auto Mute", `Jadwal ${idx + 1} dihapus.`, "info"));
     }
 
-    return m.reply(novaWrap("Auto Mute", [
+    return m.reply(raraWrap("Auto Mute", [
       `Auto Mute - Auto mute/unmute grup by schedule`,
       "",
       `Command:`,
@@ -109,7 +109,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("automute error:", e);
-    return m.reply(novaError("Auto mute", e.message));
+    return m.reply(raraError("Auto mute", e.message));
   }
 }
 

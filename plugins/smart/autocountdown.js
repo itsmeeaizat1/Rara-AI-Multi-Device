@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autocountdown",
@@ -47,20 +47,20 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "add" || sub === "tambah") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Countdown", "Khusus owner."));
+      await m.reply(raraWrap("Auto Countdown", "Khusus owner."));
       return { handled: true };
     }
     const dateStr = (args[args.length - 1] || "").trim();
     const name = args.slice(2, -1).join(" ").trim();
     if (!name || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-      await m.reply(novaWrap("Auto Countdown", "Format: " + prefix + "autocountdown add <nama> <YYYY-MM-DD>\n💡 *Contoh:* " + prefix + "autocountdown add Reuni Akbar 2026-12-20"));
+      await m.reply(raraWrap("Auto Countdown", "Format: " + prefix + "autocountdown add <nama> <YYYY-MM-DD>\n💡 *Contoh:* " + prefix + "autocountdown add Reuni Akbar 2026-12-20"));
       return { handled: true };
     }
     cfg.events.push({ name, date: dateStr, id: Date.now(), addedBy: m.sender });
     if (!cfg.notified[gid]) cfg.notified = {};
     saveConfig(db, gid, cfg);
     const days = daysUntil(dateStr);
-    await m.reply(novaWrap("Auto Countdown", [
+    await m.reply(raraWrap("Auto Countdown", [
       "Event ditambahkan!",
       "Nama: " + name,
       "Tanggal: " + dateStr,
@@ -73,23 +73,23 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "del" || sub === "hapus") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Countdown", "Khusus owner."));
+      await m.reply(raraWrap("Auto Countdown", "Khusus owner."));
       return { handled: true };
     }
     const idx = parseInt(args[2] || "0", 10) - 1;
     if (isNaN(idx) || idx < 0 || idx >= cfg.events.length) {
-      await m.reply(novaError("AutoCountdown", "Nomor gak valid nih"));
+      await m.reply(raraError("AutoCountdown", "Nomor gak valid nih"));
       return { handled: true };
     }
     const removed = cfg.events.splice(idx, 1)[0];
     saveConfig(db, gid, cfg);
-    await m.reply(novaWrap("Auto Countdown", "Event dihapus: " + removed.name));
+    await m.reply(raraWrap("Auto Countdown", "Event dihapus: " + removed.name));
     return { handled: true };
   }
 
   if (sub === "list" || sub === "cek" || !sub) {
     if (cfg.events.length === 0) {
-      await m.reply(novaWrap("Auto Countdown", [
+      await m.reply(raraWrap("Auto Countdown", [
         "Belum ada event.",
         "",
         prefix + "autocountdown add <nama> <YYYY-MM-DD>",
@@ -103,26 +103,26 @@ async function handler(m, { sock, db, config: botConfig }) {
       const status = days > 0 ? days + " hari lagi" : days === 0 ? "HARI INI!" : "lewat";
       return (i + 1) + ". " + e.name + "\n   " + e.date + " (" + status + ")";
     }).join("\n\n");
-    await m.reply(novaWrap("Auto Countdown", "Event list:\n\n" + list));
+    await m.reply(raraWrap("Auto Countdown", "Event list:\n\n" + list));
     return { handled: true };
   }
 
   if (sub === "test" || sub === "ceknotify") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Auto Countdown", "Khusus owner."));
+      await m.reply(raraWrap("Auto Countdown", "Khusus owner."));
       return { handled: true };
     }
     if (cfg.events.length === 0) {
-      await m.reply(novaWrap("Auto Countdown", "Belum ada event."));
+      await m.reply(raraWrap("Auto Countdown", "Belum ada event."));
       return { handled: true };
     }
     const e = cfg.events[0];
     const days = daysUntil(e.date);
-    await m.reply(novaWrap("Auto Countdown Test", "Event: " + e.name + "\nTanggal: " + e.date + "\nHari lagi: " + (days > 0 ? days : days === 0 ? "HARI INI" : "lewat") + "\n\nNotify akan kirim di: H-7, H-3, H-1, H-day"));
+    await m.reply(raraWrap("Auto Countdown Test", "Event: " + e.name + "\nTanggal: " + e.date + "\nHari lagi: " + (days > 0 ? days : days === 0 ? "HARI INI" : "lewat") + "\n\nNotify akan kirim di: H-7, H-3, H-1, H-day"));
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Auto Countdown", "Ketik " + prefix + "autocountdown list."));
+  await m.reply(raraWrap("Auto Countdown", "Ketik " + prefix + "autocountdown list."));
   return { handled: true };
 }
 

@@ -1,4 +1,4 @@
-// NOVA — E2E: STRUKTUR KATEGORI PLUGIN (25 Sep 2026, feat/ai-agent-category)
+// RARA — E2E: STRUKTUR KATEGORI PLUGIN (25 Sep 2026, feat/ai-agent-category)
 // Audit hasil reorganisasi: kategori "ai agent" baru, future→smart,
 // folder selaras kategori, gak ada kategori basi, import path resolve.
 import path from "node:path";
@@ -125,7 +125,7 @@ check("5b. path plugin di semua suite e2e resolve", brokenTest.length === 0, bro
 section("6. daftar kategori menu ter-update");
 
 const allmenu = fs.readFileSync("plugins/main/allmenu.js", "utf-8");
-const catlist = fs.readFileSync("src/lib/nova-category-list.js", "utf-8");
+const catlist = fs.readFileSync("src/lib/rara-category-list.js", "utf-8");
 check("6a. allmenu: 'ai agent' masuk urutan + label", allmenu.includes('"ai agent"') && allmenu.includes('"AI Agent"'));
 check("6b. allmenu: 'smart' ganti 'future'", allmenu.includes('"smart"') && !allmenu.includes('"future"'));
 check("6c. category-list: 'ai agent' + emoji 🤖", catlist.includes('"ai agent"') && catlist.includes("🤖"));

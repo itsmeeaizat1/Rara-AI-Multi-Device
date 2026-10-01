@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Nova Arcade — Dino Run</title>
+<title>Rara Arcade — Dino Run</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { background:#0b1220; color:#e8eefc; font-family:system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:12px; touch-action:none; }
@@ -15,14 +15,14 @@
 </style>
 </head>
 <body>
-<h1>🦖 NOVA DINO RUN</h1>
+<h1>🦖 RARA DINO RUN</h1>
 <div class="sub">Ketuk layar untuk lompat · hindari kaktus</div>
 <div id="score">Skor: 0 · Rekor: 0</div>
 <canvas id="c" width="340" height="160"></canvas>
 <div id="msg"></div>
 <script>
 const C=document.getElementById("c"),X=C.getContext("2d"),G=130;
-let y,vy,jumping,obs,speed,score,dead,raf,best=+(localStorage.novaDinoBest||0),t=0;
+let y,vy,jumping,obs,speed,score,dead,raf,best=+(localStorage.raraDinoBest||0),t=0;
 const scoreEl=document.getElementById("score"), msgEl=document.getElementById("msg");
 function reset(){ y=G; vy=0; jumping=false; obs=[]; speed=5; score=0; dead=false; t=0; msgEl.textContent=""; raf=requestAnimationFrame(loop); }
 function jump(){ if(dead){ reset(); return; } if(!jumping){ jumping=true; vy=-11; } }
@@ -45,7 +45,7 @@ function loop(){
 }
 function die(){ dead=true; cancelAnimationFrame(raf);
   const s=~~score;
-  if(s>best){ best=s; localStorage.novaDinoBest=best; msgEl.textContent="🏆 REKOR BARU: "+s+" — ketuk untuk main lagi"; }
+  if(s>best){ best=s; localStorage.raraDinoBest=best; msgEl.textContent="🏆 REKOR BARU: "+s+" — ketuk untuk main lagi"; }
   else msgEl.textContent="💀 Nabrak kaktus! Ketuk untuk main lagi";
   X.fillStyle="rgba(220,60,60,.6)"; X.fillRect(0,0,340,160);
   X.fillStyle="#fff"; X.font="bold 20px system-ui"; X.textAlign="center"; X.fillText("GAME OVER",170,80); }

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "debateclub",
@@ -69,7 +69,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "start" || sub === "mulai") {
     if (game && game.status === "active") {
-      await m.reply(novaWrap("Debate Club", "Debat masih aktif. Ketik " + prefix + "debateclub stop."));
+      await m.reply(raraWrap("Debate Club", "Debat masih aktif. Ketik " + prefix + "debateclub stop."));
       return { handled: true };
     }
     const topic = TOPICS[Math.floor(Math.random() * TOPICS.length)];
@@ -85,7 +85,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       voteCount: 0,
     };
     saveConfig(db, gid, data);
-    await m.reply(novaWrap("Debate Club", [
+    await m.reply(raraWrap("Debate Club", [
       "DEBAT DIMULAI!",
       "",
       "Topik: " + topic,
@@ -104,50 +104,50 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "pro" || sub === "setuju") {
     if (!game || game.status !== "active" || game.phase !== "join") {
-      await m.reply(novaWrap("Debate Club", "Tidak ada sesi join. Ketik " + prefix + "debateclub start."));
+      await m.reply(raraWrap("Debate Club", "Tidak ada sesi join. Ketik " + prefix + "debateclub start."));
       return { handled: true };
     }
     if (game.contra.includes(m.sender)) {
-      await m.reply(novaWrap("Debate Club", "Kamu sudah di tim Kontra! Keluar dulu."));
+      await m.reply(raraWrap("Debate Club", "Kamu sudah di tim Kontra! Keluar dulu."));
       return { handled: true };
     }
     if (!game.pro.includes(m.sender)) game.pro.push(m.sender);
     saveConfig(db, gid, game);
-    await m.reply(novaWrap("Debate Club", "Bergabung tim PRO! Member: " + game.pro.length + "\n" + game.pro.map(j => "@" + j.split("@")[0]).join(", ")), { mentions: game.pro });
+    await m.reply(raraWrap("Debate Club", "Bergabung tim PRO! Member: " + game.pro.length + "\n" + game.pro.map(j => "@" + j.split("@")[0]).join(", ")), { mentions: game.pro });
     return { handled: true };
   }
 
   if (sub === "contra" || sub === "kontra" || sub === "tidaksetuju") {
     if (!game || game.status !== "active" || game.phase !== "join") {
-      await m.reply(novaWrap("Debate Club", "Tidak ada sesi join. Ketik " + prefix + "debateclub start."));
+      await m.reply(raraWrap("Debate Club", "Tidak ada sesi join. Ketik " + prefix + "debateclub start."));
       return { handled: true };
     }
     if (game.pro.includes(m.sender)) {
-      await m.reply(novaWrap("Debate Club", "Kamu sudah di tim Pro! Keluar dulu."));
+      await m.reply(raraWrap("Debate Club", "Kamu sudah di tim Pro! Keluar dulu."));
       return { handled: true };
     }
     if (!game.contra.includes(m.sender)) game.contra.push(m.sender);
     saveConfig(db, gid, game);
-    await m.reply(novaWrap("Debate Club", "Bergabung tim KONTRA! Member: " + game.contra.length + "\n" + game.contra.map(j => "@" + j.split("@")[0]).join(", ")), { mentions: game.contra });
+    await m.reply(raraWrap("Debate Club", "Bergabung tim KONTRA! Member: " + game.contra.length + "\n" + game.contra.map(j => "@" + j.split("@")[0]).join(", ")), { mentions: game.contra });
     return { handled: true };
   }
 
   if (sub === "open" || sub === "buka") {
     if (!game || game.status !== "active") {
-      await m.reply(novaWrap("Debate Club", "Belum ada debat."));
+      await m.reply(raraWrap("Debate Club", "Belum ada debat."));
       return { handled: true };
     }
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Debate Club", "Khusus admin/owner."));
+      await m.reply(raraWrap("Debate Club", "Khusus admin/owner."));
       return { handled: true };
     }
     if (game.pro.length === 0 || game.contra.length === 0) {
-      await m.reply(novaWrap("Debate Club", "Tim belum lengkap! Min 1 per tim.\nPro: " + game.pro.length + " | Kontra: " + game.contra.length));
+      await m.reply(raraWrap("Debate Club", "Tim belum lengkap! Min 1 per tim.\nPro: " + game.pro.length + " | Kontra: " + game.contra.length));
       return { handled: true };
     }
     game.phase = "argue";
     saveConfig(db, gid, game);
-    await m.reply(novaWrap("Debate Club", [
+    await m.reply(raraWrap("Debate Club", [
       "SESI ARGUMEN DIBUKA!",
       "",
       "Topik: " + game.topic,
@@ -163,39 +163,39 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "argue" || sub === "argumen") {
     if (!game || game.status !== "active" || game.phase !== "argue") {
-      await m.reply(novaWrap("Debate Club", "Sesi argumen belum dibuka."));
+      await m.reply(raraWrap("Debate Club", "Sesi argumen belum dibuka."));
       return { handled: true };
     }
     const text = args.slice(2).join(" ").trim();
     if (!text) {
-      await m.reply(novaWrap("Debate Club", "Ketik argumen: " + prefix + "debateclub argue <argumen>"));
+      await m.reply(raraWrap("Debate Club", "Ketik argumen: " + prefix + "debateclub argue <argumen>"));
       return { handled: true };
     }
     const team = game.pro.includes(m.sender) ? "PRO" : game.contra.includes(m.sender) ? "KONTRA" : null;
     if (!team) {
-      await m.reply(novaWrap("Debate Club", "Kamu tidak tergabung tim mana pun."));
+      await m.reply(raraWrap("Debate Club", "Kamu tidak tergabung tim mana pun."));
       return { handled: true };
     }
     game.arguments.push({ user: m.sender, team, text, ts: Date.now() });
     saveConfig(db, gid, game);
-    await m.reply(novaWrap("Debate Club", "[" + team + "] @" + m.sender.split("@")[0] + ":\n" + text + "\n\nTotal argumen: " + game.arguments.length), { mentions: [m.sender] });
+    await m.reply(raraWrap("Debate Club", "[" + team + "] @" + m.sender.split("@")[0] + ":\n" + text + "\n\nTotal argumen: " + game.arguments.length), { mentions: [m.sender] });
     return { handled: true };
   }
 
   if (sub === "vote" || sub === "voting") {
     if (!game || game.status !== "active" || game.phase !== "argue") {
-      await m.reply(novaWrap("Debate Club", "Belum bisa voting."));
+      await m.reply(raraWrap("Debate Club", "Belum bisa voting."));
       return { handled: true };
     }
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Debate Club", "Khusus admin/owner buka voting."));
+      await m.reply(raraWrap("Debate Club", "Khusus admin/owner buka voting."));
       return { handled: true };
     }
     if (game.arguments.length === 0) {
     }
     game.phase = "vote";
     saveConfig(db, gid, game);
-    await m.reply(novaWrap("Debate Club", [
+    await m.reply(raraWrap("Debate Club", [
       "VOTING DIBUKA!",
       "",
       "Topik: " + game.topic,
@@ -213,33 +213,33 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "pilih" || sub === "votepro" || sub === "votekontra") {
     if (!game || game.status !== "active" || game.phase !== "vote") {
-      await m.reply(novaWrap("Debate Club", "Voting belum dibuka."));
+      await m.reply(raraWrap("Debate Club", "Voting belum dibuka."));
       return { handled: true };
     }
     if (game.pro.includes(m.sender) || game.contra.includes(m.sender)) {
-      await m.reply(novaWrap("Debate Club", "Anggota tim tidak bisa vote!"));
+      await m.reply(raraWrap("Debate Club", "Anggota tim tidak bisa vote!"));
       return { handled: true };
     }
     if (game.voters[m.sender]) {
-      await m.reply(novaWrap("Debate Club", "Kamu sudah vote!"));
+      await m.reply(raraWrap("Debate Club", "Kamu sudah vote!"));
       return { handled: true };
     }
     const choice = (args[2] || sub).toLowerCase();
     const vote = (choice === "pro" || sub === "votepro") ? "pro" : (choice === "kontra" || sub === "votekontra") ? "contra" : null;
     if (!vote) {
-      await m.reply(novaWrap("Debate Club", "Pilih: " + prefix + "debateclub pilih pro/kontra"));
+      await m.reply(raraWrap("Debate Club", "Pilih: " + prefix + "debateclub pilih pro/kontra"));
       return { handled: true };
     }
     game.voters[m.sender] = vote;
     game.voteCount++;
     saveConfig(db, gid, game);
-    await m.reply(novaWrap("Debate Club", "Vote " + (vote === "pro" ? "PRO" : "KONTRA") + " tercatat!\nTotal votes: " + game.voteCount));
+    await m.reply(raraWrap("Debate Club", "Vote " + (vote === "pro" ? "PRO" : "KONTRA") + " tercatat!\nTotal votes: " + game.voteCount));
     return { handled: true };
   }
 
   if (sub === "result" || sub === "hasil") {
     if (!game || game.status !== "active" || game.phase !== "vote") {
-      await m.reply(novaWrap("Debate Club", "Voting belum dimulai."));
+      await m.reply(raraWrap("Debate Club", "Voting belum dimulai."));
       return { handled: true };
     }
     const proVotes = Object.values(game.voters).filter(v => v === "pro").length;
@@ -249,7 +249,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     saveConfig(db, gid, game);
     const proMembers = game.pro.map(j => "@" + j.split("@")[0]).join(", ");
     const contraMembers = game.contra.map(j => "@" + j.split("@")[0]).join(", ");
-    await m.reply(novaWrap("Debate Club - HASIL", [
+    await m.reply(raraWrap("Debate Club - HASIL", [
       "Topik: " + game.topic,
       "",
       "Tim PRO (" + proVotes + " votes):",
@@ -268,20 +268,20 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "stop" || sub === "batal") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Debate Club", "Khusus admin/owner."));
+      await m.reply(raraWrap("Debate Club", "Khusus admin/owner."));
       return { handled: true };
     }
     delConfig(db, gid);
-    await m.reply(novaWrap("Debate Club", "Debat dibatalkan."));
+    await m.reply(raraWrap("Debate Club", "Debat dibatalkan."));
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek" || !sub) {
     if (!game) {
-      await m.reply(novaWrap("Debate Club", "Belum ada debat.\n" + prefix + "debateclub start untuk mulai."));
+      await m.reply(raraWrap("Debate Club", "Belum ada debat.\n" + prefix + "debateclub start untuk mulai."));
       return { handled: true };
     }
-    await m.reply(novaWrap("Debate Club", [
+    await m.reply(raraWrap("Debate Club", [
       "Topik: " + game.topic,
       "Phase: " + game.phase,
       "Pro: " + game.pro.length + " | Kontra: " + game.contra.length,
@@ -290,7 +290,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     ].join("\n")));
     return { handled: true };
   }
-  await m.reply(novaWrap("Debate Club", [
+  await m.reply(raraWrap("Debate Club", [
     "DEBATE CLUB",
     "",
     prefix + "debateclub start - mulai debat (random topic)",

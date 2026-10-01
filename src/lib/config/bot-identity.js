@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // bot-identity.js — Identitas bot, owner, session, mode, sticker, saluran
 
 export const botIdentity = {
@@ -21,13 +21,13 @@ export const botIdentity = {
   },
 
   bot: {
-    name: "Nova AI Whatsapp Bot",
+    name: "Rara AI Whatsapp Bot",
     version: "24.0.0",
     developer: "Aizat",
     menuImage: {
       mode: "asset",
       url: "",
-      asset: "nova",
+      asset: "rara",
     },
   },
 
@@ -38,15 +38,15 @@ export const botIdentity = {
   },
 
   sticker: {
-    packname: "Nova Ai Multi Device",
+    packname: "Rara Ai Multi Device",
     author: "Aizat",
   },
 
   saluran: {
     // id numerik (120363xxx@newsletter) di-resolve OTOMATIS dari link invite
-    // saat runtime (sock.newsletterMetadata) — lihat nova-menu-card.js.
+    // saat runtime (sock.newsletterMetadata) — lihat rara-menu-card.js.
     id: "@newsletter",
-    name: "Nova AI Official",
+    name: "Rara AI Official",
     link: "https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29",
   },
 };

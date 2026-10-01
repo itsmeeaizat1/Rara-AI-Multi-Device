@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
-import { getParticipantJid, resolveAnyLidToJid } from '../../src/lib/nova-lid.js'
-import * as timeHelper from '../../src/lib/nova-time.js'
-import te from '../../src/lib/nova-error.js'
+import { getParticipantJid, resolveAnyLidToJid } from '../../src/lib/rara-lid.js'
+import * as timeHelper from '../../src/lib/rara-time.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: "groupinfo",
     alias: ["groupinfo"],
@@ -62,7 +62,7 @@ async function handler(m, { sock, db }) {
 
         const isOpen = groupMeta.announce === false || !groupMeta.announce
 
-        let text = novaWrap("Info Grup", [`Nama: *${groupMeta.subject}*`, `ID: ${m.chat}`, `Owner: ${ownerDisplay}`, `Dibuat: ${createdDate}`, `Status: ${isOpen ? '🔓 Terbuka' : '🔒 Tertutup'}`, ``, `📊 *member*`, `Total: ${participants.length}`, `Admin: ${admins.length}`, `Member: ${participants.length - admins.length}`, ``, `🔧 *fitur aktif*`, `Welcome: ${featureStatus(group.welcome)}`, `Goodbye: ${featureStatus(group.goodbye)}`, `Autoreply: ${featureStatus(group.autoreply)}`, `AutoAI: ${featureStatus(group.autoai)}`, `AutoDL: ${featureStatus(group.autodl)}`, `AutoSticker: ${featureStatus(group.autosticker)}`, `AutoMedia: ${featureStatus(group.automedia)}`, ``, `🛡️ *proteksi*`, `AntiLink: ${featureStatus(group.antilink)}`, `AntiBot: ${featureStatus(group.antibot)}`, `AntiToxic: ${featureStatus(group.antitoxic)}`, `AntiRemove: ${featureStatus(group.antiremove)}`, `AntiHidetag: ${featureStatus(group.antihidetag)}`, `AntiSticker: ${featureStatus(group.antisticker)}`, `AntiMedia: ${featureStatus(group.antimedia)}`, `AntiDocument: ${featureStatus(group.antidocument)}` + (groupMeta.desc ? `\n\n📝 *deskripsi*\n${groupMeta.desc}` : "")].join("\n"));
+        let text = raraWrap("Info Grup", [`Nama: *${groupMeta.subject}*`, `ID: ${m.chat}`, `Owner: ${ownerDisplay}`, `Dibuat: ${createdDate}`, `Status: ${isOpen ? '🔓 Terbuka' : '🔒 Tertutup'}`, ``, `📊 *member*`, `Total: ${participants.length}`, `Admin: ${admins.length}`, `Member: ${participants.length - admins.length}`, ``, `🔧 *fitur aktif*`, `Welcome: ${featureStatus(group.welcome)}`, `Goodbye: ${featureStatus(group.goodbye)}`, `Autoreply: ${featureStatus(group.autoreply)}`, `AutoAI: ${featureStatus(group.autoai)}`, `AutoDL: ${featureStatus(group.autodl)}`, `AutoSticker: ${featureStatus(group.autosticker)}`, `AutoMedia: ${featureStatus(group.automedia)}`, ``, `🛡️ *proteksi*`, `AntiLink: ${featureStatus(group.antilink)}`, `AntiBot: ${featureStatus(group.antibot)}`, `AntiToxic: ${featureStatus(group.antitoxic)}`, `AntiRemove: ${featureStatus(group.antiremove)}`, `AntiHidetag: ${featureStatus(group.antihidetag)}`, `AntiSticker: ${featureStatus(group.antisticker)}`, `AntiMedia: ${featureStatus(group.antimedia)}`, `AntiDocument: ${featureStatus(group.antidocument)}` + (groupMeta.desc ? `\n\n📝 *deskripsi*\n${groupMeta.desc}` : "")].join("\n"));
 
         const mentions = ownerJid && !ownerJid.includes(':') ? [ownerJid] : []
 
@@ -82,7 +82,7 @@ async function handler(m, { sock, db }) {
             await m.reply(text, "groupinfo")
         }
     } catch (error) {
-        m.reply(novaWrap("groupinfo", te(m.prefix, m.command, m.pushName), "error"))}
+        m.reply(raraWrap("groupinfo", te(m.prefix, m.command, m.pushName), "error"))}
 }
 
 export { pluginConfig as config, handler }

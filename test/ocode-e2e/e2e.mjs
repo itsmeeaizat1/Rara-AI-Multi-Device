@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: OPENCODE 9ROUTER (AI coding agent via chat, owner 21 Sep 2026)
+// RARA AI WHATSAPP BOT — E2E: OPENCODE 9ROUTER (AI coding agent via chat, owner 21 Sep 2026)
 // Verifikasi: loop agent (read→edit→done), path jail, blacklist rahasia, backup+undo,
 // lock 1 tugas, abort stop, gate owner, teks polos = ringkasan, plugin report.
 import assert from "node:assert/strict";
@@ -24,7 +24,7 @@ fs.mkdirSync(path.join(ws, "src", "lib", "config", "apikey"), { recursive: true 
 fs.writeFileSync(path.join(ws, "src", "lib", "config", "apikey", "apikeys.json"), '{"router9v2":"sk-rahasia"}');
 fs.writeFileSync(path.join(ws, ".env"), "SECRET=1");
 
-const agent = await import(R + "/src/lib/nova-ocode-agent.js");
+const agent = await import(R + "/src/lib/rara-ocode-agent.js");
 agent._setOcodePathsForTest({ root: ws, backupDir: bk });
 
 function wrap(txt) { return "```ocode\n" + txt + "\n```"; }
@@ -106,7 +106,7 @@ console.log("\n— section 5: plugin —");
 {
   // GOTCHA: getDatabase() throw kalau belum init — wajib initDatabase(path
   // temp) DULU sebelum manggil handler plugin (di bot asli index.js udah init).
-  const { getDatabase, initDatabase } = await import(R + "/src/lib/nova-database.js");
+  const { getDatabase, initDatabase } = await import(R + "/src/lib/rara-database.js");
   const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "ocode-e2e-db-"));
   await initDatabase(path.join(dbDir, "db"));
   const { _setRouter9v2KeyForTest } = await import(R + "/src/scraper/router9v2.js");

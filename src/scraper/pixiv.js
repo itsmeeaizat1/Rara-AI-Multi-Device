@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/scraper/pixiv.js — PIXIV DIRECT ENGINE (ala Mori)
 // Sumber referensi: github.com/coflyn/Mori — Pixiv AJAX API.
 // Pattern VERIFIED LIVE 2026-09-07:

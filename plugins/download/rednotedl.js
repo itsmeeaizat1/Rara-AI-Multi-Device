@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { RedNoteDL } from "../../src/scraper/rednote.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     const result = await RedNoteDL(text);
 
     if (!result.status) {
-      return m.reply(novaGagal("RedNote"));
+      return m.reply(raraGagal("RedNote"));
     }
 
     if (result.type === "video" && result.results?.[0]) {
@@ -89,10 +89,10 @@ async function handler(m, { sock }) {
         );
       }
     }
-    await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("RedNote"));
+    await m.react("🐣"); await m.react("🐣"); m.reply(raraBerhasil("RedNote"));
   } catch (e) {
     console.error(e);
-    m.reply(novaGangguan("RedNote"));
+    m.reply(raraGangguan("RedNote"));
   }
 }
 

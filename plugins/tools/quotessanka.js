@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "quotessanka",
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     console.error("[QUOTESSANKA] Error:", e.message);
     let txt = `Gagal mengambil quotes!\n\n`;
     txt += `Error: ${e.message}`;
-    await m.reply(novaWrap("quotessanka", txt));
+    await m.reply(raraWrap("quotessanka", txt));
   }
 }
 

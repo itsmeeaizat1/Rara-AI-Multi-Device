@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // kuroneko.js — KuroNeko API (sylvatica.my.id) — scraper AI lengkap
 // Key: apikeys.json field `kuroneko` (fallback env KURONEKO_API_KEY)
 // Docs: sylvatica.my.id — free via login, semua endpoint pakai ?apikey=
@@ -14,7 +14,7 @@
 //   - gpt5/claude/qwen3/mistral/perplexity/bypassai/aiseek: chat AI (cadangan rantai)
 // Gak dipakai (mati utk key ini): chatgpt (bocor debug), gptanon (403),
 // imagenai (auth error), txt2img (session expired), aisong (backend down),
-// nova (moderation debug), deepsek (answer kosong).
+// rara (moderation debug), deepsek (answer kosong).
 
 const KN_BASE = "https://sylvatica.my.id/api";
 

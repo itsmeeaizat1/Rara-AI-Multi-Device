@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 import axios from 'axios'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
+import te from '../../src/lib/rara-error.js'
+const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-RaraMD'
 
 const pluginConfig = {
     name: 'robloxplayer',
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         })
         
         if (!res.data?.status || !res.data?.data?.length) {
-            return m.reply(novaWrap("robloxplayer", `❌ Tidak ditemukan player dengan username: ${query}`))
+            return m.reply(raraWrap("robloxplayer", `❌ Tidak ditemukan player dengan username: ${query}`))
         }
         
         const players = res.data.data.slice(0, 10)
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
         await m.reply(text)
     } catch (err) {
         console.error('[RobloxPlayer] Error:', err.message)
-        return m.reply(novaWrap("robloxplayer", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(raraWrap("robloxplayer", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

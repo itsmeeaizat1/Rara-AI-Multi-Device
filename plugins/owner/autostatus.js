@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 /**
  * .autostatus — halaman status ON/OFF semua fitur automasi (owner only).
@@ -6,18 +6,18 @@
  * lib getter, db.data.automation, db.setting flag, file state, dan per-grup.
  */
 
-import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getBmkgStatus } from "../../src/lib/nova-bmkg-scheduler.js";
-import { getHealthStatus } from "../../src/lib/nova-auto-api-health.js";
-import { getReengageStatus } from "../../src/lib/nova-auto-reengage.js";
-import { getRefillStatus } from "../../src/lib/nova-auto-refill.js";
-import { getRenewalStatus } from "../../src/lib/nova-auto-renewal.js";
-import { getReportStatus } from "../../src/lib/nova-auto-report.js";
-import { getBirthdayStatus } from "../../src/lib/nova-auto-birthday.js";
-import { getBackupStatus } from "../../src/lib/nova-auto-backup.js";
-import { getSettings as getCleanCacheSettings } from "../../src/lib/nova-cache-cleaner.js";
-import { getAllNotifyStatus } from "../../src/lib/nova-saluran-broadcast.js";
+import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getBmkgStatus } from "../../src/lib/rara-bmkg-scheduler.js";
+import { getHealthStatus } from "../../src/lib/rara-auto-api-health.js";
+import { getReengageStatus } from "../../src/lib/rara-auto-reengage.js";
+import { getRefillStatus } from "../../src/lib/rara-auto-refill.js";
+import { getRenewalStatus } from "../../src/lib/rara-auto-renewal.js";
+import { getReportStatus } from "../../src/lib/rara-auto-report.js";
+import { getBirthdayStatus } from "../../src/lib/rara-auto-birthday.js";
+import { getBackupStatus } from "../../src/lib/rara-auto-backup.js";
+import { getSettings as getCleanCacheSettings } from "../../src/lib/rara-cache-cleaner.js";
+import { getAllNotifyStatus } from "../../src/lib/rara-saluran-broadcast.js";
 import fs from "fs";
 import path from "path";
 
@@ -185,13 +185,13 @@ async function handler(m, { sock }) {
     if (partial > 0) lines.push(`• ${toSC("Per-Grup/Parsial")} : ${partial}`);
     lines.push(`• ${toSC("Nyalakan")} : .autoxxx on`);
 
-    const txt = novaBox("Status Automasi", lines);
+    const txt = raraBox("Status Automasi", lines);
     await m.react("🐣");
     return m.reply(txt);
   } catch (e) {
     console.error("[autostatus] error:", e.message || e);
     await m.react("❌");
-    return m.reply(novaError("AutoStatus", e.message || "Gagal membaca status automasi"));
+    return m.reply(raraError("AutoStatus", e.message || "Gagal membaca status automasi"));
   }
 }
 

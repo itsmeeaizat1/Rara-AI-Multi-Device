@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import crypto from "crypto";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "videotranscribe",
@@ -115,13 +115,13 @@ async function handler(m, { sock,  args }) {
       transcript += `... (teks terlalu panjang)`;
     }
 
-    const info = novaWrap("Video Transcribe", [`*title:* ${result.title}`, `*language:* ${lang.toUpperCase()}`, `*segments:* ${result.total}`, ``, `*transcript:*`, transcript].join("\n"));
+    const info = raraWrap("Video Transcribe", [`*title:* ${result.title}`, `*language:* ${lang.toUpperCase()}`, `*segments:* ${result.total}`, ``, `*transcript:*`, transcript].join("\n"));
     await m.react("🐣");
     await m.reply(info);
   } catch (err) {
     await m.react("❌");
     console.error("[VideoTranscribe]", err.message);
-    m.reply(novaWrap("videotranscribe", `❌ *gagal:* ${err.message || "Gagal proses nih video"}`));
+    m.reply(raraWrap("videotranscribe", `❌ *gagal:* ${err.message || "Gagal proses nih video"}`));
   }
 }
 

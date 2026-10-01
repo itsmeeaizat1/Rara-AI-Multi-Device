@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: AllDownloader (Omnify AIO) — keluarga v2 dari .alldl
  *           (cmd beda: .alldownloader / .alldl2 — .alldl lama TETAP ada)
@@ -28,14 +28,14 @@ import { omnifyResolve, omnifyHealth } from "../../src/scraper/omnify-aio.js";
 import { valoreResolve, valoreHealth } from "../../src/scraper/valore-dl.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
-import { haidarAio } from "../../src/lib/nova-haidar.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
+import { haidarAio } from "../../src/lib/rara-haidar.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
 import {
-  novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan,
+  raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan,
   toSC, bracketBox, tipText,
-} from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -342,7 +342,7 @@ async function runDownload(sock, m, session, opt) {
       }
       adlSessions.delete(m.sender);
       return m.reply(
-        novaError(
+        raraError(
           "AllDownloader",
           `File terlalu besar untuk dikirim langsung. Download manual di:\n${opt.url}`
         )
@@ -357,10 +357,10 @@ async function runDownload(sock, m, session, opt) {
   try {
     await m.react("🐣");
     await sendMedia(sock, m, session, opt, session.meta || {});
-    await m.reply(novaBerhasil("AllDownloader"));
+    await m.reply(raraBerhasil("AllDownloader"));
   } catch (err) {
     console.error("[alldownloader] send error:", err.message);
-    await m.reply(novaGangguan("AllDownloader"));
+    await m.reply(raraGangguan("AllDownloader"));
   }
 
   adlSessions.delete(m.sender);
@@ -390,7 +390,7 @@ async function handlerCore(m, { sock }) {
       );
     } catch (err) {
       await m.react("❗");
-      return m.reply(novaGangguan("AllDownloader"));
+      return m.reply(raraGangguan("AllDownloader"));
     }
   }
 
@@ -408,7 +408,7 @@ async function handlerCore(m, { sock }) {
     if (!session) {
       await m.react("❗");
       return m.reply(
-        novaGuide(
+        raraGuide(
           "AllDownloader",
           "Sesi download sudah kedaluwarsa nih! Kirim ulang linknya ya.",
           `${prefix}alldownloader <url>`
@@ -453,7 +453,7 @@ async function handlerCore(m, { sock }) {
   if (!url) {
     await m.react("❗");
     return m.reply(
-      novaGuide(
+      raraGuide(
         "AllDownloader",
         "Kirim link media dari platform mana aja — YouTube, TikTok, IG, FB, Spotify, SoundCloud, Pinterest, CapCut, dll. Bot kasih daftar format, kamu tinggal pilih nomor!",
         `${prefix}alldownloader https://youtu.be/xxx`
@@ -565,7 +565,7 @@ async function handlerCore(m, { sock }) {
   // Gagal semua
   if (!session) {
     await m.react("❗");
-    return m.reply(novaGagal("AllDownloader"));
+    return m.reply(raraGagal("AllDownloader"));
   }
 
   adlSessions.set(m.sender, session);

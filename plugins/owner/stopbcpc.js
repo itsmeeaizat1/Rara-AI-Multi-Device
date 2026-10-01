@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: 'stopbcpc',
   alias: ["stopbcpc"],
@@ -17,10 +17,10 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   if (!global.statusBcpc) {
-    { const __navText = novaWrap("stopbcpc", '❌ Tidak ada broadcast private yang sedang berjalan.'); return await m.reply(__navText); }
+    { const __navText = raraWrap("stopbcpc", '❌ Tidak ada broadcast private yang sedang berjalan.'); return await m.reply(__navText); }
   }
   global.stopBcpc = true
-  return m.reply(novaWrap("Stopbcpc", '⏹️ Menghentikan broadcast private...'))
+  return m.reply(raraWrap("Stopbcpc", '⏹️ Menghentikan broadcast private...'))
 }
 
 export { pluginConfig as config, handler }

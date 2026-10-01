@@ -1,9 +1,9 @@
 // E2E .googlesearch (request owner 10 Sep: nyari web — list 1..N, ketik nomor
 // buka halaman → preview thumbnail + plain text isi halaman + readmore).
 // Semua HTTP di-inject (offline). Reaksi 🕒→🐣 wajib.
-import { initDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase } from "../../src/lib/rara-database.js";
 import { smallcapsText } from "../../src/lib/styler.js";
-import { setWebSearchHttp, setPreviewHttp, setLinkResolverHttp, resetWebSearchDeps } from "../../src/lib/nova-websearch.js";
+import { setWebSearchHttp, setPreviewHttp, setLinkResolverHttp, resetWebSearchDeps } from "../../src/lib/rara-websearch.js";
 
 await initDatabase("/tmp/searchweb-e2e-db.json");
 

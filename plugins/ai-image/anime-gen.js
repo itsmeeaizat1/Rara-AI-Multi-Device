@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { f } from '../../src/lib/nova-http.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { f } from '../../src/lib/rara-http.js'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraLine, raraCaption } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'anime-gen',
     alias: ["anime-gen", "anime"],
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const prompt = m.text
     
     if (!prompt) {
-        return m.reply(novaCaption({
+        return m.reply(raraCaption({
   emoji: "🎨",
   name: "anime-gen",
   description: "Generate AI anime art dari prompt",
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     }
     try {
     await m.react("🕒");
-        const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
+        const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-RaraMD'
         const apiUrl = `https://api.neoxr.eu/api/ai-anime?q=${encodeURIComponent(prompt)}&apikey=${NEOXR_APIKEY}`
         
         const data = await f(apiUrl)
@@ -49,9 +49,9 @@ async function handler(m, { sock }) {
     } catch (error) {
         if (error.code === 'ECONNABORTED') {
             await m.react("🐣");
-            m.reply(novaWrap("Anime-gen", '⏱️ *Timeout*\n\nRequest terlalu lama. Coba lagi!'))
+            m.reply(raraWrap("Anime-gen", '⏱️ *Timeout*\n\nRequest terlalu lama. Coba lagi!'))
         } else {
-            m.reply(novaWrap("anime-gen", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(raraWrap("anime-gen", te(m.prefix, m.command, m.pushName), "error"))
         }
     }
 }

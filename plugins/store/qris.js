@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .qris — Kirim gambar QRIS pembayaran all-in-one (sewa/premium/topup/donasi).
  * Dipakai tombol "Kirim QRIS" di katalog .payment (quick_reply id ".qris").
@@ -7,7 +7,7 @@
 import fs from "fs";
 import path from "path";
 import config from "../../config.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "qris",
@@ -41,7 +41,7 @@ function resolveQrisPath() {
 async function handler(m, { sock }) {
   try {
     const qrisPath = resolveQrisPath();
-    const botName = config.bot?.name || "Nova AI";
+    const botName = config.bot?.name || "Rara AI";
     const ownerNumber = String((config.owner?.number || [])[0] || "").replace(/[^0-9]/g, "");
     const ownerName = config.owner?.name || "Owner";
 
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
 
     if (!qrisPath) {
       return m.reply(
-        novaWrap("Qris", [
+        raraWrap("Qris", [
           "Status: *gagal*",
           "Alasan: *File QRIS tidak ditemukan*",
           `Minta QRIS langsung ke owner: wa.me/${ownerNumber}`,
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     );
   } catch (e) {
     console.error("[qris.js] error:", e.message);
-    await m.reply(novaWrap("Qris", "Yah gagal kirim QRIS-nya, coba lagi ya 😩"));
+    await m.reply(raraWrap("Qris", "Yah gagal kirim QRIS-nya, coba lagi ya 😩"));
   }
   return { handled: true };
 }

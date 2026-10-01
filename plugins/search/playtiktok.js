@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from "../../src/lib/rara-error.js";
 import { tiktokSearchVideo, tiktokSearchWilz } from "../../src/scraper/tiktoksearch.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import {  } from "../../src/lib/nova-menu-style.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import {  } from "../../src/lib/rara-menu-style.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply(novaWrap("PlayTikTok", [
+    return m.reply(raraWrap("PlayTikTok", [
       `📌 Cari dan kirim satu video TikTok dari keyword:`,
       ``,
       `💡 Contoh:`,
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
       videos = await tiktokSearchVideo(query);
     }
     if (!videos || videos.length === 0) {
-      return m.reply(novaError("PlayTikTok", `Gak nemu video untuk: ${query} nih`));
+      return m.reply(raraError("PlayTikTok", `Gak nemu video untuk: ${query} nih`));
     }
 
     const video = videos[0];
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
     });
   } catch (error) {
     console.log(error);
-    m.reply(novaWrap("playtiktok", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("playtiktok", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

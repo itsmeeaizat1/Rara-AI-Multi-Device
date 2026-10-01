@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // AI Auto Interaction VN — bicara dengan AI via voice note ATAU teks,
 // AI bisa balas pakai suara (VN) atau teks — sesuai mode (18 Sep 2026).
 // Toggle: .aiautointeractionvn on/off  (owner only, default OFF)
@@ -7,13 +7,13 @@
 // UPGRADE 18 Sep 2026 (request owner: "buat fitur bicara dgn ai bsa pakai
 // teks ataupun vn jika disuruh jawab pakai vn" + "ai jawab pakai teks + vn
 // on off"):
-//   1. STT → shared nova-stt.js (pipeline Gemini → OpenAI → GROQ Whisper —
+//   1. STT → shared rara-stt.js (pipeline Gemini → OpenAI → GROQ Whisper —
 //      key Groq valid di pusat apikeys.json, gak lagi pipeline lokal yang
 //      cuma andalkan Gemini expired).
-//   2. OTAK AI → NOVA AGENT (runAgent nova-agent.js — request owner 18 Sep:
-//      "jd ai pakai ai agent kyk nova agent aja jd sekilas sprti ngbrol
-//      langsung ke nova agent cm ini ai novaagent jawab pakai suara vn").
-//      Bicara via VN/teks = ngobrol sama nova agent, tapi jawabannya
+//   2. OTAK AI → RARA AGENT (runAgent rara-agent.js — request owner 18 Sep:
+//      "jd ai pakai ai agent kyk rara agent aja jd sekilas sprti ngbrol
+//      langsung ke rara agent cm ini ai raraagent jawab pakai suara vn").
+//      Bicara via VN/teks = ngobrol sama rara agent, tapi jawabannya
 //      DIBACAKAN pakai suara. Memori obrolan SHARING dengan .agent
 //      (db agentMemory) — konteks nyambung antara chat teks & VN.
 //      Reaksi fase ikut sistem loading: 🧠 plan → 🔍 search → 🛠️ tool → ⚡.
@@ -26,10 +26,10 @@
 //
 // Anti-telepon (deteksi & tolak telepon + auto balas) ada di .anticall —
 // mode info/tolak/off (lihat plugins/owner/anticall.js).
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { runAgent } from "../../src/lib/nova-agent.js";
-import { transcribeAudio } from "../../src/lib/nova-stt.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { runAgent } from "../../src/lib/rara-agent.js";
+import { transcribeAudio } from "../../src/lib/rara-stt.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -121,7 +121,7 @@ async function handler(m, { sock, config: botConfig }) {
         lang: cfg[gid]?.lang || "id",
       };
       db.db.write();
-      const text = novaWrap("AIV — Bicara dengan AI", [
+      const text = raraWrap("AIV — Bicara dengan AI", [
         "Status: ON di chat ini",
         "Balasan: " + (cfg[gid].replyMode === "vn" ? "Voice Note (suara AI)" : "Teks"),
         "Voice: " + (cfg[gid].voice === "ardi" ? "Ardi (Pria ID)" : "Gadis (Wanita ID)"),
@@ -138,7 +138,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
-      const text = novaWrap("AIV — Bicara dengan AI", [
+      const text = raraWrap("AIV — Bicara dengan AI", [
         "Status: OFF",
         "Fitur bicara AI dimatikan di chat ini",
       ]);
@@ -146,7 +146,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "balas" || args[0] === "jawab" || args[0] === "reply") {
       const mode = args[1] || "";
       if (mode !== "vn" && mode !== "teks" && mode !== "voice" && mode !== "text") {
-        const text = novaWrap("AIV — Bicara dengan AI", [
+        const text = raraWrap("AIV — Bicara dengan AI", [
           "Mode balasan tidak valid!",
           "vn — AI jawab pakai voice note (suara)",
           "teks — AI jawab pakai teks biasa",
@@ -161,7 +161,7 @@ async function handler(m, { sock, config: botConfig }) {
       cfg[gid].replyMode = replyMode;
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
-      const text = novaWrap("AIV — Bicara dengan AI", [
+      const text = raraWrap("AIV — Bicara dengan AI", [
         "Balasan AI diubah: " + (replyMode === "vn" ? "VOICE NOTE (suara AI)" : "TEKS"),
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ]);
@@ -174,12 +174,12 @@ async function handler(m, { sock, config: botConfig }) {
         });
         lines.push("");
         lines.push("Ketik: " + prefix + "aiv voice <id>");
-        await m.reply(novaWrap("AIV — Bicara dengan AI", lines));
+        await m.reply(raraWrap("AIV — Bicara dengan AI", lines));
         return { handled: true };
       }
       const voice = VOICE_OPTIONS.find(v => v.id === args[1]);
       if (!voice) {
-        await m.reply(novaWrap("AIV — Bicara dengan AI", [
+        await m.reply(raraWrap("AIV — Bicara dengan AI", [
           "Voice tidak ditemukan!",
           "Ketik " + prefix + "aiv voice untuk lihat daftar",
         ], "error"));
@@ -189,7 +189,7 @@ async function handler(m, { sock, config: botConfig }) {
       cfg[gid].voice = voice.id;
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
-      await m.reply(novaWrap("AIV — Bicara dengan AI", [
+      await m.reply(raraWrap("AIV — Bicara dengan AI", [
         "Voice diubah: " + voice.id,
         "Nama: " + voice.name,
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
@@ -198,7 +198,7 @@ async function handler(m, { sock, config: botConfig }) {
       const lang = args[1] || "id";
       const supported = ["id", "en", "su", "jv", "ar", "ja", "ko", "zh"];
       if (!supported.includes(lang)) {
-        await m.reply(novaWrap("AIV — Bicara dengan AI", [
+        await m.reply(raraWrap("AIV — Bicara dengan AI", [
           "Bahasa tidak didukung!",
           "Tersedia: " + supported.join(", "),
         ], "error"));
@@ -208,7 +208,7 @@ async function handler(m, { sock, config: botConfig }) {
       cfg[gid].lang = lang;
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
-      await m.reply(novaWrap("AIV — Bicara dengan AI", [
+      await m.reply(raraWrap("AIV — Bicara dengan AI", [
         "Bahasa diubah: " + lang,
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ]));
@@ -219,7 +219,7 @@ async function handler(m, { sock, config: botConfig }) {
       const voiceId = cfg[gid]?.voice || "gadis";
       const voiceInfo = VOICE_OPTIONS.find(v => v.id === voiceId);
       const lang = cfg[gid]?.lang || "id";
-      const text = novaWrap("AIV — Bicara dengan AI", [
+      const text = raraWrap("AIV — Bicara dengan AI", [
         "Status: " + enabled,
         "Balasan AI: " + (replyMode === "vn" ? "Voice Note (suara neural, gratis)" : "Teks"),
         "Voice: " + (voiceInfo ? voiceInfo.name : voiceId),
@@ -242,7 +242,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
   } catch (e) {
     console.error("[AIV] handler error:", e?.message || e);
-    await m.reply(novaWrap("AIV — Bicara dengan AI", "Gagal proses perintah. Coba lagi.", "error"));
+    await m.reply(raraWrap("AIV — Bicara dengan AI", "Gagal proses perintah. Coba lagi.", "error"));
   }
   return { handled: true };
 }
@@ -262,7 +262,7 @@ async function edgeTTSBuffer(text, voiceLang) {
     const { MsEdgeTTS, OUTPUT_FORMAT } = await import("msedge-tts");
     const clean = text.replace(/["`']/g, "").replace(/\n/g, " ").slice(0, 500);
     const tts = new MsEdgeTTS({});
-    // FIX 19 Sep 2026: 48kbps → 96kbps (sama kyk nova-voice-reply — suara neural HD)
+    // FIX 19 Sep 2026: 48kbps → 96kbps (sama kyk rara-voice-reply — suara neural HD)
     await tts.setMetadata(voiceLang, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3);
     const { audioStream } = tts.toStream(clean);
     const buf = await new Promise((resolve, reject) => {
@@ -322,7 +322,7 @@ function writeAgentMemory(db, chat, task, mode, answer) {
   } catch {}
 }
 
-// ═══════════ OTAK AI — NOVA AGENT (bicara lewat VN = ngobrol sama agent) ═══════════
+// ═══════════ OTAK AI — RARA AGENT (bicara lewat VN = ngobrol sama agent) ═══════════
 // Reaksi fase: 🧠 plan, 🔍 search, 🛠️ tool, ⚡ compose (aturan sistem loading)
 const PHASE_REACT = { plan: "🧠", search: "🔍", tool: "🛠️", act: "⚡", compose: "⚡" };
 async function aivBrain(userText, gid, sock, userKey) {
@@ -397,7 +397,7 @@ export async function handleAiAutoVnInteraction(m, sock) {
       const durasi = Math.round(audioMsg.seconds || 0);
       if (durasi > MAX_DURASI_VN_DETIK) {
         await sock.sendMessage(gid, {
-          text: novaWrap("AIV — Bicara dengan AI", [
+          text: raraWrap("AIV — Bicara dengan AI", [
             "Pesan suaranya " + durasi + " detik — terlalu panjang.",
             "Maksimal " + MAX_DURASI_VN_DETIK + " detik ya, atau ketik pertanyaannya saja.",
           ]),
@@ -423,7 +423,7 @@ export async function handleAiAutoVnInteraction(m, sock) {
       if (!transcribed || !transcribed.trim()) {
         try { await sock.sendReaction(gid, "❌", m.key); } catch {}
         await sock.sendMessage(gid, {
-          text: novaWrap("AIV — Bicara dengan AI", [
+          text: raraWrap("AIV — Bicara dengan AI", [
             "Suaranya belum jelas terdengar.",
             "Coba rekam ulang lebih dekat ke mikrofon, atau ketik saja pertanyaannya.",
           ]),
@@ -441,7 +441,7 @@ export async function handleAiAutoVnInteraction(m, sock) {
       try { await sock.sendReaction(gid, "🕒", m.key); } catch {}
     }
 
-    // ── AI berpikir (otak nova agent — reaksi fase 🧠🔍🛠️⚡) ──
+    // ── AI berpikir (otak rara agent — reaksi fase 🧠🔍🛠️⚡) ──
     let brainRes;
     try {
       brainRes = await aivBrain(userText, gid, sock, m.key);
@@ -449,7 +449,7 @@ export async function handleAiAutoVnInteraction(m, sock) {
       console.error("[AIV] brain error:", e?.message || e);
       try { await sock.sendReaction(gid, "❌", m.key); } catch {}
       await sock.sendMessage(gid, {
-        text: novaWrap("AIV — Bicara dengan AI", "Maaf, saya gagal memproses pesannya. Coba kirim ulang ya."),
+        text: raraWrap("AIV — Bicara dengan AI", "Maaf, saya gagal memproses pesannya. Coba kirim ulang ya."),
       }, { quoted: m });
       return true;
     }
@@ -475,7 +475,7 @@ export async function handleAiAutoVnInteraction(m, sock) {
     const sources = (brainRes?.sources || []).slice(0, 3);
     if (sources.length) {
       try {
-        const srcTxt = novaWrap("AIV — Sumber", sources.map((s, i) => `${i + 1}. [${s.tag}] ${s.domain} — ${s.url}`));
+        const srcTxt = raraWrap("AIV — Sumber", sources.map((s, i) => `${i + 1}. [${s.tag}] ${s.domain} — ${s.url}`));
         await sock.sendMessage(gid, { text: srcTxt }, { quoted: m });
       } catch {}
     }

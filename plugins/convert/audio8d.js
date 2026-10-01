@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,12 +19,12 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(novaWrap("Audio 8D", "Reply audio yang mau dijadikan 8D."));
+    if (!quoted) return m.reply(raraWrap("Audio 8D", "Reply audio yang mau dijadikan 8D."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(novaWrap("Audio 8D", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(raraWrap("Audio 8D", "Reply harus audio/voice note!"));
 
     const isPtt = !!quoted.pttMessage;
-    const tmpDir = path.join(os.tmpdir(), 'nova-8d');
+    const tmpDir = path.join(os.tmpdir(), 'rara-8d');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, "input_" + Date.now() + ".ogg");
@@ -39,12 +39,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "speed" || sub === "s") {
       rotationSpeed = parseFloat(args[1]) || 0.2;
-      if (rotationSpeed < 0.05 || rotationSpeed > 2.0) return m.reply(novaWrap("Info", "Speed 0.05-2.0. Contoh: .audio8d speed 0.5"));
+      if (rotationSpeed < 0.05 || rotationSpeed > 2.0) return m.reply(raraWrap("Info", "Speed 0.05-2.0. Contoh: .audio8d speed 0.5"));
     }
 
     if (sub === "depth" || sub === "d") {
       depth = parseFloat(args[1]) || 0.8;
-      if (depth < 0.1 || depth > 1.0) return m.reply(novaWrap("Info", "Depth 0.1-1.0. Contoh: .audio8d depth 0.9"));
+      if (depth < 0.1 || depth > 1.0) return m.reply(raraWrap("Info", "Depth 0.1-1.0. Contoh: .audio8d depth 0.9"));
     }
 
     if (!isNaN(parseFloat(sub)) && sub !== "") {
@@ -63,7 +63,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
-      return m.reply(novaGagal("Audio8D"));
+      return m.reply(raraGagal("Audio8D"));
     }
 
     const buf = fs.readFileSync(outputPath);
@@ -71,7 +71,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: novaWrap("Audio 8D", [
+      caption: raraWrap("Audio 8D", [
         "Berhasil! Pakai headphone untuk efek maksimal",
         "Rotation speed: " + rotationSpeed,
         "Depth: " + depth,
@@ -80,10 +80,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
-      await m.reply(novaBerhasil("audio8d"));
+      await m.reply(raraBerhasil("audio8d"));
   } catch (e) {
     console.error("audio8d error:", e);
-    return m.reply(novaGangguan("audio8d"));
+    return m.reply(raraGangguan("audio8d"));
   }
 }
 

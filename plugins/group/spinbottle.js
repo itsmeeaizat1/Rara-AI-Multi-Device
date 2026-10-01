@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "spinbottle",
@@ -65,9 +65,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "spin") {
       const meta = await conn.groupMetadata(groupId).catch(() => null);
-      if (!meta) return m.reply(novaError("Spin Bottle", "Gagal mengambil data/info grup nih."));
+      if (!meta) return m.reply(raraError("Spin Bottle", "Gagal mengambil data/info grup nih."));
       const participants = meta.participants.map(p => p.id).filter(id => id !== conn.user?.id);
-      if (participants.length < 2) return m.reply(novaError("Spin Bottle", "Minimal butuh 2 member di grup untuk putar botol ya!"));
+      if (participants.length < 2) return m.reply(raraError("Spin Bottle", "Minimal butuh 2 member di grup untuk putar botol ya!"));
 
       const randomTarget = participants[Math.floor(Math.random() * participants.length)];
       game.active = true;
@@ -78,7 +78,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await db.save();
 
       const spins = Math.floor(Math.random() * 5) + 3;
-      return m.reply(novaWrap("Spin The Bottle", [
+      return m.reply(raraWrap("Spin The Bottle", [
         `Botol diputar ${spins}x...`,
         `Dan mendarat di: @${randomTarget.split("@")[0]}`,
         "",
@@ -89,11 +89,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "truth") {
-      if (!game.active || game.target !== sender) return m.reply(novaError("Spin Bottle", "Bukan giliranmu untuk pilih truth/dare nih!"));
+      if (!game.active || game.target !== sender) return m.reply(raraError("Spin Bottle", "Bukan giliranmu untuk pilih truth/dare nih!"));
       const q = TRUTH_QUESTIONS[Math.floor(Math.random() * TRUTH_QUESTIONS.length)];
       game.phase = "answered";
       await db.save();
-      return m.reply(novaWrap("Spin The Bottle", [
+      return m.reply(raraWrap("Spin The Bottle", [
         `Truth untuk @${sender.split("@")[0]}:`,
         "",
         `"${q}"`,
@@ -103,11 +103,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "dare") {
-      if (!game.active || game.target !== sender) return m.reply(novaError("Spin Bottle", "Bukan giliranmu untuk pilih truth/dare nih!"));
+      if (!game.active || game.target !== sender) return m.reply(raraError("Spin Bottle", "Bukan giliranmu untuk pilih truth/dare nih!"));
       const d = DARE_CHALLENGES[Math.floor(Math.random() * DARE_CHALLENGES.length)];
       game.phase = "answered";
       await db.save();
-      return m.reply(novaWrap("Spin The Bottle", [
+      return m.reply(raraWrap("Spin The Bottle", [
         `Dare untuk @${sender.split("@")[0]}:`,
         "",
         `"${d}"`,
@@ -117,11 +117,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "next") {
-      if (!game.active) return m.reply(novaEmpty("Spin Bottle", "Tidak ada permainan Spin Bottle yang aktif nih."));
+      if (!game.active) return m.reply(raraEmpty("Spin Bottle", "Tidak ada permainan Spin Bottle yang aktif nih."));
       game.phase = "idle";
       game.target = null;
       await db.save();
-      return m.reply(novaWrap("Spin The Bottle", `Giliran selesai. Spin lagi: ${usedPrefix}spinbottle spin`, "info"));
+      return m.reply(raraWrap("Spin The Bottle", `Giliran selesai. Spin lagi: ${usedPrefix}spinbottle spin`, "info"));
     }
 
     if (sub === "stop") {
@@ -131,18 +131,18 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.phase = "idle";
       game.turns = 0;
       await db.save();
-      return m.reply(novaWrap("Spin The Bottle", "Game dihentikan."));
+      return m.reply(raraWrap("Spin The Bottle", "Game dihentikan."));
     }
 
     if (sub === "status") {
-      return m.reply(novaWrap("Spin The Bottle", [
+      return m.reply(raraWrap("Spin The Bottle", [
         `Status: ${game.active ? "AKTIF" : "MATI"}`,
         `Turns: ${game.turns}`,
         game.target ? `Target: @${game.target.split("@")[0]}` : "Target: -",
       ].join("\n")));
     }
 
-    return m.reply(novaWrap("Spin The Bottle", [
+    return m.reply(raraWrap("Spin The Bottle", [
       `Spin The Bottle - Putar botol, truth or dare`,
       "",
       `Command:`,
@@ -154,7 +154,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("spinbottle error:", e);
-    return m.reply(novaError("Spin Bottle", `Terjadi kesalahan: ${e.message}`));
+    return m.reply(raraError("Spin Bottle", `Terjadi kesalahan: ${e.message}`));
   }
 }
 

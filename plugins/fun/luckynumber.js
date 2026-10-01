@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "luckynumber",
@@ -47,7 +47,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const type = args[0]?.toLowerCase();
 
     if (type === "info") {
-      return m.reply(novaWrap("Lucky Number", [
+      return m.reply(raraWrap("Lucky Number", [
         "NOMOR HOKI HARIAN",
         "Generate nomor hoki 2D/3D/4D + ramalan lengkap",
         "",
@@ -69,7 +69,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const luckyTime = String(Math.floor(Math.random() * 12) + 1).padStart(2, "0") + ":00 - " + String(Math.floor(Math.random() * 12) + 13).padStart(2, "0") + ":00";
 
     if (type === "4d") {
-      return m.reply(novaWrap("Lucky Number", [
+      return m.reply(raraWrap("Lucky Number", [
         "ANGKA HOKI 4D",
         "",
         "Lucky: " + num4d,
@@ -78,7 +78,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "info"));
     }
     if (type === "3d") {
-      return m.reply(novaWrap("Lucky Number", [
+      return m.reply(raraWrap("Lucky Number", [
         "ANGKA HOKI 3D",
         "",
         "Lucky: " + num3d,
@@ -86,7 +86,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "info"));
     }
     if (type === "2d") {
-      return m.reply(novaWrap("Lucky Number", [
+      return m.reply(raraWrap("Lucky Number", [
         "ANGKA HOKI 2D",
         "",
         "Lucky: " + num2d,
@@ -95,7 +95,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     await m.react("🐣");
-    return m.reply(novaWrap("Lucky Number", [
+    return m.reply(raraWrap("Lucky Number", [
       "ANGKA HOKI HARI INI",
       "",
       "4D: " + num4d,
@@ -115,7 +115,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ], "info"));
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("Lucky Number", "Error: " + e.message, "error"));
+    return m.reply(raraWrap("Lucky Number", "Error: " + e.message, "error"));
   }
 }
 

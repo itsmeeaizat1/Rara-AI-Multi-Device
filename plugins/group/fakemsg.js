@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .fakemsg — ganti tampilan teks pesan yang di-reply (port engine lama fakemsg.js)
 import { delay } from "nova";
-import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "fakemsg",
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").replace(new RegExp("^" + prefix + "fakemsg\\s*", "i"), "").trim();
     if (!m.quoted) {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "fakemsg",
         "Reply pesan target terus kasih teks pengganti — tampilan teks pesannya berubah (prank).",
         prefix + "fakemsg udah gue transfer dana 50 juta",
@@ -36,13 +36,13 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (!text) {
       await m.react("❌");
-      await m.reply(novaError("Fakemsg", "Kasih teks penggantinya"));
+      await m.reply(raraError("Fakemsg", "Kasih teks penggantinya"));
       return { handled: true };
     }
     const stanzaId = m.quoted.id || m.quoted.key?.id;
     if (!stanzaId) {
       await m.react("❌");
-      await m.reply(novaError("Fakemsg", "Gak bisa baca ID pesan yang di-reply"));
+      await m.reply(raraError("Fakemsg", "Gak bisa baca ID pesan yang di-reply"));
       return { handled: true };
     }
     const tempId = await sock.relayMessage(m.chat, {
@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[fakemsg]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("Fakemsg", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("Fakemsg", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }

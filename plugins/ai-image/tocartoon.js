@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
-import te from '../../src/lib/nova-error.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
+import te from '../../src/lib/rara-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return m.reply(novaGuideV2("tocartoon", {
+        return m.reply(raraGuideV2("tocartoon", {
  kaomoji: "(≧ω≦)",
  sapaan: "ubah fotomu jadi gaya kartun lucu!",
       cara: "kirim atau reply gambar dengan caption commandnya",
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(novaWrap("tocartoon", `❌ Gagal mendownload gambar`))
+            return m.reply(raraWrap("tocartoon", `❌ Gagal mendownload gambar`))
         }
         
         const result = await live3d(buffer, PROMPT)
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
             type: 'image'
         })
         // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-        await m.reply(mediaInfoCaption({ header: "Nova To Cartoon", fields: [
+        await m.reply(mediaInfoCaption({ header: "Rara To Cartoon", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Kartun" },
             { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
         ] }))
         
     } catch (error) {
-        m.reply(novaWrap("tocartoon", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("tocartoon", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zsound <query> — search sound effect dari MyInstants (ribuan sound,
 //   live search) → kirim VN — versi atas .sfx yang cuma 30 sound hardcode.
@@ -6,8 +6,8 @@
 // ═════════════════════════════════════════════
 
 import { lokMyinstants, _setLokalHttpForTest } from "../../src/scraper/lokalapi.js";
-import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 import fs from "fs";
 import os from "os";
@@ -29,16 +29,16 @@ async function handler(m, { sock }) {
     const text = (m.text || (m.args || []).join(" ") || "").trim();
     if (!text) {
       await m.react("❌");
-      return m.reply(novaWrap("zsound", "Query kosong — kirim nama sound.\nContoh: .zsound bruh\n.zsound naruto run\n\nSumber: MyInstants (ribuan sound) — hasil #1 dikirim jadi VN, 4 berikutnya dilist."));
+      return m.reply(raraWrap("zsound", "Query kosong — kirim nama sound.\nContoh: .zsound bruh\n.zsound naruto run\n\nSumber: MyInstants (ribuan sound) — hasil #1 dikirim jadi VN, 4 berikutnya dilist."));
     }
     await m.react("🧠");
 
     const r = await lokMyinstants(text);
-    if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zsound", `Sound bermasalah: ${r.error}`)); }
+    if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zsound", `Sound bermasalah: ${r.error}`)); }
 
     const first = r.list[0];
     const others = r.list.slice(1, 5);
-    const listCard = novaWrap("zsound", [
+    const listCard = raraWrap("zsound", [
       `✅ MYINSTANTS "${text}" — ${r.list.length} sound`,
       "",
       `🎵 Dikirim (VN): ${first.title}`,
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     } catch { /* download gagal → cukup list */ }
 
     if (audioBuf) {
-      const tmpDir = path.join(os.tmpdir(), "nova-zsound");
+      const tmpDir = path.join(os.tmpdir(), "rara-zsound");
       if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
       const outPath = path.join(tmpDir, "snd_" + Date.now() + ".mp3");
       fs.writeFileSync(outPath, audioBuf);
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(novaWrap("zsound", `fitur error: ${e?.message || e}`));
+    await m.reply(raraWrap("zsound", `fitur error: ${e?.message || e}`));
   }
 }
 

@@ -1,16 +1,16 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // onephoto.js — Onepunya API: UPSCALE_IMAGE (GFPGAN/RestoreFormer) + REMOVE_BG.
 // .oneupscale <reply foto> [model] [rescale] — perbaiki/enhance wajah & foto lama
 //   model: GFPGANv1.2 | GFPGANv1.3 | GFPGANv1.4 (default) | RestoreFormer
 //   rescale: 1-4 (default 2)
 // .onenobg <reply foto> — hapus background foto
-// Alur: foto WA di-download → di-upload ke host publik (nova-uploader) → URL dikirim ke API
+// Alur: foto WA di-download → di-upload ke host publik (rara-uploader) → URL dikirim ke API
 // (API Onepunya cuma terima image URL, bukan buffer/base64).
 import axios from "axios";
-import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { upscaleImage, removeBg } from "../../src/lib/nova-onepunya.js";
-import { uploadImage } from "../../src/lib/nova-uploader.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { upscaleImage, removeBg } from "../../src/lib/rara-onepunya.js";
+import { uploadImage } from "../../src/lib/rara-uploader.js";
 
 const pluginConfig = {
   name: "onephoto",
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
   try {
     const imgUrl = await getQuotedImageUrl(m);
     if (!imgUrl) {
-      return m.reply(novaWrap("Onepunya Photo", `Reply/kutip sebuah foto dengan command ini!\n\nContoh: reply foto → .${cmd === "onenobg" || cmd === "onebgremove" ? "onenobg" : "oneupscale"}`));
+      return m.reply(raraWrap("Onepunya Photo", `Reply/kutip sebuah foto dengan command ini!\n\nContoh: reply foto → .${cmd === "onenobg" || cmd === "onebgremove" ? "onenobg" : "oneupscale"}`));
     }
 
     // ── Hapus background ──
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     if (MODELS.includes(args2[0]?.toUpperCase?.() || "")) { model = args2.shift().toUpperCase(); }
     if (/^[1-4]$/.test(args2[0] || "")) { rescale = parseInt(args2.shift(), 10); }
     if (!MODELS.includes(model)) {
-      return m.reply(novaWrap("Onepunya Photo", `Model gak valid: ${model}\n\nYang tersedia: ${MODELS.join(" | ")}`));
+      return m.reply(raraWrap("Onepunya Photo", `Model gak valid: ${model}\n\nYang tersedia: ${MODELS.join(" | ")}`));
     }
     const res = await upscaleImage(apiKey, imgUrl, model, rescale);
     const out = res?.url || "";
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     const dl = await axios.get(out, { responseType: "arraybuffer", timeout: 120_000 });
     await sock.sendMessage(m.chat, { image: Buffer.from(dl.data), caption: `🪄 ${model} · rescale ${rescale}x — Onepunya API` }, { quoted: m });
   } catch (e) {
-    return m.reply(novaWrap("Onepunya Photo", `Gagal: ${String(e.message || e).slice(0, 200)}`));
+    return m.reply(raraWrap("Onepunya Photo", `Gagal: ${String(e.message || e).slice(0, 200)}`));
   }
 }
 

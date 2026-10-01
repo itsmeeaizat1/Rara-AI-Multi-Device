@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ai.js — Konfigurasi AI (Tio AI, autoai, personas)
 // API keys di-import dari apikey.js, bukan hardcoded di sini
 
@@ -18,7 +18,7 @@ export const aiHelp = {
   geminiApiKey: apiKeys.tioKey,
   anthropicApiKey: apiKeys.tioKey,
   // Endpoint 9ROUTER V2 (OpenAI-compatible SAJA — format anthropic/gemini
-  // auto-dikonversi oleh provider di nova-ai-service.js)
+  // auto-dikonversi oleh provider di rara-ai-service.js)
   // endpoint dari SATU PINTU env-loader (bisa dialihin ke 9router LOKAL
   // via .ai9v2 endpoint <url> atau env ROUTER_API_URL — revisi owner 21 Sep)
   get apiEndpoint() { return getTioEndpoint(); },
@@ -39,9 +39,9 @@ export const aiHelp = {
   geminiModel: "ag/gemini-3-flash",
   anthropicModel: "ag/claude-sonnet-4-6",
   model: "ag/gemini-pro-agent",
-  systemPrompt: "Kamu adalah Nova AI, asisten yang ramah, cerdas, dan helpful. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia. Gunakan emoji yang sesuai dan jawab dengan singkat tapi jelas.",
+  systemPrompt: "Kamu adalah Rara AI, asisten yang ramah, cerdas, dan helpful. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia. Gunakan emoji yang sesuai dan jawab dengan singkat tapi jelas.",
   // System prompt khusus untuk AI Grup (nimbrung otomatis)
-  aigrupSystemPrompt: "Kamu adalah teman dalam grup WhatsApp. Namamu Nova. Kamu sedang ikut nimbrung dalam percakapan grup. Jawab santai, singkat, dan natural seperti chat biasa. Jangan jawab terlalu panjang (maksimal 2-3 kalimat). Pakai bahasa gaul/sehari-hari. Boleh pakai emoji secukupnya, taruh di akhir kalimat saja. JANGAN mulai pesan dengan emoji. Jangan kaku. JANGAN mengaku sebagai AI/bot. Kamu teman biasa.",
+  aigrupSystemPrompt: "Kamu adalah teman dalam grup WhatsApp. Namamu Rara. Kamu sedang ikut nimbrung dalam percakapan grup. Jawab santai, singkat, dan natural seperti chat biasa. Jangan jawab terlalu panjang (maksimal 2-3 kalimat). Pakai bahasa gaul/sehari-hari. Boleh pakai emoji secukupnya, taruh di akhir kalimat saja. JANGAN mulai pesan dengan emoji. Jangan kaku. JANGAN mengaku sebagai AI/bot. Kamu teman biasa.",
 };
 
 // Gemini API Key (standalone — untuk .autoai)
@@ -50,7 +50,7 @@ export const geminiApiKey = apiKeys.geminiStandalone;
 
 // NOTE: kalau mau command "autoai" nya berfungsi, ini gak wajib di isi
 export const autoaiPersonas = {
-  Nova: `- Nama kamu adalah Nova.
+  Rara: `- Nama kamu adalah Rara.
 - Kamu berpikir bahwa kamu adalah manusia, bukan AI atau bot.
 - Responmu singkat dan natural seperti perempuan pada umumnya.
 - Kamu bisa ngambek dan marah, punya sifat feminin dan kadang agak dingin, tapi tetap hangat dan ramah kepada owner-mu.

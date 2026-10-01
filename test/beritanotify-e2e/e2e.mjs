@@ -13,14 +13,14 @@ const norm = (s) => String(s || "").toLowerCase();
 
 const R = path.resolve(".");
 fs.rmSync("/tmp/berita-e2e-db", { recursive: true, force: true });
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/berita-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/berita-e2e-db/rara.json");
 const db = getDatabase();
 
-const lib = await import(R + "/src/lib/nova-berita-notifier.js");
+const lib = await import(R + "/src/lib/rara-berita-notifier.js");
 const { config, handler } = await import(R + "/plugins/berita/newsnotify.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
-const { setAutoTargetConfig, getAutoTargetConfig } = await import(R + "/src/lib/nova-auto-target.js");
+const { setAutoTargetConfig, getAutoTargetConfig } = await import(R + "/src/lib/rara-auto-target.js");
 const low = (s) => fromSC(norm(s));
 
 t("1a. plugin beritanotify kategori berita", config.name === "beritanotify" && config.category === "berita" && config.alias.includes("beritabarak"));
@@ -170,7 +170,7 @@ const idxSrc = fs.readFileSync(R + "/index.js", "utf-8");
 t("8a. AUTO_ALIASES beritanotify → autoberitanotify", /beritanotify: "autoberitanotify"/.test(switchSrc));
 t("8b. registry switch autoberitanotify", /autoberitanotify: \{/.test(switchSrc) && /Auto Berita Notifier/.test(switchSrc));
 t("8c. TARGETABLE + SUBSCRIBER_FEATURES ke-daftar (semua occurrence)", (switchSrc.match(/autoberitanotify/g) || []).length >= 6, String((switchSrc.match(/autoberitanotify/g) || []).length));
-t("8d. index.js init BeritaNotifier", /BeritaNotifier/.test(idxSrc) && /nova-berita-notifier/.test(idxSrc));
+t("8d. index.js init BeritaNotifier", /BeritaNotifier/.test(idxSrc) && /rara-berita-notifier/.test(idxSrc));
 
 out(`\n===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail ? 1 : 0);

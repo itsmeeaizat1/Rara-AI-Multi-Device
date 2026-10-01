@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaHeader, separator, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraHeader, separator, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "aidiet", alias: ["aidiet"], category: "smart",
@@ -14,7 +14,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
-      await m.reply( novaWrap("AI Diet", ["Reply foto makanan dengan command ini",
+      await m.reply( raraWrap("AI Diet", ["Reply foto makanan dengan command ini",
         "AI akan estimasi kalori & gizi"].join("\n")), "aidiet");
       return { handled: true };
     }
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
       systemPrompt: "Kamu adalah ahli gizi. Berikan estimasi yang realistis.",
       image: base64,
     });
-    await m.reply(novaWrap("AI Diet", "🍽️") + "\n\n" + result + "\n\n" +  tipText("Estimasi saja, bukan hasil medis"));
+    await m.reply(raraWrap("AI Diet", "🍽️") + "\n\n" + result + "\n\n" +  tipText("Estimasi saja, bukan hasil medis"));
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

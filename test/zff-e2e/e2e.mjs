@@ -1,7 +1,7 @@
 // E2E — zff (Free Fire zelapi backup: search/profile/stats/like)
 import fs from "node:fs";
 fs.rmSync(new URL("./e2e-db.json", import.meta.url), { recursive: true, force: true });
-const { initDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(new URL("./e2e-db.json", import.meta.url).pathname);
 
 const {
@@ -93,10 +93,10 @@ await plugin.handler(m, { sock: m.sock });
 t("  zffsearch → list nick + uid + like", m.replyed.length === 1 && sc(m.replyed[0]).includes("gacor") && sc(m.replyed[0]).includes("12817761") && sc(m.replyed[0]).includes("95"));
 t("  react 🧠→🐣", m.reacts[0] === "🧠" && m.reacts.includes("🐣"));
 
-_setZelffHttpForTest(async () => ({ status: 200, json: async () => ({ status: true, data: { basicinfo: { accountid: "12345", nickname: "Bocil", region: "ID", level: 64, liked: 5060, lastloginat: "1789254200" }, clanbasicinfo: { clanname: "NOVA", clanlevel: 5, membernum: 12 }, profileinfo: { ismarkedstar: true } } }) }));
+_setZelffHttpForTest(async () => ({ status: 200, json: async () => ({ status: true, data: { basicinfo: { accountid: "12345", nickname: "Bocil", region: "ID", level: 64, liked: 5060, lastloginat: "1789254200" }, clanbasicinfo: { clanname: "RARA", clanlevel: 5, membernum: 12 }, profileinfo: { ismarkedstar: true } } }) }));
 m = mkM("zffprofile", ["12345"]);
 await plugin.handler(m, { sock: m.sock });
-t("  zffprofile → nick + level + clan + marked star", m.replyed.length === 1 && sc(m.replyed[0]).includes("bocil") && sc(m.replyed[0]).includes("level 64") && sc(m.replyed[0]).includes("nova") && sc(m.replyed[0]).includes("marked star"));
+t("  zffprofile → nick + level + clan + marked star", m.replyed.length === 1 && sc(m.replyed[0]).includes("bocil") && sc(m.replyed[0]).includes("level 64") && sc(m.replyed[0]).includes("rara") && sc(m.replyed[0]).includes("marked star"));
 
 _setZelffHttpForTest(async () => ({ status: 200, json: async () => ({ status: true, data: {
   solostats: { accountid: "12345", gamesplayed: 3, wins: 2, kills: 32, detailedstats: { damage: 1000, headshotkills: 5, highestkills: 9 } },

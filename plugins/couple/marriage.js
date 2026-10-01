@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Sistem Nikah — Lamar pasangan untuk menikah
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "nikah",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-      return m.reply(novaWrap("nikah", [
+      return m.reply(raraWrap("nikah", [
         `Nikah sama user lain di grup.`,
         ``,
         `📌 Format: ${m.prefix}nikah @tag`,
@@ -47,10 +47,10 @@ async function handler(m, { sock }) {
     }
 
     if (targetJid === m.sender) {
-      return m.reply(novaWrap("nikah", "Tidak bisa menikah dengan diri sendiri! 😅"));
+      return m.reply(raraWrap("nikah", "Tidak bisa menikah dengan diri sendiri! 😅"));
     }
     if (targetJid === m.botNumber) {
-      return m.reply(novaWrap("nikah", "Bot tidak bisa menikah! 🤖"));
+      return m.reply(raraWrap("nikah", "Bot tidak bisa menikah! 🤖"));
     }
 
     let myData = db.getUser(m.sender) || {};
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     // Harus punya pasangan dulu
     if (!myData.fun.pasangan || myData.fun.pasangan !== targetJid) {
       return m.reply(
-        novaWrap("nikah",
+        raraWrap("nikah",
           `Kamu harus pacaran dengan @${targetJid.split("@")[0]} dulu!\n` +
           `Gunakan \`${m.prefix}jadian @tag\` untuk menembak`
         )
@@ -71,21 +71,21 @@ async function handler(m, { sock }) {
     // Cek pasangan mutual
     if (targetData.fun.pasangan !== m.sender) {
       return m.reply(
-        novaWrap("nikah", "Hubungan kalian tidak mutual! 💔")
+        raraWrap("nikah", "Hubungan kalian tidak mutual! 💔")
       );
     }
 
     // Cek udah nikah
     if (myData.fun.nikah) {
       return m.reply(
-        novaWrap("nikah",
+        raraWrap("nikah",
           `Kamu sudah menikah dengan @${myData.fun.nikah.split("@")[0]} 💍`
         )
       );
     }
     if (targetData.fun.nikah) {
       return m.reply(
-        novaWrap("nikah", `@${targetJid.split("@")[0]} sudah menikah! 💍`)
+        raraWrap("nikah", `@${targetJid.split("@")[0]} sudah menikah! 💍`)
       );
     }
 
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
       if (durasi < 86400000) {
         const sisa = Math.ceil((86400000 - durasi) / 3600000);
         return m.reply(
-          novaWrap("nikah",
+          raraWrap("nikah",
             `Baru pacaran ${Math.floor(durasi / 3600000)} jam!\n` +
             `Minimal pacaran 1 hari dulu (${sisa} jam lagi) 💕`
           )
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     // Cek lamaran existing
     if (global.nikahSessions[`${m.chat}_${targetJid}`]) {
       return m.reply(
-        novaWrap("nikah", "Kamu sudah melamar @${targetJid.split('@')[0]}! Tunggu jawaban.")
+        raraWrap("nikah", "Kamu sudah melamar @${targetJid.split('@')[0]}! Tunggu jawaban.")
       );
     }
 
@@ -187,7 +187,7 @@ async function answerHandler(m, sock) {
       delete global.nikahSessions[sessKey];
       await m.react("💍");
       await m.reply(
-        novaWrap("SELAMAT MENIKAH 💍",
+        raraWrap("SELAMAT MENIKAH 💍",
           `@${m.sender.split("@")[0]} dan @${proposer.split("@")[0]} resmi menikah!\n` +
           `Semoga sakinah, mawaddah, warahmah 🤲`
         )
@@ -212,7 +212,7 @@ async function answerHandler(m, sock) {
       delete global.nikahSessions[sessKey];
       await m.react("💔");
       await m.reply(
-        novaWrap("LAMARAN DITOLAK 💔",
+        raraWrap("LAMARAN DITOLAK 💔",
           `@${m.sender.split("@")[0]} menolak lamaran @${proposer.split("@")[0]}\n` +
           `Sabar ya, jodoh tidak kemana! 🤲`
         )

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // setsupport.js — Owner: set link Join Grup Resmi & Saluran Resmi
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 import { getSupport, setSupport, resetSupport } from "../../src/lib/support/support.js";
 
 const pluginConfig = {
@@ -34,7 +34,7 @@ async function handler(m, { config: botConfig }) {
     // Tanpa argumen → tampil setelan sekarang + usage
     if (!key) {
       const s = getSupport();
-      return m.reply(novaWrap("Set Support", [
+      return m.reply(raraWrap("Set Support", [
         "Setelan grup & saluran resmi bot saat ini:",
         "",
         `• Group: ${s.group.name}`,
@@ -61,14 +61,14 @@ async function handler(m, { config: botConfig }) {
 
     if (k === "reset") {
       const s = resetSupport();
-      return m.reply(novaWrap("Set Support", [
+      return m.reply(raraWrap("Set Support", [
         "Status: *berhasil*",
         "Semua setelan support direset ke default config",
       ]));
     }
 
     if (!value) {
-      return m.reply(novaWrap("Set Support", [
+      return m.reply(raraWrap("Set Support", [
         `Nilai untuk *${key}* kosong`,
         "",
         `📌 Ketik: ${prefix}setsupport ${key} <nilai>`,
@@ -77,7 +77,7 @@ async function handler(m, { config: botConfig }) {
 
     // Validasi link
     if (k === "group" && !/^https:\/\/chat\.whatsapp\.com\/[\w.-]+$/i.test(value)) {
-      return m.reply(novaWrap("Set Support", [
+      return m.reply(raraWrap("Set Support", [
         "Status: *gagal*",
         "Link grup harus diawali https://chat.whatsapp.com/",
         "",
@@ -85,7 +85,7 @@ async function handler(m, { config: botConfig }) {
       ]));
     }
     if (k === "saluran" && !/^https:\/\/whatsapp\.com\/channel\/[\w.-]+$/i.test(value)) {
-      return m.reply(novaWrap("Set Support", [
+      return m.reply(raraWrap("Set Support", [
         "Status: *gagal*",
         "Link saluran harus diawali https://whatsapp.com/channel/",
         "",
@@ -103,7 +103,7 @@ async function handler(m, { config: botConfig }) {
 
     const target = map[k];
     if (!target) {
-      return m.reply(novaWrap("Set Support", [
+      return m.reply(raraWrap("Set Support", [
         `Key *${key}* tidak dikenal`,
         "",
         "📌 *Key yang tersedia:* group, groupname, saluran, saluranname, id, reset",
@@ -111,13 +111,13 @@ async function handler(m, { config: botConfig }) {
     }
 
     setSupport({ [target.field]: value });
-    return m.reply(novaWrap("Set Support", [
+    return m.reply(raraWrap("Set Support", [
       `Status: *berhasil*`,
       `${target.label}: *${value}*`,
     ]));
   } catch (error) {
     console.error("[setsupport] error:", error.message);
-    return m.reply(novaWrap("Set Support", [
+    return m.reply(raraWrap("Set Support", [
       "Status: *gagal*",
       "Alasan: *" + error.message + "*",
     ]));

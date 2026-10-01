@@ -1,9 +1,9 @@
 // E2E fitur masa depan: hotreload, rag, email, iot
-import { initDatabase } from "../../src/lib/nova-database.js";
-import * as hr from "../../src/lib/nova-hotreload.js";
-import * as rag from "../../src/lib/nova-rag.js";
-import * as mail from "../../src/lib/nova-emailbot.js";
-import * as iot from "../../src/lib/nova-mqtt.js";
+import { initDatabase } from "../../src/lib/rara-database.js";
+import * as hr from "../../src/lib/rara-hotreload.js";
+import * as rag from "../../src/lib/rara-rag.js";
+import * as mail from "../../src/lib/rara-emailbot.js";
+import * as iot from "../../src/lib/rara-mqtt.js";
 
 let pass = 0, fail = 0;
 const ok = (name, cond, detail = "") => {
@@ -38,7 +38,7 @@ await initDatabase();
   ok("status: flag on + notifyTo kesimpen", s.on === true && s.notifyTo === "owner@s.whatsapp.net");
   const rl = await hr.manualReload("plugins/owner/webpanel.js");
   ok("manual reload file nyata sukses", rl.ok === true, JSON.stringify(rl));
-  const bad = await hr.manualReload("src/lib/nova-rag.js");
+  const bad = await hr.manualReload("src/lib/rara-rag.js");
   ok("manual reload nolak path luar plugins/", bad.ok === false);
   hr.disableHotreload();
   ok("disable: watcher mati + flag off", hr.isHotreloadActive() === false && hr.hotreloadStatus().on === false);
@@ -46,7 +46,7 @@ await initDatabase();
 
 // ═══ 3. RAG
 {
-  ok("tokenize: buang stopwords & tanda baca", JSON.stringify(rag.tokenize("Yang, dan di ke Untuk! nova")) === JSON.stringify(["nova"]));
+  ok("tokenize: buang stopwords & tanda baca", JSON.stringify(rag.tokenize("Yang, dan di ke Untuk! rara")) === JSON.stringify(["rara"]));
   const chunks = rag.chunkText("a".repeat(3000), 1200, 150);
   ok("chunkText: kepotong dengan overlap", chunks.length >= 3 && chunks[0].length <= 1200);
   const ex = await rag.extractDocText("catatan.txt", Buffer.from("isi dokumen teks"));
@@ -78,7 +78,7 @@ await initDatabase();
   const setBad = mail.setEmailConfig("jelek", "x");
   ok("setEmailConfig nolak alamat salah", setBad.ok === false);
   mail._setTransportForTest({ sendMail: async () => ({ messageId: "<test123@mail>" }) });
-  const send = await mail.sendEmail("teman@yahoo.com", "Tes", "Halo dari Nova");
+  const send = await mail.sendEmail("teman@yahoo.com", "Tes", "Halo dari Rara");
   ok("sendEmail via seam sukses", send.ok === true && send.id === "<test123@mail>", JSON.stringify(send));
   const sendBad = await mail.sendEmail("bukan-addr", "Tes", "x");
   ok("sendEmail nolak tujuan salah", sendBad.ok === false);

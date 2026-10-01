@@ -1,18 +1,18 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // approvetopup.js — Owner: kelola pesanan beli satuan (.buylimit / .buykoin)
 // .approvetopup          → lihat semua pesanan pending
 // .approvetopup <nomor>  → approve → limit/koin masuk otomatis ke user
 // .approvetopup <nomor> tolak [alasan] → tolak pesanan
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
 import {
   TOPUP_ITEMS,
   ensureTopups,
-} from "../../src/lib/store/nova-store.js";
+} from "../../src/lib/store/rara-store.js";
 // Helper apply JALUR RPG / CINTA / ITEM
-import { addItem } from "../../src/lib/nova-rpg-service.js";
-import { addAffection } from "../../src/lib/nova-rpg-cinta.js";
+import { addItem } from "../../src/lib/rara-rpg-service.js";
+import { addAffection } from "../../src/lib/rara-rpg-cinta.js";
 
 const pluginConfig = {
   name: "approvetopup",
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
       ([, o]) => o.status === "pending",
     );
     if (pending.length === 0) {
-      return m.reply(novaWrap("approvetopup", "Tidak ada pesanan topup yang pending."));
+      return m.reply(raraWrap("approvetopup", "Tidak ada pesanan topup yang pending."));
     }
     let txt = `${toSC("pesanan topup pending")} — ${pending.length}\n`;
     for (const [jid, o] of pending) {
@@ -55,18 +55,18 @@ async function handler(m, { sock }) {
       txt += `\n• ${o.phoneNumber} (${o.name || "Unknown"})\n  ${icon} ${label} — ${o.price}\n  Jalur: ${o.jalur || "?"} • Waktu: ${new Date(o.orderedAt).toLocaleString("id-ID")}\n`;
     }
     txt += `\n📌 Approve: *${prefix}approvetopup <nomor>*\n💡 Tolak: *${prefix}approvetopup <nomor> tolak <alasan>*`;
-    return m.reply(novaWrap("approvetopup", txt));
+    return m.reply(raraWrap("approvetopup", txt));
   }
 
   // ── Approve / tolak by nomor ──
   const target = args[0].replace(/[^0-9]/g, "");
   if (target.length < 8) {
-    return m.reply(novaWrap("approvetopup", `Nomor tidak valid\n\n📌 Contoh: *${prefix}approvetopup 6281234567890*`));
+    return m.reply(raraWrap("approvetopup", `Nomor tidak valid\n\n📌 Contoh: *${prefix}approvetopup 6281234567890*`));
   }
   const jid = target + "@s.whatsapp.net";
   const order = topups.pending[jid] || topups.pending[target];
   if (!order || order.status !== "pending") {
-    return m.reply(novaWrap("approvetopup", `Tidak ada pesanan pending dari *${target}*`));
+    return m.reply(raraWrap("approvetopup", `Tidak ada pesanan pending dari *${target}*`));
   }
 
   const isReject = ["tolak", "batal", "reject"].includes((args[1] || "").toLowerCase());
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(jid, {
       text: `❌ *pesanan topup ditolak*\n\nItem: *${rejLabel}*\nAlasan: *${reason}*\n\nHubungi owner untuk info lebih lanjut.`,
     }).catch(() => {});
-    return m.reply(novaWrap("approvetopup",
+    return m.reply(raraWrap("approvetopup",
       `Status: *ditolak*\nPesanan ${order.type} dari *${target}* ditolak`));
   }
 
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
 
   if (order.type === "limit") {
     const user = db.getUser(jid) || db.setUser(jid);
-    if (!user) return m.reply(novaWrap("approvetopup", `Gagal: user *${target}* tidak bisa diakses`));
+    if (!user) return m.reply(raraWrap("approvetopup", `Gagal: user *${target}* tidak bisa diakses`));
     // -1 = unlimited, jangan diubah
     if (user.energi !== -1) {
       user.energi = (user.energi ?? config.energi?.default ?? 25) + order.qty;
@@ -114,18 +114,18 @@ async function handler(m, { sock }) {
     // JALUR CINTA
     const after = addAffection(fakeM, order.qty);
     if (after === undefined || after === null) {
-      return m.reply(novaWrap("approvetopup", `Gagal: data cinta user *${target}* tidak bisa diakses`));
+      return m.reply(raraWrap("approvetopup", `Gagal: data cinta user *${target}* tidak bisa diakses`));
     }
     applyNote = `Affection sekarang: ${after.toLocaleString("id-ID")}`;
   } else if (order.type === "rpgitem") {
     // JALUR ITEM: masuk inventory game
     const ok = addItem(fakeM, order.itemId, order.qty);
     if (!ok) {
-      return m.reply(novaWrap("approvetopup", `Gagal: item *${order.itemId}* tidak bisa dimasukkan ke inventory`));
+      return m.reply(raraWrap("approvetopup", `Gagal: item *${order.itemId}* tidak bisa dimasukkan ke inventory`));
     }
     applyNote = `Item masuk inventory: ${order.itemName} x${order.qty}`;
   } else {
-    return m.reply(novaWrap("approvetopup", `Tipe pesanan tidak dikenal: *${order.type}*`));
+    return m.reply(raraWrap("approvetopup", `Tipe pesanan tidak dikenal: *${order.type}*`));
   }
 
   delete topups.pending[jid];
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     text: `✅ *topup berhasil*\n\n+${unitLabel} sudah masuk ke akun kamu!\nTotal bayar: *${order.price}*\n\nTerima kasih sudah topup 🥳`,
   }).catch(() => {});
 
-  return m.reply(novaWrap("approvetopup",
+  return m.reply(raraWrap("approvetopup",
     `Status: *berhasil*\nUser: *${order.phoneNumber}*\nItem: *+${unitLabel}*\nJalur: *${order.jalur || "akun"}*\nHarga: *${order.price}*\n\n${order.type === "limit" && db.getUser(jid)?.energi === -1 ? "User unlimited (limit -1) — tidak ditambah" : applyNote || "Item sudah masuk otomatis & user dinotif"}`));
 }
 

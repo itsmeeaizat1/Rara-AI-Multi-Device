@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // kepribadianai — AI test kepribadian MBTI
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "kepribadianai",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("kepribadianai", `Ceritain kepribadian kamu, nanti AI tebak MBTI-mu!\n\nContoh: ${m.prefix}kepribadianai saya introvert, suka planning, overthinking\n${m.prefix}kepribadianai gampang bergaul, spontan, suka party`, "guide"));
+      return m.reply(raraWrap("kepribadianai", `Ceritain kepribadian kamu, nanti AI tebak MBTI-mu!\n\nContoh: ${m.prefix}kepribadianai saya introvert, suka planning, overthinking\n${m.prefix}kepribadianai gampang bergaul, spontan, suka party`, "guide"));
     }
 
     await m.react("🕒");
@@ -44,11 +44,11 @@ PENGEMBANGAN: [saran pengembangan diri]
 
 Gunakan bahasa Indonesia. Analisis berdasarkan framework MBTI (Myers-Briggs Type Indicator).`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("kepribadianai", "AI-nya lagi psychology test sendiri 🧠", "error"));
+      return m.reply(raraWrap("kepribadianai", "AI-nya lagi psychology test sendiri 🧠", "error"));
     }
 
     await m.react("🐣");
@@ -57,7 +57,7 @@ Gunakan bahasa Indonesia. Analisis berdasarkan framework MBTI (Myers-Briggs Type
   } catch (err) {
     console.error("kepribadianai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("kepribadianai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("kepribadianai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

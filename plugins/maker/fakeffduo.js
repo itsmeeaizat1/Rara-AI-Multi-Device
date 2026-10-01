@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaReply } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraReply } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "fakeffduo",
@@ -18,13 +18,13 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
-  const msg = novaReply({
+  const msg = raraReply({
     title: "Fake FF Duo",
     info: [
-      { label: "Status", value: "API nova.my.id OFFLINE" },
+      { label: "Status", value: "API rara.my.id OFFLINE" },
     ],
     status: "API sedang down, fitur ini sementara tidak tersedia",
-    content: "|\n| API nova.my.id DNS tidak resolve\n| Fitur akan kembali saat API aktif",
+    content: "|\n| API rara.my.id DNS tidak resolve\n| Fitur akan kembali saat API aktif",
   });
   return await m.reply(msg);
 }

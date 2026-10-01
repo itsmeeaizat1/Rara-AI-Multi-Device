@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Dashboard couple (stats, affection, war record, marriage bonus)
 
-import { getRpgData } from "../../src/lib/nova-rpg-service.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { getRpgData } from "../../src/lib/rara-rpg-service.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 import {
   getCintaData, getLovePower, getCouplePower, getMarriageBonus,
   formatDurasi
-} from "../../src/lib/nova-rpg-cinta.js";
+} from "../../src/lib/rara-rpg-cinta.js";
 
 const pluginConfig = {
   name: "cintainfo",
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
       if (cinta.divorceCount) lines.push(`Total Cerai: ${cinta.divorceCount}x`);
     }
 
-    await m.reply(novaRpgBox("Cinta Info", lines));
+    await m.reply(raraRpgBox("Cinta Info", lines));
     await m.react("💑");
   } catch (e) {
     console.error("[cintainfo] Error:", e.message);

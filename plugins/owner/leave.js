@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.groupLeave(m.chat);
 
     const text =
-      novaWrap("Leave", [`Group: *${m.chat}*`,
+      raraWrap("Leave", [`Group: *${m.chat}*`,
         "Status: *Left*",
         `Executor: *${m.pushName || "Owner"}*`].join("\n")) +
       "\n" +
@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Owner", "Gagal nih, coba lagi ya");
+      raraError("Owner", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "leave");
   }

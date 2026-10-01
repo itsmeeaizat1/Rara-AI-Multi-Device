@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Lens — Reverse Image Trace
  * Fitur: .lens (reply foto) → lacak asal gambar:
@@ -8,9 +8,9 @@
  *      websearch → kandidat sumber asli
  * Berguna buat lacak makan/detek hoaks dari screenshot.
  */
-import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { visionScan } from "../../src/lib/nova-vision-chain.js";
-import { searchWeb } from "../../src/lib/nova-websearch.js";
+import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { visionScan } from "../../src/lib/rara-vision-chain.js";
+import { searchWeb } from "../../src/lib/rara-websearch.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
 
 const pluginConfig = {
@@ -112,7 +112,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   if (!isPhoto) {
     return m.reply(
-      novaWrap("Lens", [
+      raraWrap("Lens", [
         "🔍 Lacak asal gambar",
         "",
         `Cara pakai: reply/kirim foto, terus ketik ${prefix}lens`,
@@ -146,7 +146,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!anime && (!web || !web.results?.length)) {
       await m.react("❌");
-      return m.reply(novaWrap("Lens", [
+      return m.reply(raraWrap("Lens", [
         "🔍 Gak ketemu sumber yang mirip.",
         "",
         "Coba foto yang lebih jelas, atau gambarna emang nggak pernah ada di web (foto pribadi).",
@@ -166,7 +166,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       // preview frame dikirim sebagai gambar biar kecewa gak 😄
       try {
-        await sock.sendMedia(m.chat, { url: anime.image }, novaWrap("Lens", `🎬 ${title}${anime.episode != null ? " — Episode " + anime.episode : ""} @ ${fmtTimestamp(anime.at)}`), m, { type: "image" });
+        await sock.sendMedia(m.chat, { url: anime.image }, raraWrap("Lens", `🎬 ${title}${anime.episode != null ? " — Episode " + anime.episode : ""} @ ${fmtTimestamp(anime.at)}`), m, { type: "image" });
       } catch (e) { console.error("[lens] preview:", e.message); }
     }
 
@@ -183,12 +183,12 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push("");
     lines.push("_cek link-nya buat mastiin sumber aslinya ya_");
 
-    await m.reply(novaWrap("Lens", lines.join("\n")));
+    await m.reply(raraWrap("Lens", lines.join("\n")));
     await m.react("🐣");
   } catch (e) {
     console.error("[lens]", e.message || e);
     await m.react("❌");
-    await m.reply(novaWrap("Lens", [
+    await m.reply(raraWrap("Lens", [
       "❌ Gagal lacak gambar.",
       "",
       "Server pelacak lagi sibuk — coba lagi bentar lagi ya.",

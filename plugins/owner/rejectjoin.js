@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "tolakgabung",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetNumber) {
-    return m.reply(novaWrap(".tolakgabung <nomor> <linkgrup>", "Format: *.tolakgabung <nomor> <linkgrup>*\n\n" +
+    return m.reply(raraWrap(".tolakgabung <nomor> <linkgrup>", "Format: *.tolakgabung <nomor> <linkgrup>*\n\n" +
       "Contoh: .tolakgabung 628xxx https://chat.whatsapp.com/xxxxx"));
   }
 
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
   }
 
   if (!groupInput) {
-    return m.reply(novaWrap("tolakgabung", "Link grup tidak ditemukan.\n\n" +
+    return m.reply(raraWrap("tolakgabung", "Link grup tidak ditemukan.\n\n" +
       "Format: .tolakgabung <nomor> <linkgrup>"));
   }
 
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
   } else {
     const code = extractInviteCode(groupInput);
     if (!code) {
-      return m.reply(novaWrap("tolakgabung", "Link grup tidak valid.\n\n" +
+      return m.reply(raraWrap("tolakgabung", "Link grup tidak valid.\n\n" +
         "Format link: https://chat.whatsapp.com/xxxxx"));
     }
 
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
       groupId = info.id;
       groupName = info.subject || "Grup";
     } catch (e) {
-      return m.reply(novaWrap("tolakgabung", "Gagal dapet nih info grup dari link.\n\n" +
+      return m.reply(raraWrap("tolakgabung", "Gagal dapet nih info grup dari link.\n\n" +
         "Error: " + (e.message || "Unknown error")));
     }
   }
@@ -89,12 +89,12 @@ async function handler(m, { sock }) {
       } catch (e) { console.error('[rejectjoin.js]:', e.message); }
     }
 
-    return m.reply(novaWrap("tolakgabung", "JOIN REQUEST DITOLAK\n\n" +
+    return m.reply(raraWrap("tolakgabung", "JOIN REQUEST DITOLAK\n\n" +
       "User: " + targetNumber + "\n" +
       "Grup: " + groupName + "\n" +
       "Status: Ditolak"));
   } catch (error) {
-    return m.reply(novaWrap("tolakgabung", "Gagal menolak join request.\n\n" +
+    return m.reply(raraWrap("tolakgabung", "Gagal menolak join request.\n\n" +
       "Error: " + (error.message || "Unknown error")));
   }
 }

@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aimathv2 — AI Math solver v2 (nexray API + fallback)
 import { aimath as nexrayAimath } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "aimathv2",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("aimathv2", `Mau selesaikan soal apa?\n\nContoh: ${m.prefix}aimathv2 integral dari x^2 dx\n${m.prefix}aimathv2 2x + 5 = 15, cari x`, "guide"));
+      return m.reply(raraWrap("aimathv2", `Mau selesaikan soal apa?\n\nContoh: ${m.prefix}aimathv2 integral dari x^2 dx\n${m.prefix}aimathv2 2x + 5 = 15, cari x`, "guide"));
     }
 
     await m.react("🕒");
@@ -33,11 +33,11 @@ async function handler(m, { sock }) {
     const mathPrompt = `Selesaikan soal matematika berikut dengan langkah-langkah yang jelas:\n\n${text}\n\nFormat:\nJAWABAN: [hasil akhir]\nLANGKAH:\n1. ...\n2. ...\n3. ...\n\nGunakan bahasa Indonesia.`;
 
     let result = await nexrayAimath(mathPrompt);
-    if (!result.status) result = await UnlimitedAI(mathPrompt, "nova-ai");
+    if (!result.status) result = await UnlimitedAI(mathPrompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("aimathv2", "AI Math lagi offline 🧮", "error"));
+      return m.reply(raraWrap("aimathv2", "AI Math lagi offline 🧮", "error"));
     }
 
     await m.react("🐣");
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("aimathv2 error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("aimathv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("aimathv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

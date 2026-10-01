@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
-import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { raraGameBox, gameCTA } from '../../src/lib/rara-games.js'
 
 const pluginConfig = {
   name: "cintatips",
@@ -141,13 +141,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "cintatips <kategori>")
       lines.push("Contoh: " + usedPrefix + "cintatips jadian")
-      return m.reply(novaWrap("Tips Cinta", lines.join("\n")))
+      return m.reply(raraWrap("Tips Cinta", lines.join("\n")))
     }
 
     const kat = KATEGORI.find(k => k.nama.includes(input) || k.nama === input)
 
     if (!kat) {
-      return m.reply(novaWrap("Tips Cinta", "Kategori tidak ditemukan: " + input + "\nKetik " + usedPrefix + "cintatips untuk lihat list.")
+      return m.reply(raraWrap("Tips Cinta", "Kategori tidak ditemukan: " + input + "\nKetik " + usedPrefix + "cintatips untuk lihat list.")
       )
     }
 
@@ -157,7 +157,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     })
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "tips cinta", icon: "💘",
       flavor: `💘 *TIPS CINTA - ${kat.nama.toUpperCase()}!*`,
       body: rows.join("\n"),
@@ -165,7 +165,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }))
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("Tips Cinta", "Error: " + e.message))
+    return m.reply(raraWrap("Tips Cinta", "Error: " + e.message))
   }
 }
 

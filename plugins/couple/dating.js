@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Sistem Pacaran — Tembak seseorang untuk diajak pacaran
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "pacaran",
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-      return m.reply(novaWrap("jadian", [
+      return m.reply(raraWrap("jadian", [
         `Nembak user lain biar jadian.`,
         ``,
         `📌 Format: ${m.prefix}jadian @tag`,
@@ -60,10 +60,10 @@ async function handler(m, { sock }) {
     }
 
     if (targetJid === m.sender) {
-      return m.reply(novaWrap("jadian", "Tidak bisa menembak diri sendiri! 😅"));
+      return m.reply(raraWrap("jadian", "Tidak bisa menembak diri sendiri! 😅"));
     }
     if (targetJid === m.botNumber) {
-      return m.reply(novaWrap("jadian", "Bot tidak bisa pacaran! 🤖"));
+      return m.reply(raraWrap("jadian", "Bot tidak bisa pacaran! 🤖"));
     }
 
     let senderData = db.getUser(m.sender) || {};
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
       const partner = db.getUser(senderData.fun.pasangan);
       if (partner?.fun?.pasangan === m.sender) {
         return m.reply(
-          novaWrap("jadian",
+          raraWrap("jadian",
             `Sudah punya pasangan: @${senderData.fun.pasangan.split("@")[0]}\n` +
             `Putus dulu dengan \`${m.prefix}putus\``
           )
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
       const tPartner = db.getUser(targetData.fun.pasangan);
       if (tPartner?.fun?.pasangan === targetJid) {
         return m.reply(
-          novaWrap("jadian",
+          raraWrap("jadian",
             `💔 @${targetJid.split("@")[0]} sudah punya pasangan`
           )
         );
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       db.save();
       delete global.jadianSessions[`${m.chat}_${targetJid}`];
       await m.react("💕");
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "resmi jadian", icon: "💕",
         flavor: "💕 *CIE CIE, RESMI JADIAN!*",
         body: [
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
 
     const quote = romanticQuotes[Math.floor(Math.random() * romanticQuotes.length)];
 
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "tembakan cinta", icon: "💘",
       flavor: "💘 *ADA YANG NEMBAK NIH!*",
       body: [
@@ -183,7 +183,7 @@ async function answerHandler(m, sock) {
       db.save();
       delete global.jadianSessions[sessKey];
       await m.react("💕");
-      await m.reply(novaGameBox({
+      await m.reply(raraGameBox({
         title: "resmi jadian", icon: "💕",
         flavor: "💕 *CIE CIE, RESMI JADIAN!*",
         body: [
@@ -203,7 +203,7 @@ async function answerHandler(m, sock) {
       db.save();
       delete global.jadianSessions[sessKey];
       await m.react("💔");
-      await m.reply(novaGameBox({
+      await m.reply(raraGameBox({
         title: "ditolak", icon: "💔",
         flavor: "💔 *DITOLAK, SABAR YA...*",
         body: [

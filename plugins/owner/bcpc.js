@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { decodeAndNormalize } from "../../src/lib/nova-lid.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { decodeAndNormalize } from "../../src/lib/rara-lid.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, broadcastFormat } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, broadcastFormat } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "bcpc",
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   }
 
   if (global.statusBcpc) {
-    return m.reply(novaWrap("bcpc", "Sedang berjalan.\nKetik *" + m.prefix + "stopbcpc* untuk hentikan"));
+    return m.reply(raraWrap("bcpc", "Sedang berjalan.\nKetik *" + m.prefix + "stopbcpc* untuk hentikan"));
   }
 
   try {
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     }
 
     if (privateJids.size === 0) {
-      return m.reply(novaBox("Broadcast PC", ["❌ Tidak ada kontak ditemukan", "Pastikan bot sudah pernah menerima pesan dari kontak tersebut"]));
+      return m.reply(raraBox("Broadcast PC", ["❌ Tidak ada kontak ditemukan", "Pastikan bot sudah pernah menerima pesan dari kontak tersebut"]));
     }
 
     const filtered = [...privateJids];
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
     let failed = 0;
 
     // Format pesan yang dikirim ke penerima
-    const botName = config.bot?.name || "Nova AI";
+    const botName = config.bot?.name || "Rara AI";
     const senderName = m.pushName || "Owner";
     const broadcastText = broadcastFormat({
       botName,
@@ -179,14 +179,14 @@ async function handler(m, { sock }) {
           "❌ Gagal: " + failed + "\n" +
           "📊 Total: " + filtered.length + " kontak\n" +
           "📈 Sukses Rate: " + Math.round((success / filtered.length) * 100) + "%\n\n" +
-          "🏷️ " + (config.bot?.name || "Nova AI"),
+          "🏷️ " + (config.bot?.name || "Rara AI"),
         contextInfo: ctx,
       },
       { quoted: m },
     );
   } catch (e) {
     delete global.statusBcpc;
-    m.reply(novaWrap("bcpc", "Gagal broadcast. Coba lagi.", "error"));
+    m.reply(raraWrap("bcpc", "Gagal broadcast. Coba lagi.", "error"));
   }
 }
 

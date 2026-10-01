@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { startJadibot, isJadibotActive } from '../../src/lib/nova-jadibot-manager.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { startJadibot, isJadibotActive } from '../../src/lib/rara-jadibot-manager.js'
 import { getJadibotAccess } from '../owner/setjadibot.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import { normalizePhone } from '../../src/lib/config/session-cli.js'
 
 const pluginConfig = {
@@ -71,7 +71,7 @@ export function parseJadibotTarget(sender, args = []) {
 
 async function handler(m, { sock }) {
     const sender = m.sender
-    if (!sender) { const __navText = novaError("JadiBot", "Gagal identifikasi nomor kamu nih"); return await m.reply(__navText); }
+    if (!sender) { const __navText = raraError("JadiBot", "Gagal identifikasi nomor kamu nih"); return await m.reply(__navText); }
 
     // Cek akses jadibot
     const access = canUseJadibot(sender)

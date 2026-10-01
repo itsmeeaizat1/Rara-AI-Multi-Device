@@ -36,7 +36,7 @@ jobs:
       - name: Scan All JS Files for Syntax Errors (ESM-aware)
         run: |
           echo "============================================"
-          echo "  NOVA AI - SYNTAX & CODE ERROR SCANNER"
+          echo "  RARA AI - SYNTAX & CODE ERROR SCANNER"
           echo "============================================"
           
           IS_ESM="false"

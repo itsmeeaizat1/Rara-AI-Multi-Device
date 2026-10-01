@@ -10,12 +10,12 @@ function t(label, cond, extra) {
 }
 
 const R = path.resolve(".")
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js")
-await initDatabase("/tmp/switch-status-db/nova.json")
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js")
+await initDatabase("/tmp/switch-status-db/rara.json")
 const db = getDatabase()
 
 const { handler } = await import(R + "/plugins/owner/switch.js")
-const { toSC } = await import(R + "/src/lib/nova-menu-style.js")
+const { toSC } = await import(R + "/src/lib/rara-menu-style.js")
 const config = { command: { prefix: "." }, saluran: { name: "Test" } }
 
 const replies = []

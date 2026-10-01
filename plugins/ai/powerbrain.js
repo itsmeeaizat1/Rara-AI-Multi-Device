@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // powerbrain — PowerBrain AI chat
 import { powerbrain } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "powerbrain",
@@ -25,17 +25,17 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("powerbrain", `Mau nanya apa ke PowerBrain?\n\nContoh: ${m.prefix}powerbrain jelaskan teori relativitas`, "guide"));
+      return m.reply(raraWrap("powerbrain", `Mau nanya apa ke PowerBrain?\n\nContoh: ${m.prefix}powerbrain jelaskan teori relativitas`, "guide"));
     }
 
     await m.react("🕒");
 
     let result = await powerbrain(text);
-    if (!result.status) result = await UnlimitedAI(text, "nova-ai");
+    if (!result.status) result = await UnlimitedAI(text, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("powerbrain", "PowerBrain lagi offline 🧠", "error"));
+      return m.reply(raraWrap("powerbrain", "PowerBrain lagi offline 🧠", "error"));
     }
 
     await m.react("🐣");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("powerbrain error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("powerbrain", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("powerbrain", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

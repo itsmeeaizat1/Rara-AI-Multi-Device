@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/rara-countdown.js";
 
 const pluginConfig = {
   name: "langganan",
@@ -116,12 +116,12 @@ async function handler(m, { sock, config: botConfig }) {
       const [name, priceStr, cycleStr, dueStr] = parts;
       const price = parseInt(priceStr.replace(/[^\d]/g, ""));
       if (isNaN(price) || price < 0) {
-        return m.reply(novaWrap("Langganan", "Harga tidak valid! Minimal Rp0"));
+        return m.reply(raraWrap("Langganan", "Harga tidak valid! Minimal Rp0"));
       }
 
       const cycle = parseCycle(cycleStr);
       if (!cycle) {
-        return m.reply(novaWrap("Langganan", "Cycle tidak valid! Pilih: weekly / monthly / yearly"));
+        return m.reply(raraWrap("Langganan", "Cycle tidak valid! Pilih: weekly / monthly / yearly"));
       }
 
       // Parse due date
@@ -169,7 +169,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       subs.push(sub);
       saveSubs(db, sender, subs);
-      return m.reply(novaWrap("Langganan",
+      return m.reply(raraWrap("Langganan",
         "Langganan ditambahkan!\n" +
         "Nama: *" + name + "*\n" +
         "Harga: *" + formatRupiah(price) + " / " + cycleLabel(cycle) + "*\n" +
@@ -182,7 +182,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "list") {
       const subs = getSubs(db, sender);
       if (subs.length === 0) {
-        return m.reply(novaWrap("Langganan", "Belum ada langganan.\nTambah: " + prefix + "langganan add <nama> | <harga> | <cycle> | <tgl>"));
+        return m.reply(raraWrap("Langganan", "Belum ada langganan.\nTambah: " + prefix + "langganan add <nama> | <harga> | <cycle> | <tgl>"));
       }
 
       let lines = [];
@@ -194,20 +194,20 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(sub.id + " | " + sub.name + " | " + priceStr + " | " + formatDate(next) + " | " + status);
       }
 
-      return m.reply(novaWrap("Daftar Langganan", lines.join("\n")));
+      return m.reply(raraWrap("Daftar Langganan", lines.join("\n")));
     }
 
     // --- INFO ---
     if (action === "info") {
       const subId = args[1]?.toUpperCase();
       if (!subId) {
-        return m.reply(novaWrap("Langganan", "Format: " + prefix + "langganan info <ID>"));
+        return m.reply(raraWrap("Langganan", "Format: " + prefix + "langganan info <ID>"));
       }
 
       const subs = getSubs(db, sender);
       const sub = subs.find((s) => s.id === subId);
       if (!sub) {
-        return m.reply(novaWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
       }
 
       const next = nextDueDate(sub.baseDate, sub.cycle);
@@ -238,11 +238,11 @@ async function handler(m, { sock, config: botConfig }) {
             lines.push(formatDate(h.date) + " - " + formatRupiah(h.amount) + " - " + (h.status || "paid"))
           })
         }
-        return novaWrap("Info Langganan", lines.join("\n"))
+        return raraWrap("Info Langganan", lines.join("\n"))
       }
 
       if (dueLive) {
-        return m.reply(novaWrap("Info Langganan", [
+        return m.reply(raraWrap("Info Langganan", [
           "Nama: *" + sub.name + "*",
           "ID: `" + sub.id + "`",
           "Harga: " + formatRupiah(sub.price) + " / " + cycleLabel(sub.cycle).toLowerCase(),
@@ -268,18 +268,18 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "edit") {
       const subId = args[1]?.toUpperCase();
       if (!subId) {
-        return m.reply(novaWrap("Langganan", "Format: " + prefix + "langganan edit <ID> | <field> | <nilai>\nField: name, price, cycle"));
+        return m.reply(raraWrap("Langganan", "Format: " + prefix + "langganan edit <ID> | <field> | <nilai>\nField: name, price, cycle"));
       }
 
       const subs = getSubs(db, sender);
       const sub = subs.find((s) => s.id === subId);
       if (!sub) {
-        return m.reply(novaWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
       }
 
       const editParts = args.slice(2).join(" ").split("|").map((s) => s.trim());
       if (editParts.length < 2) {
-        return m.reply(novaWrap("Langganan", "Format: " + prefix + "langganan edit <ID> | <field> | <nilai>\nField: name, price, cycle"));
+        return m.reply(raraWrap("Langganan", "Format: " + prefix + "langganan edit <ID> | <field> | <nilai>\nField: name, price, cycle"));
       }
 
       const [field, value] = editParts;
@@ -287,51 +287,51 @@ async function handler(m, { sock, config: botConfig }) {
         sub.name = value;
       } else if (field === "price") {
         const newPrice = parseInt(value.replace(/[^\d]/g, ""));
-        if (isNaN(newPrice)) return m.reply(novaWrap("Langganan", "Harga tidak valid"));
+        if (isNaN(newPrice)) return m.reply(raraWrap("Langganan", "Harga tidak valid"));
         sub.price = newPrice;
       } else if (field === "cycle") {
         const newCycle = parseCycle(value);
-        if (!newCycle) return m.reply(novaWrap("Langganan", "Cycle tidak valid! Pilih: weekly / monthly / yearly"));
+        if (!newCycle) return m.reply(raraWrap("Langganan", "Cycle tidak valid! Pilih: weekly / monthly / yearly"));
         sub.cycle = newCycle;
         sub.nextDue = nextDueDate(sub.baseDate, newCycle);
       } else {
-        return m.reply(novaWrap("Langganan", "Field tidak valid! Pilih: name, price, cycle"));
+        return m.reply(raraWrap("Langganan", "Field tidak valid! Pilih: name, price, cycle"));
       }
 
       saveSubs(db, sender, subs);
-      return m.reply(novaWrap("Langganan", "Langganan *" + sub.name + "* diperbarui!\nField: " + field + " -> " + value));
+      return m.reply(raraWrap("Langganan", "Langganan *" + sub.name + "* diperbarui!\nField: " + field + " -> " + value));
     }
 
     // --- REMOVE ---
     if (action === "remove") {
       const subId = args[1]?.toUpperCase();
       if (!subId) {
-        return m.reply(novaWrap("Langganan", "Format: " + prefix + "langganan remove <ID>"));
+        return m.reply(raraWrap("Langganan", "Format: " + prefix + "langganan remove <ID>"));
       }
 
       const subs = getSubs(db, sender);
       const idx = subs.findIndex((s) => s.id === subId);
       if (idx === -1) {
-        return m.reply(novaWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
       }
 
       const removed = subs[idx];
       subs.splice(idx, 1);
       saveSubs(db, sender, subs);
-      return m.reply(novaWrap("Langganan", "Langganan *" + removed.name + "* (`" + subId + "`) dihapus"));
+      return m.reply(raraWrap("Langganan", "Langganan *" + removed.name + "* (`" + subId + "`) dihapus"));
     }
 
     // --- MARKPAID ---
     if (action === "markpaid") {
       const subId = args[1]?.toUpperCase();
       if (!subId) {
-        return m.reply(novaWrap("Langganan", "Format: " + prefix + "langganan markpaid <ID>"));
+        return m.reply(raraWrap("Langganan", "Format: " + prefix + "langganan markpaid <ID>"));
       }
 
       const subs = getSubs(db, sender);
       const sub = subs.find((s) => s.id === subId);
       if (!sub) {
-        return m.reply(novaWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
+        return m.reply(raraWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
       }
 
       // Record payment in history
@@ -350,7 +350,7 @@ async function handler(m, { sock, config: botConfig }) {
       sub.paid = false;
 
       saveSubs(db, sender, subs);
-      return m.reply(novaWrap("Langganan",
+      return m.reply(raraWrap("Langganan",
         "Pembayaran tercatat!\n" +
         "Nama: *" + sub.name + "*\n" +
         "Jumlah: *" + formatRupiah(sub.price) + "*\n" +
@@ -362,7 +362,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "total") {
       const subs = getSubs(db, sender);
       if (subs.length === 0) {
-        return m.reply(novaWrap("Langganan", "Belum ada langganan."));
+        return m.reply(raraWrap("Langganan", "Belum ada langganan."));
       }
 
       let monthlyTotal = 0;
@@ -400,7 +400,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push((i + 1) + ". " + s.name + " - " + formatRupiah(s.price));
       });
 
-      return m.reply(novaWrap("Total Langganan", lines.join("\n")));
+      return m.reply(raraWrap("Total Langganan", lines.join("\n")));
     }
 
     // --- HISTORY ---
@@ -412,10 +412,10 @@ async function handler(m, { sock, config: botConfig }) {
         // History for specific subscription
         const sub = subs.find((s) => s.id === subId);
         if (!sub) {
-          return m.reply(novaWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
+          return m.reply(raraWrap("Langganan", "Langganan `" + subId + "` tidak ditemukan"));
         }
         if (sub.history.length === 0) {
-          return m.reply(novaWrap("Langganan", "Belum ada riwayat pembayaran untuk *" + sub.name + "*"));
+          return m.reply(raraWrap("Langganan", "Belum ada riwayat pembayaran untuk *" + sub.name + "*"));
         }
 
         let lines = [];
@@ -427,7 +427,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("");
         lines.push("Total dibayar: *" + formatRupiah(totalPaid) + "*");
 
-        return m.reply(novaWrap("Riwayat: " + sub.name, lines.join("\n")));
+        return m.reply(raraWrap("Riwayat: " + sub.name, lines.join("\n")));
       } else {
         // History for all subscriptions
         let allPayments = [];
@@ -438,7 +438,7 @@ async function handler(m, { sock, config: botConfig }) {
         }
 
         if (allPayments.length === 0) {
-          return m.reply(novaWrap("Langganan", "Belum ada riwayat pembayaran. Tandai bayar dengan: " + prefix + "langganan markpaid <ID>"));
+          return m.reply(raraWrap("Langganan", "Belum ada riwayat pembayaran. Tandai bayar dengan: " + prefix + "langganan markpaid <ID>"));
         }
 
         allPayments.sort((a, b) => b.date - a.date);
@@ -451,7 +451,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("");
         lines.push("Total dibayar: *" + formatRupiah(totalPaid) + "*");
 
-        return m.reply(novaWrap("Riwayat Pembayaran", lines.join("\n")));
+        return m.reply(raraWrap("Riwayat Pembayaran", lines.join("\n")));
       }
     }
 
@@ -471,7 +471,7 @@ async function handler(m, { sock, config: botConfig }) {
     );
   } catch (e) {
     console.error("langganan error:", e);
-    return m.reply(novaWrap("Langganan", "Error: " + e.message));
+    return m.reply(raraWrap("Langganan", "Error: " + e.message));
   }
 }
 

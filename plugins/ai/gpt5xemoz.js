@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 /**
  * plugins/ai/gpt5xemoz.js
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
 
   if (!text) {
-    return m.reply(novaGuideV2("gpt5xemoz", {
+    return m.reply(raraGuideV2("gpt5xemoz", {
  kaomoji: "(๑>ᴗ<)و",
  sapaan: "tanya apa aja ke GPT-5.3! ヾ(≧▽≦*)o",
       cara: "kirim pertanyaannya setelah command",
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   await m.react("🕒");
     const reply = await callGPT5(text);
     await m.react("🐣");
-    return m.reply(novaWrap("GPT-5.3", reply));
+    return m.reply(raraWrap("GPT-5.3", reply));
   } catch (error) {
     // IkyyXD fallback
     try {
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
       console.error("[gpt5xemoz.js] IkyyXD fallback failed:", ikyyErr.message);
     }
 
-    return m.reply(novaWrap("GPT-5.3 Error", error.message || "Gagal hubungin AI nih"));
+    return m.reply(raraWrap("GPT-5.3 Error", error.message || "Gagal hubungin AI nih"));
   }
 }
 

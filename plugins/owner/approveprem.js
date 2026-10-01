@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // approveprem.js — Owner: kelola pesanan beli premium (.buyprem)
 // Mirror approvetopup: pesanan pending direkam buyprem ke db.data.premiumOrders.
 // .approveprem          → lihat semua pesanan pending
@@ -8,10 +8,10 @@
 // .approveprem <nomor> tolak [alasan] → tolak pesanan + user dinotif
 // days 0 (lifetime) → premium PERMANENT tanpa expired.
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, toSC } from "../../src/lib/nova-menu-style.js";
-import { notifyPremiumAdd } from "../../src/lib/nova-saluran-broadcast.js";
-import { PREMIUM_BONUS } from "../../src/lib/store/nova-store.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
+import { notifyPremiumAdd } from "../../src/lib/rara-saluran-broadcast.js";
+import { PREMIUM_BONUS } from "../../src/lib/store/rara-store.js";
 
 const pluginConfig = {
   name: "approveprem",
@@ -58,25 +58,25 @@ async function handler(m, { sock }) {
       ([, o]) => o.status === "pending",
     );
     if (pending.length === 0) {
-      return m.reply(novaWrap("approveprem", "Tidak ada pesanan premium yang pending."));
+      return m.reply(raraWrap("approveprem", "Tidak ada pesanan premium yang pending."));
     }
     let txt = `${toSC("pesanan premium pending")} — ${pending.length}\n`;
     for (const [jid, o] of pending) {
       txt += `\n• ${o.phoneNumber} (${o.name || "Unknown"})\n  ⭐ ${o.label} (${o.days === 0 ? "Permanent" : o.days + " hari"}) — ${o.price}\n  Waktu: ${new Date(o.orderedAt).toLocaleString("id-ID")}\n`;
     }
     txt += `\n📌 Approve: *${prefix}approveprem <nomor>*\n💡 Tolak: *${prefix}approveprem <nomor> tolak <alasan>*`;
-    return m.reply(novaWrap("approveprem", txt));
+    return m.reply(raraWrap("approveprem", txt));
   }
 
   // ── Approve / tolak by nomor ──
   const target = args[0].replace(/[^0-9]/g, "");
   if (target.length < 8) {
-    return m.reply(novaWrap("approveprem", `Nomor tidak valid\n\n📌 Contoh: *${prefix}approveprem 6281234567890*`));
+    return m.reply(raraWrap("approveprem", `Nomor tidak valid\n\n📌 Contoh: *${prefix}approveprem 6281234567890*`));
   }
   const jid = target + "@s.whatsapp.net";
   const order = orders.pending[jid] || orders.pending[target];
   if (!order || order.status !== "pending") {
-    return m.reply(novaWrap("approveprem", `Tidak ada pesanan premium pending dari *${target}*`));
+    return m.reply(raraWrap("approveprem", `Tidak ada pesanan premium pending dari *${target}*`));
   }
 
   const isReject = ["tolak", "batal", "reject"].includes((args[1] || "").toLowerCase());
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(jid, {
       text: `❌ *pesanan premium ditolak*\n\nPaket: *${order.label}* — ${order.price}\nAlasan: *${reason}*\n\nHubungi owner untuk info lebih lanjut.`,
     }).catch(() => {});
-    return m.reply(novaWrap("approveprem",
+    return m.reply(raraWrap("approveprem",
       `Status: *ditolak*\nPesanan premium (${order.label}) dari *${target}* ditolak`));
   }
 
@@ -180,7 +180,7 @@ async function handler(m, { sock }) {
     text: `✅ *premium berhasil diaktifkan*\n\nPaket: *${order.label}*\nDurasi: ${durLabel}\nTotal bayar: *${order.price}*\n${newExpired ? `Expired: *${formatDate(newExpired)}*` : ""}\n\nTerima kasih sudah beli premium 🥳`,
   }).catch(() => {});
 
-  return m.reply(novaWrap("approveprem",
+  return m.reply(raraWrap("approveprem",
     `Status: *berhasil*\nUser: *${order.phoneNumber}*\nPaket: *${order.label}* (${durLabel})\nHarga: *${order.price}*\n${newExpired ? `Expired: *${formatDate(newExpired)}*` : "Tanpa expired (permanent)"}\n\nPremium aktif otomatis & user sudah dinotif`));
 }
 

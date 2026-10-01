@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'pin',
     alias: ["pin"],
@@ -20,7 +20,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, args }) {
     if (!m.quoted || !m.quoted.key || !m.quoted.key.id) {
-        await m.reply(novaGuide('Pin', 'Reply pesan yang mau di-pin dulu!', '.pin (reply pesan)'));
+        await m.reply(raraGuide('Pin', 'Reply pesan yang mau di-pin dulu!', '.pin (reply pesan)'));
         return;
     }
     
@@ -51,10 +51,10 @@ async function handler(m, { sock, args }) {
             : `${Math.floor(duration / 3600)} jam`;
         
         const successMsg = `✅ Success pin pesan ini`;
-        await m.reply(novaWrap("pin", successMsg))
+        await m.reply(raraWrap("pin", successMsg))
         
     } catch (error) {
-        await m.reply(novaError('Pin', 'Gagal pin pesan nih'));
+        await m.reply(raraError('Pin', 'Gagal pin pesan nih'));
     }
 }
 

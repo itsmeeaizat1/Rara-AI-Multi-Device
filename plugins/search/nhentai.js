@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!query) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🔍",
   name: "nhentai",
   description: "Cari info manga/doujin",
@@ -49,7 +49,7 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[nhentai.js]:', e.message); }
 
     const text =
-      novaWrap("NHentai", [`Query: *${query}*`,
+      raraWrap("NHentai", [`Query: *${query}*`,
         `Hasil: *${resultText}*`,
         "Status: *berhasil*"].join("\n")) +
       "\n" +
@@ -59,7 +59,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Nhentai", "Gagal nih, coba lagi ya");
+      raraError("Nhentai", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "nhentai");
   }

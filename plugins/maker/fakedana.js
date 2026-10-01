@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { Canvas, loadImage, FontLibrary } from 'skia-canvas'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 import { fileURLToPath } from "url";
 // FIX 12 Sep: path font gak boleh nempel ke process.cwd() — import crash kalau
 // bot dijalanin dari direktori lain (ketahuan plugins-import-e2e)
@@ -57,7 +57,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const nominal = m.text
     if (!nominal) {
-        return m.reply(novaWrap("FAKE DANA", `\`Contoh: ${m.prefix}fakedana 10000\``), "fakedana")
+        return m.reply(raraWrap("FAKE DANA", `\`Contoh: ${m.prefix}fakedana 10000\``), "fakedana")
     }
     if(isNaN(nominal)) { const __navText = `*harap masukkan angka*`; return await m.reply(__navText); }
     try {
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
             type: 'image',
         })
     } catch (error) {
-        m.reply(novaWrap("fakedana", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("fakedana", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -12,7 +12,7 @@ function t(label, cond, extra) {
 }
 
 const REPO = path.resolve(".");
-const { stripMarkdownTables } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-md-table.js")).href);
+const { stripMarkdownTables } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-md-table.js")).href);
 
 // ── case 1: table berita beneran (header + separator + rows) ──
 {
@@ -39,23 +39,23 @@ const { stripMarkdownTables } = await import(pathToFileURL(path.join(REPO, "src/
 
 // ── case 4: shell pipe di TENGAH baris & code fence gak disentuh ──
 {
-  const input = "Cara pakai:\nls | grep nova\n\n```bash\necho hai | cat\n| code | pipe |\n```";
+  const input = "Cara pakai:\nls | grep rara\n\n```bash\necho hai | cat\n| code | pipe |\n```";
   const r = stripMarkdownTables(input);
-  t("4a. pipe shell tengah baris tetap", r.includes("ls | grep nova"), r);
+  t("4a. pipe shell tengah baris tetap", r.includes("ls | grep rara"), r);
   t("4b. isi code fence verbatim (| code | pipe | tetap)", r.includes("| code | pipe |"), r);
 }
 
-// ── case 5: terpasang di nova-agent.js (jawaban agent diparse) ──
+// ── case 5: terpasang di rara-agent.js (jawaban agent diparse) ──
 {
-  const src = path.join(REPO, "src/lib/nova-agent.js");
+  const src = path.join(REPO, "src/lib/rara-agent.js");
   const c = await import("node:fs").then((fs) => fs.readFileSync(src, "utf8"));
-  t("5a. nova-agent.js import + parse di 4 mode", (c.match(/stripMarkdownTables/g) || []).length >= 5, c.match(/stripMarkdownTables/g)?.length);
+  t("5a. rara-agent.js import + parse di 4 mode", (c.match(/stripMarkdownTables/g) || []).length >= 5, c.match(/stripMarkdownTables/g)?.length);
 }
-// ── case 6: terpasang di nova-ai-service.js (AI satuan) ──
+// ── case 6: terpasang di rara-ai-service.js (AI satuan) ──
 {
-  const src = path.join(REPO, "src/lib/nova-ai-service.js");
+  const src = path.join(REPO, "src/lib/rara-ai-service.js");
   const c = await import("node:fs").then((fs) => fs.readFileSync(src, "utf8"));
-  t("6a. nova-ai-service.js parse di 3 titik return", (c.match(/return stripMarkdownTables\(text\)/g) || []).length === 3, c.match(/return stripMarkdownTables\(text\)/g)?.length);
+  t("6a. rara-ai-service.js parse di 3 titik return", (c.match(/return stripMarkdownTables\(text\)/g) || []).length === 3, c.match(/return stripMarkdownTables\(text\)/g)?.length);
 }
 
 // ── case 7: teks tanpa pipe → gak diubah sama sekali ──

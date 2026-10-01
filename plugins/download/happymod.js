@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // happymod.js — Search game mod dari Happymod (direct scrape, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { novaBox, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraBox, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "happymod",
@@ -73,13 +73,13 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const query = m.args?.join(" ").trim();
     if (!query) {
-      return m.reply(novaGuide("Happymod", "Masukkan nama game/app!", ".happymod minecraft"));
+      return m.reply(raraGuide("Happymod", "Masukkan nama game/app!", ".happymod minecraft"));
     }
 
     const results = await searchHappymod(query);
     if (!results.length) {
       await m.react("❌");
-      return m.reply(novaError("Happymod", `Tidak ditemukan untuk: *${query}*`));
+      return m.reply(raraError("Happymod", `Tidak ditemukan untuk: *${query}*`));
     }
 
     const lines = [`Hasil pencarian: ${query}`, ""];
@@ -88,12 +88,12 @@ async function handler(m, { sock }) {
       lines.push(`Link: ${item.url}`);
     });
 
-    await m.reply(novaBox("Happymod Search", lines));
+    await m.reply(raraBox("Happymod Search", lines));
     await m.react("🐣");
   } catch (err) {
     console.error("[Happymod]", err);
     await m.react("❌");
-    m.reply(novaGagal("Happymod"));
+    m.reply(raraGagal("Happymod"));
   }
 }
 

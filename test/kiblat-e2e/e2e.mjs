@@ -4,7 +4,7 @@
 // bearing great-circle ke Ka'bah + jarak haversine + kartu KOMPAS canvas
 // (jarum merah arah qiblat + ikon Ka'bah). Semua http/canvas di-mock.
 import fs from "node:fs";
-import { initDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase } from "../../src/lib/rara-database.js";
 import plugin, { qiblaBearing, distanceToKaaba, renderKiblatCard, _setKiblatHttpForTest, _resetKiblatHttpForTest } from "../../plugins/islami/kiblat.js";
 import { fromSC } from "../../src/lib/styler.js";
 

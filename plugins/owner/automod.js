@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // automod.js — Group Auto-Moderation (integrated with automation hub)
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "automod",
@@ -48,56 +48,56 @@ async function handler(m, { sock }) {
 
     if (subCmd === "addgc") {
       const gid = args[1]
-      if (!gid?.includes("@g.us")) { return m.reply(novaBox("Auto Mod", ["❌ Format: .automod addgc <groupId>"])) }
+      if (!gid?.includes("@g.us")) { return m.reply(raraBox("Auto Mod", ["❌ Format: .automod addgc <groupId>"])) }
       ensureGroup(cfg, gid); save(db);
-      return m.reply(novaBox("Auto Mod", ["✅ Grup ditambah: " + gid.slice(0, 20) + "...", "Rules: antilink, antispam", "Action: warn"]))
+      return m.reply(raraBox("Auto Mod", ["✅ Grup ditambah: " + gid.slice(0, 20) + "...", "Rules: antilink, antispam", "Action: warn"]))
     }
 
     if (subCmd === "delgc") {
       const gid = args[1]
       if (cfg.groups[gid]) { delete cfg.groups[gid]; save(db) }
-      return m.reply(novaBox("Auto Mod", ["✅ Grup dihapus: " + (gid || "?").slice(0, 20) + "..."]))
+      return m.reply(raraBox("Auto Mod", ["✅ Grup dihapus: " + (gid || "?").slice(0, 20) + "..."]))
     }
 
     if (subCmd === "setrule") {
       const gid = args[1], rule = args[2]?.toLowerCase(), toggle = args[3]?.toLowerCase()
       if (!cfg.groups[gid] || !DEFAULT_RULES.hasOwnProperty(rule)) {
-        return m.reply(novaWrap("automod", "❌ Grup belum terdaftar atau rule invalid.\nRules: antilink, antispam, antibadword, antisticker, antivoice")) }
+        return m.reply(raraWrap("automod", "❌ Grup belum terdaftar atau rule invalid.\nRules: antilink, antispam, antibadword, antisticker, antivoice")) }
       cfg.groups[gid].rules[rule] = toggle === "on"; save(db);
-      return m.reply(novaWrap("automod", rule + ": " + (toggle === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "..."))
+      return m.reply(raraWrap("automod", rule + ": " + (toggle === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "..."))
     }
 
     if (subCmd === "addword") {
       const gid = args[1], word = args.slice(2).join(" ").toLowerCase().trim()
-      if (!cfg.groups[gid] || !word) { return m.reply(novaWrap("automod", "❌ Format: .automod addword <groupId> <kata>")) }
+      if (!cfg.groups[gid] || !word) { return m.reply(raraWrap("automod", "❌ Format: .automod addword <groupId> <kata>")) }
       cfg.groups[gid].badwords.push(word); save(db);
-      return m.reply(novaWrap("automod", "Badword: " + word + " ditambah\nTotal: " + cfg.groups[gid].badwords.length))
+      return m.reply(raraWrap("automod", "Badword: " + word + " ditambah\nTotal: " + cfg.groups[gid].badwords.length))
     }
 
     if (subCmd === "delword") {
       const gid = args[1], word = args.slice(2).join(" ").toLowerCase().trim()
       if (cfg.groups[gid]) { cfg.groups[gid].badwords = cfg.groups[gid].badwords.filter(w => w !== word); save(db) }
-      return m.reply(novaWrap("automod", "Badword dihapus: " + word))
+      return m.reply(raraWrap("automod", "Badword dihapus: " + word))
     }
 
     if (subCmd === "on" || subCmd === "off") {
       const gid = args[1] || (m.isGroup ? m.chat : "")
-      if (!gid?.includes("@g.us")) { return m.reply(novaWrap("automod", "Gunakan di grup atau: .automod " + subCmd + " <groupId>", "error")) }
+      if (!gid?.includes("@g.us")) { return m.reply(raraWrap("automod", "Gunakan di grup atau: .automod " + subCmd + " <groupId>", "error")) }
       ensureGroup(cfg, gid); cfg.groups[gid].enabled = subCmd === "on"; save(db)
-      return m.reply(novaWrap("automod", "Status: " + (subCmd === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "..."))
+      return m.reply(raraWrap("automod", "Status: " + (subCmd === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "..."))
     }
 
     if (subCmd === "action") {
       const gid = args[1], action = args[2]?.toLowerCase()
       if (!cfg.groups[gid] || !["delete", "warn", "kick"].includes(action)) {
-        return m.reply(novaWrap("automod", "❌ Format: .automod action <groupId> delete/warn/kick")) }
+        return m.reply(raraWrap("automod", "❌ Format: .automod action <groupId> delete/warn/kick")) }
       cfg.groups[gid].action = action; save(db);
-      return m.reply(novaWrap("automod", "Action: " + action + "\nGrup: " + gid.slice(0, 20) + "..."))
+      return m.reply(raraWrap("automod", "Action: " + action + "\nGrup: " + gid.slice(0, 20) + "..."))
     }
 
     if (subCmd === "rules") {
       const gid = args[1]
-      if (!cfg.groups[gid]) { return m.reply(novaWrap("automod", "❌ Grup belum terdaftar.")) }
+      if (!cfg.groups[gid]) { return m.reply(raraWrap("automod", "❌ Grup belum terdaftar.")) }
       const g = cfg.groups[gid];
       let text = "*Auto Mod Rules*\n\nGrup: " + gid.slice(0, 25) + "...\nStatus: " + (g.enabled ? "ON" : "OFF") + "\nAction: " + g.action + "\n\nRules:\n"
       Object.entries(g.rules).forEach(([rule, on]) => { text += (on ? "✅ " : "❌ ") + rule + "\n" })
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
     // Default: list
     const gids = Object.keys(cfg.groups)
     if (!gids.length) {
-      return m.reply(novaWrap("automod", "Belum ada grup terdaftar.\n\n.automod addgc <groupId>\n.automod setrule <groupId> antilink on\n.automod action <groupId> delete/warn/kick\n.automod addword <groupId> <badword>"))
+      return m.reply(raraWrap("automod", "Belum ada grup terdaftar.\n\n.automod addgc <groupId>\n.automod setrule <groupId> antilink on\n.automod action <groupId> delete/warn/kick\n.automod addword <groupId> <badword>"))
     }
     let text = "*Auto Mod*\n\nGrup terdaftar: " + gids.length + "\n\n"
     gids.forEach((gid, i) => {
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
     return m.reply(text.trim())
   } catch (e) {
     console.error("[automod] error:", e.message)
-    return m.reply(novaWrap("automod", "Gagal proses. Coba lagi.", "error"))
+    return m.reply(raraWrap("automod", "Gagal proses. Coba lagi.", "error"))
   }
 }
 

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
-import { bracketBox, novaError } from "../../src/lib/nova-menu-style.js";
+import { bracketBox, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: "joke",
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         await m.reply(text)
         await m.react("😂")
     } catch (e) {
-        await m.reply(novaError('Joke', 'Gagal mengambil joke, API mungkin sedang down'))
+        await m.reply(raraError('Joke', 'Gagal mengambil joke, API mungkin sedang down'))
     }
 }
 

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 /**
  * plugins/ai/openrouter.js
@@ -138,7 +138,7 @@ async function callOpenRouter(apiKey, modelId, messages) {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       "HTTP-Referer": "https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device",
-      "X-Title": "Nova AI WhatsApp Bot",
+      "X-Title": "Rara AI WhatsApp Bot",
     },
     body: JSON.stringify({
       model: modelId,
@@ -188,7 +188,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase() === "list" || text.toLowerCase() === "models") {
     const currentModel = FREE_MODELS[session.model]?.label || session.model;
     const body = `Model aktif: ${currentModel}\n\n${formatModelList()}\nGanti model: .openrouter model <nama>`;
-    return m.reply( novaWrap("OpenRouter Models", body));
+    return m.reply( raraWrap("OpenRouter Models", body));
   }
 
   // Sub-command: model <nama>
@@ -196,42 +196,42 @@ async function handler(m, { sock, config: botConfig }) {
     const modelName = text.slice(6).trim();
     const model = resolveModel(modelName);
     if (!model) {
-      return m.reply(novaWrap("OpenRouter", `Model "${modelName}" tidak ditemukan.\n\nKetik .openrouter list untuk lihat model tersedia.`));
+      return m.reply(raraWrap("OpenRouter", `Model "${modelName}" tidak ditemukan.\n\nKetik .openrouter list untuk lihat model tersedia.`));
     }
     session.model = modelName.toLowerCase();
     session.messages = []; // Reset context saat ganti model
-    return m.reply(novaWrap("OpenRouter", `Model diganti ke: ${model.label}\nSesi direset untuk model baru.`));
+    return m.reply(raraWrap("OpenRouter", `Model diganti ke: ${model.label}\nSesi direset untuk model baru.`));
   }
 
   // Sub-command: reset
   if (text.toLowerCase() === "reset") {
     session.messages = [];
-    return m.reply(novaWrap("OpenRouter", "Sesi percakapan direset."));
+    return m.reply(raraWrap("OpenRouter", "Sesi percakapan direset."));
   }
 
   // Sub-command: setkey (owner only)
   if (text.toLowerCase().startsWith("setkey ")) {
     if (!m.isOwner) {
-      return m.reply(novaWrap("OpenRouter", "Hanya owner yang bisa set API key."));
+      return m.reply(raraWrap("OpenRouter", "Hanya owner yang bisa set API key."));
     }
     const newKey = text.slice(7).trim();
     if (!newKey) {
-      return m.reply(novaWrap("OpenRouter", "API key tidak boleh kosong.\nDaftar gratis di https://openrouter.ai/keys"));
+      return m.reply(raraWrap("OpenRouter", "API key tidak boleh kosong.\nDaftar gratis di https://openrouter.ai/keys"));
     }
     apiKeyStore = newKey;
-    return m.reply(novaWrap("OpenRouter", "API key OpenRouter tersimpan.\nDaftar model: .openrouter list"));
+    return m.reply(raraWrap("OpenRouter", "API key OpenRouter tersimpan.\nDaftar model: .openrouter list"));
   }
 
   // Validasi API key sebelum chat
   if (!apiKey) {
     const help = `API key OpenRouter belum diatur.\n\nDaftar gratis di https://openrouter.ai/keys\n\nSet key (owner only):\n.openrouter setkey sk-or-v1-xxxxx\n\nAtau set di config.js:\nAPIkey: { openrouter: "sk-or-v1-xxxxx" }`;
-    return m.reply( novaWrap("OpenRouter Setup", help));
+    return m.reply( raraWrap("OpenRouter Setup", help));
   }
 
   // Validasi pesan
   if (!text) {
     const currentModel = FREE_MODELS[session.model]?.label || session.model;
-    return m.reply(novaGuide(
+    return m.reply(raraGuide(
       "openrouter",
       ".openrouter <pesan> — chat dengan model aktif\n.openrouter model <nama> — ganti model\n.openrouter list — lihat semua model\n.openrouter reset — reset sesi",
       ".openrouter jelaskan teori relativitas\n.openrouter model deepseek-r1\n.openrouter list",
@@ -257,7 +257,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Simpan reply AI ke session
     session.messages.push({ role: "assistant", content: reply });
-    return m.reply(novaWrap(`OpenRouter | ${model.label}`, reply));
+    return m.reply(raraWrap(`OpenRouter | ${model.label}`, reply));
   } catch (error) {
     // IkyyXD fallback
     try {
@@ -281,7 +281,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     await m.react("🐣");
-    return m.reply(novaWrap("OpenRouter Error", errMsg));
+    return m.reply(raraWrap("OpenRouter Error", errMsg));
   }
 }
 

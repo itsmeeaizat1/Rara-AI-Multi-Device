@@ -1,13 +1,13 @@
 // weather.js — Cek cuaca realtime + pilih provider (rename file owner 15 Sep 2026, wasal .cuaca)
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, 
+import { raraError, raraEmpty, raraGuide, raraNoInput, 
   bracketBox,
-  novaHeader,
+  raraHeader,
   separator,
   tipText,
-  novaWrap,
-  novaLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+  raraWrap,
+  raraLine, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "weather",
@@ -72,22 +72,22 @@ async function handler(m, { sock, config: botConfig, db }) {
         .join("\n");
 
       const text =
-        novaWrap("Cuaca Bot", [`Toggle: *${prefix}weather on|off*`,
+        raraWrap("Cuaca Bot", [`Toggle: *${prefix}weather on|off*`,
           `Provider: *${prefix}weather provider <nama>*`,
           `Lokasi: *${prefix}weather lokasi <kota>*`,
           `Cek: *${prefix}weather now*`,
           `Bantuan: *${prefix}weather help*`].join("\n")) +
         "\n" +
-        novaWrap("sTATUs", [`Footer otomatis: *${enabled ? "ON" : "OFF"}*`, `Provider: *${currentProvider}*`].join("\n")) +
+        raraWrap("sTATUs", [`Footer otomatis: *${enabled ? "ON" : "OFF"}*`, `Provider: *${currentProvider}*`].join("\n")) +
         "\n\n" +
         
-        novaWrap("PROVIDER", providerList) +
+        raraWrap("PROVIDER", providerList) +
         "\n\n" +
         
-        novaWrap("LOKAsI", [`Nama: *${currentLocation.name || "Jakarta"}*`, `Lat: *${currentLocation.latitude ?? -6.2088}*`, `Lon: *${currentLocation.longitude ?? 106.8456}*`].join("\n")) +
+        raraWrap("LOKAsI", [`Nama: *${currentLocation.name || "Jakarta"}*`, `Lat: *${currentLocation.latitude ?? -6.2088}*`, `Lon: *${currentLocation.longitude ?? 106.8456}*`].join("\n")) +
         "\n\n" +
         
-        novaWrap("KONFIG", [`Provider aktif: *${currentProvider}*`, `API key: *${current.apiKey ? "terpasang" : "belum diatur"}*`, `Location key: *${current.locationKey || "belum diatur"}*`].join("\n")) +
+        raraWrap("KONFIG", [`Provider aktif: *${currentProvider}*`, `API key: *${current.apiKey ? "terpasang" : "belum diatur"}*`, `Location key: *${current.locationKey || "belum diatur"}*`].join("\n")) +
         "\n\n" +
         
         tipText("Ganti provider lewat .weather provider <nama>") +
@@ -102,9 +102,9 @@ async function handler(m, { sock, config: botConfig, db }) {
       const enabled = sub === "on";
       setWeatherDb(db, { enabled });
       await m.reply(
-        novaWrap("Cuaca Bot", "🌤️") +
+        raraWrap("Cuaca Bot", "🌤️") +
           "\n\n" +
-          novaWrap(enabled ? "DIAKTIFKAN" : "DINAsKAN", [
+          raraWrap(enabled ? "DIAKTIFKAN" : "DINAsKAN", [
             `Footer cuaca: *${enabled ? "ON" : "OFF"}*`,
             enabled ? "Sekarang setiap pesan bot akan menambahkan footer cuaca" : "Footer cuaca tidak akan ditambahkan lagi",
           ]) +
@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           .map((k) => `${PROVIDERS[k].emoji} ${k}`)
           .join(", ");
         await m.reply(
-          novaWrap("Provider Cuaca", [`Provider *${target || "kosong"}* tidak dikenali`,
+          raraWrap("Provider Cuaca", [`Provider *${target || "kosong"}* tidak dikenali`,
               `Pilihan: *${available}*`].join("\n")) +
             "\n" +
             tipText(`Contoh: ${prefix}weather provider open-meteo`) +
@@ -137,7 +137,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       const updated = setWeatherDb(db, { provider: target });
       const info = PROVIDERS[target];
       await m.reply(
-        novaWrap("Provider Cuaca", [`Provider: *${info.label}*`,
+        raraWrap("Provider Cuaca", [`Provider: *${info.label}*`,
             `Kebutuhan key: *${info.needsKey ? "perlu" : "tidak perlu"}*`,
             `Catatan: *${info.note}*`].join("\n")) +
           "\n" +
@@ -151,7 +151,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     if (sub === "lokasi") {
       const lokasi = parts.slice(1).join(" ");
       if (!lokasi) {
-        await m.reply(novaCaption({
+        await m.reply(raraCaption({
   emoji: "🌤️",
   name: "weather",
   description: "Cek cuaca realtime dan pilih provider API cuaca",
@@ -163,7 +163,7 @@ async function handler(m, { sock, config: botConfig, db }) {
 
       setWeatherDb(db, { location: { name: lokasi } });
       await m.reply(
-        novaWrap("Lokasi Cuaca", [`Lokasi disetel ke: *${lokasi}*`].join("\n")) +
+        raraWrap("Lokasi Cuaca", [`Lokasi disetel ke: *${lokasi}*`].join("\n")) +
           "\n" +
           tipText(`Ketik ${prefix}weather now untuk cek cuaca sekarang`) +
           "\n" +
@@ -173,11 +173,11 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     if (sub === "now") {
-      const { getWeatherFooter } = await import("../../src/lib/nova-weather-footer.js");
+      const { getWeatherFooter } = await import("../../src/lib/rara-weather-footer.js");
       const footer = await getWeatherFooter(true);
       if (!footer) {
         await m.reply(
-          novaWrap("Cuaca", ["Gagal mengambil data cuaca",
+          raraWrap("Cuaca", ["Gagal mengambil data cuaca",
               "Cek provider/lokasi/api key"].join("\n")) +
             "\n" +
             tipText(`Ketik ${prefix}weather help untuk konfigurasi`)
@@ -185,13 +185,13 @@ async function handler(m, { sock, config: botConfig, db }) {
         return { handled: true };
       }
 
-      await m.reply(`${footer.trim()}\n\n${botConfig?.bot?.name || `Nova AI WhatsApp Bot`}`);
+      await m.reply(`${footer.trim()}\n\n${botConfig?.bot?.name || `Rara AI WhatsApp Bot`}`);
       return { handled: true };
     }
 
     await m.react("🐣");
     await m.reply(
-      novaWrap("Cuaca Bot", [`Provider: *${prefix}weather provider <nama>*`,
+      raraWrap("Cuaca Bot", [`Provider: *${prefix}weather provider <nama>*`,
           `Lokasi: *${prefix}weather lokasi <kota>*`,
           `Cek: *${prefix}weather now*`,
           `Bantuan: *${prefix}weather help*`].join("\n")) +
@@ -201,7 +201,7 @@ async function handler(m, { sock, config: botConfig, db }) {
   } catch (error) {
     await m.react("❌");
     await m.reply(
-      novaError("Tools", "Gagal nih, coba lagi ya")
+      raraError("Tools", "Gagal nih, coba lagi ya")
     );
   }
 

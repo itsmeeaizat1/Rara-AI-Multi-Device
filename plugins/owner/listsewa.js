@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
-import * as timeHelper from '../../src/lib/nova-time.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import * as timeHelper from '../../src/lib/rara-time.js'
 const pluginConfig = {
     name: "listsewa",
     alias: ["listsewa"],
@@ -89,7 +89,7 @@ function handler(m, { sock }) {
     text += `*${m.prefix}renewsewa <id> <durasi>* — Perpanjang\n`
     text += `*${m.prefix}delsewa <id>* — Hapus dari whitelist`
 
-    return m.reply(novaWrap("listsewa", text))
+    return m.reply(raraWrap("listsewa", text))
 }
 
 export { pluginConfig as config, handler }

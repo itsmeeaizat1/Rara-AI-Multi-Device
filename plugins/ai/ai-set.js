@@ -1,16 +1,16 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ai-set (alias .ai) — panel pengaturan AI.
 // REWORK DESAIN 2026-09-11 (owner: "fitur .ai berantakan keliatannya"):
-// - panel = novaInfoSections (「 ✦ section ✦ 」 label smallcaps : value verbatim)
-// - konfirmasi = novaBox 「 ✦ AI Settings ✦ 」 + "Berhasil kak 🥳"
-// - salah pemakaian/value kosong = novaSalah (singkat, tanpa box)
-// - aksi owner ditolak / error = novaError
+// - panel = raraInfoSections (「 ✦ section ✦ 」 label smallcaps : value verbatim)
+// - konfirmasi = raraBox 「 ✦ AI Settings ✦ 」 + "Berhasil kak 🥳"
+// - salah pemakaian/value kosong = raraSalah (singkat, tanpa box)
+// - aksi owner ditolak / error = raraError
 import {
-  novaError, novaSalah, novaBerhasil,
-  novaInfoSections, novaBox, toSC,
-} from "../../src/lib/nova-menu-style.js";
-import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/nova-ai-service.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+  raraError, raraSalah, raraBerhasil,
+  raraInfoSections, raraBox, toSC,
+} from "../../src/lib/rara-menu-style.js";
+import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/rara-ai-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "ai-set",
@@ -30,7 +30,7 @@ const pluginConfig = {
 
 // ─── Konfirmasi sukses: 「 ✦ AI Settings ✦ 」 + label : value + Berhasil ───
 function okBox(lines) {
-  return novaBox("AI Settings", [...lines, "", novaBerhasil()]);
+  return raraBox("AI Settings", [...lines, "", raraBerhasil()]);
 }
 
 // ─── Panel utama: status + key + provider tersedia + daftar perintah ───
@@ -74,8 +74,8 @@ function buildStatusPanel(prefix, aiHelpConfig = {}) {
     `${prefix}ai-addprovider — tambah provider custom`,
   ];
 
-  // novaInfoSections udah diakhiri \n — cukup 1 \n biar cuma 1 baris kosong pemisah
-  return novaInfoSections(info) + "\n" + novaBox("Perintah", cmdLines);
+  // raraInfoSections udah diakhiri \n — cukup 1 \n biar cuma 1 baris kosong pemisah
+  return raraInfoSections(info) + "\n" + raraBox("Perintah", cmdLines);
 }
 
 async function handler(m, { sock, config: botConfig }) {
@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
       const providerArg = String(value || "").toLowerCase();
       const provider = resolveProvider(providerArg, {});
       if (!provider) {
-        await m.reply(novaSalah("ai-set", "provider gak dikenal — ketik .ai-set list buat lihat daftarnya"));
+        await m.reply(raraSalah("ai-set", "provider gak dikenal — ketik .ai-set list buat lihat daftarnya"));
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -114,7 +114,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "model") {
       const modelArg = String(value || "").trim();
       if (!modelArg) {
-        await m.reply(novaSalah("ai-set", "modelnya belum ditulis"));
+        await m.reply(raraSalah("ai-set", "modelnya belum ditulis"));
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -136,7 +136,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       if (!apiKey) {
-        await m.reply(novaSalah("ai-set", "api key-nya belum ditulis"));
+        await m.reply(raraSalah("ai-set", "api key-nya belum ditulis"));
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -154,7 +154,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "endpoint") {
       const endpoint = String(value || "").trim();
       if (!endpoint) {
-        await m.reply(novaSalah("ai-set", "endpoint-nya belum ditulis"));
+        await m.reply(raraSalah("ai-set", "endpoint-nya belum ditulis"));
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -167,7 +167,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "prompt") {
       const prompt = String(value || "").trim();
       if (!prompt) {
-        await m.reply(novaSalah("ai-set", "prompt-nya belum ditulis"));
+        await m.reply(raraSalah("ai-set", "prompt-nya belum ditulis"));
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -181,12 +181,12 @@ async function handler(m, { sock, config: botConfig }) {
     // AI SATUAN RICH (owner 21 Sep 2026): toggle auto-browsing buat AI satuan
     if (action === "browsing") {
       if (!m.isOwner) {
-        await m.reply(novaError("ai-set", "khusus owner — hanya owner yang bisa mengatur browsing"));
+        await m.reply(raraError("ai-set", "khusus owner — hanya owner yang bisa mengatur browsing"));
         return { handled: true };
       }
       const v = String(value || "").toLowerCase();
       if (v !== "on" && v !== "off") {
-        await m.reply(novaSalah("ai-set", "nilai-nya cuma on atau off — contoh: " + prefix + "ai-set browsing off"));
+        await m.reply(raraSalah("ai-set", "nilai-nya cuma on atau off — contoh: " + prefix + "ai-set browsing off"));
         return { handled: true };
       }
       const db = getDatabase();
@@ -206,7 +206,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (action === "on" || action === "off") {
       if (!m.isOwner) {
-        await m.reply(novaError("ai-set", "khusus owner — hanya owner yang bisa menyalakan/mematikan AI"));
+        await m.reply(raraError("ai-set", "khusus owner — hanya owner yang bisa menyalakan/mematikan AI"));
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -218,12 +218,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (action === "mode") {
       if (!m.isOwner) {
-        await m.reply(novaError("ai-set", "khusus owner — hanya owner yang bisa mengganti mode AI"));
+        await m.reply(raraError("ai-set", "khusus owner — hanya owner yang bisa mengganti mode AI"));
         return { handled: true };
       }
       const newMode = String(value || "").toLowerCase();
       if (!["offline", "online"].includes(newMode)) {
-        await m.reply(novaSalah("ai-set", "mode-nya cuma offline atau online"));
+        await m.reply(raraSalah("ai-set", "mode-nya cuma offline atau online"));
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -233,9 +233,9 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.reply(novaSalah("ai-set", `aksi ${action} gak dikenal`));
+    await m.reply(raraSalah("ai-set", `aksi ${action} gak dikenal`));
   } catch (error) {
-    await m.reply(novaError("ai-set", error.message));
+    await m.reply(raraError("ai-set", error.message));
   }
 
   return { handled: true };

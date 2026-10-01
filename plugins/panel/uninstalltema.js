@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 import { Client } from 'ssh2'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: ['uinstalltema', 'uninstalltema', 'removetema', 'hapustema'],
     alias: ["root", "uinstalltema", "uninstalltema", "removetema", "hapustema"],
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (!text) {
-        return m.reply(novaCaption({
+        return m.reply(raraCaption({
   emoji: "🖥️",
   name: "root",
   description: "Uninstall tema Pterodactyl via SSH",
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     ress.on('ready', () => {
         ress.exec(command, (err, stream) => {
             if (err) {
-                return m.reply(novaWrap("root", te(m.prefix, m.command, m.pushName), "error"))
+                return m.reply(raraWrap("root", te(m.prefix, m.command, m.pushName), "error"))
             }
             
             stream.on('close', async () => {
@@ -75,7 +75,7 @@ Tema berhasil diuninstall!`)
         })
     }).on('error', (err) => {
         console.log('[SSH Error]', err)
-        m.reply(novaWrap("root", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
+        m.reply(raraWrap("root", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
     }).connect(connSettings)
 }
 

@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // totp.js — 2FA TOTP Authenticator: kode login 6-digit real-time
 // Fitur baru 9 Sep 2026 (request owner "fitur yg blm prnh ada di bot")
 // PRIVATE ONLY — kode 2FA gak boleh keliatan di grup.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   addAccount, listAccounts, findAccount, removeAccount, generateCode,
-} from "../../src/lib/nova-totp.js";
+} from "../../src/lib/rara-totp.js";
 
 const pluginConfig = {
   name: "totp",
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     // guard: kode 2FA sensitif — jangan tampil di grup
     if (m.isGroup) {
       await m.react("🔒");
-      return m.reply(novaWrap("totp", "🔒 Kode 2FA sensitif — pakai di *private chat* saja.\n\nChat pribadi bot, ketik lagi command-nya di sana.", "error"));
+      return m.reply(raraWrap("totp", "🔒 Kode 2FA sensitif — pakai di *private chat* saja.\n\nChat pribadi bot, ketik lagi command-nya di sana.", "error"));
     }
 
     const sub = (m.args[0] || "").toLowerCase();
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       const secret = m.args.slice(2).join("").replace(/\s/g, "");
       if (!label || !secret) {
         await m.react("❌");
-        return m.reply(novaWrap("totp", [
+        return m.reply(raraWrap("totp", [
           "Cara simpen akun 2FA:",
           "",
           `${m.prefix}totp add <label> <secret>`,
@@ -70,10 +70,10 @@ async function handler(m, { sock }) {
           limit: "Maksimal 10 akun per user. Hapus salah satu dulu.",
           duplicate: "Label itu udah ada — hapus dulu atau pakai label lain.",
         };
-        return m.reply(novaWrap("totp", msgs[res.error] || "Gagal simpen akun 2FA.", "error"));
+        return m.reply(raraWrap("totp", msgs[res.error] || "Gagal simpen akun 2FA.", "error"));
       }
       await m.react("🐣");
-      return m.reply(novaWrap("totp", [
+      return m.reply(raraWrap("totp", [
         "✅ *akun 2fa tersimpen!*",
         "",
         `🏷️ ${res.account.label}`,
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     if (["list", "daftar"].includes(sub)) {
       const list = listAccounts(uid);
       if (!list.length) {
-        return m.reply(novaWrap("totp", `Belum ada akun 2FA tersimpan.\n\nKetik ${m.prefix}totp add <label> <secret> buat mulai.`, "guide"));
+        return m.reply(raraWrap("totp", `Belum ada akun 2FA tersimpan.\n\nKetik ${m.prefix}totp add <label> <secret> buat mulai.`, "guide"));
       }
       const lines = ["🔐 *akun 2fa tersimpen*", ""];
       list.forEach((a, i) => {
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
       });
       lines.push("");
       lines.push(`▸ Kode: ${m.prefix}totp <label> | Hapus: ${m.prefix}totp del <no>`);
-      return m.reply(novaWrap("totp", lines.join("\n")));
+      return m.reply(raraWrap("totp", lines.join("\n")));
     }
 
     // .totp del <no|label>
@@ -104,15 +104,15 @@ async function handler(m, { sock }) {
       const key = m.args.slice(1).join(" ").trim();
       if (!key) {
         await m.react("❌");
-        return m.reply(novaWrap("totp", `Mau hapus yang mana?\n\nKetik ${m.prefix}totp list buat lihat nomornya.`, "error"));
+        return m.reply(raraWrap("totp", `Mau hapus yang mana?\n\nKetik ${m.prefix}totp list buat lihat nomornya.`, "error"));
       }
       const res = removeAccount(uid, key);
       if (!res.ok) {
         await m.react("❌");
-        return m.reply(novaWrap("totp", `Akun itu gak ketemu. Cek ${m.prefix}totp list.`, "error"));
+        return m.reply(raraWrap("totp", `Akun itu gak ketemu. Cek ${m.prefix}totp list.`, "error"));
       }
       await m.react("🐣");
-      return m.reply(novaWrap("totp", `✅ Akun *${res.account.label}* dihapus dari bot.`));
+      return m.reply(raraWrap("totp", `✅ Akun *${res.account.label}* dihapus dari bot.`));
     }
 
     // no-arg = help
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
         help.push("", "*akun lu:*");
         list.slice(0, 5).forEach((a, i) => help.push(`${m.prefix}totp ${a.label}`));
       }
-      return m.reply(novaWrap("totp", help.join("\n")));
+      return m.reply(raraWrap("totp", help.join("\n")));
     }
 
     // default: .totp <label> — generate kode
@@ -147,15 +147,15 @@ async function handler(m, { sock }) {
     const account = findAccount(uid, label);
     if (!account) {
       await m.react("❌");
-      return m.reply(novaWrap("totp", `Akun *${label}* gak ada.\n\nCek ${m.prefix}totp list, atau simpen dulu pakai ${m.prefix}totp add.`, "error"));
+      return m.reply(raraWrap("totp", `Akun *${label}* gak ada.\n\nCek ${m.prefix}totp list, atau simpen dulu pakai ${m.prefix}totp add.`, "error"));
     }
     const g = generateCode(account);
     if (!g.ok) {
       await m.react("❌");
-      return m.reply(novaWrap("totp", "Secret-nya rusak — hapus & simpen ulang akun ini.", "error"));
+      return m.reply(raraWrap("totp", "Secret-nya rusak — hapus & simpen ulang akun ini.", "error"));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("totp", [
+    return m.reply(raraWrap("totp", [
       `🔐 *${account.label}*`,
       "",
       `nikmat kode yg aktif nya...`,
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
     ].join("\n")));
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("totp", "Gagal: " + (e?.message || e), "error"));
+    m.reply(raraWrap("totp", "Gagal: " + (e?.message || e), "error"));
   }
 }
 

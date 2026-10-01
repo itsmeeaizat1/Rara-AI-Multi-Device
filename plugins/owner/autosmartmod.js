@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autosmartmod — Auto-Smart Moderation (AI-Powered)
  *
@@ -35,9 +35,9 @@
  */
 
 import { CronJob } from "cron";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -347,7 +347,7 @@ async function smartModListener(m, { sock, config: botConfig }) {
     const severityIcon = { minor: "!", moderate: "!!", severe: "!!!" };
     const actionIcon = { warn: "[WARN]", mute: "[MUTE]", kick: "[KICK]", delete: "[DEL]" };
 
-    let modMsg = novaBox("SMART MODERATION", [
+    let modMsg = raraBox("SMART MODERATION", [
       `Case: ${caseId}`,
       `Severity: ${severityIcon[result.category] || ""} ${SEVERITY_NAMES[SEVERITY[result.category]] || result.category}`,
       `Confidence: ${result.confidence}%`,
@@ -379,7 +379,7 @@ async function smartModListener(m, { sock, config: botConfig }) {
 
     // Send warning to group
     if (action === "warn" || action === "mute") {
-      const warnText = novaBox("MODERATION WARNING", [
+      const warnText = raraBox("MODERATION WARNING", [
         `User: @${jid.split("@")[0]}`,
         `Severity: ${SEVERITY_NAMES[SEVERITY[result.category]] || result.category}`,
         `Alasan: ${result.reason}`,
@@ -434,7 +434,7 @@ function startCronJob(sock) {
 
         const openCases = s.cases.filter(c => c.status === "open").length;
 
-        const report = novaBox("SMART MOD — DAILY REPORT", [
+        const report = raraBox("SMART MOD — DAILY REPORT", [
           `Total Checked: ${s.stats.totalChecked}`,
           `Total Flagged: ${s.stats.totalFlagged}`,
           `False Positives: ${s.stats.falsePositives}`,
@@ -504,7 +504,7 @@ async function handler(m, { sock, config: botConfig }) {
       const status = settings.enabled ? "ON" : "OFF";
       const openCases = settings.cases.filter(c => c.status === "open").length;
 
-      const msg = novaBox("AUTO-SMART MODERATION (AI)", [
+      const msg = raraBox("AUTO-SMART MODERATION (AI)", [
         `Status: ${status}`,
         `Sensitivity: ${settings.sensitivity}`,
         `Cooldown: ${settings.cooldown}s`,
@@ -529,7 +529,7 @@ async function handler(m, { sock, config: botConfig }) {
         `| Report: ${settings.reportTime} WIB`,
       ]);
 
-      await m.reply(msg + "\n\n" + novaBox("COMMANDS", [
+      await m.reply(msg + "\n\n" + raraBox("COMMANDS", [
         `${prefix}autosmartmod on/off`,
         `${prefix}autosmartmod group on/off`,
         `${prefix}autosmartmod sensitivity <low/medium/high/strict>`,
@@ -555,7 +555,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.db.write();
       if (cronJob) cronJob.stop();
       startCronJob(sock);
-      await m.reply(novaBox("SMART MOD", [
+      await m.reply(raraBox("SMART MOD", [
         "Status: ON",
         "AI moderation aktif — bot akan scan pesan dengan AI",
         `Sensitivity: ${settings.sensitivity}`,
@@ -568,7 +568,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.enabled = false;
       db.db.write();
       if (cronJob) cronJob.stop();
-      await m.reply(novaBox("SMART MOD", ["Status: OFF", "AI moderation dimatikan"]));
+      await m.reply(raraBox("SMART MOD", ["Status: OFF", "AI moderation dimatikan"]));
       return { handled: true };
     }
 
@@ -576,14 +576,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "group") {
       const action = (args[1] || "").toLowerCase();
       if (!gid.endsWith("@g.us")) {
-        await m.reply(novaBox("SMART MOD", ["Command ini hanya untuk grup"]));
+        await m.reply(raraBox("SMART MOD", ["Command ini hanya untuk grup"]));
         return { handled: true };
       }
       if (action === "on") {
         if (!settings.groupSettings[gid]) settings.groupSettings[gid] = {};
         settings.groupSettings[gid].enabled = true;
         db.db.write();
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           "Grup ini: ON",
           "AI moderation aktif di grup ini",
         ]));
@@ -591,10 +591,10 @@ async function handler(m, { sock, config: botConfig }) {
         if (!settings.groupSettings[gid]) settings.groupSettings[gid] = {};
         settings.groupSettings[gid].enabled = false;
         db.db.write();
-        await m.reply(novaBox("SMART MOD", ["Grup ini: OFF", "AI moderation dimatikan di grup ini"]));
+        await m.reply(raraBox("SMART MOD", ["Grup ini: OFF", "AI moderation dimatikan di grup ini"]));
       } else {
         const gStatus = settings.groupSettings[gid]?.enabled ? "ON" : "OFF";
-        await m.reply(novaBox("SMART MOD", [`Grup ini: ${gStatus}`, `Ketik: ${prefix}autosmartmod group on/off`]));
+        await m.reply(raraBox("SMART MOD", [`Grup ini: ${gStatus}`, `Ketik: ${prefix}autosmartmod group on/off`]));
       }
       return { handled: true };
     }
@@ -603,7 +603,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "sensitivity") {
       const level = (args[1] || "").toLowerCase();
       if (!SENSITIVITY_MAP[level]) {
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Sensitivity: ${settings.sensitivity}`,
           `Pilihan: low, medium, high, strict`,
           `Ketik: ${prefix}autosmartmod sensitivity <level>`,
@@ -613,7 +613,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.sensitivity = level;
       settings.thresholds = SENSITIVITY_MAP[level];
       db.db.write();
-      await m.reply(novaBox("SMART MOD", [
+      await m.reply(raraBox("SMART MOD", [
         `Sensitivity: ${level}`,
         `Thresholds:`,
         `| Minor: ${settings.thresholds.minor}%`,
@@ -628,7 +628,7 @@ async function handler(m, { sock, config: botConfig }) {
       const severity = (args[1] || "").toLowerCase();
       const action = (args[2] || "").toLowerCase();
       if (!["minor", "moderate", "severe"].includes(severity) || !["warn", "mute", "kick", "delete"].includes(action)) {
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Actions saat ini:`,
           `| Minor: ${settings.actions.minor}`,
           `| Moderate: ${settings.actions.moderate}`,
@@ -639,7 +639,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.actions[severity] = action;
       db.db.write();
-      await m.reply(novaBox("SMART MOD", [
+      await m.reply(raraBox("SMART MOD", [
         `Action ${severity} -> ${action}`,
       ]));
       return { handled: true };
@@ -650,7 +650,7 @@ async function handler(m, { sock, config: botConfig }) {
       const severity = (args[1] || "").toLowerCase();
       const val = parseInt(args[2]);
       if (!["minor", "moderate", "severe"].includes(severity) || isNaN(val) || val < 0 || val > 100) {
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Thresholds:`,
           `| Minor: ${settings.thresholds.minor}%`,
           `| Moderate: ${settings.thresholds.moderate}%`,
@@ -661,7 +661,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       settings.thresholds[severity] = val;
       db.db.write();
-      await m.reply(novaBox("SMART MOD", [
+      await m.reply(raraBox("SMART MOD", [
         `Threshold ${severity}: ${val}%`,
       ]));
       return { handled: true };
@@ -676,25 +676,25 @@ async function handler(m, { sock, config: botConfig }) {
           settings.whitelist.push(targetJid);
           db.db.write();
         }
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Whitelist: ${settings.whitelist.length} user`,
           `${targetJid.split("@")[0]} ditambahkan`,
         ]));
       } else if (action === "del") {
         settings.whitelist = settings.whitelist.filter((j) => j !== targetJid);
         db.db.write();
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Whitelist: ${settings.whitelist.length} user`,
           `${targetJid.split("@")[0]} dihapus`,
         ]));
       } else if (action === "list") {
         const list = settings.whitelist.map((j) => j.split("@")[0]).join("\n| ") || "Kosong";
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Whitelist: ${settings.whitelist.length} user`,
           `| ${list}`,
         ]));
       } else {
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Ketik: ${prefix}autosmartmod whitelist add/del/list <nomor>`,
         ]));
       }
@@ -707,13 +707,13 @@ async function handler(m, { sock, config: botConfig }) {
       if (action === "on") {
         settings.appealEnabled = true;
         db.db.write();
-        await m.reply(novaBox("SMART MOD", ["Appeal system: ON", "User bisa appeal false positive"]));
+        await m.reply(raraBox("SMART MOD", ["Appeal system: ON", "User bisa appeal false positive"]));
       } else if (action === "off") {
         settings.appealEnabled = false;
         db.db.write();
-        await m.reply(novaBox("SMART MOD", ["Appeal system: OFF"]));
+        await m.reply(raraBox("SMART MOD", ["Appeal system: OFF"]));
       } else {
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Appeal: ${settings.appealEnabled ? "ON" : "OFF"}`,
           `Ketik: ${prefix}autosmartmod appeal on/off`,
         ]));
@@ -725,12 +725,12 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "cooldown") {
       const val = parseInt(args[1]);
       if (isNaN(val) || val < 0) {
-        await m.reply(novaBox("SMART MOD", [`Cooldown: ${settings.cooldown}s`, `Ketik: ${prefix}autosmartmod cooldown <detik>`]));
+        await m.reply(raraBox("SMART MOD", [`Cooldown: ${settings.cooldown}s`, `Ketik: ${prefix}autosmartmod cooldown <detik>`]));
         return { handled: true };
       }
       settings.cooldown = val;
       db.db.write();
-      await m.reply(novaBox("SMART MOD", [`Cooldown: ${val}s per user`]));
+      await m.reply(raraBox("SMART MOD", [`Cooldown: ${val}s per user`]));
       return { handled: true };
     }
 
@@ -744,7 +744,7 @@ async function handler(m, { sock, config: botConfig }) {
         .map(([g, count]) => `${g.slice(0, 15)}...: ${count}x`)
         .join("\n| ") || "Belum ada";
 
-      await m.reply(novaBox("SMART MOD — STATISTIK", [
+      await m.reply(raraBox("SMART MOD — STATISTIK", [
         `Total Checked: ${settings.stats.totalChecked}`,
         `Total Flagged: ${settings.stats.totalFlagged}`,
         `False Positives: ${settings.stats.falsePositives}`,
@@ -773,14 +773,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "cases") {
       const openCases = settings.cases.filter(c => c.status === "open").slice(0, 10);
       if (openCases.length === 0) {
-        await m.reply(novaBox("SMART MOD", ["Belum ada case terbuka"]));
+        await m.reply(raraBox("SMART MOD", ["Belum ada case terbuka"]));
         return { handled: true };
       }
       const caseList = openCases.map((c, i) => {
         const sev = SEVERITY_NAMES[SEVERITY[c.category]] || c.category;
         return `${i + 1}. ${c.id}\n| ${sev} | ${c.confidence}% | @${c.jid.split("@")[0]}\n| ${c.reason.slice(0, 50)}`;
       }).join("\n| \n| ");
-      await m.reply(novaBox("SMART MOD — CASES", [
+      await m.reply(raraBox("SMART MOD — CASES", [
         `Open: ${openCases.length}`,
         "---",
         caseList,
@@ -793,10 +793,10 @@ async function handler(m, { sock, config: botConfig }) {
       const caseId = args[1];
       const caseData = settings.cases.find(c => c.id === caseId);
       if (!caseData) {
-        await m.reply(novaBox("SMART MOD", [`Case tidak ditemukan: ${caseId}`]));
+        await m.reply(raraBox("SMART MOD", [`Case tidak ditemukan: ${caseId}`]));
         return { handled: true };
       }
-      await m.reply(novaBox("SMART MOD — CASE DETAIL", [
+      await m.reply(raraBox("SMART MOD — CASE DETAIL", [
         `ID: ${caseData.id}`,
         `Status: ${caseData.status}`,
         `User: @${caseData.jid.split("@")[0]}`,
@@ -819,26 +819,26 @@ async function handler(m, { sock, config: botConfig }) {
       const action = (args[2] || "").toLowerCase();
       const caseData = settings.cases.find(c => c.id === caseId);
       if (!caseData) {
-        await m.reply(novaBox("SMART MOD", [`Case tidak ditemukan: ${caseId}`]));
+        await m.reply(raraBox("SMART MOD", [`Case tidak ditemukan: ${caseId}`]));
         return { handled: true };
       }
       if (action === "dismiss") {
         caseData.status = "dismissed";
         settings.stats.falsePositives++;
         db.db.write();
-        await m.reply(novaBox("SMART MOD", [`Case ${caseId}: dismissed (false positive)`]));
+        await m.reply(raraBox("SMART MOD", [`Case ${caseId}: dismissed (false positive)`]));
       } else if (action === "warn") {
         caseData.status = "resolved_warn";
         db.db.write();
-        await m.reply(novaBox("SMART MOD", [`Case ${caseId}: resolved (warned)`]));
+        await m.reply(raraBox("SMART MOD", [`Case ${caseId}: resolved (warned)`]));
       } else if (action === "kick") {
         try {
           await sock.groupParticipantsUpdate(caseData.gid, [caseData.jid], "remove");
           caseData.status = "resolved_kick";
           db.db.write();
-          await m.reply(novaBox("SMART MOD", [`Case ${caseId}: user kicked`]));
+          await m.reply(raraBox("SMART MOD", [`Case ${caseId}: user kicked`]));
         } catch {
-          await m.reply(novaBox("SMART MOD", [`Case ${caseId}: gagal kick (bot bukan admin)`]));
+          await m.reply(raraBox("SMART MOD", [`Case ${caseId}: gagal kick (bot bukan admin)`]));
         }
       } else if (action === "whitelist") {
         if (!settings.whitelist.includes(caseData.jid)) {
@@ -847,12 +847,12 @@ async function handler(m, { sock, config: botConfig }) {
         caseData.status = "resolved_whitelist";
         settings.stats.falsePositives++;
         db.db.write();
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Case ${caseId}: resolved`,
           `User ${caseData.jid.split("@")[0]} di-whitelist`,
         ]));
       } else {
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Ketik: ${prefix}autosmartmod resolve <id> <dismiss/warn/kick/whitelist>`,
         ]));
       }
@@ -863,7 +863,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "test") {
       const testText = args.slice(1).join(" ");
       if (!testText) {
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Ketik: ${prefix}autosmartmod test <teks>`,
           `Contoh: ${prefix}autosmartmod test Halo semua apa kabar`,
         ]));
@@ -871,7 +871,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       await m.react("🕒");
       const result = await aiModerate(testText, "test", "test-group");
-      await m.reply(novaBox("SMART MOD — TEST RESULT", [
+      await m.reply(raraBox("SMART MOD — TEST RESULT", [
         `Teks: ${testText.slice(0, 200)}`,
         `Category: ${SEVERITY_NAMES[SEVERITY[result.category]] || result.category}`,
         `Confidence: ${result.confidence}%`,
@@ -893,7 +893,7 @@ async function handler(m, { sock, config: botConfig }) {
       settings.violations = {};
       settings._cooldowns = {};
       db.db.write();
-      await m.reply(novaBox("SMART MOD", ["Statistik, cases & violations direset"]));
+      await m.reply(raraBox("SMART MOD", ["Statistik, cases & violations direset"]));
       return { handled: true };
     }
 
@@ -901,7 +901,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "settime") {
       const time = args[1];
       if (!time || !/^\d{2}:\d{2}$/.test(time)) {
-        await m.reply(novaBox("SMART MOD", [
+        await m.reply(raraBox("SMART MOD", [
           `Report time: ${settings.reportTime} WIB`,
           `Ketik: ${prefix}autosmartmod settime HH:MM`,
         ]));
@@ -913,17 +913,17 @@ async function handler(m, { sock, config: botConfig }) {
         if (cronJob) cronJob.stop();
         startCronJob(sock);
       }
-      await m.reply(novaBox("SMART MOD", [`Report time: ${time} WIB`]));
+      await m.reply(raraBox("SMART MOD", [`Report time: ${time} WIB`]));
       return { handled: true };
     }
 
     // ─── UNKNOWN ───
-    await m.reply(novaBox("SMART MOD", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autosmartmod untuk dashboard`]));
+    await m.reply(raraBox("SMART MOD", [`Command tidak dikenal: ${sub}`, `Ketik ${prefix}autosmartmod untuk dashboard`]));
     return { handled: true };
 
   } catch (error) {
     console.error("[autosmartmod] handler error:", error.message);
-    await m.reply(novaError("SmartMod", "Gagal nih, coba lagi ya"));
+    await m.reply(raraError("SmartMod", "Gagal nih, coba lagi ya"));
     return { handled: true };
   }
 }

@@ -1,5 +1,5 @@
 // E2E inworld-e2e — verifikasi fitur Inworld AI (platform.inworld.ai) 29 Sep 2026:
-// lib nova-inworld.js (TTS synthesize, voice catalog + default custom-first,
+// lib rara-inworld.js (TTS synthesize, voice catalog + default custom-first,
 // STT transcribe + profil suara, LLM chat) + plugin inworldtts.js/inworldchat.js
 // + registrasi key "inworld" di API_KEYS. HTTP di-mock via seam _setInworldHttpForTest.
 import fs from "node:fs";
@@ -16,7 +16,7 @@ let pass = 0, fail = 0, total = 0;
 const ok = (name, cond, extra) => { total++; if (cond) { pass++; console.log("  ✓ " + name); } else { fail++; console.log("  ❌ " + name + (extra ? " → " + String(extra).slice(0, 200) : "")); } };
 
 console.log("─── 1. source: registrasi & plugin ───");
-const keys = fs.readFileSync(path.join(R, "src/lib/nova-api-keys.js"), "utf8");
+const keys = fs.readFileSync(path.join(R, "src/lib/rara-api-keys.js"), "utf8");
 ok("key 'inworld' terdaftar di API_KEYS (label+env INWORLD_API_KEY+usedBy)", keys.includes('inworld: {') && keys.includes('INWORLD_API_KEY') && keys.includes('usedBy: ["inworldtts"'));
 const pTts = fs.readFileSync(path.join(R, "plugins/tools/inworldtts.js"), "utf8");
 ok("plugin inworldtts: 4 cmd (tts/voice/voices/stt) + alias pendek", pTts.includes('"inworldtts"') && pTts.includes('"inworldvoice"') && pTts.includes('"inworldvoices"') && pTts.includes('"inworldstt"') && pTts.includes('"inwtts"'));
@@ -27,7 +27,7 @@ const pChat = fs.readFileSync(path.join(R, "plugins/ai/inworldchat.js"), "utf8")
 ok("plugin inworldchat: kategori ai + optional <model>|<teks>", pChat.includes('category: "ai"') && pChat.includes("includes(\"/\")"));
 
 console.log("─── 2. normalizeKey (gotcha padding terpotong) ───");
-const { normalizeKey, _setInworldHttpForTest, _resetVoiceCacheForTest, inworldSynthesize, inworldListVoices, resolveDefaultVoice, getLastInworldVoice, inworldTranscribe, inworldChat, getInworldKey } = await import(pathToFileURL(path.join(R, "src/lib/nova-inworld.js")).href);
+const { normalizeKey, _setInworldHttpForTest, _resetVoiceCacheForTest, inworldSynthesize, inworldListVoices, resolveDefaultVoice, getLastInworldVoice, inworldTranscribe, inworldChat, getInworldKey } = await import(pathToFileURL(path.join(R, "src/lib/rara-inworld.js")).href);
 ok("padding '==' dipulihkan bila len%4==2", normalizeKey("abcabcabcabcabcabcabca") === "abcabcabcabcabcabcabca==");
 ok("padding '=' dipulihkan bila len%4==3", normalizeKey("abcabcabcabcabcabcabcab") === "abcabcabcabcabcabcabcab=");
 ok("key lengkap gak diubah + 'Basic ' dibuang", normalizeKey("Basic abcd") === "abcd");

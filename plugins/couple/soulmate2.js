@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
 import path from "path";
 import fs from "fs";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 const pluginConfig = {
   name: "jodoh",
   alias: ["jodoh"],
@@ -27,7 +27,7 @@ try {
     process.cwd(),
     "assets",
     "images",
-    "nova-games.jpg",
+    "rara-games.jpg",
   );
   if (fs.existsSync(thumbPath)) thumbFun = fs.readFileSync(thumbPath);
 } catch (e) { console.error('[soulmate2.js]:', e.message); }
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     groupMeta = m.groupMetadata;
   } catch (e) {
     await m.react("❌");
-    return m.reply(novaWrap("jodoh", "Tidak bisa mengambil data grup!", "error"));
+    return m.reply(raraWrap("jodoh", "Tidak bisa mengambil data grup!", "error"));
   }
 
   const participants = groupMeta.participants || [];
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     .filter((jid) => jid && jid !== botNumber);
 
   if (memberJids.length < 2) {
-    return m.reply(novaWrap("jodoh", "Minimal ada 2 member untuk dijodohkan!", "error"));
+    return m.reply(raraWrap("jodoh", "Minimal ada 2 member untuk dijodohkan!", "error"));
   }
 
   const allUsers = db.getAllUsers();
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
 
   if (registrationRequired && registeredMembers.length < 2) {
     return m.reply(
-      novaWrap("jodoh", "Mode wajib daftar aktif. Minimal harus ada 2 member yang sudah terdaftar di grup ini!", "error"),
+      raraWrap("jodoh", "Mode wajib daftar aktif. Minimal harus ada 2 member yang sudah terdaftar di grup ini!", "error"),
     );
   }
 
@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
   rows.push(`│ • 💬 "${quote}"`);
 
   await m.react("🐣");
-  await m.reply(novaGameBox({
+  await m.reply(raraGameBox({
     title: "jodoh random", icon: "💘",
     flavor: "💘 *JODOH RANDOM DIPILIH!*",
     body: rows.join("\n"),

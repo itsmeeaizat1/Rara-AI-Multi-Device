@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // alasanai — AI generator alasan (excuse generator)
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "alasanai",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("alasanai", `Mau alasan untuk apa?\n\nContoh: ${m.prefix}alasanai telat masuk kerja\n${m.prefix}alasanai gak bales chat pacar\n${m.prefix}alasanai batal kumpul teman`, "guide"));
+      return m.reply(raraWrap("alasanai", `Mau alasan untuk apa?\n\nContoh: ${m.prefix}alasanai telat masuk kerja\n${m.prefix}alasanai gak bales chat pacar\n${m.prefix}alasanai batal kumpul teman`, "guide"));
     }
 
     await m.react("🕒");
@@ -40,11 +40,11 @@ Kategori:
 
 Tiap alasan 1-2 kalimat. Bahasa Indonesia. Buat yang masuk akal dan tidak terlalu absurd. Nomori 1-5.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("alasanai", "AI-nya juga bingung cari alasan 😅", "error"));
+      return m.reply(raraWrap("alasanai", "AI-nya juga bingung cari alasan 😅", "error"));
     }
 
     await m.react("🐣");
@@ -53,7 +53,7 @@ Tiap alasan 1-2 kalimat. Bahasa Indonesia. Buat yang masuk akal dan tidak terlal
   } catch (err) {
     console.error("alasanai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("alasanai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("alasanai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

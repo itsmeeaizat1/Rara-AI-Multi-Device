@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import fs from 'fs'
 import path from 'path'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: "gantinamabot",
     alias: ["gantinamabot"],
     category: 'owner',
     description: 'Ganti nama bot di config.js',
     usage: '.ganti-namabot <nama baru>',
-    example: '.ganti-namabot Nova MD',
+    example: '.ganti-namabot Rara MD',
     isOwner: true,
     isPremium: false,
     isGroup: false,
@@ -42,7 +42,7 @@ async function handler(m, { sock, config }) {
         { const __navText = `✅ *Berhasil*\n\nNama bot diganti ke: *${newName}*`; await m.reply(__navText); }
         
     } catch (error) {
-        await m.reply(novaWrap("gantinamabot", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(raraWrap("gantinamabot", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

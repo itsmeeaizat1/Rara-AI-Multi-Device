@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aichat-history",
@@ -23,14 +23,14 @@ async function handler(m, { sock, config: botConfig }) {
   try {
   await m.react("🕒");
     const chatId = m.chat;
-    const { getDatabase } = await import("../../src/lib/nova-database.js");
+    const { getDatabase } = await import("../../src/lib/rara-database.js");
     const db = getDatabase();
     const data = db.get(chatId) || {};
     const history = Array.isArray(data.aiChatHistory) ? data.aiChatHistory.slice(-20) : [];
 
     if (!history.length) {
       const text =
-        novaWrap("AI History", ["Status: *Kosong*",
+        raraWrap("AI History", ["Status: *Kosong*",
           "Belum ada percakapan AI di chat ini."].join("\n")) +
         "\n" ;
 
@@ -46,8 +46,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      novaWrap("AI History", "📜") +
-      novaWrap("Riwayat", lines) +
+      raraWrap("AI History", "📜") +
+      raraWrap("Riwayat", lines) +
       
       "\n" ;
 
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("AIChatHistory", "Gagal nih, coba lagi ya") +
+      raraError("AIChatHistory", "Gagal nih, coba lagi ya") +
       "\n" ;
 
     await m.reply(text, "aichat-history");

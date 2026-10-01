@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // statscard — Image card statistik grup
 // 12 Sep 2026 fix: dulu baca db.data.groupActivity yang GAK PERNAH ditulis (mati total)
 // + signature legacy (isGroupOnly gak dikenal handler, m.key.remoteJid, usedPrefix)
-// → sekarang live dari nova-activity-tracker + signature standar.
-import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
-import { getWeeklyStats, getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
+// → sekarang live dari rara-activity-tracker + signature standar.
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
+import { getWeeklyStats, getLeaderboard } from "../../src/lib/rara-activity-tracker.js";
 
 const pluginConfig = {
   name: "statscard",
@@ -29,7 +29,7 @@ async function handler(m, { sock, config: botConfig, args }) {
     const mode = (args?.[0] || "").toLowerCase();
 
     const groupMeta = await sock.groupMetadata(groupId).catch(() => null);
-    if (!groupMeta) return m.reply(novaError("Stats Card", "Gagal mengambil info/metadata grup nih."));
+    if (!groupMeta) return m.reply(raraError("Stats Card", "Gagal mengambil info/metadata grup nih."));
 
     const totalMembers = groupMeta.participants.length;
     const admins = groupMeta.participants.filter((p) => p.admin).length;
@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig, args }) {
     const activeMembers = stats.activeMembers;
 
     if (mode === "text" || mode === "txt") {
-      return m.reply(novaWrap("Group Stats Card", [
+      return m.reply(raraWrap("Group Stats Card", [
         `Nama: ${groupName}`,
         `Member: ${totalMembers}`,
         `Admin: ${admins}`,
@@ -104,13 +104,13 @@ async function handler(m, { sock, config: botConfig, args }) {
       ctx.fillStyle = "#e94560";
       ctx.font = "14px Arial";
       ctx.textAlign = "center";
-      ctx.fillText("Nova AI Bot | Generated " + new Date().toLocaleDateString("id-ID"), W / 2, H - 30);
+      ctx.fillText("Rara AI Bot | Generated " + new Date().toLocaleDateString("id-ID"), W / 2, H - 30);
 
       const buffer = canvas.toBuffer("image/png");
-      await sock.sendMessage(groupId, { image: buffer, caption: novaWrap("Group Stats Card", `Statistik ${groupName}`, "info") });
+      await sock.sendMessage(groupId, { image: buffer, caption: raraWrap("Group Stats Card", `Statistik ${groupName}`, "info") });
     } catch (canvasErr) {
       console.error("Canvas error:", canvasErr.message);
-      return m.reply(novaWrap("Group Stats Card", [
+      return m.reply(raraWrap("Group Stats Card", [
         `Nama: ${groupName}`,
         `Member: ${totalMembers}`,
         `Admin: ${admins}`,
@@ -125,7 +125,7 @@ async function handler(m, { sock, config: botConfig, args }) {
     }
   } catch (e) {
     console.error("statscard error:", e);
-    return m.reply(novaError("Stats Card", `Terjadi kesalahan: ${e.message}`));
+    return m.reply(raraError("Stats Card", `Terjadi kesalahan: ${e.message}`));
   }
 }
 

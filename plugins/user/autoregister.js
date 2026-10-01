@@ -1,17 +1,17 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import fs from "fs"
 import path from "path"
 import axios from "axios"
-import { getDatabase } from "../../src/lib/nova-database.js"
+import { getDatabase } from "../../src/lib/rara-database.js"
 import config from "../../config.js"
 import {
   getCachedJid,
   isLid,
   isLidConverted,
   lidToJid,
-} from "../../src/lib/nova-lid.js"
-import { notifyUserRegister } from "../../src/lib/nova-saluran-broadcast.js"
+} from "../../src/lib/rara-lid.js"
+import { notifyUserRegister } from "../../src/lib/rara-saluran-broadcast.js"
 import { generateSerialNumber, buildSuccessRewardBlock } from "./register.js"
 
 const pluginConfig = {
@@ -81,7 +81,7 @@ const CAPTCHA_APIS = [
 
 function getRegistrationContextInfo() {
   const saluranId = config.saluran?.id || "@newsletter"
-  const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI"
+  const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI"
   return {
     forwardingScore: 0,
     isForwarded: false,
@@ -358,14 +358,14 @@ async function handler(m, { sock }) {
 
   if (m.isGroup) {
     return m.reply(
-      novaWrap("daftarotomatis", "Fitur ini cuma bisa dipakai lewat chat pribadi (DM) ke bot ya, bukan di grup.")
+      raraWrap("daftarotomatis", "Fitur ini cuma bisa dipakai lewat chat pribadi (DM) ke bot ya, bukan di grup.")
     )
   }
 
   // Generate captcha (API -> Canvas -> Math fallback)
   const captcha = await generateCaptcha()
   if (!captcha) {
-    return m.reply(novaWrap("daftarotomatis", "Gagal membuat captcha. Coba lagi ya."))
+    return m.reply(raraWrap("daftarotomatis", "Gagal membuat captcha. Coba lagi ya."))
   }
 
   // Create session
@@ -377,7 +377,7 @@ async function handler(m, { sock }) {
   if (captcha.type === "image" && captcha.imageBuffer) {
     sentCaptcha = await sock.sendMessage(m.chat, {
       image: captcha.imageBuffer,
-      caption: novaWrap("daftarotomatis", [
+      caption: raraWrap("daftarotomatis", [
         "Selesaikan captcha di atas",
         "Reply pesan ini dengan jawabanmu",
         "",
@@ -386,7 +386,7 @@ async function handler(m, { sock }) {
     }, { quoted: m })
   } else if (captcha.type === "text-api" && captcha.textCaptcha) {
     sentCaptcha = await sock.sendMessage(m.chat, {
-      text: novaWrap("daftarotomatis", [
+      text: raraWrap("daftarotomatis", [
         captcha.textCaptcha,
         "",
         "Reply pesan ini dengan jawabanmu",
@@ -395,7 +395,7 @@ async function handler(m, { sock }) {
     }, { quoted: m })
   } else if (captcha.type === "math") {
     sentCaptcha = await sock.sendMessage(m.chat, {
-      text: novaWrap("daftarotomatis", [
+      text: raraWrap("daftarotomatis", [
         captcha.question,
         "",
         "Reply pesan ini dengan jawabanmu",
@@ -529,7 +529,7 @@ async function captchaAnswerHandler(m, sock) {
     // Ask for name
     session.step = "name"
     var sentName = await sock.sendMessage(m.chat, {
-      text: novaWrap("daftarotomatis", [
+      text: raraWrap("daftarotomatis", [
         "Captcha benar!",
         "",
         "Pertanyaan 1/3",
@@ -547,13 +547,13 @@ async function captchaAnswerHandler(m, sock) {
   if (session.step === "name") {
     var name = text.trim()
     if (!name || name.length < 2) {
-      await m.reply(novaError("DaftarOtomatis", "Nama gak valid! Masukin nama yang bener ya"))
+      await m.reply(raraError("DaftarOtomatis", "Nama gak valid! Masukin nama yang bener ya"))
       return true
     }
     session.name = name
     session.step = "age"
     var sentAge = await sock.sendMessage(m.chat, {
-      text: novaWrap("daftarotomatis", [
+      text: raraWrap("daftarotomatis", [
         "Halo " + name + "!",
         "",
         "Pertanyaan 2/3",
@@ -572,7 +572,7 @@ async function captchaAnswerHandler(m, sock) {
   if (session.step === "age") {
     var age = Number(text)
     if (!/^\d+$/.test(text) || Number.isNaN(age) || age < 1 || age > 100) {
-      await m.reply(novaError("DaftarOtomatis", "Umur gak valid! Masukin angka 1-100 ya"))
+      await m.reply(raraError("DaftarOtomatis", "Umur gak valid! Masukin angka 1-100 ya"))
       return true
     }
     session.age = age
@@ -593,7 +593,7 @@ async function captchaAnswerHandler(m, sock) {
     else if (/^(perempuan|cewek?|cewe|p|female|wanita)$/.test(low)) gender = "Perempuan"
 
     if (!gender) {
-      await m.reply(novaError("DaftarOtomatis", "Gender gak valid nih!\n\n*Cowo / Cowok / Laki-laki / L*\n*Cewe / Cewek / Perempuan / P*"))
+      await m.reply(raraError("DaftarOtomatis", "Gender gak valid nih!\n\n*Cowo / Cowok / Laki-laki / L*\n*Cewe / Cewek / Perempuan / P*"))
       return true
     }
 

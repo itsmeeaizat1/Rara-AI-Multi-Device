@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // dbexport.js — Export database bot jadi file Excel (.xlsx) pakai exceljs
 // Fitur baru 9 Sep 2026 (request owner: fitur baru biar nambah dependencies)
 // Owner only — data semua pemain sensitif.
@@ -7,9 +7,9 @@
 import ExcelJS from "exceljs";
 import path from "path";
 import fs from "fs";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const TMP_DIR = path.join(process.cwd(), "tmp");
 
@@ -61,7 +61,7 @@ function buildRingkasanSheet(wb, db) {
 
   const ws = wb.addWorksheet("Ringkasan");
   ws.columns = [{ width: 30 }, { width: 32 }];
-  ws.addRow(["📊 NOVA AI — EXPORT DATABASE"]);
+  ws.addRow(["📊 RARA AI — EXPORT DATABASE"]);
   ws.getRow(1).font = { bold: true, size: 14, color: { argb: "FF00A884" } };
   const rows = [
     ["Waktu Export", new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })],
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
     const rpgOnly = ["rpg", "pemain", "rpgplayer"].includes(mode);
 
     const wb = new ExcelJS.Workbook();
-    wb.creator = "Nova AI";
+    wb.creator = "Rara AI";
     wb.created = new Date();
 
     buildRpgSheet(wb, db);
@@ -177,7 +177,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("dbexport", "Gagal export database: " + e.message, "error"));
+    m.reply(raraWrap("dbexport", "Gagal export database: " + e.message, "error"));
   }
 }
 

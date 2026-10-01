@@ -1,6 +1,6 @@
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animHorserace } from "../../src/lib/nova-rpg-anim.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animHorserace } from "../../src/lib/rara-rpg-anim.js";
 
 const pluginConfig = {
   name: "horserace",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "list" || !subCmd) {
       await m.react('🐣');
-      return m.reply(novaRpgBox("horserace", [
+      return m.reply(raraRpgBox("horserace", [
         `Gold kamu : ${wallet.gold}`,
         "---",
         "Daftar kuda pertandingan :",
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
       if (isNaN(horseNum) || isNaN(betAmount) || betAmount <= 0) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "horserace",
             `Format taruhan tidak valid!\n\nContoh: ${m.prefix}horserace bet 1 500`,
             "error"
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
       if (!selectedHorse) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "horserace",
             `Nomor kuda tidak valid! Pilih nomor 1 sampai 5.\n\nCek list: ${m.prefix}horserace list`,
             "error"
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
       if (wallet.gold < betAmount) {
         await m.react('❌');
         return m.reply(
-          novaRpgBox(
+          raraRpgBox(
             "horserace",
             `Gold kamu tidak cukup untuk bertaruh ${betAmount} Gold!\n\nGold Kamu: ${wallet.gold} Gold`,
             "error"
@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
         await m.react('❌');
       }
 
-      return m.reply(novaGameBox({
+      return m.reply(raraGameBox({
         title: "horserace", icon: "🏁",
         flavor: isWon ? "🎉 *KUDA KAMU JUARA!*" : "💀 *KUDA KAMU KALAH!*",
         body: [
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
 
     await m.react('❌');
     return m.reply(
-      novaRpgBox(
+      raraRpgBox(
         "horserace",
         `Perintah tidak valid!\n\nGunakan:\n• ${m.prefix}horserace list\n• ${m.prefix}horserace bet <nomor_kuda> <jumlah_gold>`,
         "guide"
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("horserace error:", err);
     await m.react('❌');
-    return m.reply(novaRpgBox("horserace", err.message || "Terjadi kesalahan pada Balap Kuda.", "error"));
+    return m.reply(raraRpgBox("horserace", err.message || "Terjadi kesalahan pada Balap Kuda.", "error"));
   }
 }
 

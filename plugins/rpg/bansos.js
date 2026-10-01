@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // bansos.js — Korupsi dana bansos (high risk high reward)
-import { ensureRpg, addGold, removeGold, checkCooldown, setCooldown, formatTime } from "../../src/lib/nova-rpg-service.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { animBansos } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, addGold, removeGold, checkCooldown, setCooldown, formatTime } from "../../src/lib/rara-rpg-service.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
+import { animBansos } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "socialaid",
@@ -25,25 +25,25 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     await animBansos(m, sock);
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("bansos", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("bansos", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // Check if still in jail
     const jailCd = checkCooldown(m, "lastBansosJail");
     if (jailCd) {
       await reactCooldown(m);
-      return m.reply(novaRpgBox("bansos", `*ANDA MASIH DI TAHAN!* 👮\nTunggu *${formatTime(jailCd)}* lagi untuk bebas.`, "error"));
+      return m.reply(raraRpgBox("bansos", `*ANDA MASIH DI TAHAN!* 👮\nTunggu *${formatTime(jailCd)}* lagi untuk bebas.`, "error"));
     }
 
     // Check normal cooldown
     const cd = checkCooldown(m, "lastBansos");
     if (cd) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("bansos", `Tunggu *${formatTime(cd)}* lagi untuk korupsi bansos lagi.`, "error"));
+      return m.reply(raraRpgBox("bansos", `Tunggu *${formatTime(cd)}* lagi untuk korupsi bansos lagi.`, "error"));
     }
 
     if ((rpg.gold || 0) < 1000) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("bansos", "Gold minimal 1.000 untuk korupsi bansos!", "error"));
+      return m.reply(raraRpgBox("bansos", "Gold minimal 1.000 untuk korupsi bansos!", "error"));
     }
 
     const randomaku = Math.floor(Math.random() * 101);
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("bansos error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("bansos", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("bansos", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

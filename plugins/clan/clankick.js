@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'clankick',
     alias: ["clankick"],
@@ -21,12 +21,12 @@ async function handler(m, { sock }) {
     const db = getDatabase()
     const user = db.getUser(m.sender)
 
-    if (!user?.clanId) return m.reply(novaWrap("clankick", `❌ Kamu belum punya clan`))
+    if (!user?.clanId) return m.reply(raraWrap("clankick", `❌ Kamu belum punya clan`))
     if (!db.db.data.clans) db.db.data.clans = {}
 
     const clan = db.db.data.clans[user.clanId]
-    if (!clan) return m.reply(novaWrap("Clankick", `❌ Clan tidak ditemukan`))
-    if (clan.leader !== m.sender) return m.reply(novaWrap("Clankick", `❌ Hanya leader yang bisa kick`))
+    if (!clan) return m.reply(raraWrap("Clankick", `❌ Clan tidak ditemukan`))
+    if (clan.leader !== m.sender) return m.reply(raraWrap("Clankick", `❌ Hanya leader yang bisa kick`))
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender
     if (!target) {
@@ -35,8 +35,8 @@ async function handler(m, { sock }) {
             `Contoh: *.clankick @user*`, "clankick")
     }
 
-    if (target === m.sender) return m.reply(novaWrap("clankick", `❌ Tidak bisa kick diri sendiri`))
-    if (!clan.members.includes(target)) return m.reply(novaWrap("Clankick", `❌ User bukan member clan ini`))
+    if (target === m.sender) return m.reply(raraWrap("clankick", `❌ Tidak bisa kick diri sendiri`))
+    if (!clan.members.includes(target)) return m.reply(raraWrap("Clankick", `❌ User bukan member clan ini`))
 
     clan.members = clan.members.filter(jid => jid !== target)
     db.setUser(target, { clanId: null })

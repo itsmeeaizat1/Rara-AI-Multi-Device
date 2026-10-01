@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ai-providers.js — Individual AI command per provider
 // .openai .gemini .claude .groq .grok .xai .qwen .cohere .perplexity .fireworks
 // .ai21 .reka .cerebras .huggingface .voyage .cloudflare .stability .jina
 // .mistral .together .github + IkyyXD & Tio providers
-import { callAI, callImageGen, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/nova-ai-service.js";
-import { toMessages as sessionToMessages, appendTurn as sessionAppend } from "../../src/lib/nova-ai-session.js";
+import { callAI, callImageGen, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/rara-ai-service.js";
+import { toMessages as sessionToMessages, appendTurn as sessionAppend } from "../../src/lib/rara-ai-session.js";
 
 // brand fallback per provider (API key kosong / provider mati → rantai multi-API)
 const FALLBACK_MODEL = {
@@ -16,7 +16,7 @@ const FALLBACK_MODEL = {
   cloudflare: "gemini", jina: "gemini", stability: "gemini", ai21: "gemini",
   reka: "gemini", codestral: "gemini", kimicode: "gemini",
 };
-import { novaBox, novaWrap, novaAiUsage, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { raraBox, raraWrap, raraAiUsage, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 // Command → providerKey mapping
 const PROVIDER_COMMANDS = {
@@ -112,7 +112,7 @@ async function handler(m, { sock, config, db, args, text }) {
     const providers = getAllProviders();
     const provider = providers[providerKey];
     if (!provider) {
-      await m.reply(novaWrap(cmdUsed, `Provider tidak ditemukan. Cek daftar provider: ${prefix}multi-ai list`, "error"));
+      await m.reply(raraWrap(cmdUsed, `Provider tidak ditemukan. Cek daftar provider: ${prefix}multi-ai list`, "error"));
       return { handled: true };
     }
 
@@ -129,7 +129,7 @@ async function handler(m, { sock, config, db, args, text }) {
     // 📍 cara/contoh/note + TAMBAHAN KHUSUS AI (request owner 25 Sep): ✨ model
     // aktif + 📋 model tersedia + baris spec. Model & command VERBATIM.
     if (!fullText && !imageSource) {
-      const box = novaGuideV2(cmdUsed, {
+      const box = raraGuideV2(cmdUsed, {
  kaomoji: "(◍•ᴗ•◍)",
  sapaan: "ada yang mau ditanyain? tanya aja langsung! (≧ω≦)",
         cara: "ketik pertanyaannya sesudah command, reply atau kirim gambar juga bisa",
@@ -157,7 +157,7 @@ async function handler(m, { sock, config, db, args, text }) {
     }
 
     if (!userMessage) {
-      await m.reply(novaWrap(cmdUsed, `Tulis pesan kamu setelah command.\n\n💡 Contoh: ${prefix}${cmdUsed} halo`));
+      await m.reply(raraWrap(cmdUsed, `Tulis pesan kamu setelah command.\n\n💡 Contoh: ${prefix}${cmdUsed} halo`));
       return { handled: true };
     }
 
@@ -177,7 +177,7 @@ async function handler(m, { sock, config, db, args, text }) {
       const gKey = globalMap[providerKey] ? (global[globalMap[providerKey]] || "") : "";
       if (!gKey) {
         // 🔹 key kosong → TETAP dilayani lewat rantai fallback multi-API
-        // (nova-ai-fallback.js) — sesi obrolan tetep kepake biar nyambung.
+        // (rara-ai-fallback.js) — sesi obrolan tetep kepake biar nyambung.
         apiKey = "";
       } else {
         apiKey = gKey;
@@ -200,7 +200,7 @@ async function handler(m, { sock, config, db, args, text }) {
           prefix + "grok <tanya>",
           prefix + "kimi <tanya>",
         ];
-        const box = novaBox ? novaBox("Tidak Support Gambar", lines) : lines.join("\n");
+        const box = raraBox ? raraBox("Tidak Support Gambar", lines) : lines.join("\n");
         await m.reply(box);
         return { handled: true };
       }
@@ -232,7 +232,7 @@ async function handler(m, { sock, config, db, args, text }) {
           "---",
           "Coba lagi, atau pakai " + prefix + "gemini buat scan gambar.",
         ];
-        const box = novaBox ? novaBox("Gagal Analisis Gambar", lines) : lines.join("\n");
+        const box = raraBox ? raraBox("Gagal Analisis Gambar", lines) : lines.join("\n");
         await m.reply(box);
         return { handled: true };
       }
@@ -257,7 +257,7 @@ async function handler(m, { sock, config, db, args, text }) {
           prefix + "grok buat gambar <apa yang mau dibikin>",
           prefix + "zhipu buat gambar <apa yang mau dibikin>",
         ];
-        const box = novaBox ? novaBox("Tidak Support Generate Gambar", lines) : lines.join("\n");
+        const box = raraBox ? raraBox("Tidak Support Generate Gambar", lines) : lines.join("\n");
         await m.reply(box);
         return { handled: true };
       }
@@ -284,7 +284,7 @@ async function handler(m, { sock, config, db, args, text }) {
           "---",
           "Coba lagi beberapa saat, atau pakai " + prefix + "gemini.",
         ];
-        const box = novaBox ? novaBox("Gagal Generate Gambar", lines) : lines.join("\n");
+        const box = raraBox ? raraBox("Gagal Generate Gambar", lines) : lines.join("\n");
         await m.reply(box);
         return { handled: true };
       }
@@ -293,7 +293,7 @@ async function handler(m, { sock, config, db, args, text }) {
     // Loading react
     try { await m.react("🕒"); } catch {}
 
-    // 🔹 SESSION: riwayat obrolan user ini (persist nova-ai-session.js)
+    // 🔹 SESSION: riwayat obrolan user ini (persist rara-ai-session.js)
     // → AI inget obrolan sebelumnya, lanjut ngobrol nyambung
     // 🔹 QUOTED: pesan yang di-reply user ikut jadi konteks
     const sessionKey = `provider:${m.sender}`;
@@ -335,7 +335,7 @@ async function handler(m, { sock, config, db, args, text }) {
         "---",
         "Cek API key atau coba model lain",
       ];
-      const box = novaBox ? novaBox("AI Error", lines) : lines.join("\n");
+      const box = raraBox ? raraBox("AI Error", lines) : lines.join("\n");
       await m.reply(box);
       return { handled: true };
     }
@@ -348,7 +348,7 @@ async function handler(m, { sock, config, db, args, text }) {
   } catch (error) {
     console.error("[ai-providers.js]:", error.message);
     try { await m.react("❌"); } catch {}
-    await m.reply(novaWrap(cmdUsed, error.message || "Gagal proses, coba lagi ya", "error"));
+    await m.reply(raraWrap(cmdUsed, error.message || "Gagal proses, coba lagi ya", "error"));
     return { handled: true };
   }
 }

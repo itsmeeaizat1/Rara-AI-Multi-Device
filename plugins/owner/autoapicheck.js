@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autoapicheck — Auto API Health Monitor
  *
@@ -20,10 +20,10 @@
  *   .autoapicheck list           — Lihat daftar API yang dimonitor
  */
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, toSC, raraBox } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 import { getTioEndpoint, getTioBase } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -114,7 +114,7 @@ async function pingApi(url, timeoutMs = 8000) {
     const res = await fetch(url, {
       method: "GET",
       signal: controller.signal,
-      headers: { "User-Agent": "NovaBot/22.0.0" },
+      headers: { "User-Agent": "RaraBot/22.0.0" },
     });
     const elapsed = Date.now() - start;
     clearTimeout(timeout);
@@ -199,7 +199,7 @@ async function notifyOwnerDown(downApis, sock) {
     return line;
   });
 
-  const msg = novaBox(toSC("API Health Alert"), [
+  const msg = raraBox(toSC("API Health Alert"), [
     `${downApis.length} API ${toSC("down")} — ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}`,
     ``,
     ...lines,
@@ -288,7 +288,7 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push(``);
     lines.push(`${toSC("Ketik")} .autoapicheck now ${toSC("untuk cek")}`);
 
-    await m.reply(novaBox(toSC("API Health Monitor"), lines));
+    await m.reply(raraBox(toSC("API Health Monitor"), lines));
     return;
   }
 
@@ -297,7 +297,7 @@ async function handler(m, { sock, config: botConfig }) {
     const db = getDatabase();
     db.setting("apicheck_enabled", true);
     startMonitor(sock);
-    await m.reply(novaBox(toSC("API Health Monitor"), [
+    await m.reply(raraBox(toSC("API Health Monitor"), [
       toSC("Monitoring AKTIF"),
       `Interval: ${settings.intervalMin} ${toSC("menit")}`,
       `Notify: ${settings.notifyOwner ? "ON" : "OFF"}`,
@@ -313,7 +313,7 @@ async function handler(m, { sock, config: botConfig }) {
     const db = getDatabase();
     db.setting("apicheck_enabled", false);
     stopMonitor();
-    await m.reply(novaBox(toSC("API Health Monitor"), [
+    await m.reply(raraBox(toSC("API Health Monitor"), [
       toSC("Monitoring DIMATIKAN"),
       toSC("API tidak akan dicek otomatis"),
     ]));
@@ -325,7 +325,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
 
     const apis = getAllApis();
-    await m.reply(novaBox(toSC("API Health Check"), [
+    await m.reply(raraBox(toSC("API Health Check"), [
       toSC("Mengecek") + ` ${apis.length} ` + toSC("API endpoints..."),
       toSC("Mohon tunggu"),
     ]));
@@ -373,7 +373,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push(toSC("Semua API sehat!"));
     }
 
-    await m.reply(novaBox(toSC("API Health Report"), lines));
+    await m.reply(raraBox(toSC("API Health Report"), lines));
 
     // Notify owner kalau ada yang down dan command dijalankan bukan owner
     if (downApis.length > 0) {
@@ -386,10 +386,10 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "interval") {
     const minutes = parseInt(args[1]);
     if (!minutes || minutes < 5) {
-      return m.reply(novaError("autoapicheck", "Interval minimal 5 menit", `.autoapicheck interval 30`));
+      return m.reply(raraError("autoapicheck", "Interval minimal 5 menit", `.autoapicheck interval 30`));
     }
     if (minutes > 1440) {
-      return m.reply(novaError("autoapicheck", "Interval maksimal 1440 menit (24 jam)", `.autoapicheck interval 30`));
+      return m.reply(raraError("autoapicheck", "Interval maksimal 1440 menit (24 jam)", `.autoapicheck interval 30`));
     }
     const db = getDatabase();
     db.setting("apicheck_interval", minutes);
@@ -399,7 +399,7 @@ async function handler(m, { sock, config: botConfig }) {
       startMonitor(sock);
     }
 
-    await m.reply(novaBox(toSC("API Health Monitor"), [
+    await m.reply(raraBox(toSC("API Health Monitor"), [
       `Interval: ${minutes} ${toSC("menit")}`,
       settings.enabled ? toSC("Monitor direstart dengan interval baru") : toSC("Aktifkan dengan .autoapicheck on"),
     ]));
@@ -414,26 +414,26 @@ async function handler(m, { sock, config: botConfig }) {
     const category = args[4] || "custom";
 
     if (!name || !url) {
-      return m.reply(novaError("autoapicheck", "Format: .autoapicheck add <nama> <url> [backup_url] [kategori]", `.autoapicheck add myapi https://api.example.com https://backup.example.com primary`));
+      return m.reply(raraError("autoapicheck", "Format: .autoapicheck add <nama> <url> [backup_url] [kategori]", `.autoapicheck add myapi https://api.example.com https://backup.example.com primary`));
     }
 
     try {
       new URL(url);
     } catch {
-      return m.reply(novaError("autoapicheck", "URL tidak valid", `.autoapicheck add ${name} <url_valid>`));
+      return m.reply(raraError("autoapicheck", "URL tidak valid", `.autoapicheck add ${name} <url_valid>`));
     }
 
     const db = getDatabase();
     const custom = db.setting("apicheck_custom") || [];
 
     if (custom.some((a) => a.name === name) || DEFAULT_APIS.some((a) => a.name === name)) {
-      return m.reply(novaError("autoapicheck", `API "${name}" sudah ada`, `.autoapicheck list`));
+      return m.reply(raraError("autoapicheck", `API "${name}" sudah ada`, `.autoapicheck list`));
     }
 
     custom.push({ name, url, backup, category });
     db.setting("apicheck_custom", custom);
 
-    await m.reply(novaBox(toSC("API Health Monitor"), [
+    await m.reply(raraBox(toSC("API Health Monitor"), [
       `${toSC("API ditambahkan")}: ${name}`,
       `URL: ${url}`,
       backup ? `Backup: ${backup}` : `Backup: ${toSC("tidak ada")}`,
@@ -446,7 +446,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "del" || subCmd === "delete" || subCmd === "remove") {
     const name = args[1]?.toLowerCase();
     if (!name) {
-      return m.reply(novaError("autoapicheck", "Format: .autoapicheck del <nama>", `.autoapicheck del myapi`));
+      return m.reply(raraError("autoapicheck", "Format: .autoapicheck del <nama>", `.autoapicheck del myapi`));
     }
 
     const db = getDatabase();
@@ -455,13 +455,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (filtered.length === custom.length) {
       if (DEFAULT_APIS.some((a) => a.name === name)) {
-        return m.reply(novaError("autoapicheck", `API "${name}" adalah default, tidak bisa dihapus`, `Hanya custom API yang bisa dihapus`));
+        return m.reply(raraError("autoapicheck", `API "${name}" adalah default, tidak bisa dihapus`, `Hanya custom API yang bisa dihapus`));
       }
-      return m.reply(novaError("autoapicheck", `API "${name}" tidak ditemukan`, `.autoapicheck list`));
+      return m.reply(raraError("autoapicheck", `API "${name}" tidak ditemukan`, `.autoapicheck list`));
     }
 
     db.setting("apicheck_custom", filtered);
-    await m.reply(novaBox(toSC("API Health Monitor"), [
+    await m.reply(raraBox(toSC("API Health Monitor"), [
       `${toSC("API dihapus")}: ${name}`,
     ]));
     return;
@@ -471,11 +471,11 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "notify") {
     const action = args[1]?.toLowerCase();
     if (action !== "on" && action !== "off") {
-      return m.reply(novaError("autoapicheck", "Format: .autoapicheck notify on/off", `.autoapicheck notify on`));
+      return m.reply(raraError("autoapicheck", "Format: .autoapicheck notify on/off", `.autoapicheck notify on`));
     }
     const db = getDatabase();
     db.setting("apicheck_notify", action === "on");
-    await m.reply(novaBox(toSC("API Health Monitor"), [
+    await m.reply(raraBox(toSC("API Health Monitor"), [
       `Notify Owner: ${action === "on" ? "ON" : "OFF"}`,
       action === "on" ? toSC("Owner akan dinotifikasi saat API down") : toSC("Notifikasi dimatikan"),
     ]));
@@ -505,12 +505,12 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     lines.push(`${toSC("Custom API:")} .autoapicheck add/del`);
-    await m.reply(novaBox(toSC("API Monitor List"), lines));
+    await m.reply(raraBox(toSC("API Monitor List"), lines));
     return;
   }
 
   // Unknown subcommand
-  return m.reply(novaError("autoapicheck", te(m.prefix, m.command, m.pushName), ".autoapicheck now"));
+  return m.reply(raraError("autoapicheck", te(m.prefix, m.command, m.pushName), ".autoapicheck now"));
 }
 
 export { pluginConfig, handler, pluginConfig as config };

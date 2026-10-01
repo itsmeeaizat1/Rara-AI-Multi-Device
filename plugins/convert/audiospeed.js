@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,13 +19,13 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(novaWrap("Audio Speed", "Reply audio yang mau diubah kecepatannya."));
+    if (!quoted) return m.reply(raraWrap("Audio Speed", "Reply audio yang mau diubah kecepatannya."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(novaWrap("Audio Speed", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(raraWrap("Audio Speed", "Reply harus audio/voice note!"));
 
     const speed = parseFloat(args[0]);
     if (!speed || speed < 0.25 || speed > 4.0) {
-      return m.reply(novaWrap("Audio Speed", [
+      return m.reply(raraWrap("Audio Speed", [
         "Kecepatan 0.25 - 4.0x",
         "1.0 = normal, 2.0 = 2x cepat, 0.5 = 2x lambat",
         "",
@@ -35,7 +35,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     const isPtt = !!quoted.pttMessage;
-    const tmpDir = path.join(os.tmpdir(), 'nova-speed');
+    const tmpDir = path.join(os.tmpdir(), 'rara-speed');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, "input_" + Date.now() + ".ogg");
@@ -51,7 +51,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
-      return m.reply(novaGagal("AudioSpeed"));
+      return m.reply(raraGagal("AudioSpeed"));
     }
 
     const buf = fs.readFileSync(outputPath);
@@ -64,7 +64,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: novaWrap("Audio Speed", [
+      caption: raraWrap("Audio Speed", [
         "Berhasil!",
         "Kecepatan: " + descSpeed,
         "Filter: " + filter,
@@ -73,10 +73,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
-      await m.reply(novaBerhasil("audiospeed"));
+      await m.reply(raraBerhasil("audiospeed"));
   } catch (e) {
     console.error("audiospeed error:", e);
-    return m.reply(novaGangguan("audiospeed"));
+    return m.reply(raraGangguan("audiospeed"));
   }
 }
 

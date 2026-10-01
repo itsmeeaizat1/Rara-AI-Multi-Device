@@ -8,7 +8,7 @@ import {
   upscaleImage, polishImage, buildFilterChain, buildScaleFilter, buildDenoiseFilter,
   buildSharpnessFilter, buildColorFilter, normalizeFactor, validateInput,
   getPresets, HD_PRESETS, MAX_OUTPUT_PX,
-} from "../../src/lib/nova-remini-ffmpeg.js";
+} from "../../src/lib/rara-remini-ffmpeg.js";
 
 let pass = 0, fail = 0, skip = 0;
 const w = (s) => process.stdout.write(s + "\n");

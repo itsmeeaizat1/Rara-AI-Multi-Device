@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getParticipantJid } from '../../src/lib/nova-lid.js'
-import te from '../../src/lib/nova-error.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getParticipantJid } from '../../src/lib/rara-lid.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'listadmin',
     alias: ["listadmin"],
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
         const admins = participants.filter(p => p.admin)
 
         if (admins.length === 0) {
-            await m.reply(novaWrap("listadmin", "Tidak ada admin di grup ini.", "error"));
+            await m.reply(raraWrap("listadmin", "Tidak ada admin di grup ini.", "error"));
             return
         }
 
@@ -49,13 +49,13 @@ async function handler(m, { sock }) {
         lines.push("")
         lines.push(`Total Admin: ${admins.length}`)
 
-        const adminList = novaWrap("List Admin", lines)
+        const adminList = raraWrap("List Admin", lines)
         const mentions = admins.map(a => getParticipantJid(a))
 
         await m.reply(adminList, { mentions })
 
     } catch (error) {
-        m.reply(novaWrap("listadmin", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("listadmin", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

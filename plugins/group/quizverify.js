@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // quizverify.js — Quiz verification system for new group members
 // Anti-spam: member baru harus jawab quiz sebelum bisa chat
 
@@ -6,11 +6,11 @@ import {
   toSC,
   bracketBox,
   tipText,
-  novaError,
-  novaEmpty,
-  novaGuide,
-  novaNoInput,
-} from "../../src/lib/nova-menu-style.js";
+  raraError,
+  raraEmpty,
+  raraGuide,
+  raraNoInput,
+} from "../../src/lib/rara-menu-style.js";
 import {
   enableQuizVerify,
   disableQuizVerify,
@@ -18,7 +18,7 @@ import {
   setDifficulty,
   setTimeoutMinutes,
   getPendingUsers,
-} from "../../src/lib/nova-quiz-verify.js";
+} from "../../src/lib/rara-quiz-verify.js";
 
 const pluginConfig = {
   name: "quizverify",
@@ -59,7 +59,7 @@ async function handler(m, { sock, args }) {
       if (!isAdmin) {
         await m.react("🚫");
         return m.reply(
-          novaError("Akses Ditolak", "Cuma admin grup yang boleh ngatur fitur Quiz Verify ini!")
+          raraError("Akses Ditolak", "Cuma admin grup yang boleh ngatur fitur Quiz Verify ini!")
         );
       }
     }
@@ -104,7 +104,7 @@ async function handler(m, { sock, args }) {
         const level = (args[1] || "").toLowerCase();
         if (!["easy", "medium", "hard"].includes(level)) {
           return m.reply(
-            novaGuide("Difficulty Quiz", "Pilih tingkat kesulitan kuis yang valid ya!", `${prefix}quizverify difficulty easy | medium | hard`)
+            raraGuide("Difficulty Quiz", "Pilih tingkat kesulitan kuis yang valid ya!", `${prefix}quizverify difficulty easy | medium | hard`)
           );
         }
         setDifficulty(groupId, level);
@@ -121,7 +121,7 @@ async function handler(m, { sock, args }) {
         const minutes = parseInt(args[1]);
         if (!minutes || minutes < 1 || minutes > 30) {
           return m.reply(
-            novaGuide("Timeout Quiz", "Masukkan durasi batas waktu kuis antara 1 sampai 30 menit ya!", `${prefix}quizverify timeout 5`)
+            raraGuide("Timeout Quiz", "Masukkan durasi batas waktu kuis antara 1 sampai 30 menit ya!", `${prefix}quizverify timeout 5`)
           );
         }
         setTimeoutMinutes(groupId, minutes);
@@ -138,7 +138,7 @@ async function handler(m, { sock, args }) {
         const pending = getPendingUsers(groupId);
         if (pending.length === 0) {
           return m.reply(
-            novaEmpty("Quiz Verify", "Gak ada member yang lagi pending verifikasi saat ini~")
+            raraEmpty("Quiz Verify", "Gak ada member yang lagi pending verifikasi saat ini~")
           );
         }
         const lines = pending.map((p, i) => {
@@ -153,13 +153,13 @@ async function handler(m, { sock, args }) {
 
       default:
         return m.reply(
-          novaGuide("Quiz Verify", "Verifikasi member baru lewat kuis anti-spam!", `${prefix}quizverify on | off | status | difficulty <level> | timeout <menit> | list`)
+          raraGuide("Quiz Verify", "Verifikasi member baru lewat kuis anti-spam!", `${prefix}quizverify on | off | status | difficulty <level> | timeout <menit> | list`)
         );
     }
   } catch (e) {
     console.error("[QuizVerify] Error:", e.message);
     return m.reply(
-      novaError("Quiz Verify", `Gagal memproses verifikasi kuis: ${e.message}`)
+      raraError("Quiz Verify", `Gagal memproses verifikasi kuis: ${e.message}`)
     );
   }
 }

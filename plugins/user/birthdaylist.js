@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'birthdaylist',
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     text += `---\n\n`
     text += `Set birthday: .setbirthday DD-MM`
     
-    await m.reply(novaWrap("birthdaylist", text), { mentions });
+    await m.reply(raraWrap("birthdaylist", text), { mentions });
 }
 
 export { pluginConfig as config, handler }

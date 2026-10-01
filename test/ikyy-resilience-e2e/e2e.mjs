@@ -17,11 +17,11 @@ function t(name, ok, extra) {
 }
 
 // -- init db (GOTCHA: getDatabase tanpa initDatabase THROW) --
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "ikyy-e2e-db-"));
 await initDatabase(path.join(dbDir, "db"));
 
-const svc = await import(R + "/src/lib/nova-ai-service.js");
+const svc = await import(R + "/src/lib/rara-ai-service.js");
 const { callIkyy, _resetIkyyBreakerForTest } = svc;
 const { getProviderApiKey } = await import(R + "/src/lib/apikey/ai-chain.js");
 
@@ -132,7 +132,7 @@ console.log("- section 5: semua mati -> error jujur -");
 // -- SECTION 6: timeout terpasang di semua jalur fetch (audit statis) --
 console.log("- section 6: timeout audit -");
 {
-  const src = fs.readFileSync(R + "/src/lib/nova-ai-service.js", "utf8");
+  const src = fs.readFileSync(R + "/src/lib/rara-ai-service.js", "utf8");
   const getOk = /method:\s*"GET",\s*\n\s*headers:\s*\{\s*"User-Agent":\s*"Mozilla\/5\.0",\s*\.\.\.prov\.authHeader\(effectiveApiKey\)\s*\},\s*\n\s*signal:\s*AbortSignal\.timeout\(25000\)/.test(src);
   t("6a. requestOnce GET pakai AbortSignal 25 dtk", getOk);
   const postOk = /body:\s*JSON\.stringify\(finalBody\),\s*\n\s*signal:\s*AbortSignal\.timeout\(60000\)/.test(src);

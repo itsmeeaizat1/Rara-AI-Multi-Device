@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 import config from "../../config.js";
 const pluginConfig = {
     name: 'spamngl',
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         
     } catch (error) {
     await m.react("❌");
-        m.reply(novaWrap("spamngl", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("spamngl", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

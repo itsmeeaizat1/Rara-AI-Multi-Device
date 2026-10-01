@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getActiveJadibots } from '../../src/lib/nova-jadibot-manager.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getActiveJadibots } from '../../src/lib/rara-jadibot-manager.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'listjadibotaktif',
     alias: ["listjadibotaktif"],
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     const active = getActiveJadibots()
 
     if (active.length === 0) {
-        return m.reply(novaWrap("Listjadibotaktif", `❌ Tidak ada jadibot yang aktif saat ini`))
+        return m.reply(raraWrap("Listjadibotaktif", `❌ Tidak ada jadibot yang aktif saat ini`))
     }
 
     let txt = `*Jadibot Aktif*\n\n`

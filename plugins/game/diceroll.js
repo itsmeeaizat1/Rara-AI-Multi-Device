@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Dadu — Random dice sticker
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "diceroll",
@@ -30,12 +30,12 @@ async function handler(m, { sock }) {
     const url = DICE[Math.floor(Math.random() * DICE.length)];
     const res = await fetch(url);
     const buf = Buffer.from(await res.arrayBuffer());
-    await sock.sendImageAsSticker(m.chat, buf, m, { packname: "Nova AI", author: "Dadu" });
+    await sock.sendImageAsSticker(m.chat, buf, m, { packname: "Rara AI", author: "Dadu" });
     await m.react("🐣");
   } catch (e) {
     console.error("dadu error:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("dadu", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("dadu", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

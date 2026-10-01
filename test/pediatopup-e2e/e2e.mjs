@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT — E2E: AUTO ORDER TOPUP PANELPEDIA (panelpediatopup.com)
+// RARA AI WHATSAPP BOT — E2E: AUTO ORDER TOPUP PANELPEDIA (panelpediatopup.com)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -13,10 +13,10 @@ const t = (name, cond, extra = "") => {
 process.on("unhandledRejection", (e) => { console.log("UNHANDLED:", e?.stack || e); process.exit(1); });
 
 const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "pediatopup-e2e-"));
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const lib = await import(R + "/src/lib/nova-auto-order.js");
+const lib = await import(R + "/src/lib/rara-auto-order.js");
 const plug = await import(R + "/plugins/panel/ordertopup.js");
 const cfgPlug = await import(R + "/plugins/owner/autoorder.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");

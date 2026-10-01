@@ -1,7 +1,7 @@
 // E2E IMPORT GUARD (12 Sep 2026) — semua file plugins/**/*.js WAJIB bisa
-// di-import. BUG NYATA: novaai.js import getAllSkills dari aiagent.js yang
+// di-import. BUG NYATA: raraai.js import getAllSkills dari aiagent.js yang
 // gak nge-export → plugin gagal load SENYAP (catch loadPlugin) →
-// .novaagent unknown command di bot — padahal semua e2e hijau karena gak
+// .raraagent unknown command di bot — padahal semua e2e hijau karena gak
 // ada tes yang import file plugin-nya langsung.
 // Tes ini: (1) dynamic import tiap file plugin — nol boleh gagal,
 // (2) command KRITIS ke-resolve via loader beneran (loadPlugins).
@@ -40,13 +40,13 @@ if (broken.length) w("   FILE GAGAL:\n   " + broken.join("\n   "));
 
 w("\n— resolve command kritis via loader beneran —");
 fs.rmSync("/tmp/plugins-import-guard-db", { recursive: true, force: true });
-const { initDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-database.js")).href);
-await initDatabase("/tmp/plugins-import-guard-db/nova.json");
-const { loadPlugins, getPlugin } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-plugins.js")).href);
+const { initDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-database.js")).href);
+await initDatabase("/tmp/plugins-import-guard-db/rara.json");
+const { loadPlugins, getPlugin } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-plugins.js")).href);
 const loaded = await loadPlugins(pluginsDir);
 t("loadPlugins jalan (≥ 1000 plugin)", loaded >= 1000, "cuma " + loaded);
 // REGRESI 17 Sep 2026: resolve command kritis via loader beneran
-for (const cmd of ["novaagent", "aisuperagent", "mcp", "memory", "telpon", "doctor", "ai9v2", "9routerv2", "connlog"]) {
+for (const cmd of ["raraagent", "aisuperagent", "mcp", "memory", "telpon", "doctor", "ai9v2", "9routerv2", "connlog"]) {
   const p = getPlugin(cmd);
   t(`.${cmd} ke-resolve`, !!p, "unknown command");
 }

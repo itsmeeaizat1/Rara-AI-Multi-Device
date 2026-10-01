@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolbase32 — teks ↔ Base32 RFC 4648 (port altftool.com/tools/all/base32)
-import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolbase32", alias: ["base32"], category: "tools",
@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      return m.reply(novaGuideV2("ftoolbase32", {
+      return m.reply(raraGuideV2("ftoolbase32", {
         kaomoji: "(๑•̀ㅂ•́)و",
         sapaan: "teks mau diubah ke Base32? atau sebaliknya?",
         cara: "ketik enc (teks→base32) atau dec (base32→teks) lalu isinya",
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
       result = b32dec(text);
       if (result === null) {
         await m.react("❌");
-        return m.reply(novaSalahV2("ftoolbase32", {
+        return m.reply(raraSalahV2("ftoolbase32", {
           kaomoji: "(・_・;)",
           pesan: "string base32nya gak valid — cuma huruf A-Z dan angka 2-7",
           contoh: `${prefix}ftoolbase32 dec MZXW6YTB`,
@@ -63,19 +63,19 @@ async function handler(m, { sock, config: botConfig }) {
       }
     } else {
       await m.react("❌");
-      return m.reply(novaSalahV2("ftoolbase32", {
+      return m.reply(raraSalahV2("ftoolbase32", {
         kaomoji: "(・_・;)",
         pesan: "pilih enc atau dec ya",
         contoh: `${prefix}ftoolbase32 enc halo`,
       }), "ftoolbase32");
     }
     await m.react("🐣");
-    await m.reply(novaWrap("Base32", [`Hasil (${action.startsWith("e") ? "encode" : "decode"}):`,
+    await m.reply(raraWrap("Base32", [`Hasil (${action.startsWith("e") ? "encode" : "decode"}):`,
       "",
       "```" + (result.length > 800 ? result.substring(0, 800) + "…" : result) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(novaWrap("Base32", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(raraWrap("Base32", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

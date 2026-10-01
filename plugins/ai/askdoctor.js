@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 /**
  * plugins/ai/askdoctor.js
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
   const input = args.join(" ").trim();
 
   if (!input) {
-    const help = novaGuide(
+    const help = raraGuide(
       "tanyadokter",
       `Tanya dokter AI tentang kesehatan — gejala, penyakit, gizi, obat, tips\n${m.prefix}tanyadokter <pertanyaan>\n${m.prefix}tanyadokter reset — reset sesi percakapan`,
       `${m.prefix}tanyadokter cara agar jantung sehat\n${m.prefix}aikesehatan cara biar sembuh\n${m.prefix}tanyadokter gejala demam berdarah`

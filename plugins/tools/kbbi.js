@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "kbbi",
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!word) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🛠️",
   name: "kbbi",
   description: "Cek arti kata di KBBI",
@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[kbbi.js]:', e.message); }
 
     const text =
-      novaWrap("KBBI", [`Kata: *${word}*`,
+      raraWrap("KBBI", [`Kata: *${word}*`,
         `Arti: *${meaning}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}kbbi <kata> untuk cek arti lain`) +
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     await m.react("❌");
     const text =
-      novaError("Tools", "Gagal nih, coba lagi ya");
+      raraError("Tools", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "kbbi");
   }

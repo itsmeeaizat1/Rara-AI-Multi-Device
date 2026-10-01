@@ -1,6 +1,6 @@
-import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg } from "../../src/lib/rara-rpg-service.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 const pluginConfig = {
   name: "talent", alias: ["talent", "talentrpg"],
   category: "rpg", description: "Lihat talent berdasar kelas",
@@ -16,10 +16,10 @@ const TALENTS = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("talentrpg", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("talentrpg", "RPG belum siap.", "error"));
     const talent = TALENTS[rpg.job] || "Belum tersedia";
   await animGeneric(m, sock, "🌟", "Loading Talents");
-    return m.reply(novaRpgBox("talentrpg", `💡 *Talent Class ${rpg.job}:*\n${talent}`, "info"));
-  } catch (e) { return m.reply(novaRpgBox("talentrpg", "Error.", "error")); }
+    return m.reply(raraRpgBox("talentrpg", `💡 *Talent Class ${rpg.job}:*\n${talent}`, "info"));
+  } catch (e) { return m.reply(raraRpgBox("talentrpg", "Error.", "error")); }
 }
 export { pluginConfig as config, handler };

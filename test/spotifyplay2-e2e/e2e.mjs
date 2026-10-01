@@ -45,7 +45,7 @@ w("\n— builder lokal, gak pakai lib bersama —");
 {
   const fs = await import("fs");
   const src = fs.readFileSync(new URL("../../plugins/download/spotifyplay2.js", import.meta.url), "utf-8");
-  check("3a. gak ada import nova-spotify-play-card.js", !src.includes("nova-spotify-play-card"));
+  check("3a. gak ada import rara-spotify-play-card.js", !src.includes("rara-spotify-play-card"));
   check("3b. buildSpotifyPlay2Card didefinisikan lokal", src.includes("export function buildSpotifyPlay2Card"));
 }
 

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 TurboSeek AI — .turboseek
 // 🔹 Search engine AI (perplexity-style): tanya apa aja →
@@ -7,7 +7,7 @@
 // ═════════════════════════════════════════════
 
 import { turboseekSearch } from "../../src/scraper/fazzcode-ai.js";
-import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "turboseek",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const q = (m.args || []).join(" ").trim();
     if (!q) {
-      return m.reply(novaGuideV2("turboseek", {
+      return m.reply(raraGuideV2("turboseek", {
  kaomoji: "(๑˃ᴗ˂)ﻭ",
  sapaan: "tanya apa aja — dijawab AI lengkap dengan sumber riset web ala Perplexity! (≧∇≦)ﾉ",
         cara: "ketik pertanyaan risetmu sesudah command",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     const r = await turboseekSearch(q);
     if (!r.ok) {
       await m.react("❌");
-      return m.reply(novaWrap("turboseek", `⚠️ Gagal nyari jawaban (${r.error === "API_KEY" ? "API key fazzcode belum di-set" : r.error}). Coba lagi nanti ya.`));
+      return m.reply(raraWrap("turboseek", `⚠️ Gagal nyari jawaban (${r.error === "API_KEY" ? "API key fazzcode belum di-set" : r.error}). Coba lagi nanti ya.`));
     }
 
     // sumber: max 5, domain singkat
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     }).join("\n");
 
     await m.react("🐣");
-    return m.reply(novaWrap("turboseek",
+    return m.reply(raraWrap("turboseek",
       `🔍 *JAWABAN AI — ${q.toUpperCase().slice(0, 60)}*\n\n` +
       `${r.answer}\n` +
       (srcs ? `\n📚 *SUMBER RISET:*\n${srcs}\n` : "") +
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[turboseek]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("turboseek", "⚠️ Ada error pas nyari. Coba lagi ya."));
+    return m.reply(raraWrap("turboseek", "⚠️ Ada error pas nyari. Coba lagi ya."));
   }
 }
 

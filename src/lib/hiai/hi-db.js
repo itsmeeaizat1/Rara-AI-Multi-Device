@@ -1,5 +1,5 @@
 // hi-db.js — shim database gaya engine lama (db.data / db.read / db.write)
-// File JSON sendiri di src/database/ai/hiai-db.json — gak nyampur db Nova.
+// File JSON sendiri di src/database/ai/hiai-db.json — gak nyampur db Rara.
 import fs from 'fs';
 import path from 'path';
 

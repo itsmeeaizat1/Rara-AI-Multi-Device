@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Sistem Nikah — Terima lamaran
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "terimanikah",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     }
 
     if (!proposerJid) {
-      return m.reply(novaWrap("terimanikah", [
+      return m.reply(raraWrap("terimanikah", [
         `Terima lamaran seseorang.`,
         ``,
         `📌 Format: reply pesan lamaran + ${m.prefix}terimanikah`,
@@ -55,14 +55,14 @@ async function handler(m, { sock }) {
     // Validasi: harus masih berpacaran
     if (propData.fun.pasangan !== m.sender || myData.fun.pasangan !== proposerJid) {
       return m.reply(
-        novaWrap("terimanikah", "Kalian tidak sedang berpacaran! 💔")
+        raraWrap("terimanikah", "Kalian tidak sedang berpacaran! 💔")
       );
     }
 
     // Validasi: belum nikah
     if (propData.fun.nikah || myData.fun.nikah) {
       return m.reply(
-        novaWrap("terimanikah", "Salah satu sudah menikah! 💍")
+        raraWrap("terimanikah", "Salah satu sudah menikah! 💍")
       );
     }
 
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     const sessionKey = `${m.chat}_${m.sender}`;
     if (global.nikahSessions?.[sessionKey]) delete global.nikahSessions[sessionKey];
 
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "selamat menikah", icon: "💍",
       flavor: "💍 *SELAMAT MENIKAH!*",
       body: [

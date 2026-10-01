@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 import config from '../../config.js'
 import moment from 'moment-timezone'
 const pluginConfig = {
@@ -44,7 +44,7 @@ ganti intro bawaan dengan .setintro <text>`
         .replace(/@date/gi, dateStr)
         .replace(/@time/gi, timeStr)
         .replace(/@desc/gi, groupMeta?.desc || 'Tidak ada deskripsi')
-        .replace(/@botname/gi, config.bot?.name || 'Nova-AI')
+        .replace(/@botname/gi, config.bot?.name || 'Rara-AI')
 }
 
 async function handler(m, { sock }) {
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     const introText = groupData.intro || DEFAULT_INTRO
     const parsed = parsePlaceholders(introText, m, groupMeta)
     
-    await m.reply(novaWrap("intro", parsed), { mentions: [m.sender] });
+    await m.reply(raraWrap("intro", parsed), { mentions: [m.sender] });
 }
 
 export { pluginConfig as config, handler, parsePlaceholders, DEFAULT_INTRO }

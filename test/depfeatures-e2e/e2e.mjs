@@ -3,7 +3,7 @@
 // figlet + upgrade didyoumean di handler.
 // Seam jaringan di-inject — semua tes offline & deterministik.
 // Jalankan dari repo root: node test/depfeatures-e2e/e2e.mjs
-import { suggestCommand } from "../../src/lib/nova-command-suggest.js";
+import { suggestCommand } from "../../src/lib/rara-command-suggest.js";
 
 const R = "plugins".replace(/^.*$/, process.cwd()) ? process.cwd() : process.cwd();
 let pass = 0, fail = 0;
@@ -41,12 +41,12 @@ w("\n— 2. .mega downloader MEGA (seam, offline) —");
   const mod = await import(R + "/plugins/download/mega.js");
   t("2a. plugin ke-import + punya config & handler", !!mod.config && typeof mod.handler === "function");
   // sukses: file kecil
-  const fakeFile = { name: "nova-test.zip", size: 2048, loadAttributes: async () => {}, downloadBuffer: async () => Buffer.alloc(2048, 7) };
+  const fakeFile = { name: "rara-test.zip", size: 2048, loadAttributes: async () => {}, downloadBuffer: async () => Buffer.alloc(2048, 7) };
   mod._setMegaForTest({ File: { fromURL: (u) => { if (!/mega\.nz\/file\//.test(u)) throw new Error("bad link"); return fakeFile; } } });
   const sock = makeSock();
   const m = makeM("https://mega.nz/file/AbCd1234#KkLl5678");
   await mod.handler(m, { ...CTX, sock });
-  t("2b. file kecil → document terkirim (buffer 2KB)", sock.sends.length === 1 && sock.sends[0].content.document?.length === 2048 && sock.sends[0].content.fileName === "nova-test.zip", JSON.stringify(sock.sends.map(s => Object.keys(s.content))));
+  t("2b. file kecil → document terkirim (buffer 2KB)", sock.sends.length === 1 && sock.sends[0].content.document?.length === 2048 && sock.sends[0].content.fileName === "rara-test.zip", JSON.stringify(sock.sends.map(s => Object.keys(s.content))));
   // size limit 100 MB
   mod._setMegaForTest({ File: { fromURL: () => ({ name: "besar.iso", size: 200 * 1024 * 1024, loadAttributes: async () => {}, downloadBuffer: async () => Buffer.alloc(10) }) } });
   const m2 = makeM("https://mega.nz/file/AbCd1234#KkLl5678");
@@ -154,10 +154,10 @@ w("\n— 6. .obfuscate JavaScript (lokal, LIVE) —");
 w("\n— 7. .figlet ASCII art (figlet, LIVE) —");
 {
   const mod = await import(R + "/plugins/fun/figlet.js");
-  const m = makeM("NOVA");
+  const m = makeM("RARA");
   await mod.handler(m, { ...CTX, sock: makeSock() });
   t("7a. teks → ASCII art dalam code block", m.replies.some((r) => r.includes("```") && /N|V/.test(r.replace(/\s/g, "")) && r.length > 60), (m.replies.at(-1) || "").slice(0, 150));
-  const m2 = makeM("NOVA Doom");
+  const m2 = makeM("RARA Doom");
   await mod.handler(m2, { ...CTX, sock: makeSock() });
   t("7b. font dipilih: DOOM dipakai", m2.replies.some((r) => /「 Doom 」|Doom/.test(r)), (m2.replies.at(-1) || "").slice(0, 80));
   const m3 = makeM("list");
@@ -166,7 +166,7 @@ w("\n— 7. .figlet ASCII art (figlet, LIVE) —");
   const m4 = makeM("x".repeat(25));
   await mod.handler(m4, { ...CTX, sock: makeSock() });
   t("7d. teks kepanjangan → ditolak", m4.replies.some((r) => /kepanjangan|kepanjangan/i.test(r)));
-  const m5 = makeM("NOVA FontNgawur");
+  const m5 = makeM("RARA FontNgawur");
   await mod.handler(m5, { ...CTX, sock: makeSock() });
   t("7e. font gak dikenali → fallback Standard tetap jalan", m5.replies.some((r) => /Standard/.test(r)));
 }
@@ -179,7 +179,7 @@ w("\n— 8. konvensi repo —");
     t(`8x. ${f}: default export utuh (anti exit-0-senyap)`, /export default/.test(src) && /isEnabled: true/.test(src));
   }
   const h = fs.readFileSync("src/handler.js", "utf8");
-  t("8g. handler.js pakai suggestCommand (didyoumean terpasang)", h.includes("nova-command-suggest") && h.includes("suggestCommand("));
+  t("8g. handler.js pakai suggestCommand (didyoumean terpasang)", h.includes("rara-command-suggest") && h.includes("suggestCommand("));
 }
 
 w(`\n===== ${pass} PASS, ${fail} FAIL =====`);

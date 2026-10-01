@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
-import { uploadImage } from '../../src/lib/nova-uploader.js'
-import { f } from '../../src/lib/nova-http.js'
-import te from '../../src/lib/nova-error.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
+import { uploadImage } from '../../src/lib/rara-uploader.js'
+import { f } from '../../src/lib/rara-http.js'
+import te from '../../src/lib/rara-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(novaGuideV2("tochibi", {
+        return m.reply(raraGuideV2("tochibi", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)",
  sapaan: "ubah fotomu jadi gaya chibi yang gemesin!",
         cara: "kirim atau reply gambar dengan caption commandnya",
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(novaWrap("tochibi", `❌ Gagal mendownload gambar`))
+            return m.reply(raraWrap("tochibi", `❌ Gagal mendownload gambar`))
         }
 
         const PROMPT = `Transform into chibi style, big head and small body proportions, cute expression, big sparkling eyes, smooth shading, soft lighting, highly detailed, high quality`
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
             type: 'image'
         })
         // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-        await m.reply(mediaInfoCaption({ header: "Nova To Chibi", fields: [
+        await m.reply(mediaInfoCaption({ header: "Rara To Chibi", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Chibi" },
             { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
         ] }))
         
     } catch (error) {
-        m.reply(novaWrap("tochibi", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(raraWrap("tochibi", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

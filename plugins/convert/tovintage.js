@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { uploadToCatbox } from "../../src/lib/rara-uploader.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "tovintage",
@@ -19,14 +19,14 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage" || m.quoted.mtype === "imageMessage"));
-    if (!isImage) return m.reply(novaWrap("tovintage", "Reply gambar dengan caption .tovintage untuk efek vintage.", "guide"));
+    if (!isImage) return m.reply(raraWrap("tovintage", "Reply gambar dengan caption .tovintage untuk efek vintage.", "guide"));
 
     await m.react("🕒");
 
     let mediaBuffer;
     if (m.isImage && m.download) mediaBuffer = await m.download();
     else if (m.quoted && m.quoted.download) mediaBuffer = await m.quoted.download();
-    if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) { await m.react("❌"); return m.reply(novaWrap("tovintage", "Gagal mengunduh gambar.")); }
+    if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) { await m.react("❌"); return m.reply(raraWrap("tovintage", "Gagal mengunduh gambar.")); }
 
     const link = await uploadToCatbox(mediaBuffer, "image.jpg");
     const apiUrl = `https://api-faa.my.id/faa/vintage?url=${encodeURIComponent(link)}`;
@@ -39,18 +39,18 @@ async function handler(m, { sock }) {
     } else {
       const json = JSON.parse(res.data.toString());
       const imageUrl = json.url || json.result || json.image || json.data?.url || json.data;
-      if (!imageUrl) { await m.react("❌"); return m.reply(novaWrap("tovintage", "API tidak mengembalikan gambar.")); }
+      if (!imageUrl) { await m.react("❌"); return m.reply(raraWrap("tovintage", "API tidak mengembalikan gambar.")); }
       const img = await axios.get(imageUrl, { responseType: "arraybuffer", timeout: 60000 });
       imgBuffer = Buffer.from(img.data);
     }
 
     await m.react("🐣");
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "📼 Vintage mode aktif!" }, { quoted: m });
-    await m.reply(novaBerhasil("tovintage"));
+    await m.reply(raraBerhasil("tovintage"));
   } catch (e) {
     console.error("tovintage error:", e.message);
     await m.react("❌");
-    m.reply(novaGangguan("tovintage"));
+    m.reply(raraGangguan("tovintage"));
   }
 }
 

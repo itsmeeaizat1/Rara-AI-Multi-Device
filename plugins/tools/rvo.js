@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "rvo",
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
   }
 
   if (!quoted.isViewOnce && !quoted.isMedia) {
-    return m.reply(novaWrap("Rvo", "❌ Reply pesan view once (sekali lihat) untuk membukanya."));
+    return m.reply(raraWrap("Rvo", "❌ Reply pesan view once (sekali lihat) untuk membukanya."));
   }
   try {
     await m.react("🕒");
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
       msg =
         "Media sudah kadaluarsa atau sudah dihapus dari server WhatsApp.\n\n_Pesan View Once yang terlalu lama atau sering dibuka biasanya akan otomatis hangus dari sistem WhatsApp dan tidak bisa diunduh lagi._";
     }
-    { const __navText = novaWrap("Gagal Membuka View Once", `${msg}`); await m.reply(__navText); };
+    { const __navText = raraWrap("Gagal Membuka View Once", `${msg}`); await m.reply(__navText); };
   }
 }
 

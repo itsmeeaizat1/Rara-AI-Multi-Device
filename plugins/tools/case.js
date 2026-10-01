@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "case",
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!desc) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🛠️",
   name: "case",
   description: "Buat case/laporan",
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      novaWrap("Case", [`Deskripsi: *${desc}*`,
+      raraWrap("Case", [`Deskripsi: *${desc}*`,
         `Pelapor: *${m.pushName || m.sender}*`,
         "Status: *terkirim*"].join("\n")) +
       "\n" +
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Tools", "Gagal nih, coba lagi ya");
+      raraError("Tools", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "case");
   }

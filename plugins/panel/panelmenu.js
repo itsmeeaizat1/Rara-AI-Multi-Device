@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // panelmenu.js — Menu panel Pterodactyl (dipindah dari .cpanel yang kini jadi pusat kontrol)
 import config from '../../config.js'
-import { novaWrap } from "../../src/lib/nova-menu-style.js"
-import { getAccessibleServers, hasAccessToServer, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js"
+import { getAccessibleServers, hasAccessToServer, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
 
 // command suffix hanya diregistrasi v1-v5; slot 6-100 pakai bentuk argumen (.listserver 50)
 const MENU_SERVERS = VALID_SERVERS.slice(0, 5)
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     if (!m.isOwner) {
         const userServers = getAccessibleServers(m.sender)
         if (userServers.length === 0) {
-            return m.reply(novaWrap("panelmenu",
+            return m.reply(raraWrap("panelmenu",
                 "Akses Ditolak\n\n" +
                 "Hanya *bot owner* atau *Reseller/CEO Panel* yang bisa akses menu ini\n\n" +
                 "Minta owner untuk add kamu sebagai reseller:\n" +
@@ -129,8 +129,8 @@ async function handler(m, { sock }) {
         txt += `\n`
     }
     
-    txt += `_Powered by ${config.info?.website || 'NovaAI'}_`
-    return m.reply(novaWrap("panelmenu", txt))
+    txt += `_Powered by ${config.info?.website || 'RaraAI'}_`
+    return m.reply(raraWrap("panelmenu", txt))
 }
 
 export { pluginConfig as config, handler }

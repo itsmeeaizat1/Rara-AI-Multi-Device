@@ -16,8 +16,8 @@ const { fromSC } = await import(pathToFileURL(path.join(REPO, "src/lib/styler.js
 
 // DB real (pola penilaian-e2e): handler manggil getDatabase() internal
 fs.rmSync("/tmp/confess-e2e-db", { recursive: true, force: true });
-const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-database.js")).href);
-await initDatabase("/tmp/confess-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-database.js")).href);
+await initDatabase("/tmp/confess-e2e-db/rara.json");
 const db = getDatabase();
 
 const confess = await import(pathToFileURL(path.join(REPO, "plugins/confess-menfess/confess.js")).href);

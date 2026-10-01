@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "doh",
@@ -32,7 +32,7 @@ async function dohQuery(domain, type, provider) {
   const res = await fetch(url, {
     headers: {
       "Accept": p.accept,
-      "User-Agent": "Mozilla/5.0 (Nova Bot)",
+      "User-Agent": "Mozilla/5.0 (Rara Bot)",
     },
     signal: AbortSignal.timeout(10000),
   });
@@ -101,7 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
     domain = parts.join(" ").trim();
 
     if (!domain) {
-      return m.reply(novaWrap("DoH", "Domain tidak boleh kosong!"));
+      return m.reply(raraWrap("DoH", "Domain tidak boleh kosong!"));
     }
 
     // Clean domain
@@ -138,11 +138,11 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("Note: " + data.Comment);
     }
     await m.react("🐣");
-    return m.reply(novaWrap("DoH Query: " + domain, lines.join("\n")));
+    return m.reply(raraWrap("DoH Query: " + domain, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("doh error:", e);
-    return m.reply(novaWrap("DoH", "Error: " + e.message));
+    return m.reply(raraWrap("DoH", "Error: " + e.message));
   }
 }
 

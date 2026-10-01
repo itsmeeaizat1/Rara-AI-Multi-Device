@@ -18,7 +18,7 @@ function check(label, cond, extra = "") {
 }
 
 // ── smallcaps-aware (GOTCHA: semua output bot smallcaps → asersi WAJIB fromSC)
-const { toSC } = await import("../../src/lib/nova-menu-style.js");
+const { toSC } = await import("../../src/lib/rara-menu-style.js");
 const SC = { a:"ᴀ",b:"ʙ",c:"ᴄ",d:"ᴅ",e:"ᴇ",f:"ꜰ",g:"ɢ",h:"ʜ",i:"ɪ",j:"ᴊ",k:"ᴋ",l:"ʟ",m:"ᴍ",n:"ɴ",o:"ᴏ",p:"ᴘ",r:"ʀ",s:"ꜱ",t:"ᴛ",u:"ᴜ",v:"ᴠ",w:"ᴡ",y:"ʏ",z:"ᴢ" };
 // GOTCHA: huruf smallcaps KELEWAT range [ᴀ-ᴢ] (ʜ=U+1D25, ʟ, ʀ, ʏ…)
 // → WAJIB per-char dari mapping, JANGAN range regex.
@@ -26,7 +26,7 @@ const SC_RE = new RegExp("[" + Object.values(SC).join("") + "]", "gu");
 const fromSC = (s) => String(s).replace(SC_RE, c => { for (const [k, v] of Object.entries(SC)) if (v === c) return k; return c; });
 
 // ── engine + seams
-const R = await import("../../src/lib/nova-chat-revive.js");
+const R = await import("../../src/lib/rara-chat-revive.js");
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), "chatrevive-e2e-"));
 const STATE_FILE = path.join(TMP, "chatrevive.json");
 R._setChatReviveFileForTest(STATE_FILE);
@@ -52,11 +52,11 @@ section("0. kode & wiring");
   const indexSrc = fs.readFileSync("index.js", "utf8");
   const plugSrc = fs.readFileSync("plugins/group/chatrevive.js", "utf8");
   check("handler.js wire noteChatActivity", handlerSrc.includes("noteChatActivity(m.chat)"));
-  check("index.js scheduler ChatRevive", indexSrc.includes('name: "ChatRevive"') && indexSrc.includes("nova-chat-revive"));
+  check("index.js scheduler ChatRevive", indexSrc.includes('name: "ChatRevive"') && indexSrc.includes("rara-chat-revive"));
   check("plugin kategori group", plugSrc.includes('category: "group"'));
   check("plugin admin gate isAdmin", plugSrc.includes("isAdmin: true"));
   check("plugin export konvensi `config`", /export \{ pluginConfig as config, handler \}/.test(plugSrc));
-  check("default threshold 6 jam", (await import("../../src/lib/nova-chat-revive.js")).getChatReviveStatus(G1).thresholdHours === 6);
+  check("default threshold 6 jam", (await import("../../src/lib/rara-chat-revive.js")).getChatReviveStatus(G1).thresholdHours === 6);
 }
 
 section("1. default & state");

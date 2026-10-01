@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // API key loader — baca dari src/lib/apikey/*.json
 // File ini aman di-push ke GitHub (tidak berisi key, cuma loader)
 
@@ -33,7 +33,7 @@ const apikeysRaw = loadJson("apikeys.json");
 // ═══ STRUKTUR BARU apikeys.json (satu file, 3 section AI) ═══
 //   aiSatuan      → key fitur AI satuan & wrapper (haidar, ikyyxd, cuki, dll)
 //   aiMultiprovider → config multi-provider (chain + providers.*.apikey)
-//   novaai        → key engine NovaAI (tioApiKey, google, groqkey, deepseekkey)
+//   raraai        → key engine RaraAI (tioApiKey, google, groqkey, deepseekkey)
 // Key non-AI tetap di root. apikeysData = tampilan FLAT gabungan semuanya
 // supaya semua getter lama (getHaidarKey, keys.ikyyxd, dll) tetap jalan.
 function flattenApikeys(raw) {
@@ -44,7 +44,7 @@ function flattenApikeys(raw) {
   }
   // semua section → dibuang _note, disebar flat (key string saja;
   // object seperti andaraz/sanka dibaca getter khusus, bukan flat)
-  for (const sec of ["aiSatuan", "novaai", "scraper", "fitur"]) {
+  for (const sec of ["aiSatuan", "raraai", "scraper", "fitur"]) {
     for (const [k, v] of Object.entries(raw?.[sec] || {})) {
       if (k.startsWith("_")) continue;
       if (typeof v === "string") flat[k] = v;
@@ -79,7 +79,7 @@ export function getApiKeys() {
 
 /**
  * ── SECTION GETTER (struktur baru apikeys.json) ──
- * Config AI satuan, multi-provider, dan NovaAI dipisah rapi di satu file.
+ * Config AI satuan, multi-provider, dan RaraAI dipisah rapi di satu file.
  */
 export function getAiSatuanKeys() {
   const raw = loadJson("apikeys.json");
@@ -97,7 +97,7 @@ export function getAiMultiprovider() {
 
 export function getNovaAiKeys() {
   const raw = loadJson("apikeys.json");
-  const keys = { ...(raw.novaai || {}) };
+  const keys = { ...(raw.raraai || {}) };
   delete keys._note;
   return keys;
 }
@@ -147,7 +147,7 @@ export function getDeepAiKey() {
 /**
  * API key HaidarApis (api.haidarxd.my.id — 336 endpoint all-in-one)
  * Daftar gratis: https://api.haidarxd.my.id/register → dashboard/api-keys
- * Dipakai: nova-haidar.js (fallback downloader alldl + textpro)
+ * Dipakai: rara-haidar.js (fallback downloader alldl + textpro)
  */
 export function getHaidarKey() {
   return apikeysData.haidar || "";
@@ -205,7 +205,7 @@ const ROUTER9_DEFAULT_ENDPOINT = "https://9router.cloudku.us.kg/v1/chat/completi
 // Key dibuat/kelola LOkal via dashboard http://localhost:20128/dashboard.
 // Gateway cloudku = deployment hosted proyek yang sama — tetap jadi default
 // biar gak ada perilaku berubah, tapi sekarang SEMUA pemakaian 9router di bot
-// (aigrup, aitio, ai9v2, smartreply, fun-ai, nova-ai-service, boot doctor,
+// (aigrup, aitio, ai9v2, smartreply, fun-ai, rara-ai-service, boot doctor,
 // health check) nyedot endpoint dari SATU PINTU ini — ganti di satu tempet,
 // seluruh rantai ikut. Urutan prioritas:
 //   1. env TIO_API_URL (lama)

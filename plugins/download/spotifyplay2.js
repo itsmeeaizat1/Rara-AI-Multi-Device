@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spotifyplay2.js — Spotify Play v2 (spotifydown scrape + tikwm fallback)
 //
 // REVISI 14 Sep 2026 (owner: "disamain krna beda endpoint tp untuk dichat
@@ -11,7 +11,7 @@
 // Format TETAP "MP3 320kbps" — bukan ngarang, spotifydown.org emang fixed
 // rip 320kbps (klaim lama di kode ini valid).
 import axios from "axios";
-import { novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "spotifyplay2",
@@ -93,7 +93,7 @@ export function buildSpotifyPlay2Card({ title, album, genre, duration, artist, u
 async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
   if (!query) {
-    return m.reply(novaWrap("spotifyplay2", `Masukkan judul lagu!\n\nContoh: .spotifyplay2 faded alan walker`, "guide"));
+    return m.reply(raraWrap("spotifyplay2", `Masukkan judul lagu!\n\nContoh: .spotifyplay2 faded alan walker`, "guide"));
   }
 
   try {
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
     const tracks = await searchSpotify(query);
     if (!tracks.length) {
       await m.react("❌");
-      return m.reply(novaWrap("spotifyplay2", `Lagu tidak ditemukan untuk: *${query}*`, "error"));
+      return m.reply(raraWrap("spotifyplay2", `Lagu tidak ditemukan untuk: *${query}*`, "error"));
     }
 
     const track = tracks[0];
@@ -147,11 +147,11 @@ async function handler(m, { sock }) {
     await m.reply(cardText);
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("spotifyplay2"));
+    await m.reply(raraBerhasil("spotifyplay2"));
   } catch (err) {
     console.error("[spotifyplay2]", err);
     await m.react("❌");
-    m.reply(novaWrap("spotifyplay2", "Gagal download lagu. Coba lagi nanti!", "error"));
+    m.reply(raraWrap("spotifyplay2", "Gagal download lagu. Coba lagi nanti!", "error"));
   }
 }
 

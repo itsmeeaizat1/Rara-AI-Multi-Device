@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zlirik — AI Lyrics Generator via zelapi.eu.cc /ai-generate (suite z)
 // 🔹 Owner 14 Sep: minta "AI Music Generator" — dites live, suno/sunora/
@@ -12,7 +12,7 @@
 // ═════════════════════════════════════════════
 
 import { zelLyrics, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 export { _setZelHttpForTest, _setZelKeyForTest };
 
@@ -30,7 +30,7 @@ const pluginConfig = {
 async function handler(m) {
   try {
     const raw = (m.args || []).join(" ").trim();
-    const usage = () => novaGuideV2("zlirik", {
+    const usage = () => raraGuideV2("zlirik", {
  kaomoji: "(๑´ㅂ`๑)",
  sapaan: "generator lirik AI — bikin lirik lagu dari topik bebas! (◍•ᴗ•◍)",
       cara: "ketik topiknya, genre & mood opsional pakai pemisah |",
@@ -52,17 +52,17 @@ async function handler(m) {
     if (!r.ok) {
       await m.react("❌");
       const map = { API_KEY: "⚠️ Key zelapi belum di-set — owner isi apikeys.json slot *zelapi*." };
-      return m.reply(novaWrap("zlirik", map[r.error] || `❌ *GAGAL: ${r.error}*`));
+      return m.reply(raraWrap("zlirik", map[r.error] || `❌ *GAGAL: ${r.error}*`));
     }
     await m.react("🐣");
 
-    return m.reply(novaWrap("zlirik",
+    return m.reply(raraWrap("zlirik",
       `🎵 *${r.title}*${r.genre && r.genre !== "-" ? ` (${r.genre})` : ""}\n\n${r.lyrics.slice(0, 3500)}\n\n` +
       `_(generator lirik teks zelapi — belum ada audio)_`));
   } catch (err) {
     console.error("[zlirik]", err.message);
     await m.react("❌");
-    return m.reply(novaWrap("zlirik", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(raraWrap("zlirik", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

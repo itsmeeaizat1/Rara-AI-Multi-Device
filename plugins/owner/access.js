@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
 import ms from "ms";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "akses",
   alias: ["akses", "addakses"],
@@ -41,12 +41,12 @@ async function handler(m, { sock, plugins }) {
   let durationTarget = null;
   if (isAdd) {
     if (!target)
-      return m.reply(novaWrap("akses", `❌ *Target Invalid*\n\nTag user / Reply chat / Tulis nomor target`));
+      return m.reply(raraWrap("akses", `❌ *Target Invalid*\n\nTag user / Reply chat / Tulis nomor target`));
     const cleanArgs = m.args.filter(
       (a) => !a.includes("@") && !/^\d{10,}$/.test(a),
     );
     if (cleanArgs.length < 2) {
-      return m.reply(novaWrap("akses", [
+      return m.reply(raraWrap("akses", [
         "Format: " + m.prefix + "addakses <command> <durasi> <target>",
         "",
         "💡 Contoh:",
@@ -76,7 +76,7 @@ async function handler(m, { sock, plugins }) {
     }
 
     if (activeAccess.length === 0) {
-      return m.reply(novaWrap("akses", `Target: @${target.split("@")[0]}\nStatus: Tidak punya akses khusus`), {
+      return m.reply(raraWrap("akses", `Target: @${target.split("@")[0]}\nStatus: Tidak punya akses khusus`), {
         mentions: sock.parseMention(`@${target.split("@")[0]}`),
       });
     }
@@ -100,7 +100,7 @@ async function handler(m, { sock, plugins }) {
       txt += `   └ ${expiredTxt}\n`;
     });
 
-    return m.reply(novaWrap("akses", txt), { mentions: [target] });
+    return m.reply(raraWrap("akses", txt), { mentions: [target] });
   }
   if (isAdd) {
     let expiredTime = null;
@@ -108,10 +108,10 @@ async function handler(m, { sock, plugins }) {
       try {
         const durationMs = ms(durationTarget);
         if (!durationMs)
-          return m.reply(novaWrap("akses", `❌ Format durasi salah! Gunakan: 1h, 1d, 30d`));
+          return m.reply(raraWrap("akses", `❌ Format durasi salah! Gunakan: 1h, 1d, 30d`));
         expiredTime = Date.now() + durationMs;
       } catch {
-        return m.reply(novaWrap("akses", `❌ Format durasi tidak dikenali!`));
+        return m.reply(raraWrap("akses", `❌ Format durasi tidak dikenali!`));
       }
     }
 
@@ -119,7 +119,7 @@ async function handler(m, { sock, plugins }) {
     if (existingIdx !== -1) {
       user.access[existingIdx].expired = expiredTime;
       db.setUser(target, user);
-      return m.reply(novaWrap("akses", `Akses diperbarui\nCommand: ${commandTarget}\nDurasi: ${durationTarget}\nTarget: @${target.split("@")[0]}`));
+      return m.reply(raraWrap("akses", `Akses diperbarui\nCommand: ${commandTarget}\nDurasi: ${durationTarget}\nTarget: @${target.split("@")[0]}`));
     }
     user.access.push({
       cmd: commandTarget,
@@ -130,10 +130,10 @@ async function handler(m, { sock, plugins }) {
     db.setUser(target, user);
     // console.log('[DEBUG AddAccess] After save:', JSON.stringify(db.getUser(target)?.access))
 
-    await m.reply(novaWrap("akses", `Akses diberikan\nCmd: ${commandTarget}\nDurasi: ${durationTarget}\nTarget: @${target.split("@")[0]}`), { mentions: [target] });
+    await m.reply(raraWrap("akses", `Akses diberikan\nCmd: ${commandTarget}\nDurasi: ${durationTarget}\nTarget: @${target.split("@")[0]}`), { mentions: [target] });
   }
   if (isDel) {
-    if (!target) return m.reply(novaWrap("akses", `❌ Tag user yang mau dihapus aksesnya!`));
+    if (!target) return m.reply(raraWrap("akses", `❌ Tag user yang mau dihapus aksesnya!`));
     const now = Date.now();
     const activeAccess = user.access.filter(
       (a) => a.expired === null || a.expired > now,
@@ -143,15 +143,15 @@ async function handler(m, { sock, plugins }) {
       specificCmd = specificCmd.toLowerCase();
       const idx = user.access.findIndex((a) => a.cmd === specificCmd);
       if (idx === -1)
-        return m.reply(novaWrap("akses", `User tidak punya akses command ${specificCmd}`, "error"));
+        return m.reply(raraWrap("akses", `User tidak punya akses command ${specificCmd}`, "error"));
 
       user.access.splice(idx, 1);
       db.setUser(target, user);
-      return m.reply(novaWrap("akses", `Akses ${specificCmd} berhasil dicabut dari @${target.split("@")[0]}`));
+      return m.reply(raraWrap("akses", `Akses ${specificCmd} berhasil dicabut dari @${target.split("@")[0]}`));
     }
 
     if (activeAccess.length === 0) {
-      { return await m.reply(novaWrap("akses", "User ini tidak memiliki akses command apapun.", "error")); };
+      { return await m.reply(raraWrap("akses", "User ini tidak memiliki akses command apapun.", "error")); };
     }
     const rows = activeAccess.map((acc) => {
       const exp = acc.expired ? ms(acc.expired - now) : "Permanent";

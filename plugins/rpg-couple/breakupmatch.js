@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Putus (kehilangan affection, gold penalty)
 
-import { ensureRpg, getRpgData, removeGold } from "../../src/lib/nova-rpg-service.js";
-import { getCintaData, breakUp, formatDurasi } from "../../src/lib/nova-rpg-cinta.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, getRpgData, removeGold } from "../../src/lib/rara-rpg-service.js";
+import { getCintaData, breakUp, formatDurasi } from "../../src/lib/rara-rpg-cinta.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "putusmatch",
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     const cinta = getCintaData(m);
 
     if (!cinta.spouse) {
-      return m.reply(novaRpgBox("Putus", "Kamu tidak punya pasangan!", "warn"));
+      return m.reply(raraRpgBox("Putus", "Kamu tidak punya pasangan!", "warn"));
     }
 
     // Penalty gold
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
     putusLines.push(
       `│ • 💰 Gold : -${goldLost}`,
       "│ • 💕 Affection direset ke 0");
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "rpg cinta", icon: "💔",
       flavor: "💔 *HATI PATAH... PUTUS!*",
       body: putusLines.join("\n"),

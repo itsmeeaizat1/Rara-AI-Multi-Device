@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "animevoice",
@@ -183,7 +183,7 @@ async function handler(m, { sock, args }) {
     let txt = `Karakter: ${CHARACTERS[speakerKey].split("(")[0].trim()}\n\n`;
     txt += `Masukkan teks untuk diucapkan!\n\n`;
     txt += `\`${m.prefix}animevoice ${speakerKey} <text>\``;
-    return m.reply(novaWrap("animevoice", txt));
+    return m.reply(raraWrap("animevoice", txt));
   }
 
   // Detect language from text
@@ -298,7 +298,7 @@ async function handler(m, { sock, args }) {
     console.error("[ANIMEVOICE] Error:", e.message);
     let txt = `Gagal generate voice!\n\n`;
     txt += `Error: ${e.message}`;
-    await m.reply(novaWrap("animevoice", txt));
+    await m.reply(raraWrap("animevoice", txt));
   }
 }
 

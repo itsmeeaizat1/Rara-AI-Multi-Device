@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .autochurn — Auto Churn Detection & Re-engagement
  *
@@ -27,8 +27,8 @@
  */
 
 import { CronJob } from "cron";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaGuide, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraGuide, toSC, raraBox } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -71,9 +71,9 @@ function getSettings() {
       sendTo: "pm", // "pm" atau "owner" (pm = user, owner = notif owner saja)
       excludeJids: [], // jids yang di-exclude
       messages: {
-        warning: "Hai {name}! Kamu udah {days} hari gak pakai Nova AI. Ada fitur baru loh, coba .menu ya!",
+        warning: "Hai {name}! Kamu udah {days} hari gak pakai Rara AI. Ada fitur baru loh, coba .menu ya!",
         churn: "Hey {name}, kangen bot? Kamu udah {days} hari gak make. Coba fitur terbaru: .tanyaai, .hd, .yt. Sayang banget kalau dilewatin!",
-        critical: "{name}, kamu udah {days} hari gak pakai Nova AI. Kami kangen kamu! Jangan lupa balik ya, ketik .menu untuk lihat semua fitur terbaru.",
+        critical: "{name}, kamu udah {days} hari gak pakai Rara AI. Kami kangen kamu! Jangan lupa balik ya, ketik .menu untuk lihat semua fitur terbaru.",
       },
       contactHistory: {}, // { jid: { lastContacted: ISO, tier: "warning" } }
       lastScan: null,
@@ -276,7 +276,7 @@ async function sendReengagement(sock, dryRun = false) {
   // Notifikasi owner
   const ownerNums = (config.owner?.number || []).map((n) => `${n}@s.whatsapp.net`);
   if (ownerNums.length > 0 && !dryRun && sentCount > 0) {
-    const summary = novaBox(toSC("Churn Re-engagement"), [
+    const summary = raraBox(toSC("Churn Re-engagement"), [
       `${toSC("Terkirim")}: ${sentCount} ${toSC("user")}`,
       `${toSC("Gagal")}: ${failCount}`,
       `Warning: ${scanResult.warning.length}`,
@@ -370,7 +370,7 @@ async function handler(m, { sock, config: botConfig }) {
       `${toSC("Ketik")} .autochurn scan ${toSC("untuk cek churn sekarang")}`,
     ];
 
-    await m.reply(novaBox(toSC("Auto Churn Detection"), lines));
+    await m.reply(raraBox(toSC("Auto Churn Detection"), lines));
     return;
   }
 
@@ -379,7 +379,7 @@ async function handler(m, { sock, config: botConfig }) {
     settings.enabled = true;
     saveSettings(db);
     startCron(sock);
-    await m.reply(novaBox(toSC("Auto Churn Detection"), [
+    await m.reply(raraBox(toSC("Auto Churn Detection"), [
       toSC("Churn detection AKTIF"),
       `Scan: harian ${settings.scanTime} WIB`,
       `Threshold: warning ${settings.thresholds.warning}d, churn ${settings.thresholds.churn}d, critical ${settings.thresholds.critical}d`,
@@ -392,7 +392,7 @@ async function handler(m, { sock, config: botConfig }) {
     settings.enabled = false;
     saveSettings(db);
     stopCron();
-    await m.reply(novaBox(toSC("Auto Churn Detection"), [
+    await m.reply(raraBox(toSC("Auto Churn Detection"), [
       toSC("Churn detection DIMATIKAN"),
     ]));
     return;
@@ -405,7 +405,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (result.total === 0) {
       await m.react("🐣");
-      await m.reply(novaBox(toSC("Churn Scan Result"), [
+      await m.reply(raraBox(toSC("Churn Scan Result"), [
         toSC("Tidak ada user churn"),
         `${toSC("Total user di DB")}: ${result.totalScanned}`,
         `${toSC("Excluded")}: ${result.excluded}`,
@@ -442,7 +442,7 @@ async function handler(m, { sock, config: botConfig }) {
     lines.push(`${toSC("Ketik")} .autochurn send ${toSC("untuk kirim re-engagement")}`);
 
     await m.react("🐣");
-    await m.reply(novaBox(toSC("Churn Scan Result"), lines));
+    await m.reply(raraBox(toSC("Churn Scan Result"), lines));
     return;
   }
 
@@ -452,7 +452,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await sendReengagement(sock, false);
 
     await m.react("🐣");
-    await m.reply(novaBox(toSC("Re-engagement Sent"), [
+    await m.reply(raraBox(toSC("Re-engagement Sent"), [
       `${toSC("Terkirim")}: ${result.sentCount} ${toSC("user")}`,
       `${toSC("Gagal")}: ${result.failCount}`,
       ``,
@@ -469,22 +469,22 @@ async function handler(m, { sock, config: botConfig }) {
     const days = parseInt(args[2]);
 
     if (!tier || !["warning", "churn", "critical"].includes(tier)) {
-      return m.reply(novaError("autochurn", "Tier: warning/churn/critical", ".autochurn threshold churn 14"));
+      return m.reply(raraError("autochurn", "Tier: warning/churn/critical", ".autochurn threshold churn 14"));
     }
     if (isNaN(days) || days < 1 || days > 365) {
-      return m.reply(novaError("autochurn", "Days: 1-365", ".autochurn threshold churn 14"));
+      return m.reply(raraError("autochurn", "Days: 1-365", ".autochurn threshold churn 14"));
     }
 
     // Validate tier ordering: warning < churn < critical
     const t = { ...settings.thresholds, [tier]: days };
     if (t.warning >= t.churn || t.churn >= t.critical) {
-      return m.reply(novaError("autochurn", "warning < churn < critical wajib berurutan", ".autochurn threshold churn 14"));
+      return m.reply(raraError("autochurn", "warning < churn < critical wajib berurutan", ".autochurn threshold churn 14"));
     }
 
     settings.thresholds[tier] = days;
     saveSettings(db);
 
-    await m.reply(novaBox(toSC("Threshold Updated"), [
+    await m.reply(raraBox(toSC("Threshold Updated"), [
       `Warning: ${t.warning} hari`,
       `Churn: ${t.churn} hari`,
       `Critical: ${t.critical} hari`,
@@ -496,13 +496,13 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "cooldown") {
     const days = parseInt(args[1]);
     if (isNaN(days) || days < 1 || days > 90) {
-      return m.reply(novaError("autochurn", "Days: 1-90", ".autochurn cooldown 14"));
+      return m.reply(raraError("autochurn", "Days: 1-90", ".autochurn cooldown 14"));
     }
 
     settings.cooldownDays = days;
     saveSettings(db);
 
-    await m.reply(novaBox(toSC("Cooldown Updated"), [
+    await m.reply(raraBox(toSC("Cooldown Updated"), [
       `Cooldown: ${days} hari`,
       toSC("User gak akan di-contact lagi dalam periode ini"),
     ]));
@@ -515,11 +515,11 @@ async function handler(m, { sock, config: botConfig }) {
     const text = args.slice(2).join(" ");
 
     if (!tier || !["warning", "churn", "critical"].includes(tier)) {
-      return m.reply(novaError("autochurn", "Tier: warning/churn/critical", ".autochurn message churn Hey {name}, kangen?"));
+      return m.reply(raraError("autochurn", "Tier: warning/churn/critical", ".autochurn message churn Hey {name}, kangen?"));
     }
     if (!text) {
       // Show current message
-      await m.reply(novaBox(toSC("Current Message") + `: ${tier}`, [
+      await m.reply(raraBox(toSC("Current Message") + `: ${tier}`, [
         settings.messages[tier] || toSC("(belum diset)"),
         ``,
         toSC("Variables: {name} {days} {jid} {number}"),
@@ -530,7 +530,7 @@ async function handler(m, { sock, config: botConfig }) {
     settings.messages[tier] = text;
     saveSettings(db);
 
-    await m.reply(novaBox(toSC("Message Updated"), [
+    await m.reply(raraBox(toSC("Message Updated"), [
       `Tier: ${tier}`,
       `Message: ${text}`,
     ]));
@@ -543,10 +543,10 @@ async function handler(m, { sock, config: botConfig }) {
     const jid = args[2]?.replace(/@s\.whatsapp\.net$/, "");
 
     if (!action || !["add", "del"].includes(action)) {
-      return m.reply(novaError("autochurn", "Action: add/del", ".autochurn exclude add 628xxx"));
+      return m.reply(raraError("autochurn", "Action: add/del", ".autochurn exclude add 628xxx"));
     }
     if (!jid) {
-      return m.reply(novaError("autochurn", "Butuh nomor/JID", ".autochurn exclude add 628xxx"));
+      return m.reply(raraError("autochurn", "Butuh nomor/JID", ".autochurn exclude add 628xxx"));
     }
 
     if (action === "add") {
@@ -554,14 +554,14 @@ async function handler(m, { sock, config: botConfig }) {
         settings.excludeJids.push(jid);
       }
       saveSettings(db);
-      await m.reply(novaBox(toSC("Exclude Updated"), [
+      await m.reply(raraBox(toSC("Exclude Updated"), [
         `${toSC("Ditambahkan")}: ${jid}`,
         `Total excluded: ${settings.excludeJids.length}`,
       ]));
     } else {
       settings.excludeJids = settings.excludeJids.filter((j) => j !== jid);
       saveSettings(db);
-      await m.reply(novaBox(toSC("Exclude Updated"), [
+      await m.reply(raraBox(toSC("Exclude Updated"), [
         `${toSC("Dihapus")}: ${jid}`,
         `Total excluded: ${settings.excludeJids.length}`,
       ]));
@@ -576,7 +576,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (result.total === 0) {
       await m.react("🐣");
-      await m.reply(novaBox(toSC("Churned Users"), [
+      await m.reply(raraBox(toSC("Churned Users"), [
         toSC("Tidak ada user churn saat ini"),
       ]));
       return;
@@ -601,7 +601,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaBox(toSC("Churned Users"), lines));
+    await m.reply(raraBox(toSC("Churned Users"), lines));
     return;
   }
 
@@ -609,7 +609,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "settime") {
     const time = args[1];
     if (!time || !/^\d{1,2}:\d{2}$/.test(time)) {
-      return m.reply(novaError("autochurn", "Format: HH:MM", ".autochurn settime 10:00"));
+      return m.reply(raraError("autochurn", "Format: HH:MM", ".autochurn settime 10:00"));
     }
 
     settings.scanTime = time;
@@ -620,7 +620,7 @@ async function handler(m, { sock, config: botConfig }) {
       startCron(sock);
     }
 
-    await m.reply(novaBox(toSC("Scan Time Updated"), [
+    await m.reply(raraBox(toSC("Scan Time Updated"), [
       `Daily: ${time} WIB`,
     ]));
     return;
@@ -633,7 +633,7 @@ async function handler(m, { sock, config: botConfig }) {
     settings.lastScan = null;
     saveSettings(db);
 
-    await m.reply(novaBox(toSC("Auto Churn Detection"), [
+    await m.reply(raraBox(toSC("Auto Churn Detection"), [
       toSC("Contact history & stats direset"),
       toSC("Threshold & message tetap"),
     ]));
@@ -644,20 +644,20 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "sendto") {
     const target = args[1]?.toLowerCase();
     if (target !== "pm" && target !== "owner") {
-      return m.reply(novaError("autochurn", "Pilih: pm (user) atau owner (notif)", ".autochurn sendto pm"));
+      return m.reply(raraError("autochurn", "Pilih: pm (user) atau owner (notif)", ".autochurn sendto pm"));
     }
 
     settings.sendTo = target;
     saveSettings(db);
 
-    await m.reply(novaBox(toSC("Send Target Updated"), [
+    await m.reply(raraBox(toSC("Send Target Updated"), [
       `Send to: ${target === "owner" ? toSC("Notif Owner saja") : toSC("PM User")}`,
     ]));
     return;
   }
 
   // Unknown
-  return m.reply(novaError("autochurn", novaGuide(botConfig.command?.prefix || ".", "autochurn", m.pushName), ".autochurn scan"));
+  return m.reply(raraError("autochurn", raraGuide(botConfig.command?.prefix || ".", "autochurn", m.pushName), ".autochurn scan"));
 }
 
 export { pluginConfig, handler, pluginConfig as config };

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "kalkulatormbg",
@@ -90,7 +90,7 @@ function formatRupiah(angka) {
 
 async function handler(m, { sock,  args }) {
   if (!args[0]) {
-    return await m.reply(novaWrap("kalkulatormbg", [
+    return await m.reply(raraWrap("kalkulatormbg", [
       `Hitung berapa lama uang kamu bisa nyuplai program Makan Bergizi Gratis se-Indonesia.`,
       ``,
       `📌 Format: ${m.prefix}kkmbg <nominal uang>`,
@@ -101,7 +101,7 @@ async function handler(m, { sock,  args }) {
     await m.react("🕒");
     const uang = Number(args[0].replace(/[^0-9]/g, ''));
     if (isNaN(uang) || uang <= 0) {
-      return m.reply(novaWrap("Kalkulatormbg", "❌ Kak, tolong masukin angka uang yang valid ya! (Cuma angka aja, misal 500000)"));
+      return m.reply(raraWrap("Kalkulatormbg", "❌ Kak, tolong masukin angka uang yang valid ya! (Cuma angka aja, misal 500000)"));
     }
 
     const data = hitungMBG(uang);
@@ -131,10 +131,10 @@ async function handler(m, { sock,  args }) {
     txt += contentTxt.trim().split("\n").map(line => line.trim() ? `${line}` : ``).join("\n");
 
     await m.react("🐣");
-    await m.reply(novaWrap("kalkulatormbg", txt));
+    await m.reply(raraWrap("kalkulatormbg", txt));
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("kalkulatormbg", `❌ Maaf kak, terjadi kesalahan saat menghitung! 😭\nError: ${e.message}`));
+    m.reply(raraWrap("kalkulatormbg", `❌ Maaf kak, terjadi kesalahan saat menghitung! 😭\nError: ${e.message}`));
   }
 }
 

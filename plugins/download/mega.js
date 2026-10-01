@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .mega — downloader file MEGA.nz via package megajs (16 Sep 2026, request
 // owner: audit dependencies → megajs terverifikasi hidup, fitur MEGA belum ada).
 // TANPA API eksternal — direct protokol MEGA. STRICT satuan: error asli keluar.
 
 import { File as MegaFile } from "megajs";
 import {
-  novaError, novaCaption, novaWrap, tipText,
-} from "../../src/lib/nova-menu-style.js";
+  raraError, raraCaption, raraWrap, tipText,
+} from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "mega",
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
 
     if (!raw) {
       const text =
-        novaCaption({
+        raraCaption({
           emoji: "⬇️",
           name: "mega",
           description: "Unduh file dari link MEGA.nz langsung ke chat",
@@ -61,7 +61,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     const linkMatch = raw.match(MEGA_RE);
     if (!linkMatch) {
       await m.reply(
-        novaError("Mega", "Link MEGA tidak ditemukan — kirim link lengkap https://mega.nz/file/... atau https://mega.nz/folder/..."),
+        raraError("Mega", "Link MEGA tidak ditemukan — kirim link lengkap https://mega.nz/file/... atau https://mega.nz/folder/..."),
         "mega",
       );
       await m.react("❌");
@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
 
     if (/\/(folder|F)\//.test(link)) {
       const text =
-        novaWrap("Mega", [
+        raraWrap("Mega", [
           "Link folder MEGA belum didukung di versi ini 😊",
           "Solusi : *share link file langsung* dari folder",
           "",
@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     const size = Number(file.size || 0);
     if (size > MAX_SIZE) {
       const text =
-        novaWrap("Mega", [
+        raraWrap("Mega", [
           `File : *${file.name}*`,
           `Ukuran : *${fmtSize(size)}* — melebihi batas *100 MB* 😅`,
           "Solusi : kompres dulu atau pecah file, lalu unggah ulang",
@@ -118,11 +118,11 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     const msg = String(error?.message || error || "");
     let teks;
     if (/not found|no such|attributes/i.test(msg)) {
-      teks = novaError("Mega", "File MEGA tidak ditemukan — cek link lengkap beserta key-nya (xxxx#yyyy)");
+      teks = raraError("Mega", "File MEGA tidak ditemukan — cek link lengkap beserta key-nya (xxxx#yyyy)");
     } else if (/decrypt|key/i.test(msg)) {
-      teks = novaError("Mega", "Gagal dekripsi — key link MEGA tidak valid atau terpotong");
+      teks = raraError("Mega", "Gagal dekripsi — key link MEGA tidak valid atau terpotong");
     } else {
-      teks = novaError("Mega", `Gagal mengunduh: ${msg.slice(0, 120) || "kesalahan jaringan"}`);
+      teks = raraError("Mega", `Gagal mengunduh: ${msg.slice(0, 120) || "kesalahan jaringan"}`);
     }
     await m.reply(teks, "mega");
   }

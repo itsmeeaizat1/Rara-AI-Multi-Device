@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -154,7 +154,7 @@ async function handler(m, { sock, config: botConfig }) {
   // Cek media
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
   if (!isImage) {
-    const text = novaWrap("Nutrisi Scanner", [
+    const text = raraWrap("Nutrisi Scanner", [
       `Kirim atau reply foto makanan dengan caption:`,
       ``,
       `*${prefix}nutrisi*`,
@@ -171,7 +171,7 @@ async function handler(m, { sock, config: botConfig }) {
   // Cek API
   const visionCfg = getVisionConfig(botConfig);
   if (!visionCfg) {
-    await m.reply(novaWrap("Nutrisi Scanner", [
+    await m.reply(raraWrap("Nutrisi Scanner", [
       `API Vision belum dikonfigurasi.`,
       `Set salah satu di config.js:`,
       `aiHelp.apiKey (OpenAI format)`,
@@ -190,7 +190,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!buffer) {
-      await m.reply(novaWrap("Nutrisi Scanner", "Gagal download nih foto. Coba kirim ulang."));
+      await m.reply(raraWrap("Nutrisi Scanner", "Gagal download nih foto. Coba kirim ulang."));
       return;
     }
 
@@ -223,17 +223,17 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!result || result.trim() === "") {
-      await m.reply(novaWrap("Nutrisi Scanner", "AI tidak dapat menganalisis foto ini. Coba foto lain dengan pencahayaan lebih jelas."));
+      await m.reply(raraWrap("Nutrisi Scanner", "AI tidak dapat menganalisis foto ini. Coba foto lain dengan pencahayaan lebih jelas."));
       return;
     }
 
     // Send result
     await m.react("🐣");
-    await m.reply(novaWrap("Nutrisi Scanner", result.trim()));
+    await m.reply(raraWrap("Nutrisi Scanner", result.trim()));
   } catch (err) {
     await m.react("❌");
     console.log("[Nutrisi] Error:", err.message);
-    await m.reply(novaWrap("Nutrisi Scanner", [
+    await m.reply(raraWrap("Nutrisi Scanner", [
       `Terjadi error saat menganalisis.`,
       `Detail: ${err.message?.slice(0, 100) || "Unknown error"}`,
     ].join("\n")));

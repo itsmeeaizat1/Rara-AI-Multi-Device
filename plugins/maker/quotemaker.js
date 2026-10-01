@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraBerhasil } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -36,7 +36,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const input = text.trim();
     if (!input) {
-      return m.reply(novaWrap("quotemaker", [
+      return m.reply(raraWrap("quotemaker", [
         "Buat quote card dari teks sendiri.",
         "",
         "📌 Format: " + usedPrefix + "quotemaker <teks> | <author> | <bg>",
@@ -56,7 +56,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const bg = BG_PRESETS[bgName] || BG_PRESETS.dark;
 
     if (quoteText.length > 200) {
-      return m.reply(novaWrap("quotemaker", "Teks maksimal 200 karakter."));
+      return m.reply(raraWrap("quotemaker", "Teks maksimal 200 karakter."));
     }
 
     const canvas = await getCanvas();
@@ -114,9 +114,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ctx.font = '14px sans-serif';
     ctx.fillStyle = bg.text + '60';
     ctx.textAlign = 'right';
-    ctx.fillText('Nova AI', W - 35, H - 30);
+    ctx.fillText('Rara AI', W - 35, H - 30);
 
-    const tmpDir = path.join(os.tmpdir(), 'nova-quotemaker');
+    const tmpDir = path.join(os.tmpdir(), 'rara-quotemaker');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const outPath = path.join(tmpDir, 'quote_' + Date.now() + '.png');
     const buf = cv.toBuffer('image/png');
@@ -125,13 +125,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: buf,
-      caption: novaBerhasil(),
+      caption: raraBerhasil(),
     });
 
     fs.unlinkSync(outPath);
   } catch (e) {
     console.error("quotemaker error:", e);
-    return m.reply(novaWrap("quotemaker", "Gagal buat quote. Coba lagi.", "error"));
+    return m.reply(raraWrap("quotemaker", "Gagal buat quote. Coba lagi.", "error"));
   }
 }
 

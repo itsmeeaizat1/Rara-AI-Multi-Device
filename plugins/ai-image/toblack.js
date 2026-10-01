@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { uploadImage } from "../../src/lib/nova-uploader.js";
-import { f } from "../../src/lib/nova-http.js";
-import te from "../../src/lib/nova-error.js";
+import { uploadImage } from "../../src/lib/rara-uploader.js";
+import { f } from "../../src/lib/rara-http.js";
+import te from "../../src/lib/rara-error.js";
 import { live3d } from "../../src/scraper/seaart.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!isImage) {
-    return m.reply(novaGuideV2("toblack", {
+    return m.reply(raraGuideV2("toblack", {
  kaomoji: "(¬‿¬)",
  sapaan: "ubah kulit fotomu jadi lebih gelap secara natural dan realistis!",
       cara: "kirim atau reply gambar dengan caption commandnya",
@@ -79,14 +79,14 @@ async function handler(m, { sock }) {
     }
 
     if (!buffer) {
-      return m.reply(novaWrap("toblack", `❌ Gagal mendownload gambar`));
+      return m.reply(raraWrap("toblack", `❌ Gagal mendownload gambar`));
     }
     const result = await live3d(buffer, PROMPT);
     await sock.sendMedia(m.chat, result.image, null, m, {
       type: "image",
     });
     // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-    await m.reply(mediaInfoCaption({ header: "Nova To Black", fields: [
+    await m.reply(mediaInfoCaption({ header: "Rara To Black", fields: [
       { icon: "📥", label: "Input", value: "Foto" },
       { icon: "🎨", label: "Style", value: "Skin Tone Gelap" },
       { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     ] }))
   } catch (error) {
     console.log(error);
-    m.reply(novaWrap("toblack", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("toblack", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

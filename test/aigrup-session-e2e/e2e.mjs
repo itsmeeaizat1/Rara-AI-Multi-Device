@@ -11,13 +11,13 @@ function t(label, cond, extra) {
 }
 
 const R = path.resolve(".")
-const { initDatabase } = await import(R + "/src/lib/nova-database.js")
-await initDatabase("/tmp/aigrup-session-db/nova.json")
-const db = (await import(R + "/src/lib/nova-database.js")).getDatabase()
+const { initDatabase } = await import(R + "/src/lib/rara-database.js")
+await initDatabase("/tmp/aigrup-session-db/rara.json")
+const db = (await import(R + "/src/lib/rara-database.js")).getDatabase()
 
-const { isAiGrupEnabled, handleAiGrup } = await import(R + "/src/lib/nova-aigroupchat.js")
+const { isAiGrupEnabled, handleAiGrup } = await import(R + "/src/lib/rara-aigroupchat.js")
 const { handler } = await import(R + "/plugins/ai/aigroupchat.js")
-const { getJadibotSetting, setJadibotSetting } = await import(R + "/src/lib/nova-jadibot-database.js")
+const { getJadibotSetting, setJadibotSetting } = await import(R + "/src/lib/rara-jadibot-database.js")
 const config = (await import(R + "/config.js")).default
 
 const CHILD = "628111222333@s.whatsapp.net"
@@ -75,7 +75,7 @@ t("2f. isAiGrupEnabled(ctx) sekarang true", isAiGrupEnabled(ctx) === true)
 // ═══ 3. NIMBRUNG SETELAH ON (AI live via Tio) ═══
 replies.length = 0
 const handled = await handleAiGrup(
-  mockM("halo nova, ada yang tau film bagus?", { mentioned: [CHILD] }),
+  mockM("halo rara, ada yang tau film bagus?", { mentioned: [CHILD] }),
   mockSock(CHILD), undefined, ctx
 )
 t("3a. handleAiGrup session ON → nimbrung (handled true)", handled === true)

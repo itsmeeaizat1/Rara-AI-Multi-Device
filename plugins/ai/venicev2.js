@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // venicev2 — Venice AI (dolphin-3.0-mistral-24b)
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "venicev2", alias: ["venicev2"], aliases: ["venicev2", "veniceaiv2"],
@@ -13,12 +13,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
-    if (!text) return m.reply(novaWrap("venicev2", `Mau nanya apa?\nContoh: ${m.prefix}venicev2 jelaskan relativitas`, "guide"));
+    if (!text) return m.reply(raraWrap("venicev2", `Mau nanya apa?\nContoh: ${m.prefix}venicev2 jelaskan relativitas`, "guide"));
     await m.react("🕒");
     const res = await fetch("https://outerface.venice.ai/api/inference/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json", "Origin": "https://venice.ai", "Referer": "https://venice.ai/" },
-      body: JSON.stringify({ requestId: "nova-ai", modelId: "dolphin-3.0-mistral-24b", prompt: [{ content: text, role: "user" }] }),
+      body: JSON.stringify({ requestId: "rara-ai", modelId: "dolphin-3.0-mistral-24b", prompt: [{ content: text, role: "user" }] }),
     });
     const data = await res.json();
     const reply = data?.choices?.[0]?.message?.content || data?.content || "Tidak ada jawaban.";
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
     console.error("venicev2 error:", e.message);
     await m.react("❌");
-    return m.reply(novaWrap("venicev2", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(raraWrap("venicev2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

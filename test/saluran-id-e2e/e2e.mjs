@@ -1,5 +1,5 @@
 // E2E — Saluran ID: resolve URL→ID newsletter + fix notif .bot on/off ke saluran + .setchannel persist
-// Request owner 19 Sep 2026: "bot dimatiikan/diaktifkan notifnya gak sampai ke saluran nova
+// Request owner 19 Sep 2026: "bot dimatiikan/diaktifkan notifnya gak sampai ke saluran rara
 // official" + "g ada fitur url saluran wa convert jadi id newsletternya".
 import { strict as assert } from "assert";
 import fs from "fs";
@@ -20,7 +20,7 @@ process.on("unhandledRejection", (e) => { w("REJECTION: " + (e?.stack || e)); pr
 // ── import lib satu pintu ──
 const { resolveNewsletterJid, getSaluranChannel, persistSaluranConfig,
   _resetSaluranCacheForTest, _setSaluranConfigPathForTest } =
-  await import("../../src/lib/nova-saluran.js");
+  await import("../../src/lib/rara-saluran.js");
 const config = (await import("../../config.js")).default;
 
 // simpen config asli — semua test mutasi runtime config, restore di akhir
@@ -85,17 +85,17 @@ w("\n— section 3: persistSaluranConfig —");
 
 const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "saluran-e2e-"));
 const tmpFile = path.join(tmpDir, "bot-identity.js");
-fs.writeFileSync(tmpFile, `// dummy\nconst botIdentity = {\n  saluran: {\n    // komentar\n    id: "@newsletter",\n    name: "Nova AI Official",\n    link: "https://whatsapp.com/channel/oldlink1234567890",\n  },\n};\nexport default botIdentity;\n`);
+fs.writeFileSync(tmpFile, `// dummy\nconst botIdentity = {\n  saluran: {\n    // komentar\n    id: "@newsletter",\n    name: "Rara AI Official",\n    link: "https://whatsapp.com/channel/oldlink1234567890",\n  },\n};\nexport default botIdentity;\n`);
 _setSaluranConfigPathForTest(tmpFile);
-config.saluran = { id: "@newsletter", name: "Nova AI Official", link: "https://whatsapp.com/channel/oldlink1234567890" };
+config.saluran = { id: "@newsletter", name: "Rara AI Official", link: "https://whatsapp.com/channel/oldlink1234567890" };
 
-persistSaluranConfig({ id: NUM_JID, link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Nova Baru" });
+persistSaluranConfig({ id: NUM_JID, link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Rara Baru" });
 const written = fs.readFileSync(tmpFile, "utf8");
 t("3a. id numerik ke-tulis ke file", written.includes(`id: "${NUM_JID}"`), written.slice(0, 200));
 t("3b. link ke-tulis ke file", written.includes(`link: "https://whatsapp.com/channel/${INVITE_CODE}"`));
-t("3c. name ke-tulis di BLOK saluran doang", written.includes('name: "Nova Baru"'));
+t("3c. name ke-tulis di BLOK saluran doang", written.includes('name: "Rara Baru"'));
 t("3d. struktur file tetep valid-ish (blok saluran utuh)", written.includes("saluran: {") && written.includes("export default botIdentity"));
-t("3e. runtime config.saluran ikut ke-update (tanpa restart)", config.saluran.id === NUM_JID && config.saluran.link.includes(INVITE_CODE) && config.saluran.name === "Nova Baru");
+t("3e. runtime config.saluran ikut ke-update (tanpa restart)", config.saluran.id === NUM_JID && config.saluran.link.includes(INVITE_CODE) && config.saluran.name === "Rara Baru");
 
 // persist kedua kali (id udah numerik, bukan placeholder) → harus tetap keganti
 persistSaluranConfig({ id: "999888777666555@newsletter" });
@@ -127,10 +127,10 @@ const mkM = (text) => {
 const saluranSock = {
   newsletterMetadata: async (type, key) => {
     if (type === "invite" && key === INVITE_CODE) {
-      return { id: NUM_JID, name: "Nova AI Official", subscribers: 12345, state: "ACTIVE", verified: true };
+      return { id: NUM_JID, name: "Rara AI Official", subscribers: 12345, state: "ACTIVE", verified: true };
     }
     if (type === "jid" && key === NUM_JID) {
-      return { id: NUM_JID, name: "Nova AI Official", subscribers: 12345, state: "ACTIVE", verified: true };
+      return { id: NUM_JID, name: "Rara AI Official", subscribers: 12345, state: "ACTIVE", verified: true };
     }
     return null;
   },
@@ -142,7 +142,7 @@ const saluranSock = {
   await handler(m, { sock: saluranSock });
   const out = sent[0] || "";
   t("4c. URL saluran → reply ada ID numerik", out.includes(NUM_JID), out.slice(0, 120));
-  t("4d. reply nunjukin nama + follower", out.toLowerCase().includes("nova ai official") && out.includes("12.345"), out.slice(0, 160));
+  t("4d. reply nunjukin nama + follower", out.toLowerCase().includes("rara ai official") && out.includes("12.345"), out.slice(0, 160));
   t("4e. reply kasih hint .setchannel biar langsung dipasang", out.includes(".setchannel"));
 }
 
@@ -185,12 +185,12 @@ const saluranSock = {
 w("\n— section 5: notif .bot off/on nyampe saluran —");
 
 const botPlugin = await import("../../plugins/bot/bot.js");
-const { initDatabase, getDatabase } = await import("../../src/lib/nova-database.js");
-await initDatabase("/tmp/saluran-id-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import("../../src/lib/rara-database.js");
+await initDatabase("/tmp/saluran-id-e2e-db/rara.json");
 const db = getDatabase();
 
 // 1 grup + saluran (bot admin) — target broadcast
-config.saluran = { id: "@newsletter", link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Nova AI Official" };
+config.saluran = { id: "@newsletter", link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Rara AI Official" };
 _resetSaluranCacheForTest();
 db.db.data.groups = db.db.data.groups || {};
 db.db.data.groups["123456789-1234@g.us"] = { id: "123456789-1234@g.us", subject: "Grup Tes" };
@@ -199,7 +199,7 @@ await db.save();
 const delivered = [];
 const bSock = {
   newsletterMetadata: async (type, key) => {
-    if (type === "invite" && key === INVITE_CODE) return { id: NUM_JID, name: "Nova AI Official" };
+    if (type === "invite" && key === INVITE_CODE) return { id: NUM_JID, name: "Rara AI Official" };
     if (type === "jid" && key === NUM_JID) return { id: NUM_JID, viewer_role: "ADMIN" };
     return null;
   },
@@ -241,7 +241,7 @@ t('5e. isi notif on beneran "kembali aktif"', /kembali aktif/i.test(onToChannel.
 _resetSaluranCacheForTest();
 const bSockNonAdmin = {
   newsletterMetadata: async (type, key) => {
-    if (type === "invite" && key === INVITE_CODE) return { id: NUM_JID, name: "Nova AI Official" };
+    if (type === "invite" && key === INVITE_CODE) return { id: NUM_JID, name: "Rara AI Official" };
     if (type === "jid" && key === NUM_JID) return { id: NUM_JID, viewer_role: "SUBSCRIBER" };
     return null;
   },
@@ -264,15 +264,15 @@ t("5f. bot bukan admin → saluran di-skip (gak kirim), grup tetap kirim", chanA
 w("\n— section 6: broadcastToSaluran (notif semua fitur ke saluran) —");
 
 const { broadcastToSaluran, isNotifyEnabled, setNotifyEnabled, notifyPremiumAdd } =
-  await import("../../src/lib/nova-saluran-broadcast.js");
+  await import("../../src/lib/rara-saluran-broadcast.js");
 // db udah ke-init di section 5
 
-config.saluran = { id: "@newsletter", link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Nova AI Official" };
+config.saluran = { id: "@newsletter", link: `https://whatsapp.com/channel/${INVITE_CODE}`, name: "Rara AI Official" };
 _resetSaluranCacheForTest();
 const bcSent = [];
 const bcSock = {
   newsletterMetadata: async (type, key) =>
-    type === "invite" && key === INVITE_CODE ? { id: NUM_JID, name: "Nova AI Official" } : null,
+    type === "invite" && key === INVITE_CODE ? { id: NUM_JID, name: "Rara AI Official" } : null,
   sendMessage: async (jid, payload) => { bcSent.push({ jid, payload }); return { key: { id: "x" } } },
 };
 

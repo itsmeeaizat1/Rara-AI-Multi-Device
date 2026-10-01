@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'delpp',
     alias: ["delpp"],
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
         const botJid = sock.user?.id
         if (!botJid) {
-            { const __navText = novaWrap("delpp", `❌ Bot JID tidak ditemukan.`); await m.reply(__navText); }
+            { const __navText = raraWrap("delpp", `❌ Bot JID tidak ditemukan.`); await m.reply(__navText); }
             return
         }
         

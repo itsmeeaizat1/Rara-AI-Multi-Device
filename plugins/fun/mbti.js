@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "mbti",
@@ -72,7 +72,7 @@ async function handler(m, { sock, args }) {
   if (!session) {
     if (lowerText === ".mbti" || lowerText === ".mbti start" || lowerText === "!mbti" || lowerText.startsWith(".mbti ") || lowerText.startsWith("!mbti ")) {
       if (m.isGroup) {
-        return m.reply(novaWrap("Mbti", "MBTI test hanya bisa dijalankan di private chat (DM) karena membutuhkan sesi interaktif.\n\nChat gw langsung untuk mulai test MBTI!"));
+        return m.reply(raraWrap("Mbti", "MBTI test hanya bisa dijalankan di private chat (DM) karena membutuhkan sesi interaktif.\n\nChat gw langsung untuk mulai test MBTI!"));
       }
       try {
         const res = await apiGet("/questions?locale=en");
@@ -95,10 +95,10 @@ async function handler(m, { sock, args }) {
         txt += `B. ${q.rightTrait}\n\n`;
         txt += `Balas dengan *A* atau *B*`;
 
-        await m.reply(novaWrap("MBTI", txt.split("\n")));
+        await m.reply(raraWrap("MBTI", txt.split("\n")));
       } catch (e) {
         console.error("[MBTI] Error:", e.message);
-        await m.reply(novaError("MBTI", `Gagal mulai test MBTI nih: ${e.message}`));
+        await m.reply(raraError("MBTI", `Gagal mulai test MBTI nih: ${e.message}`));
       }
       return;
     }
@@ -109,7 +109,7 @@ async function handler(m, { sock, args }) {
   // Cancel test
   if (lowerText === "cancel" || lowerText === "batal" || lowerText === "stop" || lowerText === ".mbti cancel") {
     sessions.delete(sender);
-    return m.reply(novaWrap("Mbti", "Test MBTI dibatalkan. Ketik `.mbti` untuk mulai lagi."));
+    return m.reply(raraWrap("Mbti", "Test MBTI dibatalkan. Ketik `.mbti` untuk mulai lagi."));
   }
 
   // Parse answer (A or B)
@@ -119,7 +119,7 @@ async function handler(m, { sock, args }) {
   else if (lowerText === "aa") answer = 1; // strongly left
   else if (lowerText === "bb") answer = 5; // strongly right
   else {
-    return m.reply(novaWrap("Mbti", `Pilih *A* atau *B* saja!\n\nAtau ketik *cancel* untuk batal.`));
+    return m.reply(raraWrap("Mbti", `Pilih *A* atau *B* saja!\n\nAtau ketik *cancel* untuk batal.`));
   }
 
   // Record answer
@@ -179,11 +179,11 @@ async function handler(m, { sock, args }) {
       if (r.shareUrl) txt += `Detail: ${r.shareUrl}\n\n`;
       txt += `_Test selesai! 32/32 pertanyaan terjawab_`;
 
-      await m.reply(novaWrap("MBTI", txt.split("\n")));
+      await m.reply(raraWrap("MBTI", txt.split("\n")));
     } catch (e) {
     await m.react("❌");
       console.error("[MBTI] Calculate error:", e.message);
-      await m.reply(novaError("MBTI", `Gagal hitung hasil nih: ${e.message}`));
+      await m.reply(raraError("MBTI", `Gagal hitung hasil nih: ${e.message}`));
     }
     sessions.delete(sender);
     return;
@@ -199,7 +199,7 @@ async function handler(m, { sock, args }) {
   txt += `Ketik *cancel* untuk batal`;
 
   await m.react("🐣");
-  await m.reply(novaWrap("MBTI", txt.split("\n")));
+  await m.reply(raraWrap("MBTI", txt.split("\n")));
 }
 
 export { pluginConfig as config, handler };

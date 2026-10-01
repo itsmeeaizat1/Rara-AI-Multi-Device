@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ringtone.js — Search & download ringtone (meloboom scrape, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { novaBox, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraBox, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -73,13 +73,13 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const query = m.args?.join(" ").trim();
     if (!query) {
-      return m.reply(novaGuide("Ringtone", "Masukkan kata kunci ringtone!", ".ringtone iphone"));
+      return m.reply(raraGuide("Ringtone", "Masukkan kata kunci ringtone!", ".ringtone iphone"));
     }
 
     const results = await searchRingtone(query);
     if (!results.length) {
       await m.react("❌");
-      return m.reply(novaError("Ringtone", `Ringtone tidak ditemukan untuk: *${query}*`));
+      return m.reply(raraError("Ringtone", `Ringtone tidak ditemukan untuk: *${query}*`));
     }
 
     // Download ringtone pertama
@@ -112,12 +112,12 @@ async function handler(m, { sock }) {
       lines.push(`${i + 1}. ${item.title}`);
     });
 
-    await m.reply(novaBox("Ringtone", lines));
+    await m.reply(raraBox("Ringtone", lines));
     await m.react("🐣");
   } catch (err) {
     console.error("[Ringtone]", err);
     await m.react("❌");
-    m.reply(novaGagal("Ringtone"));
+    m.reply(raraGagal("Ringtone"));
   }
 }
 

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "quilbot",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ") || m.text?.trim();
 
   if (!text) {
-        return m.reply(novaGuideV2("quilbot", {
+        return m.reply(raraGuideV2("quilbot", {
  kaomoji: "(◍'◡'◍)",
  sapaan: "mau teksmu disempurnakan biar lebih enak dibaca? kirim aja! (◍•ᴗ•◍)",
       cara: "ketik teks yang mau diperbaiki sesudah command",
@@ -40,13 +40,13 @@ async function handler(m, { sock }) {
     const data = res.data;
     if (!data.status || !data.result) {
       await m.react("🐣");
-      return m.reply(novaWrap("quilbot", "⚠️ Quillbot gagal memproses teks."));
+      return m.reply(raraWrap("quilbot", "⚠️ Quillbot gagal memproses teks."));
     }
 
     await m.reply(data.result);
   } catch (error) {
     console.error("[Quillbot]", error.message);
-    m.reply(novaWrap("quilbot", "😔 Terjadi kesalahan saat memproses teks ke Quillbot."));
+    m.reply(raraWrap("quilbot", "😔 Terjadi kesalahan saat memproses teks ke Quillbot."));
   }
 }
 

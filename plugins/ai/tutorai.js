@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // AI Tutor — Personalized learning assistant
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "tutorai",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("tutorai", `Mau belajar apa hari ini?\n\nContoh:\n${m.prefix}tutorai jelaskan fotosintesis\n${m.prefix}tutorai cara kerja blockchain\n${m.prefix}tutorai beda AC dan DC`, "guide"));
+      return m.reply(raraWrap("tutorai", `Mau belajar apa hari ini?\n\nContoh:\n${m.prefix}tutorai jelaskan fotosintesis\n${m.prefix}tutorai cara kerja blockchain\n${m.prefix}tutorai beda AC dan DC`, "guide"));
     }
 
     await m.react("🕒");
@@ -40,11 +40,11 @@ RANGKUMAN: [rangkuman dalam 1 kalimat]
 
 Gunakan bahasa Indonesia yang santai dan mudah dimengerti.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("tutorai", "Tutor-nya lagi istirahat 📚", "error"));
+      return m.reply(raraWrap("tutorai", "Tutor-nya lagi istirahat 📚", "error"));
     }
 
     const lines = result.answer.trim().split("\n");
@@ -99,7 +99,7 @@ ${t.replace("RANGKUMAN:", "").trim()}\n`;
   } catch (err) {
     console.error("tutorai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("tutorai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("tutorai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

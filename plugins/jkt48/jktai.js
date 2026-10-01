@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .jktai — chat AI persona member JKT48 (18 member) dari zelapi.eu.cc
 // 🔹 Kategori khusus JKT48 (folder plugins/jkt48/) — request owner 15 Sep 2026.
@@ -7,7 +7,7 @@
 // ═════════════════════════════════════════════
 
 import { jktAiChat, findJktaiMember, ZEL_JKTAI_MEMBERS, _setZelJktHttpForTest, _setZelJktKeyForTest } from "../../src/scraper/zeljkt.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "jktai",
@@ -33,18 +33,18 @@ async function handler(m, { sock }) {
 
     // tanpa argumen ATAU arg pertama "list" → daftar member
     if (!args.length || q0 === "list") {
-      return m.reply(novaWrap("jktai", memberListText(prefix)));
+      return m.reply(raraWrap("jktai", memberListText(prefix)));
     }
 
     // .jktai <member> <pesan>
     const member = findJktaiMember(args[0]);
     if (!member) {
-      return m.reply(novaWrap("jktai",
+      return m.reply(raraWrap("jktai",
         `Member "${args[0]}" gak ada — ketik ${prefix}jktai buat daftar 18 member.`, "error"));
     }
     const text = args.slice(1).join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("jktai",
+      return m.reply(raraWrap("jktai",
         `Kirim pesannya juga 🙂\n\nContoh: ${prefix}jktai ${member.slug} apa rencana kamu hari ini?`));
     }
 
@@ -56,13 +56,13 @@ async function handler(m, { sock }) {
         API_KEY: "API key zelapi belum diisi — isi apikeys.json (zelapi) di server.",
         TEXT_KOSONG: "Pesan kosong.",
       };
-      return m.reply(novaWrap("jktai", map[r.error] || `Endpoint JKT48 AI error: ${r.error}`, "error"));
+      return m.reply(raraWrap("jktai", map[r.error] || `Endpoint JKT48 AI error: ${r.error}`, "error"));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("jktai", `*${member.name}* 🌸\n\n${r.reply}`));
+    return m.reply(raraWrap("jktai", `*${member.name}* 🌸\n\n${r.reply}`));
   } catch (err) {
     await m.react("❌");
-    return m.reply(novaWrap("jktai", "gagal proses: " + (err?.message || "error"), "error"));
+    return m.reply(raraWrap("jktai", "gagal proses: " + (err?.message || "error"), "error"));
   }
 }
 

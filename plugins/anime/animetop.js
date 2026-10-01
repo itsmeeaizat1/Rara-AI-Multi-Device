@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "animetop",
@@ -74,7 +74,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const maxPage = Math.ceil(TOP_ANIME.length / PER_PAGE)
 
     if (page < 1 || page > maxPage) {
-      return m.reply(novaWrap("Top Anime", "Halaman tidak valid. Tersedia 1-" + maxPage + "\nCara: " + usedPrefix + "animetop <halaman>"))
+      return m.reply(raraWrap("Top Anime", "Halaman tidak valid. Tersedia 1-" + maxPage + "\nCara: " + usedPrefix + "animetop <halaman>"))
     }
 
     const start = (page - 1) * PER_PAGE
@@ -97,9 +97,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("Ini halaman terakhir!")
     }
 
-    return m.reply(novaWrap("Top Anime #" + page, lines.join("\n")))
+    return m.reply(raraWrap("Top Anime #" + page, lines.join("\n")))
   } catch (e) {
-    return m.reply(novaWrap("Top Anime", "Error: " + e.message))
+    return m.reply(raraWrap("Top Anime", "Error: " + e.message))
   }
 }
 

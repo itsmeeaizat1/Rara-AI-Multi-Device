@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -32,14 +32,14 @@ const AUDIO_FORMATS = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(novaWrap("MP4 to Audio", "Reply video yang mau di-extract audionya."));
+    if (!quoted) return m.reply(raraWrap("MP4 to Audio", "Reply video yang mau di-extract audionya."));
     const videoMsg = quoted.videoMessage || quoted.documentMessage;
-    if (!videoMsg) return m.reply(novaWrap("MP4 to Audio", "Reply harus video/document video!"));
+    if (!videoMsg) return m.reply(raraWrap("MP4 to Audio", "Reply harus video/document video!"));
 
     const format = (args[0] || "mp3").toLowerCase();
     if (!AUDIO_FORMATS[format]) {
       const list = Object.entries(AUDIO_FORMATS).map(([k, v]) => k + " - " + v.desc).join("\n");
-      return m.reply(novaWrap("MP4 to Audio", [
+      return m.reply(raraWrap("MP4 to Audio", [
         "Format tidak didukung!",
         "Format tersedia:",
         list,
@@ -49,7 +49,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     const fmt = AUDIO_FORMATS[format];
-    const tmpDir = path.join(os.tmpdir(), 'nova-mp4toaudio');
+    const tmpDir = path.join(os.tmpdir(), 'rara-mp4toaudio');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, "input_" + Date.now() + ".mp4");
@@ -66,7 +66,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -vn -c:a ' + fmt.codec + extraFlags + ' -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
-      return m.reply(novaGagal("MP4toAudio"));
+      return m.reply(raraGagal("MP4toAudio"));
     }
 
     const buf = fs.readFileSync(outputPath);
@@ -75,7 +75,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: fmt.mime,
       ptt: isPtt,
-      caption: novaWrap("MP4 to Audio", [
+      caption: raraWrap("MP4 to Audio", [
         "Berhasil extract audio!",
         "Format: " + format.toUpperCase() + " (" + fmt.desc + ")",
         "Codec: " + fmt.codec,
@@ -85,10 +85,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
-      await m.reply(novaBerhasil("mp4toaudio"));
+      await m.reply(raraBerhasil("mp4toaudio"));
   } catch (e) {
     console.error("mp4toaudio error:", e);
-    return m.reply(novaGangguan("mp4toaudio"));
+    return m.reply(raraGangguan("mp4toaudio"));
   }
 }
 

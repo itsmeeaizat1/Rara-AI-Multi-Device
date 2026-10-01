@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// buydiamond.js — Beli diamond RPG satuan — masukin jumlah yang mau ditambah (via factory nova-topup-flow.js)
-import { buildTopupPlugin } from "../../src/lib/store/nova-topup-flow.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// buydiamond.js — Beli diamond RPG satuan — masukin jumlah yang mau ditambah (via factory rara-topup-flow.js)
+import { buildTopupPlugin } from "../../src/lib/store/rara-topup-flow.js";
 
 const { pluginConfig, handler } = buildTopupPlugin({
   key: "diamond",

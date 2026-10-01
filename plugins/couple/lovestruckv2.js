@@ -1,6 +1,6 @@
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
-import { getRandomItem } from '../../src/lib/nova-game-engine.js'
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
+import { getRandomItem } from '../../src/lib/rara-game-engine.js'
 const pluginConfig = {
     name: "bucinv2",
     alias: ["bucinv2", "bucin"],
@@ -21,11 +21,11 @@ async function handler(m, { sock }) {
     const quote = getRandomItem('bucin.json');
     
     if (!quote) {
-        { const __navText = novaWrap("bucin", '❌ Data tidak tersedia!'); await m.reply(__navText); };
+        { const __navText = raraWrap("bucin", '❌ Data tidak tersedia!'); await m.reply(__navText); };
         return;
     }
     
-    await m.reply(novaGameBox({
+    await m.reply(raraGameBox({
       title: "quotes bucin", icon: "💕",
       flavor: "💕 *QUOTES BUCIN BUAT KAMU!*",
       body: `│ • "${quote}"`,

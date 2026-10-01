@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from "../../src/lib/rara-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ptvsearch",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply(novaCaption({
+    return m.reply(raraCaption({
   emoji: "🔍",
   name: "ptvsearch",
   description: "Cari video TikTok",
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const videos = await tiktokSearchVideo(query);
 
     if (!videos || videos.length === 0) {
-      return m.reply(novaError("PTVSearch", `Gak nemu video untuk: ${query} nih`));
+      return m.reply(raraError("PTVSearch", `Gak nemu video untuk: ${query} nih`));
     }
 
     const randomVideo = videos[Math.floor(Math.random() * videos.length)];
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       ptv: true,
     });
   } catch (error) {
-    m.reply(novaWrap("ptvsearch", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("ptvsearch", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

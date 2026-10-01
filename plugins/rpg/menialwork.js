@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Nguli — simulasi kerja keras (upgrade ala script owner 9 Sep 2026)
 // 16 pekerjaan bergaji dengan syarat level • toko 10 alat (bonus gaji/energi)
 // bank tabung/ambil • animasi morphing • istirahat • leaderboard kuli terkaya
@@ -7,11 +7,11 @@
 import {
   ensureRpg, saveRpg, addExp, addCash, spendCash, getCash, formatRp,
   useEnergy, checkCooldown, setCooldown,
-} from "../../src/lib/nova-rpg-service.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+} from "../../src/lib/rara-rpg-service.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 import { smallcapsText } from "../../src/lib/styler.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { reactCooldown } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "nguli",
@@ -279,19 +279,19 @@ async function doWork(m, sock) {
   const job = JOBS[jobKey] || JOBS.pengangguran;
 
   if (!job || job.income === 0) {
-    return m.reply(novaRpgBox("nguli",
+    return m.reply(raraRpgBox("nguli",
       `😴 Kamu masih *${job.name}*! Cari kerja dulu\n💡 .nguli kerja <pekerjaan> — lihat daftar: .nguli help`, "warn"));
   }
 
   const cd = checkCooldown(m, "lastNguli");
   if (cd) {
     await reactCooldown(m);
-    return m.reply(novaRpgBox("nguli",
+    return m.reply(raraRpgBox("nguli",
       `🕒 Sabar kuli! Tunggu *${cd} detik* lagi.\n💡 ${job.name} butuh istirahat sebentar.`, "warn"));
   }
 
   if (rpg.energy < job.energyCost) {
-    return m.reply(novaRpgBox("nguli",
+    return m.reply(raraRpgBox("nguli",
       `😰 Energi kurang! Butuh *${job.energyCost}* energi\n⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n💡 Ketik .nguli istirahat`, "warn"));
   }
 
@@ -331,7 +331,7 @@ async function doWork(m, sock) {
   if (expRes?.leveledUp) {
     body += `\n\n⬆️ LEVEL UP! Level ${fin.level - (expRes.levels || 1)} → ${fin.level}\n⚡ Max Energy & HP naik!`;
   }
-  return m.reply(novaRpgBox("nguli", body, "success"));
+  return m.reply(raraRpgBox("nguli", body, "success"));
 }
 
 // ─── ISTIRAHAT ───
@@ -340,7 +340,7 @@ async function doRest(m, sock) {
   const restAmount = Math.min(50, rpg.maxEnergy - rpg.energy);
 
   if (restAmount <= 0) {
-    return m.reply(novaRpgBox("nguli",
+    return m.reply(raraRpgBox("nguli",
       `⚡ Energi penuh! *${rpg.energy}/${rpg.maxEnergy}*\n💡 Ayo kerja! .nguli kerja`, "warn"));
   }
 
@@ -357,7 +357,7 @@ async function doRest(m, sock) {
   saveRpg(m, { energy: fresh.energy });
 
   const fin = ensureRpg(m);
-  return m.reply(novaRpgBox("nguli",
+  return m.reply(raraRpgBox("nguli",
     `✅ ISTIRAHAT SELESAI\n\n⚡ Energy : ${fin.energy}/${fin.maxEnergy}\n💡 Sekarang siap kerja!`, "success"));
 }
 
@@ -369,7 +369,7 @@ async function handler(m, { sock, args }) {
     const sub2 = (args?.[1] || "").toLowerCase();
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("nguli", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("nguli", "RPG belum siap. Ketik .daftar dulu.", "error"));
     const name = m.pushName || "Kuli";
     const job = getJob(rpg);
 
@@ -388,18 +388,18 @@ async function handler(m, { sock, args }) {
           available.forEach(([, j]) => {
             msg += `${j.icon} ${j.name}${j.levelReq ? ` (Level ${j.levelReq})` : ""}\n`;
           });
-          return m.reply(novaRpgBox("nguli", msg, "warn"));
+          return m.reply(raraRpgBox("nguli", msg, "warn"));
         }
         if (newJob.levelReq && rpg.level < newJob.levelReq) {
-          return m.reply(novaRpgBox("nguli",
+          return m.reply(raraRpgBox("nguli",
             `⚠️ Butuh *Level ${newJob.levelReq}* untuk menjadi ${newJob.name}!\nLevel kamu: *${rpg.level}*`, "warn"));
         }
         if ((rpg.nguliJob || "pengangguran") === key) {
-          return m.reply(novaRpgBox("nguli",
+          return m.reply(raraRpgBox("nguli",
             `ℹ️ Kamu sudah ${newJob.icon} *${newJob.name}*!\n💡 Langsung kerja: .nguli kerja`, "warn"));
         }
         saveRpg(m, { nguliJob: key });
-        return m.reply(novaRpgBox("nguli",
+        return m.reply(raraRpgBox("nguli",
           `✅ BERGANTI PEKERJAAN!\n\n${newJob.icon} ${newJob.name}\n💵 Gaji : ${formatRp(newJob.income)}\n⭐ EXP : ${newJob.exp}\n⚡ Energy Cost : ${newJob.energyCost}\n\n💡 Ketik .nguli kerja untuk mulai!`, "success"));
       }
       return doWork(m, sock);
@@ -418,15 +418,15 @@ async function handler(m, { sock, args }) {
           msg += `• ${t} — ${formatRp(d.cost)}\n  💡 ${d.bonus}\n`;
         }
         msg += `\n💵 Uang kamu: ${formatRp(getCash(m))}\n💡 Ketik .nguli beli [nama alat]`;
-        return m.reply(novaRpgBox("nguli", msg));
+        return m.reply(raraRpgBox("nguli", msg));
       }
       const tool = TOOLS[toolName];
       const tools = ensureRpg(m).nguliTools || [];
       if (tools.includes(toolName)) {
-        return m.reply(novaRpgBox("nguli", `ℹ️ Kamu sudah punya *${toolName}*!`, "warn"));
+        return m.reply(raraRpgBox("nguli", `ℹ️ Kamu sudah punya *${toolName}*!`, "warn"));
       }
       if (!spendCash(m, tool.cost)) {
-        return m.reply(novaRpgBox("nguli",
+        return m.reply(raraRpgBox("nguli",
           `💵 Uang tidak cukup! Butuh *${formatRp(tool.cost)}*\nUang kamu: ${formatRp(getCash(m))}`, "warn"));
       }
       const fresh = ensureRpg(m);
@@ -438,7 +438,7 @@ async function handler(m, { sock, args }) {
       }
       saveRpg(m, patch);
       const fin = ensureRpg(m);
-      return m.reply(novaRpgBox("nguli",
+      return m.reply(raraRpgBox("nguli",
         `✅ BELI ALAT BERHASIL!\n\n🛒 ${toolName}\n💡 ${tool.bonus}\n💵 Sisa Uang : ${formatRp(fin.cash || 0)}${tool.energyBonus ? `\n⚡ Max Energy : ${fin.maxEnergy}` : ""}`, "success"));
     }
 
@@ -446,16 +446,16 @@ async function handler(m, { sock, args }) {
     if (sub === "tabung" || sub === "deposit") {
       const amount = parseInt(sub2, 10);
       if (isNaN(amount) || amount <= 0) {
-        return m.reply(novaRpgBox("nguli", `⚠️ Masukkan jumlah yang valid!\nContoh: .nguli tabung 50000`, "warn"));
+        return m.reply(raraRpgBox("nguli", `⚠️ Masukkan jumlah yang valid!\nContoh: .nguli tabung 50000`, "warn"));
       }
       if (!spendCash(m, amount)) {
-        return m.reply(novaRpgBox("nguli", `💵 Uang tidak cukup! Uang: ${formatRp(getCash(m))}`, "warn"));
+        return m.reply(raraRpgBox("nguli", `💵 Uang tidak cukup! Uang: ${formatRp(getCash(m))}`, "warn"));
       }
       const fresh = ensureRpg(m);
       fresh.nguliBank = (fresh.nguliBank || 0) + amount;
       saveRpg(m, { nguliBank: fresh.nguliBank });
       const fin = ensureRpg(m);
-      return m.reply(novaRpgBox("nguli",
+      return m.reply(raraRpgBox("nguli",
         `🏦 TABUNG UANG\n\n💵 Uang : ${formatRp(fin.cash || 0)}\n🏦 Bank : ${formatRp(fin.nguliBank || 0)}`, "success"));
     }
 
@@ -463,17 +463,17 @@ async function handler(m, { sock, args }) {
     if (sub === "ambil" || sub === "withdraw") {
       const amount = parseInt(sub2, 10);
       if (isNaN(amount) || amount <= 0) {
-        return m.reply(novaRpgBox("nguli", `⚠️ Masukkan jumlah yang valid!\nContoh: .nguli ambil 50000`, "warn"));
+        return m.reply(raraRpgBox("nguli", `⚠️ Masukkan jumlah yang valid!\nContoh: .nguli ambil 50000`, "warn"));
       }
       const fresh = ensureRpg(m);
       if ((fresh.nguliBank || 0) < amount) {
-        return m.reply(novaRpgBox("nguli", `🏦 Saldo bank tidak cukup! Bank: ${formatRp(fresh.nguliBank || 0)}`, "warn"));
+        return m.reply(raraRpgBox("nguli", `🏦 Saldo bank tidak cukup! Bank: ${formatRp(fresh.nguliBank || 0)}`, "warn"));
       }
       fresh.nguliBank = (fresh.nguliBank || 0) - amount;
       saveRpg(m, { nguliBank: fresh.nguliBank });
       addCash(m, amount);
       const fin = ensureRpg(m);
-      return m.reply(novaRpgBox("nguli",
+      return m.reply(raraRpgBox("nguli",
         `🏦 AMBIL UANG\n\n💵 Uang : ${formatRp(fin.cash || 0)}\n🏦 Bank : ${formatRp(fin.nguliBank || 0)}`, "success"));
     }
 
@@ -481,14 +481,14 @@ async function handler(m, { sock, args }) {
     if (sub === "tools" || sub === "inventory" || sub === "alat") {
       const tools = rpg.nguliTools || [];
       if (!tools.length) {
-        return m.reply(novaRpgBox("nguli", `🛠️ Belum punya alat!\n💡 Beli dengan .nguli beli [alat]`, "warn"));
+        return m.reply(raraRpgBox("nguli", `🛠️ Belum punya alat!\n💡 Beli dengan .nguli beli [alat]`, "warn"));
       }
       let msg = `🛠️ ALAT ${name}\n\n`;
       tools.forEach((t, i) => {
         msg += `${i + 1}. ${t} — ${TOOLS[t]?.bonus || "??"}\n`;
       });
       msg += `\n🎯 Total Bonus Gaji: +${getToolBonus(tools)}%`;
-      return m.reply(novaRpgBox("nguli", msg));
+      return m.reply(raraRpgBox("nguli", msg));
     }
 
     // LEADERBOARD KULI TERKAYA
@@ -505,18 +505,18 @@ async function handler(m, { sock, args }) {
           .sort((a, b) => b.total - a.total)
           .slice(0, 10);
       } catch {}
-      if (!list.length) return m.reply(novaRpgBox("nguli", "📊 Belum ada kuli kaya!", "warn"));
+      if (!list.length) return m.reply(raraRpgBox("nguli", "📊 Belum ada kuli kaya!", "warn"));
       let msg = `🏆 LEADERBOARD KULI TERKAYA\n\n`;
       list.forEach((p, i) => {
         const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`;
         msg += `${medal} ${p.name} — ${formatRp(p.total)}\n   Level ${p.level} | ${p.job}\n`;
       });
-      return m.reply(novaRpgBox("nguli", msg));
+      return m.reply(raraRpgBox("nguli", msg));
     }
 
     // HELP
     if (sub === "help" || sub === "bantuan") {
-      return m.reply(novaRpgBox("nguli",
+      return m.reply(raraRpgBox("nguli",
         `👷 BANTUAN NGULI\n\n` +
         `📌 PERINTAH:\n` +
         `.nguli — status & menu\n` +
@@ -554,10 +554,10 @@ async function handler(m, { sock, args }) {
       `.nguli tabung/ambil <jumlah> — bank\n` +
       `.nguli top — kuli terkaya\n` +
       `.nguli help — bantuan lengkap`;
-    return m.reply(novaRpgBox("nguli", menu));
+    return m.reply(raraRpgBox("nguli", menu));
   } catch (e) {
     console.error("[nguli] handler error:", e.message);
-    return m.reply(novaRpgBox("nguli", "⚠️ Ada yang error, coba lagi.", "error"));
+    return m.reply(raraRpgBox("nguli", "⚠️ Ada yang error, coba lagi.", "error"));
   }
 }
 

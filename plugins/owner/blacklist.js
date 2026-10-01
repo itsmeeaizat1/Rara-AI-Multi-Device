@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Blacklist — pengganti .ban/.unban/.listban (request owner: jangan "ban", tapi "blacklist")
 // Sekarang pasangan konsisten: .whitelist (yang boleh) & .blacklist (yang diblokir)
 import config from '../../config.js'
-import { notifyUserBanned } from '../../src/lib/nova-saluran-broadcast.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
-import { novaGuide, novaWrap } from "../../src/lib/nova-menu-style.js"
+import { notifyUserBanned } from '../../src/lib/rara-saluran-broadcast.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { isLid, lidToJid } from '../../src/lib/rara-lid.js'
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js"
 
 const pluginConfig = {
   name: "blacklist",
@@ -67,19 +67,19 @@ function findIndex(list, num) {
 async function addNumber(m, { sock }) {
   const target = resolveTarget(m)
   if (!target || target.length < 10 || target.length > 15) {
-    return m.reply(novaWrap("blacklist", `❌ *Gagal*\n\n` +
+    return m.reply(raraWrap("blacklist", `❌ *Gagal*\n\n` +
       `Masukkan nomor, tag user, atau reply pesannya\n\n` +
       `💡 Contoh: \`${m.prefix}blacklist add 6281234567890\``))
   }
   if (config.isOwner(target)) {
-    return m.reply(novaWrap("blacklist", `❌ *Gagal*\n\nTidak bisa blacklist owner`))
+    return m.reply(raraWrap("blacklist", `❌ *Gagal*\n\nTidak bisa blacklist owner`))
   }
 
   const db = getDatabase()
   const list = getBlacklist(db)
 
   if (findIndex(list, target) !== -1) {
-    return m.reply(novaWrap("blacklist", `❌ *Gagal*\n\nNomor \`${target}\` sudah ada di blacklist`))
+    return m.reply(raraWrap("blacklist", `❌ *Gagal*\n\nNomor \`${target}\` sudah ada di blacklist`))
   }
 
   list.push(target)
@@ -92,7 +92,7 @@ async function addNumber(m, { sock }) {
     totalBanned: list.length,
   }).catch((e) => { console.error('[blacklist.js]:', e.message) })
 
-  return m.reply(novaWrap("blacklist", `✅ *Berhasil*\n\n` +
+  return m.reply(raraWrap("blacklist", `✅ *Berhasil*\n\n` +
     `+\`${target}\` masuk blacklist\n` +
     `Nomor ini gak bisa chat bot lagi\n` +
     `Total: \`${list.length}\` nomor`))
@@ -101,7 +101,7 @@ async function addNumber(m, { sock }) {
 async function removeNumber(m) {
   const target = resolveTarget(m)
   if (!target) {
-    return m.reply(novaWrap("blacklist", `❌ *Gagal*\n\n` +
+    return m.reply(raraWrap("blacklist", `❌ *Gagal*\n\n` +
       `Masukkan nomor yang mau dihapus\n\n` +
       `💡 Contoh: \`${m.prefix}blacklist remove 6281234567890\``))
   }
@@ -111,13 +111,13 @@ async function removeNumber(m) {
   const idx = findIndex(list, target)
 
   if (idx === -1) {
-    return m.reply(novaWrap("blacklist", `❌ *Gagal*\n\nNomor \`${target}\` tidak ada di blacklist`))
+    return m.reply(raraWrap("blacklist", `❌ *Gagal*\n\nNomor \`${target}\` tidak ada di blacklist`))
   }
 
   const removed = list.splice(idx, 1)[0]
   saveBlacklist(db, list)
 
-  return m.reply(novaWrap("blacklist", `✅ *Berhasil*\n\n` +
+  return m.reply(raraWrap("blacklist", `✅ *Berhasil*\n\n` +
     `-\`${removed}\` dihapus dari blacklist\n` +
     `Nomor ini bisa chat bot lagi\n` +
     `Total: \`${list.length}\` nomor`))
@@ -128,13 +128,13 @@ async function listNumbers(m) {
   const list = getBlacklist(db)
 
   if (!list.length) {
-    return m.reply(novaWrap("blacklist", `📌 *Blacklist Kosong*\n\n` +
+    return m.reply(raraWrap("blacklist", `📌 *Blacklist Kosong*\n\n` +
       `💡 Tambah dengan \`${m.prefix}blacklist add <nomor>\``))
   }
 
   let text = `🚫 *Daftar Blacklist* (${list.length})\n\n`
   list.forEach((n, i) => { text += `${i + 1}. +${n}\n` })
-  return m.reply(novaWrap("blacklist", text))
+  return m.reply(raraWrap("blacklist", text))
 }
 
 async function handler(m, { sock }) {
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
   if (!sub) {
     const db = getDatabase()
     const list = getBlacklist(db)
-    return m.reply(novaWrap("blacklist", `📌 *Blacklist* (${list.length} nomor)\n\n` +
+    return m.reply(raraWrap("blacklist", `📌 *Blacklist* (${list.length} nomor)\n\n` +
       `Blacklist SELALU aktif — nomor di dalamnya gak bisa chat bot\n\n` +
       `💡 \`${m.prefix}blacklist add <nomor>\` — tambah\n` +
       `\`${m.prefix}blacklist remove <nomor>\` — hapus\n` +
@@ -165,7 +165,7 @@ async function handler(m, { sock }) {
   }
 
   // Salah subcommand — guide
-  return m.reply(novaGuide(
+  return m.reply(raraGuide(
     "blacklist",
     "Blacklist nomor yang gak boleh chat bot",
     `${m.prefix}blacklist add 6281234567890`,

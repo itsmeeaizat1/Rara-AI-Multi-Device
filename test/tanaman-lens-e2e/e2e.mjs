@@ -6,9 +6,9 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-tanlens-db-" + Date.now();
+const DB_DIR = "/tmp/rara-tanlens-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const { fromSC } = await import(R + "/src/lib/styler.js");
@@ -53,7 +53,7 @@ w("\n— TANAMAN: AI plant identifier —");
     const mk = mkMock();
     await handler(mk.m, ctx(mk.sock));
     const txt = norm(mk.sends.at(-1).txt);
-    // REWORK 24 Sep: panduan kini novaGuide (intro/note di-smallcaps; contoh
+    // REWORK 24 Sep: panduan kini raraGuide (intro/note di-smallcaps; contoh
     // verbatim) — asersi harus smallcaps-aware (GOTCHA: teks smallcaps gak
     // bisa di-lowercase balik, jadi bandingkan dua-duanya).
     const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };

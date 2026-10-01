@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // capcutdl — Download video CapCut
 // Primary: IkyyXD /download/capcut → /download/all-in-one | Fallback: btch-downloader
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { capcut } from "btch-downloader";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -51,11 +51,11 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply(novaGuide('CapCut', 'Mau download video CapCut? Kasih linknya ya!', `${m.prefix}ccdl https://www.capcut.com/t/xxx`));
+    return m.reply(raraGuide('CapCut', 'Mau download video CapCut? Kasih linknya ya!', `${m.prefix}ccdl https://www.capcut.com/t/xxx`));
   }
 
   if (!url.match(/capcut\.com/i)) {
-    return m.reply(novaGuide('CapCut', 'URL-nya gak valid nih! Pakai link CapCut ya.', `${m.prefix}ccdl https://www.capcut.com/t/xxx`));
+    return m.reply(raraGuide('CapCut', 'URL-nya gak valid nih! Pakai link CapCut ya.', `${m.prefix}ccdl https://www.capcut.com/t/xxx`));
   }
 
   try {
@@ -99,16 +99,16 @@ async function handler(m, { sock }) {
         video: { url: video.url }, caption,
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m });
-      await m.reply(novaBerhasil("capcutdl"));
+      await m.reply(raraBerhasil("capcutdl"));
       return;
     }
 
     await m.react("❌");
-    return m.reply(novaError('CapCut', 'Gagal ambil video — coba link lain ya'));
+    return m.reply(raraError('CapCut', 'Gagal ambil video — coba link lain ya'));
   } catch (error) {
     console.error("[capcutdl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaError('CapCut', 'Ada error nih, coba lagi ya'));
+    return m.reply(raraError('CapCut', 'Ada error nih, coba lagi ya'));
   }
 }
 

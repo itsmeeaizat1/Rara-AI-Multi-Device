@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaHeader,
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraHeader,
   separator,
-  tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
+  tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "dashboardpremium",
@@ -26,15 +26,15 @@ async function handler(m, { sock, config: botConfig }) {
     // Load premium list from premium-db
     let premiumList = [];
     try {
-      const premiumDb = await import("../../src/lib/nova-premium-db.js");
+      const premiumDb = await import("../../src/lib/rara-premium-db.js");
       premiumList = premiumDb.loadPremium() || [];
     } catch (e) {
-      return m.reply(novaWrap("dashboardpremium", "Gagal load nih data premium."));
+      return m.reply(raraWrap("dashboardpremium", "Gagal load nih data premium."));
     }
 
     if (premiumList.length === 0) {
       return m.reply(
-        novaWrap("Dashboard Premium", "Belum ada user premium terdaftar.") + "\n\n" +
+        raraWrap("Dashboard Premium", "Belum ada user premium terdaftar.") + "\n\n" +
         tipText(`Gunakan ${prefix}addprem untuk menambah premium`)
       );
     }
@@ -65,15 +65,15 @@ async function handler(m, { sock, config: botConfig }) {
     const totalAll = sorted.reduce((a, p) => a + p.timesBought, 0);
     const totalDays = sorted.reduce((a, p) => a + p.totalDays, 0);
 
-    let text = novaWrap("Dashboard Premium", "💎") + "\n\n";
+    let text = raraWrap("Dashboard Premium", "💎") + "\n\n";
 
-    text += novaWrap("STATS", [`Total User: *${sorted.length}*`, `User Aktif: *${active.length}*`, `Total Pembelian: *${totalAll}x*`, `Total Hari: *${totalDays} hari*`].join("\n")) + "\n\n";
+    text += raraWrap("STATS", [`Total User: *${sorted.length}*`, `User Aktif: *${active.length}*`, `Total Pembelian: *${totalAll}x*`, `Total Hari: *${totalDays} hari*`].join("\n")) + "\n\n";
 
     // Readmore trick
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(4001);
 
-    text += novaWrap("Top Premium Buyers", "") + "\n\n";
+    text += raraWrap("Top Premium Buyers", "") + "\n\n";
 
     // Show top 10 (visible), rest after readmore
     const top10 = sorted.slice(0, 10);
@@ -106,13 +106,13 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     text += "\n";
-    text += novaWrap("Keterangan", "Aktif — Expired") + "\n\n";
+    text += raraWrap("Keterangan", "Aktif — Expired") + "\n\n";
     text += tipText(`Ketik ${prefix}listprem untuk list premium aktif`);
 
     await m.reply( text, "dashboardpremium");
   } catch (error) {
     const text =
-      novaError("Owner", "Gagal nih, coba lagi ya");
+      raraError("Owner", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "dashboardpremium");
   }

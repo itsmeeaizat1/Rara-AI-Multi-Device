@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libmountainclimberrpg.js — LIB ANIMASI EMOJI-GRID khusus Mountainclimber / gunung
 // (upgrade owner 28 Sep 2026: OPEN WORLD PER NEGARA — beda negara beda animasi, durasi TIDAK buru-buru:
 //  SITUASI MENENTUKAN LEVEL ANIMASI — zona + jalur risiko + cuaca buruk memperpanjang babak lintasan,
@@ -10,7 +10,7 @@
 // Konvensi folder src/lib/libanimationrpg/: file lib<namagame>rpg.js per game, animasi BEDA antar game —
 // gunung = SIDE-SCROLLING DAKI (jejak ⬜, char melintas tile). Fallback: editSceneAnim false → senyap lanjut.
 
-import { editSceneAnim } from "../nova-anim-runner.js";
+import { editSceneAnim } from "../rara-anim-runner.js";
 
 const ANIM_BASE = process.env.GUNUNG_CINEMATIC_MS !== undefined ? Number(process.env.GUNUNG_CINEMATIC_MS) : 700;
 let _animBaseMs = ANIM_BASE;

@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 /**
  * plugins/ai/deepseekv4flash.js
@@ -36,7 +36,7 @@ function sessionKey(m) {
 }
 
 function toSessionId(rawKey) {
-  return String(rawKey).replace(/[^a-zA-Z0-9]/g, "").slice(0, 40) || "novauser";
+  return String(rawKey).replace(/[^a-zA-Z0-9]/g, "").slice(0, 40) || "rarauser";
 }
 
 function sleep(ms) {
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
   const sessionId = toSessionId(key);
 
   if (!text) {
-    return m.reply(novaGuideV2("deepseekv4flash", {
+    return m.reply(raraGuideV2("deepseekv4flash", {
  kaomoji: "(๑˘ᘿ˂๑)",
  sapaan: "ngobrol sama DeepSeek V4 Flash, inget sesi percakapanmu lho! (≧◡≦) ♡",
       cara: "kirim pertanyaannya setelah command, reset buat hapus sesi",
@@ -120,17 +120,17 @@ async function handler(m, { sock }) {
     await m.react("🕒");
       await callDeepSeekV4Flash("reset", sessionId, true);
     } catch (e) { console.error('[deepseekv4flash.js]:', e.message); }
-    return m.reply(novaWrap("DeepSeek V4 Flash", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
+    return m.reply(raraWrap("DeepSeek V4 Flash", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
   }
   try {
     const result = await callWithRetry(text, sessionId, false);
 
     if (result.answer && result.answer.trim()) {
-      return m.reply(novaWrap("DeepSeek V4 Flash", result.answer));
+      return m.reply(raraWrap("DeepSeek V4 Flash", result.answer));
     }
     throw new Error("AI sedang sibuk, coba kirim ulang pertanyaan kamu.");
   } catch (error) {
-    return m.reply(novaWrap("DeepSeek V4 Flash Error", error.message || "Gagal hubungin AI nih"));
+    return m.reply(raraWrap("DeepSeek V4 Flash Error", error.message || "Gagal hubungin AI nih"));
   }
 }
 

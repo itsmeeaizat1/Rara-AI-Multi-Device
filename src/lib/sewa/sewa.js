@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/lib/sewa/sewa.js — Sumber tunggal harga & info SEWA BOT + BELI PREMIUM
 //
 // ✦ UTAK ATIK HARGA CUKUP DI FILE INI — semua fitur auto-update:
@@ -10,7 +10,7 @@
 // ═══════════════════════════════════════════
 // OVERRIDE LIVE VIA .setsewa (persist DB, tanpa edit file)
 // ═══════════════════════════════════════════
-import { getDatabase } from "../nova-database.js";
+import { getDatabase } from "../rara-database.js";
 
 const SEWA_FIELDS = ["daily", "weekly", "monthly", "yearly", "lifetime", "custom", "qrisUrl"];
 

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "define",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   try {
     const word = m.args?.[0]?.trim() || (m.quoted && (m.quoted.text || m.quoted.caption))?.trim();
     if (!word) {
-      return m.reply(novaWrap("define", `Masukkan kata yang ingin dicari definisinya!\n\nContoh: ${m.prefix}define algorithm`, "guide"));
+      return m.reply(raraWrap("define", `Masukkan kata yang ingin dicari definisinya!\n\nContoh: ${m.prefix}define algorithm`, "guide"));
     }
 
     await m.react("🕒");
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
 
     if (res.status === 404 || !Array.isArray(res.data) || res.data.length === 0) {
       await m.react("❌");
-      return m.reply(novaWrap("define", `Kata "*${word}*" tidak ditemukan di dalam kamus.`));
+      return m.reply(raraWrap("define", `Kata "*${word}*" tidak ditemukan di dalam kamus.`));
     }
 
     const entry = res.data[0];
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("define error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("define", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("define", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

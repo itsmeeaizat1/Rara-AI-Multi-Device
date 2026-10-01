@@ -1,4 +1,4 @@
-// NOVA SKILL PACK — NOMOR HOKI (12 Sep 2026)
+// RARA SKILL PACK — NOMOR HOKI (12 Sep 2026)
 // Ramalan energi nomor HP ala primbon — 100% lokal deterministik, no network.
 // Metode: tabel prima 10x4 klasik numerologi Indonesia — tiap digit
 // dikalikan bobot posisi → energi → dirangkum jadi skor kategori 0-100.

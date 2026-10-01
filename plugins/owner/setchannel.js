@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
-import { persistSaluranConfig, normalizeNewsletterMeta } from "../../src/lib/nova-saluran.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { persistSaluranConfig, normalizeNewsletterMeta } from "../../src/lib/rara-saluran.js";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   // Parse input - could be a link or an ID
   let saluranId = "";
   let saluranLink = "";
-  let saluranName = config.saluran?.name || "Nova AI Official";
+  let saluranName = config.saluran?.name || "Rara AI Official";
 
   if (input.includes("whatsapp.com/channel/")) {
     // It's a link - extract channel code
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     const channelCode = input.split("whatsapp.com/channel/")[1]?.split(/[?\s]/)[0];
 
     if (!channelCode) {
-      return m.reply(novaWrap("Setsaluran", "Link saluran tidak valid. Pastikan link benar."));
+      return m.reply(raraWrap("Setsaluran", "Link saluran tidak valid. Pastikan link benar."));
     }
 
     // Try to get newsletter ID from the link
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
         if (metadata?.name) saluranName = metadata.name;
       } else {
         // If can't get ID, save the link and let owner set ID manually
-        return m.reply(novaWrap("setchannel", [
+        return m.reply(raraWrap("setchannel", [
           "Tidak bisa dapat ID dari link tersebut.",
           "",
           "💡 Coba cara manual:",
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
     saluranId = config.saluran?.id || "@newsletter";
     // Don't change ID, just update link
   } else {
-    return m.reply(novaWrap("setchannel", [
+    return m.reply(raraWrap("setchannel", [
       "Format tidak dikenal.",
       "",
       "💡 Ketik:",

@@ -1,7 +1,7 @@
 // E2E — nano-banana text2img di rantai image gen agent
 import path from "node:path";
 const R = path.resolve(".");
-const svc = await import(R + "/src/lib/nova-ai-service.js");
+const svc = await import(R + "/src/lib/rara-ai-service.js");
 const { callImageGenChain, nanoBananaText2Img, _setNanoBananaT2IForTest } = svc;
 
 let pass = 0, fail = 0;
@@ -12,7 +12,7 @@ t("1a. nanoBananaText2Img exported", typeof nanoBananaText2Img === "function");
 t("1b. callImageGenChain exported", typeof callImageGenChain === "function");
 const m = svc;
 // canvas 512x512 PNG (dari konstanta internal — cek lewat source)
-const src = (await import("node:fs")).readFileSync(R + "/src/lib/nova-ai-service.js", "utf8");
+const src = (await import("node:fs")).readFileSync(R + "/src/lib/rara-ai-service.js", "utf8");
 t("1c. canvas kosong 512x512 ke-embed", /NANO_CANVAS_B64 = "iVBOR/.test(src) && /This is a blank gray canvas/.test(src));
 const chainStart = src.indexOf("export async function callImageGenChain");
 const chainEnd = src.indexOf("/**", chainStart);

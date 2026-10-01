@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Invasion — Territory invasion events
 
-import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { animInvasion } from "../../src/lib/nova-rpg-anim.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";
+import { animInvasion } from "../../src/lib/rara-rpg-anim.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "invasion",
@@ -27,8 +27,8 @@ const INVASION_RESULTS = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("invasion", "RPG belum siap. Ketik .daftar dulu.", "error"));
-    if ((rpg.energy || 0) < 30) return m.reply(novaRpgBox("invasion", "Energi tidak cukup. Butuh 30 energi.", "info"));
+    if (!rpg) return m.reply(raraRpgBox("invasion", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if ((rpg.energy || 0) < 30) return m.reply(raraRpgBox("invasion", "Energi tidak cukup. Butuh 30 energi.", "info"));
 
     await m.react("🕒");
     await animInvasion(m, sock);
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("invasion error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("invasion", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("invasion", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // mapss.js — Cari tempat di Google Maps + screenshot + buka per nomor.
 // Request owner 24 Sep 2026 (pilihan jalur 2, tanpa API key SerpApi):
 // "pas gunakan fiturnya, contoh pencarian web hasilnya screenshot dulu
@@ -15,14 +15,14 @@
 //                     [1] screenshot isi halaman place
 //                     [2] plain text isi (readmore + chat lanjutan)
 //   balas "stop"    → keluar sesi
-// Engine: src/scraper/nova-maps-browser.js (chromium bersama, data ASLI).
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+// Engine: src/scraper/rara-maps-browser.js (chromium bersama, data ASLI).
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 import { splitChatChunks } from "../../src/lib/aiagent.js";
 import {
   mapsScreenshotSearch, mapsPlaceDetail, parseMapCoords,
   registerMapsChoice, takeMapsChoice, getMapsSession, clearMapsChoice,
-} from "../../src/scraper/nova-maps-browser.js";
+} from "../../src/scraper/rara-maps-browser.js";
 
 const pluginConfig = {
   name: "mapss",
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   const query = (m.text || "").trim();
 
   if (!query) {
-    return m.reply(novaWrap("Google Maps Search", [
+    return m.reply(raraWrap("Google Maps Search", [
       `Cari tempat di Google Maps — hasil di-screenshot + list plain text.`,
       ``,
       `📌 Format: ${m.prefix}mapss <tempat>`,
@@ -91,11 +91,11 @@ async function handler(m, { sock }) {
     } else {
       lines.push(`Screenshot hasil pencarian "${query}" — list tempat gak bisa diekstrak dari DOM (tampilan Maps berubah), lihat gambar ya.`);
     }
-    await m.reply(novaWrap("Google Maps Search", lines.join("\n")));
+    await m.reply(raraWrap("Google Maps Search", lines.join("\n")));
     await m.react("⚡");
   } catch (error) {
     await m.react("❌");
-    return m.reply(novaWrap("Google Maps Search", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("Google Maps Search", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 
@@ -136,7 +136,7 @@ export async function answerHandler(m, sock) {
     // keluar sesi manual
     if (/^(stop|batal|x|cancel|keluar)$/.test(text)) {
       clearMapsChoice(m.chat);
-      await m.reply(novaWrap("Google Maps Search", "Sesi Maps ditutup. Ketik ulang .mapss <tempat> buat cari lagi."));
+      await m.reply(raraWrap("Google Maps Search", "Sesi Maps ditutup. Ketik ulang .mapss <tempat> buat cari lagi."));
       return true;
     }
 
@@ -145,7 +145,7 @@ export async function answerHandler(m, sock) {
     const n = Number(text);
     const item = takeMapsChoice(m.chat, n);
     if (!item) {
-      await m.reply(novaWrap("Google Maps Search", [
+      await m.reply(raraWrap("Google Maps Search", [
         `Nomor ${n} gak ada di hasil pencarian.`,
         `Balas nomor yang bener, atau "stop" buat keluar sesi.`,
       ]));
@@ -200,7 +200,7 @@ export async function answerHandler(m, sock) {
     return true;
   } catch (error) {
     await m.react("❌").catch(() => {});
-    await m.reply(novaWrap("Google Maps Search", te(m.prefix, "mapss", m.pushName), "error")).catch(() => {});
+    await m.reply(raraWrap("Google Maps Search", te(m.prefix, "mapss", m.pushName), "error")).catch(() => {});
     return true; // sesi mapss aktif → tetap dianggap tertangani
   }
 }

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const KONTRAK_PROMPT = `Kamu adalah ahli hukum Indonesia. Buatkan draft kontrak/perjanjian resmi berdasarkan informasi user.
 
@@ -104,7 +104,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   const prefix = botConfig?.command?.prefix || ".";
 
   if (!args || args.trim().length < 10) {
-    const help = novaWrap("Kontrak", [
+    const help = raraWrap("Kontrak", [
       `AI Generator Kontrak/Perjanjian → PDF`,
       ``,
       `📌 Format:`,
@@ -124,10 +124,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   await m.react("🕒");
 
   try {
-    const result = await UnlimitedAI(KONTRAK_PROMPT.replace("__INPUT__", args), "nova-ai");
+    const result = await UnlimitedAI(KONTRAK_PROMPT.replace("__INPUT__", args), "rara-ai");
 
     if (!result || result.trim().length < 20) {
-      return m.reply(novaWrap("Kontrak", "❌ Gagal generate kontrak. Coba dengan detail yang lebih lengkap."));
+      return m.reply(raraWrap("Kontrak", "❌ Gagal generate kontrak. Coba dengan detail yang lebih lengkap."));
     }
 
     const text = result.trim();
@@ -135,10 +135,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     // Text preview
     let preview = text;
     if (preview.length > 2000) preview = preview.substring(0, 2000) + "\n\n... (lihat PDF untuk versi lengkap)";
-    await m.reply(novaWrap("Kontrak — Preview", preview));
+    await m.reply(raraWrap("Kontrak — Preview", preview));
 
     // PDF
-    m.reply(novaWrap("Kontrak", "Render kontrak ke PDF..."));
+    m.reply(raraWrap("Kontrak", "Render kontrak ke PDF..."));
     const pdfBuffer = await renderKontrakPDF(text);
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,
@@ -147,7 +147,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     }, { quoted: m });
   } catch (error) {
     console.error("kontrak error:", error);
-    m.reply(novaWrap("Kontrak", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
+    m.reply(raraWrap("Kontrak", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }
 
   return { handled: true };

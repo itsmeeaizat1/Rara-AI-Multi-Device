@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // dompet — Dompet AI (ide fitur no 1, 12 Sep 2026):
 //   * .dompet <bahasa natural> → catat pemasukan/pengeluaran (parser lokal,
 //     kalau nominal gak ketemu → AI parse), auto kategori + saldo
@@ -11,12 +11,12 @@
 // Penyimpanan: user.dompet { budget, entries[] } — saldo selalu dihitung dari
 // entries (sum masuk - keluar) biar gak pernah nyelisih.
 
-import { visionScan } from "../../src/lib/nova-vision-chain.js";
-import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
-import { novaWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { visionScan } from "../../src/lib/rara-vision-chain.js";
+import { aiChainChat } from "../../src/lib/rara-ai-fallback.js";
+import { raraWrap, raraCaption, tipText, toSC } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 import { renderChart } from "../tools/chart.js";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "dompet",
@@ -216,7 +216,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ═══ Subcommand: kategori ═══
     if (sub === "kategori") {
-      return m.reply(novaWrap("dompet",
+      return m.reply(raraWrap("dompet",
         `🏷 *KATEGORI DOMPET*\n\n📤 Keluar: ${EXPENSE_CATS.join(", ")}\n📥 Masuk: ${INCOME_CATS.join(", ")}\n\n` + tipText(`Kategori dideteksi otomatis dari catatanmu`)));
     }
 
@@ -227,17 +227,17 @@ async function handler(m, { sock, config: botConfig }) {
       // reset budget sebelum validasi — "0" valid
       if (args[1] && /^\s*0+\s*$/.test(args[1])) {
         saveStore(m, store.db, { budget: 0, entries: store.entries });
-        return m.reply(novaWrap("dompet", "✅ Budget bulanan direset — dompet jalan tanpa budget."));
+        return m.reply(raraWrap("dompet", "✅ Budget bulanan direset — dompet jalan tanpa budget."));
       }
       if (!Number.isFinite(n) || n < 1000 || n > 100_000_000) {
         const spent = sum(store.entries.filter((e) => e.type === "keluar" && monthKey(e.ts) === thisMonth), (e) => e.amount);
         const cur = store.budget ? `${rp(store.budget)}/bulan — terpakai ${rp(spent)}` : "belum diset";
-        return m.reply(novaWrap("dompet", `💰 *Budget bulanan*: ${cur}\n\nFormat: ${prefix}dompet budget 2000000\n(1rb - 100jt,reset: ${prefix}dompet budget 0)`, "info"));
+        return m.reply(raraWrap("dompet", `💰 *Budget bulanan*: ${cur}\n\nFormat: ${prefix}dompet budget 2000000\n(1rb - 100jt,reset: ${prefix}dompet budget 0)`, "info"));
       }
       saveStore(m, store.db, { budget: n, entries: store.entries });
       const spent = sum(store.entries.filter((e) => e.type === "keluar" && monthKey(e.ts) === thisMonth), (e) => e.amount);
       const pct = spent ? Math.min(999, Math.round((spent / n) * 100)) : 0;
-      return m.reply(novaWrap("dompet", `✅ Budget bulanan disimpan: *${rp(n)}*\n\n📉 Terpakai bulan ini: ${rp(spent)} (${pct}%)`));
+      return m.reply(raraWrap("dompet", `✅ Budget bulanan disimpan: *${rp(n)}*\n\n📉 Terpakai bulan ini: ${rp(spent)} (${pct}%)`));
     }
 
     // ═══ Subcommand: saldo ═══
@@ -254,7 +254,7 @@ async function handler(m, { sock, config: botConfig }) {
         txt += `\n🎯 Budget: ${rp(store.budget)} — terpakai ${pct}%` + (pct >= 100 ? " ⚠ HABIS!" : pct >= 80 ? " ⚠ hampir habis!" : "");
       }
       txt += `\n\n📅 *Hari ini:* +${rp(dIn)} / -${rp(dOut)}`;
-      return m.reply(novaWrap("dompet", txt));
+      return m.reply(raraWrap("dompet", txt));
     }
 
     // ═══ Subcommand: log ═══
@@ -265,14 +265,14 @@ async function handler(m, { sock, config: botConfig }) {
       const from = Date.now() - cutoff * 86400_000;
       const list = store.entries.filter((e) => e.ts >= from).slice(-15);
       if (!list.length) {
-        return m.reply(novaWrap("dompet", `Belum ada catatan ${cutoff === 1 ? "hari" : cutoff === 7 ? "minggu" : "30 hari"} ini.\n` + tipText(`Coba: ${prefix}dompet makan siang 25rb`)));
+        return m.reply(raraWrap("dompet", `Belum ada catatan ${cutoff === 1 ? "hari" : cutoff === 7 ? "minggu" : "30 hari"} ini.\n` + tipText(`Coba: ${prefix}dompet makan siang 25rb`)));
       }
       const totIn = sum(list.filter((e) => e.type === "masuk"), (e) => e.amount);
       const totOut = sum(list.filter((e) => e.type === "keluar"), (e) => e.amount);
       const lines = list.map((e, i) =>
         `${i + 1}. ${e.type === "masuk" ? "📥" : "📤"} ${e.desc} — ${rp(e.amount)} *(${e.cat})*`
       ).join("\n");
-      return m.reply(novaWrap("dompet",
+      return m.reply(raraWrap("dompet",
         `📋 *Log ${cutoff === 1 ? "hari ini" : cutoff === 7 ? "7 hari" : "30 hari"} (${list.length} transaksi)*\n\n${lines}\n\n📥 Masuk: ${rp(totIn)}\n📤 Keluar: ${rp(totOut)}`));
     }
 
@@ -282,7 +282,7 @@ async function handler(m, { sock, config: botConfig }) {
       const from = Date.now() - range * 86400_000;
       const list = store.entries.filter((e) => e.ts >= from);
       if (!list.length) {
-        return m.reply(novaWrap("dompet", `Belum ada transaksi ${range} hari terakhir.\n` + tipText(`Coba: ${prefix}dompet beli kopi 18rb`)));
+        return m.reply(raraWrap("dompet", `Belum ada transaksi ${range} hari terakhir.\n` + tipText(`Coba: ${prefix}dompet beli kopi 18rb`)));
       }
       const totIn = sum(list.filter((e) => e.type === "masuk"), (e) => e.amount);
       const totOut = sum(list.filter((e) => e.type === "keluar"), (e) => e.amount);
@@ -322,26 +322,26 @@ async function handler(m, { sock, config: botConfig }) {
 
       let txt = `📊 *Rekap ${range} hari*\n\n📥 Masuk: ${rp(totIn)}\n📤 Keluar: ${rp(totOut)}\n⚖ Selisih: ${rp(totIn - totOut)}\n📅 Hari aktif: ${activeDays}/${range} (avg ${rp(avg)}/hari)\n\n🏷 *Kategori terbesar:*\n${catLines}`;
       if (insight) txt += `\n\n💡 _${insight}_`;
-      return m.reply(novaWrap("dompet", txt));
+      return m.reply(raraWrap("dompet", txt));
     }
 
     // ═══ Subcommand: hapus / reset ═══
     if (sub === "hapus" || sub === "undo") {
-      if (!store.entries.length) return m.reply(novaWrap("dompet", "Dompet masih kosong, gak ada yang bisa dihapus.", "error"));
+      if (!store.entries.length) return m.reply(raraWrap("dompet", "Dompet masih kosong, gak ada yang bisa dihapus.", "error"));
       const last = store.entries.pop();
       saveStore(m, store.db, { budget: store.budget, entries: store.entries });
-      return m.reply(novaWrap("dompet", `🗑 Transaksi terakhir dihapus: *${last.desc}* (${last.type === "masuk" ? "+" : "-"}${rp(last.amount)})`));
+      return m.reply(raraWrap("dompet", `🗑 Transaksi terakhir dihapus: *${last.desc}* (${last.type === "masuk" ? "+" : "-"}${rp(last.amount)})`));
     }
     if (sub === "reset" || sub === "bersih") {
       saveStore(m, store.db, { budget: store.budget, entries: [] });
-      return m.reply(novaWrap("dompet", "✅ Semua catatan dompet dibersihin. Budget tetep kepake."));
+      return m.reply(raraWrap("dompet", "✅ Semua catatan dompet dibersihin. Budget tetep kepake."));
     }
 
     // ═══ Entry baru: foto struk (reply/attach) atau teks natural ═══
     const isPhoto = (m.quoted && m.quoted.isImage) || m.isImage;
     const textInput = (m.text || "").trim();
     if (!isPhoto && !textInput) {
-      const guide = novaCaption({
+      const guide = raraCaption({
         emoji: "👛",
         name: "dompet",
         description: "Dompet AI — catat keuangan via teks natural / foto struk",
@@ -361,7 +361,7 @@ async function handler(m, { sock, config: botConfig }) {
       const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
       if (!buffer || !buffer.length) {
         await m.react("❌");
-        return m.reply(novaWrap("dompet", "Gagal download gambar. Coba kirim ulang.", "error"));
+        return m.reply(raraWrap("dompet", "Gagal download gambar. Coba kirim ulang.", "error"));
       }
       const res = await parserVision({
         imageBuffer: buffer,
@@ -370,12 +370,12 @@ async function handler(m, { sock, config: botConfig }) {
       }).catch((e) => ({ status: false, error: e.message }));
       if (!res?.status) {
         await m.react("❌");
-        return m.reply(novaWrap("dompet", res?.error || "Gagal membaca struk", "error"));
+        return m.reply(raraWrap("dompet", res?.error || "Gagal membaca struk", "error"));
       }
       receipt = parseAiReceipt(res.text);
       if (!receipt || !receipt.total) {
         await m.react("❌");
-        return m.reply(novaWrap("dompet", "Gak kedeteksi transaksi di gambarnya. Coba foto struk yang lebih jelas.", "error"));
+        return m.reply(raraWrap("dompet", "Gak kedeteksi transaksi di gambarnya. Coba foto struk yang lebih jelas.", "error"));
       }
       entry = {
         type: "keluar",
@@ -393,7 +393,7 @@ async function handler(m, { sock, config: botConfig }) {
         engineUsed = "ai";
         if (!entry) {
           await m.react("❌");
-          return m.reply(novaWrap("dompet", "Gak kedeteksi nominalnya. Tulis nominalnya ya, contoh: *makan siang 25rb* atau *bayar listrik 350rb*.", "error"));
+          return m.reply(raraWrap("dompet", "Gak kedeteksi nominalnya. Tulis nominalnya ya, contoh: *makan siang 25rb* atau *bayar listrik 350rb*.", "error"));
         }
       }
     }
@@ -419,7 +419,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (err) {
     console.error("dompet error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("dompet", te.novaError(err) || "Gagal memproses", "error"));
+    return m.reply(raraWrap("dompet", te.raraError(err) || "Gagal memproses", "error"));
   }
 }
 

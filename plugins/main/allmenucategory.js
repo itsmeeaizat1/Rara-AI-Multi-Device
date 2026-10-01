@@ -1,21 +1,21 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenucategory.js — Commands per kategori (layout standar novaMenuLayout — sama kayak .menu/.allmenu)
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// allmenucategory.js — Commands per kategori (layout standar raraMenuLayout — sama kayak .menu/.allmenu)
 import * as botmodePlugin from "../group/botmode.js";
-import { getCasesByCategory } from "../../case/nova.js";
+import { getCasesByCategory } from "../../case/rara.js";
 import config from "../../config.js";
 import {
   getCommandsByCategory,
   getCategories,
   getPlugin,
-} from "../../src/lib/nova-plugins.js";
+} from "../../src/lib/rara-plugins.js";
 import path from "path";
-import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { buildNavButtons } from "../../src/lib/nova-menu-card.js";
-import { toSC, novaMenuLayout, getAccessSymbols } from "../../src/lib/nova-menu-style.js";
+import { sendMenuCard } from "../../src/lib/rara-menu-card.js";
+import { buildNavButtons } from "../../src/lib/rara-menu-card.js";
+import { toSC, raraMenuLayout, getAccessSymbols } from "../../src/lib/rara-menu-style.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
-import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
+import { buildMenuInfo } from "../../src/lib/rara-info-section.js";
 
 const pluginConfig = {
   name: "allmenucategory",
@@ -77,7 +77,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
     const categories = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const casesByCategory = getCasesByCategory();
-    const botName = config.bot?.name || "Nova AI Whatsapp Bot";
+    const botName = config.bot?.name || "Rara AI Whatsapp Bot";
 
     // ── Mode 1: Tanpa argumen → semua kategori ──
     if (!categoryArg) {
@@ -157,16 +157,16 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         catEntries.push({ cat, catName, total });
       }
 
-      // Section index pakai novaMenuLayout: intro AI + box info terpisah + section kategori
-      const txt = novaMenuLayout({
+      // Section index pakai raraMenuLayout: intro AI + box info terpisah + section kategori
+      const txt = raraMenuLayout({
         intro: aiIntro || "Halo!",
-        introTitle: "Nova",
+        introTitle: "Rara",
         info: menuInfo,
         categories: [
           {
             name: "Daftar Kategori",
             // baris kategori dipakai sebagai "command" — smallcaps di sini
-            // (novaMenuLayout gak nge-smallcaps nama command, biar .cmd tetep apa adanya)
+            // (raraMenuLayout gak nge-smallcaps nama command, biar .cmd tetep apa adanya)
             commands: catEntries.map((e) => ({ name: `${toSC(e.catName)} — ${e.total} cmd` })),
           },
         ],
@@ -226,9 +226,9 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
     // Layout standar — sama persis kayak .allmenu: intro AI + box info terpisah
     // + legend symbol + section kategori (│ ✦ .cmd symbol) + readmore
-    const txt = novaMenuLayout({
+    const txt = raraMenuLayout({
       intro: aiIntro || "Halo!",
-      introTitle: "Nova",
+      introTitle: "Rara",
       info: menuInfo,
       legend: LEGEND,
       categories: [
@@ -252,7 +252,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
     });
   } catch (e) {
     console.error("[allmenucategory] handler error:", e.message);
-    try { await m.reply(novaError("Allmenucategory", "Gagal menampilkan kategori, coba lagi nanti")); } catch {}
+    try { await m.reply(raraError("Allmenucategory", "Gagal menampilkan kategori, coba lagi nanti")); } catch {}
   }
 }
 

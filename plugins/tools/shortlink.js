@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaGuideV2, novaSalahV2, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraGuideV2, raraSalahV2, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -237,7 +237,7 @@ async function handler(m, { sock }) {
   const url = args.slice(1).join(" ").trim() || "";
 
   if (!providerName || !url) {
-    return m.reply(novaGuideV2("shortlink", {
+    return m.reply(raraGuideV2("shortlink", {
  kaomoji: "(¬‿¬)",
  sapaan: "link panjang mau dipendekin? gih! (￣▽￣)ノ",
       cara: "ketik provider lalu linknya sesudah command",
@@ -250,7 +250,7 @@ async function handler(m, { sock }) {
   const provider = PROVIDERS[providerName];
   if (!provider) {
     await m.react("🐣");
-    return m.reply(novaSalahV2("shortlink", {
+    return m.reply(raraSalahV2("shortlink", {
  kaomoji: "(・_・;)",
       pesan: "providerinya gak ada nih kak, cek daftar provider dulu ya~",
       contoh: `${m.prefix}shortlink list`,
@@ -267,7 +267,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const shortUrl = await provider.shorten(cleanUrl, m);
 
-    const txt = novaWrap("Shortlink", ["SHORTLINK BERHASIL", "Provider: " + provider.name, "URL asli: " + cleanUrl, "URL pendek: " + shortUrl].join("\n"));
+    const txt = raraWrap("Shortlink", ["SHORTLINK BERHASIL", "Provider: " + provider.name, "URL asli: " + cleanUrl, "URL pendek: " + shortUrl].join("\n"));
     await m.react("🐣");
     return m.reply( txt, "shortlink");
   } catch (e) {
@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
     txt += "URL: " + cleanUrl + "\n";
     txt += "Error: " + e.message + "\n\n";
     txt += "Coba provider lain: .shortlink tinyurl <url>";
-    return m.reply(novaWrap("shortlink", txt));
+    return m.reply(raraWrap("shortlink", txt));
   }
 }
 

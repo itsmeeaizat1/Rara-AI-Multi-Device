@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
-import { f } from '../../src/lib/nova-http.js'
-import { novaWrap, novaLine, toSC } from "../../src/lib/nova-menu-style.js";
+import { f } from '../../src/lib/rara-http.js'
+import { raraWrap, raraLine, toSC } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
         const urls = loadJsonData()
         
         if (urls.length === 0) {
-            return m.reply(novaWrap("Asupan", `❌ Data asupan tidak tersedia`))
+            return m.reply(raraWrap("Asupan", `❌ Data asupan tidak tersedia`))
         }
         
         const url = urls[Math.floor(Math.random() * urls.length)]
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
             platformName: 'Asupan',
             title: 'Random Video Asupan',
             format: 'Video',
-            method: 'Nova AI',
+            method: 'Rara AI',
         })
         
         await sock.sendMessage(m.chat, {
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
         }, { quoted: m })
         
     } catch (error) {
-        m.reply(novaWrap("Error", `Video asupan tidak ditemukan`))
+        m.reply(raraWrap("Error", `Video asupan tidak ditemukan`))
     }
 }
 

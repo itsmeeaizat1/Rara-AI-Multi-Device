@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // downloader.js — Unified Downloader
 // Format: .downloader <platform> <format> <url atau keyword>
 
@@ -6,10 +6,10 @@ import yts from "yt-search";
 import { aiodl, detectPlatform } from "../../src/scraper/aio.js";
 import scdl from "../../src/scraper/soundclouddl.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { toSC, novaWrap, novaError, novaGuide, novaBox, bracketBox, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
+import { toSC, raraWrap, raraError, raraGuide, raraBox, bracketBox, raraBerhasil, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -173,10 +173,10 @@ async function downloadYouTube(url, format, sock, m, meta = {}) {
       await offerConvert(sock, m, { buffer, type: "video", platform: "YouTube", title, sourceUrl: url });
     }
     await m.react("🐣");
-    await m.reply(novaBerhasil("YouTube"));
+    await m.reply(raraBerhasil("YouTube"));
   } catch (err) {
     await m.react("❌");
-    m.reply(novaGangguan("YouTube DL"));
+    m.reply(raraGangguan("YouTube DL"));
   }
 }
 
@@ -242,7 +242,7 @@ async function handleAIO(url, format, platformName, sock, m) {
     await offerConvert(sock, m, { buffer, type: "video", platform: platformName, title: result.title, sourceUrl: url });
   }
   await m.react("🐣");
-  await m.reply(novaBerhasil(platformName));
+  await m.reply(raraBerhasil(platformName));
 }
 
 // === SoundCloud handler ===
@@ -274,7 +274,7 @@ async function handleSoundCloud(url, sock, m) {
     }),
   }, { quoted: m });
   await m.react("🐣");
-  await m.reply(novaBerhasil("SoundCloud"));
+  await m.reply(raraBerhasil("SoundCloud"));
 }
 
 // === Spotify handler ===
@@ -304,7 +304,7 @@ async function handleSpotify(url, sock, m) {
     caption, contextInfo: saluranCtx(),
   }, { quoted: m });
   await m.react("🐣");
-  await m.reply(novaBerhasil("Spotify"));
+  await m.reply(raraBerhasil("Spotify"));
 }
 
 // === Mediafire handler ===
@@ -335,7 +335,7 @@ async function handleMediafire(url, sock, m) {
     caption, contextInfo: saluranCtx(),
   }, { quoted: m });
   await m.react("🐣");
-  await m.reply(novaBerhasil("MediaFire"));
+  await m.reply(raraBerhasil("MediaFire"));
 }
 
 // === Main handler ===
@@ -349,7 +349,7 @@ async function handler(m, { sock }) {
       `${k.padEnd(12)} ${prefix}downloader ${k} ${PLATFORMS[k].needsUrl ? "<url>" : "<keyword>"}`
     ).join("\n");
 
-    return m.reply(novaWrap("downloader", [
+    return m.reply(raraWrap("downloader", [
       "📌 Format: " + prefix + "downloader <platform> <format> <url/keyword>",
       "",
       "Platform tersedia: " + platforms,
@@ -366,7 +366,7 @@ async function handler(m, { sock }) {
   if (!platformName) {
     await m.react("❗");
     return m.reply(
-      novaError("Downloader", `Platform "${args[0]}" tidak dikenal. Ketik ${prefix}downloader untuk lihat daftar platform.`)
+      raraError("Downloader", `Platform "${args[0]}" tidak dikenal. Ketik ${prefix}downloader untuk lihat daftar platform.`)
     );
   }
 
@@ -386,13 +386,13 @@ async function handler(m, { sock }) {
 
     if (!query) {
       return m.reply(
-        novaGuide("Downloader", `Masukkan URL ${platformName} yang mau di-download!`, `${prefix}downloader ${platformName} <url>`)
+        raraGuide("Downloader", `Masukkan URL ${platformName} yang mau di-download!`, `${prefix}downloader ${platformName} <url>`)
       );
     }
 
     if (!query.match(/^https?:\/\//i)) {
       await m.react("❗");
-      return m.reply(novaError("Downloader", `"${query.slice(0, 50)}" bukan URL yang valid.`));
+      return m.reply(raraError("Downloader", `"${query.slice(0, 50)}" bukan URL yang valid.`));
     }
   } else {
     if (args[1] && resolveFormat(args[1])) {
@@ -404,7 +404,7 @@ async function handler(m, { sock }) {
 
     if (!query) {
       return m.reply(
-        novaGuide("Downloader", `Masukkan kata kunci pencarian untuk ${platformName}!`, `${prefix}downloader ${platformName} audio faded`)
+        raraGuide("Downloader", `Masukkan kata kunci pencarian untuk ${platformName}!`, `${prefix}downloader ${platformName} audio faded`)
       );
     }
   }
@@ -436,7 +436,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error(`[Downloader] ${platformName}:`, err.message);
     await m.react("❌");
-    m.reply(novaError("Downloader", err.message || `Gagal download dari ${platformName}`));
+    m.reply(raraError("Downloader", err.message || `Gagal download dari ${platformName}`));
   }
 }
 

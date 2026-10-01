@@ -1,8 +1,8 @@
 // E2E REWORK DESAIN .ai (ai-set) — 11 Sep 2026
 // Request owner: "fitur .ai itu udh pakai desain skrg ga soalnya berantakan
 // kelaitannya" — panel harus pake layout sekarang:
-// novaInfoSections (「 ✦ section ✦ 」 label smallcaps : value verbatim)
-// + novaBox Perintah + novaSalah salah pemakaian + novaBox konfirmasi.
+// raraInfoSections (「 ✦ section ✦ 」 label smallcaps : value verbatim)
+// + raraBox Perintah + raraSalah salah pemakaian + raraBox konfirmasi.
 // Jalankan dari cwd repo: node test/ai-set-e2e/e2e.mjs
 import { config as aiSetConfig, handler as aiSetHandler } from "../../plugins/ai/ai-set.js";
 
@@ -10,7 +10,7 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 
-// smallcaps map (novaWrap/toSC smallcaps semua label — assert pakai toSC)
+// smallcaps map (raraWrap/toSC smallcaps semua label — assert pakai toSC)
 const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
 // UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
 const toSC = (s) => String(s ?? "");
@@ -61,7 +61,7 @@ w("\n— 2. set provider/model → box konfirmasi baru —");
   check(".ai-set model → box + verbatim gpt-4o-mini", (m2._replies[0] || "").includes("gpt-4o-mini") && (m2._replies[0] || "").includes("Berhasil kak"), "");
 }
 
-w("\n— 3. salah pemakaian → novaSalah SINGKAT tanpa box —");
+w("\n— 3. salah pemakaian → raraSalah SINGKAT tanpa box —");
 {
   const m = mkM(".ai-set model");
   await aiSetHandler(m, { sock: {}, config: botConfig() });
@@ -84,7 +84,7 @@ w("\n— 4. owner-gate + mode + apikey —");
   const m = mkM(".ai-set off", false);
   await aiSetHandler(m, { sock: {}, config: botConfig() });
   const r = m._replies[0] || "";
-  check("non-owner .ai-set off → novaError ❌", r.includes("❌") && r.includes(toSC("khusus owner")), r.slice(0, 60));
+  check("non-owner .ai-set off → raraError ❌", r.includes("❌") && r.includes(toSC("khusus owner")), r.slice(0, 60));
 
   const cfg = botConfig();
   const m2 = mkM(".ai-set mode online");

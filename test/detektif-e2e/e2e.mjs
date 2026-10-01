@@ -1,7 +1,7 @@
-// E2E detektif — Nova Detektif: Kasus Kriminal Kota
+// E2E detektif — Rara Detektif: Kasus Kriminal Kota
 import path from "node:path";
 import fs from "node:fs";
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
 
 process.env.DETEKTIF_ANSWER_CD_MS = "0"; // e2e jalan mili-detik
 process.env.DETEKTIF_ANIM_MS = "0"; // animasi siram lokasi instan saat e2e

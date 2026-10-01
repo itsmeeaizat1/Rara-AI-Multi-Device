@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * .agentloop — AGENT LOOP ITERATIF dengan self-critique (upgrade #1 menuju
  * bot "masa depan", disetujui owner 24 Sep 2026).
  *
- * Gap yang ditutup: .novaagent/.aisuperagent = ONE-SHOT (plan → eksekusi →
+ * Gap yang ditutup: .raraagent/.aisuperagent = ONE-SHOT (plan → eksekusi →
  * selesai), .autotask = tahapan berjangka tapi rencana disusun SEKALI dan
  * hasilnya GAK pernah diverifikasi. .agentloop menambahkan siklus sejati:
  *
@@ -27,12 +27,12 @@
  * otomatis dari putaran berikutnya (resumeAgentLoops dipanggil index.js).
  */
 
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
-import { runAgent } from "../../src/lib/nova-agent.js";
-import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
-import { skillsBlock } from "../../src/lib/nova-askills.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraBox, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { callAI } from "../../src/lib/rara-ai-service.js";
+import { runAgent } from "../../src/lib/rara-agent.js";
+import { memoryBlock, extractMemories } from "../../src/lib/rara-memory.js";
+import { skillsBlock } from "../../src/lib/rara-askills.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -72,7 +72,7 @@ let _planner = null;   // override penyusun rencana awal
 let _runner = null;    // override eksekusi putaran
 let _critic = null;    // override evaluator diri
 let _composer = null;  // override penyusun jawaban final
-let _extractor = null; // override ekstraksi memori (nova-memory.js)
+let _extractor = null; // override ekstraksi memori (rara-memory.js)
 
 // ────────────────────────────────────────────────────────────────────────────
 // STORE — persisten di db.data.agentloop
@@ -160,7 +160,7 @@ async function planLoop(task) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// FASE 2: EKSEKUSI PUTARAN — engine sama kayak .novaagent (penalaran + riset)
+// FASE 2: EKSEKUSI PUTARAN — engine sama kayak .raraagent (penalaran + riset)
 // ────────────────────────────────────────────────────────────────────────────
 
 function scratchpadOf(run) {
@@ -189,8 +189,8 @@ async function runIteration(run) {
     } catch { return null; }
   };
 
-  // 🔹 MEMORY LAYER: fakta durabel user (nova-memory.js — store sama kayak
-  // .novaai/.novaagent) di-inject ke prompt putaran biar loop inget owner
+  // 🔹 MEMORY LAYER: fakta durabel user (rara-memory.js — store sama kayak
+  // .raraai/.raraagent) di-inject ke prompt putaran biar loop inget owner
   const memLine = run.sender ? memoryBlock(getDatabase(), run.sender, run.plan.goal) : "";
   const skillLine = skillsBlock(run.plan.goal);
   const prompt =
@@ -402,7 +402,7 @@ async function handler(m, { sock, config: botConfig }) {
   const prefix = botConfig?.command?.prefix || ".";
   const raw = (m.text || "").trim();
   if (!raw) {
-    await m.reply(novaGuide(
+    await m.reply(raraGuide(
       "agentloop",
       "Agent otonom iteratif — rencanakan, kerjakan, evaluasi diri, koreksi, ulangi sampai tujuan tercapai",
       `${prefix}agentloop riset 3 laptop gaming terbaik 2026, bandingkan, kasih rekomendasi\n${prefix}agentloop status\n${prefix}agentloop stop\n${prefix}agentloop hasil l1`,
@@ -419,14 +419,14 @@ async function handler(m, { sock, config: botConfig }) {
   if (sub === "list") {
     const ids = Object.keys(st.runs);
     if (!ids.length) {
-      await m.reply(novaBox("AGENTLOOP", ["Belum ada loop.", `Buat: ${prefix}agentloop <tugas>`]));
+      await m.reply(raraBox("AGENTLOOP", ["Belum ada loop.", `Buat: ${prefix}agentloop <tugas>`]));
       return { handled: true };
     }
     const lines = ids.map((id) => {
       const r = st.runs[id];
       return `| ${id.toUpperCase()} ${statusLine(r)} — ${String(r.task).slice(0, 45)}`;
     });
-    await m.reply(novaBox("DAFTAR LOOP", lines));
+    await m.reply(raraBox("DAFTAR LOOP", lines));
     return { handled: true };
   }
 
@@ -435,13 +435,13 @@ async function handler(m, { sock, config: botConfig }) {
     const id = (args[1] || "").toLowerCase();
     const run = id ? st.runs[id] : Object.values(st.runs).find((r) => r.status === "running") || Object.values(st.runs).slice(-1)[0];
     if (!run) {
-      await m.reply(novaBox("AGENTLOOP", ["Loop gak ketemu."]));
+      await m.reply(raraBox("AGENTLOOP", ["Loop gak ketemu."]));
       return { handled: true };
     }
     const iterLines = (run.iterations || []).map((it) =>
       `| ${it.n + 1}. ${it.result ? (it.critique?.satisfied ? "✅" : "🟡") : "⚠️"} ${String(it.instruction).slice(0, 50)}`
     );
-    await m.reply(novaBox("STATUS LOOP " + run.id.toUpperCase(), [
+    await m.reply(raraBox("STATUS LOOP " + run.id.toUpperCase(), [
       `Tugas: ${String(run.task).slice(0, 60)}`,
       `Tujuan: ${String(run.plan.goal).slice(0, 60)}`,
       `Status: ${statusLine(run)}${run.status === "done" ? (run.met ? " — tercapai" : " — budget habis") : ""}`,
@@ -458,17 +458,17 @@ async function handler(m, { sock, config: botConfig }) {
       Object.keys(st.runs).find((k) => st.runs[k].status === "running") || "";
     const run = st.runs[id];
     if (!run) {
-      await m.reply(novaBox("AGENTLOOP", [`${id || "?"} gak ketemu.`, `Loop jalan: ${prefix}agentloop status`]));
+      await m.reply(raraBox("AGENTLOOP", [`${id || "?"} gak ketemu.`, `Loop jalan: ${prefix}agentloop status`]));
       return { handled: true };
     }
     if (run.status !== "running") {
-      await m.reply(novaBox("AGENTLOOP", [`${id.toUpperCase()} gak lagi jalan (${run.status}).`]));
+      await m.reply(raraBox("AGENTLOOP", [`${id.toUpperCase()} gak lagi jalan (${run.status}).`]));
       return { handled: true };
     }
     run.status = "stopped";
     run.stoppedAt = Date.now();
     save();
-    await m.reply(novaBox("AGENTLOOP", [
+    await m.reply(raraBox("AGENTLOOP", [
       `${id.toUpperCase()} dihentikan di putaran ${run.cur}/${run.maxIter}.`,
       `Hasil sementara: ${prefix}agentloop hasil ${id}`,
     ]));
@@ -480,13 +480,13 @@ async function handler(m, { sock, config: botConfig }) {
     const id = (args[1] || "").toLowerCase();
     const run = id ? st.runs[id] : Object.values(st.runs).slice(-1)[0];
     if (!run || !run.answer) {
-      await m.reply(novaBox("AGENTLOOP", [`${id || "?"} belum punya jawaban final.`]));
+      await m.reply(raraBox("AGENTLOOP", [`${id || "?"} belum punya jawaban final.`]));
       return { handled: true };
     }
     const ok = await dmOwner(sock,
       `📋 AGENTLOOP ${run.id.toUpperCase()} — JAWABAN FINAL (${run.met ? "tercapai" : "budget habis"})\n\n${run.answer}`
     );
-    await m.reply(novaBox("AGENTLOOP", [
+    await m.reply(raraBox("AGENTLOOP", [
       ok ? `Jawaban final dikirim ke DM kamu.` : `Gagal kirim DM (bot gak kenal nomor owner?).`,
     ]));
     return { handled: true };
@@ -495,7 +495,7 @@ async function handler(m, { sock, config: botConfig }) {
   // ─── BUAT LOOP BARU ───
   const taskText = raw.trim();
   if (taskText.length < 8) {
-    await m.reply(novaBox("AGENTLOOP", ["Tugasnya kependekan bos.", `Contoh: ${prefix}agentloop riset 3 hp terbaik 2026 lalu rekomendasikan satu`]));
+    await m.reply(raraBox("AGENTLOOP", ["Tugasnya kependekan bos.", `Contoh: ${prefix}agentloop riset 3 hp terbaik 2026 lalu rekomendasikan satu`]));
     return { handled: true };
   }
 
@@ -505,7 +505,7 @@ async function handler(m, { sock, config: botConfig }) {
   st.runs[id] = {
     id,
     task: taskText,
-    sender: m.sender || null, // buat memory layer (nova-memory.js per-user)
+    sender: m.sender || null, // buat memory layer (rara-memory.js per-user)
     plan,
     status: "running",
     met: false,
@@ -522,7 +522,7 @@ async function handler(m, { sock, config: botConfig }) {
   }
   save();
 
-  await m.reply(novaBox("LOOP BARU — " + id.toUpperCase(), [
+  await m.reply(raraBox("LOOP BARU — " + id.toUpperCase(), [
     `Tugas: ${taskText.slice(0, 60)}`,
     `Tujuan: ${plan.goal.slice(0, 60)}`,
     `Kriteria sukses: ${plan.criteria.slice(0, 60)}`,

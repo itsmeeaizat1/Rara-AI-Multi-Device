@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaWrap, tipText, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, tipText, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -278,11 +278,11 @@ export default {
     // ─── Toggle commands ───
     if (new RegExp(`^${prefix}todon\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(novaError("Truth or Dare", "Hanya owner yang bisa mengatur fitur ini ya!"));
+        await m.reply(raraError("Truth or Dare", "Hanya owner yang bisa mengatur fitur ini ya!"));
         return { handled: true };
       }
       toggleOn(groupId);
-      await m.reply(novaWrap("Truth or Dare", [
+      await m.reply(raraWrap("Truth or Dare", [
         `Status: *Aktif*`,
         ``,
         `Truth or Dare dinyalakan di grup ini.`,
@@ -293,11 +293,11 @@ export default {
 
     if (new RegExp(`^${prefix}todoff\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(novaError("Truth or Dare", "Hanya owner yang bisa mematikan fitur ini ya!"));
+        await m.reply(raraError("Truth or Dare", "Hanya owner yang bisa mematikan fitur ini ya!"));
         return { handled: true };
       }
       toggleOff(groupId);
-      await m.reply(novaWrap("Truth or Dare", [
+      await m.reply(raraWrap("Truth or Dare", [
         `Status: *Nonaktif*`,
         ``,
         `Truth or Dare dimatikan.`,
@@ -318,19 +318,19 @@ export default {
         ``,
         `Status: *${isTodOn(groupId) ? "Aktif" : "Nonaktif"}*`,
       ];
-      await m.reply(novaWrap("Tod - Statistik", lines.join("\n")));
+      await m.reply(raraWrap("Tod - Statistik", lines.join("\n")));
       return { handled: true };
     }
 
     // ─── Check if enabled ───
     if (!isTodOn(groupId)) {
-      await m.reply(novaError("Truth or Dare", `Fitur ToD belum aktif di grup ini nih! Owner ketik *${prefix}todon* untuk mengaktifkan.`));
+      await m.reply(raraError("Truth or Dare", `Fitur ToD belum aktif di grup ini nih! Owner ketik *${prefix}todon* untuk mengaktifkan.`));
       return { handled: true };
     }
 
     // ─── Group only check ───
     if (!groupId.endsWith("@g.us")) {
-      await m.reply(novaError("Truth or Dare", "Fitur ini khusus untuk grup ya! Ajak teman kamu main di grup."));
+      await m.reply(raraError("Truth or Dare", "Fitur ini khusus untuk grup ya! Ajak teman kamu main di grup."));
       return { handled: true };
     }
     // ─── Parse sub-command ───
@@ -347,7 +347,7 @@ export default {
 
     // ─── Help ───
     if (subCmd === "help" || subCmd === "bantu") {
-      await m.reply(novaWrap("Tod - Bantuan", [
+      await m.reply(raraWrap("Tod - Bantuan", [
         `Cara Pakai Truth or Dare:`,
         ``,
         `1. *${prefix}tod* - Random truth atau dare`,
@@ -376,7 +376,7 @@ export default {
     // ─── Target mode: point at random member ───
     if (subCmd === "target") {
       if (members.length === 0) {
-        await m.reply(novaEmpty("Truth or Dare", "Tidak ada member lain yang bisa ditunjuk nih. Coba lagi nanti ya!"));
+        await m.reply(raraEmpty("Truth or Dare", "Tidak ada member lain yang bisa ditunjuk nih. Coba lagi nanti ya!"));
         return { handled: true };
       }
 
@@ -401,7 +401,7 @@ export default {
         `${chosen === "truth" ? "Jujur ya, jangan diplomasi!" : "Lakuin ya, jangan kabur!"}`,
       ];
 
-      const text = novaWrap("Tod - Target", lines.join("\n")) +
+      const text = raraWrap("Tod - Target", lines.join("\n")) +
         "\n" +
         tipText(`Kalau skip, wajib kasih 1 dare ke ${displayName(target)}`);
 
@@ -480,7 +480,7 @@ export default {
       lines.push(`${displayName(targetMember)} wajib respon ya!`);
     }
 
-    let text = novaWrap(`Tod - ${label}`, lines.join("\n"));
+    let text = raraWrap(`Tod - ${label}`, lines.join("\n"));
 
     if (type === "truth") {
       text += "\n" + tipText("Skip? Wajib kasih 1 truth ke member lain");

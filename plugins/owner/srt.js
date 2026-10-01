@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import config from '../../config.js';
-import { getDatabase } from '../../src/lib/nova-database.js';
-import te from '../../src/lib/nova-error.js';
+import { getDatabase } from '../../src/lib/rara-database.js';
+import te from '../../src/lib/rara-error.js';
 import { prepareWAMessageMedia, generateWAMessageFromContent, generateWAMessage, jidNormalizedUser } from 'nova';
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'srt',
@@ -42,16 +42,16 @@ async function handler(m, { sock, args }) {
         const action = args[0]?.toLowerCase();
 
         if (!action) {
-            return m.reply(novaWrap("srt", `🛠️ *SISTEM SHUFFLE REPLY THUMB (SRT)*\n\nSelamat datang di menu pengelolaan gambar balasan otomatis. Sistem ini memungkinkan bot untuk membalas dengan gambar *thumbnail* yang diacak secara otomatis dari koleksi yang kamu simpan.\n\nBerikut adalah daftar perintah yang tersedia:\n- *.srt on* : Mengaktifkan fitur shuffle secara global.\n- *.srt off* : Menonaktifkan fitur shuffle dan kembali ke pengaturan awal.\n- *.srt c* : Membuka sesi tangkapan gambar untuk menambahkan koleksi baru ke dalam database.\n- *.srt d* : Menutup sesi tangkapan gambar.\n- *.srt list* : Menampilkan seluruh koleksi gambar yang telah tersimpan di dalam database bot.`));
+            return m.reply(raraWrap("srt", `🛠️ *SISTEM SHUFFLE REPLY THUMB (SRT)*\n\nSelamat datang di menu pengelolaan gambar balasan otomatis. Sistem ini memungkinkan bot untuk membalas dengan gambar *thumbnail* yang diacak secara otomatis dari koleksi yang kamu simpan.\n\nBerikut adalah daftar perintah yang tersedia:\n- *.srt on* : Mengaktifkan fitur shuffle secara global.\n- *.srt off* : Menonaktifkan fitur shuffle dan kembali ke pengaturan awal.\n- *.srt c* : Membuka sesi tangkapan gambar untuk menambahkan koleksi baru ke dalam database.\n- *.srt d* : Menutup sesi tangkapan gambar.\n- *.srt list* : Menampilkan seluruh koleksi gambar yang telah tersimpan di dalam database bot.`));
         }
 
         if (action === 'on') {
             db.setting('srtEnabled', true);
-            await m.reply(novaWrap("Srt", '✅ *FITUR SRT BERHASIL DIAKTIFKAN*\n\nFitur ini telah menyala secara global. Setiap balasan bot yang mendukung *thumbnail* sekarang akan menampilkan gambar secara acak dari dalam folder shuffle yang telah dikumpulkan.'));
+            await m.reply(raraWrap("Srt", '✅ *FITUR SRT BERHASIL DIAKTIFKAN*\n\nFitur ini telah menyala secara global. Setiap balasan bot yang mendukung *thumbnail* sekarang akan menampilkan gambar secara acak dari dalam folder shuffle yang telah dikumpulkan.'));
         } 
         else if (action === 'off') {
             db.setting('srtEnabled', false);
-            await m.reply(novaWrap("Srt", '❌ *FITUR SRT BERHASIL DINONAKTIFKAN*\n\nPenggunaan *thumbnail* acak telah dimatikan. Semua balasan bot akan kembali menggunakan gambar *default* bawaan sistem.'));
+            await m.reply(raraWrap("Srt", '❌ *FITUR SRT BERHASIL DINONAKTIFKAN*\n\nPenggunaan *thumbnail* acak telah dimatikan. Semua balasan bot akan kembali menggunakan gambar *default* bawaan sistem.'));
         } 
         else if (action === 'c' || action === 'capture') {
             global.srtSession[m.chat] = { sender: m.sender, count: 0 };
@@ -60,17 +60,17 @@ async function handler(m, { sock, args }) {
         } 
         else if (action === 'd' || action === 'done') {
             if (!global.srtSession[m.chat] || global.srtSession[m.chat].sender !== m.sender) {
-                return m.reply(novaWrap("Srt", '❌ Kamu sedang tidak berada di dalam sesi penangkapan gambar aktif untuk saat ini.'));
+                return m.reply(raraWrap("Srt", '❌ Kamu sedang tidak berada di dalam sesi penangkapan gambar aktif untuk saat ini.'));
             }
             const count = global.srtSession[m.chat].count;
             delete global.srtSession[m.chat];
             const totalImages = countShuffleImages();
-            await m.reply(novaWrap("Srt", `✅ *SESI TANGKAPAN GAMBAR SELESAI*\n\nSesi telah dihentikan dan seluruh gambar telah diproses.\n- Total gambar baru yang ditambahkan: *${count}*\n- Total keseluruhan gambar di sistem: *${totalImages}*`));
+            await m.reply(raraWrap("Srt", `✅ *SESI TANGKAPAN GAMBAR SELESAI*\n\nSesi telah dihentikan dan seluruh gambar telah diproses.\n- Total gambar baru yang ditambahkan: *${count}*\n- Total keseluruhan gambar di sistem: *${totalImages}*`));
         } 
         else if (action === 'list') {
             if (!fs.existsSync(SHUFFLE_DIR)) return m.reply('❌ Belum ada satu pun gambar yang tersimpan di dalam direktori *shuffle*. Silakan lakukan penangkapan gambar terlebih dahulu.');
             const files = fs.readdirSync(SHUFFLE_DIR).filter(f => f.endsWith('.jpg') || f.endsWith('.png') || f.endsWith('.jpeg'));
-            if (files.length === 0) return m.reply(novaWrap("Srt", '❌ Direktori *shuffle* masih kosong. Silakan gunakan perintah tangkapan gambar untuk mulai menambahkan.'));
+            if (files.length === 0) return m.reply(raraWrap("Srt", '❌ Direktori *shuffle* masih kosong. Silakan gunakan perintah tangkapan gambar untuk mulai menambahkan.'));
             try {
                 const opener = generateWAMessageFromContent(
                     m.chat,
@@ -118,12 +118,12 @@ async function handler(m, { sock, args }) {
             }
         } 
         else {
-            await m.reply(novaWrap("Srt", `❌ Perintah lanjutan "${action}" tidak dapat dikenali oleh sistem.`));
+            await m.reply(raraWrap("Srt", `❌ Perintah lanjutan "${action}" tidak dapat dikenali oleh sistem.`));
         }
         
     } catch (error) {
         console.error('SRT List Error:', error);
-        m.reply(novaWrap("srt", te(m.prefix, m.command, m.pushName), "error"));
+        m.reply(raraWrap("srt", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 
@@ -154,11 +154,11 @@ async function srtAnswerHandler(m, sock) {
             const filepath = path.join(SHUFFLE_DIR, filename);
 
             if (fs.existsSync(filepath)) {
-                await m.reply(novaWrap("Srt", '⚠️ Gambar yang sama terdeteksi telah tersimpan di dalam database.'));
+                await m.reply(raraWrap("Srt", '⚠️ Gambar yang sama terdeteksi telah tersimpan di dalam database.'));
             } else {
                 fs.writeFileSync(filepath, buffer);
                 session.count++;
-                { const __navText = novaWrap("GAMBAR BERHASIL DISIMPAN", `Gambar telah diamankan ke dalam penyimpanan lokal bot.\n- Total gambar ditambahkan pada sesi ini: *${session.count}*`); await m.reply(__navText); };
+                { const __navText = raraWrap("GAMBAR BERHASIL DISIMPAN", `Gambar telah diamankan ke dalam penyimpanan lokal bot.\n- Total gambar ditambahkan pada sesi ini: *${session.count}*`); await m.reply(__navText); };
             }
         }
         return true;

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // cuki-api.js — Scraper untuk api.cuki.biz.id (Naya AI dll)
 import axios from "axios";
 

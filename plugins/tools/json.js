@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "json",
@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
         "values = extract semua values\n" +
         "type = detect type per key\n\n" +
         "Contoh:\n" +
-        prefix + 'json beautify {"name":"Nova","age":20}\n' +
+        prefix + 'json beautify {"name":"Rara","age":20}\n' +
         prefix + 'json check {"a":1}\n' +
         prefix + 'json keys {"a":1,"b":2}',
         { title: "JSON Formatter & Validator" }
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!jsonStr) {
-      return m.reply(novaWrap("JSON", "Input JSON tidak boleh kosong!"));
+      return m.reply(raraWrap("JSON", "Input JSON tidak boleh kosong!"));
     }
     // Parse JSON
     let parsed;
@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) {
       // For check mode, show detailed error
       if (mode === "check") {
-        return m.reply(novaWrap("JSON Validation", [
+        return m.reply(raraWrap("JSON Validation", [
           "Status: INVALID",
           "Error: " + e.message,
           "",
@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
         ].join("\n")));
       }
 
-      return m.reply(novaWrap("JSON", "JSON invalid: " + e.message));
+      return m.reply(raraWrap("JSON", "JSON invalid: " + e.message));
     }
 
     let result;
@@ -87,7 +87,7 @@ async function handler(m, { sock, config: botConfig }) {
         if (result.length > 1500) {
           result = result.substring(0, 1500) + "\n... (dipotong)";
         }
-        return m.reply(novaWrap("JSON Beautify", "```\n" + result + "\n```"));
+        return m.reply(raraWrap("JSON Beautify", "```\n" + result + "\n```"));
       }
 
       case "minify": {
@@ -95,7 +95,7 @@ async function handler(m, { sock, config: botConfig }) {
         if (result.length > 1500) {
           result = result.substring(0, 1500) + "...";
         }
-        return m.reply(novaWrap("JSON Minify", "```\n" + result + "\n```"));
+        return m.reply(raraWrap("JSON Minify", "```\n" + result + "\n```"));
       }
 
       case "check": {
@@ -114,12 +114,12 @@ async function handler(m, { sock, config: botConfig }) {
           lines.push("Value: " + String(parsed));
           lines.push("Size: " + JSON.stringify(parsed).length + " bytes");
         }
-        return m.reply(novaWrap("JSON Validation", lines.join("\n")));
+        return m.reply(raraWrap("JSON Validation", lines.join("\n")));
       }
 
       case "keys": {
         if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-          return m.reply(novaWrap("JSON Keys", "Input bukan object!"));
+          return m.reply(raraWrap("JSON Keys", "Input bukan object!"));
         }
         const keys = Object.keys(parsed);
         const lines = ["Total keys: " + keys.length, ""];
@@ -128,12 +128,12 @@ async function handler(m, { sock, config: botConfig }) {
           const valType = Array.isArray(val) ? "array" : typeof val;
           lines.push((i + 1) + ". " + k + " (" + valType + ")");
         });
-        return m.reply(novaWrap("JSON Keys", lines.join("\n")));
+        return m.reply(raraWrap("JSON Keys", lines.join("\n")));
       }
 
       case "values": {
         if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-          return m.reply(novaWrap("JSON Values", "Input bukan object!"));
+          return m.reply(raraWrap("JSON Values", "Input bukan object!"));
         }
         const keys = Object.keys(parsed);
         const lines = ["Total values: " + keys.length, ""];
@@ -142,16 +142,16 @@ async function handler(m, { sock, config: botConfig }) {
           const valStr = typeof val === "object" ? JSON.stringify(val) : String(val);
           lines.push((i + 1) + ". " + k + " = " + (valStr.length > 50 ? valStr.substring(0, 50) + "..." : valStr));
         });
-        return m.reply(novaWrap("JSON Values", lines.join("\n")));
+        return m.reply(raraWrap("JSON Values", lines.join("\n")));
       }
 
       case "type": {
         if (typeof parsed !== "object" || parsed === null) {
-          return m.reply(novaWrap("JSON Type", "Type: " + typeof parsed));
+          return m.reply(raraWrap("JSON Type", "Type: " + typeof parsed));
         }
         if (Array.isArray(parsed)) {
           const types = parsed.map((item, i) => (i + 1) + ": " + (Array.isArray(item) ? "array" : typeof item));
-          return m.reply(novaWrap("JSON Type (Array)", "Items: " + parsed.length + "\n" + types.join("\n")));
+          return m.reply(raraWrap("JSON Type (Array)", "Items: " + parsed.length + "\n" + types.join("\n")));
         }
         const keys = Object.keys(parsed);
         const lines = ["Total: " + keys.length + " keys", ""];
@@ -160,17 +160,17 @@ async function handler(m, { sock, config: botConfig }) {
           const valType = Array.isArray(val) ? "array" : typeof val;
           lines.push(k + ": " + valType);
         });
-        return m.reply(novaWrap("JSON Type Analysis", lines.join("\n")));
+        return m.reply(raraWrap("JSON Type Analysis", lines.join("\n")));
       }
 
       default:
         await m.react("🐣");
-        return m.reply(novaWrap("JSON", "Mode tidak dikenal!"));
+        return m.reply(raraWrap("JSON", "Mode tidak dikenal!"));
     }
   } catch (e) {
     await m.react("❌");
     console.error("json error:", e);
-    return m.reply(novaWrap("JSON", "Error: " + e.message));
+    return m.reply(raraWrap("JSON", "Error: " + e.message));
   }
 }
 

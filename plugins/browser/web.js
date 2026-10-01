@@ -1,17 +1,17 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/browser/web.js — .web — LIVE HTML DI DALAM WHATSAPP
 //
 // Request owner 2026-09-07 (inspirasi video bot scene: "html + live, nyambung
 // ke websocket, bisa buka YouTube dll di dalam WA"):
 // Kirim interactive card dengan tombol nativeFlow cta_url — pas di-tap,
 // WhatsApp buka URL di WEBVIEW DI DALAM APLIKASI (gak keluar WA).
-// Halaman live-nya di-host oleh bot sendiri (src/lib/nova-web-server.js,
+// Halaman live-nya di-host oleh bot sendiri (src/lib/rara-web-server.js,
 // web/live.html — live via SSE push tiap 2 detik).
 //
 // Command:
 //   .web                     → guide + daftar preset
 //   .web list                → daftar preset lengkap
-//   .web live                → Nova Live Dashboard (stat server realtime)
+//   .web live                → Rara Live Dashboard (stat server realtime)
 //   .web yt <judul|url>      → YouTube (query → resolve video pertama via
 //                               yt-dlp; gagal → buka halaman hasil cari)
 //   .web google <query>      → pencarian Google
@@ -37,18 +37,18 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
 import { config } from "../../config.js";
-import { sendRichMessage } from "../../src/lib/nova-rich-response.js";
+import { sendRichMessage } from "../../src/lib/rara-rich-response.js";
 import {
   getYouTubeInfo, getYouTubeFeed, formatYouTubeRich, formatYouTubeFeedRich,
   pipedSuggestions, extractVideoId,
-} from "../../src/lib/nova-youtube-info.js";
-import { sendGoogleSerpRich } from "../../src/lib/nova-web-rich.js";
+} from "../../src/lib/rara-youtube-info.js";
+import { sendGoogleSerpRich } from "../../src/lib/rara-web-rich.js";
 import { smallcapsText, toSC } from "../../src/lib/styler.js";
-import { novaGuide, novaNoInput, novaError } from "../../src/lib/nova-menu-style.js";
-import { getNovaWebUrl } from "../../src/lib/nova-web-server.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { raraGuide, raraNoInput, raraError } from "../../src/lib/rara-menu-style.js";
+import { getNovaWebUrl } from "../../src/lib/rara-web-server.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
-const BOT_REPO = "itsmeeaizat/Nova-AI-Whatsapp-Bot-Multi-Device";
+const BOT_REPO = "itsmeeaizat/Rara-AI-Whatsapp-Bot-Multi-Device";
 
 const pluginConfig = {
   name: "web",
@@ -475,15 +475,15 @@ function presetListText() {
     out += `\n${label}\n`;
     out += items.map(([key, p]) => `• .web ${key} — ${p.desc}`).join("\n");
   }
-  out += "\n\n• .web live — Nova Live Dashboard (stat realtime bot)\n• .web <url> [judul] — buka URL apa pun\n• .web list <kata> — filter preset";
+  out += "\n\n• .web live — Rara Live Dashboard (stat realtime bot)\n• .web <url> [judul] — buka URL apa pun\n• .web list <kata> — filter preset";
   return out;
 }
 
 // ── CARD ──────────────────────────────────────────────────────────────
 // Bangun interactive card: banner (kalau ada) + body + tombol cta_url.
-// Pola sama dengan nova-menu-card (viewOnceMessage → interactiveMessage).
+// Pola sama dengan rara-menu-card (viewOnceMessage → interactiveMessage).
 async function sendWebCard(sock, m, { url, title = "", text = "" }) {
-  const botName = config.bot?.name || "Nova AI";
+  const botName = config.bot?.name || "Rara AI";
   const botVersion = config.bot?.version || "24.0.0";
 
   // Banner: pakai thumbnail menu bot — kalau gak ada, card tetap jalan tanpa header.
@@ -584,7 +584,7 @@ async function handler(m, { sock, args }) {
   // Guide
   if (!cmd) {
     return m.reply(
-      novaGuide(
+      raraGuide(
         "web",
         "Buka halaman web/HTML live langsung di dalam WhatsApp — preset lengkap untuk nonton, cari, belanja.",
         ".web list (lihat semua preset)\n.web mode card/text — atur cara kirim link\n.web yt judul lagu\n.web 2048 md — link text sekali pakai",
@@ -604,7 +604,7 @@ async function handler(m, { sock, args }) {
           (p.group || "").includes(filterKey) ||
           (p.desc || "").toLowerCase().includes(filterKey)
       );
-      if (!all.length) return m.reply(novaError("Web", `Gak ada preset yang cocok dengan kata "${filterKey}". Ketik .web list buat lihat semua.`));
+      if (!all.length) return m.reply(raraError("Web", `Gak ada preset yang cocok dengan kata "${filterKey}". Ketik .web list buat lihat semua.`));
       return m.reply(
         `「 ✦ WEB PRESET ✦ 」\n\n` +
           all.map(([key, p]) => `• .web ${key} — ${p.desc}`).join("\n")
@@ -613,15 +613,15 @@ async function handler(m, { sock, args }) {
     return m.reply(presetListText());
   }
 
-  // Preset: Nova Live Dashboard
+  // Preset: Rara Live Dashboard
   if (cmd === "live" || cmd === "dashboard") {
     await m.react("🕒");
     const url = getNovaWebUrl();
     try {
       await sendWebCard(sock, m, {
         url,
-        title: "Nova Live Dashboard",
-        text: "Nova Live Dashboard - stat server realtime\nJam live - Uptime - RAM - CPU - Demo YouTube",
+        title: "Rara Live Dashboard",
+        text: "Rara Live Dashboard - stat server realtime\nJam live - Uptime - RAM - CPU - Demo YouTube",
       });
       await m.react("🐣");
     } catch (e) {
@@ -646,7 +646,7 @@ async function handler(m, { sock, args }) {
       );
     }
     return m.reply(
-      novaGuide(
+      raraGuide(
         "web mode",
         `Mode kirim link sekarang: ${current === "text" ? "TEXT (markdown)" : "CARD (webview)"}`,
         ".web mode card — webview interaktif di dalam WA\n.web mode text — link markdown code block, chat gak kegeser"
@@ -734,7 +734,7 @@ async function handler(m, { sock, args }) {
   const maybeUrl = args.find((a) => /^https?:\/\//i.test(a));
   if (!maybeUrl) {
     await m.react("❗");
-    return m.reply(novaNoInput("web", `Format salah. Ketik .web list buat lihat semua preset, atau masukkan URL diawali http:// atau https://`));
+    return m.reply(raraNoInput("web", `Format salah. Ketik .web list buat lihat semua preset, atau masukkan URL diawali http:// atau https://`));
   }
 
   await m.react("🕒");

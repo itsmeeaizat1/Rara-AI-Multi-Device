@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "unblock",
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        novaWrap("Unblock User", [
+        raraWrap("Unblock User", [
           `Penggunaan: ${prefix}unblock <@target / nomor>`,
           `Contoh: ${prefix}unblock @username`,
           `Contoh: ${prefix}unblock 6281234567890`,
@@ -55,14 +55,14 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!targetJid) {
-      return m.reply( novaWrap("Unblock User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "unblock");
+      return m.reply( raraWrap("Unblock User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "unblock");
     }
 
     // Eksekusi unblock via Baileys
     await sock.updateBlockStatus(targetJid, "unblock");
 
     const text =
-      novaWrap("Unblock User", [
+      raraWrap("Unblock User", [
         `Target: ${targetDisplay}`,
         "Status: Berhasil di-unblock",
       ].join("\n")) +
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Owner", "Gagal nih, coba lagi ya");
+      raraError("Owner", "Gagal nih, coba lagi ya");
 
     return m.reply( text, "unblock");
   }

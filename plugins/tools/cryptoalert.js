@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // cryptoalert.js — Crypto Price Alert: pasang target harga, bot notif pas kena
 // Fitur baru 9 Sep 2026 (request owner "fitur yg blm prnh ada di bot")
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   addAlert, removeAlert, listAlerts, getStatus, checkNow, setSock, formatRp,
-} from "../../src/lib/nova-cryptoalert.js";
+} from "../../src/lib/rara-cryptoalert.js";
 
 const pluginConfig = {
   name: "cryptoalert",
@@ -23,7 +23,7 @@ const pluginConfig = {
 };
 
 function helpText(m) {
-  return novaWrap("cryptoalert", [
+  return raraWrap("cryptoalert", [
     "🎯 *crypto alarm*",
     "",
     "pasang target harga crypto — notif otomatis pas kena",
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     if (["list", "daftar"].includes(sub)) {
       const list = listAlerts(m.chat);
       if (!list.length) {
-        return m.reply(novaWrap("cryptoalert", `Belum ada alarm harga di chat ini.\n\nKetik ${m.prefix}cryptoalert btc diatas 150jt buat mulai.`, "guide"));
+        return m.reply(raraWrap("cryptoalert", `Belum ada alarm harga di chat ini.\n\nKetik ${m.prefix}cryptoalert btc diatas 150jt buat mulai.`, "guide"));
       }
       const lines = ["🎯 *alarm harga di chat ini*", ""];
       list.forEach((a, i) => {
@@ -67,35 +67,35 @@ async function handler(m, { sock }) {
         lines.push("");
       });
       lines.push(`▸ Hapus: ${m.prefix}cryptoalert stop <no>`);
-      return m.reply(novaWrap("cryptoalert", lines.join("\n")));
+      return m.reply(raraWrap("cryptoalert", lines.join("\n")));
     }
 
     if (["stop", "del", "hapus", "off"].includes(sub)) {
       const key = m.args.slice(1).join(" ").trim();
       if (!key) {
         await m.react("❌");
-        return m.reply(novaWrap("cryptoalert", `Mau hapus alarm yang mana?\n\nKetik ${m.prefix}cryptoalert list buat lihat nomornya.`, "error"));
+        return m.reply(raraWrap("cryptoalert", `Mau hapus alarm yang mana?\n\nKetik ${m.prefix}cryptoalert list buat lihat nomornya.`, "error"));
       }
       const res = removeAlert(m.chat, key);
       if (!res.ok) {
         await m.react("❌");
-        return m.reply(novaWrap("cryptoalert", `Alarm itu gak ketemu di chat ini. Cek ${m.prefix}cryptoalert list.`, "error"));
+        return m.reply(raraWrap("cryptoalert", `Alarm itu gak ketemu di chat ini. Cek ${m.prefix}cryptoalert list.`, "error"));
       }
       await m.react("🐣");
-      return m.reply(novaWrap("cryptoalert", `✅ Alarm *${res.alert.symbol}* dihapus.`));
+      return m.reply(raraWrap("cryptoalert", `✅ Alarm *${res.alert.symbol}* dihapus.`));
     }
 
     if (["now", "cek"].includes(sub)) {
       const list = listAlerts(m.chat);
       if (!list.length) {
         await m.react("❌");
-        return m.reply(novaWrap("cryptoalert", "Belum ada alarm di chat ini.", "error"));
+        return m.reply(raraWrap("cryptoalert", "Belum ada alarm di chat ini.", "error"));
       }
       await m.react("🕒");
       const res = await checkNow(m.chat);
       await m.react("🐣");
       if (res.fired === 0) {
-        return m.reply(novaWrap("cryptoalert", `✅ ${res.checked} alarm dicek — belum ada yang kena. Harga terbaru udah keupdate.`));
+        return m.reply(raraWrap("cryptoalert", `✅ ${res.checked} alarm dicek — belum ada yang kena. Harga terbaru udah keupdate.`));
       }
       return;
     }
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
     if (["info", "status"].includes(sub)) {
       const st = getStatus();
       const mine = listAlerts(m.chat);
-      return m.reply(novaWrap("cryptoalert", [
+      return m.reply(raraWrap("cryptoalert", [
         "🎯 *status crypto alarm*",
         "",
         `aktif: ${st.enabled ? "ya" : "tidak"} (switch auto)`,
@@ -128,11 +128,11 @@ async function handler(m, { sock }) {
         // v24.2.4 — dibedakan dari coin_not_found biar pesannya gak menyesatkan
         api_error: "CoinGecko lagi gak bisa diakses (rate-limit / down). Coba lagi bentar ya 🙏",
       };
-      return m.reply(novaWrap("cryptoalert", msgs[res.error] || "Gagal pasang alarm.", "error"));
+      return m.reply(raraWrap("cryptoalert", msgs[res.error] || "Gagal pasang alarm.", "error"));
     }
     const a = res.alert;
     await m.react("🐣");
-    return m.reply(novaWrap("cryptoalert", [
+    return m.reply(raraWrap("cryptoalert", [
       "✅ *alarm dipasang!*",
       "",
       `🪙 *${a.coinName}* (${a.symbol})`,
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     ].join("\n")));
   } catch (e) {
     await m.react("❌");
-    m.reply(novaWrap("cryptoalert", "Gagal: " + (e?.message || e), "error"));
+    m.reply(raraWrap("cryptoalert", "Gagal: " + (e?.message || e), "error"));
   }
 }
 

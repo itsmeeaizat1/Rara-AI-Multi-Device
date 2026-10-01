@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "ttselon",
   alias: ["ttselon"],
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     );
     const voice = res.data?.result?.find((v) => v.elon_musk && !v.error);
     if (!voice) {
-      return m.reply(novaWrap("ttselon", `❌ Elon voice error. Coba TTS lain.`));
+      return m.reply(raraWrap("ttselon", `❌ Elon voice error. Coba TTS lain.`));
     }
 
     const tempDir = path.join(process.cwd(), "temp");
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     fs.unlinkSync(wavPath);
     fs.unlinkSync(opusPath);
   } catch (err) {
-    m.reply(novaWrap("ttselon", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("ttselon", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

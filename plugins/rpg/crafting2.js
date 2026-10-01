@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // crafting2.js — Crafting System v2 (recipe, material, craft)
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "crafting2",
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "materials" || subCmd === "bahan") {
       if (!data.materials || Object.keys(data.materials).length === 0) {
-        return m.reply(novaRpgBox("crafting2", `Belum ada bahan. Dapatkan dari:\n${m.prefix}mining - tambang iron, crystal, gold_ore\n${m.prefix}nebang - tebang wood\n${m.prefix}berburu - dapat leather, herb`, "guide"));
+        return m.reply(raraRpgBox("crafting2", `Belum ada bahan. Dapatkan dari:\n${m.prefix}mining - tambang iron, crystal, gold_ore\n${m.prefix}nebang - tebang wood\n${m.prefix}berburu - dapat leather, herb`, "guide"));
       }
       let msg = "";
       for (const [mat, count] of Object.entries(data.materials)) {
@@ -94,13 +94,13 @@ async function handler(m, { sock }) {
     if (subCmd === "craft" || subCmd === "buat") {
       const itemName = m.args.slice(1).join(" ").trim();
       if (!itemName) {
-        return m.reply(novaRpgBox("crafting2", `Mau craft apa?\n\nList recipe: ${m.prefix}crafting2`, "guide"));
+        return m.reply(raraRpgBox("crafting2", `Mau craft apa?\n\nList recipe: ${m.prefix}crafting2`, "guide"));
       }
 
       const recipe = RECIPES.find(r => r.name.toLowerCase() === itemName.toLowerCase());
       if (!recipe) {
         await m.react("❌");
-        return m.reply(novaRpgBox("crafting2", `Recipe "${itemName}" tidak ditemukan.`, "error"));
+        return m.reply(raraRpgBox("crafting2", `Recipe "${itemName}" tidak ditemukan.`, "error"));
       }
 
       // Cek materials
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
 
       if (missing.length > 0) {
         await m.react("❌");
-        return m.reply(novaRpgBox("crafting2", `Bahan tidak cukup!\n\nKurang: ${missing.join(", ")}`, "error"));
+        return m.reply(raraRpgBox("crafting2", `Bahan tidak cukup!\n\nKurang: ${missing.join(", ")}`, "error"));
       }
 
       // Cek gold
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
         const gold = await db.getGold?.(m.sender) || 0;
         if (gold < recipe.goldCost) {
           await m.react("❌");
-          return m.reply(novaRpgBox("crafting2", `Gold tidak cukup! Butuh ${recipe.goldCost} gold.`, "error"));
+          return m.reply(raraRpgBox("crafting2", `Gold tidak cukup! Butuh ${recipe.goldCost} gold.`, "error"));
         }
         await db.minGold?.(m.sender, recipe.goldCost);
       } catch {}
@@ -165,7 +165,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("crafting2 error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("crafting2", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("crafting2", err.message || "Error", "error"));
   }
 }
 

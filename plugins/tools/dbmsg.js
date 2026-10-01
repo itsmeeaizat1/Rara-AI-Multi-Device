@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .addmsg/.getmsg/.delmsg/.listmsg — bank pesan tersimpan (port engine lama dbmsg.js)
 // Simpan pesan (vn/video/sticker/img/teks) dengan nama, panggil kembali kapan pun.
 import fs from "fs";
 import path from "path";
 import { proto } from "nova";
-import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "addmsg",
@@ -43,44 +43,44 @@ async function handler(m, { sock, config: botConfig }) {
     if (cmd === "add") {
       if (!m.quoted) {
         await m.react("❌");
-        await m.reply(novaError("Addmsg", "Reply pesan yang mau disimpen dulu"));
+        await m.reply(raraError("Addmsg", "Reply pesan yang mau disimpen dulu"));
         return { handled: true };
       }
       if (!text) {
         await m.react("❌");
-        await m.reply(novaError("Addmsg", "Kasih nama: " + prefix + "addmsg <nama>"));
+        await m.reply(raraError("Addmsg", "Kasih nama: " + prefix + "addmsg <nama>"));
         return { handled: true };
       }
       if (text in msgs) {
         await m.react("❌");
-        await m.reply(novaError("Addmsg", "Nama '" + text + "' udah terdaftar — hapus dulu pakai " + prefix + "delmsg " + text));
+        await m.reply(raraError("Addmsg", "Nama '" + text + "' udah terdaftar — hapus dulu pakai " + prefix + "delmsg " + text));
         return { handled: true };
       }
       const obj = m.quoted.obj || m.quoted.raw || m.quoted;
       msgs[text] = proto.WebMessageInfo.fromObject(obj).toJSON();
       saveMsgs(msgs);
       await m.react("⚡");
-      await m.reply(novaWrap("Addmsg", "Pesan '" + text + "' tersimpan. Panggil: " + prefix + "getmsg " + text));
+      await m.reply(raraWrap("Addmsg", "Pesan '" + text + "' tersimpan. Panggil: " + prefix + "getmsg " + text));
       return { handled: true };
     }
 
     if (cmd === "del") {
       if (!(text in msgs)) {
         await m.react("❌");
-        await m.reply(novaError("Delmsg", "Data '" + text + "' gak ada — lihat daftar: " + prefix + "listmsg"));
+        await m.reply(raraError("Delmsg", "Data '" + text + "' gak ada — lihat daftar: " + prefix + "listmsg"));
         return { handled: true };
       }
       delete msgs[text];
       saveMsgs(msgs);
       await m.react("⚡");
-      await m.reply(novaWrap("Delmsg", "Pesan '" + text + "' dihapus"));
+      await m.reply(raraWrap("Delmsg", "Pesan '" + text + "' dihapus"));
       return { handled: true };
     }
 
     if (cmd === "get") {
       if (!(text in msgs)) {
         await m.react("❌");
-        await m.reply(novaError("Getmsg", "Pesan '" + text + "' gak ada di daftar"));
+        await m.reply(raraError("Getmsg", "Pesan '" + text + "' gak ada di daftar"));
         return { handled: true };
       }
       const parsed = JSON.parse(JSON.stringify(msgs[text]), (_, v) => {
@@ -98,13 +98,13 @@ async function handler(m, { sock, config: botConfig }) {
     // list
     const names = Object.keys(msgs);
     await m.react("⚡");
-    await m.reply(novaWrap("Bank Pesan", names.length
+    await m.reply(raraWrap("Bank Pesan", names.length
       ? ["Total: *" + names.length + "*", "", ...names.slice(0, 50).map((n) => "- " + n), names.length > 50 ? "... dan " + (names.length - 50) + " lagi" : ""].filter(Boolean).join("\n")
       : "Masih kosong — simpen dengan " + prefix + "addmsg <nama> (reply pesan)"));
   } catch (error) {
     console.error("[dbmsg]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("DBmsg", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("DBmsg", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }

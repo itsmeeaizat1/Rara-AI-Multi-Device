@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_FILE = path.join(__dirname, "../../src/data/resep-indonesia.json");
@@ -58,7 +58,7 @@ function formatRecipe(r) {
 
 async function handler(m, { sock, args }) {
   if (RECIPES.length === 0) {
-    return m.reply(novaWrap("Resepid", "Data resep Indonesia tidak tersedia. Pastikan file resep-indonesia.json ada di src/data/"));
+    return m.reply(raraWrap("Resepid", "Data resep Indonesia tidak tersedia. Pastikan file resep-indonesia.json ada di src/data/"));
   }
 
   const sub = (args[0] || "").toLowerCase();
@@ -95,7 +95,7 @@ async function handler(m, { sock, args }) {
       const cat = query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
       pool = RECIPES.filter(r => r.c.toLowerCase() === cat.toLowerCase());
       if (pool.length === 0) {
-        return m.reply(novaWrap("Info", `Kategori "${query}" tidak ditemukan.\n\nTersedia: ${CATEGORIES.join(", ")}`));
+        return m.reply(raraWrap("Info", `Kategori "${query}" tidak ditemukan.\n\nTersedia: ${CATEGORIES.join(", ")}`));
       }
     }
     const recipe = pool[Math.floor(Math.random() * pool.length)];
@@ -121,7 +121,7 @@ async function handler(m, { sock, args }) {
     const filtered = RECIPES.filter(r => r.c.toLowerCase() === cat.toLowerCase());
     
     if (filtered.length === 0) {
-      return m.reply(novaWrap("Info", `Kategori "${query}" tidak ditemukan.\n\nTersedia: ${CATEGORIES.join(", ")}`));
+      return m.reply(raraWrap("Info", `Kategori "${query}" tidak ditemukan.\n\nTersedia: ${CATEGORIES.join(", ")}`));
     }
     
     // Sort by loves
@@ -160,7 +160,7 @@ async function handler(m, { sock, args }) {
     const recipe = RECIPES.find(r => r.id === id);
     
     if (!recipe) {
-      return m.reply(novaWrap("Info", `Resep ID ${id} tidak ditemukan.\n\nTotal resep: ${RECIPES.length}\nRange ID: 1-${RECIPES.length}`));
+      return m.reply(raraWrap("Info", `Resep ID ${id} tidak ditemukan.\n\nTotal resep: ${RECIPES.length}\nRange ID: 1-${RECIPES.length}`));
     }
     
     return await m.reply( formatRecipe(recipe), { commandName: "resepid" });

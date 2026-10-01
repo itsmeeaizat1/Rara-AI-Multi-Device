@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Premium (Info & Harga)
  * Pembuat Code: Aizat
@@ -8,13 +8,13 @@
 
 import fs from "fs";
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { runLiveTicker } from "../../src/lib/nova-countdown.js";
-import { buildPremTickerCard } from "../../src/lib/nova-prem-card.js";
-import { getAllPlugins, getCategories, getCommandsByCategory } from "../../src/lib/nova-plugins.js";
-import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { runLiveTicker } from "../../src/lib/rara-countdown.js";
+import { buildPremTickerCard } from "../../src/lib/rara-prem-card.js";
+import { getAllPlugins, getCategories, getCommandsByCategory } from "../../src/lib/rara-plugins.js";
+import { getCaseCount, getCasesByCategory } from "../../case/rara.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, bracketBox, tipText } from "../../src/lib/rara-menu-style.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
 import { premiumPrice as PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
 
 const pluginConfig = {
@@ -241,7 +241,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     premStatus += "\n\n";
 
     // ── BAGIAN 2: INFO BOT ──
-    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
+    const botName = botConfig.bot?.name || "Rara AI Whatsapp Bot";
     const botVersion = botConfig.bot?.version || "21.2.0";
     const infoBox = bracketBox("⚡", "Info Bot", [
       "Nama: *" + botName + "*",
@@ -352,7 +352,7 @@ async function handler(m, { sock, config: botConfig, db }) {
   } catch (error) {
     console.error("[premium.js] error:", error);
     await m.reply(
-      novaWrap("Premium", [
+      raraWrap("Premium", [
         "Status: *GAGAL*",
         "Alasan: *" + (error.message || "Unknown error") + "*",
         "Coba lagi ya",

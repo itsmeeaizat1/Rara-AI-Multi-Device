@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import crypto from "crypto";
 
 const pluginConfig = {
@@ -26,7 +26,7 @@ async function checkPasswordBreach(password) {
     const suffix = hash.slice(5);
 
     const res = await fetch("https://api.pwnedpasswords.com/range/" + prefix, {
-      headers: { "User-Agent": "Nova-AI-Bot" },
+      headers: { "User-Agent": "Rara-AI-Bot" },
     });
 
     if (!res.ok) throw new Error("HIBP API error: " + res.status);
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
 
   // ===== HELP =====
   if (!sub || sub === "help" || sub === "menu") {
-    return m.reply( novaWrap("Breach Check", [
+    return m.reply( raraWrap("Breach Check", [
       "Cek apakah password/email pernah bocor di data breach",
       "",
       "CARA PAKAI:",
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
   if (sub === "pass" || sub === "password" || sub === "pw") {
     const password = args.slice(1).join(" ");
     if (!password) {
-      return m.reply(novaWrap("Breach Check", "Masukkan password!\n💡 *Contoh:* .breachcheck pass password123"));
+      return m.reply(raraWrap("Breach Check", "Masukkan password!\n💡 *Contoh:* .breachcheck pass password123"));
     }
 
     await m.react("🔍");
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
 
       if (result.breached) {
         await m.react("🚫");
-        return m.reply(novaWrap("Breach Check", [
+        return m.reply(raraWrap("Breach Check", [
           "Password: " + "*".repeat(Math.min(password.length, 20)),
           "",
           "Status: *TERBOCOR!*",
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
 
         let verdict = strength >= 80 ? "SANGAT KUAT" : strength >= 60 ? "KUAT" : strength >= 40 ? "SEDANG" : "LEM AH";
 
-        return m.reply(novaWrap("Breach Check", [
+        return m.reply(raraWrap("Breach Check", [
           "Password: " + "*".repeat(Math.min(password.length, 20)),
           "",
           "Status: *aman*",
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
         ], "success"));
       }
     } catch (e) {
-      return m.reply(novaWrap("Breach Check", "Error: " + e.message + "\n\nMungkin API HIBP sedang down. Coba lagi nanti."));
+      return m.reply(raraWrap("Breach Check", "Error: " + e.message + "\n\nMungkin API HIBP sedang down. Coba lagi nanti."));
     }
   }
 
@@ -164,7 +164,7 @@ async function handler(m, { sock }) {
   if (sub === "email" || sub === "mail") {
     const email = args[1] || "";
     if (!email) {
-      return m.reply(novaWrap("Breach Check", "Masukkan email!\n💡 *Contoh:* .breachcheck email test@gmail.com"));
+      return m.reply(raraWrap("Breach Check", "Masukkan email!\n💡 *Contoh:* .breachcheck email test@gmail.com"));
     }
 
     await m.react("🔍");
@@ -172,7 +172,7 @@ async function handler(m, { sock }) {
     const validation = validateEmail(email);
 
     if (!validation.valid) {
-      return m.reply(novaWrap("Breach Check", "Format email tidak valid!\n💡 *Contoh:* user@domain.com"));
+      return m.reply(raraWrap("Breach Check", "Format email tidak valid!\n💡 *Contoh:* user@domain.com"));
     }
 
     const lines = [
@@ -186,7 +186,7 @@ async function handler(m, { sock }) {
       lines.push("Domain " + validation.domain + " adalah email sekali pakai!");
       lines.push("Tidak boleh dipakai untuk akun penting atau transaksi.");
       await m.react("⚠️");
-      return m.reply(novaWrap("Breach Check", lines, "warn"));
+      return m.reply(raraWrap("Breach Check", lines, "warn"));
     }
 
     // Cek breach lokal
@@ -205,7 +205,7 @@ async function handler(m, { sock }) {
       lines.push("Saran: Gunakan email berbeda untuk akun penting.");
       lines.push("Aktifkan 2FA di semua akun yang pakai email ini.");
       await m.react("⚠️");
-      return m.reply(novaWrap("Breach Check", lines, "warn"));
+      return m.reply(raraWrap("Breach Check", lines, "warn"));
     }
 
     lines.push("");
@@ -214,11 +214,11 @@ async function handler(m, { sock }) {
     lines.push("Tidak ada breach yang diketahui untuk domain ini");
     lines.push("");
     lines.push("Tetap aktifkan 2FA untuk keamanan ekstra.");
-    return m.reply(novaWrap("Breach Check", lines, "success"));
+    return m.reply(raraWrap("Breach Check", lines, "success"));
   }
 
   // DEFAULT - help
-  return m.reply( novaWrap("Breach Check", [
+  return m.reply( raraWrap("Breach Check", [
     "Pilih mode cek:",
     "",
     m.prefix + "breachcheck pass <password> — Cek password di HIBP",

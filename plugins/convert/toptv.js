@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "toptv",
@@ -17,10 +17,10 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const quoted = m.quoted;
-    if (!quoted) return m.reply(novaWrap("toptv", "Reply video dengan caption .toptv", "guide"));
+    if (!quoted) return m.reply(raraWrap("toptv", "Reply video dengan caption .toptv", "guide"));
 
     const isVideo = quoted.type === "videoMessage" || quoted.mtype === "videoMessage";
-    if (!isVideo) return m.reply(novaWrap("toptv", "Reply harus video!", "guide"));
+    if (!isVideo) return m.reply(raraWrap("toptv", "Reply harus video!", "guide"));
 
     await m.react("🕒");
 
@@ -33,11 +33,11 @@ async function handler(m, { sock }) {
 
     await sock.relayMessage(m.chat, ptv.message, { messageId: ptv.key.id });
     await m.react("🐣");
-    await m.reply(novaBerhasil("toptv"));
+    await m.reply(raraBerhasil("toptv"));
   } catch (e) {
     console.error("toptv error:", e.message);
     await m.react("❌");
-    m.reply(novaGangguan("toptv"));
+    m.reply(raraGangguan("toptv"));
   }
 }
 

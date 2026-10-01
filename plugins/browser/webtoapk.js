@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // WebToNative — Convert website ke native APK via webtonative.com API, no token needed
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "webtoapk",
@@ -138,7 +138,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await m.react("🕒");
     const input = text.trim();
     if (!input) {
-      return m.reply(novaWrap("WebToNative", [
+      return m.reply(raraWrap("WebToNative", [
         "Convert website ke native Android/iOS app",
         "Gratis tanpa API key via webtonative.com",
         "",
@@ -163,11 +163,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // Validate URL
     if (!websiteUrl || !websiteUrl.match(/^https?:\/\/.+/)) {
-      return m.reply(novaWrap("WebToNative", "URL tidak valid! Contoh: .webtoapk https://example.com MyApp"));
+      return m.reply(raraWrap("WebToNative", "URL tidak valid! Contoh: .webtoapk https://example.com MyApp"));
     }
 
     if (!appName) {
-      return m.reply(novaWrap("WebToNative", "Nama app wajib! Contoh: .webtoapk https://example.com MyApp"));
+      return m.reply(raraWrap("WebToNative", "Nama app wajib! Contoh: .webtoapk https://example.com MyApp"));
     }
 
     // Generate random email if not provided
@@ -176,7 +176,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       emailId = random + "@catchmail.io";
     }
 
-    m.reply(novaWrap("WebToNative", [
+    m.reply(raraWrap("WebToNative", [
       "MEMULAI BUILD APP",
       "",
       "URL: " + websiteUrl,
@@ -191,13 +191,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const requestId = build.requestId;
 
     if (!requestId) {
-      return m.reply(novaWrap("WebToNative", [
+      return m.reply(raraWrap("WebToNative", [
         "Request berhasil dikirim tapi requestId tidak ditemukan.",
         "Response: " + JSON.stringify(build).substring(0, 500),
       ], "warn"));
     }
 
-    m.reply(novaWrap("WebToNative", [
+    m.reply(raraWrap("WebToNative", [
       "REQUEST DITERIMA",
       "",
       "Request ID: " + requestId,
@@ -214,7 +214,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         const androidStatus = statusData.android_status || "PENDING";
         const iosStatus = statusData.ios_status || "PENDING";
         conn.sendMessage(m.key.remoteJid, {
-          text: novaWrap("WebToNative", [
+          text: raraWrap("WebToNative", [
             "BUILD UPDATE",
             "",
             "Request ID: " + requestId,
@@ -261,11 +261,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("Build time: ~" + (attempts * 5) + " detik");
 
     await m.react("🐣");
-    return m.reply(novaWrap("WebToNative", lines, "success"));
+    return m.reply(raraWrap("WebToNative", lines, "success"));
   } catch (e) {
     await m.react("❌");
     console.error("[WebToNative]", e);
-    m.reply(novaWrap("WebToNative", [
+    m.reply(raraWrap("WebToNative", [
       "Error: " + e.message,
       "",
       "Kemungkinan penyebab:",

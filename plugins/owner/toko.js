@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 /**
  * .toko — sistem toko untuk owner (kelola produk, pesanan, kategori).
@@ -23,7 +23,7 @@ import {
   notifyBuyer,
   formatRupiah,
   formatDate,
-} from "../../src/lib/nova-store.js";
+} from "../../src/lib/rara-store.js";
 
 const pluginConfig = {
   name: "tokobase3",
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
         ".toko add <nama>|<harga>|<deskripsi>|<kategori>|<stok>\n\n" +
         "Contoh:\n" +
         ".toko add Voucher Game 50K|50000|Voucher game 50 ribu|Digital|unlimited\n" +
-        ".toko add Kaos Nova|85000|Kaos premium|Fashion|50\n\n" +
+        ".toko add Kaos Rara|85000|Kaos premium|Fashion|50\n\n" +
         "Stok: angka atau 'unlimited'\n" +
         "Kategori: opsional, default 'Umum'"
       );
@@ -99,10 +99,10 @@ async function handler(m, { sock }) {
   if (action === "edit" || action === "ubah") {
     // .toko edit <id> nama=<nama> harga=<harga> desc=<desc> stok=<stok> kategori=<kat>
     const id = args[1];
-    if (!id) return m.reply(novaWrap("Toko", "Format: .toko edit <id> nama=... harga=... stok=..."));
+    if (!id) return m.reply(raraWrap("Toko", "Format: .toko edit <id> nama=... harga=... stok=..."));
 
     const product = getProduct(id);
-    if (!product) return m.reply(novaWrap("toko", "Produk tidak ditemukan: " + id));
+    if (!product) return m.reply(raraWrap("toko", "Produk tidak ditemukan: " + id));
 
     const text = args.slice(2).join(" ");
     const updates = {};
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
     const catMatch = text.match(/kategori=(.+?)(?=\s+\w+=|$)/);
     if (catMatch) updates.category = catMatch[1].trim();
 
-    if (Object.keys(updates).length === 0) return m.reply(novaWrap("Toko", "Tidak ada yang diubah. Gunakan: nama=, harga=, desc=, stok=, kategori="));
+    if (Object.keys(updates).length === 0) return m.reply(raraWrap("Toko", "Tidak ada yang diubah. Gunakan: nama=, harga=, desc=, stok=, kategori="));
 
     const updated = updateProduct(id, updates);
     return m.reply(
@@ -137,16 +137,16 @@ async function handler(m, { sock }) {
 
   if (action === "del" || action === "hapus" || action === "delete") {
     const id = args[1];
-    if (!id) return m.reply(novaWrap("Toko", "Format: .toko del <id>"));
-    if (deleteProduct(id)) return m.reply(novaWrap("toko", "Produk dihapus: " + id));
-    return m.reply(novaWrap("toko", "Produk tidak ditemukan: " + id));
+    if (!id) return m.reply(raraWrap("Toko", "Format: .toko del <id>"));
+    if (deleteProduct(id)) return m.reply(raraWrap("toko", "Produk dihapus: " + id));
+    return m.reply(raraWrap("toko", "Produk tidak ditemukan: " + id));
   }
 
   if (action === "produk" || action === "list") {
     const cat = args[1];
     const products = listProducts(cat);
 
-    if (products.length === 0) return m.reply(novaWrap("Info", "Belum ada produk" + (cat ? " di kategori " + cat : "")));
+    if (products.length === 0) return m.reply(raraWrap("Info", "Belum ada produk" + (cat ? " di kategori " + cat : "")));
 
     let txt = "*DAFTAR PRODUK*\n\n";
     for (const p of products) {
@@ -157,19 +157,19 @@ async function handler(m, { sock }) {
       txt += "\n";
     }
     txt += "Total: " + products.length + " produk";
-    return await m.reply(novaWrap("tokobase3", txt));
+    return await m.reply(raraWrap("tokobase3", txt));
   }
 
   if (action === "cari" || action === "search") {
     const query = args.slice(1).join(" ").trim();
-    if (!query) return m.reply(novaWrap("Toko", "Format: .toko cari <kata kunci>"));
+    if (!query) return m.reply(raraWrap("Toko", "Format: .toko cari <kata kunci>"));
     const results = searchProducts(query);
-    if (results.length === 0) return m.reply(novaWrap("toko", "Tidak ditemukan produk untuk: " + query));
+    if (results.length === 0) return m.reply(raraWrap("toko", "Tidak ditemukan produk untuk: " + query));
     let txt = "Hasil pencarian: " + query + "\n\n";
     for (const p of results) {
       txt += p.id + " — " + p.name + " (" + formatRupiah(p.price) + ")\n";
     }
-    return await m.reply(novaWrap("tokobase3", txt));
+    return await m.reply(raraWrap("tokobase3", txt));
   }
 
   // ── PESANAN ─────────────────────────────────────────────────────────────
@@ -178,7 +178,7 @@ async function handler(m, { sock }) {
     const filter = (args[1] || "pending").toLowerCase();
     const orders = listOrders(filter);
 
-    if (orders.length === 0) return m.reply(novaWrap("Info", "Tidak ada pesanan" + (filter !== "all" ? " dengan status " + filter : "")));
+    if (orders.length === 0) return m.reply(raraWrap("Info", "Tidak ada pesanan" + (filter !== "all" ? " dengan status " + filter : "")));
 
     let txt = "*PESANAN — " + filter.toUpperCase() + "*\n\n";
     for (const o of orders) {
@@ -191,15 +191,15 @@ async function handler(m, { sock }) {
       txt += "\n";
     }
     txt += "Total: " + orders.length + " pesanan";
-    return await m.reply(novaWrap("tokobase3", txt));
+    return await m.reply(raraWrap("tokobase3", txt));
   }
 
   if (action === "terima" || action === "confirm") {
     const id = args[1];
-    if (!id) return m.reply(novaWrap("Toko", "Format: .toko terima <id> [catatan]"));
+    if (!id) return m.reply(raraWrap("Toko", "Format: .toko terima <id> [catatan]"));
     const note = args.slice(2).join(" ").trim();
     const order = updateOrderStatus(id, "confirmed", note);
-    if (!order) return m.reply(novaWrap("toko", "Pesanan tidak ditemukan: " + id));
+    if (!order) return m.reply(raraWrap("toko", "Pesanan tidak ditemukan: " + id));
     await notifyBuyer(order, "confirmed", note);
     return m.reply(
       "Pesanan diterima: " + id + "\n" +
@@ -212,38 +212,38 @@ async function handler(m, { sock }) {
 
   if (action === "tolak" || action === "reject") {
     const id = args[1];
-    if (!id) return m.reply(novaWrap("Toko", "Format: .toko tolak <id> [alasan]"));
+    if (!id) return m.reply(raraWrap("Toko", "Format: .toko tolak <id> [alasan]"));
     const note = args.slice(2).join(" ").trim();
     const order = updateOrderStatus(id, "rejected", note);
-    if (!order) return m.reply(novaWrap("toko", "Pesanan tidak ditemukan: " + id));
+    if (!order) return m.reply(raraWrap("toko", "Pesanan tidak ditemukan: " + id));
     await notifyBuyer(order, "rejected", note);
-    return m.reply(novaWrap("Info", "\u2705 Pesanan ditolak: " + id + "\nNotif terkirim ke buyer."));
+    return m.reply(raraWrap("Info", "\u2705 Pesanan ditolak: " + id + "\nNotif terkirim ke buyer."));
   }
 
   if (action === "kirim" || action === "ship") {
     const id = args[1];
-    if (!id) return m.reply(novaWrap("Toko", "Format: .toko kirim <id> [info pengiriman]"));
+    if (!id) return m.reply(raraWrap("Toko", "Format: .toko kirim <id> [info pengiriman]"));
     const note = args.slice(2).join(" ").trim();
     const order = updateOrderStatus(id, "shipped", note);
-    if (!order) return m.reply(novaWrap("toko", "Pesanan tidak ditemukan: " + id));
+    if (!order) return m.reply(raraWrap("toko", "Pesanan tidak ditemukan: " + id));
     await notifyBuyer(order, "shipped", note);
-    return m.reply(novaWrap("Info", "\u2705 Pesanan dikirim: " + id + "\nNotif terkirim ke buyer."));
+    return m.reply(raraWrap("Info", "\u2705 Pesanan dikirim: " + id + "\nNotif terkirim ke buyer."));
   }
 
   if (action === "selesai" || action === "done") {
     const id = args[1];
-    if (!id) return m.reply(novaWrap("Toko", "Format: .toko selesai <id>"));
+    if (!id) return m.reply(raraWrap("Toko", "Format: .toko selesai <id>"));
     const order = updateOrderStatus(id, "done");
-    if (!order) return m.reply(novaWrap("toko", "Pesanan tidak ditemukan: " + id));
+    if (!order) return m.reply(raraWrap("toko", "Pesanan tidak ditemukan: " + id));
     await notifyBuyer(order, "done");
-    return m.reply(novaWrap("toko", "Pesanan selesai: " + id));
+    return m.reply(raraWrap("toko", "Pesanan selesai: " + id));
   }
 
   if (action === "delpesanan" || action === "delorder") {
     const id = args[1];
-    if (!id) return m.reply(novaWrap("Toko", "Format: .toko delpesanan <id>"));
-    if (deleteOrder(id)) return m.reply(novaWrap("toko", "Pesanan dihapus: " + id));
-    return m.reply(novaWrap("toko", "Pesanan tidak ditemukan: " + id));
+    if (!id) return m.reply(raraWrap("Toko", "Format: .toko delpesanan <id>"));
+    if (deleteOrder(id)) return m.reply(raraWrap("toko", "Pesanan dihapus: " + id));
+    return m.reply(raraWrap("toko", "Pesanan tidak ditemukan: " + id));
   }
 
   // ── KATEGORI ────────────────────────────────────────────────────────────
@@ -252,50 +252,50 @@ async function handler(m, { sock }) {
     const sub = (args[1] || "").toLowerCase();
     if (sub === "add") {
       const name = args.slice(2).join(" ").trim();
-      if (!name) return m.reply(novaWrap("Toko", "Format: .toko kategori add <nama>"));
-      if (addCategory(name)) return m.reply(novaWrap("toko", "Kategori ditambah: " + name));
-      return m.reply(novaWrap("toko", "Kategori sudah ada: " + name));
+      if (!name) return m.reply(raraWrap("Toko", "Format: .toko kategori add <nama>"));
+      if (addCategory(name)) return m.reply(raraWrap("toko", "Kategori ditambah: " + name));
+      return m.reply(raraWrap("toko", "Kategori sudah ada: " + name));
     }
     if (sub === "del" || sub === "remove") {
       const name = args.slice(2).join(" ").trim();
-      if (!name) return m.reply(novaWrap("Toko", "Format: .toko kategori del <nama>"));
-      if (deleteCategory(name)) return m.reply(novaWrap("toko", "Kategori dihapus: " + name));
-      return m.reply(novaWrap("toko", "Tidak bisa hapus kategori Umum atau tidak ditemukan: " + name));
+      if (!name) return m.reply(raraWrap("Toko", "Format: .toko kategori del <nama>"));
+      if (deleteCategory(name)) return m.reply(raraWrap("toko", "Kategori dihapus: " + name));
+      return m.reply(raraWrap("toko", "Tidak bisa hapus kategori Umum atau tidak ditemukan: " + name));
     }
     // list
     const cats = listCategories();
     let txt = "*KATEGORI*\n\n";
     cats.forEach((c, i) => { txt += (i + 1) + ". " + c + "\n"; });
     txt += "\nTambah: .toko kategori add <nama>\nHapus: .toko kategori del <nama>";
-    return await m.reply(novaWrap("tokobase3", txt));
+    return await m.reply(raraWrap("tokobase3", txt));
   }
 
   // ── CONFIG ──────────────────────────────────────────────────────────────
 
   if (action === "setnama") {
     const name = args.slice(1).join(" ").trim();
-    if (!name) return m.reply(novaWrap("Toko", "Format: .toko setnama <nama toko>"));
+    if (!name) return m.reply(raraWrap("Toko", "Format: .toko setnama <nama toko>"));
     updateStoreConfig((c) => ({ ...c, storeName: name }));
-    return m.reply(novaWrap("toko", "Nama toko diubah: " + name));
+    return m.reply(raraWrap("toko", "Nama toko diubah: " + name));
   }
 
   if (action === "setdesc") {
     const desc = args.slice(1).join(" ").trim();
-    if (!desc) return m.reply(novaWrap("Toko", "Format: .toko setdesc <deskripsi>"));
+    if (!desc) return m.reply(raraWrap("Toko", "Format: .toko setdesc <deskripsi>"));
     updateStoreConfig((c) => ({ ...c, storeDesc: desc }));
-    return m.reply(novaWrap("toko", "Deskripsi toko diubah: " + desc));
+    return m.reply(raraWrap("toko", "Deskripsi toko diubah: " + desc));
   }
 
   if (action === "notif") {
     const on = (args[1] || "").toLowerCase() === "on";
     updateStoreConfig((c) => ({ ...c, autoNotify: on }));
-    return m.reply(novaWrap("Info", "\u2705 Notif buyer: " + (on ? "ON" : "OFF")));
+    return m.reply(raraWrap("Info", "\u2705 Notif buyer: " + (on ? "ON" : "OFF")));
   }
 
   if (action === "autostok") {
     const on = (args[1] || "").toLowerCase() === "on";
     updateStoreConfig((c) => ({ ...c, autoReduceStock: on }));
-    return m.reply(novaWrap("Info", "\u2705 Auto-kurang stok: " + (on ? "ON" : "OFF")));
+    return m.reply(raraWrap("Info", "\u2705 Auto-kurang stok: " + (on ? "ON" : "OFF")));
   }
 
   // ── STATUS ──────────────────────────────────────────────────────────────
@@ -307,8 +307,8 @@ async function handler(m, { sock }) {
     const confirmedCount = data.orders.filter((o) => o.status === "confirmed").length;
     const doneCount = data.orders.filter((o) => o.status === "done").length;
 
-    let txt = "*nova store*\n\n";
-    txt += "Nama: " + (config.storeName || "Nova Store") + "\n";
+    let txt = "*rara store*\n\n";
+    txt += "Nama: " + (config.storeName || "Rara Store") + "\n";
     txt += "Deskripsi: " + (config.storeDesc || "-") + "\n";
     txt += "Notif Buyer: " + (config.autoNotify ? "ON" : "OFF") + "\n";
     txt += "Auto Stok: " + (config.autoReduceStock ? "ON" : "OFF") + "\n\n";
@@ -333,10 +333,10 @@ async function handler(m, { sock }) {
     txt += "13. .toko setdesc <deskripsi>\n";
     txt += "14. .toko notif on/off\n";
     txt += "15. .toko autostok on/off";
-    return await m.reply(novaWrap("tokobase3", txt));
+    return await m.reply(raraWrap("tokobase3", txt));
   }
 
-  return m.reply(novaWrap("Toko", "Perintah tidak dikenal. Ketik .toko status untuk lihat semua perintah."));
+  return m.reply(raraWrap("Toko", "Perintah tidak dikenal. Ketik .toko status untuk lihat semua perintah."));
 }
 
 export { pluginConfig as config, handler };

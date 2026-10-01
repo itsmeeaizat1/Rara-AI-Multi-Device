@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 const pluginConfig = {
     name: 'jedacreate',
     alias: ["jedacreate"],
@@ -70,17 +70,17 @@ function handler(m, { sock }) {
     const jedaMs = parseTime(input)
     
     if (jedaMs === null) {
-        return m.reply(novaWrap("jedacreate", `❌ Format waktu tidak valid!\n\n💡 *Contoh:* 30s, 5m, 1h`))
+        return m.reply(raraWrap("jedacreate", `❌ Format waktu tidak valid!\n\n💡 *Contoh:* 30s, 5m, 1h`))
     }
     
     db.setting('panelCreateJeda', jedaMs)
     db.setting('panelCreateLastUsed', 0)
     if (jedaMs === 0) {
-        return m.reply(novaWrap("jedacreate", `✅ *jeda dinonaktifkan*\n\n` +
+        return m.reply(raraWrap("jedacreate", `✅ *jeda dinonaktifkan*\n\n` +
             `Panel create sekarang tanpa jeda`))
     }
     
-    return m.reply(novaWrap("jedacreate", `✅ *jeda diset*\n\n` +
+    return m.reply(raraWrap("jedacreate", `✅ *jeda diset*\n\n` +
         `Jeda: *${formatTime(jedaMs)}*\n` +
         `\n` +
         `Setelah panel dibuat, SEMUA user harus menunggu ${formatTime(jedaMs)} sebelum bisa create lagi.`))

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { stopJadibot, isJadibotActive, getJadibotStatus } from '../../src/lib/nova-jadibot-manager.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { stopJadibot, isJadibotActive, getJadibotStatus } from '../../src/lib/rara-jadibot-manager.js'
 import { normalizePhone } from '../../src/lib/config/session-cli.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'stopjadibot',
@@ -30,7 +30,7 @@ function formatUptime(ms) {
 
 async function handler(m, { sock, isJadibot }) {
     const sender = m.sender
-    if (!sender) return m.reply(novaError("StopJadiBot", "Gagal identifikasi nomor kamu nih"))
+    if (!sender) return m.reply(raraError("StopJadiBot", "Gagal identifikasi nomor kamu nih"))
 
     // ─── MULTI SESSION (9 Sep 2026): .stopjadibot <nomor> — hentikan
     // session jadibot nomor LAIN (khusus owner). Tanpa argumen = nomor sendiri.
@@ -43,7 +43,7 @@ async function handler(m, { sock, isJadibot }) {
             // tapi itu owner SESSION-nya sendiri — BUKAN owner bot utama.
             // Cross-session stop hanya untuk owner utama (m.isOwner && !isJadibot).
             if (!m.isOwner || isJadibot) {
-                return m.reply(novaError("StopJadiBot", "Menghentikan jadibot nomor lain khusus owner utama"))
+                return m.reply(raraError("StopJadiBot", "Menghentikan jadibot nomor lain khusus owner utama"))
             }
         }
         target = norm + "@s.whatsapp.net"
@@ -60,9 +60,9 @@ async function handler(m, { sock, isJadibot }) {
     const uptime = status ? formatUptime(Date.now() - status.startedAt) : '-'
     try {
         await stopJadibot(target, false)
-        await m.reply(novaWrap("Stopjadibot", `Jadibot dihentikan\n\nNomor: @${target.split('@')[0]}\nUptime: ${uptime}\nSession: Tersimpan\n\nKetik \`${m.prefix}jadibot\` untuk mengaktifkan kembali.`, "success"))
+        await m.reply(raraWrap("Stopjadibot", `Jadibot dihentikan\n\nNomor: @${target.split('@')[0]}\nUptime: ${uptime}\nSession: Tersimpan\n\nKetik \`${m.prefix}jadibot\` untuk mengaktifkan kembali.`, "success"))
     } catch (e) {
-        await m.reply(novaError("StopJadiBot", `Gagal hentikan jadibot nih: ${e.message}`))
+        await m.reply(raraError("StopJadiBot", `Gagal hentikan jadibot nih: ${e.message}`))
     }
 }
 

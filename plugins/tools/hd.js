@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // HD Upscaler — pakai sharp local (Lanczos3 + sharpen) sebagai primary
 // DeepAI key expired, Azbry/Snowping down. Sharp local = gratis, no API, no rate limit
 import sharp from "sharp";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/rara-error.js";
 import cfg from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBox } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "hd",
@@ -84,7 +84,7 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    return await m.reply(novaBox("HD Enhance", [
+    return await m.reply(raraBox("HD Enhance", [
       "Kirim gambar baru atau reply/tag foto yang",
       "udah diupload sebelumnya, terus ketik .hd",
       "---",
@@ -114,7 +114,7 @@ async function handler(m, { sock, args }) {
       buffer = await m.download();
     }
     if (!buffer || !buffer.length) {
-      return await m.reply(novaWrap("hd", "Gagal download gambar! Coba lagi."));
+      return await m.reply(raraWrap("hd", "Gagal download gambar! Coba lagi."));
     }
 
     const { buffer: resultBuffer, width: outW, height: outH, scale: finalScale, capped } = await upscaleImage(buffer, scale);
@@ -158,7 +158,7 @@ async function handler(m, { sock, args }) {
     let txt = "";
     txt += `Gagal enhance gambar!\n`;
     txt += `${e.message}\n`;
-        await m.reply(novaWrap("hd", txt));
+        await m.reply(raraWrap("hd", txt));
   }
 }
 

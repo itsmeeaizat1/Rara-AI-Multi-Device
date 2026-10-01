@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // messages.js — Template pesan bot (wait, error, ownerOnly, dll) + groupProtection
 
 export const errorTemplate = `「 ✦ ⚠️ Kendala ✦ 」\nPerintah \`{prefix}{command}\` lagi bermasalah\nCoba lagi nanti ya, {pushName}\nMasih error? Hubungi owner bot`;
@@ -36,7 +36,7 @@ export const messages = {
 };
 
 // Semua pesan groupProtection ini fallback ke GP_DEFAULTS di
-// src/lib/nova-group-protection.js kalau key-nya gak diisi di sini.
+// src/lib/rara-group-protection.js kalau key-nya gak diisi di sini.
 // Cukup ubah di SINI kalau mau custom teks — jangan ubah di plugin manapun.
 export const groupProtection = {
   // Owner rule: pesan anti-* OTOMATIS saat pelanggaran = plain text natural

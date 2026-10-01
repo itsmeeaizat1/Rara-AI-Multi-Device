@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -34,14 +34,14 @@ const FORMATS = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(novaWrap("Video Convert", "Reply video yang mau di-convert."));
+    if (!quoted) return m.reply(raraWrap("Video Convert", "Reply video yang mau di-convert."));
     const videoMsg = quoted.videoMessage || quoted.documentMessage;
-    if (!videoMsg) return m.reply(novaWrap("Video Convert", "Reply harus video/document video!"));
+    if (!videoMsg) return m.reply(raraWrap("Video Convert", "Reply harus video/document video!"));
 
     const format = (args[0] || "").toLowerCase();
     if (!format || !FORMATS[format]) {
       const list = Object.entries(FORMATS).map(([k, v]) => k + " - " + v.desc).join("\n");
-      return m.reply(novaWrap("Video Convert", [
+      return m.reply(raraWrap("Video Convert", [
         "Format tujuan harus diisi!",
         "Format tersedia:",
         list,
@@ -51,7 +51,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     const fmt = FORMATS[format];
-    const tmpDir = path.join(os.tmpdir(), 'nova-videoconvert');
+    const tmpDir = path.join(os.tmpdir(), 'rara-videoconvert');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, "input_" + Date.now() + ".mp4");
@@ -71,7 +71,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await queueFFmpeg(cmd);
 
     if (!fs.existsSync(outputPath)) {
-      return m.reply(novaGagal("VideoConvert"));
+      return m.reply(raraGagal("VideoConvert"));
     }
 
     const buf = fs.readFileSync(outputPath);
@@ -81,7 +81,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await conn.sendMessage(m.key.remoteJid, {
         video: buf,
         gifPlayback: true,
-        caption: novaWrap("Video Convert", [
+        caption: raraWrap("Video Convert", [
           "Berhasil convert!",
           "Format: GIF (480px, 15fps)",
           "Size: " + (buf.length / 1024).toFixed(0) + " KB",
@@ -91,7 +91,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await conn.sendMessage(m.key.remoteJid, {
         video: buf,
         mimetype: fmt.mime,
-        caption: novaWrap("Video Convert", [
+        caption: raraWrap("Video Convert", [
           "Berhasil convert!",
           "Format: " + format.toUpperCase() + " (" + fmt.desc + ")",
           "Codec: " + fmt.codec,
@@ -102,10 +102,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
-    await m.reply(novaBerhasil("VideoConvert"));
+    await m.reply(raraBerhasil("VideoConvert"));
   } catch (e) {
     console.error("videoconvert error:", e);
-    return m.reply(novaGangguan("VideoConvert"));
+    return m.reply(raraGangguan("VideoConvert"));
   }
 }
 

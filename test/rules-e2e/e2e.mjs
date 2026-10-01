@@ -16,8 +16,8 @@ const REPO = path.resolve(".");
 const { fromSC } = await import(pathToFileURL(path.join(REPO, "src/lib/styler.js")).href);
 
 fs.rmSync("/tmp/rules-e2e-db", { recursive: true, force: true });
-const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-database.js")).href);
-await initDatabase("/tmp/rules-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-database.js")).href);
+await initDatabase("/tmp/rules-e2e-db/rara.json");
 const db = getDatabase();
 
 const { config: cfg, handler } = await import(pathToFileURL(path.join(REPO, "plugins/main/rules.js")).href);
@@ -33,7 +33,7 @@ function mockM() {
     reply: async (txt) => replies.push(String(txt)),
   };
 }
-const botConfig = { bot: { name: "Nova-AI" } };
+const botConfig = { bot: { name: "Rara-AI" } };
 
 // ── case 2: tanpa custom rules → DEFAULT (kalimat peraturan beneran) ──
 {

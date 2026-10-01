@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import novaApi from "../../src/lib/nova-apimanager.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import raraApi from "../../src/lib/rara-apimanager.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "bingimage",
   alias: ["bingimage", "carigambar"],
@@ -25,10 +25,10 @@ async function handler(m, { sock }) {
     const query = m.text;
 
     if (!query) {
-      return m.reply( novaWrap("Bingimage", `❌ *Masukkan kata kunci pencarian!*\n\n💡 *Contoh:* ${m.prefix}carigambar rem`), { commandName: "bingimage" });
+      return m.reply( raraWrap("Bingimage", `❌ *Masukkan kata kunci pencarian!*\n\n💡 *Contoh:* ${m.prefix}carigambar rem`), { commandName: "bingimage" });
     }
-    const apikey = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
-    const data = await novaApi.apiFaa.get(
+    const apikey = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
+    const data = await raraApi.apiFaa.get(
       "/faa/google-image",
       {
         query,
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data.status) {
-      return m.reply(novaWrap("bingimage", `❌ *tidak ditemukan hasil untuk:* ${query}`));
+      return m.reply(raraWrap("bingimage", `❌ *tidak ditemukan hasil untuk:* ${query}`));
     }
     const results = data.result;
     const album = await Promise.all(
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     console.log(error);
-    m.reply(novaWrap("bingimage", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("bingimage", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

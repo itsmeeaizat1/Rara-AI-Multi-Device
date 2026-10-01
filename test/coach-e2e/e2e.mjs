@@ -13,8 +13,8 @@ const low = (s) => String(s || "").toLowerCase();
 
 const R = path.resolve(".");
 fs.rmSync("/tmp/coach-e2e-db", { recursive: true, force: true });
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/coach-e2e-db/nova.json");
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/coach-e2e-db/rara.json");
 const db = getDatabase();
 
 const { config, handler, parseProgram, parseBody, localProgram, streakInfo, consistency, _setCoachDepsForTest } = await import(R + "/plugins/ai/coach.js");

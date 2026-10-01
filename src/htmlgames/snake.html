@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Nova Arcade — Snake</title>
+<title>Rara Arcade — Snake</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { background:#0b1220; color:#e8eefc; font-family:system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:12px; touch-action:none; }
@@ -19,7 +19,7 @@
 </style>
 </head>
 <body>
-<h1>🐍 NOVA SNAKE</h1>
+<h1>🐍 RARA SNAKE</h1>
 <div class="sub">Geser layar atau pakai tombol · makan 🍎 untuk tumbuh</div>
 <div id="score">Skor: 0 · Rekor: 0</div>
 <canvas id="c" width="320" height="320"></canvas>
@@ -30,7 +30,7 @@
 </div>
 <script>
 const N=16, C=document.getElementById("c"), X=C.getContext("2d");
-let snake, dir, nextDir, food, score, best=+(localStorage.novaSnakeBest||0), dead, timer;
+let snake, dir, nextDir, food, score, best=+(localStorage.raraSnakeBest||0), dead, timer;
 const scoreEl=document.getElementById("score"), msgEl=document.getElementById("msg");
 function reset(){ snake=[{x:8,y:8},{x:7,y:8},{x:6,y:8}]; dir={x:1,y:0}; nextDir=dir; score=0; dead=false; placeFood(); msgEl.textContent=""; loop(); }
 function placeFood(){ do{ food={x:~~(Math.random()*N),y:~~(Math.random()*N)}; }while(snake.some(s=>s.x===food.x&&s.y===food.y)); }
@@ -44,7 +44,7 @@ function tick(){
   draw();
 }
 function die(){ dead=true; clearInterval(timer);
-  if(score>best){ best=score; localStorage.novaSnakeBest=best; msgEl.textContent="🏆 REKOR BARU! Ketuk layar untuk main lagi"; }
+  if(score>best){ best=score; localStorage.raraSnakeBest=best; msgEl.textContent="🏆 REKOR BARU! Ketuk layar untuk main lagi"; }
   else msgEl.textContent="💀 Game Over — ketuk layar untuk main lagi";
   draw(); }
 function draw(){

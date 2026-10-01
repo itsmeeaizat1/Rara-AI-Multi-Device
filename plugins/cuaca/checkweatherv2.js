@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // checkweatherv2.js — Cuaca via OpenWeather API (needs API key)
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const query = m.args?.join(" ") || "";
 
     if (!query) {
-      return m.reply(novaWrap("Cuaca v2", [
+      return m.reply(raraWrap("Cuaca v2", [
         "Cek cuaca via OpenWeather",
         "",
         "📌 *Cara Pakai:*",
@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const apiKey = config.openWeatherKey || config.APIkey?.openweather || "";
 
     if (!apiKey) {
-      return m.reply(novaWrap("Cuaca v2", [
+      return m.reply(raraWrap("Cuaca v2", [
         "API key OpenWeather belum diset nih",
         "",
         "Dapatkan gratis di: https://openweathermap.org/api",
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (res.status === 404) {
       await m.react("❌");
-      return m.reply(novaWrap("Cuaca v2", `Kota "${query}" tidak ditemukan.`));
+      return m.reply(raraWrap("Cuaca v2", `Kota "${query}" tidak ditemukan.`));
     }
 
     if (!res.ok) throw new Error(`OpenWeather ${res.status}`);
@@ -74,7 +74,7 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     const text = `${name}, ${country}\n${desc}\n\n🌡️ Suhu: ${temp}\n🤔 Terasa: ${feels}\n💧 Kelembaban: ${humidity}\n📏 Tekanan: ${pressure}\n💨 Angin: ${wind}`;
     await m.react("🐣");
-    return m.reply(novaWrap("Cuaca v2", text));
+    return m.reply(raraWrap("Cuaca v2", text));
   } catch (e) {
     console.error("[cekcuacav2] error:", e.message);
     return m.reply(te(m.prefix, m.command, m.pushName), "cekcuacav2");

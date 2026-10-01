@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .channelid — CONVERT URL/INVITE SALURAN WA → ID NEWSLETTER (120363xxx@newsletter)
 // Request owner 19 Sep 2026: "g ada fitur url saluran wa convert jadi id newsletternya".
 // Berguna buat: .setchannel manual, target broadcast saluran, integrasi fitur channel lain.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { resolveNewsletterJid, normalizeNewsletterMeta } from "../../src/lib/nova-saluran.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { resolveNewsletterJid, normalizeNewsletterMeta } from "../../src/lib/rara-saluran.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
   // tanpa arg → convert saluran config saat ini (buat cek cepat)
   if (!input) {
     await m.react("🐣");
-    return m.reply(novaWrap("Saluran ID", [
+    return m.reply(raraWrap("Saluran ID", [
       "Cara pakai:",
       `Ketik *.channelid <url saluran>* contoh:`,
       `.channelid https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29`,
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
   if (["cek", "config", "utama"].includes(input.toLowerCase())) {
     const jid = await resolveNewsletterJid(sock).catch(() => null);
     await m.react("🐣");
-    return m.reply(novaWrap("Saluran Utama", [
+    return m.reply(raraWrap("Saluran Utama", [
       `ID : ${jid || "-"}`,
       `Link : ${config.saluran?.link || "-"}`,
       `Nama : ${config.saluran?.name || "-"}`,
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
     const jid = input.split(/[\s?]/)[0].trim();
     if (!/^\d+@newsletter$/.test(jid)) {
       await m.react("❌");
-      return m.reply(novaWrap("Saluran ID", [
+      return m.reply(raraWrap("Saluran ID", [
         `Format ID salah: ${jid}`,
         "Format bener: 120363xxx@newsletter (angka + @newsletter)",
       ].join("\n")));
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
       meta = normalizeNewsletterMeta(await sock.newsletterMetadata("jid", jid).catch(() => null));
     } catch {}
     await m.react("🐣");
-    return m.reply(novaWrap("Saluran ID", [
+    return m.reply(raraWrap("Saluran ID", [
       `ID : ${jid}`,
       `Nama : ${meta?.name || "(metadata gak kebaca)"}`,
       `Follower : ${meta?.followers != null ? meta.followers.toLocaleString("id-ID") : "-"}`,
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
   const invite = extractInvite(input);
   if (!invite) {
     await m.react("❌");
-    return m.reply(novaWrap("Saluran ID", [
+    return m.reply(raraWrap("Saluran ID", [
       "Input gak dikenali sebagai link/kode saluran.",
       "",
       "Contoh bener:",
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
 
   if (!meta?.id || !/^\d+@newsletter$/.test(meta.id)) {
     await m.react("❌");
-    return m.reply(novaWrap("Saluran ID", [
+    return m.reply(raraWrap("Saluran ID", [
       "Gagal dapat ID dari link/kode tersebut.",
       "Kemungkinan:",
       "1. Link salah / saluran udah dihapus",
@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
     "Mau jadiin saluran utama bot? Ketik:",
     `.setchannel https://whatsapp.com/channel/${invite}`,
   ];
-  return m.reply(novaWrap("Saluran ID — Convert URL → Newsletter ID", lines.join("\n")));
+  return m.reply(raraWrap("Saluran ID — Convert URL → Newsletter ID", lines.join("\n")));
 }
 
 export { pluginConfig as config, handler };

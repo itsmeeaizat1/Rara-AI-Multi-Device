@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "antispamdm",
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
 
   // === HELP ===
   if (!action || action === "help" || action === "bantuan") {
-    return m.reply( novaWrap("Anti-Spam DM", [
+    return m.reply( raraWrap("Anti-Spam DM", [
       "Sistem perlindungan bot dari spam di private chat",
       "",
       "Perintah tersedia:",
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
   if (action === "on") {
     settings.enabled = true;
     db.setting("antispamDM", settings);
-    return m.reply(novaWrap("Anti-Spam DM", [
+    return m.reply(raraWrap("Anti-Spam DM", [
       "Anti-spam DM diaktifkan!",
       "",
       `Limit: ${settings.limit} pesan per ${settings.windowMs / 1000}s`,
@@ -84,12 +84,12 @@ async function handler(m, { sock }) {
   if (action === "off") {
     settings.enabled = false;
     db.setting("antispamDM", settings);
-    return m.reply(novaWrap("Anti-Spam DM", "Anti-spam DM dimatikan!", "info"));
+    return m.reply(raraWrap("Anti-Spam DM", "Anti-spam DM dimatikan!", "info"));
   }
 
   // === STATUS ===
   if (action === "status" || action === "info") {
-    return m.reply(novaWrap("Anti-Spam DM Status", [
+    return m.reply(raraWrap("Anti-Spam DM Status", [
       `Status: ${settings.enabled ? "AKTIF" : "MATI"}`,
       `Limit: ${settings.limit} pesan`,
       `Window: ${settings.windowMs / 1000} detik`,
@@ -102,47 +102,47 @@ async function handler(m, { sock }) {
   if (action === "limit") {
     const val = parseInt(args[1]);
     if (!val || val < 3 || val > 50) {
-      return m.reply(novaWrap("Anti-Spam DM", "Nilai limit harus 3-50!\n\n💡 *Contoh:* .antispamdm limit 15", "error"));
+      return m.reply(raraWrap("Anti-Spam DM", "Nilai limit harus 3-50!\n\n💡 *Contoh:* .antispamdm limit 15", "error"));
     }
     settings.limit = val;
     db.setting("antispamDM", settings);
-    return m.reply(novaWrap("Anti-Spam DM", `Limit diatur ke ${val} pesan per window`, "success"));
+    return m.reply(raraWrap("Anti-Spam DM", `Limit diatur ke ${val} pesan per window`, "success"));
   }
 
   // === WINDOW ===
   if (action === "window") {
     const val = parseInt(args[1]);
     if (!val || val < 3 || val > 120) {
-      return m.reply(novaWrap("Anti-Spam DM", "Window harus 3-120 detik!\n\n💡 *Contoh:* .antispamdm window 15", "error"));
+      return m.reply(raraWrap("Anti-Spam DM", "Window harus 3-120 detik!\n\n💡 *Contoh:* .antispamdm window 15", "error"));
     }
     settings.windowMs = val * 1000;
     db.setting("antispamDM", settings);
-    return m.reply(novaWrap("Anti-Spam DM", `Window diatur ke ${val} detik`, "success"));
+    return m.reply(raraWrap("Anti-Spam DM", `Window diatur ke ${val} detik`, "success"));
   }
 
   // === WARN ===
   if (action === "warn") {
     const val = parseInt(args[1]);
     if (!val || val < 1 || val > 10) {
-      return m.reply(novaWrap("Anti-Spam DM", "Max warning harus 1-10!\n\n💡 *Contoh:* .antispamdm warn 5", "error"));
+      return m.reply(raraWrap("Anti-Spam DM", "Max warning harus 1-10!\n\n💡 *Contoh:* .antispamdm warn 5", "error"));
     }
     settings.maxWarn = val;
     db.setting("antispamDM", settings);
-    return m.reply(novaWrap("Anti-Spam DM", `Max warning diatur ke ${val}x`, "success"));
+    return m.reply(raraWrap("Anti-Spam DM", `Max warning diatur ke ${val}x`, "success"));
   }
 
   // === MUTE ===
   if (action === "mute") {
     const val = parseInt(args[1]);
     if (!val || val < 1 || val > 1440) {
-      return m.reply(novaWrap("Anti-Spam DM", "Mute duration 1-1440 menit!\n\n💡 *Contoh:* .antispamdm mute 10", "error"));
+      return m.reply(raraWrap("Anti-Spam DM", "Mute duration 1-1440 menit!\n\n💡 *Contoh:* .antispamdm mute 10", "error"));
     }
     settings.muteMin = val;
     db.setting("antispamDM", settings);
-    return m.reply(novaWrap("Anti-Spam DM", `Mute duration diatur ke ${val} menit`, "success"));
+    return m.reply(raraWrap("Anti-Spam DM", `Mute duration diatur ke ${val} menit`, "success"));
   }
 
-  return m.reply(novaWrap("Anti-Spam DM", [
+  return m.reply(raraWrap("Anti-Spam DM", [
     `Perintah tidak dikenal: ${action}`,
     "Ketik .antispamdm help untuk panduan",
   ], "warn"));

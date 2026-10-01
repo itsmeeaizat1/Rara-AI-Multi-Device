@@ -11,9 +11,9 @@ import path from "path";
 import { fileURLToPath } from "node:url";
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 // initDatabase wajib path eksplisit (gotcha lama: tanpa path → silent exit)
-await import(REPO + "/src/lib/nova-database.js").then((m) => m.initDatabase(path.join(process.cwd(), "db")));
+await import(REPO + "/src/lib/rara-database.js").then((m) => m.initDatabase(path.join(process.cwd(), "db")));
 
-const N = await import(REPO + "/src/lib/nova-auto-anime-notifier.js");
+const N = await import(REPO + "/src/lib/rara-auto-anime-notifier.js");
 const JID = "6281234567890@s.whatsapp.net";
 
 let pass = 0, fail = 0;

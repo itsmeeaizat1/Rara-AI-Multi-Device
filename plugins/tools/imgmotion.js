@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .imgmotion — motion image (foto bergerak) WA native (port engine lama imgmotion.js)
 // 2 langkah: .imgmotion + gambar → kirim video (caption "2") → jadi motion image.
 import { prepareWAMessageMedia, generateWAMessageFromContent } from "nova";
-import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "imgmotion",
@@ -90,7 +90,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaGuide(
+    await m.reply(raraGuide(
       "imgmotion",
       "Gabung foto + video jadi motion image native WhatsApp (foto yang gerak).",
       prefix + "imgmotion <url_foto> <url_video> — atau reply foto, lalu kirim video caption 2",
@@ -99,7 +99,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[imgmotion]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("ImgMotion", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("ImgMotion", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }
@@ -121,7 +121,7 @@ export async function answerHandler(m, { sock }) {
   } catch (e) {
     console.error("[imgmotion]:", e.message);
     await m.react("❌");
-    await m.reply(novaError("ImgMotion", "Gagal: " + String(e.message).slice(0, 120)));
+    await m.reply(raraError("ImgMotion", "Gagal: " + String(e.message).slice(0, 120)));
   }
   return true;
 }

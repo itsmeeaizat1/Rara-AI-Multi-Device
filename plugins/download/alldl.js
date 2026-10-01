@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: AllDL
  * Pembuat Code: Aizat
@@ -21,12 +21,12 @@ import axios from "axios";
 import { getSaveNowKey } from "../../src/lib/config/env-loader.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
-import { haidarAio } from "../../src/lib/nova-haidar.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, bracketBox, tipText, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { haidarAio } from "../../src/lib/rara-haidar.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, bracketBox, tipText, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -344,7 +344,7 @@ async function runSessionDownload(sock, m, session, choice) {
     }
     // Clear session
     dlSessions.delete(m.sender);
-    return m.reply(novaGagal("AllDL"));
+    return m.reply(raraGagal("AllDL"));
   }
 
   // Download buffer
@@ -358,7 +358,7 @@ async function runSessionDownload(sock, m, session, choice) {
     }
     dlSessions.delete(m.sender);
     return m.reply(
-      novaError(
+      raraError(
         "AllDL",
         `File terlalu besar untuk dikirim langsung. Download manual di:\n${result.download_url}`
       )
@@ -431,10 +431,10 @@ async function runSessionDownload(sock, m, session, choice) {
       );
       await offerConvert(sock, m, { buffer, type: "video", platform: platform.name, title, sourceUrl: url });
     }
-    await m.reply(novaBerhasil("AllDL"));
+    await m.reply(raraBerhasil("AllDL"));
   } catch (sendErr) {
     console.error("[alldl] Send error:", sendErr.message);
-    m.reply(novaGangguan("AllDL"));
+    m.reply(raraGangguan("AllDL"));
   }
 
   // Clear session
@@ -454,7 +454,7 @@ async function handlerCore(m, { sock }) {
     if (!session) {
       await m.react("❗");
       return m.reply(
-        novaGuide("AllDL", "Sesi download sudah kedaluwarsa nih! Silakan kirim ulang linknya ya.", `${prefix}alldl <url>`)
+        raraGuide("AllDL", "Sesi download sudah kedaluwarsa nih! Silakan kirim ulang linknya ya.", `${prefix}alldl <url>`)
       );
     }
     return runSessionDownload(sock, m, session, command);
@@ -472,7 +472,7 @@ async function handlerCore(m, { sock }) {
       if (!session) {
         await m.react("❗");
         return m.reply(
-          novaGuide("AllDL", "Sesi download sudah kedaluwarsa nih! Silakan kirim ulang linknya ya.", `${prefix}alldl <url>`)
+          raraGuide("AllDL", "Sesi download sudah kedaluwarsa nih! Silakan kirim ulang linknya ya.", `${prefix}alldl <url>`)
         );
       }
       const wanted = KEYWORD_MAP[firstWord];
@@ -500,7 +500,7 @@ async function handlerCore(m, { sock }) {
 
   if (!text) {
     return m.reply(
-      novaGuide(
+      raraGuide(
         "AllDL",
         "Kirim link media dari YouTube, TikTok, IG, FB, dll. Nanti kamu bisa pilih mau download Video, Audio, atau Foto!",
         `${prefix}alldl https://youtu.be/xxx`
@@ -513,7 +513,7 @@ async function handlerCore(m, { sock }) {
   if (!url) {
     await m.react("❗");
     return m.reply(
-      novaGuide(
+      raraGuide(
         "AllDL",
         "URL-nya tidak valid nih! Kirim link dari YouTube, TikTok, IG, FB, dll.",
         `${prefix}alldl https://youtu.be/xxx`

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 //  SnapTik Douyin Downloader (ESM scraper)
 //  Target  : https://snaptik.fi/api/tiktok

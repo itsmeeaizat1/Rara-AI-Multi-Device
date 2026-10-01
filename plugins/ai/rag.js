@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .rag — ingat dokumen (PDF/DOCX/TXT), tanya apa aja isinya. BM25 lokal + AI, tanpa API key.
-import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { saveDoc, listDocs, getDoc, deleteDoc, countDocs, extractDocText, askRag, searchDocs, ragLimits } from "../../src/lib/nova-rag.js";
+import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { saveDoc, listDocs, getDoc, deleteDoc, countDocs, extractDocText, askRag, searchDocs, ragLimits } from "../../src/lib/rara-rag.js";
 
 const pluginConfig = {
   name: "rag",
@@ -28,13 +28,13 @@ async function handler(m) {
       const q = m.quoted;
       if (!q) {
         await m.react("❌");
-        await m.reply(novaWrap("RAG", "Reply ke dokumen (PDF/DOCX/TXT/MD/CSV/JSON) atau pesan teks yang mau diingat, lalu ketik .rag add <nama>"));
+        await m.reply(raraWrap("RAG", "Reply ke dokumen (PDF/DOCX/TXT/MD/CSV/JSON) atau pesan teks yang mau diingat, lalu ketik .rag add <nama>"));
         return { handled: true };
       }
       const name = rest.replace(/^add\s*/i, "").trim() || ("dokumen-" + (countDocs(m.sender) + 1));
       if (countDocs(m.sender) >= ragLimits.MAX_DOCS_PER_USER) {
         await m.react("❌");
-        await m.reply(novaWrap("RAG", "Kamu udah simpan " + ragLimits.MAX_DOCS_PER_USER + " dokumen (batas maksimal). Hapus dulu: .rag del <id>"));
+        await m.reply(raraWrap("RAG", "Kamu udah simpan " + ragLimits.MAX_DOCS_PER_USER + " dokumen (batas maksimal). Hapus dulu: .rag del <id>"));
         return { handled: true };
       }
       await m.react("🧠");
@@ -44,53 +44,53 @@ async function handler(m) {
         const buf = await q.download();
         fname = q.fileName || (q.msg && q.msg.fileName) || "dokumen";
         const ex = await extractDocText(fname, buf);
-        if (!ex.ok) { await m.react("❌"); await m.reply(novaWrap("RAG", ex.error)); return { handled: true }; }
+        if (!ex.ok) { await m.react("❌"); await m.reply(raraWrap("RAG", ex.error)); return { handled: true }; }
         text = ex.text; info = ex.info || "";
       } else {
         text = q.text || q.body || "";
-        if (!text) { await m.react("❌"); await m.reply(novaWrap("RAG", "Reply-nya bukan dokumen atau teks. Reply dokumen PDF/DOCX/TXT atau pesan teks.")); return { handled: true }; }
+        if (!text) { await m.react("❌"); await m.reply(raraWrap("RAG", "Reply-nya bukan dokumen atau teks. Reply dokumen PDF/DOCX/TXT atau pesan teks.")); return { handled: true }; }
       }
       const saved = saveDoc({ name, from: m.sender, text });
-      if (!saved.ok) { await m.react("❌"); await m.reply(novaWrap("RAG", saved.error)); return { handled: true }; }
+      if (!saved.ok) { await m.react("❌"); await m.reply(raraWrap("RAG", saved.error)); return { handled: true }; }
       await m.react("⚡");
-      await m.reply(novaWrap("RAG", "✅ Dokumen \"" + saved.name + "\" diingat\nID: " + saved.id + "\nPotongan: " + saved.chunks + (info ? "\n" + info : "") + "\n\nSekarang tanya isinya: .rag ask <pertanyaan>"));
+      await m.reply(raraWrap("RAG", "✅ Dokumen \"" + saved.name + "\" diingat\nID: " + saved.id + "\nPotongan: " + saved.chunks + (info ? "\n" + info : "") + "\n\nSekarang tanya isinya: .rag ask <pertanyaan>"));
     } else if (first === "ask") {
       const question = rest.replace(/^ask\s*/i, "").trim();
-      if (!question) { await m.reply(novaWrap("RAG", "Format: .rag ask <pertanyaan>")); return { handled: true }; }
+      if (!question) { await m.reply(raraWrap("RAG", "Format: .rag ask <pertanyaan>")); return { handled: true }; }
       await m.react("🧠");
       const r = await askRag(question, m.sender);
-      if (!r.ok) { await m.react("❌"); await m.reply(novaWrap("RAG", r.error)); return { handled: true }; }
+      if (!r.ok) { await m.react("❌"); await m.reply(raraWrap("RAG", r.error)); return { handled: true }; }
       await m.react("⚡");
-      await m.reply(novaWrap("RAG", (r.answer || "(AI gak jawab, coba lagi)") + "\n\n📎 Sumber: " + r.sources.join(", ")));
+      await m.reply(raraWrap("RAG", (r.answer || "(AI gak jawab, coba lagi)") + "\n\n📎 Sumber: " + r.sources.join(", ")));
     } else if (first === "cari") {
       const question = rest.replace(/^cari\s*/i, "").trim();
-      if (!question) { await m.reply(novaWrap("RAG", "Format: .rag cari <kata kunci>")); return { handled: true }; }
+      if (!question) { await m.reply(raraWrap("RAG", "Format: .rag cari <kata kunci>")); return { handled: true }; }
       const r = searchDocs(question, m.sender, 3);
-      if (!r.ok) { await m.react("❌"); await m.reply(novaWrap("RAG", r.error)); return { handled: true }; }
+      if (!r.ok) { await m.react("❌"); await m.reply(raraWrap("RAG", r.error)); return { handled: true }; }
       await m.react("⚡");
-      await m.reply(novaWrap("RAG", r.results.map((x, i) => "【" + (i + 1) + "】 " + x.doc + " (bagian " + (x.idx + 1) + "):\n" + x.text.slice(0, 400) + "…").join("\n\n")));
+      await m.reply(raraWrap("RAG", r.results.map((x, i) => "【" + (i + 1) + "】 " + x.doc + " (bagian " + (x.idx + 1) + "):\n" + x.text.slice(0, 400) + "…").join("\n\n")));
     } else if (first === "list") {
       const docs = listDocs(m.sender);
       await m.react("🔍");
-      await m.reply(novaWrap("RAG Dokumen", docs.length
+      await m.reply(raraWrap("RAG Dokumen", docs.length
         ? docs.map((d, i) => (i + 1) + ". " + d.name + "\n   ID: " + d.id + " · " + d.chunks + " potongan").join("\n")
         : "Belum ada dokumen. Tambahin: .rag add <nama> (reply dokumen)"));
     } else if (first === "del" || first === "delete") {
       const id = rest.replace(/^(del|delete)\s*/i, "").trim();
-      if (!id) { await m.reply(novaWrap("RAG", "Format: .rag del <id> (cek id di .rag list)")); return { handled: true }; }
+      if (!id) { await m.reply(raraWrap("RAG", "Format: .rag del <id> (cek id di .rag list)")); return { handled: true }; }
       const r = deleteDoc(id, m.sender);
       await m.react(r.ok ? "⚡" : "❌");
-      await m.reply(novaWrap("RAG", r.ok ? "✅ \"" + r.name + "\" dihapus" : r.error));
+      await m.reply(raraWrap("RAG", r.ok ? "✅ \"" + r.name + "\" dihapus" : r.error));
     } else if (first === "info") {
       const id = rest.replace(/^info\s*/i, "").trim();
       const rec = getDoc(id, m.sender);
       await m.react(rec ? "🔍" : "❌");
-      await m.reply(novaWrap("RAG", rec
+      await m.reply(raraWrap("RAG", rec
         ? "Nama: " + rec.name + "\nDibuat: " + rec.created.slice(0, 19).replace("T", " ") + "\nPotongan: " + rec.chunks.length + "\nAwal isi:\n" + String(rec.chunks[0] || "").slice(0, 500)
         : "Dokumen gak ketemu (cek .rag list)"));
     } else {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "rag",
         "RAG dokumen: kirim PDF/DOCX/TXT ke bot untuk diingat, lalu tanya isinya pakai bahasa natural. Pencarian BM25 lokal — gratis, tanpa API key. Dokumen kamu privat, cuma kamu yang bisa akses.",
         ".rag add catatan (reply dokumen)",
@@ -100,7 +100,7 @@ async function handler(m) {
   } catch (error) {
     console.error("[rag]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("RAG", "Gagal: " + String(error.message).slice(0, 120)));
+    await m.reply(raraError("RAG", "Gagal: " + String(error.message).slice(0, 120)));
   }
   return { handled: true };
 }

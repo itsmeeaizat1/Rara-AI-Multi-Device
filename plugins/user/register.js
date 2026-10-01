@@ -1,18 +1,18 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
 import fs from "fs";
 import path from "path";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import {
   getCachedJid,
   isLid,
   isLidConverted,
   lidToJid,
-} from "../../src/lib/nova-lid.js";
+} from "../../src/lib/rara-lid.js";
 import config from "../../config.js";
-import { notifyUserRegister } from "../../src/lib/nova-saluran-broadcast.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { notifyUserRegister } from "../../src/lib/rara-saluran-broadcast.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "daftar",
@@ -45,13 +45,13 @@ function generateRandomBonus() {
   };
 }
 const REGISTRATION_IMAGE_CANDIDATES = [
-  "nova-daftar",
-  "nova",
+  "rara-daftar",
+  "rara",
 ];
 
 function getRegistrationContextInfo() {
   const saluranId = config.saluran?.id || "@newsletter";
-  const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+  const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
   return {
     forwardingScore: 0,
@@ -70,7 +70,7 @@ function getRegistrationRewards() {
 }
 
 async function getRegistrationImage() {
-  const { getCachedThumb } = await import("../../src/lib/nova-serialize.js");
+  const { getCachedThumb } = await import("../../src/lib/rara-serialize.js");
   for (const key of REGISTRATION_IMAGE_CANDIDATES) {
     const buf = getAssetBuffer(key);
     if (buf) return buf;
@@ -185,7 +185,7 @@ async function sendRegistrationPrompt(sock, m, text, options = {}) {
             contextInfo: {
               ...getRegistrationContextInfo(),
               externalAdReply: {
-                title: config.bot?.name || "Nova AI Whatsapp Bot",
+                title: config.bot?.name || "Rara AI Whatsapp Bot",
                 body: "Menu Daftar",
                 thumbnail,
                 previewType: "PHOTO",
@@ -202,7 +202,7 @@ async function sendRegistrationPrompt(sock, m, text, options = {}) {
     await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
     return msg;
   } else {
-    return await m.reply(novaWrap("daftar", text));
+    return await m.reply(raraWrap("daftar", text));
   }
 }
 
@@ -251,7 +251,7 @@ function generateSerialNumber() {
   let part1 = "", part2 = "";
   for (let i = 0; i < 5; i++) part1 += chars[Math.floor(Math.random() * chars.length)];
   for (let i = 0; i < 5; i++) part2 += chars[Math.floor(Math.random() * chars.length)];
-  return "NOVA-" + part1 + "-" + part2;
+  return "RARA-" + part1 + "-" + part2;
 }
 
 function buildUserDataBlock(name, age, gender, serial) {
@@ -341,10 +341,10 @@ async function handler(m, { sock }) {
       const age = Number(parts[1]);
 
       if (name.length < 2 || name.length > 30) {
-        return m.reply(novaError("Daftar", "Nama harus 2-30 karakter ya"));
+        return m.reply(raraError("Daftar", "Nama harus 2-30 karakter ya"));
       }
       if (!/^\d+$/.test(String(parts[1])) || Number.isNaN(age) || age < 1 || age > 100) {
-        return m.reply(novaError("Daftar", "Umur gak valid! Masukin angka 1-100 ya"));
+        return m.reply(raraError("Daftar", "Umur gak valid! Masukin angka 1-100 ya"));
       }
 
       const gender = parts[2] ? (parts[2].trim()) : null;
@@ -489,7 +489,7 @@ async function registrationAnswerHandler(m, sock) {
     const name = normalizeRegistrationName(text);
 
     if (name.length < 2 || name.length > 30) {
-      await m.reply(novaError("Daftar", "Nama harus 2-30 karakter ya"));
+      await m.reply(raraError("Daftar", "Nama harus 2-30 karakter ya"));
       return true;
     }
 
@@ -574,7 +574,7 @@ async function registrationAnswerHandler(m, sock) {
     const name = normalizeRegistrationName(text);
 
     if (name.length < 2 || name.length > 30) {
-      await m.reply(novaError("Daftar", "Nama harus 2-30 karakter ya"));
+      await m.reply(raraError("Daftar", "Nama harus 2-30 karakter ya"));
       return true;
     }
 

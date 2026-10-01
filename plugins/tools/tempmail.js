@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 // ============================================================
 // Temp Email Plugin - Multi Provider (5 Providers)
@@ -597,7 +597,7 @@ async function handler(m, { sock }) {
     if (!PROVIDERS[providerKey]) {
       const validKeys = Object.keys(PROVIDERS).join(", ");
       return m.reply(
-        novaWrap("Temp Email", `Provider "${providerKey}" tidak ada!\nTersedia: ${validKeys}\n\n💡 *Contoh:* ${m.prefix}tempmail create aizat mailtm`)
+        raraWrap("Temp Email", `Provider "${providerKey}" tidak ada!\nTersedia: ${validKeys}\n\n💡 *Contoh:* ${m.prefix}tempmail create aizat mailtm`)
       );
     }
 
@@ -607,14 +607,14 @@ async function handler(m, { sock }) {
         const result = await providerCreate(providerKey);
         sessions.set(m.sender, { ...result, createdAt: Date.now() });
         const body = `Berhasil dibuat!\n\nProvider: ${PROVIDERS[result.provider].name}\nEmail: ${result.address}\nStatus: Aktif\n\nKirim email ke alamat di atas, lalu cek:\n${m.prefix}tempmail inbox\n\nNote: ${PROVIDERS[result.provider].name} auto-generate email, tidak support custom name.`;
-        return m.reply( novaWrap("Temp Email", body), "tempmail");
+        return m.reply( raraWrap("Temp Email", body), "tempmail");
       } catch (err) {
-        return m.reply(novaWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
+        return m.reply(raraWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 
     if (!name || name.length < 3) {
-    await m.reply(novaWrap(
+    await m.reply(raraWrap(
           "Temp Email",
           `Cara pakai:\n${m.prefix}tempmail create <nama> [provider]\n\nContoh:\n${m.prefix}tempmail create aizat\n${m.prefix}tempmail create aizat mailgw\n${m.prefix}tempmail create aizat guerrilla\n${m.prefix}tempmail create aizat mailporary\n\nNama: min 3 karakter (huruf, angka, . _ -)\n\nProvider:\n1. mailtm (default)\n2. mailgw\n3. guerrilla\n4. mailporary\n5. tempmailio (auto-generate)`
         ));
@@ -624,7 +624,7 @@ async function handler(m, { sock }) {
 
       if (result.error === "exists") {
         return m.reply(
-          novaWrap(
+          raraWrap(
             "Temp Email",
             `Email "${result.address}" sudah dipakai!\nCoba nama lain atau ganti provider.\n\nContoh:\n${m.prefix}tempmail create ${name}99\n${m.prefix}tempmail create ${name} mailgw`
           )
@@ -636,9 +636,9 @@ async function handler(m, { sock }) {
       const pwdLine = result.password !== "-" ? `\nPassword: ${result.password}` : "";
       const body = `Berhasil dibuat!\n\nProvider: ${providerName}\nEmail: ${result.address}${pwdLine}\nStatus: Aktif\n\nKirim email ke alamat di atas, lalu cek:\n${m.prefix}tempmail inbox`;
 
-      return m.reply( novaWrap("Temp Email", body), "tempmail");
+      return m.reply( raraWrap("Temp Email", body), "tempmail");
     } catch (err) {
-      return m.reply(novaWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
@@ -647,7 +647,7 @@ async function handler(m, { sock }) {
     const session = sessions.get(m.sender);
     if (!session) {
       return m.reply(
-        novaWrap("Temp Email", `Belum punya email sementara!\nKetik: ${m.prefix}tempmail create <nama>`)
+        raraWrap("Temp Email", `Belum punya email sementara!\nKetik: ${m.prefix}tempmail create <nama>`)
       );
     }
     try {
@@ -655,7 +655,7 @@ async function handler(m, { sock }) {
 
       if (messages.length === 0) {
         return m.reply(
-          novaWrap(
+          raraWrap(
             "Temp Email",
             `Email: ${session.address}\nProvider: ${PROVIDERS[session.provider].name}\n\nTidak ada pesan masuk.\nTunggu email masuk lalu cek lagi.`
           )
@@ -669,15 +669,15 @@ async function handler(m, { sock }) {
       });
       list += `Baca pesan: ${m.prefix}tempmail read <nomor>`;
       list += `\nBaca semua: ${m.prefix}tempmail read all`;
-      return m.reply( novaWrap("Temp Email Inbox", list), "tempmail");
+      return m.reply( raraWrap("Temp Email Inbox", list), "tempmail");
     } catch (err) {
       if (err.response?.status === 401) {
         sessions.delete(m.sender);
         return m.reply(
-          novaWrap("Temp Email", `Session expired!\nBuat baru: ${m.prefix}tempmail create <nama>`)
+          raraWrap("Temp Email", `Session expired!\nBuat baru: ${m.prefix}tempmail create <nama>`)
         );
       }
-      return m.reply(novaWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
@@ -686,13 +686,13 @@ async function handler(m, { sock }) {
     const session = sessions.get(m.sender);
     if (!session) {
       return m.reply(
-        novaWrap("Temp Email", `Belum punya email sementara!\nKetik: ${m.prefix}tempmail create <nama>`)
+        raraWrap("Temp Email", `Belum punya email sementara!\nKetik: ${m.prefix}tempmail create <nama>`)
       );
     }
 
     if (!arg) {
       return m.reply(
-        novaWrap(
+        raraWrap(
           "Temp Email",
           `Cara baca:\n${m.prefix}tempmail read <nomor>\n${m.prefix}tempmail read all\n\nCek inbox: ${m.prefix}tempmail inbox`
         )
@@ -703,7 +703,7 @@ async function handler(m, { sock }) {
       const messages = await providerGetInbox(session);
 
       if (messages.length === 0) {
-        return m.reply(novaWrap("Temp Email", `Tidak ada pesan untuk dibaca.`));
+        return m.reply(raraWrap("Temp Email", `Tidak ada pesan untuk dibaca.`));
       }
 
       // Read all
@@ -721,14 +721,14 @@ async function handler(m, { sock }) {
           if (body.length > 800) body = body.slice(0, 800) + "\n\n... (dipotong)";
           content += `Isi:\n${body}\n\n`;
         }
-        return m.reply( novaWrap("Temp Email - Semua Pesan", content), "tempmail");
+        return m.reply( raraWrap("Temp Email - Semua Pesan", content), "tempmail");
       }
 
       // Read by number
       const num = parseInt(arg);
       if (isNaN(num) || num < 1 || num > messages.length) {
         return m.reply(
-          novaWrap(
+          raraWrap(
             "Temp Email",
             `Nomor tidak valid!\nTersedia: 1-${messages.length}\n\nCek inbox: ${m.prefix}tempmail inbox`
           )
@@ -759,16 +759,16 @@ async function handler(m, { sock }) {
           });
         }
       }
-      return m.reply( novaWrap("Temp Email - Pesan", content), "tempmail");
+      return m.reply( raraWrap("Temp Email - Pesan", content), "tempmail");
     } catch (err) {
     await m.react("❌");
       if (err.response?.status === 401) {
         sessions.delete(m.sender);
         return m.reply(
-          novaWrap("Temp Email", `Session expired!\nBuat baru: ${m.prefix}tempmail create <nama>`)
+          raraWrap("Temp Email", `Session expired!\nBuat baru: ${m.prefix}tempmail create <nama>`)
         );
       }
-      return m.reply(novaWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(raraWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 
@@ -776,12 +776,12 @@ async function handler(m, { sock }) {
   if (sub === "delete" || sub === "hapus" || sub === "del") {
     const session = sessions.get(m.sender);
     if (!session) {
-      return m.reply(novaWrap("Temp Email", `Tidak ada email aktif untuk dihapus.`));
+      return m.reply(raraWrap("Temp Email", `Tidak ada email aktif untuk dihapus.`));
     }
     await providerDelete(session);
     sessions.delete(m.sender);
     return m.reply(
-      novaWrap("Temp Email", `Email ${session.address} berhasil dihapus!\nSemua pesan terkait juga terhapus.`)
+      raraWrap("Temp Email", `Email ${session.address} berhasil dihapus!\nSemua pesan terkait juga terhapus.`)
     );
   }
 
@@ -790,7 +790,7 @@ async function handler(m, { sock }) {
     const session = sessions.get(m.sender);
     if (!session) {
       return m.reply(
-        novaWrap("Temp Email", `Tidak ada email aktif.\nBuat: ${m.prefix}tempmail create <nama>`)
+        raraWrap("Temp Email", `Tidak ada email aktif.\nBuat: ${m.prefix}tempmail create <nama>`)
       );
     }
 
@@ -799,7 +799,7 @@ async function handler(m, { sock }) {
     const mins = Math.floor((age % 3600000) / 60000);
     const providerName = PROVIDERS[session.provider].name;
     return m.reply(
-      novaWrap(
+      raraWrap(
         "Temp Email Status",
         `Provider: ${providerName}\nEmail: ${session.address}\n${session.password !== "-" ? `Password: ${session.password}\n` : ""}Dibuat: ${hrs}j ${mins}m lalu\nToken: Aktif\n\nInbox: ${m.prefix}tempmail inbox\nHapus: ${m.prefix}tempmail delete`
       )
@@ -816,7 +816,7 @@ async function handler(m, { sock }) {
       i++;
     }
     list += `\nDefault: mailtm\n\nCara pakai:\n${m.prefix}tempmail create <nama> <provider>\n\nContoh:\n${m.prefix}tempmail create aizat mailtm\n${m.prefix}tempmail create aizat mailporary\n${m.prefix}tempmail create - tempmailio`;
-    return m.reply( novaWrap("Temp Email", list), "tempmail");
+    return m.reply( raraWrap("Temp Email", list), "tempmail");
   }
 
   // === HELP / DEFAULT ===
@@ -824,7 +824,7 @@ async function handler(m, { sock }) {
 6. anonymmail (AnonymMail) - custom name\n\nPerintah:\n1. ${m.prefix}tempmail create <nama> [provider]\n   Buat email custom name\n2. ${m.prefix}tempmail inbox\n   Cek kotak masuk\n3. ${m.prefix}tempmail read <nomor>\n   Baca pesan (atau "all")\n4. ${m.prefix}tempmail status\n   Info email aktif\n5. ${m.prefix}tempmail delete\n   Hapus email\n6. ${m.prefix}tempmail list\n   Lihat daftar provider\n\nContoh:\n${m.prefix}tempmail create aizat\n${m.prefix}tempmail create aizat mailporary\n${m.prefix}tempmail inbox\n${m.prefix}tempmail read 1\n\nNote: Email expired otomatis oleh server provider.`;
 
   await m.react("🐣");
-  return m.reply( novaWrap("Temp Email", help), "tempmail");
+  return m.reply( raraWrap("Temp Email", help), "tempmail");
 }
 
 export { pluginConfig as config, handler };

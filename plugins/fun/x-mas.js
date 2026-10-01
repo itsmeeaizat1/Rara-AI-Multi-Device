@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     const isChristmasSeason = month === 12;
 
     const text =
-      novaWrap("Christmas", [`Hai *${userName}*!`,
+      raraWrap("Christmas", [`Hai *${userName}*!`,
         isChristmasSeason ? "Musim Natal aktif! 🎅" : "Khusus hari Natal!",
         "Selamat Natal! 🎄",
         "Damai dan bahagia selalu."].join("\n")) +
@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("XMas", "Gagal nih, coba lagi ya");
+      raraError("XMas", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "x-mas");
   }

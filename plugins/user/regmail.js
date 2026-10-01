@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendOtpEmail, isEmailConfigured, getEmailUser, setEmailDb } from "../../src/lib/nova-email.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { sendOtpEmail, isEmailConfigured, getEmailUser, setEmailDb } from "../../src/lib/rara-email.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "regmail",
@@ -98,7 +98,7 @@ async function handler(m, { args, sock }) {
     txt += `Owner perlu set email SMTP dulu dengan:\n`;
     txt += `\`${m.prefix}setemail <email> <app-password>\`\n\n`;
     txt += `Atau gunakan \`${m.prefix}daftar\` untuk daftar tanpa email.`;
-    return await m.reply(novaWrap("regmail", txt));
+    return await m.reply(raraWrap("regmail", txt));
   }
 
   if (getOtpSession(m.sender)) {
@@ -132,21 +132,21 @@ async function handler(m, { args, sock }) {
   const email = input[1].trim().toLowerCase();
 
   if (name.length < 2 || name.length > 30) {
-    return await m.reply(novaError("RegMail", "Nama harus 2-30 karakter ya"));
+    return await m.reply(raraError("RegMail", "Nama harus 2-30 karakter ya"));
   }
 
   if (!validateEmail(email)) {
-    return await m.reply(novaError("RegMail", "Email gak valid! Contoh: nama@gmail.com"));
+    return await m.reply(raraError("RegMail", "Email gak valid! Contoh: nama@gmail.com"));
   }
 
   const existingUsers = db.data?.users || {};
   for (const [uid, u] of Object.entries(existingUsers)) {
     if (u.regEmail?.toLowerCase() === email && u.isRegistered) {
-      return await m.reply(novaError("RegMail", "Email ini sudah terdaftar! Pakai email lain ya"));
+      return await m.reply(raraError("RegMail", "Email ini sudah terdaftar! Pakai email lain ya"));
     }
   }
   try {
-    const botName = config.bot?.name || "Nova AI";
+    const botName = config.bot?.name || "Rara AI";
     const session = createOtpSession(m.sender, name, email);
 
     await sendOtpEmail(email, session.otp, botName);
@@ -166,7 +166,7 @@ async function handler(m, { args, sock }) {
     let txt = `Gagal kirim OTP ke email nih!\n\n`;
     txt += `Error: ${e.message}\n\n`;
     txt += `Pastikan email valid dan SMTP terkonfigurasi dengan benar.`;
-    await m.reply(novaWrap("regmail", txt));
+    await m.reply(raraWrap("regmail", txt));
   }
 }
 

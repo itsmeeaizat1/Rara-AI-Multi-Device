@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
   name: "sologo",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const prompt = m.text?.trim() || m.args.join(" ");
 
   if (!prompt) {
-        return m.reply(novaGuideV2("sologo", {
+        return m.reply(raraGuideV2("sologo", {
  kaomoji: "(¬‿¬)✧",
  sapaan: "bikin logo dari deskripsi teks, hasilnya clean! (⌒‿⌒)",
       cara: "ketik deskripsi logo yang mau dibuat",
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
     const data = res.data;
     if (!data.status || !data.result || data.result.length === 0) {
-      return m.reply(novaError("SoLogo", "⚠️ AI gagal membuat logo. Coba gunakan prompt (deskripsi) yang lain."));
+      return m.reply(raraError("SoLogo", "⚠️ AI gagal membuat logo. Coba gunakan prompt (deskripsi) yang lain."));
     }
 
     const logo = data.result[0];
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
     }
 
     console.error("[SoLogo AI]", error.message);
-    m.reply(novaError("SoLogo", "😔 Terjadi kesalahan saat memproses permintaan ke AI."));
+    m.reply(raraError("SoLogo", "😔 Terjadi kesalahan saat memproses permintaan ke AI."));
   }
 }
 

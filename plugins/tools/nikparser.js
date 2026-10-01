@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -93,11 +93,11 @@ async function handler(m, { sock }) {
     const provNama = PROVINSI[data.provinceId] || data.province || "-";
 
     await m.react("🐣");
-    m.reply(novaWrap("NIK Parser", [`*nik* → \`${data.raw}\``, `*valid* → ✅ Valid`, `*tanggal lahir* → ${bFormatted}`, `*jenis kelamin* → ${genderEmoji} ${data.gender?.charAt(0).toUpperCase() + data.gender?.slice(1)}`, `*provinsi* → ${provNama}`, `*Kab/Kota* → Kode \`${data.kabupatenKotaId}\``, `*kecamatan* → Kode \`${data.kecamatanId}\``, `*kode unik* → \`${data.uniqcode}\``].join("\n")));
+    m.reply(raraWrap("NIK Parser", [`*nik* → \`${data.raw}\``, `*valid* → ✅ Valid`, `*tanggal lahir* → ${bFormatted}`, `*jenis kelamin* → ${genderEmoji} ${data.gender?.charAt(0).toUpperCase() + data.gender?.slice(1)}`, `*provinsi* → ${provNama}`, `*Kab/Kota* → Kode \`${data.kabupatenKotaId}\``, `*kecamatan* → Kode \`${data.kecamatanId}\``, `*kode unik* → \`${data.uniqcode}\``].join("\n")));
   } catch (e) {
     await m.react("❌");
     console.log(e);
-    m.reply(novaWrap("nikparser", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("nikparser", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

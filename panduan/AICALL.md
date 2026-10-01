@@ -49,7 +49,7 @@ pm2 save
 Set env `AICALL_HTTP_KEY` (isi key yang sama) di bot utama lalu `pm2 restart <bot>`.
 
 **Auto-run:** bot utama otomatis nyalain service ini saat boot kalau binary
-+.env ada (src/lib/nova-aicall-autostart.js). Matiin: `touch aicall/.noautostart`.
++.env ada (src/lib/rara-aicall-autostart.js). Matiin: `touch aicall/.noautostart`.
 
 ## 4. Cara pakai
 

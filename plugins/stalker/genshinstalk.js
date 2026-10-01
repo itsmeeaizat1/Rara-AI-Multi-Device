@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "genshinstalk",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const uid = m.text?.trim() || m.args[0];
 
   if (!uid) {
-    return m.reply(novaWrap("genshinstalk", "❌ *UID Genshin-nya mana nih?*\n\nKamu harus memasukkan UID pemain Genshin Impact yang ingin di-stalk. \n\n💡 *Contoh:* `.genshinstalk 856012067`"));
+    return m.reply(raraWrap("genshinstalk", "❌ *UID Genshin-nya mana nih?*\n\nKamu harus memasukkan UID pemain Genshin Impact yang ingin di-stalk. \n\n💡 *Contoh:* `.genshinstalk 856012067`"));
   }
   try {
     const res = await axios.get(`https://api.nexray.eu.cc/stalker/genshin?id=${uid}`, {
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const data = res.data;
 
     if (!data.status || !data.result) {
-      return m.reply(novaWrap("genshinstalk", `⚠️ *Pencarian Gagal!*\n\nUID *${uid}* tidak ditemukan atau profilnya diprivat. Pastikan UID yang kamu masukkan sudah benar ya.`));
+      return m.reply(raraWrap("genshinstalk", `⚠️ *Pencarian Gagal!*\n\nUID *${uid}* tidak ditemukan atau profilnya diprivat. Pastikan UID yang kamu masukkan sudah benar ya.`));
     }
 
     const r = data.result.player_info;
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[Genshin Stalk]", error.message);
-    m.reply(novaWrap("genshinstalk", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Genshin Impact. Silakan coba beberapa saat lagi ya."));
+    m.reply(raraWrap("genshinstalk", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Genshin Impact. Silakan coba beberapa saat lagi ya."));
   }
 }
 

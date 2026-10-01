@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { Client } from 'ssh2'
-import te from '../../src/lib/nova-error.js'
+import te from '../../src/lib/rara-error.js'
 const pluginConfig = {
     name: 'installtemanebula',
     alias: ["installtemanebula"],
@@ -70,7 +70,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply(novaGuide(
+        return m.reply(raraGuide(
             "installtemanebula",
             "Install tema Nebula ke VPS",
             `${m.prefix}installtemanebula 192.168.1.1|secretpass`
@@ -102,18 +102,18 @@ function handler(m, { sock }) {
                         await execSSH(conn, CMD_BLUEPRINT)
 
                         await execSSH(conn, CMD_NEBULA)
-            await m.reply(novaWrap("installtemanebula", `
+            await m.reply(raraWrap("installtemanebula", `
 │ sTatus: *terinstall*
 │ Ip: ${ipvps}\n\n_Tema Nebula berhasil diinstall!_`))
         } catch (err) {
             console.error('[Nebula Install Error]', err)
-            m.reply(novaWrap("installtemanebula", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(raraWrap("installtemanebula", te(m.prefix, m.command, m.pushName), "error"))
         } finally {
             conn.end()
         }
     }).on('error', (err) => {
         console.error('[SSH Error]', err)
-        m.reply(novaWrap("installtemanebula", `❌ Koneksi gagal!\n\nIP atau Password tidak valid / VPS down.`))
+        m.reply(raraWrap("installtemanebula", `❌ Koneksi gagal!\n\nIP atau Password tidak valid / VPS down.`))
     }).connect(connSettings)
 }
 

@@ -1,0 +1,33 @@
+{
+  "enabled": false,
+  "targets": [],
+  "intervalMenit": 30,
+  "liveIntervalMenit": 3,
+  "apifyIntervalMenit": 120,
+  "lastApifyCheck": null,
+  "apifyCache": null,
+  "initDone": false,
+  "leagues": [
+    "eng.1",
+    "esp.1",
+    "ita.1",
+    "ger.1",
+    "fra.1",
+    "uefa.champions",
+    "idn.1",
+    "idn.2"
+  ],
+  "contentTypes": {
+    "jadwal": true,
+    "reminder": true,
+    "hasil": true,
+    "live": false
+  },
+  "dailyDigest": null,
+  "seenJadwal": [],
+  "sentReminders": {},
+  "sentResults": {},
+  "liveMatches": {},
+  "lastCheck": null,
+  "lastSource": null
+}

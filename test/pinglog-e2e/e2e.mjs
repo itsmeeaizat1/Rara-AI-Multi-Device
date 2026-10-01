@@ -1,4 +1,4 @@
-// NOVA AI — pinglog e2e: log ping interaktif panel tiap 20 dtk
+// RARA AI — pinglog e2e: log ping interaktif panel tiap 20 dtk
 // Fitur 26 Sep 2026 (owner: "di log panel pas bot run ada log ping tiap 20
 // detik, log deteksi kerusakan, dll biar log interaktif lengkap").
 // Yang dites: format murni, counter window, hook logger.error, tick render
@@ -15,7 +15,7 @@ let pass = 0, fail = 0;
 const w = (s) => console.log(s);
 const t = (name, ok, extra) => { ok ? pass++ : fail++; w((ok ? "✅ " : "❌ ") + name + (ok ? "" : extra ? " — " + extra : "")); };
 
-const mod = await import(R + "/src/lib/nova-pinglog.js");
+const mod = await import(R + "/src/lib/rara-pinglog.js");
 const {
   formatDuration, formatBytes, buildPingLine,
   notePingMessage, notePingError,
@@ -94,7 +94,7 @@ pingTimerLoop: {
 }
 
 // ─── 6. hook logger.error otomatis ───
-const { logger } = await import(R + "/src/lib/nova-logger.js");
+const { logger } = await import(R + "/src/lib/rara-logger.js");
 itl.resetStats();
 const res6 = startPingLog(fakeSock, { intervalMs: 30000 });
 logger.error("TESHOOK", "pesan gagal");

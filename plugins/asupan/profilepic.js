@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const STYLES = ["avataaars", "bottts", "fun-emoji", "lorelei", "micah", "notionists", "open-peeps", "personas", "pixel-art", "adventurer"];
 
@@ -19,7 +19,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const from = m.key.remoteJid;
-    const text = m.args?.join(" ").trim() || m.pushName || "Nova";
+    const text = m.args?.join(" ").trim() || m.pushName || "Rara";
     await sock.sendMessage(from, { react: { text: "🕒", key: m.key } });
     const style = STYLES[Math.floor(Math.random() * STYLES.length)];
     const url = `https://api.dicebear.com/7.x/${style}/png?seed=${encodeURIComponent(text)}&size=512`;
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     const from = m.key.remoteJid;
     await sock.sendMessage(from, { react: { text: "❌", key: m.key } });
-    return m.reply(novaWrap("profilepic", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("profilepic", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

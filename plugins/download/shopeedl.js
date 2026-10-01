@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // shopeedl.js — Download video Shopee no-watermark
 // Engine: shopeenowatermark.com (src/scraper/shopee-nowm.js — axios+cookie
 // jar → Puppeteer buat tembus Cloudflare) → ishop.id → IkyyXD shopeevid.
@@ -7,11 +7,11 @@
 // (2) validasi URL sekarang terima link share app shp.ee/id.shp.ee;
 // (3) Method 1 lama (fetch polos) kena Cloudflare 403 → scraper baru.
 import axios from "axios";
-import { novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { shopeeNoWm } from "../../src/scraper/shopee-nowm.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     const url = m.text?.trim();
     // FIX: dulu cuma "shopee" → link share app (id.shp.ee/...) keditolak
     if (!url || !/shopee|shp\.ee/i.test(url)) {
-      return m.reply(novaGuide("Shopee DL", "Kirim URL video Shopee yang valid!", ".shopeedl https://id.shp.ee/xxx"));
+      return m.reply(raraGuide("Shopee DL", "Kirim URL video Shopee yang valid!", ".shopeedl https://id.shp.ee/xxx"));
     }
 
     await m.react("🕒");
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
 
     if (!data?.videos?.length) {
       await m.react("❌");
-      return m.reply(novaError("Shopee DL", "Video tidak ditemukan di URL tersebut!"));
+      return m.reply(raraError("Shopee DL", "Video tidak ditemukan di URL tersebut!"));
     }
 
     // Ambil video quality terbaik
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[ShopeeDL]", err);
     await m.react("❌");
-    m.reply(novaGagal("Shopee DL"));
+    m.reply(raraGagal("Shopee DL"));
   }
 }
 

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -164,7 +164,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ctx.font = '12px sans-serif';
     ctx.fillStyle = '#555555';
     ctx.textAlign = 'right';
-    ctx.fillText('Nova AI', W - 25, H - 25);
+    ctx.fillText('Rara AI', W - 25, H - 25);
 
     const outBuf = cv.toBuffer('image/png');
     await m.react("🐣");
@@ -180,7 +180,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
   } catch (e) {
     console.error("profilecard error:", e);
-    return m.reply(novaWrap("profilecard", "Gagal buat profile card. Coba lagi.", "error"));
+    return m.reply(raraWrap("profilecard", "Gagal buat profile card. Coba lagi.", "error"));
   }
 }
 

@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // menara.js — MENARA SERIBU PINTU: petualangan teka-teki per lantai (request owner 21 Sep 2026)
 // 100 lantai, tiap lantai 1 pintu terkunci teka-teki (6 jenis, tema dunia acak per lantai).
 // Tiap lantai ke-10: GERBANG SANG BIJAK (boss 2 teka-teki berturut, reward ×3 + 1 permata).
@@ -10,12 +10,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "url";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox } from "../../src/lib/nova-games.js";
-import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
-import { addGameCash, addGold, removeGold, ensureRpg } from "../../src/lib/nova-rpg-service.js";
-import { normalizeAnswer, getSimilarity } from "../../src/lib/nova-game-engine.js";
-import { getLocalDateObject } from "../../src/lib/nova-time.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox } from "../../src/lib/rara-games.js";
+import { addExpWithLevelCheck } from "../../src/lib/rara-level.js";
+import { addGameCash, addGold, removeGold, ensureRpg } from "../../src/lib/rara-rpg-service.js";
+import { normalizeAnswer, getSimilarity } from "../../src/lib/rara-game-engine.js";
+import { getLocalDateObject } from "../../src/lib/rara-time.js";
 import { playDoorAnim as libPlayDoorAnim } from "../../src/lib/libanimationrpg/libthousanddoortowerrpg.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -132,7 +132,7 @@ async function playDoorAnim(m, sock, s) {
 function askDoor(m, sock, s, prefix) {
   clearTimeout(s.timer);
   s.timer = setTimeout(() => onTimeout(m, sock, s), Q_MS);
-  const send = (icon, flavor, body) => sock.sendMessage(m.chat, { text: novaGameBox({ title: "menara", icon, flavor, body }) }).catch(() => {});
+  const send = (icon, flavor, body) => sock.sendMessage(m.chat, { text: raraGameBox({ title: "menara", icon, flavor, body }) }).catch(() => {});
   if (prefix) return send(prefix.icon, prefix.flavor, prefix.body).then(() => send("🚪", `🚪 *PINTU LANTAI ${s.user.floor}*`, doorText(s, s.current)));
   return send("🚪", `🚪 *PINTU LANTAI ${s.user.floor}*`, doorText(s, s.current));
 }
@@ -236,7 +236,7 @@ export async function answerHandler(m, sock) {
         "",
         `♻️ Ketik .menaraseribupintu rebirth — mulai ulang dengan +10% EXP permanen!`,
       ].join("\n");
-      return sock.sendMessage(m.chat, { text: novaGameBox({ title: "menara", icon: "👑", flavor: "👑 *PUNCAK MENARA!*", body }) }).catch(() => {});
+      return sock.sendMessage(m.chat, { text: raraGameBox({ title: "menara", icon: "👑", flavor: "👑 *PUNCAK MENARA!*", body }) }).catch(() => {});
     }
     climbTo(m, sock, s, u.floor + 1);
     s.user = u;
@@ -288,35 +288,35 @@ async function handler(m, { sock, config }) {
   // sub yang sah saat sesi jalan ATAU tanpa sesi
   if (sub === "stop") {
     const s = sessions.get(m.chat);
-    if (!s) return m.reply(novaGameBox({ title: "menara", icon: "🤔", flavor: "❓ *GAK ADA PERJALANAN!*", body: "Belum ada pendakian menara yang jalan di chat ini!" }));
+    if (!s) return m.reply(raraGameBox({ title: "menara", icon: "🤔", flavor: "❓ *GAK ADA PERJALANAN!*", body: "Belum ada pendakian menara yang jalan di chat ini!" }));
     const u = s.user;
     endSession(m, m.chat);
     saveDb();
-    return m.reply(novaGameBox({ title: "menara", icon: "🛑", flavor: "🛑 *PENDAKIAN DIJEDA!*", body: `Kamu berhenti di lantai ${u.floor}. Ketik .menaraseribupintu kapan saja untuk lanjut dari lantai yang sama — progres tersimpan permanen.` }));
+    return m.reply(raraGameBox({ title: "menara", icon: "🛑", flavor: "🛑 *PENDAKIAN DIJEDA!*", body: `Kamu berhenti di lantai ${u.floor}. Ketik .menaraseribupintu kapan saja untuk lanjut dari lantai yang sama — progres tersimpan permanen.` }));
   }
 
   if (sub === "hint") {
     const s = sessions.get(m.chat);
-    if (!s || !s.current) return m.reply(novaGameBox({ title: "menara", icon: "💡", flavor: "❓ *GAK ADA PINTU!*", body: "Mulai dulu pendakianmu: ketik .menaraseribupintu" }));
-    if (s.hintUsed) return m.reply(novaGameBox({ title: "menara", icon: "💡", flavor: "💡 *HINT SUDAH DIPAKAI!*", body: "Satu pintu cuma boleh 1 hint. Jawab dulu teka-tekinya!" }));
+    if (!s || !s.current) return m.reply(raraGameBox({ title: "menara", icon: "💡", flavor: "❓ *GAK ADA PINTU!*", body: "Mulai dulu pendakianmu: ketik .menaraseribupintu" }));
+    if (s.hintUsed) return m.reply(raraGameBox({ title: "menara", icon: "💡", flavor: "💡 *HINT SUDAH DIPAKAI!*", body: "Satu pintu cuma boleh 1 hint. Jawab dulu teka-tekinya!" }));
     const u = ensureUser(m) || s.user;
     // bayar: 30 gold, fallback 1 permata (transaksi atomic per try)
     let paidWith = null;
     if (removeGold(m, HINT_GOLD)) paidWith = `${HINT_GOLD} gold`;
     else if ((u.permata || 0) >= 1) { u.permata -= 1; paidWith = "1 permata"; saveDb(); }
     else {
-      return m.reply(novaGameBox({ title: "menara", icon: "🪙", flavor: "💸 *KURANG DANA!*", body: `Hint butuh ${HINT_GOLD} gold ATAU 1 permata. Kamu gak punya keduanya — Gaskeun jawab tanpa hint, EXP-mu dobel!` }));
+      return m.reply(raraGameBox({ title: "menara", icon: "🪙", flavor: "💸 *KURANG DANA!*", body: `Hint butuh ${HINT_GOLD} gold ATAU 1 permata. Kamu gak punya keduanya — Gaskeun jawab tanpa hint, EXP-mu dobel!` }));
     }
     s.hintUsed = true;
     s.user = u;
-    return m.reply(novaGameBox({ title: "menara", icon: "💡", flavor: "💡 *HINT DIBELI!*", body: `Dibayar pakai ${paidWith}.\n\n${s.current.hint}\n\n⚠️ Jawaban benar sekarang EXP normal (tanpa bonus tanpa-hint).` }));
+    return m.reply(raraGameBox({ title: "menara", icon: "💡", flavor: "💡 *HINT DIBELI!*", body: `Dibayar pakai ${paidWith}.\n\n${s.current.hint}\n\n⚠️ Jawaban benar sekarang EXP normal (tanpa bonus tanpa-hint).` }));
   }
 
   if (sub === "status") {
     let u = ensureUser(m);
-    if (!u) return m.reply(novaGameBox({ title: "menara", icon: "🏗️", flavor: "🏗️ *MENARA SERIBU PINTU*", body: "Kamu belum pernah mendaki! Ketik .menaraseribupintu untuk mulai — pemain baru dapat starter pack 3 permata + 50 gold." }));
+    if (!u) return m.reply(raraGameBox({ title: "menara", icon: "🏗️", flavor: "🏗️ *MENARA SERIBU PINTU*", body: "Kamu belum pernah mendaki! Ketik .menaraseribupintu untuk mulai — pemain baru dapat starter pack 3 permata + 50 gold." }));
     const th = themeFor(u.floor);
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "menara", icon: "🏗️",
       flavor: "🏗️ *KARTU PETUALANG*",
       body: [
@@ -341,21 +341,21 @@ async function handler(m, { sock, config }) {
     const body = all.length
       ? all.map((r, i) => `${i + 1}. @${r.jid.split("@")[0]}\n   🏰 Lantai ${r.bestFloor} · ${rankFor(r.bestFloor)} · 💎 ${r.permata} · ♻️ ${r.rebirths}`).join("\n\n")
       : "Belum ada petualang yang tercatat! Ketik .menaraseribupintu";
-    return m.reply(novaGameBox({ title: "menara", icon: "🏆", flavor: "🏆 *PAPAN PETUALANG MENARA*", body }));
+    return m.reply(raraGameBox({ title: "menara", icon: "🏆", flavor: "🏆 *PAPAN PETUALANG MENARA*", body }));
   }
 
   if (sub === "daily") {
     let u = ensureUser(m);
-    if (!u) return m.reply(novaGameBox({ title: "menara", icon: "🏗️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Mulai pendakian dulu: ketik .menaraseribupintu" }));
+    if (!u) return m.reply(raraGameBox({ title: "menara", icon: "🏗️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Mulai pendakian dulu: ketik .menaraseribupintu" }));
     const today = todayWib();
-    if (u.lastDaily === today) return m.reply(novaGameBox({ title: "menara", icon: "📅", flavor: "📅 *SUDAH DIKLAIM!*", body: "Bonus harian hari ini sudah kamu ambil. Kembali besok!" }));
+    if (u.lastDaily === today) return m.reply(raraGameBox({ title: "menara", icon: "📅", flavor: "📅 *SUDAH DIKLAIM!*", body: "Bonus harian hari ini sudah kamu ambil. Kembali besok!" }));
     u.dailyStreak = (u.lastDaily === yesterdayWib()) ? (u.dailyStreak || 0) + 1 : 1;
     u.lastDaily = today;
     u.permata += 1;
     const gold = 30 + (u.dailyStreak - 1) * 5;
     try { addGold(m, gold); } catch {}
     saveDb();
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "menara", icon: "📅",
       flavor: "📅 *BONUS HARIAN!*",
       body: [
@@ -369,16 +369,16 @@ async function handler(m, { sock, config }) {
 
   if (sub === "rebirth") {
     let u = ensureUser(m);
-    if (!u) return m.reply(novaGameBox({ title: "menara", icon: "♻️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Mulai pendakian dulu: ketik .menaraseribupintu" }));
+    if (!u) return m.reply(raraGameBox({ title: "menara", icon: "♻️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Mulai pendakian dulu: ketik .menaraseribupintu" }));
     if (u.bestFloor < MAX_FLOOR) {
-      return m.reply(novaGameBox({ title: "menara", icon: "♻️", flavor: "🔒 *BELUM SIAP!*", body: `Rebirth terbuka setelah mencapai puncak lantai ${MAX_FLOOR}. Lantai tertinggimu: ${u.bestFloor}.` }));
+      return m.reply(raraGameBox({ title: "menara", icon: "♻️", flavor: "🔒 *BELUM SIAP!*", body: `Rebirth terbuka setelah mencapai puncak lantai ${MAX_FLOOR}. Lantai tertinggimu: ${u.bestFloor}.` }));
     }
     u.rebirths += 1;
     u.floor = 1;
     u.nafas = NAFAHS_MAX;
     saveDb();
     endSession(m, m.chat);
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "menara", icon: "♻️",
       flavor: "♻️ *REBIRTH BERHASIL!*",
       body: [
@@ -393,7 +393,7 @@ async function handler(m, { sock, config }) {
 
   // ── MULAI / LANJUT PENDAKIAN ──
   if (sessions.get(m.chat)) {
-    return m.reply(novaGameBox({ title: "menara", icon: "⏳", flavor: "⏳ *PENDAKIAN SEDANG BERJALAN!*", body: "Pintu di chat ini lagi dibuka. Balas teka-tekinya atau .menaraseribupintu stop" }));
+    return m.reply(raraGameBox({ title: "menara", icon: "⏳", flavor: "⏳ *PENDAKIAN SEDANG BERJALAN!*", body: "Pintu di chat ini lagi dibuka. Balas teka-tekinya atau .menaraseribupintu stop" }));
   }
 
   let u = ensureUser(m);
@@ -403,7 +403,7 @@ async function handler(m, { sock, config }) {
   // nafas
   if ((u.nafas || 0) < 1) {
     const mins = Math.ceil((NAFAHS_REGEN_S - ((Math.floor(Date.now() / 1000) - (u.nafasAt || 0)) % NAFAHS_REGEN_S)) / 60);
-    return m.reply(novaGameBox({ title: "menara", icon: "🌬️", flavor: "😮‍💨 *NAFASMU HABIS!*", body: `Nafasmu habis (${u.nafas}/${NAFAHS_MAX}). Rehat dulu — nafas pulih +1 tiap 5 menit (kurang lebih ${mins} menit lagi). Ketik .menaraseribupintu daily buat bonus sambil nunggu!` }));
+    return m.reply(raraGameBox({ title: "menara", icon: "🌬️", flavor: "😮‍💨 *NAFASMU HABIS!*", body: `Nafasmu habis (${u.nafas}/${NAFAHS_MAX}). Rehat dulu — nafas pulih +1 tiap 5 menit (kurang lebih ${mins} menit lagi). Ketik .menaraseribupintu daily buat bonus sambil nunggu!` }));
   }
   u.nafas -= 1;
   u.nafasAt = Math.floor(Date.now() / 1000);
@@ -419,7 +419,7 @@ async function handler(m, { sock, config }) {
     u.permata += 3;
     try { addGold(m, 50); } catch {}
     saveDb();
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "menara", icon: "🏗️",
       flavor: "🏗️ *SELAMAT DATANG DI MENARA SERIBU PINTU!*",
       body: [
@@ -442,7 +442,7 @@ async function handler(m, { sock, config }) {
   }
 
   s.current = pickPuzzle(s.usedIds, u.floor);
-  return m.reply(novaGameBox({
+  return m.reply(raraGameBox({
     title: "menara", icon: "🧗",
     flavor: "🧗 *PENDAKIAN DILANJUTKAN!*",
     body: doorText(s, s.current, `Progresmu tersimpan permanen — lantai ${u.floor} (tertinggi: ${u.bestFloor}, ${rankFor(u.bestFloor)}).`),

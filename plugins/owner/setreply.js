@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import fs from "fs";
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "setreply",
   alias: ["setreply"],
@@ -35,14 +35,14 @@ async function handler(m, { sock, db }) {
   if (variant) {
     const selected = VARIANTS[variant];
     if (!selected) {
-      m.reply(novaWrap("Setreply", `❌ *VARIANT TIDAK VALID*\n\nSatu-satunya variant: *v1*`));
+      m.reply(raraWrap("Setreply", `❌ *VARIANT TIDAK VALID*\n\nSatu-satunya variant: *v1*`));
       return;
     }
 
     db.setting("replyVariant", selected.id);
     await db.save();
 
-    await m.reply(novaWrap("setreply", `✅ *REPLY VARIANT DIUBAH*\n\n` +
+    await m.reply(raraWrap("setreply", `✅ *REPLY VARIANT DIUBAH*\n\n` +
       `${selected.emoji} *V${selected.id} — ${selected.name}*\n` +
       `_${selected.desc}_`));
     return;

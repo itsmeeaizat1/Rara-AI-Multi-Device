@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
 import { downloadContentFromMessage } from 'nova'
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "openvo",
     alias: ["openvo", "rvo"],
@@ -22,23 +22,23 @@ async function handler(m, { sock }) {
     const quoted = m.quoted
 
     if (!quoted) {
-        return m.reply(novaNoInput("Open VO", `Balas pesan 1x lihat (View Once) dengan perintah ini!\nContoh: Reply foto/video 1x lihat lalu ketik \`${m.prefix || "."}openvo\``))
+        return m.reply(raraNoInput("Open VO", `Balas pesan 1x lihat (View Once) dengan perintah ini!\nContoh: Reply foto/video 1x lihat lalu ketik \`${m.prefix || "."}openvo\``))
     }
 
     const quotedMsg = quoted.message
     if (!quotedMsg) {
-        return m.reply(novaEmpty("Open VO", "Tidak dapat membaca struktur pesan yang di-reply nih."))
+        return m.reply(raraEmpty("Open VO", "Tidak dapat membaca struktur pesan yang di-reply nih."))
     }
 
     const type = Object.keys(quotedMsg)[0]
     const content = quotedMsg[type]
 
     if (!content) {
-        return m.reply(novaEmpty("Open VO", "Konten pesan yang di-reply tidak ditemukan atau kosong."))
+        return m.reply(raraEmpty("Open VO", "Konten pesan yang di-reply tidak ditemukan atau kosong."))
     }
 
     if (!content.viewOnce) {
-        return m.reply(novaError("Open VO", "Pesan yang kamu reply bukan pesan 1x lihat (View Once)!"))
+        return m.reply(raraError("Open VO", "Pesan yang kamu reply bukan pesan 1x lihat (View Once)!"))
     }
     try {
         let mediaType = null
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
         }
 
         if (!mediaType) {
-            return m.reply(novaError("Open VO", "Tipe media tidak didukung! Hanya mendukung foto, video, atau audio."))
+            return m.reply(raraError("Open VO", "Tipe media tidak didukung! Hanya mendukung foto, video, atau audio."))
         }
 
         const stream = await downloadContentFromMessage(content, mediaType)
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
         }
 
         if (!buffer || buffer.length < 100) {
-            return m.reply(novaError("Open VO", "Gagal mengunduh media 1x lihat. Media mungkin sudah kadaluarsa atau rusak."))
+            return m.reply(raraError("Open VO", "Gagal mengunduh media 1x lihat. Media mungkin sudah kadaluarsa atau rusak."))
         }
         const targetQuoted = m.quoted ? m.quoted : m
 
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
         }
 
     } catch (error) {
-        return m.reply(novaError("Open VO", `Gagal membuka pesan 1x lihat: ${error.message}`))
+        return m.reply(raraError("Open VO", `Gagal membuka pesan 1x lihat: ${error.message}`))
     }
 }
 

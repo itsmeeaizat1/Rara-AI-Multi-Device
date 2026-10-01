@@ -1,15 +1,15 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 GUARDIAN — Group Guardian AI (request owner 12 Sep 2026)
 // 🔹 Moderator grup berbasis AI — nilai konteks pesan:
 //   promo/jualan, scam/judi, toxic, nsfw, junk → warning → kick
 // 🔹 Beda dari anti-X (regex): ini ngerti konteks, gak asal blokir
 // ============================================================
-import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 import {
   isGuardianOn, setGuardianOn, setGuardianMode, getGuardianStatus,
   resetStrikes, guardianTest,
-} from "../../src/lib/nova-guardian.js";
+} from "../../src/lib/rara-guardian.js";
 
 const pluginConfig = {
   name: "guardian",
@@ -28,8 +28,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, db } = {}) {
-  if (!m.isGroup) return m.reply(novaWrap("Guardian", `Fitur ini cuma jalan di dalam grup.`));
-  if (!m.isAdmin && !m.isOwner) return m.reply(novaWrap("Guardian", `Cuma admin grup/owner yang bisa ngatur guardian.`));
+  if (!m.isGroup) return m.reply(raraWrap("Guardian", `Fitur ini cuma jalan di dalam grup.`));
+  if (!m.isAdmin && !m.isOwner) return m.reply(raraWrap("Guardian", `Cuma admin grup/owner yang bisa ngatur guardian.`));
 
   const args = (m.args || []).map(String);
   const sub = (args[0] || "").toLowerCase();
@@ -40,7 +40,7 @@ async function handler(m, { sock, db } = {}) {
     setGuardianOn(db, m.chat, sub === "on");
     await m.react("🐣");
     if (sub === "on") {
-      return m.reply(novaWrap("Guardian", [
+      return m.reply(raraWrap("Guardian", [
         `🛡️ Group Guardian AI AKTIF!`,
         ``,
         `Aku jaga grup ini 24/7 — pesan yang nilainya pelanggaran bakal kena:`,
@@ -52,14 +52,14 @@ async function handler(m, { sock, db } = {}) {
         `Mode: ${st.mode || "normal"} — ganti: .guardian mode <santai/normal/strict>`,
       ]));
     }
-    return m.reply(novaWrap("Guardian", [`📴 Guardian mati di grup ini.`]));
+    return m.reply(raraWrap("Guardian", [`📴 Guardian mati di grup ini.`]));
   }
 
   // ── mode ──
   if (sub === "mode" || sub === "sensitivity") {
     const mode = (args[1] || "").toLowerCase();
     if (!["santai", "normal", "strict"].includes(mode)) {
-      return m.reply(novaWrap("Guardian", [
+      return m.reply(raraWrap("Guardian", [
         `⚙️ Mode guardian sekarang: ${st.mode || "normal"}`,
         ``,
         `• santai — cuma kasus jelas (link scam/judi) yang dicek AI`,
@@ -69,29 +69,29 @@ async function handler(m, { sock, db } = {}) {
     }
     setGuardianMode(db, m.chat, mode);
     await m.react("🐣");
-    return m.reply(novaWrap("Guardian", [`✅ Mode diganti jadi ${mode}.`]));
+    return m.reply(raraWrap("Guardian", [`✅ Mode diganti jadi ${mode}.`]));
   }
 
   // ── reset strike ──
   if (sub === "reset") {
     let target = m.mentionedJid?.[0] || m.quoted?.sender;
-    if (!target) return m.reply(novaError("Guardian", `Reset strike siapa? Reply pesannya atau @mention user.`));
+    if (!target) return m.reply(raraError("Guardian", `Reset strike siapa? Reply pesannya atau @mention user.`));
     const before = resetStrikes(db, m.chat, target);
     await m.react("🐣");
     return sock.sendMessage(m.chat, {
-      text: novaWrap("Guardian", [`✅ Strike ${before} buat @${target.split("@")[0]} dihapus — mulai dari nol lagi.`]),
+      text: raraWrap("Guardian", [`✅ Strike ${before} buat @${target.split("@")[0]} dihapus — mulai dari nol lagi.`]),
       mentions: [target],
     }, { quoted: m });
   }
 
   // ── log ──
   if (sub === "log" || sub === "riwayat") {
-    if (!st.log.length) return m.reply(novaWrap("Guardian", [`📭 Belum ada kejadian tercatat di grup ini.`]));
+    if (!st.log.length) return m.reply(raraWrap("Guardian", [`📭 Belum ada kejadian tercatat di grup ini.`]));
     const lines = st.log.slice(0, 10).map((e, i) => {
       const t = new Date(e.ts).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
       return `${i + 1}. [${t}] ${e.name} — ${e.type} (${e.act})`;
     });
-    return m.reply(novaWrap("Guardian", [
+    return m.reply(raraWrap("Guardian", [
       `📜 10 kejadian terakhir:`,
       ``,
       ...lines,
@@ -101,11 +101,11 @@ async function handler(m, { sock, db } = {}) {
   // ── test (dry-run — tanpa aksi apa pun) ──
   if (sub === "test" || sub === "cek") {
     const text = args.slice(1).join(" ").trim();
-    if (!text) return m.reply(novaError("Guardian", `Tes pakai teks apa? Contoh: .guardian test bang mau jual akun murah dm 0812`));
+    if (!text) return m.reply(raraError("Guardian", `Tes pakai teks apa? Contoh: .guardian test bang mau jual akun murah dm 0812`));
     await m.react("🕒");
     const { suspect, verdict } = await guardianTest(text);
     const v = verdict;
-    return m.reply(novaWrap("Guardian", [
+    return m.reply(raraWrap("Guardian", [
       `🧪 Hasil tes (dry-run — gak ada aksi):`,
       ``,
       `Deteksi lokal: ${suspect || "gak mencurigakan (AI tetap menilai)"}`,
@@ -118,7 +118,7 @@ async function handler(m, { sock, db } = {}) {
 
   // ── default: status ──
   const totalStrikes = Object.values(st.strikes || {}).reduce((a, s) => a + (s.count || 0), 0);
-  return m.reply(novaWrap("Guardian", [
+  return m.reply(raraWrap("Guardian", [
     `🛡️ GROUP GUARDIAN AI`,
     ``,
     `Status: ${st.on ? "🟢 AKTIF" : "🔴 mati"} — ${st.on ? ".guardian off" : ".guardian on"}`,

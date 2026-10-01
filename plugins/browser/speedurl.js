@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "speedurl",
@@ -25,7 +25,7 @@ async function measureLoad(url) {
   const t0 = Date.now();
   try {
     const res = await fetch(target, {
-      headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
+      headers: { "User-Agent": "Mozilla/5.0 (Rara Bot)" },
       signal: AbortSignal.timeout(15000),
       redirect: "follow",
     });
@@ -100,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await measureLoad(text);
 
     if (result.error) {
-      return m.reply(novaWrap("SpeedURL Error", [
+      return m.reply(raraWrap("SpeedURL Error", [
         "URL: " + result.url,
         "Error: " + result.error,
         "Time: " + result.phases.total + "ms",
@@ -131,11 +131,11 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("Cache-Control: " + (result.cacheControl.length > 40 ? result.cacheControl.substring(0, 40) + "..." : result.cacheControl));
     }
     await m.react("🐣");
-    return m.reply(novaWrap("SpeedURL: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
+    return m.reply(raraWrap("SpeedURL: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("speedurl error:", e);
-    return m.reply(novaWrap("SpeedURL", "Error: " + e.message));
+    return m.reply(raraWrap("SpeedURL", "Error: " + e.message));
   }
 }
 

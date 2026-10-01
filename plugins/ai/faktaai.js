@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // faktaai — AI generator fakta menarik
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import te from "../../src/lib/rara-error.js";
 
 const pluginConfig = {
   name: "faktaai",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(novaWrap("faktaai", `Mau tahu fakta tentang apa?\n\nContoh: ${m.prefix}faktaai luar angkasa\n${m.prefix}faktaai kucing\n${m.prefix}faktaai sejarah Indonesia`, "guide"));
+      return m.reply(raraWrap("faktaai", `Mau tahu fakta tentang apa?\n\nContoh: ${m.prefix}faktaai luar angkasa\n${m.prefix}faktaai kucing\n${m.prefix}faktaai sejarah Indonesia`, "guide"));
     }
 
     await m.react("🕒");
@@ -33,11 +33,11 @@ async function handler(m, { sock }) {
 
 Format nomor 1-7. Tiap fakta 2-3 kalimat. Bahasa Indonesia. Pilih fakta yang kurang diketahui orang, bukan fakta pasaran. Pastikan akurat secara ilmiah/sejarah.`;
 
-    const result = await UnlimitedAI(prompt, "nova-ai");
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(novaWrap("faktaai", "AI-nya lagi baca buku ensiklopedia 📚", "error"));
+      return m.reply(raraWrap("faktaai", "AI-nya lagi baca buku ensiklopedia 📚", "error"));
     }
 
     await m.react("🐣");
@@ -46,7 +46,7 @@ Format nomor 1-7. Tiap fakta 2-3 kalimat. Bahasa Indonesia. Pilih fakta yang kur
   } catch (err) {
     console.error("faktaai error:", err);
     await m.react("❌");
-    return m.reply(novaWrap("faktaai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraWrap("faktaai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -45,9 +45,9 @@ ok("hi-db write/read roundtrip", db2.read().hiaiTest?.n === db.data.hiaiTest.n);
 // 6. plugin config & handler
 const mod = await import("../../plugins/ai-agent/hiaiagent.js");
 ok("plugin config & handler ter-ekspor", !!mod.config?.name && typeof mod.handler === "function");
-ok("cmd hiaiagent (beda dari ai/novaagent/mcp)", mod.config.name === "hiaiagent" && !["ai", "novaagent", "mcp"].includes(mod.config.name));
+ok("cmd hiaiagent (beda dari ai/raraagent/mcp)", mod.config.name === "hiaiagent" && !["ai", "raraagent", "mcp"].includes(mod.config.name));
 ok("owner-only (anti penyalahgunaan)", mod.config.isOwner === true);
-ok("alias gak bentrok novaagent/mcp/ai", (mod.config.alias || []).every((a) => !["ai", "novaagent", "mcp", "aichat"].includes(a)), JSON.stringify(mod.config.alias));
+ok("alias gak bentrok raraagent/mcp/ai", (mod.config.alias || []).every((a) => !["ai", "raraagent", "mcp", "aichat"].includes(a)), JSON.stringify(mod.config.alias));
 
 // 7. REGRESI BUG (30 Sep 2026): "Cannot read properties of undefined (reading
 // '<jid>')" di ensureChatSlot/getSession — akar: db.data.chats sendiri belum

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "grupshop",
@@ -46,7 +46,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const wallet = shop.wallet[sender];
 
     if (sub === "coins" || sub === "balance") {
-      return m.reply(novaWrap("Group Shop", [
+      return m.reply(raraWrap("Group Shop", [
         `Wallet: @${sender.split("@")[0]}`,
         `Koin: ${wallet.coins}`,
         `Badge: ${wallet.badges.length > 0 ? wallet.badges.join(", ") : "Belum ada"}`,
@@ -59,17 +59,17 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "buy") {
       const itemId = parseInt(args[1]);
-      if (!itemId) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}grupshop buy <id>`, "info"));
+      if (!itemId) return m.reply(raraWrap("Usage", `Cara: ${usedPrefix}grupshop buy <id>`, "info"));
       const item = shop.items.find(i => i.id === itemId);
-      if (!item) return m.reply(novaWrap("Info", `Item ID ${itemId} tidak ditemukan.`));
-      if (wallet.coins < item.price) return m.reply(novaWrap("Info", `Koin kurang! Butuh ${item.price}, kamu punya ${wallet.coins}.`, "info"));
+      if (!item) return m.reply(raraWrap("Info", `Item ID ${itemId} tidak ditemukan.`));
+      if (wallet.coins < item.price) return m.reply(raraWrap("Info", `Koin kurang! Butuh ${item.price}, kamu punya ${wallet.coins}.`, "info"));
       wallet.coins -= item.price;
       if (item.type === "badge") wallet.badges.push(item.name);
       else if (item.type === "title") wallet.titles.push(item.name);
       else if (item.type === "privilege") wallet.privileges.push(item.name);
       else wallet.badges.push(item.name);
       await db.save();
-      return m.reply(novaWrap("Group Shop", [
+      return m.reply(raraWrap("Group Shop", [
         `Berhasil membeli!`,
         `Item: ${item.name}`,
         `Harga: ${item.price} koin`,
@@ -82,35 +82,35 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const price = parseInt(args[args.length - 2]);
       const type = (args[args.length - 1] || "").toLowerCase();
       if (!itemName || !price || !type) {
-        return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}grupshop add <item> <price> <type>\nType: badge, title, privilege, cosmetic`, "info"));
+        return m.reply(raraWrap("Usage", `Cara: ${usedPrefix}grupshop add <item> <price> <type>\nType: badge, title, privilege, cosmetic`, "info"));
       }
       const newId = shop.pendingId++;
       shop.items.push({ id: newId, name: itemName, price, type, desc: "Custom item" });
       await db.save();
-      return m.reply(novaWrap("Group Shop", `Item ditambahkan: ${itemName} (${price} koin, type: ${type}, ID: ${newId})`));
+      return m.reply(raraWrap("Group Shop", `Item ditambahkan: ${itemName} (${price} koin, type: ${type}, ID: ${newId})`));
     }
 
     if (sub === "leaderboard") {
       const sorted = Object.entries(shop.wallet)
         .sort((a, b) => (b[1].coins || 0) - (a[1].coins || 0))
         .slice(0, 10);
-      if (sorted.length === 0) return m.reply(novaWrap("Group Shop", "Belum ada member dengan koin."));
+      if (sorted.length === 0) return m.reply(raraWrap("Group Shop", "Belum ada member dengan koin."));
       const lb = sorted.map(([jid, w], i) => `${i + 1}. @${jid.split("@")[0]} - ${w.coins} koin`).join("\n");
-      return m.reply(novaWrap("Group Shop", `Top Coin Holders:\n\n${lb}`, "info"));
+      return m.reply(raraWrap("Group Shop", `Top Coin Holders:\n\n${lb}`, "info"));
     }
 
     if (sub === "give" && isOwner) {
       const target = m.mentionedJid?.[0] || args[1]?.replace(/[@.]/g, "") + "@s.whatsapp.net";
       const amount = parseInt(args[2]);
-      if (!target || !amount) return m.reply(novaWrap("Usage", `Cara: ${usedPrefix}grupshop give @user <amount>`, "info"));
+      if (!target || !amount) return m.reply(raraWrap("Usage", `Cara: ${usedPrefix}grupshop give @user <amount>`, "info"));
       if (!shop.wallet[target]) shop.wallet[target] = { coins: 0, badges: [], titles: [], privileges: [] };
       shop.wallet[target].coins += amount;
       await db.save();
-      return m.reply(novaWrap("Group Shop", `Berhasil kasih ${amount} koin ke @${target.split("@")[0]}`, "info"));
+      return m.reply(raraWrap("Group Shop", `Berhasil kasih ${amount} koin ke @${target.split("@")[0]}`, "info"));
     }
 
     const itemList = shop.items.map(i => `${i.id}. ${i.name} - ${i.price} koin (${i.type})`).join("\n");
-    return m.reply(novaWrap("Group Shop", [
+    return m.reply(raraWrap("Group Shop", [
       `Group Shop - ${groupId.split("@")[0]}`,
       `Koin kamu: ${wallet.coins}`,
       "",
@@ -125,7 +125,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("grupshop error:", e);
-    return m.reply(novaError("Grupshop", e.message));
+    return m.reply(raraError("Grupshop", e.message));
   }
 }
 

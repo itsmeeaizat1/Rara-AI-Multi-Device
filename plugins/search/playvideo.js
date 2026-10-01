@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // playvideo.js — Search YouTube → download video → kirim langsung
 // Resolusi: 360p / 480p (default) / 720p / HD 1080p
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
-import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/nova-ytdlp.js";
-import { toWhatsAppVideo } from "../../src/lib/nova-ffmpeg.js";
-import { novaGuideV2, novaSalahV2, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { offerConvert } from "../../src/lib/nova-convert.js";
-import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/rara-ytdlp.js";
+import { toWhatsAppVideo } from "../../src/lib/rara-ffmpeg.js";
+import { raraGuideV2, raraSalahV2, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
+import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
 
@@ -105,14 +105,14 @@ async function searchYoutube(query) {
 }
 
 async function downloadVideo(url, quality) {
-  // Try 1: yt-dlp / cobalt (nova-ytdlp) — dukung pilihan resolusi persis
+  // Try 1: yt-dlp / cobalt (rara-ytdlp) — dukung pilihan resolusi persis
   try {
     const result = await downloadVideoYtDlp(url, quality);
     if (result?.buffer?.length > 10000) {
       return { buffer: result.buffer, title: result.title };
     }
   } catch (e) {
-    console.error("[PlayVideo] nova-ytdlp error:", e.message);
+    console.error("[PlayVideo] rara-ytdlp error:", e.message);
   }
 
   // Try 2: IkyyXD ytmp4 (tanpa kontrol kualitas — biasanya 720p)
@@ -165,7 +165,7 @@ async function sendPlayVideo(sock, m, video, quality) {
   const vid = await downloadVideo(video.url, quality);
   if (!vid?.buffer || vid.buffer.length < 10000) {
     await m.react("❌");
-    return m.reply(novaGagal("PlayVideo"));
+    return m.reply(raraGagal("PlayVideo"));
   }
   console.log(`[PlayVideo] Video OK: ${vid.buffer.length} bytes`);
 
@@ -220,7 +220,7 @@ async function sendPlayVideo(sock, m, video, quality) {
 
   // 3. Tawaran convert di bawahnya
   await offerConvert(sock, m, { buffer: vid.buffer, type: "video", platform: "YouTube", title: titleForLyrics, sourceUrl: video.url });
-  await m.reply(novaBerhasil("Playvideo"));
+  await m.reply(raraBerhasil("Playvideo"));
 }
 
 async function handler(m, { sock }) {
@@ -229,7 +229,7 @@ async function handler(m, { sock }) {
 
   // Usage: pilihan resolusi (default 480p)
   if (!query) {
-    return m.reply(novaGuideV2("playvideo", {
+    return m.reply(raraGuideV2("playvideo", {
  kaomoji: "(๑•̀ㅂ•́)و✧",
  sapaan: "pengen sekalian videonya? ketik judulnya! (≧▽≦)b",
       cara: "ketik judul lagunya sesudah command",
@@ -242,7 +242,7 @@ async function handler(m, { sock }) {
   // SALAH CMD CUTE (owner 25 Sep): link padahal .playvideo mau judul lagu
   if (/^(https?:\/\/|www\.)|\b(?:facebook|fb\.watch|tiktok|instagram|youtu\.?be)\.com/i.test(query)) {
     await m.react("🐣");
-    return m.reply(novaSalahV2("playvideo", {
+    return m.reply(raraSalahV2("playvideo", {
  kaomoji: "(¬_¬;)",
       pesan: "kok yang diketik linknya kak? ini mah mau judul lagunya~",
       contoh: `${m.prefix}playvideo nama lagu`,
@@ -256,7 +256,7 @@ async function handler(m, { sock }) {
     const video = await searchYoutube(query);
     if (!video) {
       await m.react("❌");
-      return m.reply(novaGagal("PlayVideo"));
+      return m.reply(raraGagal("PlayVideo"));
     }
     console.log(`[PlayVideo] Found: ${video.title} → ${video.url} (${quality}p)`);
 
@@ -265,7 +265,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[PlayVideo]", err.message || err);
     await m.react("❌");
-    return m.reply(novaGangguan("PlayVideo"));
+    return m.reply(raraGangguan("PlayVideo"));
   }
 }
 

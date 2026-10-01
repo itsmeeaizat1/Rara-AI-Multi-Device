@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "👑",
   name: "join2",
   description: "Bot join ke grup via link",
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.groupAcceptInvite(inviteCode);
 
     const text =
-      novaWrap("Join", [`Link: *${url}*`,
+      raraWrap("Join", [`Link: *${url}*`,
         "Status: *Joined*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Owner", "Gagal nih, coba lagi ya");
+      raraError("Owner", "Gagal nih, coba lagi ya");
 
     await m.reply( text, "join");
   }

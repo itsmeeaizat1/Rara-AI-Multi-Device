@@ -1,17 +1,17 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 /**
  * .autobmkg — konfigurasi scheduler gempa BMKG otomatis (owner only).
  * Default jeda 6 jam: 00:00, 06:00, 12:00, 18:00 WIB.
  */
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
 import {
   getBmkgStatus,
   updateBmkgSettings,
   startBmkgJobs,
   stopBmkgJobs,
-} from "../../src/lib/nova-bmkg-scheduler.js";
+} from "../../src/lib/rara-bmkg-scheduler.js";
 
 const pluginConfig = {
   name: "autobmkg",
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     if (action === "off") {
       const settings = updateBmkgSettings((cur) => ({ ...cur, enabled: false }));
       stopBmkgJobs();
-      return m.reply(novaBox("Auto BMKG", ["❌ Auto-broadcast BMKG: OFF"]));
+      return m.reply(raraBox("Auto BMKG", ["❌ Auto-broadcast BMKG: OFF"]));
     }
 
     if (action === "add") {
@@ -123,16 +123,16 @@ async function handler(m, { sock }) {
     if (action === "shakemap" || action === "peta") {
       const val = args[1];
       if (val !== "on" && val !== "off") {
-        return m.reply(novaWrap("autobmkg", "Format: .autobmkg shakemap <on/off>\nSaat ini: " + (getBmkgStatus().sendShakemap ? "ON" : "OFF")));
+        return m.reply(raraWrap("autobmkg", "Format: .autobmkg shakemap <on/off>\nSaat ini: " + (getBmkgStatus().sendShakemap ? "ON" : "OFF")));
       }
       const settings = updateBmkgSettings((cur) => ({ ...cur, sendShakemap: val === "on" }));
-      return m.reply(novaWrap("autobmkg", "Shakemap (peta gempa): " + (val === "on" ? "ON" : "OFF")));
+      return m.reply(raraWrap("autobmkg", "Shakemap (peta gempa): " + (val === "on" ? "ON" : "OFF")));
     }
 
     if (action === "minmag") {
       const val = parseFloat(args[1]);
       if (isNaN(val) || val < 0 || val > 10) {
-        return m.reply(novaWrap("autobmkg", "Format: .autobmkg minmag <0-10>\nSaat ini: M" + (getBmkgStatus().minMagnitude || 0)));
+        return m.reply(raraWrap("autobmkg", "Format: .autobmkg minmag <0-10>\nSaat ini: M" + (getBmkgStatus().minMagnitude || 0)));
       }
       const settings = updateBmkgSettings((cur) => ({ ...cur, minMagnitude: val }));
       return m.reply(
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
       return await m.reply(txt);
     }
   } catch (error) {
-    return m.reply(novaWrap("autobmkg", "Gagal proses. Coba lagi.", "error"));
+    return m.reply(raraWrap("autobmkg", "Gagal proses. Coba lagi.", "error"));
   }
 }
 

@@ -1,6 +1,6 @@
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";
+import { animGeneric } from "../../src/lib/rara-rpg-anim.js";
 
 const pluginConfig = {
   name: "fortune",
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     if (player.gold < spinCost) {
       await m.react('❌');
       return m.reply(
-        novaRpgBox(
+        raraRpgBox(
           "fortune",
           `Gold kamu tidak cukup untuk memutar Fortune Wheel!\n\nBiaya Spin: ${spinCost} Gold | Gold Kamu: ${player.gold} Gold`,
           "error"
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     await db.setPlayerData?.(sender, "fortune", player);
 
     await m.react('🐣');
-    return m.reply(novaGameBox({
+    return m.reply(raraGameBox({
       title: "fortune", icon: "🥠",
       flavor: result.type === "none"
         ? "💀 *ZONK!*"
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("fortune error:", err);
     await m.react('❌');
-    return m.reply(novaRpgBox("fortune", err.message || "Terjadi kesalahan pada Fortune Wheel.", "error"));
+    return m.reply(raraRpgBox("fortune", err.message || "Terjadi kesalahan pada Fortune Wheel.", "error"));
   }
 }
 

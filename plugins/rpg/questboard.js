@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // questboard.js — Daily Quest Board (5 quest random, reward progresif)
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { animQuest } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { animQuest } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "questboard",
@@ -59,23 +59,23 @@ async function handler(m, { sock }) {
     if (subCmd === "claim") {
       const questId = m.args[1];
       if (!questId) {
-        return m.reply(novaRpgBox("questboard", `Mau klaim quest mana?\n\nContoh: ${m.prefix}questboard claim 1`, "guide"));
+        return m.reply(raraRpgBox("questboard", `Mau klaim quest mana?\n\nContoh: ${m.prefix}questboard claim 1`, "guide"));
       }
 
       const questIdx = parseInt(questId) - 1;
       const quest = data.quests?.[questIdx];
       if (!quest) {
         await m.react("❌");
-        return m.reply(novaRpgBox("questboard", "Quest tidak ditemukan.", "error"));
+        return m.reply(raraRpgBox("questboard", "Quest tidak ditemukan.", "error"));
       }
 
       if (quest.claimed) {
-        return m.reply(novaRpgBox("questboard", `Quest "${quest.name}" sudah diklaim.`, "error"));
+        return m.reply(raraRpgBox("questboard", `Quest "${quest.name}" sudah diklaim.`, "error"));
       }
 
       if ((quest.progress || 0) < quest.target) {
         await m.react("❌");
-        return m.reply(novaRpgBox("questboard", `Belum selesai! Progress: ${quest.progress || 0}/${quest.target}`, "error"));
+        return m.reply(raraRpgBox("questboard", `Belum selesai! Progress: ${quest.progress || 0}/${quest.target}`, "error"));
       }
 
       // Claim reward
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("questboard error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("questboard", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("questboard", err.message || "Error", "error"));
   }
 }
 

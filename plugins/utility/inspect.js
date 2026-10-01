@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "inspect",
     alias: ["inspect"],
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
             return await m.reply(teks)
 
         } else {
-            return m.reply(novaWrap("Inspect", '❌ Hanya support URL Grup atau Saluran WhatsApp!'))
+            return m.reply(raraWrap("Inspect", '❌ Hanya support URL Grup atau Saluran WhatsApp!'))
         }
 
     } catch (error) {
@@ -110,10 +110,10 @@ async function handler(m, { sock }) {
                 return m.reply('❌ Grup/Saluran tidak ditemukan!')
             }
             if (error.data === 401) {
-                return m.reply(novaWrap("Inspect", '❌ Bot di-kick dari grup tersebut!'))
+                return m.reply(raraWrap("Inspect", '❌ Bot di-kick dari grup tersebut!'))
             }
             if (error.data === 410) {
-                return m.reply(novaWrap("Inspect", '❌ URL grup telah di-reset!'))
+                return m.reply(raraWrap("Inspect", '❌ URL grup telah di-reset!'))
             }
         }
         

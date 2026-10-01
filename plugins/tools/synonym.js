@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import {  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const word = m.text?.trim();
     if (!word) {
-      await m.reply( novaCaption({
+      await m.reply( raraCaption({
   emoji: "🛠️",
   name: "synonym",
   description: "Cari sinonim kata",
@@ -36,12 +36,12 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     if (!syns.size) {
-      await m.reply(novaWrap("Synonym", [`Kata: *${word}*`, "Sinonim tidak ditemukan"].join("\n")));
+      await m.reply(raraWrap("Synonym", [`Kata: *${word}*`, "Sinonim tidak ditemukan"].join("\n")));
       return { handled: true };
     }
     const list = [...syns].slice(0, 15).join(", ");
     await m.react("🐣");
-    await m.reply(novaWrap("Synonym", [`Kata: *${word}*`, `Sinonim: ${list}`].join("\n")));
+    await m.reply(raraWrap("Synonym", [`Kata: *${word}*`, `Sinonim: ${list}`].join("\n")));
   } catch (e) {
     await m.react("❌");
     await m.reply("Error: " + e.message);

@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tiktokv4.js — TikTok Downloader V4 via IkyyXD
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { novaWrap, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
+import { raraWrap, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -50,10 +50,10 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaGuide("TikTok V4", "Download video TikTok V4! Kasih linknya ya!", `${m.prefix}ttv4 https://vt.tiktok.com/xxx`));
+    return m.reply(raraGuide("TikTok V4", "Download video TikTok V4! Kasih linknya ya!", `${m.prefix}ttv4 https://vt.tiktok.com/xxx`));
   }
   if (!text.match(/tiktok\.com|vt\.tiktok/i)) {
-    return m.reply(novaGuide("TikTok V4", "URL-nya gak valid nih! Pakai link TikTok ya.", `${m.prefix}ttv4 https://vt.tiktok.com/xxx`));
+    return m.reply(raraGuide("TikTok V4", "URL-nya gak valid nih! Pakai link TikTok ya.", `${m.prefix}ttv4 https://vt.tiktok.com/xxx`));
   }
 
   try {
@@ -76,13 +76,13 @@ async function handler(m, { sock }) {
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaGagal("TikTok V4"));
-      await m.reply(novaBerhasil("tiktokv4"));
+      await m.reply(raraGagal("TikTok V4"));
+      await m.reply(raraBerhasil("tiktokv4"));
     }
   } catch (error) {
     console.error("[tiktokv4.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaGangguan("TikTok V4"));
+    return m.reply(raraGangguan("TikTok V4"));
   }
 }
 

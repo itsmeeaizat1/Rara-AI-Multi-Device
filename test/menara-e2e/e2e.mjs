@@ -1,7 +1,7 @@
 // E2E menara — Menara Seribu Pintu
 import path from "node:path";
 import fs from "node:fs";
-import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
+import { initDatabase, getDatabase } from "../../src/lib/rara-database.js";
 
 process.env.MENARA_ANSWER_CD_MS = "0"; // e2e jalan mili-detik — matikan anti-spam
 process.env.MENARA_ANIM_MS = "0"; // animasi pintu instan saat e2e

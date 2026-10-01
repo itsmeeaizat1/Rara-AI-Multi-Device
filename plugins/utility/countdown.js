@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/rara-countdown.js";
 
 const pluginConfig = {
   name: "countdown", alias: ["countdown"], category: "utility",
@@ -15,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const input = m.text?.trim();
     if (!input) {
-      await m.reply( novaCaption({
+      await m.reply( raraCaption({
   emoji: "🔧",
   name: "countdown",
   description: "Hitung mundur ke tanggal tertentu",
@@ -30,17 +30,17 @@ async function handler(m, { sock, config: botConfig }) {
     const now = new Date();
     const diff = target - now;
     if (diff < 0) {
-      await m.reply(novaError("Countdown", [`Target: *${target.toLocaleDateString("id-ID")}*`,
+      await m.reply(raraError("Countdown", [`Target: *${target.toLocaleDateString("id-ID")}*`,
         "Tanggal sudah lewat!"].join("\n")));
       return { handled: true };
     }
     // 🔹 LIVE COUNTDOWN (13 Sep, request owner "fitur polos di-variasi biar
     // menarik"): ironis kalau fitur bernama countdown gak nge-tick — kartu
-    // sekarang hidup pakai nova-countdown, settle statis saat kuota edit abis.
+    // sekarang hidup pakai rara-countdown, settle statis saat kuota edit abis.
     const cdCard = (remainingMs, live = true) => {
       const days = Math.floor(Math.max(0, remainingMs) / 86400000);
       const hms = formatRemaining(Math.max(0, remainingMs) % 86400000);
-      return novaWrap("Countdown", [
+      return raraWrap("Countdown", [
         `Target: *${target.toLocaleDateString("id-ID")}*`,
         live
           ? `🕒 *${days} hari ${hms}* lagi 🕒`
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
       finalCard: (st) => cdCard(st.remainingMs, false),
     });
   } catch (e) {
-    await m.reply(novaWrap("Gagal nih", [`${e.message}`].join("\n")));
+    await m.reply(raraWrap("Gagal nih", [`${e.message}`].join("\n")));
   }
   return { handled: true };
 }

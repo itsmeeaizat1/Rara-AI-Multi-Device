@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
-import { runLiveTicker, formatRemaining } from '../../src/lib/nova-countdown.js'
-import { computeRamadhanPhase, ramadhanHeaderLine, buildRamadhanCard } from '../../src/lib/nova-ramadhan.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { runLiveTicker, formatRemaining } from '../../src/lib/rara-countdown.js'
+import { computeRamadhanPhase, ramadhanHeaderLine, buildRamadhanCard } from '../../src/lib/rara-ramadhan.js'
 
 const pluginConfig = {
   name: "ramadhan",
@@ -162,7 +162,7 @@ async function handler(m, { sock, conn, text, args, usedPrefix, command }) {
       lines.push("Contoh: " + usedPrefix + "ramadhan 3 (Doa buka puasa)")
       lines.push("")
       lines.push("_Catatan: tanggal Ramadhan = estimasi kalender, penetapan final menyusul via rukyatul hilal_")
-      m.reply(novaWrap("Panduan Ramadhan", lines.join("\n")))
+      m.reply(raraWrap("Panduan Ramadhan", lines.join("\n")))
 
       // < 24 jam menuju 1 Ramadhan → ticker live sampai D-day (fire-and-forget)
       if (phase && phase.phase === 'countdown') {
@@ -186,10 +186,10 @@ async function handler(m, { sock, conn, text, args, usedPrefix, command }) {
     const r = RAMADHAN[input - 1]
 
     if (r.isi) {
-      return m.reply(novaWrap("Ramadhan - " + r.judul, r.isi.join("\n")))
+      return m.reply(raraWrap("Ramadhan - " + r.judul, r.isi.join("\n")))
     }
 
-    return m.reply(novaWrap("Ramadhan - " + r.judul, [
+    return m.reply(raraWrap("Ramadhan - " + r.judul, [
       "Teks Arab:",
       r.arab,
       "",
@@ -203,7 +203,7 @@ async function handler(m, { sock, conn, text, args, usedPrefix, command }) {
       r.keterangan,
     ].join("\n")))
   } catch (e) {
-    return m.reply(novaWrap("Ramadhan", "Error: " + e.message))
+    return m.reply(raraWrap("Ramadhan", "Error: " + e.message))
   }
 }
 

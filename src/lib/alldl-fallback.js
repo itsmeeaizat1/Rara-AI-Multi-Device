@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // All Downloader — fallback chain antar versi (V1 → V2 → V3 → V4).
 // Command tiap versi TETAP TERPISAH (biar keliatan engine mana yang down),
 // tapi kalau versi itu gagal, otomatis nyoba versi berikutnya.
 // Sukses via fallback → notice singkat versi mana yang down tadi.
 
-import { novaWrap } from "./nova-menu-style.js";
+import { raraWrap } from "./rara-menu-style.js";
 
 const VERSIONS = {
   v1: { label: ".alldl (V1)", file: "../../plugins/download/alldl.js" },
@@ -132,7 +132,7 @@ export async function runAllDlFallback(selfKey, m, ctx = {}) {
       if (fails.length) {
         try {
           await m.reply(
-            novaWrap(
+            raraWrap(
               "All Downloader",
               `Engine ${VERSIONS[selfKey].label} lagi down:\n` +
                 fails.map((f) => `• ${f}`).join("\n") +
@@ -149,7 +149,7 @@ export async function runAllDlFallback(selfKey, m, ctx = {}) {
 
   try {
     await m.reply(
-      novaWrap(
+      raraWrap(
         "All Downloader",
         "Semua engine downloader gagal memproses link ini:\n\n" +
           fails.map((f) => `• ${f}`).join("\n") +

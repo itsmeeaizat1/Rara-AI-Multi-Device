@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
-import { getDatabase } from '../../src/lib/nova-database.js'
+import { getDatabase } from '../../src/lib/rara-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'setbirthday',
@@ -42,26 +42,26 @@ async function handler(m, { sock }) {
         text += `${m.prefix}setbirthday 25-12\n`
         text += `${m.prefix}setbirthday 01-01`
         
-        return await m.reply(novaWrap("setbirthday", text))
+        return await m.reply(raraWrap("setbirthday", text))
     }
     
     const dateRegex = /^(\d{1,2})[-\/](\d{1,2})$/
     const match = input.match(dateRegex)
     
     if (!match) {
-        return m.reply(novaWrap("setbirthday", `Format salah! Gunakan: DD-MM\n\nContoh: ${m.prefix}setbirthday 25-12`))
+        return m.reply(raraWrap("setbirthday", `Format salah! Gunakan: DD-MM\n\nContoh: ${m.prefix}setbirthday 25-12`))
     }
     
     const day = parseInt(match[1])
     const month = parseInt(match[2])
     
     if (month < 1 || month > 12) {
-        return m.reply(novaWrap("setbirthday", `Bulan gak valid! (1-12)`))
+        return m.reply(raraWrap("setbirthday", `Bulan gak valid! (1-12)`))
     }
     
     const daysInMonth = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     if (day < 1 || day > daysInMonth[month - 1]) {
-        return m.reply(novaWrap("setbirthday", `Tanggal gak valid untuk bulan ${month} nih!`))
+        return m.reply(raraWrap("setbirthday", `Tanggal gak valid untuk bulan ${month} nih!`))
     }
     
     const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}`

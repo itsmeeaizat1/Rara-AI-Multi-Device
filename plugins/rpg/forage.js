@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Forage — Cari tanaman/herba di alam
 // Rombak khas (batch #11): animasi Keranjang Mengisi +
 // item khas Benih Langka + tool Keranjang Anyam.
 
-import { ensureRpg, saveRpg, getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { shapeForage } from "../../src/lib/nova-rpg-shapes.js";
-import te from "../../src/lib/nova-error.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg, saveRpg, getCash, spendCash, formatRp } from "../../src/lib/rara-rpg-service.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { shapeForage } from "../../src/lib/rara-rpg-shapes.js";
+import te from "../../src/lib/rara-error.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "forage",
@@ -41,7 +41,7 @@ const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { leve
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("forage", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("forage", "RPG belum siap. Ketik .daftar dulu.", "error"));
     const prefix = m.prefix || ".";
     const sub = (m.args?.[0] || "").toLowerCase();
 
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     if (sub === "keranjang" || sub === "status") {
       const tool = getTool(m.sender);
       const lv = tool.level || 0;
-      return m.reply(novaRpgBox("forage",
+      return m.reply(raraRpgBox("forage",
         `🧺 KERANJANG ANYAM KAMU\n\n` +
         `Level : *Lv.${lv}*\n⭐ Bonus EXP : +${10 * lv}%\n🌱 Benih Langka : ${tool.seeds || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
         `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.seedCost(lv)}x Benih + ${formatRp(TOOL.rpCost(lv))}\nKetik: ${prefix}forage upgrade`));
@@ -63,12 +63,12 @@ async function handler(m, { sock }) {
       const needRp = TOOL.rpCost(lv);
       if ((tool.seeds || 0) < needSeed) {
         await m.react("❌");
-        return m.reply(novaRpgBox("forage",
+        return m.reply(raraRpgBox("forage",
           `🌱 Upgrade Keranjang ke Lv.${lv + 1} butuh:\n\n• Benih Langka : ${needSeed}x (punya ${tool.seeds || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Benih didapat dari forage sendiri — 30% per cari, nemu daun suci dijamin +2!`, "warn"));
       }
       if (!spendCash(m, needRp)) {
         await m.react("❌");
-        return m.reply(novaRpgBox("forage", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+        return m.reply(raraRpgBox("forage", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
       }
       const fresh = getTool(m.sender);
       fresh.seeds = (fresh.seeds || 0) - needSeed;
@@ -76,12 +76,12 @@ async function handler(m, { sock }) {
       fresh.spent = (fresh.spent || 0) + needRp;
       await getDatabase().setPlayerData?.(m.sender, TOOL.dbKey, fresh);
       await m.react("🐣");
-      return m.reply(novaRpgBox("forage",
+      return m.reply(raraRpgBox("forage",
         `🧺 KERANJANG UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n⭐ Bonus EXP : +${10 * (lv + 1)}%\n\n🌱 Material : −${needSeed} Benih Langka\n💵 Biaya : ${formatRp(needRp)}`, "success"));
     }
 
     // ── main forage ──
-    if ((rpg.energy || 0) < 5) return m.reply(novaRpgBox("forage", "Energi tidak cukup. Butuh 5 energi.", "info"));
+    if ((rpg.energy || 0) < 5) return m.reply(raraRpgBox("forage", "Energi tidak cukup. Butuh 5 energi.", "info"));
 
     await m.react("🕒");
     const tool = getTool(m.sender);
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
 
     saveRpg(m, rpg);
     await m.react("🐣");
-    return m.reply(novaRpgBox("forage",
+    return m.reply(raraRpgBox("forage",
       `🌿 KAMU MENEMUKAN TANAMAN LIAR!\n\n` +
       `🎁 Item : *${item.name}* (${item.rarity})\n` +
       `⭐ EXP : +${expGain}\n` +
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("forage error:", e.message);
     await m.react("❌");
-    return m.reply(novaRpgBox("forage", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(raraRpgBox("forage", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

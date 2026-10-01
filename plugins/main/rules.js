@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'rules',
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
 
         // Request owner 20 Sep 2026: ganti table/sheet jadi plain text
         // "peraturan ketentuan penggunaan bot" — simpel, gampang dibaca di semua device.
-        const botName = botConfig.bot?.name || 'Nova-AI'
+        const botName = botConfig.bot?.name || 'Rara-AI'
         const lines = [
             `*Peraturan & Ketentuan Penggunaan ${botName}*`,
             '',
@@ -75,9 +75,9 @@ async function handler(m, { sock, config: botConfig }) {
             '',
             'Pelanggaran dapat mengakibatkan banned / kick!',
         ]
-        await m.reply(novaWrap('Peraturan Penggunaan Bot', lines))
+        await m.reply(raraWrap('Peraturan Penggunaan Bot', lines))
     } catch (e) {
-        m.reply(novaError("Rules", "Ada error nih saat ambil rules"))
+        m.reply(raraError("Rules", "Ada error nih saat ambil rules"))
     }
 }
 

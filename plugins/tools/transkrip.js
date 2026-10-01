@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import FormData from 'form-data'
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
 import { exec } from 'child_process'
 import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "transkrip",
     alias: ["transkrip"],
@@ -70,14 +70,14 @@ async function handler(m, { sock }) {
     await m.react("🕒");
         const buffer = await quoted.download();
         if (!buffer || buffer.length < 1000) {
-            return m.reply(novaWrap("Transkrip", '❌ Audio terlalu kecil atau gagal diunduh'));
+            return m.reply(raraWrap("Transkrip", '❌ Audio terlalu kecil atau gagal diunduh'));
         }
         fs.writeFileSync(inputFile, buffer);
         await convertToWav(inputFile, wavFile);
         const wavBuffer = fs.readFileSync(wavFile);
         const text = await transcribeWithGroq(wavBuffer, groqKey);
         if (!text || text.trim() === '') {
-            return m.reply(novaWrap("Transkrip", '❌ Tidak dapat mendeteksi suara. Pastikan audio jelas dan tidak terlalu pendek.'));
+            return m.reply(raraWrap("Transkrip", '❌ Tidak dapat mendeteksi suara. Pastikan audio jelas dan tidak terlalu pendek.'));
         }
         const duration = Math.ceil(buffer.length / 4000);
         await m.react("🐣");
@@ -99,9 +99,9 @@ async function handler(m, { sock }) {
             return m.reply('❌ API Key Groq invalid. Cek config.js → APIkey.groq');
         }
         if (error.response?.status === 429) {
-            return m.reply(novaWrap("Transkrip", '❌ Rate limit Groq tercapai. Coba lagi nanti.'));
+            return m.reply(raraWrap("Transkrip", '❌ Rate limit Groq tercapai. Coba lagi nanti.'));
         }
-        m.reply(novaWrap("transkrip", te(m.prefix, m.command, m.pushName), "error"));
+        m.reply(raraWrap("transkrip", te(m.prefix, m.command, m.pushName), "error"));
     } finally {
         [inputFile, wavFile].forEach(f => { try { fs.unlinkSync(f); } catch (e) { console.error('[transkrip.js]:', e.message); } });
     }

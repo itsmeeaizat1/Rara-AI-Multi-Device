@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .voipcall / .voipvideocall — telepon WA dengan pemutar media (port engine lama)
 // Engine: src/lib/hivoip/ — OWNER-ONLY (anti penyalahgunaan, owner 28 Sep 2026)
 // REVISI 1 Okt 2026 (owner: "2 mode .voipcall telepon biasa untuk default klo
@@ -9,7 +9,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import Voip from "../../src/lib/hivoip/index.js";
-import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "voipcall",
@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig }) {
       await voip.end(bodyArgs[0] === "force");
       activeCalls.delete(m.chat);
       await m.react("⚡");
-      await m.reply(novaWrap("VOIP", bodyArgs[0] === "force" ? "State VOIP di-force-reset." : "Hangup diminta..."));
+      await m.reply(raraWrap("VOIP", bodyArgs[0] === "force" ? "State VOIP di-force-reset." : "Hangup diminta..."));
       return { handled: true };
     }
 
@@ -118,12 +118,12 @@ async function handler(m, { sock, config: botConfig }) {
       const entry = activeCalls.get(m.chat);
       if (!entry) {
         await m.react("🐣");
-        await m.reply(novaError("VOIP", "Gak ada call berjalan di chat ini"));
+        await m.reply(raraError("VOIP", "Gak ada call berjalan di chat ini"));
         return { handled: true };
       }
       const nowSilenced = await entry.call.silent();
       await m.react("⚡");
-      await m.reply(novaWrap("VOIP", nowSilenced ? "Mic dimute, video dipause." : "Lanjut lagi."));
+      await m.reply(raraWrap("VOIP", nowSilenced ? "Mic dimute, video dipause." : "Lanjut lagi."));
       return { handled: true };
     }
 
@@ -131,7 +131,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🧠");
     if (!bodyArgs[0]) {
       await m.react("🐣");
-      await m.reply(novaGuide(
+      await m.reply(raraGuide(
         "voipcall",
         `Telepon nomor WA lewat bot + putar media. 2 mode: ${prefix}voipcall = TELEPON BIASA (media video dimainkan audionya saja), ${prefix}voipvideocall = TELEPON VIDEO (tanpa URL video = black screen).`,
         `${prefix}voipcall 6281234567890 auto`,
@@ -142,14 +142,14 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (activeCalls.has(m.chat)) {
       await m.react("🐣");
-      await m.reply(novaError("VOIP", `Masih ada call berjalan di chat ini — akhiri dulu pakai ${prefix}voipend`));
+      await m.reply(raraError("VOIP", `Masih ada call berjalan di chat ini — akhiri dulu pakai ${prefix}voipend`));
       return { handled: true };
     }
 
     const phoneNumber = bodyArgs[0].replace(/\D/g, "");
     if (!phoneNumber) {
       await m.react("❌");
-      await m.reply(novaError("VOIP", "Nomor gak valid"));
+      await m.reply(raraError("VOIP", "Nomor gak valid"));
       return { handled: true };
     }
 
@@ -178,7 +178,7 @@ async function handler(m, { sock, config: botConfig }) {
     // (video media nanti dimainkan audionya aja oleh engine).
     const willBeVideo = callType === "video";
 
-    const sent = await m.reply(novaWrap("VOIP", `Ngelpon ${phoneNumber}...${willBeVideo ? " (telepon video)" : " (telepon biasa)"} — akhiri ${prefix}voipend`));
+    const sent = await m.reply(raraWrap("VOIP", `Ngelpon ${phoneNumber}...${willBeVideo ? " (telepon video)" : " (telepon biasa)"} — akhiri ${prefix}voipend`));
     const key = sent?.key;
 
     const cleanupTempFiles = () => {
@@ -195,7 +195,7 @@ async function handler(m, { sock, config: botConfig }) {
     let connectedAtMs = null;
     let phase = 0; // 1=berdering 2=diangkat 3=terhubung 4=berakhir
     const editStatus = (text) => {
-      key && sock.sendMessage(m.chat, { text: novaWrap("VOIP", text), edit: key }).catch(() => {});
+      key && sock.sendMessage(m.chat, { text: raraWrap("VOIP", text), edit: key }).catch(() => {});
     };
 
     call.on("ringing", () => {
@@ -216,7 +216,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
     call.on("item", ({ index, kind }) => {
       if (index === 0) return;
-      sock.sendMessage(m.chat, { text: novaWrap("VOIP", `Putar item ${index + 1} (${kind})`) }).catch(() => {});
+      sock.sendMessage(m.chat, { text: raraWrap("VOIP", `Putar item ${index + 1} (${kind})`) }).catch(() => {});
     });
     call.on("ended", (reason) => {
       activeCalls.delete(m.chat);
@@ -228,14 +228,14 @@ async function handler(m, { sock, config: botConfig }) {
     });
     call.on("error", (err) => {
       activeCalls.delete(m.chat);
-      sock.sendMessage(m.chat, { text: novaError("VOIP", `Error call: ${String(err?.message || err).slice(0, 100)}`) }).catch(() => {});
+      sock.sendMessage(m.chat, { text: raraError("VOIP", `Error call: ${String(err?.message || err).slice(0, 100)}`) }).catch(() => {});
       cleanupTempFiles();
     });
     await m.react("⚡");
   } catch (error) {
     console.error("[voipcall]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("VOIP", toFriendlyVoipError(error?.message || error)));
+    await m.reply(raraError("VOIP", toFriendlyVoipError(error?.message || error)));
   }
 
   return { handled: true };

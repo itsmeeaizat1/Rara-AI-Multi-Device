@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tournament.js — Weekly Tournament (leaderboard, prize pool)
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
-import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { rpgSleep } from "../../src/lib/rara-rpg-anim.js";
+import { raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "tournament",
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "join" || subCmd === "ikut") {
       if (tournamentData.participants.has(m.sender)) {
-        return m.reply(novaRpgBox("tournament", "Kamu sudah ikut turnamen minggu ini!", "error"));
+        return m.reply(raraRpgBox("tournament", "Kamu sudah ikut turnamen minggu ini!", "error"));
       }
 
       // Entry fee
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
         const gold = await db.getGold?.(m.sender) || 0;
         if (gold < 500) {
           await m.react("❌");
-          return m.reply(novaRpgBox("tournament", "Entry fee 500 gold. Gold tidak cukup!", "error"));
+          return m.reply(raraRpgBox("tournament", "Entry fee 500 gold. Gold tidak cukup!", "error"));
         }
         await db.minGold?.(m.sender, 500);
       } catch {}
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
       });
 
       await m.react("🐣");
-      return m.reply(novaRpgBox("tournament", `✅ Berhasil ikut turnamen minggu ini!\nEntry fee: 500 gold\n\nMain arena (${m.prefix}arena) untuk naikin poin!`));
+      return m.reply(raraRpgBox("tournament", `✅ Berhasil ikut turnamen minggu ini!\nEntry fee: 500 gold\n\nMain arena (${m.prefix}arena) untuk naikin poin!`));
     }
 
     if (subCmd === "info" || subCmd === "prize") {
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
 
     // LEADERBOARD (default)
     if (tournamentData.participants.size === 0) {
-      return m.reply(novaRpgBox("tournament", `Belum ada peserta. Ikut sekarang: ${m.prefix}tournament join`, "guide"));
+      return m.reply(raraRpgBox("tournament", `Belum ada peserta. Ikut sekarang: ${m.prefix}tournament join`, "guide"));
     }
 
     // Update scores from arena data
@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("tournament error:", err);
     await m.react("❌");
-    return m.reply(novaRpgBox("tournament", err.message || "Error", "error"));
+    return m.reply(raraRpgBox("tournament", err.message || "Error", "error"));
   }
 }
 

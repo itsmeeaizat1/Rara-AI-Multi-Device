@@ -7,10 +7,10 @@ const check = (name, ok) => { w((ok ? "  ✅ " : "  ❌ ") + name); ok ? pass++ 
 // db fresh (pola bola e2e)
 const DB = "/tmp/hujan-e2e-db.json";
 fs.rmSync(DB, { recursive: true, force: true });
-const { initDatabase, getDatabase } = await import("../../src/lib/nova-database.js");
+const { initDatabase, getDatabase } = await import("../../src/lib/rara-database.js");
 await initDatabase(DB);
 
-import * as lib from "../../src/lib/nova-rain-notify.js";
+import * as lib from "../../src/lib/rara-rain-notify.js";
 import { fromSC } from "../../src/lib/styler.js";
 
 // ── mock nowcast: 61 titik data per-menit, bisa digeser dari test ──

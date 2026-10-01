@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Stat — Statistik karakter (tampilan bar interaktif)
-import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, psSection, psStat, novaRpgBox } from "../../src/lib/nova-games.js";
+import { ensureRpg } from "../../src/lib/rara-rpg-service.js";
+import { raraGameBox, gameCTA, psSection, psStat, raraRpgBox } from "../../src/lib/rara-games.js";
 
 const pluginConfig = {
   name: "stat", alias: ["stat", "statrpg"],
@@ -13,9 +13,9 @@ const pluginConfig = {
 async function handler(m) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(novaRpgBox("statrpg", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(raraRpgBox("statrpg", "RPG belum siap.", "error"));
 
-    const msg = novaGameBox({
+    const msg = raraGameBox({
       title: "stat karakter", icon: "📊",
       flavor: `📊 *${(m.pushName || "Player").toUpperCase()} SIAP TEMPUR!*`,
       body: [
@@ -43,7 +43,7 @@ async function handler(m) {
     });
     return m.reply(msg);
   } catch (e) {
-    return m.reply(novaRpgBox("statrpg", "Terjadi error.", "error"));
+    return m.reply(raraRpgBox("statrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

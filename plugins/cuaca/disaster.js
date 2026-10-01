@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // disaster.js — Dashboard & cek bencana alam dunia + Indonesia (rename file owner 15 Sep 2026)
 // Kategori baru: bencana. Sumber: GDACS (EU/UN), NASA EONET, USGS, BMKG.
 // Semua endpoint resmi & verified hidup 2026-09-06.
@@ -9,13 +9,13 @@
 import {
   getGdacs, getEonet, getUsgs, getBmkgLatest,
   GDACS_TYPES, ALERT_STYLE, shortCountry,
-} from "../../src/lib/nova-bencana.js";
-import { novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-bencana.js";
+import { raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() dari src/lib/styler.js
 // (dilarang kotak manual / │ manual) — dikirim dalam code block.
 import { boxMessage } from "../../src/lib/styler.js";
 
-const novaGuide = (header, intro, example) =>
+const raraGuide = (header, intro, example) =>
   boxMessage(`◆ ${String(header).split("—")[0].trim().toUpperCase()} ◆`, [
     ...(intro ? [String(intro)] : []),
     ...(example ? [`Contoh: ${example}`] : []),
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
     switch (jenis) {
       case "gempa": {
         const g = await getBmkgLatest().catch(() => null);
-        if (!g) { await m.reply(novaGangguan("bencana gempa")); return; }
+        if (!g) { await m.reply(raraGangguan("bencana gempa")); return; }
         const [lat, lon] = String(g.Coordinates).split(",").map((s) => s.trim());
         let out = `GEMPA TERKINI — BMKG\n\n`;
         out += `${g.Magnitude} SR, kedalaman ${g.Kedalaman}\n${g.Tanggal} ${g.Jam}\n${g.Wilayah}\n`;
@@ -196,7 +196,7 @@ async function handler(m, { sock }) {
       }
 
       default:
-        await m.reply(novaGuide(
+        await m.reply(raraGuide(
           "Bencana",
           "Jenis bencana tidak dikenal. Pilihan: gempa, banjir, badai, gunungapi, kebakaran, kering, tsunami, global",
           ".disaster banjir"
@@ -207,7 +207,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[disaster]", err);
     await m.react("❌");
-    await m.reply(novaGagal("disaster"));
+    await m.reply(raraGagal("disaster"));
   }
 }
 

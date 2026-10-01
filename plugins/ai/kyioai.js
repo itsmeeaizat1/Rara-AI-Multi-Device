@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // kyioai.js — KyioAPI kategori AI (69 endpoint) — api.kyio.web.id.
 // FREE TIER TANPA KEY (10 RPM). Key opsional: .setkey kyio <api_key> -> 120 RPM + premium.
 // Semua cmd pakai prefix .kyio biar gak bentrok fitur lain. TABEL endpoint ada di file ini,
-// engine generik di src/lib/nova-kyio.js — tiap kategori bisa diedit sendiri-sendiri.
-import { runKyioTable } from "../../src/lib/nova-kyio.js";
+// engine generik di src/lib/rara-kyio.js — tiap kategori bisa diedit sendiri-sendiri.
+import { runKyioTable } from "../../src/lib/rara-kyio.js";
 
 const TABLE = [
   { cmd: "kyiodeepseekai", path: "/api/v2/ai/deepseek-ai", param: "q", method: "GET", hint: ".kyiodeepseekai <pertanyaan>" },

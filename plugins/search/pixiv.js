@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "pixiv",
   alias: ["pixiv"],
@@ -24,22 +24,22 @@ async function handler(m, { sock }) {
     const query = m.args?.join(" ")?.trim();
 
     if (!query) {
-      return m.reply( novaWrap("Pixiv", `❌ *Masukkan kata kunci pencarian!*\n\n💡 *Contoh:* .pixiv rem`), { commandName: "pixiv" });
+      return m.reply( raraWrap("Pixiv", `❌ *Masukkan kata kunci pencarian!*\n\n💡 *Contoh:* .pixiv rem`), { commandName: "pixiv" });
     }
-    const apikey = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
+    const apikey = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
     const url = `https://api.neoxr.eu/api/pixiv-search?q=${encodeURIComponent(query)}&apikey=${apikey}`;
 
     const response = await axios.get(url, { timeout: 30000 });
     const data = response.data;
 
     if (!data.status || !data.data || data.data.length === 0) {
-      return m.reply(novaWrap("pixiv", `❌ *tidak ditemukan hasil untuk:* ${query}`));
+      return m.reply(raraWrap("pixiv", `❌ *tidak ditemukan hasil untuk:* ${query}`));
     }
 
     const results = data.data.slice(0, 10);
 
     const saluranId = config.saluran?.id || "@newsletter";
-    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+    const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     let caption = `🎨 *pixiv search*\n`;
     caption += `📝 *kuery:* ${query}\n`;
@@ -76,9 +76,9 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     if (error.response?.status === 403) {
-      return m.reply(novaWrap("Pixiv", `❌ *api key tidak valid atau limit tercapai*`));
+      return m.reply(raraWrap("Pixiv", `❌ *api key tidak valid atau limit tercapai*`));
     }
-    m.reply(novaWrap("pixiv", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("pixiv", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

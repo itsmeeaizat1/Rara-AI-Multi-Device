@@ -1,16 +1,16 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { notifyPremiumAdd } from "../../src/lib/nova-saluran-broadcast.js";
-// Bonus aktivasi premium — sinkron dengan src/lib/store/nova-store.js
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { notifyPremiumAdd } from "../../src/lib/rara-saluran-broadcast.js";
+// Bonus aktivasi premium — sinkron dengan src/lib/store/rara-store.js
 // (nilainya dipakai .buyprem buat nampilin "Paket Termasuk 3 Role")
-import { PREMIUM_BONUS } from "../../src/lib/store/nova-store.js";
+import { PREMIUM_BONUS } from "../../src/lib/store/rara-store.js";
 import {
   addJadibotPremium,
   removeJadibotPremium,
   getJadibotPremiums,
-} from "../../src/lib/nova-jadibot-database.js";
+} from "../../src/lib/rara-jadibot-database.js";
 const pluginConfig = {
   name: "addprem",
   alias: ["addprem", "addpremium", "addpremuser", "setprem", "delprem", "delpremium", "listprem", "premlist"],
@@ -82,7 +82,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     }
 
     if (db.data.premium.length === 0) {
-      return m.reply(novaWrap("addprem", `💎 Belum ada premium terdaftar`));
+      return m.reply(raraWrap("addprem", `💎 Belum ada premium terdaftar`));
     }
     let txt = `💎 *DAFTAR PREMIUM*\n\n`;
     const now = Date.now();
@@ -120,7 +120,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
   }
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
-    return m.reply(novaWrap("Addprem", `❌ Format nomor tidak valid`));
+    return m.reply(raraWrap("Addprem", `❌ Format nomor tidak valid`));
   }
 
   if (isJadibot && jadibotId) {
@@ -193,7 +193,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     user.isPremium = true;
 
     db.setUser(jid, user);
-    // Bonus role koin+exp — nilai terpusat di nova-store.js (PREMIUM_BONUS)
+    // Bonus role koin+exp — nilai terpusat di rara-store.js (PREMIUM_BONUS)
     db.updateExp(jid, PREMIUM_BONUS.exp);
     db.updateKoin(jid, PREMIUM_BONUS.koin);
 
@@ -219,7 +219,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     );
 
     if (index === -1) {
-      return m.reply(novaWrap("Addprem", `❌ *${targetNumber}* bukan premium`));
+      return m.reply(raraWrap("Addprem", `❌ *${targetNumber}* bukan premium`));
     }
 
     db.data.premium.splice(index, 1);

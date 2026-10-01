@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Meme Generator — Buat meme dari 100+ template via Imgflip API (free, no login)
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "memegenapi",
@@ -8,7 +8,7 @@ const pluginConfig = {
   category: "tools",
   description: "Meme Generator — 100+ template meme via Imgflip, gratis tanpa login",
   usage: ".memegen list — Lihat template\n.memegen <id> | text1 | text2 — Buat meme\n.memegen random | text1 | text2 — Random template",
-  example: ".memegen 112126428 | Saya | Nova AI\n.memegen random | Test | Berhasil",
+  example: ".memegen 112126428 | Saya | Rara AI\n.memegen random | Test | Berhasil",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -97,9 +97,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push(usedPrefix + "memegen random | text1 | text2");
       lines.push("");
       lines.push("Contoh:");
-      lines.push(usedPrefix + "memegen 112126428 | Saya | Nova AI");
+      lines.push(usedPrefix + "memegen 112126428 | Saya | Rara AI");
       lines.push(usedPrefix + "memegen random | Test | Berhasil");
-      return m.reply(novaWrap("Meme Generator", lines, "info"));
+      return m.reply(raraWrap("Meme Generator", lines, "info"));
     }
 
     // Parse: templateId | text1 | text2 | text3
@@ -108,11 +108,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const textParts = parts.slice(1);
 
     if (!textParts.length || textParts.every((t) => !t)) {
-      return m.reply(novaWrap("Meme Generator", [
+      return m.reply(raraWrap("Meme Generator", [
         "Text tidak boleh kosong",
         "",
         "Format: " + usedPrefix + "memegen <id> | text1 | text2",
-        "Contoh: " + usedPrefix + "memegen 112126428 | Saya | Nova AI",
+        "Contoh: " + usedPrefix + "memegen 112126428 | Saya | Rara AI",
       ], "warn"));
     }
 
@@ -135,7 +135,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           m.key.remoteJid,
           {
             image: imgBuf,
-            caption: novaWrap("Meme Generator", [
+            caption: raraWrap("Meme Generator", [
               "Meme berhasil dibuat!",
               "Template ID: " + templateId,
               "Text: " + textParts.join(" | "),
@@ -146,14 +146,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         );
       } catch (dlErr) {
         // If download fails, send URL
-        return m.reply(novaWrap("Meme Generator", [
+        return m.reply(raraWrap("Meme Generator", [
           "Meme berhasil dibuat (URL):",
           result.data.url,
         ], "info"));
       }
     } else {
       // Fallback: Download template and overlay text locally
-      return m.reply(novaWrap("Meme Generator", [
+      return m.reply(raraWrap("Meme Generator", [
         "Caption API butuh akun Imgflip",
         "",
         "Gunakan template ID untuk download gambar:",
@@ -164,7 +164,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
   } catch (e) {
     console.error("[MemeGen]", e);
-    m.reply(novaWrap("Meme Generator", [
+    m.reply(raraWrap("Meme Generator", [
       "Error: " + e.message,
       "",
       "Kemungkinan:",

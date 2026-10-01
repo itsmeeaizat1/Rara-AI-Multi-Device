@@ -1,6 +1,6 @@
 import config from '../../config.js';
 import axios from 'axios';
-import { novaError, novaEmpty, novaNoInput, novaGuide } from '../../src/lib/nova-menu-style.js';
+import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js';
 
 const pluginConfig = {
     name: "rawg",
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim();
 
     if (!query) {
-        return m.reply(novaGuide('Game Search', 'Mau nyari info game apa nih? Ketik nama gamenya ya!', pluginConfig.example));
+        return m.reply(raraGuide('Game Search', 'Mau nyari info game apa nih? Ketik nama gamenya ya!', pluginConfig.example));
     }
     try {
         const apiKey = config.APIkey?.rawg || 'DEMO_KEY';
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
         const games = response.data?.results || [];
 
         if (!games.length) {
-            return m.reply(novaEmpty('Game Search', `Gak nemu game "${query}" 🧐`));
+            return m.reply(raraEmpty('Game Search', `Gak nemu game "${query}" 🧐`));
         }
 
         const list = games.slice(0, 5);
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
         }
     } catch (error) {
         const errorMsg = error.response?.data?.error || error.message || 'Terjadi kesalahan saat menghubungi API RAWG.';
-        return m.reply(novaError('Game Search', errorMsg));
+        return m.reply(raraError('Game Search', errorMsg));
     }
 }
 

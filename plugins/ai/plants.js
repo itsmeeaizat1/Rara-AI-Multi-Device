@@ -1,12 +1,12 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: AI Plant Identifier
  * Fitur: .tanaman (reply foto tanaman) → AI identifikasi: nama + latin,
  *        cara perawatan (sirah/cahaya/pupuk), racun buat hewan, fakta.
  *        Engine: vision chain (Gemini → SenseNova → describe+LLM).
  */
-import { novaWrap, tipText, novaGuide } from "../../src/lib/nova-menu-style.js";
-import { visionScan } from "../../src/lib/nova-vision-chain.js";
+import { raraWrap, tipText, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { visionScan } from "../../src/lib/rara-vision-chain.js";
 
 const pluginConfig = {
   name: "tanaman",
@@ -83,7 +83,7 @@ function buildPlantCard(p) {
   if (p.racun) lines.push(`⚠️ Hewan: ${p.racun}`);
   if (p.fakta) lines.push(`✨ Fakta: ${p.fakta}`);
   if (!p.confident) lines.push("", "_perkiraan AI — bukan identifikasi 100%_");
-  return novaWrap("Tanaman", lines.join("\n"));
+  return raraWrap("Tanaman", lines.join("\n"));
 }
 
 // seam e2e
@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   if (!isPhoto) {
     return m.reply(
-      novaGuide(
+      raraGuide(
         "tanaman",
         `Identifikasi tanaman pakai AI — reply/kirim foto tanaman, daun, atau bunga, terus ketik ${prefix}tanaman`,
         `${prefix}tanaman (reply foto monstera)`,
@@ -119,7 +119,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!parsed) throw new Error("AI jawab gak kebaca");
     if (parsed.error === "BUKAN_TANAMAN") {
       await m.react("❌");
-      return m.reply(novaWrap("Tanaman", "Hmm, itu kayaknya bukan tanaman ya 🌱\n\nKirim foto tanaman, daun, atau bunga — terus ketik lagi."));
+      return m.reply(raraWrap("Tanaman", "Hmm, itu kayaknya bukan tanaman ya 🌱\n\nKirim foto tanaman, daun, atau bunga — terus ketik lagi."));
     }
 
     await m.reply(buildPlantCard(parsed));
@@ -127,7 +127,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (e) {
     console.error("[tanaman]", e.message || e);
     await m.react("❌");
-    await m.reply(novaWrap("Tanaman", [
+    await m.reply(raraWrap("Tanaman", [
       "❌ Gagal identifikasi tanaman.",
       "",
       "AI lagi sibuk atau fotonya kurang jelas — coba foto yang lebih dekat & terang ya.",

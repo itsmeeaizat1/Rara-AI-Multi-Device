@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { tipText, raraWrap, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "autoreactionemoji",
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {
-      await m.reply(novaGuide("Auto Reaction", "Pengaturan auto reaction emoji pesan di grup.", `${prefix}autoreaction on`));
+      await m.reply(raraGuide("Auto Reaction", "Pengaturan auto reaction emoji pesan di grup.", `${prefix}autoreaction on`));
       return { handled: true };
     }
 
@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
     db.setGroup(m.chat, { autoreaction: args === "on" });
 
     const text =
-      novaWrap("Autoreaction", ["Fitur: *auto reaction*",
+      raraWrap("Autoreaction", ["Fitur: *auto reaction*",
         `Status: *${args === "on" ? "ON" : "OFF"}*`,
         `Group: *${m.chat}*`].join("\n")) +
       "\n" +
@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(text, "autoreaction");
   } catch (error) {
-    await m.reply(novaError("Auto Reaction", `Terjadi kesalahan: ${error.message || "coba lagi nanti ya"}`));
+    await m.reply(raraError("Auto Reaction", `Terjadi kesalahan: ${error.message || "coba lagi nanti ya"}`));
   }
 
   return { handled: true };

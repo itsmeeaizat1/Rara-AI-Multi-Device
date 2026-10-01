@@ -1,14 +1,14 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as _canvas from "@napi-rs/canvas";
 import path from "path";
 import fs from "fs";
-import * as timeHelper from "../../src/lib/nova-time.js";
-import te from "../../src/lib/nova-error.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
+import te from "../../src/lib/rara-error.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
 import axios from "axios";
 import config from "../../config.js";
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "nulis",
   alias: ["nulis"],
@@ -24,7 +24,7 @@ const pluginConfig = {
   energi: 1,
   isEnabled: true,
 };
-const fontUrl = getAssetBuffer("nova-font");
+const fontUrl = getAssetBuffer("rara-font");
 let _fontRegistered = false;
 function wrapText(ctx, text, maxWidth) {
   const words = text.split(" ");
@@ -46,7 +46,7 @@ function wrapText(ctx, text, maxWidth) {
 async function handler(m, { sock }) {
   const text = m.args?.join(" ");
   if (!text) {
-    return m.reply(novaWrap("nulis", [
+    return m.reply(raraWrap("nulis", [
       `📌 Format: ${m.prefix}nulis <teks>`,
       `💡 Contoh: ${m.prefix}nulis Aku cinta kamu selamanya`
     ]));
@@ -54,16 +54,16 @@ async function handler(m, { sock }) {
   if (text.length > 500) {
     { const __navText = `❌ *teks terlalu panjang*\n\nMaksimal 500 karakter`; return await m.reply(__navText); };
   }
-  const inputUrl = getAssetBuffer("nova-kertas");
+  const inputUrl = getAssetBuffer("rara-kertas");
   if (!inputUrl) {
-    return m.reply(novaWrap("Nulis", `❌ *template tidak ada*\n\nFile template kertas tidak ditemukan di config.assets`));
+    return m.reply(raraWrap("Nulis", `❌ *template tidak ada*\n\nFile template kertas tidak ditemukan di config.assets`));
   }
   await m.react("🕒");
   try {
     const { createCanvas, loadImage, GlobalFonts } = _canvas;
     if (!_fontRegistered) {
       try {
-        const fontBuf = getAssetBuffer("nova-font");
+        const fontBuf = getAssetBuffer("rara-font");
         if (fontBuf) {
           GlobalFonts.register(fontBuf, "Zahraaa");
         }
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
       }
       _fontRegistered = true;
     }
-    const bgBuf = getAssetBuffer("nova-kertas");
+    const bgBuf = getAssetBuffer("rara-kertas");
     const bgImage = await loadImage(bgBuf);
     const canvas = createCanvas(bgImage.width, bgImage.height);
     const ctx = canvas.getContext("2d");
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
       { type: "image", contextInfo: saluranCtx() },
     );
   } catch (error) {
-    m.reply(novaWrap("nulis", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("nulis", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

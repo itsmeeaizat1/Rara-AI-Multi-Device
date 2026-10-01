@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Auto-generated game plugin: riddle
 
-import { games } from "../../src/lib/nova-game-factory.js";
+import { games } from "../../src/lib/rara-game-factory.js";
 
 const plugin = games.createPlugin("riddle");
 

@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "sudoku",
@@ -103,7 +103,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "play" || sub === "main" || sub === "baru") {
     const difficulty = (args[2] || "medium").toLowerCase();
     if (!["easy", "medium", "hard"].includes(difficulty)) {
-      await m.reply(novaWrap("Sudoku", "Level: easy, medium, hard\n💡 *Contoh:* " + prefix + "sudoku play medium"));
+      await m.reply(raraWrap("Sudoku", "Level: easy, medium, hard\n💡 *Contoh:* " + prefix + "sudoku play medium"));
       return { handled: true };
     }
     const gen = generateSudoku(difficulty);
@@ -112,7 +112,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     cfg.solvedBy = null;
     saveConfig(db, gid, cfg);
 
-    await m.reply(novaWrap("Sudoku " + difficulty, [
+    await m.reply(raraWrap("Sudoku " + difficulty, [
       "Isi angka 1-9, tiap baris/kolom/box tidak boleh ada angka sama.",
       "Kosong (·) = isi kamu.",
       "",
@@ -127,26 +127,26 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "answer" || sub === "isi") {
     if (!cfg.current) {
-      await m.reply(novaWrap("Sudoku", "Belum ada puzzle. Ketik " + prefix + "sudoku play."));
+      await m.reply(raraWrap("Sudoku", "Belum ada puzzle. Ketik " + prefix + "sudoku play."));
       return { handled: true };
     }
     if (cfg.current.solvedBy) {
-      await m.reply(novaWrap("Sudoku", "Sudoku sudah diselesaikan oleh @" + cfg.current.solvedBy.split("@")[0] + "!"), { mentions: [cfg.current.solvedBy] });
+      await m.reply(raraWrap("Sudoku", "Sudoku sudah diselesaikan oleh @" + cfg.current.solvedBy.split("@")[0] + "!"), { mentions: [cfg.current.solvedBy] });
       return { handled: true };
     }
     const row = parseInt(args[2] || "0", 10) - 1;
     const col = parseInt(args[3] || "0", 10) - 1;
     const num = parseInt(args[4] || "0", 10);
     if (isNaN(row) || isNaN(col) || isNaN(num) || row < 0 || row > 8 || col < 0 || col > 8 || num < 1 || num > 9) {
-      await m.reply(novaWrap("Sudoku", "Format: " + prefix + "sudoku answer <baris 1-9> <kolom 1-9> <angka 1-9>"));
+      await m.reply(raraWrap("Sudoku", "Format: " + prefix + "sudoku answer <baris 1-9> <kolom 1-9> <angka 1-9>"));
       return { handled: true };
     }
     if (cfg.current.puzzle[row][col] !== 0) {
-      await m.reply(novaWrap("Sudoku", "Posisi (" + (row + 1) + "," + (col + 1) + ") sudah terisi."));
+      await m.reply(raraWrap("Sudoku", "Posisi (" + (row + 1) + "," + (col + 1) + ") sudah terisi."));
       return { handled: true };
     }
     if (num !== cfg.current.solution[row][col]) {
-      await m.reply(novaWrap("Sudoku", "Salah! Angka untuk (" + (row + 1) + "," + (col + 1) + ") bukan " + num + "."));
+      await m.reply(raraWrap("Sudoku", "Salah! Angka untuk (" + (row + 1) + "," + (col + 1) + ") bukan " + num + "."));
       return { handled: true };
     }
     cfg.current.puzzle[row][col] = num;
@@ -168,31 +168,31 @@ async function handler(m, { sock, db, config: botConfig }) {
       cfg.leaderboard[m.sender].wins++;
       if (time < cfg.leaderboard[m.sender].bestTime) cfg.leaderboard[m.sender].bestTime = time;
       saveConfig(db, gid, cfg);
-      await m.reply(novaWrap("Sudoku SELESAI!", [
+      await m.reply(raraWrap("Sudoku SELESAI!", [
         "Solver: @" + m.sender.split("@")[0],
         "Waktu: " + Math.floor(time / 60) + "m " + (time % 60) + "s",
         "Total menang: " + cfg.leaderboard[m.sender].wins,
       ].join("\n")), { mentions: [m.sender] });
     } else {
       const remaining = cfg.current.puzzle.flat().filter(v => v === 0).length;
-      await m.reply(novaWrap("Sudoku", "Benar! Sisa: " + remaining + " kotak kosong."));
+      await m.reply(raraWrap("Sudoku", "Benar! Sisa: " + remaining + " kotak kosong."));
     }
     return { handled: true };
   }
 
   if (sub === "check" || sub === "cek") {
     if (!cfg.current) {
-      await m.reply(novaWrap("Sudoku", "Belum ada puzzle."));
+      await m.reply(raraWrap("Sudoku", "Belum ada puzzle."));
       return { handled: true };
     }
-    await m.reply(novaWrap("Sudoku " + cfg.current.difficulty, "```" + formatGrid(cfg.current.puzzle) + "```"));
+    await m.reply(raraWrap("Sudoku " + cfg.current.difficulty, "```" + formatGrid(cfg.current.puzzle) + "```"));
     return { handled: true };
   }
 
   if (sub === "leaderboard" || sub === "top") {
     const sorted = Object.entries(cfg.leaderboard).sort((a, b) => a[1].bestTime - b[1].bestTime).slice(0, 5);
     const list = sorted.map(([jid, data], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + data.wins + " win, " + Math.floor(data.bestTime / 60) + "m" + (data.bestTime % 60) + "s").join("\n") || "(kosong)";
-    await m.reply(novaWrap("Sudoku Leaderboard", [
+    await m.reply(raraWrap("Sudoku Leaderboard", [
       "Solver tercepat:",
       list,
     ].join("\n")), { mentions: sorted.map(([jid]) => jid) });
@@ -201,11 +201,11 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "hint" || sub === "bantuan") {
     if (!cfg.current) {
-      await m.reply(novaWrap("Sudoku", "Belum ada puzzle."));
+      await m.reply(raraWrap("Sudoku", "Belum ada puzzle."));
       return { handled: true };
     }
     if (cfg.current.solvedBy) {
-      await m.reply(novaWrap("Sudoku", "Sudah selesai."));
+      await m.reply(raraWrap("Sudoku", "Sudah selesai."));
       return { handled: true };
     }
     // Find an empty cell and reveal answer
@@ -214,16 +214,16 @@ async function handler(m, { sock, db, config: botConfig }) {
         if (cfg.current.puzzle[r][c] === 0) {
           cfg.current.puzzle[r][c] = cfg.current.solution[r][c];
           saveConfig(db, gid, cfg);
-          await m.reply(novaWrap("Sudoku Hint", "Baris " + (r + 1) + ", Kolom " + (c + 1) + " = " + cfg.current.solution[r][c]));
+          await m.reply(raraWrap("Sudoku Hint", "Baris " + (r + 1) + ", Kolom " + (c + 1) + " = " + cfg.current.solution[r][c]));
           return { handled: true };
         }
       }
     }
-    await m.reply(novaError("Sudoku", "Gak ada kotak kosong nih"));
+    await m.reply(raraError("Sudoku", "Gak ada kotak kosong nih"));
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Sudoku", [
+  await m.reply(raraWrap("Sudoku", [
     "SUDOKU HARIAN",
     "",
     prefix + "sudoku play [easy/medium/hard]",

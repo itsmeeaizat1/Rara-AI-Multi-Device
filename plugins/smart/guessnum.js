@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "guessnum",
@@ -49,11 +49,11 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "start" || sub === "mulai") {
     if (game && game.active && game.player === m.sender) {
-      await m.reply(novaWrap("Guess Number", "Kamu masih main! Sisa: " + game.attempts + " tebakan."));
+      await m.reply(raraWrap("Guess Number", "Kamu masih main! Sisa: " + game.attempts + " tebakan."));
       return { handled: true };
     }
     if (user.coin < ENTRY_COST) {
-      await m.reply(novaWrap("Guess Number", "Butuh " + ENTRY_COST + " coins. Coin kamu: " + (user.coin || 0)));
+      await m.reply(raraWrap("Guess Number", "Butuh " + ENTRY_COST + " coins. Coin kamu: " + (user.coin || 0)));
       return { handled: true };
     }
     user.coin -= ENTRY_COST;
@@ -71,7 +71,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     saveConfig(db, gid, data);
     db.setUser(m.sender, user);
     db.save();
-    await m.reply(novaWrap("Guess Number", [
+    await m.reply(raraWrap("Guess Number", [
       "Game dimulai! (-" + ENTRY_COST + " coins)",
       "",
       "Tebak angka 1-100",
@@ -86,19 +86,19 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "stop" || sub === "berhenti") {
     if (game && game.active && (game.player === m.sender || m.isOwner)) {
       delConfig(db, gid);
-      await m.reply(novaWrap("Guess Number", "Game dihentikan. Jawaban: " + game.target));
+      await m.reply(raraWrap("Guess Number", "Game dihentikan. Jawaban: " + game.target));
     } else {
-      await m.reply(novaWrap("Guess Number", "Tidak ada game aktif."));
+      await m.reply(raraWrap("Guess Number", "Tidak ada game aktif."));
     }
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek") {
     if (!game || !game.active) {
-      await m.reply(novaWrap("Guess Number", "Belum ada game. Ketik " + prefix + "guessnum start"));
+      await m.reply(raraWrap("Guess Number", "Belum ada game. Ketik " + prefix + "guessnum start"));
       return { handled: true };
     }
-    await m.reply(novaWrap("Guess Number", [
+    await m.reply(raraWrap("Guess Number", [
       "Player: @" + game.player.split("@")[0],
       "Sisa tebakan: " + game.attempts + "/" + game.maxAttempts,
       "Tebakan sebelumnya: " + (game.guesses.length > 0 ? game.guesses.join(", ") : "(belum ada)"),
@@ -110,19 +110,19 @@ async function handler(m, { sock, db, config: botConfig }) {
   const guess = parseInt(sub, 10);
   if (!isNaN(guess)) {
     if (!game || !game.active) {
-      await m.reply(novaWrap("Guess Number", "Belum ada game. Ketik " + prefix + "guessnum start"));
+      await m.reply(raraWrap("Guess Number", "Belum ada game. Ketik " + prefix + "guessnum start"));
       return { handled: true };
     }
     if (game.player !== m.sender) {
-      await m.reply(novaWrap("Guess Number", "Bukan game kamu! @" + game.player.split("@")[0] + " yang main."), { mentions: [game.player] });
+      await m.reply(raraWrap("Guess Number", "Bukan game kamu! @" + game.player.split("@")[0] + " yang main."), { mentions: [game.player] });
       return { handled: true };
     }
     if (guess < 1 || guess > 100) {
-      await m.reply(novaWrap("Guess Number", "Angka harus 1-100!"));
+      await m.reply(raraWrap("Guess Number", "Angka harus 1-100!"));
       return { handled: true };
     }
     if (game.guesses.includes(guess)) {
-      await m.reply(novaWrap("Guess Number", "Angka " + guess + " sudah ditebak!"));
+      await m.reply(raraWrap("Guess Number", "Angka " + guess + " sudah ditebak!"));
       return { handled: true };
     }
 
@@ -137,7 +137,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       db.setUser(m.sender, user);
       delConfig(db, gid);
       db.save();
-      await m.reply(novaWrap("Guess Number - MENANG!", [
+      await m.reply(raraWrap("Guess Number - MENANG!", [
         "@" + m.sender.split("@")[0],
         "",
         "Jawaban: " + game.target,
@@ -150,7 +150,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     if (game.attempts <= 0) {
       delConfig(db, gid);
-      await m.reply(novaWrap("Guess Number - KALAH", [
+      await m.reply(raraWrap("Guess Number - KALAH", [
         "@" + m.sender.split("@")[0],
         "",
         "Tebakan habis! Jawaban: " + game.target,
@@ -161,7 +161,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     const hint = guess < game.target ? "LEBIH BESAR ⬆" : "LEBIH KECIL ⬇";
     saveConfig(db, gid, game);
-    await m.reply(novaWrap("Guess Number", [
+    await m.reply(raraWrap("Guess Number", [
       "Tebakan: " + guess,
       "Hint: " + hint,
       "Sisa: " + game.attempts + " tebakan",
@@ -170,7 +170,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(novaWrap("Guess Number", [
+  await m.reply(raraWrap("Guess Number", [
     "GUESS THE NUMBER",
     "",
     prefix + "guessnum start - mulai (" + ENTRY_COST + " coins, reward 100+)",

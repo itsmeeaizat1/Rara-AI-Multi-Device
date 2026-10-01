@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { bratGen } from "brat-canvas";
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
+import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "brat",
@@ -57,7 +57,7 @@ async function sendBratMenu(m, sock, text) {
   ];
   await sock.sendButton(m.chat, getAssetBuffer("sticker-thumb"), caption, m, {
     buttons,
-    footer: "Nova-AI Brat Generator",
+    footer: "Rara-AI Brat Generator",
   });
 }
 
@@ -77,11 +77,11 @@ async function handler(m, { sock }) {
       packname: config.sticker.packname,
       author: config.sticker.author,
     });
-    await m.reply(novaBerhasil("brat"));
+    await m.reply(raraBerhasil("brat"));
   } catch (error) {
     console.error("[brat] Error:", error.message);
     await m.react("❌");
-    m.reply(novaGangguan("brat"));
+    m.reply(raraGangguan("brat"));
   }
 }
 

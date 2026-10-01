@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "sitasi",
@@ -219,7 +219,7 @@ async function handler(m, { sock, args }) {
       isURL = true;
       meta = await fetchPageMeta(input);
       if (!meta) {
-        return m.reply(novaError("Sitasi", "Gagal ambil halaman nih, pastikan URL valid"));
+        return m.reply(raraError("Sitasi", "Gagal ambil halaman nih, pastikan URL valid"));
       }
     } else {
       // Treat as manual entry - search or manual format
@@ -255,7 +255,7 @@ async function handler(m, { sock, args }) {
     await m.reply(txt);
   } catch (e) {
     console.error("[SITASI] Error:", e.message);
-    await m.reply(novaError("Sitasi", `Gagal bikin sitasi nih: ${e.message}`));
+    await m.reply(raraError("Sitasi", `Gagal bikin sitasi nih: ${e.message}`));
   }
 }
 

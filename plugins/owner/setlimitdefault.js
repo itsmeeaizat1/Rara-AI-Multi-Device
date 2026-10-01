@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
 import config from '../../config.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: 'setlimitdefault',
     alias: ["setlimitdefault"],
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         const db = getDatabase()
         const currentDefault = db.setting('defaultLimit') || config.limits?.default || 25
         
-        return m.reply(novaGuide(
+        return m.reply(raraGuide(
             "setlimitdefault",
             `Limit default saat ini: ${currentDefault}`,
             `${m.prefix}setlimitdefault 50`,
@@ -35,13 +35,13 @@ async function handler(m, { sock }) {
     }
     
     if (newLimit < 1 || newLimit > 1000) {
-        { const __navText = `❌ *Gagal*\n\nLimit harus antara 1 - 1000`; return await m.reply(novaWrap("setlimitdefault", __navText)); }
+        { const __navText = `❌ *Gagal*\n\nLimit harus antara 1 - 1000`; return await m.reply(raraWrap("setlimitdefault", __navText)); }
     }
     
     const db = getDatabase()
     db.setting('defaultLimit', newLimit)
     
-    await m.reply(novaWrap("Berhasil", 
+    await m.reply(raraWrap("Berhasil", 
         `Default limit diubah menjadi: \`${newLimit}\`\n` +
         `User baru akan mendapat limit ini`))
 }

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { delay } from "../../src/lib/nova-utils.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { delay } from "../../src/lib/rara-utils.js";
 
 const pluginConfig = {
   name: "aigrouppet",
@@ -32,7 +32,7 @@ function getPet(db, gid) {
   const all = db.setting("aigrouppet") || {};
   if (!all[gid]) {
     all[gid] = {
-      name: "Nova Pet",
+      name: "Rara Pet",
       level: 0,
       exp: 0,
       hp: 100,
@@ -92,7 +92,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const nextStage = STAGES.find(s => s.minLevel > pet.level);
     const progress = Math.floor((pet.exp / expNeeded) * 100);
     const hpBar = Math.floor((pet.hp / pet.maxHp) * 100);
-    await m.reply(novaWrap("Group Pet", [
+    await m.reply(raraWrap("Group Pet", [
       stage.emoji + " " + pet.name + " [" + stage.name + "]",
       "",
       "Level: " + pet.level,
@@ -128,7 +128,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const newStage = getStage(pet.level);
       savePet(db, gid, pet);
       if (newStage.name !== oldStage.name) {
-        await m.reply(novaWrap("Group Pet", [
+        await m.reply(raraWrap("Group Pet", [
           pet.name + " LEVEL UP!",
           "Lv " + (pet.level - 1) + " -> " + pet.level,
           "",
@@ -137,11 +137,11 @@ async function handler(m, { sock, db, config: botConfig }) {
           newStage.desc,
         ].join("\n")));
       } else {
-        await m.reply(novaWrap("Group Pet", "Makan diberikan! " + pet.name + " Level Up!\nLv " + (pet.level - 1) + " -> " + pet.level));
+        await m.reply(raraWrap("Group Pet", "Makan diberikan! " + pet.name + " Level Up!\nLv " + (pet.level - 1) + " -> " + pet.level));
       }
     } else {
       savePet(db, gid, pet);
-      await m.reply(novaWrap("Group Pet", pet.name + " diberi makan! +2 EXP\nHunger: " + pet.hunger + "/100\nMood: " + pet.mood));
+      await m.reply(raraWrap("Group Pet", pet.name + " diberi makan! +2 EXP\nHunger: " + pet.hunger + "/100\nMood: " + pet.mood));
     }
     return { handled: true };
   }
@@ -159,24 +159,24 @@ async function handler(m, { sock, db, config: botConfig }) {
       stage.emoji + " " + pet.name + " meringkik senang!",
       stage.emoji + " " + pet.name + " bertambah dekat dengan grup!",
     ];
-    await m.reply(novaWrap("Group Pet", responses[Math.floor(Math.random() * responses.length)] + "\n+1 EXP"));
+    await m.reply(raraWrap("Group Pet", responses[Math.floor(Math.random() * responses.length)] + "\n+1 EXP"));
     return { handled: true };
   }
 
   // ==================== RENAME
   if (sub === "rename" || sub === "namain") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(novaWrap("Group Pet", "Khusus admin/owner."));
+      await m.reply(raraWrap("Group Pet", "Khusus admin/owner."));
       return { handled: true };
     }
     const name = args.slice(2).join(" ").trim();
     if (!name || name.length > 20) {
-      await m.reply(novaWrap("Group Pet", "Format: " + prefix + "grouppet rename <nama max 20 huruf>"));
+      await m.reply(raraWrap("Group Pet", "Format: " + prefix + "grouppet rename <nama max 20 huruf>"));
       return { handled: true };
     }
     pet.name = name;
     savePet(db, gid, pet);
-    await m.reply(novaWrap("Group Pet", "Pet berganti nama: " + name));
+    await m.reply(raraWrap("Group Pet", "Pet berganti nama: " + name));
     return { handled: true };
   }
 
@@ -187,7 +187,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       .slice(0, 5)
       .map(([jid, count], i) => (i + 1) + ". @" + jid.split("@")[0] + " (" + count + "x)")
       .join("\n") || "(belum ada)";
-    await m.reply(novaWrap("Group Pet Stats", [
+    await m.reply(raraWrap("Group Pet Stats", [
       "Nama: " + pet.name,
       "Total pesan: " + pet.totalMessages,
       "Total level: " + pet.level,
@@ -204,21 +204,21 @@ async function handler(m, { sock, db, config: botConfig }) {
   // ==================== RESET (owner)
   if (sub === "reset") {
     if (!m.isOwner) {
-      await m.reply(novaWrap("Group Pet", "Khusus owner."));
+      await m.reply(raraWrap("Group Pet", "Khusus owner."));
       return { handled: true };
     }
     savePet(db, gid, {
-      name: "Nova Pet",
+      name: "Rara Pet",
       level: 0, exp: 0, hp: 100, maxHp: 100,
       hunger: 0, mood: "happy", lastActive: Date.now(),
       totalMessages: 0, milestones: [], evolvedAt: Date.now(), fedBy: {},
     });
-    await m.reply(novaWrap("Group Pet", "Pet direset."));
+    await m.reply(raraWrap("Group Pet", "Pet direset."));
     return { handled: true };
   }
 
   // ==================== HELP
-  await m.reply(novaWrap("Group Pet", [
+  await m.reply(raraWrap("Group Pet", [
     "GROUP PET - Pet virtual kolaboratif",
     "",
     "Cara pakai:",

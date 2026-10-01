@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Gemini Vision — Analisis gambar dengan Google Gemini (gratis, pakai API key)
 // Requires: GEMINI_API_KEY di .env atau set via .setkey gemini
 // Dapatkan API key gratis: https://aistudio.google.com/apikey
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { getApiKey } from "../lib/nova-api-keys.js";
+import { getApiKey } from "../lib/rara-api-keys.js";
 
 /**
  * Analisis gambar dengan Gemini Vision

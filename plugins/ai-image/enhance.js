@@ -1,9 +1,9 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     const media = (m.quoted && (m.quoted.isImage || m.quoted.isVideo)) || m.isImage || m.isVideo; // FIX 10 Sep: flags isImage/isVideo
     if (!media) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🤖",
   name: "enhance2",
   description: "Enhance kualitas foto/video",
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
     fs.writeFileSync(resultPath, resultBuffer);
 
     const caption =
-      novaWrap("Enhance", ["Status: *Berhasil*",
+      raraWrap("Enhance", ["Status: *Berhasil*",
         "Model: *AI Enhancement*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}enhance untuk enhance media lain`) +
@@ -84,7 +84,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      novaError("Enhance", "Gagal nih, coba lagi ya");
+      raraError("Enhance", "Gagal nih, coba lagi ya");
 
     await m.reply(text, "enhance");
   }

@@ -6,7 +6,7 @@ engine `src/lib/hiweb/`). Owner-only.
 ## 1. Instalasi
 
 Gak ada build terpisah — server HTTP stdlib jalan di dalam proses bot.
-Di Nova SENGAJA manual (gak auto-boot):
+Di Rara SENGAJA manual (gak auto-boot):
 
 ```
 .webpanel on

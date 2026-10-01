@@ -1,8 +1,8 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { ClaudeHaiku } from "../../src/scraper/claudehaiku.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import te from "../../src/lib/rara-error.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "claudehaiku",
@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(novaGuideV2("claudehaiku", {
+    return m.reply(raraGuideV2("claudehaiku", {
  kaomoji: "(⌒‿⌒)",
  sapaan: "tanya apa aja ke Claude Haiku — cepat, ringan, cocok buat tanyaan harian! (ᵔ◡ᵔ)",
       cara: "ketik pertanyaannya sesudah command",
@@ -37,14 +37,14 @@ async function handler(m, { sock }) {
     const result = await ClaudeHaiku(text);
 
     if (!result.status) {
-      return m.reply(novaWrap("Claude Haiku Gagal", `${result.error || "Gagal dapet respons nih"}`));
+      return m.reply(raraWrap("Claude Haiku Gagal", `${result.error || "Gagal dapet respons nih"}`));
     }
     const reply = `${result.answer}`;
     await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(novaWrap("claudehaiku", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("claudehaiku", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

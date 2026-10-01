@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from '../../src/lib/nova-database.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from '../../src/lib/rara-database.js'
 const pluginConfig = {
     name: 'addantilink',
     alias: ["addantilink"],
@@ -35,13 +35,13 @@ function handler(m, { sock }) {
     const antilinkList = groupData.antilinkList || []
     
     if (antilinkList.includes(link)) {
-        return m.reply(novaWrap("Addantilink", `Link \`${link}\` sudah ada di daftar antilink!`, "warn"))
+        return m.reply(raraWrap("Addantilink", `Link \`${link}\` sudah ada di daftar antilink!`, "warn"))
     }
     
     antilinkList.push(link)
     db.setGroup(m.chat, { antilinkList })
     
-    m.reply(novaWrap("Antilink Ditambah", [`Link: \`${link}\``, `Total: *${antilinkList.length}* link`, "", `Gunakan \`${m.prefix}listantilink\` untuk melihat daftar`].join("\n")))
+    m.reply(raraWrap("Antilink Ditambah", [`Link: \`${link}\``, `Total: *${antilinkList.length}* link`, "", `Gunakan \`${m.prefix}listantilink\` untuk melihat daftar`].join("\n")))
 }
 
 export { pluginConfig as config, handler }

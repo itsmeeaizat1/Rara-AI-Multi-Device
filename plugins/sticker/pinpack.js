@@ -1,13 +1,13 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Scrape Pinterest langsung (tanpa API pihak ketiga)
-import { novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 import _sharp from 'sharp'
 import axios from "axios"
 import config from "../../config.js"
-import te from "../../src/lib/nova-error.js"
-import { addExifToWebp } from "../../src/lib/nova-exif.js"
-import { novaError, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js"
+import te from "../../src/lib/rara-error.js"
+import { addExifToWebp } from "../../src/lib/rara-exif.js"
+import { raraError, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js"
 
 function getSharp() { return _sharp }
 
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     const query = m.args?.join(" ")?.trim()
 
     if (!query) {
-        return m.reply(novaCaption({
+        return m.reply(raraCaption({
             emoji: "📌",
             name: "pinpack",
             description: "Cari gambar Pinterest lalu jadikan sticker pack",
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
         const results = await scrapePinterest(query, MAX_STICKERS)
 
         if (!results || results.length === 0) {
-            return m.reply(novaError("PinPack", `Gak nemu hasil untuk: ${query} nih`))
+            return m.reply(raraError("PinPack", `Gak nemu hasil untuk: ${query} nih`))
         }
 
         await m.react("🕒");
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
         }
 
         if (!stickerBuffers.length) {
-            return m.reply(novaGagal("PinPack"))
+            return m.reply(raraGagal("PinPack"))
         }
 
         const packname = `Pinterest: ${query}`
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
             })
         } catch (packErr) {
             console.error("[PinPack] Pack send failed:", packErr.message)
-            await m.reply(novaWrap("pinpack", "Pack gagal, mengirim satu per satu..."))
+            await m.reply(raraWrap("pinpack", "Pack gagal, mengirim satu per satu..."))
 
             let sent = 0
             for (const buf of stickerBuffers) {
@@ -134,15 +134,15 @@ async function handler(m, { sock }) {
             }
 
             if (sent > 0) {
-                await m.reply(novaWrap("pinpack", `Berhasil kirim *${sent}* sticker dari *${packname}*`))
+                await m.reply(raraWrap("pinpack", `Berhasil kirim *${sent}* sticker dari *${packname}*`))
             } else {
-                await m.reply(novaGagal("PinPack"))
+                await m.reply(raraGagal("PinPack"))
             }
         }
-        await m.reply(novaBerhasil("pinpack"));
+        await m.reply(raraBerhasil("pinpack"));
     } catch (error) {
         console.error("[PinPack] Error:", error.message)
-        m.reply(novaGangguan("pinpack"))
+        m.reply(raraGangguan("pinpack"))
     }
 }
 

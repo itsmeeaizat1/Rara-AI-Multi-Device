@@ -1,6 +1,6 @@
 // E2E: field info hasil fitur pemroses media (request owner 19-20 Sep —
 // "apakah fitur lain bisa dibuat field juga kyk stiker, convert fitur kyk
-// tools dan makes sesuai field yang sesuai") — nova-media-info.js satu pintu
+// tools dan makes sesuai field yang sesuai") — rara-media-info.js satu pintu
 // + 16 maker AI + sticker + converter + togif + vocalremover.
 // Jalankan dari repo root: node test/media-info-e2e/e2e.mjs
 import path from "node:path";
@@ -16,7 +16,7 @@ function t(label, cond, extra) {
 
 const REPO = path.resolve(".");
 const { fmtBytes, mediaInfoCaption } =
-  await import(pathToFileURL(path.join(REPO, "src/lib/nova-media-info.js")).href);
+  await import(pathToFileURL(path.join(REPO, "src/lib/rara-media-info.js")).href);
 
 // ── fmtBytes ──
 t("fmtBytes: 353000 → '344.7 KB'", fmtBytes(353000) === "344.7 KB");
@@ -26,14 +26,14 @@ t("fmtBytes: 0/invalid → '' (baris dilewati)", fmtBytes(0) === "" && fmtBytes(
 
 // ── mediaInfoCaption: format ala downloader ──
 {
-  const cap = mediaInfoCaption({ header: "Nova Sticker", fields: [
+  const cap = mediaInfoCaption({ header: "Rara Sticker", fields: [
     { icon: "📥", label: "Input", value: "Video" },
     { icon: "⏱️", label: "Durasi", value: "6.0 detik" },
     { icon: "🎨", label: "Filter", value: "crop, circle" },
     { icon: "📦", label: "Ukuran", value: "344.7 KB" },
   ] });
   const expect =
-`*Nova Sticker*
+`*Rara Sticker*
 
 📥 *Input:* Video
 ⏱️ *Durasi:* 6.0 detik
@@ -48,16 +48,16 @@ t("caption: field null/undefined/kosong dilewati",
     { icon: "z", label: "Z", value: "  " },
   ] }) === "*X*\n\n📤 *Out:* Y");
 t("caption: tanpa field → header doang", mediaInfoCaption({ header: "X" }) === "*X*");
-t("caption: header kosong → fallback 'Nova'", mediaInfoCaption({}).startsWith("*Nova*"));
+t("caption: header kosong → fallback 'Rara'", mediaInfoCaption({}).startsWith("*Rara*"));
 t("caption: icon default kalau gak ada", mediaInfoCaption({ header: "X", fields: [{ label: "L", value: "V" }] }).includes("▪️ *L:* V"));
 
 // ── asersi source: fitur pemroses media pakai format baru ──
 {
   const files = {
-    "plugins/sticker/sticker.js": ['mediaInfoCaption({ header: "Nova Sticker"', "Stiker Animasi WebP"],
-    "plugins/tools/converter.js": ['mediaInfoCaption({ header: "Nova Converter"', "Nova Converter"],
-    "plugins/convert/togif.js": ['mediaInfoCaption({ header: "Nova To GIF"'],
-    "plugins/convert/vocalremover.js": ['mediaInfoCaption({ header: "Nova Vocal Remover"'],
+    "plugins/sticker/sticker.js": ['mediaInfoCaption({ header: "Rara Sticker"', "Stiker Animasi WebP"],
+    "plugins/tools/converter.js": ['mediaInfoCaption({ header: "Rara Converter"', "Rara Converter"],
+    "plugins/convert/togif.js": ['mediaInfoCaption({ header: "Rara To GIF"'],
+    "plugins/convert/vocalremover.js": ['mediaInfoCaption({ header: "Rara Vocal Remover"'],
   };
   for (const [f, needles] of Object.entries(files)) {
     const src = fs.readFileSync(path.join(REPO, f), "utf8");
@@ -68,12 +68,12 @@ t("caption: icon default kalau gak ada", mediaInfoCaption({ header: "X", fields:
 // ── 16 maker AI: caption info hasil setelah sendMedia ──
 {
   const makers = {
-    "to3d": "Nova To 3D", "toanime": "Nova To Anime", "toblack": "Nova To Black",
-    "tocartoon": "Nova To Cartoon", "tocermin": "Nova To Cermin", "tochibi": "Nova To Chibi",
-    "toemotebatu": "Nova Emote Batu", "tofigurev2": "Nova Figure v2", "tofigurine": "Nova Figurine",
-    "toghibli": "Nova To Ghibli", "tohijab": "Nova To Hijab", "toisland": "Nova To Island",
-    "tojapanese": "Nova To Japanese", "tomanga": "Nova To Manga", "tomekah": "Nova To Mekah",
-    "tooilpainting": "Nova Oil Painting",
+    "to3d": "Rara To 3D", "toanime": "Rara To Anime", "toblack": "Rara To Black",
+    "tocartoon": "Rara To Cartoon", "tocermin": "Rara To Cermin", "tochibi": "Rara To Chibi",
+    "toemotebatu": "Rara Emote Batu", "tofigurev2": "Rara Figure v2", "tofigurine": "Rara Figurine",
+    "toghibli": "Rara To Ghibli", "tohijab": "Rara To Hijab", "toisland": "Rara To Island",
+    "tojapanese": "Rara To Japanese", "tomanga": "Rara To Manga", "tomekah": "Rara To Mekah",
+    "tooilpainting": "Rara Oil Painting",
   };
   for (const [name, header] of Object.entries(makers)) {
     const src = fs.readFileSync(path.join(REPO, `plugins/ai/${name}.js`), "utf8");

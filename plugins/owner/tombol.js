@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "menunav",
@@ -53,24 +53,24 @@ async function handler(m, { sock }) {
       txt += "5. .menunav group reset — Grup ikut global\n";
       txt += "6. .menunav status — Lihat status";
 
-      return await m.reply(novaWrap("menunav", txt));
+      return await m.reply(raraWrap("menunav", txt));
     }
 
     // GLOBAL TOGGLE
     if (subCmd === "on") {
       db.setting("navButtons", true);
-      return await m.reply(novaWrap("Menunav", "✅ Tombol navigasi *diaktifkan* secara global."));
+      return await m.reply(raraWrap("Menunav", "✅ Tombol navigasi *diaktifkan* secara global."));
     }
 
     if (subCmd === "off") {
       db.setting("navButtons", false);
-      return await m.reply(novaWrap("Menunav", "✅ Tombol navigasi *dimatikan* secara global.\nSemua reply sekarang plain text tanpa tombol."));
+      return await m.reply(raraWrap("Menunav", "✅ Tombol navigasi *dimatikan* secara global.\nSemua reply sekarang plain text tanpa tombol."));
     }
 
     // GROUP TOGGLE
     if (subCmd === "group") {
       if (!isGroup) {
-        return await m.reply(novaWrap("Menunav", "❌ Command ini hanya bisa dipakai di dalam grup."));
+        return await m.reply(raraWrap("Menunav", "❌ Command ini hanya bisa dipakai di dalam grup."));
       }
 
       const action = args[1] || "status";
@@ -78,17 +78,17 @@ async function handler(m, { sock }) {
 
       if (action === "on") {
         db.setGroup(m.chat, { ...group, navButtons: true });
-        return await m.reply(novaWrap("Menunav", "✅ Tombol navigasi *diaktifkan* untuk grup ini."));
+        return await m.reply(raraWrap("Menunav", "✅ Tombol navigasi *diaktifkan* untuk grup ini."));
       }
 
       if (action === "off") {
         db.setGroup(m.chat, { ...group, navButtons: false });
-        return await m.reply(novaWrap("Menunav", "✅ Tombol navigasi *dimatikan* untuk grup ini.\nReply di grup ini sekarang plain text."));
+        return await m.reply(raraWrap("Menunav", "✅ Tombol navigasi *dimatikan* untuk grup ini.\nReply di grup ini sekarang plain text."));
       }
 
       if (action === "reset") {
         db.setGroup(m.chat, { ...group, navButtons: undefined });
-        return await m.reply(novaWrap("Menunav", "✅ Grup ini sekarang *ikut setting global*."));
+        return await m.reply(raraWrap("Menunav", "✅ Grup ini sekarang *ikut setting global*."));
       }
 
       // Group status
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       "Atau: .menunav group on/off/reset (untuk grup ini saja)"
     );
   } catch (error) {
-    return await m.reply(novaWrap("tombol", "Gagal proses. Coba lagi.", "error"));
+    return await m.reply(raraWrap("tombol", "Gagal proses. Coba lagi.", "error"));
   }
 }
 

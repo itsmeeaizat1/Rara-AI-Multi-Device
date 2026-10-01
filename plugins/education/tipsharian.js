@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "tipsharian",
@@ -96,18 +96,18 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push(tip)
       lines.push("")
       lines.push("Kategori: " + KATEGORI_LIST.join(", "))
-      return m.reply(novaWrap("Tips Harian", lines.join("\n")))
+      return m.reply(raraWrap("Tips Harian", lines.join("\n")))
     }
 
     const kat = KATEGORI_LIST.find(k => k.includes(input) || k === input)
     if (!kat) {
-      return m.reply(novaWrap("Tips Harian", "Kategori tidak ditemukan: " + input + "\nTersedia: " + KATEGORI_LIST.join(", ")))
+      return m.reply(raraWrap("Tips Harian", "Kategori tidak ditemukan: " + input + "\nTersedia: " + KATEGORI_LIST.join(", ")))
     }
 
     const tip = TIPS[kat][Math.floor(Math.random() * TIPS[kat].length)]
-    return m.reply(novaWrap("Tips: " + kat, tip))
+    return m.reply(raraWrap("Tips: " + kat, tip))
   } catch (e) {
-    return m.reply(novaWrap("Tips Harian", "Error: " + e.message))
+    return m.reply(raraWrap("Tips Harian", "Error: " + e.message))
   }
 }
 

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
-import te from '../../src/lib/nova-error.js'
-import { novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import te from '../../src/lib/rara-error.js'
+import { raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -52,7 +52,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-  if (!m.fullArgs) { return await m.reply(novaGuideV2(m.command, {
+  if (!m.fullArgs) { return await m.reply(raraGuideV2(m.command, {
  kaomoji: "(◕ᴗ◕)",
  sapaan: "bikin gambar dari teks, deskripsikan aja yang kamu mau!",
     cara: "ketik prompt/deskripsi gambarnya sesudah command",
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, response.data, m.fullArgs, m, { type: 'image' })
   } catch (e) {
     console.error(e)
-    return m.reply(novaWrap("text2img2", te(m.prefix, m.command, m.pushName), "error"))
+    return m.reply(raraWrap("text2img2", te(m.prefix, m.command, m.pushName), "error"))
   }
 }
 

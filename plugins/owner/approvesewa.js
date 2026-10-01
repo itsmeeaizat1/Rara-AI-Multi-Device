@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
-import { notifySewaApproved, notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
-import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
-import { grantSewaPremium } from "../../src/lib/nova-sewa-premium.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/rara-database.js";
+import * as timeHelper from "../../src/lib/rara-time.js";
+import { saluranCtx } from "../../src/lib/rara-context.js";
+import { notifySewaApproved, notifySewaBot } from "../../src/lib/rara-saluran-broadcast.js";
+import { calculateSewaPrice } from "../../src/lib/rara-sewa-price.js";
+import { grantSewaPremium } from "../../src/lib/rara-sewa-premium.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "approvesewa",
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
   const phoneNum = inputParts[0].replace(/\D/g, "");
   const customPrice = inputParts.slice(1).join(" ") || ""; // Optional: owner set harga manual
   if (!phoneNum) {
-    return m.reply(novaWrap("Approvesewa", "Format: *.approvesewa <nomor> [harga]*\n\nContoh:\n.approvesewa 628xxx\n.approvesewa 628xxx \"Rp 25.000\""));
+    return m.reply(raraWrap("Approvesewa", "Format: *.approvesewa <nomor> [harga]*\n\nContoh:\n.approvesewa 628xxx\n.approvesewa 628xxx \"Rp 25.000\""));
   }
 
   // Find registration by phone number
@@ -228,7 +228,7 @@ async function handler(m, { sock }) {
 
     return m.reply(ownerText);
   } catch (error) {
-    return m.reply(novaWrap("Error", "\u274c Gagal approve sewa: " + (error.message || "Unknown error")));
+    return m.reply(raraWrap("Error", "\u274c Gagal approve sewa: " + (error.message || "Unknown error")));
   }
 }
 

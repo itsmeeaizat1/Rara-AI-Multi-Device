@@ -1,5 +1,5 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "animegenre",
@@ -55,11 +55,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "animegenre <nomor>")
       lines.push("Contoh: " + usedPrefix + "animegenre 5")
-      return m.reply(novaWrap("Genre Anime", lines.join("\n")))
+      return m.reply(raraWrap("Genre Anime", lines.join("\n")))
     }
 
     const g = GENRES[input - 1]
-    return m.reply(novaWrap("Genre: " + g.nama, [
+    return m.reply(raraWrap("Genre: " + g.nama, [
       "Arti: " + g.arti,
       "",
       "Ciri-ciri:",
@@ -69,7 +69,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       g.contoh,
     ].join("\n")))
   } catch (e) {
-    return m.reply(novaWrap("Genre Anime", "Error: " + e.message))
+    return m.reply(raraWrap("Genre Anime", "Error: " + e.message))
   }
 }
 

@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { novaWrap } from '../../src/lib/nova-menu-style.js'
+import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 
 const pluginConfig = {
   name: "cnnnews",
@@ -57,7 +57,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = (args[0] || "").toLowerCase().trim();
 
     if (input === "list" || input === "kategori") {
-      return m.reply(novaWrap("CNN Indonesia", [
+      return m.reply(raraWrap("CNN Indonesia", [
         "Kategori tersedia:",
         Object.keys(CATEGORIES).map((k, i) => (i + 1) + ". " + k).join("\n"),
         "",
@@ -79,7 +79,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
 
     const items = parseRSS(res.data, 10);
-    if (!items.length) return m.reply(novaWrap("CNN Indonesia", "Gagal ambil nih berita. Coba lagi nanti."));
+    if (!items.length) return m.reply(raraWrap("CNN Indonesia", "Gagal ambil nih berita. Coba lagi nanti."));
 
     const catName = input && CATEGORIES[input] ? input : "terbaru";
     let newsText = [];
@@ -92,10 +92,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       newsText.push("");
     });
 
-    return m.reply(novaWrap("CNN News", newsText.join("\n")));
+    return m.reply(raraWrap("CNN News", newsText.join("\n")));
   } catch (e) {
     console.error("cnnnews error:", e.message);
-    return m.reply(novaWrap("CNN Indonesia", "Gagal ambil nih berita: " + e.message));
+    return m.reply(raraWrap("CNN Indonesia", "Gagal ambil nih berita: " + e.message));
   }
 }
 

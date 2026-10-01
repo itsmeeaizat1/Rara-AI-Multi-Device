@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libgachawaifurpg.js — LIB ANIMASI EMOJI-GRID khusus Gacha Waifu
 // (upgrade owner 28 Sep 2026: cutscene 2 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
 // Grid per frame: HUD mesin · baris mesin/kapsul (🥚 bergetar → jatuh → retak → 💥 → 💞) · baris adegan
@@ -7,7 +7,7 @@
 // KHUSUS gachawaifu (aturan "beda game beda animasi"). Isi MURNI KODE ANIMASI (pure, gak import plugin).
 // Dipanggil plugin saat user main game — animasi dimuat dari lib ini. Fallback gak dukung edit → senyap.
 
-import { editFramesAnim } from "../nova-anim-runner.js";
+import { editFramesAnim } from "../rara-anim-runner.js";
 
 export function kapsulFrames() {
   const HUD = "🥚 ━ MESIN KAPSUL ━";

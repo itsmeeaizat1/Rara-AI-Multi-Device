@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/scraper/spicychat.js — SpicyChat AI (uncensored character chat,
 // guest-based, tanpa API key). Port dari script CLI owner 9 Sep 2026.
 //
@@ -7,7 +7,7 @@
 // Session per-user: guestUserId + conversationId, persist di db.
 
 import crypto from "crypto";
-import { getDatabase } from "../lib/nova-database.js";
+import { getDatabase } from "../lib/rara-database.js";
 
 const BASE_URL = "https://prod.nd-api.com";
 const DEFAULT_CHARACTER_ID = "bfcbb334-183c-4c5e-9dde-c544a5a67795";

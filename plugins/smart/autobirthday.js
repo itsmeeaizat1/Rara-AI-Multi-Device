@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaHeader, separator, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { raraHeader, separator, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
 
 const pluginConfig = {
   name: "autobirthday", alias: ["autobirthday"], category: "smart",
@@ -23,14 +23,14 @@ async function handler(m, { sock, config: botConfig }) {
       if (!name || !date) throw new Error("Format: .autobirthday add <nama> <DD-MM>");
       db.birthdays.push({ name, date, by: m.sender, created: Date.now() });
       db.write();
-      await m.reply(novaWrap("Auto Birthday", [`Nama: *${name}*`, `Tanggal: *${date}*`,
+      await m.reply(raraWrap("Auto Birthday", [`Nama: *${name}*`, `Tanggal: *${date}*`,
         "Bot akan ucapkan selamat ultah otomatis"].join("\n")));
     } else if (action === "list") {
       if (!db.birthdays.length) {
-        await m.reply(novaWrap("Auto Birthday", ["Belum ada ulang tahun tercatat", `Ketik: *${prefix}autobirthday add <nama> <DD-MM>*`].join("\n")));
+        await m.reply(raraWrap("Auto Birthday", ["Belum ada ulang tahun tercatat", `Ketik: *${prefix}autobirthday add <nama> <DD-MM>*`].join("\n")));
         return { handled: true };
       }
-      let text = novaWrap("Birthday List", "🎂") + "\n\n";
+      let text = raraWrap("Birthday List", "🎂") + "\n\n";
       db.birthdays.forEach((b, i) => { text += `${i+1}. 🎂 ${b.name} - ${b.date}\n`; });
       text += "\n";
       await m.reply(text);

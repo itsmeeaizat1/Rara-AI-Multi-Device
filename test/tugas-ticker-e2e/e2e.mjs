@@ -8,11 +8,11 @@ import { fileURLToPath } from "url";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
-const DB_DIR = "/tmp/nova-tugas-db-" + Date.now();
+const DB_DIR = "/tmp/rara-tugas-db-" + Date.now();
 fs.mkdirSync(DB_DIR, { recursive: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(DB_DIR + "/db.json");
-const { getDatabase } = await import(R + "/src/lib/nova-database.js");
+const { getDatabase } = await import(R + "/src/lib/rara-database.js");
 
 const { handler } = await import(R + "/plugins/education/assignment.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");

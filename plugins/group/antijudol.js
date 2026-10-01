@@ -1,6 +1,6 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from '../../src/lib/rara-database.js'
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'antijudol',
@@ -28,43 +28,43 @@ function handler(m, { sock }) {
     if (!option) {
         const status = groupData.antijudol || 'off'
         const mode = groupData.antijudolMode || 'remove'
-        return m.reply(novaGuide("Anti-Judol", `Status: ${status.toUpperCase()} | Mode: ${mode.toUpperCase()}\n\nDeteksi konten judi online/slot gacor di grup.`, `${m.prefix}antijudol on`))
+        return m.reply(raraGuide("Anti-Judol", `Status: ${status.toUpperCase()} | Mode: ${mode.toUpperCase()}\n\nDeteksi konten judi online/slot gacor di grup.`, `${m.prefix}antijudol on`))
     }
 
     if (option === 'on') {
         db.setGroup(m.chat, { antijudol: 'on' })
-        return m.reply(novaWrap("Antijudol", '✅ *AntiJudol diaktifkan*'))
+        return m.reply(raraWrap("Antijudol", '✅ *AntiJudol diaktifkan*'))
     }
 
     if (option === 'off') {
         db.setGroup(m.chat, { antijudol: 'off' })
-        return m.reply(novaWrap("Antijudol", '❌ *AntiJudol dinonaktifkan*'))
+        return m.reply(raraWrap("Antijudol", '❌ *AntiJudol dinonaktifkan*'))
     }
 
     if (option.startsWith('metode')) {
         const method = m.args?.[1]?.toLowerCase()
         if (method === 'kick') {
             db.setGroup(m.chat, { antijudol: 'on', antijudolMode: 'kick' })
-            return m.reply(novaWrap("Antijudol", '✅ *AntiJudol mode KICK diaktifkan*'))
+            return m.reply(raraWrap("Antijudol", '✅ *AntiJudol mode KICK diaktifkan*'))
         }
         if (method === 'remove' || method === 'delete') {
             db.setGroup(m.chat, { antijudol: 'on', antijudolMode: 'remove' })
-            return m.reply(novaWrap("Antijudol", '✅ *AntiJudol mode DELETE diaktifkan*'))
+            return m.reply(raraWrap("Antijudol", '✅ *AntiJudol mode DELETE diaktifkan*'))
         }
-        return m.reply(novaWrap("Anti judol", `Metode tidak valid! Gunakan: \`kick\` atau \`remove\``, "error"))
+        return m.reply(raraWrap("Anti judol", `Metode tidak valid! Gunakan: \`kick\` atau \`remove\``, "error"))
     }
 
     if (option === 'kick') {
         db.setGroup(m.chat, { antijudol: 'on', antijudolMode: 'kick' })
-        return m.reply(novaWrap("Antijudol", '✅ *AntiJudol mode KICK diaktifkan*'))
+        return m.reply(raraWrap("Antijudol", '✅ *AntiJudol mode KICK diaktifkan*'))
     }
 
     if (option === 'remove' || option === 'delete') {
         db.setGroup(m.chat, { antijudol: 'on', antijudolMode: 'remove' })
-        return m.reply(novaWrap("Antijudol", '✅ *AntiJudol mode DELETE diaktifkan*'))
+        return m.reply(raraWrap("Antijudol", '✅ *AntiJudol mode DELETE diaktifkan*'))
     }
 
-    return m.reply(novaError("Anti-Judol", "Opsi tidak valid nih! Gunakan: on, off, metode kick, atau metode remove"))
+    return m.reply(raraError("Anti-Judol", "Opsi tidak valid nih! Gunakan: on, off, metode kick, atau metode remove"))
 }
 
 export { pluginConfig as config, handler }

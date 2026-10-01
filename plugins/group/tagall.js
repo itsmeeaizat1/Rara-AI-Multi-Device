@@ -1,10 +1,10 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import {
   getParticipantJid,
   getParticipantJids,
-} from "../../src/lib/nova-lid.js";
-import te from "../../src/lib/nova-error.js";
-import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
+} from "../../src/lib/rara-lid.js";
+import te from "../../src/lib/rara-error.js";
+import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "tagall",
   alias: ["tagall"],
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     const participants = groupMeta.participants || [];
 
     if (participants.length === 0) {
-      await m.reply(novaWrap("Tagall", `gagal\n\nTidak ada member di grup ini.`, "error"));
+      await m.reply(raraWrap("Tagall", `gagal\n\nTidak ada member di grup ini.`, "error"));
       return;
     }
 
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     });
 
     if (targetParticipants.length === 0) {
-      await m.reply(novaWrap("Tagall", `gagal\n\nTidak ada member lain yang bisa di-tag.`, "error"));
+      await m.reply(raraWrap("Tagall", `gagal\n\nTidak ada member lain yang bisa di-tag.`, "error"));
       return;
     }
 
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
         `Total: ${targetParticipants.length} member\n\n` +
         memberList);
   } catch (error) {
-    m.reply(novaWrap("tagall", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(raraWrap("tagall", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

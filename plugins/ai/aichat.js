@@ -1,11 +1,11 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
-import { startAiStatus } from "../../src/lib/nova-ai-status.js";
+import { getDatabase } from "../../src/lib/rara-database.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { callAI, callIkyy } from "../../src/lib/rara-ai-service.js";
+import { startAiStatus } from "../../src/lib/rara-ai-status.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
       } catch (e) { console.error('[aichat.js]:', e.message); }
 
       const text =
-        novaWrap("AI Chat", ["Status: *Dihapus*",
+        raraWrap("AI Chat", ["Status: *Dihapus*",
           "Memori percakapan sudah direset."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}aichat <pesan> untuk mulai lagi`) +
@@ -87,7 +87,7 @@ async function handler(m, { sock, config: botConfig }) {
     const message = raw.replace(/^\.aichat\s+/i, "").trim();
     if (!message) {
       const text =
-        novaCaption({
+        raraCaption({
   emoji: "🤖",
   name: "aichat",
   description: "Chat AI dengan memori percakapan per chat",
@@ -133,7 +133,7 @@ async function handler(m, { sock, config: botConfig }) {
     appendHistory(chatId, "assistant", reply);
 
     const text =
-      novaWrap("AI Chat", [`Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
+      raraWrap("AI Chat", [`Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
         `AI: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aichat <pesan> untuk lanjut chat`) +
@@ -145,7 +145,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (aiStatus) await aiStatus.fail("AI Chat gagal merespons — coba lagi ya");
     else {
       await m.react("❌");
-      await m.reply(novaError("AIChat", "Gagal nih, coba lagi ya"), "aichat");
+      await m.reply(raraError("AIChat", "Gagal nih, coba lagi ya"), "aichat");
     }
   }
 

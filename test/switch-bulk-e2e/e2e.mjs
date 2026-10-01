@@ -9,14 +9,14 @@ function t(label, cond, extra) {
 }
 
 const R = path.resolve(".")
-const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js")
+const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js")
 await initDatabase("/tmp/switch-bulk-e2e/db.json")
 const db = getDatabase()
 
 const { handler: switchHandler } = await import(R + "/plugins/owner/switch.js")
-const { toSC } = await import(R + "/src/lib/nova-menu-style.js")
+const { toSC } = await import(R + "/src/lib/rara-menu-style.js")
 const reSC = (s) => new RegExp(toSC(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")
-const { getAllNotifyStatus } = await import(R + "/src/lib/nova-saluran-broadcast.js")
+const { getAllNotifyStatus } = await import(R + "/src/lib/rara-saluran-broadcast.js")
 const config = (await import(R + "/config.js")).default
 
 const GID = "120363021234567890@g.us"

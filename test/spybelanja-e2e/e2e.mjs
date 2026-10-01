@@ -13,8 +13,8 @@ const norm = (s) => String(s || "").toLowerCase();
 
 const R = path.resolve(".");
 fs.rmSync("/tmp/spy-e2e-db", { recursive: true, force: true });
-const { initDatabase } = await import(R + "/src/lib/nova-database.js");
-await initDatabase("/tmp/spy-e2e-db/nova.json");
+const { initDatabase } = await import(R + "/src/lib/rara-database.js");
+await initDatabase("/tmp/spy-e2e-db/rara.json");
 
 const { config, handler, parseJson, parseVerdict, _setSpyDepsForTest } = await import(R + "/plugins/ai/spybelanja.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");

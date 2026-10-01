@@ -1,4 +1,4 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // blackbox-api.js — Scraper untuk Blackbox AI (free, no API key)
 import axios from "axios";
 

@@ -29,7 +29,7 @@ src/data/models/
 # src/data/ cuma boleh berisi konten statis (soal game, kata-kata, dll).
 # src/database/ DIKEPALIKAN IKUT di-push (owner 27 Sep 2026: daripada data hilang bareng VPS, snapshot DB disimpan di repo private)
 src/data/ai-router-health.json
-src/data/nova-database.json/
+src/data/rara-database.json/
 
 # ── SECRET ──
 # Repo ini PRIVATE (dikonfirmasi owner 24 Sep 2026) → apikeys.json IKUT di-push
@@ -41,8 +41,8 @@ session/
 storage/
 !skills/session/
 
-# folder DB legacy nova.json/ (era config.database.path lama) — migrasi otomatis ke src/database/<kategori>/, jangan pernah di-git
-nova.json/
+# folder DB legacy rara.json/ (era config.database.path lama) — migrasi otomatis ke src/database/<kategori>/, jangan pernah di-git
+rara.json/
 
 # key API jangan pernah ke-commit (security)
 # apikeys.json DIKEPALIKAN IKUT di-push (owner 27 Sep 2026: repo private, VPS udah gak aktif — daripada key hilang, disimpan di repo)

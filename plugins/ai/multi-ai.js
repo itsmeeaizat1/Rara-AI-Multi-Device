@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // multi-ai.js — OpenRouter-style: pilih provider + model lewat chat
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI, DEFAULT_PROVIDERS, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/nova-ai-service.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { callAI, DEFAULT_PROVIDERS, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/rara-ai-service.js";
 
 
 function resolveModel(providerKey, modelArg) {
@@ -52,7 +52,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines += `${provider.name || key} (${key})\n${modelList}\n`;
       }
 
-      const text = novaGuide(
+      const text = raraGuide(
         "multi-ai",
         `Router AI — pilih provider & model\n${prefix}multi-ai <provider> <pesan>\n${prefix}multi-ai <provider> <model> <pesan>`,
         `${prefix}multi-ai gemini apa itu AI\n${prefix}multi-ai openai gpt-4o-mini jelaskan kuantum\n${prefix}multi-ai groq buat puisi`,
@@ -85,7 +85,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!userMessage) {
-      const text = novaGuide(
+      const text = raraGuide(
         `multi-ai ${providerArg}`,
         `Provider: ${provider.name || providerArg}\nModel: ${model}\n${prefix}multi-ai ${providerArg} [model] <pesan>`,
         `${prefix}multi-ai ${providerArg} ${model} apa itu AI`

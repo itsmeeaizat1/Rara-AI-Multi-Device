@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Request owner 20 Sep 2026: tombol Penggunaan (popup Rules & Tutorial) di
 // menu card — .tutorial adalah tujuan baris "Tutorial" di popup itu.
-import { novaWrap } from "../../src/lib/nova-menu-style.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
     name: 'tutorial',
@@ -20,7 +20,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { config: botConfig }) {
-    const botName = botConfig?.bot?.name || 'Nova-AI'
+    const botName = botConfig?.bot?.name || 'Rara-AI'
     const prefix = m.prefix || '.'
     // Request owner 20 Sep 2026: tutorial diperluas jadi 12 contoh penggunaan
     // lengkap — pengenalan, fitur basic (AI, stiker, play, downloader), grup,
@@ -34,8 +34,8 @@ async function handler(m, { config: botConfig }) {
         `Tombol di bawah menu bisa langsung diklik buat navigasi`,
         '',
         `2. Ngobrol sama AI`,
-        `${prefix}novaagent <pertanyaan> — tanya apa aja, bisa nyari web juga`,
-        `Reply foto + ${prefix}novaagent apa ini — AI baca gambarnya`,
+        `${prefix}raraagent <pertanyaan> — tanya apa aja, bisa nyari web juga`,
+        `Reply foto + ${prefix}raraagent apa ini — AI baca gambarnya`,
         ``,
         `3. Bikin stiker`,
         `Kirim atau reply foto, ketik ${prefix}sticker <caption opsional>`,
@@ -81,7 +81,7 @@ async function handler(m, { config: botConfig }) {
         `Fitur media harus reply/kirim gambar atau video dulu`,
         `Kalau masih error, ketik ${prefix}menu lalu pilih Support`,
     ]
-    await m.reply(novaWrap('Tutorial Penggunaan Bot', lines))
+    await m.reply(raraWrap('Tutorial Penggunaan Bot', lines))
 }
 
 export { pluginConfig as config, handler }

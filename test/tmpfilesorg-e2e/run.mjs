@@ -70,7 +70,7 @@ async function main() {
   ok("tanpa media → balasan panduan (bukan error senyap)", replies.length === 1 && /Reply atau kirim media/.test(replies[0]));
   replies = []; reacts = [];
   await handler(fakeM({ mtype: "imageMessage", mimetype: "image/jpeg", download: async () => Buffer.from("FAKEIMG"), args: ["10m"] }));
-  ok("happy path: kartu sukses berisi link share + kadaluarsa (smallcaps)", norm(replies[0]).includes("tmpfiles.org/fid123/nova-upload.jpg") && norm(replies[0]).includes("terhapus otomatis"));
+  ok("happy path: kartu sukses berisi link share + kadaluarsa (smallcaps)", norm(replies[0]).includes("tmpfiles.org/fid123/rara-upload.jpg") && norm(replies[0]).includes("terhapus otomatis"));
   ok("happy path: direct link /dl/ ikut dikirim", replies[0].includes("https://tmpfiles.org/dl/177.tk/fid123/nova-upload.jpg"));
   ok("reaksi loading 🕒 → 🐣 (sesuai aturan global)", reacts[0] === "🕒" && reacts.at(-1) === "🐣");
   let sentExpire = null;
@@ -88,8 +88,8 @@ async function main() {
     const lib = await import(pathToFileURL(pPath).href);
     // reset seam: null fallback ke fetch global — verify via unpatch
     const real = { uploadToTmpfiles: lib.uploadToTmpfiles, extractDirectLink: lib.extractDirectLink };
-    const up2 = await real.uploadToTmpfiles(Buffer.from("live e2e tmpfiles.org"), "nova-live-e2e.txt", "text/plain", 60);
-    ok("LIVE: upload nyata balik URL tmpfiles.org", /^https:\/\/tmpfiles\.org\/[A-Za-z0-9]+\/nova-live-e2e\.txt$/.test(up2.url), up2.url);
+    const up2 = await real.uploadToTmpfiles(Buffer.from("live e2e tmpfiles.org"), "rara-live-e2e.txt", "text/plain", 60);
+    ok("LIVE: upload nyata balik URL tmpfiles.org", /^https:\/\/tmpfiles\.org\/[A-Za-z0-9]+\/rara-live-e2e\.txt$/.test(up2.url), up2.url);
     const dl2 = await real.extractDirectLink(up2.url);
     ok("LIVE: halaman share nyata punya link /dl/", typeof dl2 === "string" && /\/dl\//.test(dl2), dl2);
   } else {

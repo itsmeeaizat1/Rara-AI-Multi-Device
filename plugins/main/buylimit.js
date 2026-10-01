@@ -1,7 +1,7 @@
-// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// buylimit.js — Beli limit fitur satuan — masukin angka yang mau ditambah (via factory nova-topup-flow.js)
-// Harga & validasi terpusat di src/lib/store/nova-store.js
-import { buildTopupPlugin } from "../../src/lib/store/nova-topup-flow.js";
+// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// buylimit.js — Beli limit fitur satuan — masukin angka yang mau ditambah (via factory rara-topup-flow.js)
+// Harga & validasi terpusat di src/lib/store/rara-store.js
+import { buildTopupPlugin } from "../../src/lib/store/rara-topup-flow.js";
 
 const { pluginConfig, handler } = buildTopupPlugin({
   key: "limit",
