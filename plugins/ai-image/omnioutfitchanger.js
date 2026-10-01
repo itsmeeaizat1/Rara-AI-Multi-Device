@@ -216,6 +216,7 @@ async function handler(m, { sock }) {
       await m.react("🧠");
 
       let outBuf;
+      let usedEngine = "";
       if (sess.items.length === 1) {
         // ── 1 item → native endpoint zelapi ai-image/omnivton (person+outfit) ──
         const personUrl = await depUploadToUguu(sess.personBuf, "person.jpg");
@@ -228,13 +229,34 @@ async function handler(m, { sock }) {
           imageUrl2: outfitUrl,
           imageParam2: "outfit",
         });
+        usedEngine = "zelapi omnivton";
         if (!r.ok) {
-          clearSession(jid);
-          await m.react("❌");
-          const map = { API_KEY: "⚠️ Key zelapi belum di-set." };
-          return m.reply(claraWrap("omnioutfitchanger", map[r.error] || `⚠️ *TRY-ON GAGAL:* ${r.error}`, "error"));
-        }
-        if (r.buffer) outBuf = r.buffer;
+          // ── FALLBACK (fix 1 Okt 2026, report owner "apikey invalid pdhal hasil
+          // scraper"): zelapi.eu.cc kini wajib key daftar (key lama di-reset, live
+          // probe balas 403 "Invalid API Key."). 1-item dulunya MATI TOTAL tanpa
+          // fallback — kini turun ke rantai nano-banana yang sama dengan jalur
+          // multi-item: vision describe item → buildMultiItemPrompt → edit chain.
+          console.error("omnioutfitchanger zelapi omnivton gagal:", r.error);
+          await m.react("🛠️");
+          let desc = "";
+          try {
+            const res = await depVision({ imageBuffer: sess.items[0], question: ITEM_Q, sessionKey: null });
+            const text = typeof res === "string" ? res : res?.text || res?.answer || "";
+            desc = parseItemDesc(text);
+          } catch (e) {
+            console.error("omnioutfitchanger vision fallback:", e.message);
+          }
+          if (!desc) {
+            clearSession(jid);
+            await m.react("❌");
+            const map = { API_KEY: "⚠️ Key zelapi belum di-set." };
+            return m.reply(claraWrap("omnioutfitchanger", map[r.error] || `⚠️ *TRY-ON GAGAL:* ${r.error}`, "error"));
+          }
+          const prompt = buildMultiItemPrompt([desc]);
+          const result = await runEditChain(sess.personBuf, prompt);
+          outBuf = await toBuffer(result);
+          usedEngine = "nano-banana (fallback zelapi down)";
+        } else if (r.buffer) outBuf = r.buffer;
         else if (r.images?.[0]) outBuf = await toBuffer(r.images[0]);
         else throw new Error("hasil kosong dari omnivton");
       } else {
@@ -259,6 +281,7 @@ async function handler(m, { sock }) {
         const prompt = buildMultiItemPrompt(descs);
         const result = await runEditChain(sess.personBuf, prompt);
         outBuf = await toBuffer(result);
+        usedEngine = "nano-banana (vision multi-item)";
       }
 
       clearSession(jid);
@@ -270,7 +293,7 @@ async function handler(m, { sock }) {
           image: outBuf,
           caption: boxLeft(
             toSC("omni outfit changer"),
-            `✨ ${toSC("try-on selesai")} — ${itemCount} ${toSC(itemCount === 1 ? "item" : "item")}\n⚙️ ${toSC(itemCount === 1 ? "engine: zelapi omnivton" : "engine: nano-banana (vision multi-item)")}`
+            `✨ ${toSC("try-on selesai")} — ${itemCount} ${toSC(itemCount === 1 ? "item" : "item")}\n⚙️ ${toSC("engine: " + usedEngine)}`
           ),
         },
         { quoted: m }
