@@ -181,7 +181,7 @@ const mTok = mkM(".dashboard token");
 await handler(mTok);
 const tokReply = mTok.replies.join("\n");
 check("7d. token di DM dikirim DALAM CODE FENCE (kebal smallcaps)", tokReply.includes("```\n" + tok2 + "\n```"), tokReply.slice(0, 150));
-check("7e. guide V2 kaomoji format (plain text sejak revisi 1 Okt, bukan smallcaps)", /「✧/.test(tokReply) && / dashboard!!/.test(tokReply), tokReply.slice(0, 100));
+check("7e. guide V2 kaomoji format (plain text sejak revisi 1 Okt, bukan smallcaps)", /୨୧ ✧/.test(tokReply) && / dashboard!!/.test(tokReply), tokReply.slice(0, 100));
 
 const mSt = mkM(".dashboard");
 await handler(mSt);

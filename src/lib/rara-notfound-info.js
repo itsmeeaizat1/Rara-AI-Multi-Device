@@ -20,33 +20,33 @@ export async function buildNotFoundReply(m, ctx, command, closest, level, totalH
   const lines = [];
 
   if (level === 0) {
-    lines.push(toSC("Command") + " *" + prefix + command + "* " + toSC("tidak ditemukan"));
+    lines.push("(・_・?) " + toSC("command") + " *" + prefix + command + "* " + toSC("gak ketemu kak..."));
     if (closest) {
       lines.push("");
-      lines.push("🤔 " + toSC("Mungkin maksudmu") + ": *" + prefix + closest + "* ?");
+      lines.push("Mungkin maksud kamu: *" + prefix + closest + "* ?");
     }
     lines.push("");
     lines.push("💡 " + toSC("Ketik") + " *" + prefix + "tanyaai* " + toSC("untuk tanya AI"));
   } else if (level === 1) {
-    lines.push("⚠ " + toSC("Kamu sudah salah ketik") + " " + totalHits + "x " + toSC("dalam 1 menit"));
+    lines.push("(¬_¬") " + toSC("kamu sudah salah ketik") + " " + totalHits + "x " + toSC("dalam 1 menit kak..."));
     lines.push("");
-    lines.push(toSC("Command") + " *" + prefix + command + "* " + toSC("tidak ditemukan"));
+    lines.push(toSC("command") + " *" + prefix + command + "* " + toSC("gak ketemu"));
     if (closest) {
       lines.push("");
-      lines.push("🤔 " + toSC("Mungkin") + ": *" + prefix + closest + "*");
+      lines.push("(・_・?) " + toSC("mungkin") + ": *" + prefix + closest + "*");
     }
     lines.push("");
     lines.push("💡 " + toSC("Cek") + " *" + prefix + "menu* " + toSC("untuk daftar lengkap"));
   } else if (level === 2) {
-    lines.push("⚠ " + toSC("Sudah") + " " + totalHits + "x " + toSC("command tidak ditemukan") + "!");
+    lines.push("(￣～￣;) " + toSC("sudah") + " " + totalHits + "x " + toSC("command gak ketemu") + " kak!");
     lines.push("");
-    lines.push(toSC("Tolong cek") + " *" + prefix + "menu* " + toSC("dulu ya"));
+    lines.push(toSC("tolong cek") + " *" + prefix + "menu* " + toSC("dulu ya kak ♡"));
     lines.push("");
     lines.push("💡 " + toSC("Atau tanya") + " *" + prefix + "tanyaai* — " + toSC("AI bantu cari"));
   } else if (level === 4) {
-    lines.push("😵 " + toSC("Kamu mengirim") + " " + totalHits + " " + toSC("command salah") + "!");
+    lines.push("(⊙_⊙;) " + toSC("kamu mengirim") + " " + totalHits + " " + toSC("command salah") + " kak!");
     lines.push("");
-    lines.push(toSC("Bot tidak mengenal command tersebut"));
+    lines.push(toSC("bot tidak mengenal command tersebut kak..."));
     lines.push("");
     lines.push("💡 " + toSC("Daripada tebak-tebakan, langsung tanya AI") + ":");
     lines.push("*" + prefix + "tanyaai* <" + toSC("apa yang kamu cari") + ">");

@@ -22,7 +22,7 @@ w("\n— raraAiUsage gemini (V2) —");
   const p = providers.gemini;
   const out = raraAiUsage("gemini", { prefix: ".", command: "gemini", modelAktif: p.defaultModel, models: p.models });
   const lines = out.split("\n");
-  check("header 「✧ gemini ✧」", lines[0] === `「✧ ${toSC("gemini")} ✧」`, lines[0]);
+  check("header 「✧ gemini ✧」", lines[0] === `୨୧ ✧ ${toSC("gemini")} ✧ ୨୧`, lines[0]);
   check("kaomoji + nama!! (baris cute)", /gemini!!/.test(lines[1]) && /\(/.test(lines[1]), lines[1]);
   check("📍 cara: baris sendiri", lines[3] === `📍 ${toSC("Cara")}: .gemini [pertanyaan]`, lines[3]);
   check("contoh: baris sendiri VERBATIM", lines[4] === `${toSC("Contoh")}: .gemini apa itu AI?`, lines[4]);
@@ -31,9 +31,12 @@ w("\n— raraAiUsage gemini (V2) —");
   check("model aktif = auto-latest (verbatim, bukan smallcaps)", iModel > -1 && lines[iModel].endsWith("auto-latest"), lines[iModel]);
   const iList = lines.indexOf(`📋 ${toSC("Model tersedia")}:`);
   check("📋 model tersedia: section ada", iList > -1);
-  const listed = lines.slice(iList + 1).filter((l) => l.trim());
-  check("8 model ter-list semuanya (verbatim, bukan smallcaps)", listed.length === 8 && listed[0].trim() === "gemini-3.7-flash" && listed[7].trim() === "gemini-2.5-flash-lite");
-  check("urutan model sesuai owner", listed.map((l) => l.trim()).join(",") === "gemini-3.7-flash,gemini-3.6-flash,gemini-3.5-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-2.5-pro,gemini-2.5-flash,gemini-2.5-flash-lite");
+  // FIX (2 Okt): divider ── ⋆ ⋆ ── sebelum spec → potong di divider
+  const iDiv = lines.indexOf("── ⋆ ⋆ ──");
+  const listed = lines.slice(iList + 1, iDiv > -1 ? iDiv : lines.length).filter((l) => l.trim());
+  // FIX BASI (2 Okt): daftar model gemini di rara-ai-service terbaru = 7 model
+  check("7 model ter-list semuanya (verbatim, bukan smallcaps)", listed.length === 7 && listed[0].trim() === "gemini-3.7-flash" && listed[6].trim() === "gemini-flash-latest", listed.join(" | "));
+  check("urutan model sesuai owner", listed.map((l) => l.trim()).join(",") === "gemini-3.7-flash,gemini-3.6-flash,gemini-3.5-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-3-flash-preview,gemini-flash-latest");
   check("nama model TIDAK di-smallcaps", !listed.some((l) => /[ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘʀꜱᴛᴜᴠᴡʏᴢ]/.test(l)));
 }
 
@@ -41,7 +44,7 @@ w("\n— raraAiUsage gemini (V2) —");
 w("\n— raraAiUsage provider lain —");
 {
   const out = raraAiUsage("openai", { prefix: "!", command: "openai", modelAktif: providers.openai.defaultModel, models: providers.openai.models });
-  check("header openai smallcaps + prefix ! jalan", out.startsWith(`「✧ ${toSC("openai")} ✧」`) && out.includes("!openai [pertanyaan]"));
+  check("header openai smallcaps + prefix ! jalan", out.startsWith(`୨୧ ✧ ${toSC("openai")} ✧ ୨୧`) && out.includes("!openai [pertanyaan]"));
   check("model aktif gpt-4o-mini + list models verbatim", out.includes("gpt-4o-mini") && out.includes("gpt-5.5"));
 }
 {
@@ -71,18 +74,18 @@ w("\n— handler ai-providers —");
   await provHandler(m1, opts(m1));
   const r1 = m1._replies[0];
   check(".gemini → reply 1 pesan", m1._replies.length === 1 && !!r1);
-  check(".gemini → header V2 + contoh verbatim", r1.startsWith(`「✧ ${toSC("gemini")} ✧」`) && r1.includes(".gemini apa itu AI?"));
-  check(".gemini → auto-latest + 8 model verbatim", r1.includes("auto-latest") && r1.includes("gemini-3.7-flash") && r1.includes("gemini-2.5-flash-lite"));
+  check(".gemini → header V2 + contoh verbatim", r1.startsWith(`୨୧ ✧ ${toSC("gemini")} ✧ ୨୧`) && r1.includes(".gemini apa itu AI?"));
+  check(".gemini → auto-latest + 7 model verbatim", r1.includes("auto-latest") && r1.includes("gemini-3.7-flash") && r1.includes("gemini-flash-latest"));
   check(".gemini → gak ada lagi format lama (Key/Provider:/Default:)", !r1.includes("Key") && !r1.includes("Provider  :"));
 
   const m2 = mkM("claude");
   await provHandler(m2, opts(m2));
   const r2 = m2._replies[0];
-  check(".claude → header V2 + model anthropic", r2.startsWith(`「✧ ${toSC("claude")} ✧」`) && r2.includes(providers.anthropic.defaultModel));
+  check(".claude → header V2 + model anthropic", r2.startsWith(`୨୧ ✧ ${toSC("claude")} ✧ ୨୧`) && r2.includes(providers.anthropic.defaultModel));
 
   const m3 = mkM("google");
   await provHandler(m3, opts(m3));
-  check(".google alias → header google + model list gemini", m3._replies[0].includes("gemini-3.7-flash") && m3._replies[0].startsWith(`「✧ ${toSC("google")} ✧」`));
+  check(".google alias → header google + model list gemini", m3._replies[0].includes("gemini-3.7-flash") && m3._replies[0].startsWith(`୨୧ ✧ ${toSC("google")} ✧ ୨୧`));
 
   check("pluginConfig alias keada (gemini/openai/claude)", provConfig.alias.includes("gemini") && provConfig.alias.includes("openai") && provConfig.alias.includes("claude"));
 }
