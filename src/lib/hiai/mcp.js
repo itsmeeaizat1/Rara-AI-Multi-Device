@@ -907,7 +907,7 @@ export const MODELS = {
     default: 'gemini-3.1-flash-lite',
     flash: 'gemini-3.5-flash',
     'flash-lite': 'gemini-3.1-flash-lite',
-    pro: 'gemini-2.5-pro',
+    pro: 'gemini-3.1-pro-preview', // 2.5-pro 404 buat key baru (1 Okt 2026)
     gemma: 'gemma-4-31b-it',
     'gemma-moe': 'gemma-4-26b-a4b-it',
 };
@@ -1329,7 +1329,7 @@ export function getDangerousDocReason(m) {
     return null;
 }
 const SEARCH_MODEL_PRIMARY = 'gemini-3.1-flash-lite';
-const SEARCH_MODEL_FALLBACK = 'gemini-2.5-flash';
+const SEARCH_MODEL_FALLBACK = 'gemini-3.5-flash-lite';
 function extractGroundingSources(response) {
     try {
         const chunks = response?.candidates?.[0]?.groundingMetadata?.groundingChunks || [];

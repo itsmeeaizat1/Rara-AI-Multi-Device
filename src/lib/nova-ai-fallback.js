@@ -70,7 +70,10 @@ async function viaGeminiNative(fullPrompt) {
   } catch {}
   if (!key) throw new Error("key google kosong");
 
-  for (const model of ["gemini-2.5-flash", "gemini-2.0-flash"]) {
+  // FIX 1 Okt 2026: key Google baru DITOLAK di model <3.0 (404 "no longer
+  // available to new users") — semua varian 2.x dibuang, rantai 3.x yang
+  // DIPROBE LIVE (3.8/3.7 lagi 503 high demand → taruh belakang).
+  for (const model of ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-3-flash-preview"]) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
     const res = await fetch(url, {
       method: "POST",
