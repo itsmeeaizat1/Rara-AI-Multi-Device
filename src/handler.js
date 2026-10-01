@@ -412,7 +412,7 @@ try {
             await sock.groupParticipantsUpdate(m.chat, [m.sender], "remove");
           } catch {}
           await sock.sendMessage(m.chat, {
-            text: "「 ✦ Verifikasi ✦ 」\n❌ Gagal verifikasi 3x!\nMember dikeluarkan",
+            text: "୨୧ ✧ verifikasi ✧ ୨୧\n(;ω;) gagal verifikasi 3x ya...\nmember dikeluarkan",
           });
           return;
         } else if (verifyResult.timedOut) {
@@ -507,7 +507,7 @@ try {
       const { verifyVnCaptcha, hasVnCaptchaChallenge, isVnCaptchaBlocked } = await import("../plugins/owner/vncaptcha.js");
       const senderJid = m.key?.remoteJid || m.sender;
       if (typeof isVnCaptchaBlocked === "function" && isVnCaptchaBlocked(senderJid)) {
-        await sock.sendMessage(senderJid, { text: "「 ✦ Diblokir 24 Jam ✦ 」\n❌ Gagal verifikasi suara\nCoba lagi besok" });
+        await sock.sendMessage(senderJid, { text: "୨୧ ✧ diblokir 24 jam ✧ ୨୧\n(´•̥ ω •̥`) gagal verifikasi suara\ncoba lagi besok ya kak..." });
         return;
       }
       if (typeof hasVnCaptchaChallenge === "function" && hasVnCaptchaChallenge(senderJid)) {
@@ -1152,7 +1152,7 @@ try {
         ? "Jangan spam " + label + "! Tunggu " + spamResult.remainSec + " detik lagi"
         : "Tunggu " + spamResult.remainSec + " detik sebelum pakai " + label + " lagi";
       if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-      await m.reply("「 ✦ Anti-Spam ✦ 」\n⚠ " + msg + "");
+      await m.reply("୨୧ ✧ anti-spam ✧ ୨୧\n(¬_¬)" + " pelan-pelan kak...\n" + msg);
       return;
     }
   } catch (e) {
@@ -1164,7 +1164,7 @@ try {
     if (!m.isNewsletter) {
       try {
         if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-        await m.reply("「 ✦ Nonaktif ✦ 」\n⚠ Command ini sedang dinonaktifkan");
+        await m.reply("୨୧ ✧ nonaktif ✧ ୨୧\n(._.) command ini sedang dinonaktifkan kak...");
       } catch {}
     }
     return;
@@ -1191,7 +1191,7 @@ try {
       if (!m.isNewsletter) {
         try {
           if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-          await m.reply("「 ✦ Nonaktif ✦ 」\n⚠ Fitur ini sedang dinonaktifkan oleh owner\nKetik .togglefitur untuk melihat status");
+          await m.reply("୨୧ ✧ nonaktif ✧ ୨୧\n(._.) fitur ini sedang dinonaktifkan oleh owner\nketik .togglefitur buat lihat status ya");
         } catch {}
       }
       return;
@@ -1232,7 +1232,7 @@ try {
             try { await m.react("❗"); } catch {}
             try {
               await m.reply(
-                "「 ✦ energi game kurang ✦ 」\n⚠ Butuh *" + energiCost + "* energi game\n⚡ Energi: *" + energiGame + "/" + maxEnergy + "*\n💡 Isi ulang via *.heal* (energy drink)"
+                "୨୧ ✧ energi game ✧ ୨୧\n(>.<) butuh *" + energiCost + "* energi game kak\n⚡ energi: *" + energiGame + "/" + maxEnergy + "*\n💡 isi ulang via *.heal* (energy drink)"
               );
             } catch {}
           }
@@ -1274,7 +1274,7 @@ try {
             if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
           await m.reply(
               (config.messages?.energiExceeded ||
-               "「 ✦ Energi Habis ✦ 」\n⚠ Energi kamu sudah habis!\nTunggu reset besok atau beli Premium")
+               "୨୧ ✧ energi habis ✧ ୨୧\n(´-ω-`) energi kamu sudah habis ya kak...\ntunggu reset besok atau beli premium ♡")
             );
           } catch {}
         }

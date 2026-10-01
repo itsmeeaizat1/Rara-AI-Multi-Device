@@ -166,7 +166,7 @@ function raraCaption({ emoji = "", name = "", description = "", usage = "", exam
   // Game category tetap render box lama (desain khas game sendiri).
   if (isGameCmd(name)) return raraCaptionClassic({ emoji, name, description, usage, example, note });
   const title = name ? toSC(name) : toSC("Guide");
-  let out = `「✧ ${toSC(String(title).toLowerCase())} ✧」\n`;
+  let out = `${cuteHeader(title)}\n`;
   out += `${v2Kaomoji(name)} ${toSC(String(title).toLowerCase())}!!\n`;
   if (description && String(description).trim()) out += `\n${scLine(description)}\n`;
   if (usage || example || note) {
@@ -390,7 +390,7 @@ function raraWrap(title, body, type = "info") {
   // Game/rpg/rpg-cinta/rpg-couple tetap box lama (desain khas game sendiri).
   if (type === "guide" && !isGameCmd(title)) {
     const gname = toSC(String(title || "guide").toLowerCase());
-    let gout = `「✧ ${gname} ✧」\n`;
+    let gout = `${cuteHeader(title || "guide")}\n`;
     gout += `${v2Kaomoji(title)} ${gname}!!\n`;
     if (lines.length) {
       const bodyTxt = lines.map((l) => (typeof l === "object" && l !== null) ? `◈ ${l.subHeader || l.sub || ""}` : l).join("\n");
@@ -861,9 +861,9 @@ function boxRows(text) {
 }
 
 function raraError(commandName, detail) {
-  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("ERROR");
-  let out = `「 ✦ ${title} ✦ 」\n`;
-  out += `❌ ${scLine(detail || "Gagal, coba lagi ya")}\n`;
+  // DESAIN CUTE (2 Okt 2026): header ribbon + kaomoji susah, bukan ❌ polos
+  let out = `${cuteHeader(commandName || "error")}\n`;
+  out += `${pickRandom(CUTE_ERR_POOL)} ${scLine(detail || "gagal, coba lagi ya kak...")}\n`;
   return out;
 }
 
@@ -873,9 +873,9 @@ function raraError(commandName, detail) {
  * @param {string} [detail] - detail opsional
  */
 function raraEmpty(commandName, detail) {
-  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("KOSONG");
-  let out = `「 ✦ ${title} ✦ 」\n`;
-  out += `❌ ${scLine(detail || "Kosong, tidak ada data")}\n`;
+  // DESAIN CUTE (2 Okt 2026): kaomoji datar khas pesan kosong
+  let out = `${cuteHeader(commandName || "kosong")}\n`;
+  out += `${pickRandom(CUTE_EMPTY_POOL)} ${scLine(detail || "datanya kosong kak...")}\n`;
   return out;
 }
 
@@ -898,7 +898,7 @@ function raraNoInput(commandName, hint, example) {
     return out.replace(/\n+$/, "");
   }
   const name = toSC(String(commandName).toLowerCase());
-  let out = `「✧ ${name} ✧」\n`;
+  let out = `${cuteHeader(commandName)}\n`;
   out += `${v2Kaomoji(commandName)} ${name}!!\n`;
   out += `\n${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
   if ((hint && String(hint).trim()) || example) {
@@ -910,7 +910,7 @@ function raraNoInput(commandName, hint, example) {
     }
   }
   const spec = v2Spec(commandName);
-  if (spec) out += `\n${spec}\n`;
+  if (spec) out += `\n${CUTE_DIVIDER}\n${spec}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -920,8 +920,9 @@ function raraNoInput(commandName, hint, example) {
  * @param {string} [mediaType] - "image" | "sticker" | "video" | "audio"
  */
 function raraNoQuoted(commandName, mediaType) {
-  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-  out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}\n`;
+  // DESAIN CUTE (2 Okt 2026): kaomoji susah ganti ⚠, frasa random tetap
+  let out = `${cuteHeader(commandName)}\n`;
+  out += `${pickRandom(CUTE_ERR_POOL)} ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}\n`;
   if (mediaType) out += scLine(`Butuh: ${mediaType}`) + "\n";
   return out.replace(/\n+$/, "");
 }
@@ -932,9 +933,9 @@ function raraNoQuoted(commandName, mediaType) {
  * @param {string} message - pesan sukses
  */
 function raraSuccess(commandName, message) {
-  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("SUKSES");
-  let out = `「 ✦ ${title} ✦ 」\n`;
-  out += `✅ ${scLine(message || "Berhasil!")}\n`;
+  // DESAIN CUTE (2 Okt 2026): kaomoji senang ganti ✅ polos
+  let out = `${cuteHeader(commandName || "sukses")}\n`;
+  out += `${pickRandom(CUTE_OK_POOL)} ${scLine(message || "beres kak!!")}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -971,6 +972,18 @@ const V2_KAOMOJI_POOL = [
   "(๑´ㅂ`๑)", "(˶ᵔ ᵕ ᵔ˶)", "(๑˃̵ᴗ˂̵)و", "(◍'◡'◍)", "(๑>ᴗ<)و",
   "(・∀・)", "(≧◡≦) ♡", "(๑ᵔ⤙ᵔ๑)♡", "(•‿•)", "(¬‿¬)✧",
 ];
+// ── DESAIN CUTE (2 Okt 2026, owner: "desain cute dibagian usage semua
+// fitur serta replynya dihandler, kyk pesan eror atau yg lain" — kecuali
+// sistem loading emoji react yang TIDAK disentuh): header ribbon ୨୧ ✧ nama
+// ✧ ୨୧ + kaomoji sesuai suasana (error/sukses/kosong) + divider bintang
+// sebelum baris spec. Game category TETAP desain khas sendiri.
+const CUTE_ERR_POOL = ["(>_<)", "(;ω;)", "(´•̥ ω •̥`)", "(｡•́︿•̀｡)", "(╥_╥)", "(>.<)"];
+const CUTE_OK_POOL = ["(≧▽≦)", "(๑˃ᴗ˂)ﻭ", "(◍•ᴗ•◍)", "(≧▽≦) ♡", "(๑>ᴗ<)و", "(⌒‿⌒)"];
+const CUTE_EMPTY_POOL = ["(._.)", "(´･_･`)", "(︶︹︶)", "(´-ω-`)", "(;-;)"];
+function cuteHeader(name) {
+  return `୨୧ ✧ ${toSC(String(name || "").toLowerCase())} ✧ ୨୧`;
+}
+const CUTE_DIVIDER = "── ⋆ ⋆ ──";
 function v2Kaomoji(name) {
   const key = String(name || "x").toLowerCase();
   let h = 0;
@@ -1039,7 +1052,7 @@ function raraGuide(commandName, intro, example, note) {
   // Game/minigame/rpg/rpg-cinta → render klasik (desain khas game sendiri).
   if (isGameCmd(commandName)) return raraGuideClassic(commandName, intro, example, note);
   const name = toSC(String(commandName).toLowerCase());
-  let out = `「✧ ${name} ✧」\n`;
+  let out = `${cuteHeader(commandName)}\n`;
   out += `${v2Kaomoji(commandName)} ${name}!!\n`;
   // GUARD LEBAR SERAGAM (1 Okt 2026): intro & note = kalimat prosa → scWrap
   // (potong ≤30 char/baris, standar kayak allmenu). example = command
@@ -1054,7 +1067,7 @@ function raraGuide(commandName, intro, example, note) {
     }
   }
   const spec = v2Spec(commandName);
-  if (spec) out += `\n${spec}\n`;
+  if (spec) out += `\n${CUTE_DIVIDER}\n${spec}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -1149,7 +1162,7 @@ export function raraGuideV2(commandName, opts = {}) {
   // kalimat prosa → scWrap (≤30 char/baris, standar kayak allmenu). contoh
   // = command VERBATIM → gak dipotong.
   const name = toSC(String(commandName).toLowerCase());
-  let out = `「✧ ${name} ✧」\n`;
+  let out = `${cuteHeader(commandName)}\n`;
   out += `${kaomoji} ${name}!!\n`;
   if (sapaan && String(sapaan).trim()) out += `\n${scWrap(sapaan)}\n`;
   if (cara || contoh || note) {
@@ -1171,7 +1184,7 @@ export function raraGuideV2(commandName, opts = {}) {
   if (Array.isArray(models) && models.length) {
     out += `📋 ${toSC("Model tersedia")}: ${models.map(String).join(" · ")}\n`;
   }
-  if (Array.isArray(spec) && spec.length) out += `\n${spec.map((x) => scLine(x)).join(" • ")}\n`;
+  if (Array.isArray(spec) && spec.length) out += `\n${CUTE_DIVIDER}\n${spec.map((x) => scLine(x)).join(" • ")}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -1197,7 +1210,7 @@ export function raraAiUsage(brand, { prefix = ".", command, modelAktif = null, m
   }
   const cmd = `${prefix}${command || brand}`;
   const name = toSC(String(brand).toLowerCase());
-  let out = `「✧ ${name} ✧」\n`;
+  let out = `${cuteHeader(brand)}\n`;
   out += `${v2Kaomoji(brand)} ${name}!!\n`;
   out += `\n📍 ${toSC("Cara")}: ${cmd} [pertanyaan]\n`;
   out += `${toSC("Contoh")}: ${cmd} apa itu AI?\n`;
@@ -1208,7 +1221,7 @@ export function raraAiUsage(brand, { prefix = ".", command, modelAktif = null, m
   }
   if (Array.isArray(extra) && extra.length) out += `\n${extra.map(String).join("\n")}\n`;
   const spec = v2Spec(command || brand);
-  if (spec) out += `\n${spec}\n`;
+  if (spec) out += `\n${CUTE_DIVIDER}\n${spec}\n`;
   return out.replace(/\n+$/, "");
 }
 
