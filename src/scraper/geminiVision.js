@@ -11,13 +11,13 @@ import { getApiKey } from "../lib/nova-api-keys.js";
  * @param {Object} opts
  * @param {Buffer} opts.imageBuffer - Buffer gambar (jpg/png/webp)
  * @param {string} opts.prompt - Pertanyaan/instruksi tentang gambar
- * @param {string} opts.model - Model Gemini (default: gemini-2.0-flash)
+ * @param {string} opts.model - Model Gemini (default: gemini-3.6-flash)
  * @returns {Object} { status, text, model }
  */
 async function GeminiVision({
   imageBuffer,
   prompt = "Deskripsikan gambar ini secara detail dalam bahasa Indonesia.",
-  model = "gemini-2.0-flash",
+  model = "gemini-3.6-flash",
   instruction = "",
 }) {
   try {
@@ -107,7 +107,7 @@ async function GeminiVision({
     } else if (errorMsg.includes("SAFETY")) {
       errorMsg = "Gambar ditolak oleh filter keamanan Gemini.";
     } else if (errorMsg.includes("not found") || errorMsg.includes("404")) {
-      errorMsg = "Model tidak tersedia. Coba gunakan gemini-1.5-flash atau gemini-2.0-flash";
+      errorMsg = "Model tidak tersedia. Coba gunakan gemini-3.6-flash atau gemini-3.5-flash";
     }
 
     return {

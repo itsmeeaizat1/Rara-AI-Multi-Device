@@ -28,7 +28,7 @@ const DEFAULT_PROVIDERS = {
   },
   gemini: {
     name: "Google Gemini",
-    models: ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"],
+    models: ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-3-flash-preview", "gemini-flash-latest"], // <3.0 dibuang 1 Okt 2026 — key baru ditolak 404
     defaultModel: "auto-latest",
     chatEndpoint: (model) => `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=__API_KEY__`,
     authHeader: () => ({}),
@@ -55,7 +55,7 @@ const DEFAULT_PROVIDERS = {
     parseResponse: (data) => data?.candidates?.[0]?.content?.parts?.[0]?.text || "",
     supportsVision: true,
     // 🔹 IMAGE GEN (nano banana) — generate gambar via API yang sama
-    imageGen: { model: "gemini-2.5-flash-image", format: "gemini" },
+    imageGen: { model: "nano-banana-pro-preview", format: "gemini" }, // 2.5-flash-image 404 buat key baru (1 Okt 2026); nano-banana-pro = image model 3.x (butuh kuota image)
     supportsSystem: true,
   },
   anthropic: {

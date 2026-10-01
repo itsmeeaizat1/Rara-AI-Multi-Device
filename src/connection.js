@@ -1693,7 +1693,7 @@ connectionState.sock = sock;
                       const _b64 = _acBuffer.toString("base64");
                       const _aiPrompt = "Lihat stiker WhatsApp ini. Berikan 3-5 kata trigger dalam bahasa Indonesia yang cocok untuk stiker ini (kata yang orang biasa ketik di chat yang relate dengan stiker ini). Hanya jawab dengan kata-kata dipisah koma, tanpa penjelasan. Contoh: wkwk, haha, lucu, pusing, marah, sedih, love, siap, ok";
                       const _aiRes = await fetch(
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + _gemKey,
+                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=" + _gemKey,
                         {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },

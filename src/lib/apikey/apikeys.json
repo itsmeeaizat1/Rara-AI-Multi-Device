@@ -292,7 +292,7 @@
       "fitur": "image gen gemini (.txt2img rantai), vision chain (baca gambar AI), .autoai",
       "catatan": "BEDA dari key Tio"
     },
-    "google": "Ab8RN6I9akckrF9inEsfCm-I1KyihGlYDNSoZ_b8nNgAIB-aDg",
+    "google": "AQ.Ab8RN6L5s9ewooIhy64juxoav1RJz222GywiULUin5XAhDceYg",
     "_note_groqkey": {
       "restapi": "GROQ — console.groq.com",
       "fitur": "fallback aiagent + STT cepat (.stt, aiautointeractionvn)"
@@ -389,7 +389,7 @@
       "restapi": "GEMINI STANDALONE — aistudio.google.com/apikey",
       "fitur": ".autoai (otak AI interaksi otomatis)"
     },
-    "geminiStandalone": "Ab8RN6I9akckrF9inEsfCm-I1KyihGlYDNSoZ_b8nNgAIB-aDg",
+    "geminiStandalone": "AQ.Ab8RN6L5s9ewooIhy64juxoav1RJz222GywiULUin5XAhDceYg",
     "_note_openWeatherKey": {
       "restapi": "OPENWEATHERMAP — openweathermap.org",
       "fitur": ".weather/.cekcuacav2 (provider OWM), .hujannotif (nowcast hujan 30 menit)",

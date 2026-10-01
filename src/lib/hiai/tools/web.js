@@ -278,7 +278,7 @@ export default [
 },
 {
     name: 'search_web',
-    description: 'Cari informasi terbaru dari internet (Gemini native grounding via Google Search — model gemini-3.1-flash-lite, fallback ke gemini-2.5-flash kalau gagal/limit). Pakai untuk berita, harga, data real-time, atau hal yang mungkin sudah berubah sejak training. PENTING: setelah dapat hasil dari tool ini, balasan akhirmu ke user WAJIB lewat tool send_rich_reply (lihat rule 13) — JANGAN PERNAH langsung menjawab dengan teks biasa yang menempel link mentah dari bagian "Sumber:" hasil tool ini.',
+    description: 'Cari informasi terbaru dari internet (Gemini native grounding via Google Search — model gemini-3.1-flash-lite, fallback ke gemini-3.5-flash-lite kalau gagal/limit). Pakai untuk berita, harga, data real-time, atau hal yang mungkin sudah berubah sejak training. PENTING: setelah dapat hasil dari tool ini, balasan akhirmu ke user WAJIB lewat tool send_rich_reply (lihat rule 13) — JANGAN PERNAH langsung menjawab dengan teks biasa yang menempel link mentah dari bagian "Sumber:" hasil tool ini.',
     parameters: {
         query: { type: 'string', description: 'Kata kunci atau pertanyaan yang ingin dicari', required: true }
     },
