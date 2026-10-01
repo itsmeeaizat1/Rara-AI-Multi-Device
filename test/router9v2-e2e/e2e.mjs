@@ -278,7 +278,15 @@ try {
   const live = await router9v2Models();
   t("  live /v1/models: " + live.total + " model", live.total > 10);
 } catch (e) {
-  t("  live models (skip kalau offline)", false, e.message.slice(0, 80));
+  // SKIP JUJUR (bukan FAIL): hosted 9router v2 lagi down / 5xx Cloudflare —
+  // bukan bug kode. FAIL cuma kalau errorNYA gak jelas (bukan 5xx/network).
+  const msg = String(e.message || e);
+  const offline = /HTTP 5\d\d|5\d\d:|fetch failed|ECONNREFUSED|ENOTFOUND|timeout|502|503/i.test(msg);
+  if (offline) {
+    w("  ⏭ live models: SKIP — hosted 9router lagi down (" + msg.slice(0, 60) + ")");
+  } else {
+    t("  live models (skip kalau offline)", false, msg.slice(0, 80));
+  }
 }
 
 w("\n===== " + pass + " PASS, " + fail + " FAIL =====");

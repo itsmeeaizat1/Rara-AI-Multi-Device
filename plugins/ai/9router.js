@@ -23,6 +23,7 @@ import { novaBox, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import {
   ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys, killStalePort9Router,
+  invalidateRouter9GatewayKey, router9ValidateGatewayKey,
   router9Models, router9FindModel, router9Chat, router9ImageGen,
   router9ImageModels, router9VisionModels, router9Stats,
   getRouter9Base, getRouter9Port, ROUTER9_DEFAULT_MODEL,
@@ -306,7 +307,21 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       ]));
     }
     let gw = "belum";
-    try { gw = (await ensureRouter9GatewayKey({ create: true })) ? "ok" : "belum"; } catch (e) { gw = `gagal (${e.message})`; }
+    try {
+      let g = await ensureRouter9GatewayKey({ create: true });
+      // ── VALIDASI (fix 1 Okt 2026 malam, report owner ".9router restart ttep
+      // g bsa gagal"): dulunya key lama di JSON dipercaya buta — kartu bilang
+      // "ok" padahal server udah nolak key itu → chat tetap 401. Sekarang key
+      // DICEK dulu ke /v1/models; ditolak → buang + provisi baru SEKARANG.
+      const v = await router9ValidateGatewayKey();
+      if (!v.ok) {
+        await invalidateRouter9GatewayKey();
+        g = await ensureRouter9GatewayKey({ create: true });
+        gw = g ? "ok (key lama basi — baru diprovisi)" : "belum";
+      } else {
+        gw = g ? "ok (key valid)" : "belum";
+      }
+    } catch (e) { gw = `gagal (${e.message})`; }
     let count = "-";
     try { count = (await router9Models()).length; } catch { /* telat gak masalah */ }
     await m.react("🐣");
