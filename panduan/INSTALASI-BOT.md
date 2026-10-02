@@ -31,7 +31,7 @@ nomor owner — gak perlu edit-edit lagi setelahnya.
 ## 2. Ambil Script Bot
 
 ```bash
-git clone https://github.com/itsmeeaizat1/Nova-AI-Multi-Device.git
+git clone https://github.com/itsmeeaizat1/Rara-AI-Multi-Device.git
 cd Rara-AI-Multi-Device
 ```
 
