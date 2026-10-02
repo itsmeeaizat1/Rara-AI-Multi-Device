@@ -143,103 +143,58 @@ export default [
 
         try {
             if (platform === 'tiktok') {
-                const { tiktok } = await import('../../../scrapers/src/tiktok.js')
-                const data = await tiktok(url)
-                if (data.images?.length) {
-
-                    const { buffer, contentType } = await peekFetchBuffer(data.images[0])
+                // FIX 2 Okt 2026 (gap porting): scrapers/src/tiktok.js HIROBOT
+                // gak pernah ada di repo Rara — pakai scraper TikTok resmi Rara
+                // (src/scraper/tiktok.js, engine .tiktokdl) + adaptasi shape.
+                const ttdown = (await import('../../../scraper/tiktok.js')).default
+                const data = await ttdown(url)
+                const dls = Array.isArray(data?.downloads) ? data.downloads : []
+                const vid = dls.find(d => /mp4|hd|no.?water/i.test(String(d?.type || '') + String(d?.label || ''))) || dls[0]
+                if (vid?.url) {
+                    mediaItems.push({ buffer: Buffer.alloc(0), contentType: 'video/mp4', thumbnailUrl: data?.cover || null })
+                } else if (data?.cover) {
+                    const { buffer, contentType } = await peekFetchBuffer(data.cover)
                     mediaItems.push({ buffer, contentType })
-                } else if (data.play) {
-
-                    mediaItems.push({ buffer: Buffer.alloc(0), contentType: 'video/mp4', thumbnailUrl: data.cover || data.origin_cover || null })
                 }
-            } else if (platform === 'instagram') {
-                const { instagram } = await import('../../../scrapers/src/ig.js')
-                const result = await instagram(url)
-                if (result.status && result.result) {
-                    const { metadata, media } = result.result
-
-                    if (metadata?.type === 'single_image') {
-                        const imgUrl = media.images?.[0]?.url
-                        if (imgUrl) {
-                            const { buffer, contentType } = await peekFetchBuffer(imgUrl)
-                            mediaItems.push({ buffer, contentType })
+                if (data?.title) context = [data.title, context].filter(Boolean).join(' — ')
+                        } else if (platform === 'instagram') {
+                // FIX 2 Okt 2026 (gap porting): scrapers/src/ig.js HIROBOT gak
+                // pernah ada di repo Rara — pakai instagramDownloader resmi Rara
+                // (src/scraper/ig.js, engine .ig/.igv2/.igmp3) + adaptasi shape.
+                const instagramDownloader = (await import('../../../scraper/ig.js')).default
+                const result = await instagramDownloader(url)
+                const media = Array.isArray(result?.media) ? result.media : []
+                const vid = media.find(m => /video/i.test(m?.type || '') || /\.mp4/i.test(m?.url || ''))
+                let sentVideo = false
+                if (vid?.url) {
+                    try {
+                        const MAX_VIDEO_BYTES = 15 * 1024 * 1024
+                        const { buffer, contentType, tooLarge } = await peekFetchVideoBuffer(vid.url, MAX_VIDEO_BYTES)
+                        if (!tooLarge && buffer.length > 0) {
+                            mediaItems.push({ buffer, contentType: contentType.includes('mp4') ? contentType : 'video/mp4' })
+                            sentVideo = true
                         }
-                    } else if (metadata?.type === 'video' || metadata?.type === 'reels') {
-                        const vidUrl = media.videos?.[0]?.url
-                        let sentVideo = false
-                        if (vidUrl) {
-                            try {
-                                const MAX_VIDEO_BYTES = 15 * 1024 * 1024
-                                const { buffer, contentType, tooLarge } = await peekFetchVideoBuffer(vidUrl, MAX_VIDEO_BYTES)
-                                if (!tooLarge && buffer.length > 0) {
-                                    mediaItems.push({ buffer, contentType: contentType.includes('mp4') ? contentType : 'video/mp4' })
-                                    sentVideo = true
-                                }
-                            } catch (err) {
-                                console.warn('[view_link_post] Gagal download video IG utuh, fallback ke thumbnail:', err.message)
-                            }
-                        }
-
-                        if (!sentVideo && media.thumbnail) {
-                            try {
-                                const buffer = fs.readFileSync(media.thumbnail)
-                                mediaItems.push({ buffer, contentType: 'image/jpeg' })
-                            } catch (_) {}
-                        }
-                        if (media.thumbnail) {
-                            try { fs.unlinkSync(media.thumbnail) } catch (_) {}
-                        }
-                    } else if (metadata?.type === 'carousel') {
-                        const first = media.items?.[0]
-                        let sentVideo = false
-                        if (first?.type === 'video') {
-                            const vidUrl = first.videos?.[0]?.url
-                            if (vidUrl) {
-                                try {
-                                    const MAX_VIDEO_BYTES = 15 * 1024 * 1024
-                                    const { buffer, contentType, tooLarge } = await peekFetchVideoBuffer(vidUrl, MAX_VIDEO_BYTES)
-                                    if (!tooLarge && buffer.length > 0) {
-                                        mediaItems.push({ buffer, contentType: contentType.includes('mp4') ? contentType : 'video/mp4' })
-                                        sentVideo = true
-                                    }
-                                } catch (err) {
-                                    console.warn('[view_link_post] Gagal download video carousel utuh, fallback ke thumbnail:', err.message)
-                                }
-                            }
-                        }
-                        if (!sentVideo && media.thumbnail) {
-                            try {
-                                if (/^https?:\/\//.test(media.thumbnail)) {
-                                    const { buffer, contentType } = await peekFetchBuffer(media.thumbnail)
-                                    mediaItems.push({ buffer, contentType })
-                                } else {
-                                    const buffer = fs.readFileSync(media.thumbnail)
-                                    mediaItems.push({ buffer, contentType: 'image/jpeg' })
-                                }
-                            } catch (_) {}
-                        }
-                        if (media.thumbnail && !/^https?:\/\//.test(media.thumbnail)) {
-                            try { fs.unlinkSync(media.thumbnail) } catch (_) {}
-                        }
-                        if (media.items?.length > 1) {
-                            context = [`(Carousel berisi ${media.items.length} slide, ini slide pertama saja)`, context].filter(Boolean).join(' — ')
-                        }
-                    } else if (media.thumbnail) {
-
+                    } catch (err) {
+                        console.warn('[view_link_post] Gagal download video IG utuh, fallback ke thumbnail:', err.message)
+                    }
+                }
+                if (!sentVideo) {
+                    const img = media.find(m => /image/i.test(m?.type || '') || /\.(jpe?g|png|webp)(\?|$)/i.test(m?.url || ''))
+                    const thumbUrl = img?.url || (/^https?:\/\//.test(result?.thumbnail || '') ? result.thumbnail : null)
+                    if (thumbUrl) {
                         try {
-                            if (/^https?:\/\//.test(media.thumbnail)) {
-                                const { buffer, contentType } = await peekFetchBuffer(media.thumbnail)
-                                mediaItems.push({ buffer, contentType })
-                            } else {
-                                const buffer = fs.readFileSync(media.thumbnail)
-                                mediaItems.push({ buffer, contentType: 'image/jpeg' })
-                                try { fs.unlinkSync(media.thumbnail) } catch (_) {}
-                            }
+                            const { buffer, contentType } = await peekFetchBuffer(thumbUrl)
+                            mediaItems.push({ buffer, contentType })
                         } catch (_) {}
                     }
                 }
-            } else if (platform === 'youtube') {
+                if (media.length > 1) {
+                    context = [`(Post berisi ${media.length} media, ini yang pertama saja)`, context].filter(Boolean).join(' — ')
+                }
+                if (result?.username && result.username !== '-') {
+                    context = [`@${result.username}`, context].filter(Boolean).join(' — ')
+                }
+                        } else if (platform === 'youtube') {
 
                 const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|live\/|shorts\/)|[?&]v=)([a-zA-Z0-9-_]{11})/)
                 const videoId = videoIdMatch?.[1]
@@ -249,18 +204,25 @@ export default [
                     mediaItems.push({ buffer, contentType })
                 }
             } else if (platform === 'twitter') {
-                const { twitter } = await import('../../../scrapers/src/x.js')
-                const data = await twitter(url)
-
-                if (data.thumbnail) {
+                // FIX 2 Okt 2026 (gap porting): scrapers/src/x.js HIROBOT gak
+                // pernah ada di repo Rara — pakai x2twitterDl resmi Rara
+                // (src/scraper/twitter.js, engine .twitterdl) + adaptasi shape.
+                const x2twitterDl = (await import('../../../scraper/twitter.js')).default
+                const data = await x2twitterDl(url)
+                if (!data || data.error) throw new Error(data?.message || 'Gagal mengambil data Twitter/X')
+                const thumb = data?.metadata?.thumbnail
+                if (thumb && thumb !== '-') {
                     try {
-                        const { buffer, contentType } = await peekFetchBuffer(data.thumbnail)
+                        const { buffer, contentType } = await peekFetchBuffer(thumb)
                         mediaItems.push({ buffer, contentType })
                     } catch (_) {}
                 }
-
-                if (data.description) context = [data.description, context].filter(Boolean).join(' — ')
-            } else {
+                const dur = data?.metadata?.duration && data.metadata.duration !== '-' ? `durasi ${data.metadata.duration}` : ''
+                if (dur) context = [dur, context].filter(Boolean).join(' — ')
+                if (!mediaItems.length && Array.isArray(data?.videos) && data.videos.length) {
+                    mediaItems.push({ buffer: Buffer.alloc(0), contentType: 'video/mp4', thumbnailUrl: thumb && thumb !== '-' ? thumb : null })
+                }
+                        } else {
 
                 return `Platform tidak dikenal untuk peek. Coba gunakan view_website untuk melihat isi URL ini.`
             }

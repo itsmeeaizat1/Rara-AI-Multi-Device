@@ -1611,10 +1611,11 @@ function pluginRiskFloor(name, plugin) {
     }
     return { level: 'low', reason: 'Aman & idempotent — tidak mengubah state sensitif.' };
 }
-function pluginAccessLevel(plugin) {
-    if (plugin.rowner === true)
-        return 'rowner';
-    if (plugin.owner === true)
+export function pluginAccessLevel(plugin) {
+    // FIX 2 Okt 2026: plugin Rara bentuknya { config: {...}, handler } — bukan
+    // handler-plain Hiro dengan flag plugin.owner/plugin.rowner langsung.
+    const cfg = plugin?.config || plugin || {};
+    if (cfg.isOwner === true)
         return 'owner';
     return 'public';
 }
@@ -1626,137 +1627,93 @@ export function accessLabel(level) {
     }[level] || 'semua user';
 }
 export function pluginRequirements(plugin) {
+    // FIX 2 Okt 2026: baca dari config plugin Rara (isGroup/isPrivate/dst),
+    // bukan flag flat handler Hiro (plugin.group/plugin.private/dst).
+    const cfg = plugin?.config || plugin || {};
     return {
-        group: plugin.group === true,
-        private: plugin.private === true,
-        premium: plugin.premium === true,
-        admin: plugin.admin === true,
-        botAdmin: plugin.botAdmin === true,
-        mods: plugin.mods === true,
-        registered: plugin.registered === true,
-        limit: plugin.limit === true || typeof plugin.limit === 'number' ? (typeof plugin.limit === 'number' ? plugin.limit : true) : false,
+        group: cfg.isGroup === true,
+        private: cfg.isPrivate === true,
+        premium: cfg.isPremium === true,
+        admin: cfg.isAdmin === true,
+        botAdmin: cfg.isBotAdmin === true,
+        mods: false,
+        registered: false,
+        limit: typeof cfg.limit === 'number' ? cfg.limit : (cfg.limit === true ? 1 : false),
     };
 }
 export function classifyPluginRisk(name, plugin) {
     if (!plugin)
-        return { level: 'blocked', reason: 'Plugin tidak ditemukan.' };
-    const ai = plugin.ai && typeof plugin.ai === 'object' ? plugin.ai : null;
-    if (!ai) {
-        return {
-            level: 'blocked',
-            reason: 'Plugin ini tidak punya handler.ai, jadi tidak pernah diekspos ke AI (dianggap plugin sistem/internal-only).',
-            source: 'no_ai_block'
-        };
-    }
-    const identity = pluginIdentity(name, plugin);
+        return { level: 'blocked', reason: 'Plugin tidak ditemukan.', source: 'not_found' };
+    // FIX 2 Okt 2026: plugin Rara gak punya handler.ai (sistem deklarasi risiko
+    // Hiro). Policy baru: hard-floor pattern (exec/session/db/secret) TETAP
+    // blocked; pattern berat (broadcast/kick/promote/ban/block) = high (butuh
+    // persetujuan owner); pattern sedang (setname/setpp/mute/lock) = medium
+    // (butuh persetujuan user); sisanya low — semua tetap dieksekusi lewat
+    // pipeline PENUH bot (middleware gate/cooldown/energi tetap aktif).
+    const cfg = plugin?.config || plugin || {};
+    const identity = `${name} ${cfg?.name || ''} ${cfg?.category || ''} ${(cfg?.alias || []).join(' ')}`;
     if (RISK_BLOCKED_PATTERNS.some(p => p.test(identity))) {
         return {
             level: 'blocked',
-            reason: 'Termasuk kategori sistem/sensitif (exec/session/db/secret) -- floor keamanan ini tidak bisa diturunkan lewat handler.ai.risk apapun, terlepas dari access level plugin-nya.',
+            reason: 'Termasuk kategori sistem/sensitif (exec/session/db/secret) -- floor keamanan ini tidak bisa diturunkan lewat apapun, terlepas dari access level plugin-nya.',
             source: 'hard_floor'
         };
     }
-    const bodyFloor = pluginBodySourceFloor(plugin);
-    let declared = null;
-    if (ai.risk && RISK_LEVELS.includes(ai.risk)) {
-        const normalizedLevel = RISK_LEVEL_ALIASES[ai.risk] || ai.risk;
-        declared = {
-            level: normalizedLevel,
-            reason: ai.description || `Risiko dideklarasikan plugin sebagai '${ai.risk}'.`,
-            source: 'declared'
-        };
-    }
-    else {
-        declared = {
-            level: 'none',
-            reason: ai.description || 'Plugin ini punya handler.ai tapi belum mendeklarasikan risk level (handler.ai.risk kosong).',
-            source: 'undeclared'
-        };
-    }
-    if (bodyFloor && RISK_ORDER[bodyFloor.level] > (RISK_ORDER[declared.level] ?? -1)) {
+    if (RISK_HIGH_PATTERNS.some(p => p.test(identity))) {
         return {
-            level: bodyFloor.level,
-            reason: `${bodyFloor.reason} (declared risk plugin ini cuma '${declared.level}', tapi dinaikkan otomatis karena body-scan.)`,
-            source: 'body_scan'
+            level: 'high',
+            reason: 'Command berdampak luas/merubah keadaan chat lain (broadcast/kick/promote/ban/dst) — butuh persetujuan eksplisit dulu.',
+            source: 'pattern'
         };
     }
-    return declared;
-}
-export function riskBadge(level) {
-    return { blocked: '', high: '', medium: '', low: '', none: '' }[level] || '';
-}
-async function resolveGroupContext(groupJid) {
-    if (!groupJid?.endsWith('@g.us')) {
-        return { isGroup: false, isSenderAdmin: false, isBotAdmin: false, meta: null };
+    if (RISK_MEDIUM_PATTERNS.some(p => p.test(identity))) {
+        return {
+            level: 'medium',
+            reason: 'Command merubah pengaturan/identitas (setname/setpp/mute/dst) — konfirmasi user dulu sebelum jalan.',
+            source: 'pattern'
+        };
     }
-    try {
-        const meta = await _conn.groupMetadata(groupJid);
-        const senderJid = _currentM?.sender;
-        const botJid = _conn?.decodeJid ? _conn.decodeJid(_conn?.user?.id) : _conn?.user?.id;
-        const senderParticipant = meta.participants?.find(p => matchParticipant(_conn, p, senderJid));
-        const botParticipant = meta.participants?.find(p => matchParticipant(_conn, p, botJid));
-        const isSenderAdmin = senderParticipant?.admin === 'admin' || senderParticipant?.admin === 'superadmin';
-        const isBotAdmin = botParticipant?.admin === 'admin' || botParticipant?.admin === 'superadmin';
-        return { isGroup: true, isSenderAdmin: !!isSenderAdmin, isBotAdmin: !!isBotAdmin, meta };
-    }
-    catch (e) {
-        console.warn(`[resolveGroupContext] Gagal ambil metadata grup ${groupJid}: ${e.message}`);
-        return { isGroup: true, isSenderAdmin: false, isBotAdmin: false, meta: null, error: e.message };
-    }
-}
-function isSenderPremium() {
-    if (_currentIsOwner)
-        return true;
-    try {
-        const senderJid = _currentM?.sender;
-        const userDb = db?.data?.users?.[senderJid];
-        return !!userDb?.premium;
-    }
-    catch (e) {
-        return false;
-    }
+    return {
+        level: 'low',
+        reason: 'Command reguler — dijalankan lewat pipeline penuh bot (gate/cooldown/energi tetap aktif).',
+        source: 'default_low'
+    };
 }
 export async function resolvePlugin(command) {
-    const { plugins } = await import('../../utils/plugins.js');
-    let candidates = [];
-    for (const [name, plugin] of Object.entries(plugins || {})) {
-        if (!plugin || typeof plugin !== 'function')
-            continue;
-        if (plugin.customPrefix)
-            continue;
-        const cmd = plugin.command;
-        if (!cmd)
-            continue;
-        const isMatch = cmd instanceof RegExp ? cmd.test(command)
-            : Array.isArray(cmd) ? cmd.some(c => c === command || (c instanceof RegExp && c.test(command)))
-                : cmd === command;
-        if (isMatch)
-            candidates.push([name, plugin]);
-    }
-    if (candidates.length > 1) {
-        const exact = candidates.find(([, p]) => (Array.isArray(p.dym) && p.dym.includes(command)) ||
-            (typeof p.command === 'string' && p.command === command));
-        if (exact)
-            candidates = [exact];
-    }
-    const rawCodeRe = /(^|[\\/])(exec)\.js$/i;
-    const safeCandidates = candidates.filter(([name]) => !rawCodeRe.test(name));
-    if (safeCandidates.length)
-        candidates = safeCandidates;
-    if (candidates.length) {
-        const [name, plugin] = candidates[0];
-        return { pluginName: name, plugin };
-    }
-    return { pluginName: '', plugin: null };
+    // FIX 2 Okt 2026 (gap porting .hiai): engine HIROBOT asli nyimpen registry
+    // plugin di utils/plugins.js — file itu GAK PERNAH ada di repo Rara (dicek
+    // git log --all: nol jejak), jadi resolvePlugin selalu throw & fitur
+    // run_plugin/list_plugins/download_media mati sejak hari pertama. Registry
+    // resmi Rara ada di src/lib/rara-plugins.js (pluginStore) — resolve dari
+    // sana (seam yang sama dipakai gateCommandAccess .agent).
+    const { getPlugin } = await import('../rara-plugins.js');
+    const plugin = getPlugin(String(command || '').toLowerCase().trim());
+    if (!plugin)
+        return { pluginName: '', plugin: null };
+    let pluginName = plugin.filePath || '';
+    if (!pluginName)
+        pluginName = `${plugin.config?.name || command}.js`;
+    pluginName = pluginName.split(/[\\/]/).pop();
+    return { pluginName, plugin };
 }
 export async function resolveCustomPrefixPlugin(rawInput) {
-    const { plugins } = await import('../../utils/plugins.js');
-    for (const [name, plugin] of Object.entries(plugins || {})) {
-        if (!plugin || typeof plugin !== 'function' || !plugin.customPrefix)
+    // FIX 2 Okt 2026: registry plugin HIROBOT (utils/plugins.js) gak pernah
+    // ke-port — scan customTrigger di registry Rara sebagai padanannya.
+    const { getAllPlugins } = await import('../rara-plugins.js');
+    for (const plugin of getAllPlugins() || []) {
+        const trig = plugin?.config?.customTrigger;
+        if (!trig)
             continue;
-        if (plugin.customPrefix instanceof RegExp && plugin.customPrefix.test(rawInput)) {
-            return { pluginName: name, plugin };
+        try {
+            const hit = trig instanceof RegExp ? trig.test(rawInput)
+                : (typeof trig === 'function' ? trig(rawInput) === true : false);
+            if (hit) {
+                let name = plugin.filePath || '';
+                name = name ? name.split(/[\\/]/).pop() : String(plugin.config?.name || '');
+                return { pluginName: name, plugin };
+            }
         }
+        catch { /* trigger plugin gak boleh bikin registry baper */ }
     }
     return { pluginName: '', plugin: null };
 }
@@ -1769,117 +1726,112 @@ export async function execEval(code, { silent = false } = {}) {
     if (typeof code !== 'string' || !code.trim()) {
         throw new Error('Kode eval kosong/tidak valid.');
     }
-    const { plugin: evalPlugin, pluginName } = await resolveCustomPrefixPlugin(silent ? `< ${code}` : `<< ${code}`);
-    if (!evalPlugin) {
-        throw new Error('Plugin eval (customPrefix "<"/"<<") tidak ditemukan di sistem plugin.');
-    }
-    const extra = {
-        conn: _conn,
-        args: [code],
-        text: code,
-        usedPrefix: silent ? '<' : '<<',
-        noPrefix: code,
-        isOwner: _currentIsOwner,
-        isROwner: _currentIsROwner,
-        isMods: true,
-        isPrems: true,
-        isAdmin: true,
-        isBotAdmin: false,
-        isRAdmin: false,
-        chatUpdate: {},
-        __dirname: path.join(ROOT, 'plugins'),
-        __filename: path.join(ROOT, pluginName),
-        groupMetadata: {},
-        participants: [],
-        user: {},
-        bot: {},
-        match: [code]
-    };
-    await evalPlugin.call(_conn, _currentM, extra);
-    return { ok: true };
+    // FIX 2 Okt 2026: plugin eval customPrefix "<"/"<<" milik HIROBOT gak
+    // pernah ke-port ke Rara. Rara punya fitur .eval sendiri
+    // (plugins/owner/eval.js, owner-only) — jalankan lewat pipeline penuh
+    // messageHandler (pola executor .agent) + capture output biar hasil eval
+    // dibalikin ke AI, bukan cuma menguap di chat.
+    const res = await execPluginCommand('eval', code, { captureOutput: true, skipRiskFloor: true });
+    const texts = (res?.captured || []).map((c) => {
+        const content = c?.content;
+        if (typeof content === 'string')
+            return content;
+        if (content?.text)
+            return String(content.text);
+        return '';
+    }).filter(Boolean).join('\n');
+    return { ok: true, output: texts || '(eval selesai tanpa output)' };
 }
-export async function execPluginCommand(command, argsStr = '', { confirmed = false, captureOutput = false } = {}) {
+// FIX 2 Okt 2026: engine Hiro nyuruh AI manggil execPluginCommand → plugin
+// langsung (plugin.call(conn, m, extra)) — itu konvensi plugin HIROBOT, plugin
+// Rara bentuknya { config, handler } + jalan lewat messageHandler. Jalankan
+// command lewat PIPELINE PENUH bot (pola executor .agent di
+// plugins/ai-agent/agent.js): sintesis pesan WA mentah lalu messageHandler —
+// middleware gate/cooldown/energi tetap jalan, konsisten kayak user ngetik
+// manual, dan command jalan ATAS NAMA user yang sedang chat.
+async function runBotCommandPipeline(command, argsStr = '') {
+    const { messageHandler } = await import('../handler.js');
+    const sender = _currentM?.sender || _currentM?.key?.participant || _conn?.user?.id;
+    const text = `.${command}${argsStr ? ' ' + argsStr : ''}`;
+    const raw = {
+        key: {
+            remoteJid: _currentJid,
+            fromMe: false,
+            id: 'HIAICMD' + Date.now(),
+            participant: _currentJid?.endsWith('@g.us') ? sender : undefined
+        },
+        message: { conversation: text },
+        messageTimestamp: Math.floor(Date.now() / 1000)
+    };
+    await Promise.race([
+        messageHandler(raw, _conn),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout 60 detik menjalankan command (plugin kemungkinan macet)'), 60_000))
+        )
+    ]);
+}
+// Guard anti-loop: AI-entry commands gak boleh dijalankan dari dalam AI agent.
+const AI_LOOP_COMMANDS = new Set([
+    'hiai', 'hiroai', 'hiagent', 'agent', 'aisuperagent', 'raraagent',
+    'novaagent', 'anovaagent', 'aichat'
+]);
+export async function execPluginCommand(command, argsStr = '', { confirmed = false, captureOutput = false, skipRiskFloor = false } = {}) {
     if (!_conn || !_currentM || !_currentJid)
         throw new Error('Konteks WA tidak tersedia');
     if (/^\$/.test(command.trim())) {
         throw new Error(`Command "${command}" is a raw-code prefix (exec) and cannot be run automatically.`);
     }
+    const cmdLower = String(command || '').toLowerCase().trim();
+    // FIX 2 Okt 2026: .eval punya gate rowner khusus di execEval — jangan biarkan
+    // AI meng-akalinya lewat run_plugin generik.
+    if (!skipRiskFloor && cmdLower === 'eval') {
+        throw new Error('Command .eval cuma bisa dijalankan lewat tool run_eval (gate real owner).');
+    }
+    if (AI_LOOP_COMMANDS.has(cmdLower)) {
+        throw new Error(`Command "${cmdLower}" adalah fitur AI agent — tidak boleh dipanggil dari dalam AI agent (loop). Balas user secara natural, jangan panggil tool ini.`);
+    }
     const { pluginName, plugin: targetPlugin } = await resolvePlugin(command);
     if (!targetPlugin)
         throw new Error(`Command "${command}" not found. Check with list_plugins first.`);
-    const rawCodeRe = /(^|[\\/])(exec)\.js$/i;
-    if (rawCodeRe.test(pluginName)) {
-        throw new Error(`Command "${command}" maps to a raw-code plugin (${pluginName}) and cannot be run automatically.`);
-    }
     const access = pluginAccessLevel(targetPlugin);
-    if (access === 'rowner' && !_currentIsROwner) {
-        throw new Error(`Command "${command}" khusus real owner bot (handler.rowner = true). User ini bukan real owner, ditolak.`);
-    }
     if (access === 'owner' && !_currentIsOwner) {
-        throw new Error(`Command "${command}" khusus owner (handler.owner = true, termasuk sub-bot owner). User ini bukan owner, ditolak.`);
+        throw new Error(`Command "${command}" khusus owner (isOwner = true, termasuk sub-bot owner). User ini bukan owner, ditolak.`);
     }
     const risk = classifyPluginRisk(pluginName, targetPlugin);
-    if (risk.level === 'blocked') {
+    if (!skipRiskFloor && risk.level === 'blocked') {
         throw new Error(`Command "${command}" tergolong risiko BANNED (untuk AI Agent, BUKAN larangan untuk user): ${risk.reason} AI Agent DILARANG KERAS menjalankan command ini lewat run_plugin sama sekali, siapapun requester-nya (termasuk owner) — ini bukan berarti user tidak boleh pakai command ini, user tetap bisa menjalankannya sendiri secara manual dengan mengetik ".${command}" langsung di chat kalau memang berwenang. Kalau user butuh ini, arahkan mereka ketik manual, JANGAN coba akali lewat run_plugin dengan cara apapun. WAJIB balas ke user dengan bahasa natural TANPA menyebut kata "risk"/"risiko"/"banned"/level apapun sama sekali (lihat rule 6c).`);
     }
-    if (risk.level === 'high') {
+    if (!skipRiskFloor && risk.level === 'high') {
         if (!_currentIsOwner) {
-            throw new Error(`Command "${command}" tergolong risiko HIGH: ${risk.reason} Hanya owner bot yang boleh menjalankan ini lewat AI Agent. User ini bukan owner, ditolak. WAJIB balas ke user dengan bahasa natural TANPA menyebut kata "risk"/"risiko"/level apapun sama sekali (lihat rule 6c).`);
+            throw new Error(`Command "${command}" cuma boleh dijalankan AI Agent kalau requester owner bot dan owner sudah menyetujuinya secara eksplisit. Requester bukan owner — arahkan user menjalankannya manual dengan mengetik ".${command}" kalau memang berwenang.`);
         }
         if (!confirmed) {
             throw new Error(`CONFIRM_REQUIRED: Command "${command}" tergolong risiko HIGH: ${risk.reason} Ini level tertinggi yang masih boleh dijalankan AI Agent (satu tingkat di bawah BANNED) — WAJIB tanya dulu ke owner secara eksplisit sebelum lanjut, walau requester-nya owner sendiri, TANPA menyebut istilah "risk"/"risiko"/"high"/level apapun ke owner (lihat rule 6c). Begitu owner benar-benar menyetujui secara eksplisit di chat, panggil ulang run_plugin dengan parameter confirmed: true.`);
         }
     }
-    if (risk.level === 'medium' && !confirmed) {
-        throw new Error(`CONFIRM_REQUIRED: Command "${command}" tergolong risiko MEDIUM: ${risk.reason} Tanya dulu ke user apakah yakin mau lanjut, TANPA menyebut istilah "risk"/"risiko"/"medium"/level apapun (lihat rule 6c) — kalau user sudah setuju secara eksplisit, panggil ulang run_plugin dengan parameter confirmed: true.`);
-    }
-    if (risk.level === 'none') {
-        throw new Error(`UNCLASSIFIED: Command "${command}" (file plugin: ${pluginName}) punya handler.ai tapi BELUM mendeklarasikan risk level yang valid. ${risk.reason} JANGAN cuma tanya user boleh-tidaknya. Ikuti prosedur klasifikasi otomatis (rule 6c system prompt): kalau requester saat ini OWNER bot, baca dulu source code plugin ini via read_file("${pluginName}") untuk paham cara kerjanya, tentukan risk level yang paling tepat (banned/high/medium/low) berdasarkan apa yang kodenya BENAR-BENAR lakukan, lalu write_file untuk mengisi/menambahkan field risk & description di handler.ai plugin ini (JANGAN ubah bagian lain plugin), baru panggil ulang run_plugin dengan command yang sama. Kalau requester BUKAN owner, JANGAN sentuh/edit file apapun — cukup beri tahu user command ini belum diverifikasi keamanannya dan owner bot perlu mengonfigurasinya dulu.`);
+    if (!skipRiskFloor && risk.level === 'medium' && !confirmed) {
+        throw new Error(`CONFIRM_REQUIRED: Command "${command}" tergolong risiko MEDIUM: ${risk.reason} Tanya dulu ke user apakah yakin mau lanjut, TANPA menyebut istilah "risk"/"risiko"/"medium"/level apapun — kalau user sudah setuju secara eksplisit, panggil ulang run_plugin dengan parameter confirmed: true.`);
     }
     const reqs = pluginRequirements(targetPlugin);
     const isGroupChat = _currentJid?.endsWith('@g.us');
     if (reqs.group && !isGroupChat) {
-        throw new Error(`Command "${command}" cuma bisa dipakai di dalam grup (handler.group = true). Chat saat ini bukan grup, ditolak.`);
+        throw new Error(`Command "${command}" cuma bisa dipakai di dalam grup (isGroup = true). Chat saat ini bukan grup, ditolak.`);
     }
     if (reqs.private && isGroupChat) {
-        throw new Error(`Command "${command}" cuma bisa dipakai di chat pribadi/DM (handler.private = true). Chat saat ini adalah grup, ditolak.`);
+        throw new Error(`Command "${command}" cuma bisa dipakai di chat pribadi/DM (isPrivate = true). Chat saat ini adalah grup, ditolak.`);
     }
     if (reqs.premium && !isSenderPremium()) {
-        throw new Error(`Command "${command}" cuma untuk user premium (handler.premium = true). Sender saat ini bukan premium/owner, ditolak.`);
+        throw new Error(`Command "${command}" cuma untuk user premium (isPremium = true). Sender saat ini bukan premium/owner, ditolak.`);
     }
     let groupCtx = { isGroup: isGroupChat, isSenderAdmin: false, isBotAdmin: false, meta: null };
     if (isGroupChat && (reqs.admin || reqs.botAdmin || reqs.group)) {
         groupCtx = await resolveGroupContext(_currentJid);
         if (reqs.admin && !_currentIsOwner && !groupCtx.isSenderAdmin) {
-            throw new Error(`Command "${command}" cuma untuk admin grup (handler.admin = true). Sender bukan admin grup ini dan bukan owner bot, ditolak.`);
+            throw new Error(`Command "${command}" cuma untuk admin grup (isAdmin = true). Sender bukan admin grup ini dan bukan owner bot, ditolak.`);
         }
         if (reqs.botAdmin && !groupCtx.isBotAdmin) {
-            throw new Error(`Command "${command}" butuh bot jadi admin grup ini dulu (handler.botAdmin = true). Bot belum jadi admin di grup ini, ditolak.`);
+            throw new Error(`Command "${command}" butuh bot jadi admin grup ini dulu (isBotAdmin = true). Bot belum jadi admin di grup ini, ditolak.`);
         }
     }
-    const extra = {
-        conn: _conn,
-        command,
-        args: argsStr.split(' ').filter(Boolean),
-        text: argsStr,
-        usedPrefix: '.',
-        noPrefix: command + (argsStr ? ' ' + argsStr : ''),
-        isOwner: _currentIsOwner,
-        isROwner: _currentIsROwner,
-        isMods: true,
-        isPrems: isSenderPremium(),
-        isAdmin: _currentIsOwner || groupCtx.isSenderAdmin,
-        isBotAdmin: groupCtx.isBotAdmin,
-        isRAdmin: groupCtx.isSenderAdmin,
-        chatUpdate: {},
-        __dirname: path.join(ROOT, 'plugins'),
-        __filename: path.join(ROOT, pluginName),
-        groupMetadata: groupCtx.meta || {},
-        participants: groupCtx.meta?.participants || [],
-        user: {},
-        bot: {},
-        match: [null]
-    };
     let captured = null;
     let originalReply = null;
     let originalSendMessage = null;
@@ -1899,33 +1851,12 @@ export async function execPluginCommand(command, argsStr = '', { confirmed = fal
         }
     }
     try {
-        await targetPlugin.call(_conn, _currentM, extra);
+        await runBotCommandPipeline(command, argsStr);
         return captureOutput ? { pluginName, captured, risk } : { pluginName, risk };
     }
-    catch (directErr) {
-        console.warn(`[execPluginCommand] Eksekusi langsung "${command}" gagal (${directErr.message}), fallback ke buttonReply...`);
-        try {
-            const buttonId = `/${command}${argsStr ? ' ' + argsStr : ''}`;
-            if (captureOutput) {
-                captured.push({
-                    jid: _currentJid,
-                    content: { type: 'plain', buttonReply: { id: buttonId, displayText: `Menjalankan .${command}${argsStr ? ' ' + argsStr : ''}...` } },
-                    opts: { quoted: _currentM }
-                });
-                return { pluginName, captured, risk };
-            }
-            await (originalSendMessage || _conn.sendMessage.bind(_conn))(_currentJid, {
-                type: 'plain',
-                buttonReply: {
-                    id: buttonId,
-                    displayText: `Menjalankan .${command}${argsStr ? ' ' + argsStr : ''}...`
-                }
-            }, { quoted: _currentM });
-            return { pluginName, risk };
-        }
-        catch (fallbackErr) {
-            throw directErr;
-        }
+    catch (pipelineErr) {
+        console.warn(`[execPluginCommand] Pipeline "${command}" gagal: ${pipelineErr.message}`);
+        throw pipelineErr;
     }
     finally {
         if (captureOutput) {
@@ -1941,65 +1872,46 @@ export const DOWNLOAD_PLATFORM_MAP = {
     youtube: { command: 'ytv', label: 'YouTube' },
     youtube_audio: { command: 'play', label: 'YouTube (audio/lagu)' },
     twitter: { command: 'twitter', label: 'Twitter/X' },
+    // FIX 2 Okt 2026: platform "facebook" ada di DOWNLOAD_PLATFORM_KEYS tool
+    // download_media tapi GAK pernah ada mapping-nya (gap porting) — selama ini
+    // .hiai download media facebook selalu ditolak "platform tidak dikenali".
+    // Rara punya plugin .facebookdl — petakan ke sana.
+    facebook: { command: 'facebookdl', label: 'Facebook' },
 };
 export async function downloadTwitterDirect(query) {
     if (!_conn || !_currentJid)
         throw new Error('WA connection not ready');
-    const { twitter, gifToMp4, isLink } = await import('../../scrapers/src/x.js');
-    const txt = isLink(query);
-    const input = txt ? txt[0] : query;
-    if (!input)
+    // FIX 2 Okt 2026 (gap porting): scrapers/src/x.js milik HIROBOT gak pernah
+    // ada di repo Rara (git log --all: nol jejak) — download Twitter lewat .hiai
+    // selalu gagal "Cannot find module" sejak port pertama. Ganti ke scraper
+    // Twitter resmi Rara (src/scraper/twitter.js — x2twitterDl, engine .twitterdl)
+    // dengan adaptasi shape hasil.
+    const linkMatch = String(query || '').match(/https?:\/\/(?:[a-z0-9.-]*\.)?(?:twitter|x)\.com\/\S+/i);
+    const input = linkMatch ? linkMatch[0] : String(query || '').trim();
+    if (!input || !/^https?:\/\//i.test(input))
         throw new Error('Link Twitter/X tidak valid atau tidak ditemukan di argumen.');
-    const twitterData = await twitter(input);
-    let videoUrls = twitterData.videoUrls || [];
-    if (twitterData.type === 'gif') {
-        videoUrls = [{ type: 'GIF', quality: 'GIF format', link: [twitterData.gif] }];
-    }
-    if (videoUrls.length === 0) {
+    const x2twitterDl = (await import('../../scraper/twitter.js')).default;
+    const data = await x2twitterDl(input);
+    if (!data || data.error)
+        throw new Error(data?.message || 'Gagal mengambil data dari x2twitter.');
+    const videos = (data.videos || []).filter(v => v?.url);
+    if (!videos.length)
         return 'Tidak ditemukan konten yang bisa diunduh dari link Twitter/X tersebut.';
-    }
-    const mp4Entries = videoUrls.filter(v => v.type === 'MP4');
-    const nonMp4Entries = videoUrls.filter(v => v.type !== 'MP4');
-    const isMultiImageCarousel = videoUrls.some(v => v.type === 'JPG' && Array.isArray(v.link) && v.link.length > 1);
-    let toSend;
-    if (mp4Entries.length > 1 && nonMp4Entries.length === 0 && !isMultiImageCarousel) {
-        toSend = [mp4Entries[0]];
-    }
-    else {
-        const MAX_SEND = 3;
-        toSend = videoUrls.slice(0, MAX_SEND);
-    }
-    const caption = `- *Caption :* \n${twitterData.description || ''}`;
-    for (let i = 0; i < toSend.length; i++) {
-        const item = toSend[i];
-        const isSelectedGif = i === 0 && twitterData.type === 'gif';
-        for (const linkUrl of item.link) {
-            if (isSelectedGif) {
-                const tmpPath = await gifToMp4(linkUrl);
-                try {
-                    await _conn.sendMessage(_currentJid, { video: fs.readFileSync(tmpPath), gifPlayback: true, caption }, { quoted: _currentM });
-                }
-                finally {
-                    if (fs.existsSync(tmpPath))
-                        fs.unlinkSync(tmpPath);
-                }
-            }
-            else {
-                const ext = linkUrl.includes('.mp3') ? 'mp3' : (linkUrl.includes('.jpg') || linkUrl.includes('.jpeg')) ? 'jpg' : 'mp4';
-                if (ext === 'mp3') {
-                    await _conn.sendMessage(_currentJid, { audio: { url: linkUrl }, mimetype: 'audio/mpeg', caption }, { quoted: _currentM });
-                }
-                else if (ext === 'jpg') {
-                    await _conn.sendMessage(_currentJid, { image: { url: linkUrl }, caption }, { quoted: _currentM });
-                }
-                else {
-                    await _conn.sendMessage(_currentJid, { video: { url: linkUrl }, caption }, { quoted: _currentM });
-                }
-            }
+    const resNum = (v) => parseInt(String(v?.resolution || '').match(/\d+/)?.[0] || '0', 10) || 0;
+    const best = [...videos].sort((a, b) => resNum(b) - resNum(a))[0];
+    const duration = data.metadata?.duration && data.metadata.duration !== '-' ? `\nDuration: ${data.metadata.duration}` : '';
+    const caption = `- *Caption :* \nMedia Twitter/X${duration}`;
+    await _conn.sendMessage(_currentJid, { video: { url: best.url }, caption }, { quoted: _currentM });
+    if (data.audio?.url) {
+        try {
+            await _conn.sendMessage(_currentJid, { audio: { url: data.audio.url }, mimetype: 'audio/mpeg' }, { quoted: _currentM });
+        }
+        catch (e) {
+            console.warn('[downloadTwitterDirect] Gagal kirim audio mp3:', e.message);
         }
     }
-    const skipped = videoUrls.length - toSend.length;
-    return `Twitter/X berhasil didownload dan dikirim (${toSend.map(v => v.type).join(', ')}) langsung ke chat ini.${skipped > 0 ? ` (${skipped} pilihan format lain dilewati.)` : ''}`;
+    const skipped = videos.length - 1;
+    return `Twitter/X berhasil didownload dan dikirim langsung ke chat ini.${skipped > 0 ? ` (${skipped} pilihan resolusi lain dilewati.)` : ''}`;
 }
 export async function downloadUserImageAsUrl(m) {
     const { downloadMediaMessage } = await import('baileys');
