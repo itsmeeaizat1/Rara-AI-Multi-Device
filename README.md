@@ -44,11 +44,11 @@ Automation:
 
 ---
 
-## ✨ Fitur Unggulan v24.2.8
+## Fitur Unggulan v24.2.8
 
 Rara AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buatan, otomasi realtime, sistem RPG yang dalam, dan ratusan utilitas produktivitas dalam satu bot — semuanya bisa dipakai langsung dari chat.
 
-### 🆕 Fitur Terbaru
+### Fitur Terbaru
 
 - **4.727 Skill untuk AI Agent** — katalog skill terbesar hasil integrasi skills.sh, dicocokkan otomatis ke prompt agent sesuai tugas; owner bisa eksplorasi via `.skill`.
 - **Guild War & Time Capsule RPG** — battle antar grup dengan pot taruhan, hadiah MVP, plus event dunia sekali-terjadi (komet, world boss, festival) yang tidak bisa diulang.
@@ -68,7 +68,7 @@ Rara AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 - **Peringatan Dini Realtime** — gempa multi-provider (BMKG, USGS, JMA, EMSC), cuaca ekstrem, dan peringatan tsunami dengan estimasi guncangan tiba.
 - **Auto-Order Terintegrasi** — pemesanan otomatis tiga penyedia (topup game, SMM, akun premium): bayar QRIS, bot memproses pesanan, memantau status, dan mengirim struk otomatis.
 
-### ⭐ Fitur Paling Populer
+### Fitur Paling Populer
 
 - **Downloader Multi-Platform** — video dan audio dari YouTube, TikTok, Instagram, Facebook, Spotify, SoundCloud, Threads, dan banyak lagi, dengan deteksi platform otomatis.
 - **AI Multi-Engine** — chat, gambar, suara, dan video dari puluhan model AI dengan rantai fallback otomatis, termasuk opsi gratis tanpa API key.
@@ -79,7 +79,7 @@ Rara AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 - **Produktivitas** — generator surat resmi, kontrak, notulen rapat, CV, konversi dokumen, OCR, reminder, patungan, dan tracker keuangan pribadi.
 - **Anti-Link & Moderasi Grup** — deteksi link, antispam, antitoxic, welcome yang bisa dikustomisasi, dan sistem level/XP.
 
-### 🎯 Ringkasan Kapabilitas
+### Ringkasan Kapabilitas
 
 | Area | Yang Ditawarkan |
 |------|----------------|
@@ -95,7 +95,7 @@ Rara AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 
 ---
 
-## 📊 Statistik Bot
+## Statistik Bot
 
 | Metric | Count |
 |--------|-------|
@@ -123,7 +123,7 @@ Rara AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 | API Endpoint | 700+ (lihat `docs/list api.md`) |
 | Agent Skill | 4.727 (integrasi skills.sh) |
 
-## 📝 Command Penting
+## Command Penting
 
 Command yang paling sering dipakai sehari-hari:
 
@@ -148,7 +148,7 @@ Command yang paling sering dipakai sehari-hari:
 | `.aboutrara` | Info bot & creator |
 | `.owner` / `.donasi` | Kontak owner & dukungan developer |
 
-## 💻 Spesifikasi Server
+## Spesifikasi Server
 
 | Resource | Minimum | Rekomendasi |
 |----------|---------|-------------|
@@ -172,7 +172,7 @@ Command yang paling sering dipakai sehari-hari:
 
 ---
 
-## 🚀 Cara Pemasangan & Persiapan
+## Cara Pemasangan & Persiapan
 
 ### 1. Install & Jalankan
 
@@ -319,7 +319,7 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
 ![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
 ![npm](https://img.shields.io/badge/-npm-CB3837?style=flat-square&logo=npm&logoColor=white)
 
-## 📄 License
+## License
 
 Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat1)  
 All Rights Reserved. Made in Indonesia 🇮🇩
@@ -328,7 +328,7 @@ Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
 
 ---
 
-## 💰 Donate
+## Donate
 
 <p align="center">
   <a href="https://files.catbox.moe/zewra8.jpeg">
