@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { live3d } from "../../src/scraper/seaart.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "rarabanana",
   alias: ["rarabanana", "novabanana"],
@@ -20,7 +20,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = m.args.join(" ");
   if (!prompt) {
-    return m.reply(raraGuideV2("rarabanana", {
+    return m.reply(raraGuide("rarabanana", {
  kaomoji: "(๑˃ᴗ˂)ﻭ",
  sapaan: "edit gambar pakai AI Banana, tinggal bilang mau diubah jadi apa! (≧◡≦) ♡",
       cara: "reply/kirim gambar + caption perintah editnya",

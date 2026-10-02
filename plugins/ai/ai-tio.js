@@ -8,7 +8,7 @@
 //            .aitio qwen jelaskan kuantum
 // ═══════════════════════════════════════════════
 
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getTioKey, getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -208,7 +208,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ═══ No args → show help ═══
     if (!body) {
       await m.react("🐣");
-      return m.reply(raraGuideV2("aitio", {
+      return m.reply(raraGuide("aitio", {
  kaomoji: "(๑>ᴗ<)و",
  sapaan: "pilih model langsung, semua dalam satu command! (≧∇≦)ﾉ",
         cara: "ketik nama model + promptnya sesudah command",

@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolasciitext — teks ↔ kode ASCII/Unicode (port altftool.com/tools/all/text-ascii)
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolasciitext", alias: ["asciitext", "kodeascii", "textascii"], category: "tools",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      return m.reply(raraGuideV2("ftoolasciitext", {
+      return m.reply(raraGuide("ftoolasciitext", {
         kaomoji: "(◕ᴗ◕)",
         sapaan: "teks mau diubah ke kode angka? atau kode ke teks?",
         cara: "ketik enc (teks→kode) atau dec (kode→teks) lalu isinya",

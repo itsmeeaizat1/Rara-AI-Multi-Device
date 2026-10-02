@@ -2,7 +2,7 @@
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { downloadContentFromMessage } from "nova";
 import config from "../../config.js";
-import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "antirvo",

@@ -10,7 +10,7 @@
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/rara-ytdlp.js";
-import { raraWrap, raraBerhasil, raraGagal, raraGangguan, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan, raraGuide, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 
@@ -264,7 +264,7 @@ async function handler(m, { sock }) {
 
   // Usage: pilihan bitrate (default 256kbps)
   if (!query) {
-    return m.reply(raraGuideV2("play", {
+    return m.reply(raraGuide("play", {
  kaomoji: "ヾ(≧▽≦*)o",
  sapaan: "mau lagu favorit? ketik aja judulnya! (≧◡≦)",
       cara: "ketik judul lagunya sesudah command",

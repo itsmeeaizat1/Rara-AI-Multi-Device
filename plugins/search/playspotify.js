@@ -18,7 +18,7 @@
 import axios from "axios";
 import { searchSpotiDown, downloadSpotiAudio } from "../../src/scraper/spotidown.js";
 import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
-import { raraGagal, raraGangguan, raraGuideV2, raraBerhasil } from "../../src/lib/rara-menu-style.js";
+import { raraGagal, raraGangguan, raraGuide, raraBerhasil } from "../../src/lib/rara-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
 
   if (!query) {
     return m.reply(
-      raraGuideV2("playspotify", {
+      raraGuide("playspotify", {
  kaomoji: "(๑´ㅂ`๑)",
  sapaan: "mau dengerin lagu dari spotify? ketik judulnya! (˶ᵔ ᵕ ᵔ˶)",
         cara: "ketik judul lagunya sesudah command",

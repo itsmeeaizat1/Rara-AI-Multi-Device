@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolrot13 — sandi ROT13 (port altftool.com/tools/all/rot13) — geser huruf 13 posisi.
 // ROT13 symmetric: encode = decode. Huruf saja, angka/emoji/aksara lain gak disentuh.
-import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolrot13", alias: ["rot13", "sandirot13"], category: "tools",
@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(raraGuideV2("ftoolrot13", {
+      return m.reply(raraGuide("ftoolrot13", {
         kaomoji: "(¬‿¬)✧",
         sapaan: "teks mau disandikan ROT13? ketik aja, ulangi perintahnya buat ngembaliin~",
         cara: "setiap huruf digeser 13 posisi, ketik dua kali hasilnya balik ke teks asli",

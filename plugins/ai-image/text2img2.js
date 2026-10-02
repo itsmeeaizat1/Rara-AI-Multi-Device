@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import te from '../../src/lib/rara-error.js'
-import { raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, toSC, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -52,7 +52,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-  if (!m.fullArgs) { return await m.reply(raraGuideV2(m.command, {
+  if (!m.fullArgs) { return await m.reply(raraGuide(m.command, {
  kaomoji: "(◕ᴗ◕)",
  sapaan: "bikin gambar dari teks, deskripsikan aja yang kamu mau!",
     cara: "ketik prompt/deskripsi gambarnya sesudah command",

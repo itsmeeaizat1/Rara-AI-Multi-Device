@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import { f } from '../../src/lib/rara-http.js'
 import te from '../../src/lib/rara-error.js'
@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        return m.reply(raraGuideV2("gita", {
+        return m.reply(raraGuide("gita", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)",
  sapaan: "nanya apa aja ke Gita GPT, asisten AI serba bisa! (◕ᴗ◕)",
           cara: "ketik pertanyaannya sesudah command",

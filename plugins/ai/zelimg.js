@@ -6,7 +6,7 @@
 
 import { zelImageEndpoint, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
 import { ZEL_IMAGE_REGISTRY, getZelImageSpec } from "../../src/lib/rara-zel-registry.js";
-import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import { sendImage } from "../../src/lib/rara-message.js";
 import { fetchBuffer } from "../../src/lib/rara-utils.js";
 
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     const prompt = args.join(" ").trim();
     const isImgEdit = spec.type === "imgedit" || (spec.type === "flex" && m.quoted?.isImage);
     if (isImgEdit && !m.quoted?.isImage) {
-      return m.reply(raraGuideV2(cmd, {
+      return m.reply(raraGuide(cmd, {
  kaomoji: "(๑ᵔ⤙ᵔ๑)",
  sapaan: spec.desc + " (wajib reply foto dulu ya!)",
         cara: "reply foto + ketik prompt ini sebagai caption",
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         spec: ["⚡ energi 2", "⏱ 20dtk", "💸 gratis"],
       }));
     }
-    if (!prompt) return m.reply(raraGuideV2(cmd, {
+    if (!prompt) return m.reply(raraGuide(cmd, {
  kaomoji: "(≧ω≦)",
  sapaan: spec.desc + "!",
       cara: (isImgEdit || spec.type === "imgedit") ? "reply foto + ketik prompt ini sebagai caption" : "ketik prompt/deskripsinya sesudah command",

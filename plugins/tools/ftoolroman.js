@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolroman — konversi angka Arab ↔ angka Romawi (port altftool.com/tools/all/roman-numeral-converter)
 // Auto-detect: angka → Romawi, huruf romawi → angka. Range standar 1-3999.
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolroman", alias: ["roman", "romannumeral", "romawi"], category: "tools",
@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const raw = (m.text || "").trim().toUpperCase();
     if (!raw) {
-      return m.reply(raraGuideV2("ftoolroman", {
+      return m.reply(raraGuide("ftoolroman", {
         kaomoji: "(๑•̀ㅂ•́)و",
         sapaan: "angka mau diubah ke romawi atau sebaliknya? tinggal ketik~",
         cara: "masukkan angka biasa ATAU angka romawi, bot otomatis mendeteksi arahnya",

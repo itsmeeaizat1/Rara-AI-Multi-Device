@@ -16,7 +16,7 @@ const FALLBACK_MODEL = {
   cloudflare: "gemini", jina: "gemini", stability: "gemini", ai21: "gemini",
   reka: "gemini", codestral: "gemini", kimicode: "gemini",
 };
-import { raraBox, raraWrap, raraAiUsage, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraBox, raraWrap, raraAiUsage, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 // Command → providerKey mapping
 const PROVIDER_COMMANDS = {
@@ -129,7 +129,7 @@ async function handler(m, { sock, config, db, args, text }) {
     // 📍 cara/contoh/note + TAMBAHAN KHUSUS AI (request owner 25 Sep): ✨ model
     // aktif + 📋 model tersedia + baris spec. Model & command VERBATIM.
     if (!fullText && !imageSource) {
-      const box = raraGuideV2(cmdUsed, {
+      const box = raraGuide(cmdUsed, {
  kaomoji: "(◍•ᴗ•◍)",
  sapaan: "ada yang mau ditanyain? tanya aja langsung! (≧ω≦)",
         cara: "ketik pertanyaannya sesudah command, reply atau kirim gambar juga bisa",

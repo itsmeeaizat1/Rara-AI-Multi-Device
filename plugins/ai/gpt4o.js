@@ -2,7 +2,7 @@
 import te from "../../src/lib/rara-error.js";
 import raraApi from "../../src/lib/rara-apimanager.js";
 import config from "../../config.js";
-import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "gpt4o",
   alias: ["gpt4o"],
@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(raraGuideV2("gpt4o", {
+    return m.reply(raraGuide("gpt4o", {
  kaomoji: "(≧▽≦)",
  sapaan: "tanya apa aja ke GPT-4O! (◕‿◕)",
       cara: "ketik pertanyaannya sesudah command",

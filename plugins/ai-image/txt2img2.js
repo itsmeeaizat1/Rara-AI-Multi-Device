@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { Txt2Img2 } from "../../src/scraper/txt2img2.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "txt2img2",
@@ -21,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(raraGuideV2("txt2img2", {
+    return m.reply(raraGuide("txt2img2", {
  kaomoji: "(•̀ᴗ•́)و",
  sapaan: "bikin gambar dari teks pakai AI Flux Klein 4B, hasilnya tajam! (๑•̀ㅂ•́)و✧",
       cara: "ketik deskripsi gambar yang mau dibuat",

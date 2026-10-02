@@ -2,7 +2,7 @@
 import { FeelBetter } from "../../src/scraper/feeb.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import te from "../../src/lib/rara-error.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "feelbetter",
@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(raraGuideV2("feelbetter", {
+    return m.reply(raraGuide("feelbetter", {
  kaomoji: "(ᵔ◡ᵔ)",
  sapaan: "curhat apa aja ke aku, aku dengerin tanpa nghakimi! (⌒‿⌒)",
       cara: "ketik curhatan atau pertanyaannya sesudah command",

@@ -6,7 +6,7 @@
 // ═════════════════════════════════════════════
 
 import { zelAiChat, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import { sendImage } from "../../src/lib/rara-message.js";
 import { fetchBuffer } from "../../src/lib/rara-utils.js";
 
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     const cmd = (m.command || "").toLowerCase();
     const text = (m.args || []).join(" ").trim();
 
-    if (!text) return m.reply(raraGuideV2("zelaichat3", {
+    if (!text) return m.reply(raraGuide("zelaichat3", {
  kaomoji: "(◍•ᴗ•◍)",
  sapaan: "AI zelapi jawab apa aja, reply foto juga bisa mode vision! (◕‿◕)",
       cara: "ketik pertanyaannya sesudah command" + (m.quoted?.isImage ? " (atau reply foto + pertanyaan, mode vision)" : ""),

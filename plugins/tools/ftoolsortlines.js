@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolsortlines — urutkan baris teks (port altftool.com/tools/all/sort-text-lines)
-import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolsortlines", alias: ["sortlines", "urutbaris", "sorttext"], category: "tools",
@@ -20,7 +20,7 @@ async function handler(m, { sock, config: botConfig }) {
     const mode = (sp < 0 ? raw : raw.slice(0, sp)).toLowerCase();
     const text = sp < 0 ? "" : raw.slice(sp + 1);
     if (!mode || !["az", "za", "acak"].includes(mode) || !text) {
-      return m.reply(raraGuideV2("ftoolsortlines", {
+      return m.reply(raraGuide("ftoolsortlines", {
         kaomoji: "(๑˃ᴗ˂̵)و",
         sapaan: "daftar berantakan mau diurutin? pilih modenya~",
         cara: "ketik mode (az / za / acak) lalu daftarnya, satu item satu baris",

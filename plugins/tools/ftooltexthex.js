@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltexthex — teks ↔ heksadesimal (port altftool.com/tools/all/text-to-hex)
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltexthex", alias: ["texthex", "hex", "texttohex"], category: "tools",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      return m.reply(raraGuideV2("ftooltexthex", {
+      return m.reply(raraGuide("ftooltexthex", {
         kaomoji: "(◕ᴗ◕)",
         sapaan: "teks mau diubah ke heksadesimal? atau heksa ke teks?",
         cara: "ketik enc (teks→hex) atau dec (hex→teks) lalu isinya",

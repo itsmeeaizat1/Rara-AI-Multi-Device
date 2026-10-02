@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolstriptags — buang tag HTML dari teks (port altftool.com/tools/all/html-tag-stripper)
-import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolstriptags", alias: ["striptags", "htmlstrip", "htmlketeks"], category: "tools",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(raraGuideV2("ftoolstriptags", {
+      return m.reply(raraGuide("ftoolstriptags", {
         kaomoji: "(•̀ᴗ•́)و",
         sapaan: "teks HTML berantakan mau dibersihin? tempel aja~",
         cara: "tempel teks html apa pun, semua tag dihapus dan simbol khusus diterjemahin",

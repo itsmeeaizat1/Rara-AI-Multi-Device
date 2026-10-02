@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltextreverse — balik urutan teks (port altftool.com/tools/all/text-reverser)
 // Pakai spread [...str] biar emoji/surrogate pair gak rusak.
-import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltextreverse", alias: ["textreverse", "reversetext", "balikteks"], category: "tools",
@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(raraGuideV2("ftooltextreverse", {
+      return m.reply(raraGuide("ftooltextreverse", {
         kaomoji: "(¬‿¬)",
         sapaan: "teks mau dibalik urutannya? ketik aja~",
         cara: "ketik teksnya, hasilnya dibaca dari belakang",

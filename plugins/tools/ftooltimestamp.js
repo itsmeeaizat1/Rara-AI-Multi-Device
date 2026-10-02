@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltimestamp — konversi Unix timestamp ↔ tanggal WIB (port altftool.com/tools/all/unix-timestamp-converter)
 // Tanpa arg = waktu sekarang. Angka = timestamp → tanggal. Tanggal (yyyy-mm-dd / dd-mm-yyyy [+HH:mm]) → timestamp.
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltimestamp", alias: ["timestamp", "unixtime", "epoch"], category: "tools",

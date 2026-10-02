@@ -4,7 +4,7 @@
 // key mati / kredit kurang → error jelas, GAK nyamber ke brand lain.
 // Model default: qwen3-vl-8b-thinking (FREE — kata owner "qwen thinking").
 // Ganti model: .min1ai model <id> (persist per user, db.setting min1aiModel).
-import { raraGuideV2, raraInfoSections, raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraInfoSections, raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
 import { min1aiChat, MIN1AI_MODEL_GROUPS, MIN1AI_MODELS, MIN1AI_DEFAULT_MODEL } from "../../src/scraper/min1ai.js";
 
@@ -76,7 +76,7 @@ async function handler(m, { sock, db } = {}) {
     const picked = normModel(args[1] || "");
     if (!picked || !VALID_MODELS.includes(picked)) {
       const cur = getSavedModel(db, m.sender) || MIN1AI_DEFAULT_MODEL;
-      return m.reply(raraGuideV2("Min1AI", {
+      return m.reply(raraGuide("Min1AI", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)♡",
  sapaan: "modelnya gak ada nih kak, cek daftar yang bener ya~ (˶ᵔᵕᵔ˶)",
         cara: "ketik pertanyaannya sesudah command",
@@ -114,7 +114,7 @@ async function handler(m, { sock, db } = {}) {
   // ── .min1ai doang / salah pemakaian — usage daftar model ──
   if (!prompt) {
     const cur = getSavedModel(db, m.sender) || MIN1AI_DEFAULT_MODEL;
-    return m.reply(raraGuideV2("Min1AI", {
+    return m.reply(raraGuide("Min1AI", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)♡",
  sapaan: "satu pintu banyak model AI! tanya aja apa pun (˶ᵔᵕᵔ˶)",
       cara: "ketik pertanyaannya sesudah command",

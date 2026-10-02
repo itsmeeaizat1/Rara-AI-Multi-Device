@@ -5,7 +5,7 @@
 // Aturan owner: (1) "ubah satu satu jgn di batch / jd 1 konversi card" —
 // raraGuide lama TETAP ada & gak berubah; (2) "tiap plugin sapaannya beda
 // beda g sama" — kaomoji + sapaan unik antar plugin wave-1.
-import { raraGuideV2, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { raraGuide } from "../../src/lib/rara-menu-style.js";
 import { config as playCfg, handler as playH } from "../../plugins/search/play.js";
 import { config as pvCfg, handler as pvH } from "../../plugins/search/playvideo.js";
 import { config as igCfg, handler as igH } from "../../plugins/download/instagramdl.js";
@@ -25,7 +25,7 @@ const SC_MAP = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h',
 const toSC = (s) => String(s ?? "");
 
 // ─── 1. RENDER — persis struktur contoh owner ───
-w("\n— raraGuideV2 render (struktur contoh owner) —");
+w("\n— raraGuide render (struktur contoh owner) —");
 {
   // GUARD LEBAR SERAGAM (1 Okt 2026, owner: "aku mau semua pesan menu
   // gelembung ukuran lebarnya standarnya kyk menu allmenu") — sapaan/cara/
@@ -33,7 +33,7 @@ w("\n— raraGuideV2 render (struktur contoh owner) —");
   // standar, BUKAN lagi 1 baris fisik panjang. contoh = command TETAP
   // VERBATIM 1 baris gak dipotong. Asersi di bawah gak hardcode index baris
   // (jumlah baris wrap berubah tiap kalimat) — cek per-blok via helper.
-  const out = raraGuideV2("play", {
+  const out = raraGuide("play", {
     kaomoji: "ヾ(≧▽≦*)o",
     sapaan: "mau lagu favorit? ketik aja judulnya! (≧◡≦) ♡",
     cara: "ketik judul lagu sesudah command",
@@ -80,7 +80,7 @@ w("\n— raraGuideV2 render (struktur contoh owner) —");
 // ─── 2. VARIAN AI — field model aktif + model tersedia (owner 25 Sep) ───
 w("\n— varian AI: ✨ model aktif + 📋 model tersedia —");
 {
-  const out = raraGuideV2("raraai", {
+  const out = raraGuide("raraai", {
     kaomoji: "(◍•ᴗ•◍)",
     sapaan: "ada yang mau ditanyain? tanya aja langsung! (≧ω≦)",
     cara: "ketik pertanyaannya sesudah command",
@@ -99,7 +99,7 @@ w("\n— varian AI: ✨ model aktif + 📋 model tersedia —");
 // ─── 3. OPSIONAL — bagian kosong gak ninggalin baris liar ───
 w("\n— opsional: sapaan/note/spec/model kosong —");
 {
-  const out = raraGuideV2("simple", { cara: "ketik aja", contoh: ".simple" });
+  const out = raraGuide("simple", { cara: "ketik aja", contoh: ".simple" });
   const L = out.split("\n");
   check("3a. tanpa sapaan/note/spec → 5 baris bersih (cara+contoh baris sendiri)", L.length === 5 && L[3] === `📍 ${toSC("Cara")}: ${toSC("ketik aja")}` && L[4] === `${toSC("Contoh")}: .simple` && !out.includes("~") && !out.includes("✨"), out);
 }
@@ -226,9 +226,9 @@ w("\n— global: raraGuide/raraNoInput/raraSalah auto-V2 + guard game —");
   const gSalah = salahF("Suitdummy", "salah game nih");
   check("5a5. raraSalah game → format lama, non-game → cute", gSalah.startsWith("❗") && salahF("tesbiasa", "salah biasa").includes(toSC("yah kak")), gSalah.split("\n")[0]);
   const ap = fs.readFileSync("plugins/ai/ai-providers.js", "utf8");
-  check("5b. ai-providers pakai raraGuideV2 + modelAktif + models", ap.includes("raraGuideV2(cmdUsed") && ap.includes("modelAktif:") && ap.includes("models:"), null);
+  check("5b. ai-providers pakai raraGuide + modelAktif + models", ap.includes("raraGuide(cmdUsed") && ap.includes("modelAktif:") && ap.includes("models:"), null);
   const migrated = ["plugins/search/play.js", "plugins/search/playvideo.js", "plugins/download/instagramdl.js", "plugins/download/ytmp3.js", "plugins/download/aio.js", "plugins/download/aio2.js", "plugins/tools/shortlink.js", "plugins/ai/ocrsolve.js", "plugins/browser/ssweb.js", "plugins/ai/kuroai.js", "plugins/ai/min1ai.js", "plugins/search/playspotify.js", "plugins/download/douyindl.js", "plugins/download/facebookdl.js", "plugins/download/mediafiredl.js", "plugins/download/tiktokdl.js", "plugins/download/ytmp4.js"];
-  check("5c. 17 plugin import raraGuideV2", migrated.every((f) => fs.readFileSync(f, "utf8").includes("raraGuideV2")), null);
+  check("5c. 17 plugin import raraGuide", migrated.every((f) => fs.readFileSync(f, "utf8").includes("raraGuide")), null);
   const games = ["plugins/game/rockpaperscissors.js", "plugins/game/guessnumber.js"];
   check("5c2. 2 mini-game pakai raraGameBox (desain khas game, bukan V2)", games.every((f) => fs.readFileSync(f, "utf8").includes("raraGameBox") && !fs.readFileSync(f, "utf8").includes("raraGuide")), null);
   const dup = [...new Set(["ヾ(≧▽≦*)o", "(>_<)", "(๑•̀ㅂ•́)و✧", "(¬‿¬;)", "(•̀ᴗ•́)و", "(´･_･`)", "ヾ(´︶`*)ﾉ", "(・_・;)", "(◕ᴗ◕)", "(;ω;)", "(๑˃ᴗ˂)ﻭ", "(;∀;)", "(¬‿¬)", "(๑ᵔ⤙ᵔ๑)", "(≧▽≦)", "(◍•ᴗ•◍)", "(^◡^)", "(๑ᵔ⤙ᵔ๑)♡", "(๑´ㅂ`๑)", "(・∀・)", "(•‿•)", "(¬‿¬)✧", "(≧◡≦) ♡", "(๑•̀ㅂ•́)✧", "(ノ◕ヮ◕)ノ"])];

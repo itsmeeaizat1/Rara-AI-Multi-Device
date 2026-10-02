@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "aihelp",
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
 
   if (!keyword) {
     const cats = Object.keys(AI_COMMANDS).map(k => `${prefix}aihelp ${k}`).join("\n");
-    return m.reply(raraGuideV2("aihelp", {
+    return m.reply(raraGuide("aihelp", {
  kaomoji: "(◍•ᴗ•◍)",
  sapaan: "mau nyari command AI? tinggal sebut kategorinya! (◕‿◕)",
       cara: "pilih kategori yang mau dilihat daftar commandnya",

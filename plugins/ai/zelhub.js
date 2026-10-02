@@ -4,7 +4,7 @@
 // ═════════════════════════════════════════════
 
 import { zelAiChat, zelAiImage, ZEL_AI_REGISTRY, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import { sendImage } from "../../src/lib/rara-message.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const text = args.join(" ").trim();
 
     if (cmd === "zimage") {
-      if (!text) return m.reply(raraGuideV2("zimage", {
+      if (!text) return m.reply(raraGuide("zimage", {
  kaomoji: "(◍•ᴗ•◍)",
  sapaan: "generator gambar AI zelapi, deskripsikan aja yang kamu mau!",
         cara: "ketik deskripsi gambar yang mau dibuat",

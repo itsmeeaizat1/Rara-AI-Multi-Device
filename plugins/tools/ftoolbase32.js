@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolbase32 — teks ↔ Base32 RFC 4648 (port altftool.com/tools/all/base32)
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolbase32", alias: ["base32"], category: "tools",
@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      return m.reply(raraGuideV2("ftoolbase32", {
+      return m.reply(raraGuide("ftoolbase32", {
         kaomoji: "(๑•̀ㅂ•́)و",
         sapaan: "teks mau diubah ke Base32? atau sebaliknya?",
         cara: "ketik enc (teks→base32) atau dec (base32→teks) lalu isinya",

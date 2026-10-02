@@ -18,7 +18,7 @@ import {
   getContentTypes, setContentType, BOLA_TYPES, LEAGUE_DB,
   setIntervalMenit, setApifyIntervalMenit, setLiveIntervalMenit, getLiveNow,
 } from "../../src/lib/rara-auto-bola-notifier.js";
-import { raraError, raraGuide, raraGuideV2, raraSuccess } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraGuide, raraSuccess } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "jadwalbolanotify",
@@ -149,7 +149,7 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(raraGuideV2(pluginConfig.name, {
+      return m.reply(raraGuide(pluginConfig.name, {
         kaomoji: "(•̀ᴗ•́)و",
         sapaan: `interval cek sekarang tiap ${st.intervalMenit} menit — mau diatur?`,
         cara: "ketik .jadwalbolanotify interval <menit> (5–720)",
@@ -170,7 +170,7 @@ async function handler(m, { sock, args }) {
       if (!res) return m.reply(raraError(pluginConfig.name, "interval Apify harus 15–720 menit — jaga credit free Apify $5/bln (biaya $0.003/match record)"));
       return m.reply(raraSuccess(pluginConfig.name, `interval cek Apify (Liga 2 via Flashscore) sekarang *tiap ${res} menit*`));
     }
-    return m.reply(raraGuideV2(pluginConfig.name, {
+    return m.reply(raraGuide(pluginConfig.name, {
       kaomoji: "(•̀ᴗ•́)و",
       sapaan: "apify flashscore buat liga 2 indonesia — cek kondisinya dulu ya",
       cara: `ketik .jadwalbolanotify apify <menit> (15–720)${st.apifyToken ? "" : " — token BELUM diset (env APIFY_TOKEN / apikeys.json apifyToken)"}`,
@@ -220,7 +220,7 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(raraGuideV2(pluginConfig.name, {
+      return m.reply(raraGuide(pluginConfig.name, {
         kaomoji: "(•̀ᴗ•́)و",
         sapaan: `ticker gol cek skor tiap ${st.liveIntervalMenit} menit (tipe live: ${st.liveTipe ? "AKTIF" : "MATI"}, ${st.liveTracked} laga terlacak)`,
         cara: "ketik .jadwalbolanotify liveinterval <menit> (1–30)",

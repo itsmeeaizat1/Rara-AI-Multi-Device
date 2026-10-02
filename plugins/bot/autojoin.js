@@ -14,7 +14,7 @@ import {
   parseWaktuAutojoin, formatWaktuAutojoin, extractGroupCode, isChannelLink,
   _autojoinForTest,
 } from "../../src/lib/rara-autojoin.js";
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autojoin",
@@ -49,7 +49,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ─── usage card ───
     if (!sub) {
-      return m.reply(raraGuideV2("autojoin", {
+      return m.reply(raraGuide("autojoin", {
         sapaan: "Jadwalkan bot join/leave grup & channel otomatis di waktu ditentukan",
         cara: [
           `${prefix}autojoin group|gc <link grup> <waktu> — join grup terjadwal`,

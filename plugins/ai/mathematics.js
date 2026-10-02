@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 import te from '../../src/lib/rara-error.js'
 import axios from 'axios'
 import config from '../../config.js'
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const text = m.args.join(' ')
 
     if (!text) {
-        return m.reply(raraGuideV2("matematika", {
+        return m.reply(raraGuide("matematika", {
  kaomoji: "(•̀ᴗ•́)و",
  sapaan: "kirim soalnya, nanti aku bantu kerjain! (๑•̀ㅂ•́)و✧",
           cara: "ketik soal matematikanya sesudah command",

@@ -10,7 +10,7 @@
 import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, buildSearchQuery, quickWebSearch, splitChatChunks, getAgentTools, getAllSkills, TOOL_TOPIC, TOOL_NATURAL_DOING } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/rara-ai-service.js";
 import { visionScan } from "../../src/lib/rara-vision-chain.js";
-import { raraWrap, bracketBox, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, bracketBox, raraGuide } from "../../src/lib/rara-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { startStatusRotation as startStatusRotationLib } from "../../src/lib/rara-status-rotate.js";
 import { getCommandsByCategory, getCategories, getPlugin } from "../../src/lib/rara-plugins.js";
@@ -245,7 +245,7 @@ async function handler(m, { sock, conn, config, db }) {
     }
     lines.push(`📸 scan gambar: kirim foto + caption .raraagent <tanya>`);
     lines.push(`🎙️ mode suara: .raraagent pakai suara — jawabanku dibacakan jadi voice note`);
-    return m.reply(raraGuideV2("raraai", {
+    return m.reply(raraGuide("raraai", {
  kaomoji: "(๑˃ᴗ˂)ﻭ",
  sapaan: `ai agent dengan ${toolCount} perintah — ngobrol santai atau suruh aku ngapa'in! (≧∇≦)ﾉ`,
       cara: "tanya apa aja, atau suruh aku jalanin command bot",

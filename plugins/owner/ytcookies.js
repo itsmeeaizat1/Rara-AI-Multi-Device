@@ -17,7 +17,7 @@
 // file lama GAK ditimpa sampai valid.
 import fs from "fs";
 import path from "path";
-import { raraError, raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const COOKIES_PATH = path.join(process.cwd(), "data", "yt-cookies.txt");
 
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
   const media = m.quoted?.isMedia ? m.quoted : m.isMedia ? m : null;
   if (!media) {
     return m.reply(
-      raraGuideV2("ytcookies", {
+      raraGuide("ytcookies", {
         kaomoji: "(๑˃ᴗ˂)ﻭ",
         sapaan: "login Google/YouTube via chat — kirim file cookies.txt",
         cara: "kirim file cookies.txt di chat (atau reply file-nya) lalu ketik .ytcookies",

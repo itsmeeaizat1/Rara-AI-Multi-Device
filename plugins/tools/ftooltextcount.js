@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltextcount — statistik teks (port altftool.com/tools/all/word-character-counter)
-import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltextcount", alias: ["textcount", "counttext", "hitungteks"], category: "tools",
@@ -15,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(raraGuideV2("ftooltextcount", {
+      return m.reply(raraGuide("ftooltextcount", {
         kaomoji: "(◍•ᴗ•◍)",
         sapaan: "teks mau dihitung statistiknya? tempel aja di sini~",
         cara: "ketik teks apa pun setelah command, nanti dihitung otomatis",

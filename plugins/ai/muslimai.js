@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 import { f } from '../../src/lib/rara-http.js';
 import te from '../../src/lib/rara-error.js';
 import { callIkyy } from "../../src/lib/rara-ai-service.js";
@@ -61,7 +61,7 @@ class MuslimAI {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        return m.reply(raraGuideV2("muslimai", {
+        return m.reply(raraGuide("muslimai", {
  kaomoji: "(⌒‿⌒)",
  sapaan: "nanya apa aja seputar Islam, dijawab dengan landasan yang benar! (ᵔ◡ᵔ)",
           cara: "ketik pertanyaannya tentang Islam sesudah command",

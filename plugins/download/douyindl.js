@@ -23,7 +23,7 @@ import {
 } from "../../src/lib/rara-playdouyin.js";
 import { haidarDouyin, sylvaticaDouyin } from "../../src/lib/rara-douyin-dl.js";
 import axios from "axios";
-import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
   const text = args.join(" ").trim() || (m.text || "").trim();
 
   if (!text) {
-    return m.reply(raraGuideV2("douyin", {
+    return m.reply(raraGuide("douyin", {
  kaomoji: "(・∀・)",
  sapaan: "video douyin mau disimpen? kasih link atau judulnya! (๑>ᴗ<)و",
       cara: "tempel linknya atau ketik keyword pencariannya",

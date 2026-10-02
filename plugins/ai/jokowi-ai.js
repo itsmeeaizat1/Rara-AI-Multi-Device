@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import te from "../../src/lib/rara-error.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "jokowi-ai",
@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(raraGuideV2("jokowi-ai", {
+    return m.reply(raraGuide("jokowi-ai", {
  kaomoji: "(¬‿¬)",
  sapaan: "ngobrol sama Pak Jokowi, Pria Solo yang sederhana dan bijak! (◍'◡'◍)",
       cara: "ketik pertanyaannya sesudah command",

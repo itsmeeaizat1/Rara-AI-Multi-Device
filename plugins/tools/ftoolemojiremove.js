@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolemojiremove — buang emoji dari teks (port altftool.com/tools/all/emoji-remover)
-import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolemojiremove", alias: ["emojiremove", "hapusemoji", "stripemoji"], category: "tools",
@@ -15,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(raraGuideV2("ftoolemojiremove", {
+      return m.reply(raraGuide("ftoolemojiremove", {
         kaomoji: "(˶ᵔ ᵕ ᵔ˶)",
         sapaan: "teks penuh emoji mau dibersihin? tempel aja~",
         cara: "tempel teksnya, semua emoji dibuang dan spasi berlebih dirapikan",

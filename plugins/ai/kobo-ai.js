@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import te from "../../src/lib/rara-error.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "kobo-ai",
@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(raraGuideV2("kobo-ai", {
+    return m.reply(raraGuide("kobo-ai", {
  kaomoji: "(≧ω≦)",
  sapaan: "ngobrol sama Kobo, Wind Shaman Hololive yang cheerful dan suka prank! (≧∇≦)ﾉ",
       cara: "ketik pertanyaannya sesudah command",

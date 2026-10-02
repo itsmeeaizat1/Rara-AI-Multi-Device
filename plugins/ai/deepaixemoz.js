@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   const input = args.join(" ").trim();
 
   if (!input) {
-    return m.reply(raraGuideV2("deepaixemoz", {
+    return m.reply(raraGuide("deepaixemoz", {
  kaomoji: "(◕‿◕)",
  sapaan: "ngobrol sama DeepAI Xemoz, otaknya serba bisa! (≧▽≦)",
       cara: "kirim pertanyaannya setelah command, reset buat hapus sesi",

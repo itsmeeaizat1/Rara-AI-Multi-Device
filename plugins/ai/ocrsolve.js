@@ -4,7 +4,7 @@
 //   One-shot (all users): .ocrsolve — reply ke foto, analisis sekali
 //   Persistent (owner): .toggleocrsolve on/off — auto detect tiap foto masuk
 import { getDatabase } from "../../src/lib/rara-database.js";
-import { raraError, raraEmpty, raraGuide, raraGuideV2, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 import { callAI, callIkyy } from "../../src/lib/rara-ai-service.js";
 
 const pluginConfig = {
@@ -44,7 +44,7 @@ async function doOcrAnalysis(m, sock, mode) {
     const msg = m.message || {};
     const imageMsg = msg.imageMessage || (m.quoted?.isImage ? m.quoted.message?.imageMessage : null); // FIX 10 Sep: quoted flags
     if (!imageMsg) {
-      await m.reply(raraGuideV2("ocrsolve", {
+      await m.reply(raraGuide("ocrsolve", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)",
  sapaan: "jawab soal dari gambar cukup dengan reply! (◕‿◕)",
         cara: "reply foto soalnya lalu ketik command, mode opsional math atau code",
@@ -244,7 +244,7 @@ async function handler(m, { sock, config: botConfig }) {
       mode = args[0];
     } else if (args[0] && !["math", "code", "auto"].includes(args[0])) {
       // Unknown sub-command → show help
-      await m.reply(raraGuideV2("ocrsolve", {
+      await m.reply(raraGuide("ocrsolve", {
  kaomoji: "(๑ᵔ⤙ᵔ๑)",
  sapaan: "jawab soal dari gambar cukup dengan reply! (◕‿◕)",
         cara: "reply foto soalnya lalu ketik command, mode opsional math atau code",
