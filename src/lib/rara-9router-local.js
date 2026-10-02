@@ -181,6 +181,28 @@ export function getRouter9CliToken() {
   }
 }
 
+// ── DIAGNOSTIK AUTH FILE (2 Okt 2026, report owner ".9router restart" 401
+// terus-terusan walau PID ganti tiap restart — bukan "proses basi" lagi,
+// kemungkinan file ~/.9router/machine-id atau auth/cli-secret gak ada/gak
+// konsisten SAMA SEKALI, bukan cuma proses lama). Dipakai buat kasih pesan
+// error yang NUNJUK akar beneran (file mana yang kosong, HOME dir apa)
+// daripada cuma "HTTP 401" generik yang gak kebantu diagnosis dari WA.
+export function router9AuthDiag() {
+  const dir = getRouter9DataDir();
+  const midPath = path.join(dir, "machine-id");
+  const secretPath = path.join(dir, "auth", "cli-secret");
+  let mid = "", secret = "";
+  try { mid = fs.readFileSync(midPath, "utf8").trim(); } catch { /* belum ada */ }
+  try { secret = fs.readFileSync(secretPath, "utf8").trim(); } catch { /* belum ada */ }
+  return {
+    dataDir: dir,
+    home: os.homedir(),
+    midExists: Boolean(mid),
+    secretExists: Boolean(secret),
+    tokenReady: Boolean(mid && secret),
+  };
+}
+
 async function mgmtApi(method, apiPath, body = null) {
   const token = getRouter9CliToken();
   return httpJson(`${getRouter9Base()}${apiPath}`, {
@@ -286,7 +308,11 @@ export async function ensureRouter9GatewayKey({ create = true, _retried = false 
       const up = await ensure9RouterRunning({ waitMs: 20000 });
       if (up.up) return ensureRouter9GatewayKey({ create, _retried: true });
     }
-    throw new Error(`gagal bikin gateway key 9router (HTTP ${r.status}) — proses lama kemungkinan basi, coba .9router restart`);
+    const diag = router9AuthDiag();
+    const diagMsg = diag.tokenReady
+      ? "file auth lengkap tapi token masih ditolak server — proses basi, coba .9router restart"
+      : `file auth 9router BELUM lengkap di ${diag.dataDir} (machine-id: ${diag.midExists ? "ada" : "HILANG"}, cli-secret: ${diag.secretExists ? "ada" : "HILANG"}, HOME=${diag.home}) — kemungkinan folder ini kehapus/kereset tiap restart container, cek persistensi HOME di VPS`;
+    throw new Error(`gagal bikin gateway key 9router (HTTP ${r.status}) — ${diagMsg}`);
   }
   cfg.gateway = { ...(cfg.gateway || {}), apikey: key };
   writeRouter9Config(cfg);

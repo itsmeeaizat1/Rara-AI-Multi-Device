@@ -23,7 +23,7 @@ import { raraBox, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import {
   ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys, killStalePort9Router,
-  invalidateRouter9GatewayKey, router9ValidateGatewayKey,
+  invalidateRouter9GatewayKey, router9ValidateGatewayKey, router9AuthDiag,
   router9Models, router9FindModel, router9Chat, router9ImageGen,
   router9ImageModels, router9VisionModels, router9Stats,
   getRouter9Base, getRouter9Port, ROUTER9_DEFAULT_MODEL,
@@ -324,12 +324,18 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
     } catch (e) { gw = `gagal (${e.message})`; }
     let count = "-";
     try { count = (await router9Models()).length; } catch { /* telat gak masalah */ }
+    const authLines = [];
+    if (gw.startsWith("gagal") || gw === "belum") {
+      const diag = router9AuthDiag();
+      authLines.push("", `Auth file   : machine-id ${diag.midExists ? "ada" : "HILANG"}, cli-secret ${diag.secretExists ? "ada" : "HILANG"} (${diag.dataDir})`);
+    }
     await m.react("🐣");
     return m.reply(raraBox("9Router — Restart", [
       `Proses lama : ${killed.killed ? `dimatikan (PID ${killed.pid})` : killed.reason}`,
       `9Router     : jalan di ${getRouter9Base()}`,
       `Gateway key : ${gw}`,
       `Model live  : ${count}`,
+      ...authLines,
     ]));
   }
 
