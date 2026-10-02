@@ -1,3 +1,8 @@
+## 2 Okt 2026 — Fix npm EALLOWGIT di Node 24 (fork baileys gagal install)
+**Akar:** npm 12+ (bundled Node 24) defaultnya blokir SEMUA dependency tipe git (`allow-git=none`, kebijakan keamanan baru merespons worm supply-chain). Fork baileys kita `itsmeeaizat-bailey` (alias `nova`) punya dependency internal `libsignal: git+https://github.com/whiskeysockets/libsignal-node.git` yang dibawaan dari package aslinya (bukan sesuatu yang kita publish) → `npm error code EALLOWGIT, Refusing to fetch "libsignal@git+..."` di VPS/Pterodactyl yang pakai Node 24, server crash exit 1.
+
+**Fix:** `.npmrc` tambah `allow-git=true`. npm lama (Node 18/20, dipakai sebagian besar VPS) gak kenal opsi ini — cuma warning "Unknown user config" (aman, diabaikan, pola sama kayak `onnxruntime-node-install=skip`). VPS: pull main → `npm install` ulang → restart.
+
 ## 2 Okt 2026 — Rewiring fitur .hiai ke engine Rara (gap porting modul HIROBOT)
 **Akar:** audit menemukan 5 modul HIROBOT yang direferensikan engine hiai tapi GAK PERNAH ada di repo Rara (git log --all: nol jejak) — `utils/plugins.js` (registry plugin), `utils/connection.js` (store), `scrapers/src/x.js`, `scrapers/src/tiktok.js`, `scrapers/src/ig.js`. Akibatnya fitur-fitur ini MATI SENYAP sejak port pertama: run_plugin/list_plugins/read_plugin_guide/check_plugin_risk/run_eval (tool "hantu" yang diminta prompt.txt tapi gak pernah terdefinisi), download media TikTok/IG/Twitter/Facebook lewat .hiai, dan riwayat chat grup.
 
