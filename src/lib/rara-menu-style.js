@@ -176,7 +176,7 @@ function raraCaption({ emoji = "", name = "", description = "", usage = "", exam
     if (note && String(note).trim()) out += `, ${scLine(note)}~`;
     out += `\n`;
   }
-  const cspec = v2Spec(name);
+  const cspec = v2SpecCompact(name);
   if (cspec) out += `\n${cspec}\n`;
   return out.replace(/\n+$/, "");
 }
@@ -396,7 +396,7 @@ function raraWrap(title, body, type = "info") {
       const bodyTxt = lines.map((l) => (typeof l === "object" && l !== null) ? `◈ ${l.subHeader || l.sub || ""}` : l).join("\n");
       gout += `\n${bodyTxt}\n`;
     }
-    const gspec = v2Spec(title);
+    const gspec = v2SpecCompact(title);
     if (gspec) gout += `\n${gspec}\n`;
     return gout.replace(/\n+$/, "");
   }
@@ -925,8 +925,8 @@ function raraNoInput(commandName, hint, example) {
       out += `\n📍 ${toSC("Contoh")}: ${example}\n`;
     }
   }
-  const spec = v2Spec(commandName);
-  if (spec) out += `\n${CUTE_DIVIDER}\n${spec}\n`;
+  const info = v2InfoBlock(commandName);
+  if (info) out += `\n${CUTE_DIVIDER}\n${info}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -1017,18 +1017,96 @@ function v2Kaomoji(name) {
   return V2_KAOMOJI_POOL[h % V2_KAOMOJI_POOL.length];
 }
 // spec dari pluginConfig ASLI (registry rara-plugins) — fakta nyata, bukan karangan
-function v2Spec(commandName) {
+// BLOK INFO TERPOSISI (2 Okt 2026, owner: "template seminimal mungkin gak
+// ramai, tapi tiap fitur field info lengkap klo tersedia, format posisi
+// teks terposisikan dengan rapih") — tabel rapi label:value dari
+// pluginConfig ASLI registry, field cuma muncul kalau datanya ada.
+// FIX LATEN: v2Spec lama baca field FLAT (pl.energi) padahal plugin di
+// registry bentuknya {config, handler} → energi/cooldown/kategori gak
+// PERNAH muncul di kartu produksi (cuma "💸 gratis" yang kebaca) —
+// sekarang baca cfg = pl.config dengan fallback flat.
+const INFO_LABEL_WIDTH = 9; // "cooldown"/"kategori" terpanjang → rata ":"
+// baris spec KOMPAK (1 baris inline) — khusus kartu status/caption yang
+// gak muat tabel (error/sukses/kosong/caption); baca cfg bener (fix flat)
+function v2SpecCompact(commandName) {
   try {
     const key = String(commandName || "").toLowerCase().replace(/\s+/g, "");
     const pl = getPlugin(key) || getPlugin(String(commandName || "").toLowerCase());
     if (!pl) return null;
+    const cfg = pl.config || pl || {};
     const items = [];
-    const energi = Number(pl.energi);
+    const energi = Number(cfg.energi);
     if (energi > 0) items.push(`⚡ ${toSC("energi")} ${energi}`);
-    const cd = Number(pl.cooldown);
+    const cd = Number(cfg.cooldown);
     if (cd > 0) items.push(`⏱ ${cd}${toSC("dtk")}`);
-    if (!pl.isPremium) items.push(`💸 ${toSC("gratis")}`);
+    if (cfg.isOwner !== true && cfg.isPremium !== true) items.push(`💸 ${toSC("gratis")}`);
     return items.length ? items.join(" • ") : null;
+  } catch { return null; }
+}
+
+function v2InfoBlock(commandName, manualSpec = []) {
+  try {
+    const key = String(commandName || "").toLowerCase().replace(/\s+/g, "");
+    const pl = getPlugin(key) || getPlugin(String(commandName || "").toLowerCase());
+    const specArr = Array.isArray(manualSpec) ? manualSpec : [];
+    if (!pl) {
+      // tanpa registry: spec manual caller tetap tampil (baris apa adanya)
+      const ms = specArr.map(String).map((s) => s.trim()).filter(Boolean);
+      return ms.length ? ms.join(" • ") : null;
+    }
+    const cfg = pl.config || pl || {};
+    const rows = [];
+    const has = {};
+    const row = (label, value) => {
+      const v = value === null || value === undefined ? "" : String(value).trim();
+      if (!v) return;
+      rows.push(`${String(label).padEnd(INFO_LABEL_WIDTH)}: ${v}`);
+    };
+    const cat = String(cfg.category || "").trim().toLowerCase();
+    if (cat && cat !== "main") { row("kategori", cat); }
+    if (cfg.isOwner === true) row("akses", "owner");
+    else if (cfg.isPremium === true) row("akses", "premium");
+    else { row("akses", "semua user · gratis"); has.gratis = true; }
+    if (cfg.isGroup === true && cfg.isPrivate !== true) row("tempat", "grup");
+    else if (cfg.isPrivate === true && cfg.isGroup !== true) row("tempat", "dm");
+    else row("tempat", "dm & grup");
+    const energi = Number(cfg.energi);
+    if (energi > 0) { row("energi", String(energi)); has.energi = true; }
+    const cd = Number(cfg.cooldown);
+    if (cd > 0) { row("cooldown", `${cd} dtk`); has.cd = true; }
+    // limit default registry = 1 (semua plugin) → cuma tampil kalau
+    // pluginnya eksplisit set nilai beda (bukan noise tiap kartu)
+    const lim = Number(cfg.limit);
+    if (lim > 0 && lim !== 1) row("limit", String(lim));
+    const reqs = [];
+    if (cfg.isAdmin === true) reqs.push("admin grup");
+    if (cfg.isBotAdmin === true) reqs.push("bot admin");
+    if (reqs.length) row("syarat", reqs.join(" + "));
+    const aliases = (Array.isArray(cfg.alias) ? cfg.alias : Array.isArray(cfg.aliases) ? cfg.aliases : [])
+      .map(String).map((s) => s.trim().toLowerCase()).filter(Boolean)
+      .filter((a) => a !== String(cfg.name || key).toLowerCase());
+    if (aliases.length) row("alias", aliases.map((a) => `.${a}`).join(" · "));
+    // spec manual caller (param spec raraGuideV2) — merge TANPA dobel fakta
+    // yang udah otomatis dari config (energi/cooldown/gratis), sisanya jadi
+    // baris "info" rapi (mis. "⚡ layanan lokal 9router").
+    for (const raw of specArr) {
+      const s = String(raw).replace(/^[⚡⏱💸✨📋]\s*/u, "").trim();
+      if (!s) continue;
+      if (/^energi\b/i.test(s)) {
+        if (!has.energi) { row("energi", s.replace(/^energi\s*/i, "")); has.energi = true; }
+        continue;
+      }
+      if (/^cooldown\b/i.test(s) || /^\d+\s*dtk/i.test(s)) {
+        if (!has.cd) { row("cooldown", s.replace(/^cooldown\s*/i, "")); has.cd = true; }
+        continue;
+      }
+      if (/^gratis$/i.test(s)) {
+        if (!has.gratis) { row("akses", "semua user · gratis"); has.gratis = true; }
+        continue;
+      }
+      row("info", s);
+    }
+    return rows.length ? rows.join("\n") : null;
   } catch { return null; }
 }
 const V2_GAME_CATS = new Set(["game", "rpg", "rpgcinta", "rpg-cinta", "rpg-couple"]);
@@ -1070,7 +1148,17 @@ function raraSalah(commandName, message) {
 // REWORK 2026-09-10 (owner: "terapin ke semua usage" — layout section kayak
 // AI/DL usage): 📝 Cara Pakai + 💡 Contoh + ⚠ catatan DETAIL di bawah contoh.
 // Example & command VERBATIM; intro/note di-smallcaps (URL aman via scLine).
-function raraGuide(commandName, intro, example, note) {
+function raraGuide(commandName, a = {}, b = null, c = null) {
+  // UNIFIED (owner 2 Okt 2026): raraGuideV2 DIHAPUS — raraGuide SATU-SATUNYA
+  // pintu, dukung 2 signature: (name, optsObject) = kartu V2 eksplisit
+  // (kaomoji/sapaan/cara/contoh/note/spec/model — caller non-game yang mau
+  // kartu custom), ATAU (name, intro, example, note) positional legacy.
+  if (a && typeof a === "object" && !Array.isArray(a)) {
+    return renderGuideV2Body(commandName, a).replace(/\n+$/, "");
+  }
+  const intro = a;
+  const example = b;
+  const note = c;
   // REWORK 25 Sep — SEMUA plugin non-game otomatis ke DESAIN V2 kaomoji
   // (owner: "semua plugin diterapin dr ai sampai plugin owner diubah usage
   // dan pesan eror cmd"). Intro per-plugin jadi sapaan; contoh VERBATIM;
@@ -1092,8 +1180,8 @@ function raraGuide(commandName, intro, example, note) {
       if (nl.length) out += nl.map((l) => scWrap(l)).join("\n") + "~\n";
     }
   }
-  const spec = v2Spec(commandName);
-  if (spec) out += `\n${CUTE_DIVIDER}\n${spec}\n`;
+  const info = v2InfoBlock(commandName);
+  if (info) out += `\n${CUTE_DIVIDER}\n${info}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -1178,7 +1266,10 @@ export function raraSalahV2(commandName, opts = {}) {
   return out.replace(/\n+$/, "");
 }
 
-export function raraGuideV2(commandName, opts = {}) {
+// renderGuideV2Body — badan kartu V2 (kaomoji + info blok) — dipakai
+// raraGuide SATU-SATUNYA (owner 2 Okt: "v2 dihapus aja jadi raraGuide,
+// jangan raraGuideV2 — dua nama buat desain sama cuma bikin ribet").
+function renderGuideV2Body(commandName, opts = {}) {
   const {
     kaomoji = "ヾ(≧▽≦*)o 😆", sapaan = "", cara = "", contoh = "", note = "",
     modelAktif = null, models = [], spec = [], extra = [],
@@ -1210,7 +1301,8 @@ export function raraGuideV2(commandName, opts = {}) {
   if (Array.isArray(models) && models.length) {
     out += `📋 ${toSC("Model tersedia")}: ${models.map(String).join(" · ")}\n`;
   }
-  if (Array.isArray(spec) && spec.length) out += `\n${CUTE_DIVIDER}\n${spec.map((x) => scLine(x)).join(" • ")}\n`;
+  const info = v2InfoBlock(commandName, spec);
+  if (info) out += `\n${CUTE_DIVIDER}\n${info}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -1246,8 +1338,8 @@ export function raraAiUsage(brand, { prefix = ".", command, modelAktif = null, m
     for (const mdl of models) out += `${mdl}\n`;
   }
   if (Array.isArray(extra) && extra.length) out += `\n${extra.map(String).join("\n")}\n`;
-  const spec = v2Spec(command || brand);
-  if (spec) out += `\n${CUTE_DIVIDER}\n${spec}\n`;
+  const info = v2InfoBlock(command || brand);
+  if (info) out += `\n${CUTE_DIVIDER}\n${info}\n`;
   return out.replace(/\n+$/, "");
 }
 

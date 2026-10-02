@@ -9,7 +9,7 @@
 import { aioDl, teraboxDl } from "../../src/scraper/nexray-dl.js";
 import { registerChoice } from "../../src/lib/rara-aio2-session.js";
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
-import { toSC, raraWrap, raraGuide, raraGuideV2, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { toSC, raraWrap, raraGuide, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -167,7 +167,7 @@ async function handler(m, { sock, config: botConfig }) {
   const url = String(m.text || "").trim();
 
   if (!url) {
-    return m.reply(raraGuideV2("aio2", {
+    return m.reply(raraGuide("aio2", {
  kaomoji: "(๑˃ᴗ˂)ﻭ",
  sapaan: "pengen pilih kualitas sendiri? pakai yang ini! (⌒‿⌒)♡",
       cara: "tempel linknya sesudah command",

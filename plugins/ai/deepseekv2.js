@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
 /**
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
 
   if (!text) {
-    return m.reply(raraGuideV2("deepseekv2", {
+    return m.reply(raraGuide("deepseekv2", {
  kaomoji: "(◍'◡'◍)",
  sapaan: "ngobrol sama DeepSeek v3.2, si jenius matematika! (◕ᴗ◕)",
       cara: "kirim pertanyaannya setelah command",

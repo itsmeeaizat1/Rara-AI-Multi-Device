@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooldeduplines — hapus baris duplikat (port altftool.com/tools/all/duplicate-line-remover)
-import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooldeduplines", alias: ["deduplines", "hapusduplikat", "uniquelines"], category: "tools",
@@ -15,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(raraGuideV2("ftooldeduplines", {
+      return m.reply(raraGuide("ftooldeduplines", {
         kaomoji: "(◕‿◕)",
         sapaan: "daftar banyak baris duplikat? bersihin sekejap~",
         cara: "tempel teksnya, baris yang dobel dihapus dan urutan pertama tetap dipertahankan",

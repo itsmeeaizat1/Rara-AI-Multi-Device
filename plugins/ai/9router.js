@@ -19,7 +19,7 @@
 // + VISION NATIVE: kirim/reply foto + caption → model vision live (glm-4.6v
 //   dsb) via multimodal chat 9router — bukan Gemini external.
 // + Model yang dipakai nongol di footer tiap jawaban (transparansi routing).
-import { raraBox, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraBox, raraGuide } from "../../src/lib/rara-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import {
   ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys, killStalePort9Router,
@@ -63,7 +63,7 @@ function getModelPref(chatId) {
 
 // ── kartu panduan (usage V2) ──
 function guide(m) {
-  return m.reply(raraGuideV2("9router", {
+  return m.reply(raraGuide("9router", {
     kaomoji: "ヾ(≧▽≦*)o 🚀",
     sapaan: "9Router lokal udah jalan bareng bot — 747 model AI siap dipakai!",
     cara: "tiket pertanyaan buat chat AI, ag <tugas> buat suruh agent browsing/bikin kode/bikin file, gambar buat bikin gambar, model buat liat daftar model, setmodel buat ganti model default",

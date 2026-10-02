@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolnumberwords — angka → terbilang Bahasa Indonesia (port altftool.com/tools/all/number-to-words)
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolnumberwords", alias: ["numberwords", "terbilang", "kataangka"], category: "tools",
@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const raw = (m.text || "").trim().replace(/\./g, "");
     if (!raw) {
-      return m.reply(raraGuideV2("ftoolnumberwords", {
+      return m.reply(raraGuide("ftoolnumberwords", {
         kaomoji: "(◍•ᴗ•◍)",
         sapaan: "angka mau dijadiin terbilang? tinggal ketik angkanya~",
         cara: "masukkan angka bulat sampai 999 triliun, titik pemisah ribuan boleh ikut",

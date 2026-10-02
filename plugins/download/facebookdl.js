@@ -4,7 +4,7 @@
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { fbdown } from "btch-downloader";
 import te from "../../src/lib/rara-error.js";
-import { raraGuideV2, raraWrap, raraLine, toSC, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap, raraLine, toSC, raraError, raraEmpty, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -51,7 +51,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(raraGuideV2("facebook", {
+    return m.reply(raraGuide("facebook", {
  kaomoji: "(◕‿◕)",
  sapaan: "video facebook keren nih? tempel linknya! (◍'◡'◍)",
       cara: "tempel link video facebooknya sesudah command",

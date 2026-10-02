@@ -2,7 +2,7 @@
 // Qwen3 replaced with callIkyy (ikyyxd qwen endpoint)
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import te from "../../src/lib/rara-error.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { aiFallbackChat } from "../../src/lib/rara-ai-fallback.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(raraGuideV2("qwen3", {
+    return m.reply(raraGuide("qwen3", {
  kaomoji: "(๑´ㅂ`๑)",
  sapaan: "tanya apa aja ke Qwen3, model besar dari Alibaba yang jago bahasa apa aja! (◍•ᴗ•◍)",
       cara: "ketik pertanyaannya sesudah command",

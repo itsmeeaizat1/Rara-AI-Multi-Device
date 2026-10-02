@@ -6,7 +6,7 @@
 // Sub: optimizer (RAM auto-turun > 500MB, default off) · pinglog · jam
 // · ram · ramalert (DM owner pas RAM sistem lewat ambang, default off) ·
 // status.
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getConnectionState, forceReconnect } from "../../src/connection.js";
 import {
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!sub) {
       return mm.reply(
-        raraGuideV2("index", {
+        raraGuide("index", {
           sapaan: "Panel kontrol bot saat run — bagian index.js & connection.js",
           cara: SUB_LIST.map((s) => "• " + prefix + s).join("\n"),
           contoh: `${prefix}index optimizer on · ${prefix}index optimizer on 600 · ${prefix}index pinglog off`,

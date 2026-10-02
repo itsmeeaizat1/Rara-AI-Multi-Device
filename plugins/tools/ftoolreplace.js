@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolreplace — ganti potongan teks massal (port altftool.com/tools/all/find-and-replace)
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolreplace", alias: ["replace", "gantiteks", "findreplace"], category: "tools",
@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     const raw = (m.text || "").trim();
     const parts = raw.split("|");
     if (parts.length < 3 || !parts[0].trim()) {
-      return m.reply(raraGuideV2("ftoolreplace", {
+      return m.reply(raraGuide("ftoolreplace", {
         kaomoji: "(¬‿¬)",
         sapaan: "teks mau diganti massal? pisahin pakai tanda |",
         cara: "ketik teks yang dicari, tanda |, penggantinya, tanda |, lalu teks aslinya",

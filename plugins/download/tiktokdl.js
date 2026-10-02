@@ -2,7 +2,7 @@
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import axios from "axios";
 import { AIRich } from "../../src/lib/rara-builder.js";
-import { raraGuideV2, raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine, toSC, raraBerhasil, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraError, raraEmpty, raraNoInput, raraWrap, raraLine, toSC, raraBerhasil, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
   const command = m?.command;
   if (!text) {
-    return m.reply(raraGuideV2("tiktok", {
+    return m.reply(raraGuide("tiktok", {
  kaomoji: "(≧◡≦) ♡",
  sapaan: "tiktok favorit mau disimpen? kasih link atau keywordnya! (⌒‿⌒)ﻭ",
       cara: "tempel linknya atau ketik keyword pencariannya",

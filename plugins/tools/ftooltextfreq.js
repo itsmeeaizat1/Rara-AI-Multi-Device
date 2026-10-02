@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltextfreq — kata paling sering muncul (port altftool.com/tools/all/word-frequency-counter)
-import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltextfreq", alias: ["textfreq", "wordfreq", "frekuensikata"], category: "tools",
@@ -15,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(raraGuideV2("ftooltextfreq", {
+      return m.reply(raraGuide("ftooltextfreq", {
         kaomoji: "(๑´ㅂ`๑)",
         sapaan: "mau tau kata apa yang paling sering muncul? tempel teksnya~",
         cara: "ketik teks apa pun, nanti dihitung top 10 kata terbanyak",

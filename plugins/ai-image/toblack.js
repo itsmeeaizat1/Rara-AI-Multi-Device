@@ -4,7 +4,7 @@ import { uploadImage } from "../../src/lib/rara-uploader.js";
 import { f } from "../../src/lib/rara-http.js";
 import te from "../../src/lib/rara-error.js";
 import { live3d } from "../../src/scraper/seaart.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!isImage) {
-    return m.reply(raraGuideV2("toblack", {
+    return m.reply(raraGuide("toblack", {
  kaomoji: "(¬‿¬)",
  sapaan: "ubah kulit fotomu jadi lebih gelap secara natural dan realistis!",
       cara: "kirim atau reply gambar dengan caption commandnya",

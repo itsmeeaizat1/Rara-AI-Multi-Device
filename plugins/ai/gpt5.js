@@ -2,7 +2,7 @@
 import { GPT5 } from "../../src/scraper/gpt5.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import te from "../../src/lib/rara-error.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "gpt5",
@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(raraGuideV2("gpt5", {
+    return m.reply(raraGuide("gpt5", {
  kaomoji: "(๑˃ᴗ˂)ﻭ",
  sapaan: "tanya apa aja ke AI, dijawab pakai model GPT-4.1 Nano! (≧∇≦)ﾉ",
       cara: "ketik pertanyaannya sesudah command",

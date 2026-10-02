@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/ytmp3 → Sanka AIO → ytdl fallback
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { raraGuideV2, raraSalahV2, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -90,7 +90,7 @@ async function getAudioDownload(url) {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(raraGuideV2("ytmp3", {
+    return m.reply(raraGuide("ytmp3", {
  kaomoji: "ヾ(´︶`*)ﾉ",
  sapaan: "konversi video youtube jadi mp3? gas! (◠‿◠)",
       cara: "tempel link youtubenya sesudah command",

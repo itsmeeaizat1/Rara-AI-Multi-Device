@@ -5,7 +5,7 @@
 // Sumber: onepunya.qzz.io (key .setkey onepunya) — numpang model Onepunya,
 // beda dari AI satuan (.gpt4o dkk) yang udah ada.
 import { getApiKey } from "../../src/lib/rara-api-keys.js";
-import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import { aiChat, multimodalChat } from "../../src/lib/rara-onepunya.js";
 import { uploadImage } from "../../src/lib/rara-uploader.js";
 
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
 
     // ── teks biasa → AI chat ──
     if (!text) {
-      return m.reply(raraGuideV2("onechat", {
+      return m.reply(raraGuide("onechat", {
  kaomoji: "(๑˃̵ᴗ˂̵)و",
  sapaan: "satu pintu banyak model AI, tanya apa pun! (๑•̀ㅂ•́)✧",
         cara: "ketik pertanyaannya sesudah command",

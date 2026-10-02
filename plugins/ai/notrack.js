@@ -9,7 +9,7 @@
 // ═════════════════════════════════════════════
 
 import { notrackChat } from "../../src/scraper/fazzcode-ai.js";
-import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "notrack",
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
   try {
     const q = (m.args || []).join(" ").trim();
     if (!q) {
-      return m.reply(raraGuideV2("notrack", {
+      return m.reply(raraGuide("notrack", {
  kaomoji: "(¬‿¬)",
  sapaan: "tanya apa aja — AI satuan NoTrack yang gak nyimpen track kamu! (⌒‿⌒)",
         cara: "ketik pertanyaannya sesudah command",

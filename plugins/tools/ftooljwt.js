@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooljwt — decoder JSON Web Token native offline (port altftool.com/tools/all/jwt-decoder)
 // Decode header + payload base64url + status kadaluarsa. Signature TIDAK diverifikasi (cuma decode).
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooljwt", alias: ["jwt", "jwtdecode", "decodejwt"], category: "tools",
@@ -30,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const token = (m.text || "").trim();
     if (!token) {
-      return m.reply(raraGuideV2("ftooljwt", {
+      return m.reply(raraGuide("ftooljwt", {
         kaomoji: "(・_・;)",
         sapaan: "token JWT mau didecode? tempel tokennya ya~",
         cara: "ketik .jwt diikuti token JWT lengkap (3 bagian dipisah titik)",

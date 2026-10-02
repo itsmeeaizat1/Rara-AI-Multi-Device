@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 import axios from 'axios'
 import { uploadImage } from '../../src/lib/rara-uploader.js'
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(raraGuideV2("toghibli", {
+        return m.reply(raraGuide("toghibli", {
  kaomoji: "(˶ᵔ ᵕ ᵔ˶)",
  sapaan: "ubah fotomu jadi gaya Ghibli yang hangat dan mimpi!",
         cara: "kirim atau reply gambar dengan caption commandnya",

@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 /**
  * plugins/ai/deepai.js
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   const input = args.join(" ").trim();
 
   if (!input) {
-    return m.reply(raraGuideV2("deepai", {
+    return m.reply(raraGuide("deepai", {
  kaomoji: "(⌒‿⌒)",
  sapaan: "ngobrol sama DeepAI, otaknya serba bisa! (ᵔ◡ᵔ)",
       cara: "kirim pertanyaannya setelah command, reset buat hapus sesi",

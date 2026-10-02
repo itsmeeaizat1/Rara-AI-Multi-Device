@@ -17,7 +17,7 @@ import {
   getLocation, setLocation, geocodePlace, runRainCheck, rainNowCard,
   setIntervalMenit, setCooldownMenit, setRainSock, syncRainMonitor,
 } from "../../src/lib/rara-rain-notify.js";
-import { raraError, raraGuide, raraGuideV2, raraSuccess } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraGuide, raraSuccess } from "../../src/lib/rara-menu-style.js";
 
 // seam buat e2e offline
 const __http = { geocode: null };
@@ -174,7 +174,7 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(raraGuideV2(pluginConfig.name, {
+      return m.reply(raraGuide(pluginConfig.name, {
         kaomoji: "(´･ω･`)",
         sapaan: "cek nowcast sekarang tiap " + st.intervalMenit + " menit — mau diatur?",
         cara: "ketik .hujannotif interval <menit> (5–60)",
@@ -191,7 +191,7 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(raraGuideV2(pluginConfig.name, {
+      return m.reply(raraGuide(pluginConfig.name, {
         kaomoji: "(´･ω･`)",
         sapaan: "anti-spam sekarang 1 notif maks tiap " + st.cooldownMenit + " menit per chat",
         cara: "ketik .hujannotif cooldown <menit> (30–720)",

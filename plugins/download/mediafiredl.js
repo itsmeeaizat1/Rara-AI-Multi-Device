@@ -4,8 +4,8 @@
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import te from "../../src/lib/rara-error.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { raraGuideV2, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
-import { raraError, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraError } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -52,7 +52,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(raraGuideV2("mediafire", {
+    return m.reply(raraGuide("mediafire", {
  kaomoji: "(¬‿¬)✧",
  sapaan: "file di mediafire pengen diunduh? tempel linknya! (๑˃̵ᴗ˂̵)و",
       cara: "tempel link file mediafirenya sesudah command",

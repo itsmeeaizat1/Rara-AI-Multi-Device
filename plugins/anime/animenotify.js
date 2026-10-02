@@ -15,7 +15,7 @@ import {
   getContentTypes, setContentType, DIGEST_LABELS,
   setIntervalMenit, getListMode, setListMode,
 } from "../../src/lib/rara-auto-anime-notifier.js";
-import { raraError, raraGuide, raraGuideV2, raraSuccess } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraGuide, raraSuccess } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "animenotify",
@@ -122,7 +122,7 @@ async function handler(m, { sock, args }) {
       setListMode(false);
       return m.reply(raraSuccess(pluginConfig.name, "Mode List *OFF* — digest anime cuma kirim *1 info anime terbaru* per notifikasi (anti-spam)"));
     }
-    return m.reply(raraGuideV2(pluginConfig.name, {
+    return m.reply(raraGuide(pluginConfig.name, {
       kaomoji: "(๑˃ᴗ˂)ﻭ",
       sapaan: `mode list sekarang *${getListMode() ? "ON" : "OFF"}* — mau diubah?`,
       cara: "ketik .animenotify list on atau off",
@@ -136,7 +136,7 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(raraGuideV2(pluginConfig.name, {
+      return m.reply(raraGuide(pluginConfig.name, {
         kaomoji: "(๑˃ᴗ˂)ﻭ",
         sapaan: `interval cek sekarang tiap ${st.intervalMenit} menit — mau diatur?`,
         cara: "ketik .animenotify interval <menit> (5–720)",

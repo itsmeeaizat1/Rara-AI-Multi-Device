@@ -5,7 +5,7 @@ import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/rara-ytdlp.js";
 import { toWhatsAppVideo } from "../../src/lib/rara-ffmpeg.js";
-import { raraGuideV2, raraSalahV2, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 
@@ -229,7 +229,7 @@ async function handler(m, { sock }) {
 
   // Usage: pilihan resolusi (default 480p)
   if (!query) {
-    return m.reply(raraGuideV2("playvideo", {
+    return m.reply(raraGuide("playvideo", {
  kaomoji: "(๑•̀ㅂ•́)و✧",
  sapaan: "pengen sekalian videonya? ketik judulnya! (≧▽≦)b",
       cara: "ketik judul lagunya sesudah command",

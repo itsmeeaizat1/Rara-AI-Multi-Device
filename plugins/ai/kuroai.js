@@ -4,7 +4,7 @@
 // Persona KuroNeko, SESSION PERSIST per user (token session API disimpan di
 // db.setting kuroaiSession) — AI inget percakapan sebelumnya per orang.
 // STRICT SATU RUTE (pola satuan owner): API down → error jelas, gak nyamber.
-import { raraWrap, raraGuideV2, raraInfoSections } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide, raraInfoSections } from "../../src/lib/rara-menu-style.js";
 import { kuroaiChat } from "../../src/scraper/evernight.js";
 
 const pluginConfig = {
@@ -65,7 +65,7 @@ async function handler(m, { sock, db } = {}) {
   if (!prompt) {
     const hasSession = !!getSession(db, m.sender);
     return m.reply(
-      raraGuideV2("KuroAI", {
+      raraGuide("KuroAI", {
  kaomoji: "(^◡^)",
  sapaan: `pengen ngobrol santai? sapa aja! (=^･ω･^=) ${hasSession ? " sesi obrolanmu masih kuinget lho~" : ""}`,
         cara: "ketik pesannya sesudah command, bot jawab santai dan inget obrolanmu",

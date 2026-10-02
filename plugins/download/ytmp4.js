@@ -5,7 +5,7 @@
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo, isYtDlpAvailable } from "../../src/scraper/rara-ytdlp.js";
-import { raraGuideV2, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
   const quality = qi >= 0 ? tokens[qi].replace(/p$/i, "") : "720";
   const url = tokens.filter((_, i) => i !== qi).join(" ").trim();
   if (!url) {
-    return m.reply(raraGuideV2("ytmp4", {
+    return m.reply(raraGuide("ytmp4", {
  kaomoji: "(๑•̀ㅂ•́)✧",
  sapaan: "download video youtube full? gas! (◕‿◕)♡",
       cara: "tempel link youtubenya sesudah command",

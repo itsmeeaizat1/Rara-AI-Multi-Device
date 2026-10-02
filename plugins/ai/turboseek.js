@@ -7,7 +7,7 @@
 // ═════════════════════════════════════════════
 
 import { turboseekSearch } from "../../src/scraper/fazzcode-ai.js";
-import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "turboseek",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const q = (m.args || []).join(" ").trim();
     if (!q) {
-      return m.reply(raraGuideV2("turboseek", {
+      return m.reply(raraGuide("turboseek", {
  kaomoji: "(๑˃ᴗ˂)ﻭ",
  sapaan: "tanya apa aja — dijawab AI lengkap dengan sumber riset web ala Perplexity! (≧∇≦)ﾉ",
         cara: "ketik pertanyaan risetmu sesudah command",

@@ -2,7 +2,7 @@
 import { ClaudeHaiku } from "../../src/scraper/claudehaiku.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import te from "../../src/lib/rara-error.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "claudehaiku",
@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(raraGuideV2("claudehaiku", {
+    return m.reply(raraGuide("claudehaiku", {
  kaomoji: "(⌒‿⌒)",
  sapaan: "tanya apa aja ke Claude Haiku — cepat, ringan, cocok buat tanyaan harian! (ᵔ◡ᵔ)",
       cara: "ketik pertanyaannya sesudah command",

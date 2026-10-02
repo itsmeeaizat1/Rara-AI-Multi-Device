@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolnato — eja NATO/ICAO alphabet (port altftool.com/tools/all/nato-phonetic-alphabet)
-import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolnato", alias: ["nato", "natoalphabet", "ejaannato"], category: "tools",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(raraGuideV2("ftoolnato", {
+      return m.reply(raraGuide("ftoolnato", {
         kaomoji: "(๑>ᗜ<)و",
         sapaan: "teks mau dieja kayak penerbang? gih~",
         cara: "ketik teksnya, tiap huruf dijadiin kata ejaan standar internasional",

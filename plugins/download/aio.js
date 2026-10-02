@@ -4,7 +4,7 @@
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
-import { raraError, raraEmpty, raraGuide, raraGuideV2, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply(raraGuideV2("aio", {
+    return m.reply(raraGuide("aio", {
  kaomoji: "(◕ᴗ◕)",
  sapaan: "download semua platform! tinggal kasih linknya! (≧∇≦)ﾉ",
       cara: "tempel linknya sesudah command",

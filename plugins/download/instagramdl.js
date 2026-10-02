@@ -4,7 +4,7 @@
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { raraGuideV2, raraSalahV2, raraWrap, raraLine, toSC, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap, raraLine, toSC, raraError, raraEmpty, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -51,7 +51,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(raraGuideV2("instagram", {
+    return m.reply(raraGuide("instagram", {
  kaomoji: "(•̀ᴗ•́)و",
  sapaan: "mau simpen reel atau post IG? tempel linknya! (⌒‿⌒)",
       cara: "tempel link instagramnya sesudah command",

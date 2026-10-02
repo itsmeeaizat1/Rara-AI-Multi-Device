@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 import axios from 'axios'
 import { uploadImage } from '../../src/lib/rara-uploader.js'
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(raraGuideV2("tofigurev2", {
+        return m.reply(raraGuide("tofigurev2", {
  kaomoji: "(๑˃̵ᴗ˂̵)و",
  sapaan: "ubah fotomu jadi figure versi 2 yang detail!",
         cara: "kirim atau reply gambar dengan caption commandnya",

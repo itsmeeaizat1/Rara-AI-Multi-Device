@@ -18,7 +18,7 @@
 // URL aneh ditolak JELAS, file lama gak ketimpa.
 import fs from "fs";
 import path from "path";
-import { raraError, raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getYtProxyArgs } from "../../src/scraper/rara-ytdlp.js";
 
 const PROXY_PATH = path.join(process.cwd(), "data", "yt-proxy.txt");
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
   const raw = (args[0] || "").trim();
   if (!raw) {
     return m.reply(
-      raraGuideV2("ytproxy", {
+      raraGuide("ytproxy", {
         kaomoji: "(๑˃ᴗ˂)ﻭ",
         sapaan: "setel proxy yt-dlp via chat — fallback kedua .play pas bot-check",
         cara: "ketik .ytproxy diikuti URL proxy (http/https/socks5)",

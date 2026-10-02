@@ -12,7 +12,7 @@
 // ═════════════════════════════════════════════
 
 import { zelLyrics, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 export { _setZelHttpForTest, _setZelKeyForTest };
 
@@ -30,7 +30,7 @@ const pluginConfig = {
 async function handler(m) {
   try {
     const raw = (m.args || []).join(" ").trim();
-    const usage = () => raraGuideV2("zlirik", {
+    const usage = () => raraGuide("zlirik", {
  kaomoji: "(๑´ㅂ`๑)",
  sapaan: "generator lirik AI — bikin lirik lagu dari topik bebas! (◍•ᴗ•◍)",
       cara: "ketik topiknya, genre & mood opsional pakai pemisah |",

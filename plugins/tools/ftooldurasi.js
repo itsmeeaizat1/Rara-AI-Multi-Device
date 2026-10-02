@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooldurasi — selisih dua tanggal (port altftool.com/tools/all/date-duration-calculator)
 // Format: .ftooldurasi <tanggal1>|<tanggal2> — yyyy-mm-dd atau dd-mm-yyyy, opsional HH:mm (WIB).
-import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooldurasi", alias: ["durasi", "selisihtanggal", "datediff"], category: "tools",
@@ -38,7 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const raw = (m.text || "").trim();
     if (!raw.includes("|")) {
-      return m.reply(raraGuideV2("ftooldurasi", {
+      return m.reply(raraGuide("ftooldurasi", {
         kaomoji: "(๑˃ᴗ˂)ﻭ",
         sapaan: "selisih dua tanggal mau dihitung? pisahin dengan tanda |",
         cara: "ketik tanggal pertama, tanda |, lalu tanggal kedua",

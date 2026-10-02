@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 /**
  * plugins/ai/deepseekv4flash.js
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
   const sessionId = toSessionId(key);
 
   if (!text) {
-    return m.reply(raraGuideV2("deepseekv4flash", {
+    return m.reply(raraGuide("deepseekv4flash", {
  kaomoji: "(๑˘ᘿ˂๑)",
  sapaan: "ngobrol sama DeepSeek V4 Flash, inget sesi percakapanmu lho! (≧◡≦) ♡",
       cara: "kirim pertanyaannya setelah command, reset buat hapus sesi",

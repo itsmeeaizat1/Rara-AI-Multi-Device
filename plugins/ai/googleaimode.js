@@ -8,7 +8,7 @@
 // ═════════════════════════════════════════════
 
 import { googleAiModeSearch, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
 
 // seam buat e2e: upload gambar bisa di-mock
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     const isPhoto = (m.quoted && m.quoted.isImage) || m.isImage;
 
     if (!q && !isPhoto) {
-      return m.reply(raraGuideV2("googleaimode", {
+      return m.reply(raraGuide("googleaimode", {
  kaomoji: "(◍•ᴗ•◍)",
  sapaan: "tanya apa aja — dijawab AI Mode Google + link sumber riset real-time! (◕ᴗ◕)",
         cara: "ketik pertanyaannya sesudah command, atau reply foto + command",

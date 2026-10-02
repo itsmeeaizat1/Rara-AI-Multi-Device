@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
-import { raraWrap, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ssweb",
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
   let text = m.text?.trim();
 
   if (!text) {
-    return m.reply(raraGuideV2("ssweb", {
+    return m.reply(raraGuide("ssweb", {
  kaomoji: "(≧▽≦)",
  sapaan: "tangkap layar website jadi gambar? gas! (ᵔ◡ᵔ)",
       cara: "tempel link webnya sesudah command, opsi --mobile buat tampilan HP",

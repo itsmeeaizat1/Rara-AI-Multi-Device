@@ -2,7 +2,7 @@
 import { f } from "../../src/lib/rara-http.js";
 import te from "../../src/lib/rara-error.js";
 import { haidarTxt2img } from "../../src/scraper/haidar-ai.js";
-import { raraWrap, toSC, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, toSC, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -54,7 +54,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(raraGuideV2("text2img", {
+    return m.reply(raraGuide("text2img", {
  kaomoji: "(◍'◡'◍)",
  sapaan: "ubah teks jadi gambar, deskripsikan aja yang kamu mau! (◍•ᴗ•◍)",
       cara: "ketik deskripsi gambar yang mau dibuat",

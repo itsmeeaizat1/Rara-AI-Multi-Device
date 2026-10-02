@@ -16,7 +16,7 @@ import {
   MOVIE_TYPES, searchMovies, fetchTrending, fetchUpcoming, fetchNowPlaying,
   setIntervalMenit, sendMovieCardTo, enrichMovie,
 } from "../../src/lib/rara-movie-notifier.js";
-import { raraError, raraSuccess, raraGuide, raraGuideV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraSuccess, raraGuide } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "movienotify",
@@ -110,7 +110,7 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(raraGuideV2(pluginConfig.name, {
+      return m.reply(raraGuide(pluginConfig.name, {
         kaomoji: "(ノ◕ヮ◕)ノ",
         sapaan: `interval cek sekarang tiap ${st.intervalMenit} menit — mau diatur?`,
         cara: "ketik .movienotify interval <menit> (5–720)",
@@ -171,7 +171,7 @@ async function handler(m, { sock, args }) {
     return null;
   }
 
-  return m.reply(raraGuideV2(pluginConfig.name, {
+  return m.reply(raraGuide(pluginConfig.name, {
     kaomoji: "(ノ◕ヮ◕)ノ",
     sapaan: `pengin update film terbaru otomatis? langganan aja! (auto ${isEnabled() ? "ON" : "OFF"} global, gratis tanpa apikey)`,
     cara: "on buat langganan · off berhenti · status cek kondisi · info atur tipe · interval atur jeda · now kirim sekarang · cari <judul> buat manual",
