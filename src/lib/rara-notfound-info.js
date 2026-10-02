@@ -28,7 +28,7 @@ export async function buildNotFoundReply(m, ctx, command, closest, level, totalH
     lines.push("");
     lines.push("💡 " + toSC("Ketik") + " *" + prefix + "tanyaai* " + toSC("untuk tanya AI"));
   } else if (level === 1) {
-    lines.push("(¬_¬") " + toSC("kamu sudah salah ketik") + " " + totalHits + "x " + toSC("dalam 1 menit kak..."));
+    lines.push("(¬_¬) " + toSC("kamu sudah salah ketik") + " " + totalHits + "x " + toSC("dalam 1 menit kak..."));
     lines.push("");
     lines.push(toSC("command") + " *" + prefix + command + "* " + toSC("gak ketemu"));
     if (closest) {
