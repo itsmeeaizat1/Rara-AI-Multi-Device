@@ -18,23 +18,23 @@
 ---
 
 Build:
-![Bot Prepare Check](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/bot-prepare-check.yaml/badge.svg)
+![Bot Prepare Check](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/bot-prepare-check.yaml/badge.svg)
 
 Deploy:
-![Auto Deploy](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/auto-deploy.yaml/badge.svg)
-![Release Zip](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/release-zip.yaml/badge.svg)
-![Auto Clean Session](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/Auto-Clean-Session-Cache.yaml/badge.svg)
+![Auto Deploy](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/auto-deploy.yaml/badge.svg)
+![Release Zip](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/release-zip.yaml/badge.svg)
+![Auto Clean Session](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/Auto-Clean-Session-Cache.yaml/badge.svg)
 
 Code Quality:
-![Syntax Scanner](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/syntax-error-scanner.yaml/badge.svg)
-![ESLint Auto Fix](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/eslint-autofix.yaml/badge.svg)
-![CodeQL](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/codeql.yaml/badge.svg)
+![Syntax Scanner](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/syntax-error-scanner.yaml/badge.svg)
+![ESLint Auto Fix](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/eslint-autofix.yaml/badge.svg)
+![CodeQL](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/codeql.yaml/badge.svg)
 
 Automation:
-![Keep Alive](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/keep-alive.yaml/badge.svg)
-![Auto Sync](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/auto-sync.yaml/badge.svg)
-![Feature Notifier](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/Feature-notifier.yaml/badge.svg)
-![Update Badge](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/Update-badge.yaml/badge.svg)
+![Keep Alive](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/keep-alive.yaml/badge.svg)
+![Auto Sync](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/auto-sync.yaml/badge.svg)
+![Feature Notifier](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/Feature-notifier.yaml/badge.svg)
+![Update Badge](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/actions/workflows/Update-badge.yaml/badge.svg)
 
 
 <!--START_SECTION:latest-update-->
@@ -179,7 +179,7 @@ Command yang paling sering dipakai sehari-hari:
 **Termux / VPS:**
 
 ```bash
-git clone https://github.com/itsmeeaizat1/Nova-AI-Multi-Device.git
+git clone https://github.com/itsmeeaizat1/Rara-AI-Multi-Device.git
 cd Rara-AI-Multi-Device
 npm install
 npm start
