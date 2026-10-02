@@ -123,7 +123,7 @@ Rara AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 | API Endpoint | 700+ (lihat `docs/list api.md`) |
 | Agent Skill | 4.727 (integrasi skills.sh) |
 
-## Command Penting
+## Perintah Penting
 
 Command yang paling sering dipakai sehari-hari:
 
