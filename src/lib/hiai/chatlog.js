@@ -18,7 +18,16 @@ export function groupContextLimit() {
 }
 
 async function getStore() {
-  return (await import('../../utils/connection.js')).default?.store
+  // FIX 2 Okt 2026 (gap porting .hiai): utils/connection.js HIROBOT gak pernah
+  // ada di repo Rara (git log --all: nol jejak) — getStore selalu throw & fitur
+  // riwayat chat mati sejak port pertama. Store Rara ada di sock.store
+  // (MakeStoreSerialized, src/lib/store.js) — ambil dari ctx engine.
+  try {
+    const { ctx } = await import('./mcp.js')
+    return ctx?.()?.conn?.store || null
+  } catch {
+    return null
+  }
 }
 
 function unwrap(message) {
@@ -128,7 +137,15 @@ function makeWho(conn) {
 }
 
 function collect(store, conn, chat, { tz, skipCommands }) {
-  const arr = store?.messages?.[chat]
+  // FIX 2 Okt 2026: store Rara = Map (messages: Map<jid, Map<id, msg>>),
+  // bukan plain object ala Hiro. Dukung dua-duanya.
+  let arr = null
+  if (store?.messages?.get) {
+    const per = store.messages.get(chat)
+    arr = per?.values ? Array.from(per.values()) : (Array.isArray(per) ? per : null)
+  } else {
+    arr = store?.messages?.[chat]
+  }
   if (!Array.isArray(arr) || !arr.length) return []
 
   const who = makeWho(conn)
@@ -190,7 +207,8 @@ export async function buildGroupContext(conn, m, { limit = groupContextLimit(), 
   }
 
   const older = rows.length - lines.length
-  const subject = store?.chats?.[chat]?.subject
+  const chatMeta = store?.chats?.get ? store.chats.get(chat) : store?.chats?.[chat]
+  const subject = chatMeta?.subject || chatMeta?.name
   const attrs = `${subject ? ` grup="${String(subject).replace(/"/g, "'")}"` : ''} pesan="${lines.length}" zona="${tz}"`
   const note = older > 0 ? `\n(+${older} pesan lebih lama tidak ditampilkan — pakai tool read_chat_history kalau perlu)` : ''
   return `<riwayat_grup${attrs}>\n${lines.join('\n')}${note}\n</riwayat_grup>`
@@ -223,6 +241,6 @@ export async function readChatHistory(conn, chat, { limit = 50, minutes, keyword
     total,
     shown: picked.length,
     matched: rows.length,
-    subject: store?.chats?.[chat]?.subject || null,
+    subject: (() => { const cm = store?.chats?.get ? store.chats.get(chat) : store?.chats?.[chat]; return cm?.subject || cm?.name || null })(),
   }
 }

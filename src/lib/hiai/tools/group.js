@@ -59,11 +59,26 @@ export default [
                 return 'Chat ini bukan grup, jadi tidak ada info grup untuk "grup ini". Kasih JID atau link undangan grup yang dimaksud kalau mau lihat grup lain.'
             }
 
-            const store = (await import('../../../utils/connection.js')).default?.store
-            if (!store) return 'Store tidak tersedia'
-            const chats = Object.keys(store.chats || {}).filter(jid => jid.endsWith('@g.us'))
-            if (!chats.length) return 'Tidak ada grup'
-            return `Grup bot (${chats.length}):\n` + chats.slice(0, 30).map(j => `- ${j}`).join('\n')
+            // FIX 2 Okt 2026 (gap porting): utils/connection.js HIROBOT gak
+            // pernah ada di Rara — enumerasi grup resmi Rara pakai
+            // groupFetchAllParticipating (sock), fallback ke sock.store.
+            const conn = ctx().conn
+            const rows = []
+            try {
+                const groups = await conn?.groupFetchAllParticipating?.()
+                for (const jid of Object.keys(groups || {})) {
+                    rows.push(`- ${jid}${groups[jid]?.subject ? ` — ${groups[jid].subject}` : ''}`)
+                }
+            } catch (e) {
+                const store = conn?.store
+                const chatList = store?.chats?.get ? Array.from(store.chats.keys()) : Object.keys(store?.chats || {})
+                for (const jid of chatList.filter(j => j.endsWith('@g.us'))) {
+                    const cm = store.chats.get ? store.chats.get(jid) : store.chats[jid]
+                    rows.push(`- ${jid}${cm?.subject || cm?.name ? ` — ${cm.subject || cm.name}` : ''}`)
+                }
+            }
+            if (!rows.length) return 'Tidak ada grup'
+            return `Grup bot (${rows.length}):\n` + rows.slice(0, 30).join('\n')
         } catch (e) {
             return `Error: ${e.message}`
         }
