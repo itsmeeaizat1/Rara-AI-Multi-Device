@@ -59,3 +59,9 @@ data/yt-cookies.txt
 # 🔹 proxy yt-dlp (bisa nyimpen user:password — JANGAN di-commit)
 data/yt-proxy.txt
 data/yt-proxy.txt.bak
+
+# arsip lokal & dev-only (gak kepake runtime panel)
+.branch-archive/
+.agents-backup-eslint-branches.txt
+.buatfitur
+.editorconfig
