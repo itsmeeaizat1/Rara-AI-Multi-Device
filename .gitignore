@@ -65,3 +65,5 @@ data/yt-proxy.txt.bak
 .agents-backup-eslint-branches.txt
 .buatfitur
 .editorconfig
+tmp-dl.mjs
+_remove_notifbox.cjs
