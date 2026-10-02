@@ -53,7 +53,7 @@ export async function shapeMining(m, sock, delay = SHAPE_ANIM_MS) {
   for (let i = 0; i < layers.length; i++) {
     const cross = layers.slice(0, i + 1).map((l, j) => `${j === 0 ? "⛰️" : "  "}${"🟫".repeat(Math.min(j + 1, 4))} ${l} — ${depths[j]}m`).join("\n");
     frames.push(
-      `${hdr("Gali Makin Dalam")}\n\n⛏️ kedalaman: *${depths[i]}m*\n\n${cross}\n\n⛏️ ${i === 0 ? "mulai menggali..." : i < layers.length - 1 ? "terus menggali..." : "ada kilau di dinding! 💎"}`
+      `${hdr("Gali Makin Dalam")}\n\n⛏️ kedalaman: ${depths[i]}m\n\n${cross}\n\n⛏️ ${i === 0 ? "mulai menggali..." : i < layers.length - 1 ? "terus menggali..." : "ada kilau di dinding! 💎"}`
     );
   }
   await morphCore(m, sock, frames, delay);
@@ -104,7 +104,7 @@ export async function shapeDagang(m, sock, from = "Desa Asal", to = "Desa Tujuan
     { pct: 100, note: "TIBA! mulai berteriak jualan! 💰" },
   ];
   const frames = stops.map((s, i) =>
-    `${hdr("Rute Karavan")}\n\n${track(s.pct)}\n\n📦 ${good} • ${from} ➜ ${to}\n🧭 Perjalanan : *${s.pct}%*\n\n🐪 ${s.note}`
+    `${hdr("Rute Karavan")}\n\n${track(s.pct)}\n\n📦 ${good} • ${from} ➜ ${to}\n🧭 Perjalanan : ${s.pct}%\n\n🐪 ${s.note}`
   );
   await morphCore(m, sock, frames, delay);
 }
@@ -155,7 +155,7 @@ export async function shapeTreasure(m, sock, locName = "Lokasi", delay = SHAPE_A
   ];
   const dist = (r, c) => Math.max(Math.abs(r - 2), Math.abs(c - 2));
   const frames = steps.map((s) =>
-    `${hdr("Peta Mendekat")}\n\n🗺️ ${locName}\n\n${grid(s.r, s.c, s.hit)}\n\n🧭 Jarak ke ❌ : *${s.hit ? 0 : dist(s.r, s.c)} kotak*\n\n${s.note}`
+    `${hdr("Peta Mendekat")}\n\n🗺️ ${locName}\n\n${grid(s.r, s.c, s.hit)}\n\n🧭 Jarak ke ❌ : ${s.hit ? 0 : dist(s.r, s.c)} kotak\n\n${s.note}`
   );
   await morphCore(m, sock, frames, delay);
 }
@@ -207,7 +207,7 @@ export async function shapeDungeon(m, sock, stages = 3, hasKey = false, delay = 
     const gate = "🚪" + "⬇️".repeat(i + 1);
     frames.push(
       `${hdr("Turun ke Kedalaman")}\n\n${torch}\n${gate}\n\n` +
-      `🏯 Lantai : *B${i + 1}/${stages}*${hasKey ? " 🔑" : ""}\n\n${flavorByFloor[Math.min(i, flavorByFloor.length - 1)]}`
+      `🏯 Lantai : B${i + 1}/${stages}${hasKey ? " 🔑" : ""}\n\n${flavorByFloor[Math.min(i, flavorByFloor.length - 1)]}`
     );
   }
   await morphCore(m, sock, frames, delay);
