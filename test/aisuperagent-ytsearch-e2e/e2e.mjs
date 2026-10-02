@@ -174,7 +174,7 @@ w("\n— registrasi tool planner —");
 const { TOOLS_LIST_NAME } = {};
 const na = await import("../../src/lib/rara-agent.js");
 const sysPlan = na.SYS_PLAN || "";
-t("4a. ytsearch ada di TOOL_LIST rara-agent.js", na.TOOL_LIST?.includes("ytsearch") || /ytsearch/.test(sysPlan), "cek export");
+t("4a. ytsearch ada di TOOL_LIST rara-agent.js", na.getToolList?.().includes("ytsearch") && /ytsearch/.test(na.renderPlanPrompt?.() || ""), "cek export");
 
 // ═══ 5. tool searchyt .raraagent tetap delegasi lib bersama ═══
 w("\n— .raraagent TOOLS.searchyt (delegasi) —");

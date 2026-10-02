@@ -17,8 +17,11 @@ import { skillsBlock } from "../../src/lib/rara-askills.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { callImageGenChain } from "../../src/lib/rara-ai-service.js";
 import { aiChainChat } from "../../src/lib/rara-ai-fallback.js";
+import { brainChat } from "../../src/lib/rara-agent-brain.js";
 import { visionScan } from "../../src/lib/rara-vision-chain.js";
 import { runEditChain, applyHd, expandPreset, toBuffer } from "../ai-image/clotheschanger.js";
+import { buildExecutorMap } from "../../src/lib/rara-agent-registry.js";
+import { installBuiltinTools } from "../../src/lib/rara-agent-tools.js";
 import { getLeaderboard } from "../../src/lib/rara-activity-tracker.js";
 import { getAllSkills, awaitSkillPacks } from "../../src/lib/rara-skills.js";
 import { getMcpTools } from "../../src/lib/rara-mcp.js";
@@ -283,7 +286,7 @@ export async function gateCommandAccess(cmd, m) {
   return null;
 }
 
-function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
+function buildLegacyExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
   // ⚡ command — jalanin command bot lain lewat messageHandler penuh
   //    (gates/cooldown/energi middleware tetap jalan — konsisten)
   const command = deps.command || (async (t) => {
@@ -448,7 +451,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     // dideteksi, lalu AI disuruh lanjutin PERSIS dari baris terakhir).
     let codeBody = "", explain = "", rounds = 0, complete = true;
     try {
-      const chat = deps.aiChat || aiChainChat; // seam deps.aiChat buat e2e
+      const chat = deps.aiChat || brainChat; // seam deps.aiChat buat e2e
       const { generateCompleteCode } = await import("../../src/lib/rara-codegen.js");
       const gen = await generateCompleteCode({
         spec, ext, lang: langKey,
@@ -600,7 +603,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
       const { CODE_EXTS, looksIncomplete, generateCompleteCode } = await import("../../src/lib/rara-codegen.js");
       if (CODE_EXTS.has(extGuess) && looksIncomplete(content, extGuess)) {
         onStatus?.("melengkapi kode yang kepotong");
-        const chat = deps.aiChat || aiChainChat;
+        const chat = deps.aiChat || brainChat;
         const gen = await generateCompleteCode({
           spec: "Lengkapi file " + fileName + " sesuai draft berikut jadi versi final lengkap siap jalan:\n\n" + content,
           ext: extGuess, lang: extGuess,
@@ -652,7 +655,23 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     }
   });
 
-  return { command, image, editimage, download, code, vision, activity, memory, create, skill, mcp, createfile, browse, ytsearch };
+  // `browse` lama DIHAPUS dari peta legacy: diganti tool registry baru (browser
+  // beneran + screenshot SELALU). Sisanya tetap implementasi teruji.
+  return { command, image, editimage, download, code, vision, activity, memory, create, skill, mcp, createfile, ytsearch };
+}
+
+/**
+ * Executor agent — DITURUNKAN DARI REGISTRY (rara-agent-registry). Satu pintu
+ * untuk aisuperagent, anovaagent (autoflow), dan agentloop/autotask. Tool lama
+ * diteruskan ke implementasi legacy; tool baru (browse+screenshot, screenshot,
+ * readfile, listfiles, editfile, writefile) jalan langsung dari registry.
+ * Signature TETAP sama dengan versi lama → semua pemanggil tanpa perubahan.
+ */
+function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
+  const legacyMap = buildLegacyExecutors(m, sock, db, mediaBuffer, deps, onStatus);
+  installBuiltinTools();
+  // legacy ikut di ctx → tiap pemanggilan buildExecutors membawa m/sock-nya SENDIRI
+  return buildExecutorMap({ m, sock, db, mediaBuffer, deps, onStatus, isOwner: !!m?.isOwner, legacy: legacyMap });
 }
 
 // simpan jejak percakapan agent per chat (db.setting agentMemory) — biar inget
@@ -951,4 +970,28 @@ async function handler(m, { sock, db, deps } = {}) {
   }
 }
 
-export { pluginConfig as config, handler, execAction, buildExecutors };
+// Tool yang BOLEH dipakai automation (agentloop/autotask) — semuanya baca/aman.
+// SENGAJA tanpa editfile/writefile/create/command: automation jalan di background
+// tanpa manusia mengawasi, jadi perubahan kode & aksi atas nama pengguna tetap
+// cuma lewat percakapan langsung. Dijaga di level KODE (allowlist), bukan prompt.
+export const AUTOMATION_TOOLS = Object.freeze([
+  "browse", "screenshot", "listfiles", "readfile", "skill", "mcp", "vision", "activity", "memory",
+]);
+
+/**
+ * Executor khusus automation headless. Output (screenshot, dokumen) dikirim ke
+ * `ownerJid` (DM owner) — loop jalan di background & dilanjut setelah restart,
+ * jadi gak bisa bergantung pada chat asal. `m` sintetis: owner (tool file baca
+ * cuma buat owner) dengan chat = DM owner. Tool di luar allowlist DIHAPUS dari
+ * peta, bukan sekadar ditolak, biar planner gak pernah melihat/memilihnya.
+ */
+function buildAutomationExecutors(sock, ownerJid, db = null, onStatus = null) {
+  if (!sock || !ownerJid) return {};
+  const m = { chat: ownerJid, sender: ownerJid, isOwner: true, isGroup: false, prefix: ".", key: {}, isAutomation: true };
+  const all = buildExecutors(m, sock, db, null, {}, onStatus);
+  const safe = {};
+  for (const name of AUTOMATION_TOOLS) if (typeof all[name] === "function") safe[name] = all[name];
+  return safe;
+}
+
+export { pluginConfig as config, handler, execAction, buildExecutors, buildAutomationExecutors };

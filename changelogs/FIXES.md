@@ -1,3 +1,13 @@
+## 3 Okt 2026 — Fix .9router gateway key 401: "machine-id HILANG, cli-secret HILANG"
+**Akar:** BUKAN npm install dan BUKAN proses basi. Dibaca dari kode server 9router 0.5.75 (api/keys/route.js): file ~/.9router/machine-id dan ~/.9router/auth/cli-secret dibuat 9router SECARA LAZY, hanya saat ada request manajemen yang SUDAH terautentikasi. Kalau kedua file belum ada, getRouter9CliToken() balik "" → request POST /api/keys dikirim tanpa token → server menolak 401 SEBELUM sempat membuat file → file tetap tidak ada → 401 selamanya. Lingkaran tertutup. Self-heal lama (kill → respawn) tidak menolong karena file memang tidak pernah dibuat. Health check hijau dan 637 model terbaca (endpoint model tidak butuh token manajemen) sehingga terlihat "jalan".
+
+**Fix:** `ensureRouter9AuthFiles()` di rara-9router-local.js membuat kedua file sendiri dengan format PERSIS server (machine-id = uuid, cli-secret = randomBytes(32).hex, mode 0600). Idempoten, TIDAK PERNAH menimpa file yang sudah ada (menimpa saat server hidup memutus sinkron secret di memorinya), tidak melempar bila gagal menulis (lapor jujur). Dipanggil sebelum spawn dan di dalam getRouter9CliToken() (jalur yang dipakai mgmtApi).
+
+**Bukti:** diuji dengan 9router ASLI dari HOME kosong (kondisi identik screenshot): file dibuat, tokenReady true, gateway key BERHASIL dibuat, 637 model terbaca. Chat sandbox gagal "belum ada provider aktif" karena tak ada key provider (bukan bug). E2E router9-authboot 25/25.
+GOTCHA: 9routerapikey.json jangan di-commit berisi key sandbox (machine-id beda → 401 di VPS).
+
+VPS: pull → restart → .9router restart → .9router status (gateway key harus ok).
+
 ## 3 Okt 2026 — Fix lanjutan: allow-git value SALAH (true bukan enum valid)
 **Akar:** fix sebelumnya (`allow-git=true`) KEBALIK bikin tambah parah — npm 12+ validasi strict: opsi `allow-git` itu ENUM (`all`/`none`/`root`), BUKAN boolean. `true` ditolak ("invalid config... Must be one of: all, none, root") → npm fallback ke default (`none`?) atau malah bikin whole config dianggap gak sah, `npm install` tetap EALLOWGIT mentah-mentah di package libsignal, GAGAL TOTAL (laporan owner: "jd kena g bsa npm install sm sekali").
 

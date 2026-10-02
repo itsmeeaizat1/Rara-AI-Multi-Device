@@ -171,6 +171,19 @@ function scratchpadOf(run) {
     .join("\n\n");
 }
 
+// sock aktif disimpan saat loop dijalankan (runLoopLoop/resumeAgentLoops) biar
+// runIteration bisa membangun executor tanpa mengubah signature-nya.
+let _activeSock = null;
+async function automationTools(run) {
+  try {
+    if (!_activeSock) return {};
+    const ownerJidStr = ownerJid();
+    if (!ownerJidStr) return {};
+    const { buildAutomationExecutors } = await import("./agent.js");
+    return buildAutomationExecutors(_activeSock, ownerJidStr, getDatabase(), null);
+  } catch { return {}; }
+}
+
 async function runIteration(run) {
   // instruksi putaran ini: koreksi dari kritik terakhir > langkah rencana > tugas utuh
   const prev = (run.iterations || [])[run.cur - 1];
@@ -182,8 +195,10 @@ async function runIteration(run) {
   const doRun = _runner !== null ? _runner : async (prompt) => {
     try {
       const res = await runAgent(prompt, {
-        execTools: {}, // headless: penalaran + riset web (pola autotask)
-        toolbox: "penalaran mandiri; riset/browsing web via search engine bawaan (mode research)",
+        // tool AMAN untuk automation (browse+screenshot, baca file, skill, mcp, ...);
+        // output ke DM owner. editfile/writefile/create SENGAJA tidak ada.
+        execTools: await automationTools(run),
+        toolbox: "penalaran mandiri; riset/browsing web via search engine bawaan (mode research); tool aman: browse+screenshot, screenshot, listfiles, readfile, skill, mcp",
       });
       return res?.answer ? String(res.answer) : null;
     } catch { return null; }
@@ -304,6 +319,7 @@ async function finishLoop(sock, run) {
 }
 
 async function runLoopLoop(sock, id) {
+  _activeSock = sock || _activeSock;
   if (running.has(id)) return;
   running.add(id);
   try {

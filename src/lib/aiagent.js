@@ -38,7 +38,7 @@ async function resolveParticipantId(conn, m, jid) {
 // → fallback ke tool.done (akurat, statis). Cuma tool yang topiknya rawan
 // ketukar (info grup: nama/deskripsi/foto profil/gambar/tutup-buka) yang
 // dicek — tool lain (kick/block/dll) tetap bebas natural.
-export const TOOL_TOPIC = {
+const _TOOL_TOPIC_STATIC = {
   searchsite: 'situs web',
   closegc: 'tutup',
   opengc: 'dibuka',
@@ -46,7 +46,6 @@ export const TOOL_TOPIC = {
   setdesc: 'deskripsi',
   setpp: 'foto profil',
   genimage: 'gambar',
-  editimage: 'edit gambar',
   lockedit: 'kunci',
   unlockedit: 'unlock',
 }
@@ -58,12 +57,11 @@ export const TOOL_TOPIC = {
 // kayak asisten asli lagi ngomong "oke bentar ya", bukan status teknis
 // "sedang mengeksekusi: closegc..."). Dipakai raraai.js pas status loading
 // sebelum tool.run() — fallback generik kalau tool gak ada di map.
-export const TOOL_NATURAL_DOING = {
+const _TOOL_NATURAL_DOING_STATIC = {
   searchsite: 'nyariin di situs web-nya...',
   closegc: 'nutup grupnya',
   opengc: 'buka grupnya',
   genimage: 'bikin gambarnya',
-  editimage: 'ngedit gambarnya',
   kick: 'ngeluarin dia dari grup',
   add: 'nambahin ke grup',
   promote: 'jadiin dia admin',
@@ -98,6 +96,22 @@ export const TOOL_NATURAL_DOING = {
   download: 'download filenya',
   createfile: 'buatin filenya',
 }
+
+// Statis (tool aksi grup) + dinamis dari registry (rara-agent-registry). Proxy
+// supaya `TOOL_TOPIC[nama]`, `Object.entries(TOOL_TOPIC)` dan `in` tetap jalan
+// seperti objek biasa — pemanggil lama (raraai.js) TANPA perubahan.
+import { topicMap as _regTopicMap, doingMap as _regDoingMap, toLegacyTools as _regToLegacy } from './rara-agent-registry.js'
+import { installBuiltinTools as _installBuiltinTools } from './rara-agent-tools.js'
+const _merged = (stat, dyn) => new Proxy(stat, {
+  get: (t, k) => (k in t ? t[k] : dyn()[k]),
+  has: (t, k) => k in t || k in dyn(),
+  ownKeys: (t) => [...new Set([...Reflect.ownKeys(t), ...Object.keys(dyn())])],
+  getOwnPropertyDescriptor: (t, k) => (k in t
+    ? Object.getOwnPropertyDescriptor(t, k)
+    : (k in dyn() ? { value: dyn()[k], enumerable: true, configurable: true, writable: true } : undefined)),
+})
+export const TOOL_TOPIC = _merged(_TOOL_TOPIC_STATIC, _regTopicMap)
+export const TOOL_NATURAL_DOING = _merged(_TOOL_NATURAL_DOING_STATIC, _regDoingMap)
 
 export const TOOLS = {
   // ─── BUKA/TUTUP GRUP ───
@@ -134,61 +148,6 @@ export const TOOLS = {
       await conn.sendMessage(m.chat, {
         image: Buffer.from(img.base64, 'base64'),
         caption: '🎨 ' + prompt.slice(0, 150) + (img.via ? '\n_(engine: ' + img.via + ')_' : '') + (img.ratio && img.ratio !== '1:1' ? ' _(rasio: ' + img.ratio + ')_' : ''),
-      }, { quoted: m });
-    }
-  },
-
-  // ─── EDIT GAMBAR (AI IMAGE EDIT — nano-banana chain, request owner 3 Okt 2026:
-  // "supaya novaagent+aisuperagent+anovaagent semuanya support generate gambar
-  // pakai nanobanana yg ada di novaagent support edit gambar pakai
-  // clotheschanger jd smuanya gabungan support"). Pakai rantai edit yang SAMA
-  // dengan .aiclotheschanger: live3d nano-banana → kuroneko → Img2Img.
-  // Mode: clothes (ganti baju), bg (ganti background), remove (hapus objek),
-  // age (ubah umur), hair (ganti rambut), gender (ganti gender), faceswap.
-  editimage: {
-    perm: 'user', args: ['prompt', 'mode'], danger: false,
-    desc: 'EDIT gambar yang di-reply/attach: ganti baju, ganti background, hapus objek, ubah umur, ganti rambut, ganti gender (contoh: "edit foto ini ganti baju jadi formal")',
-    done: '✅ Gambarnya udah aku edit di atas ya.',
-    run: async (conn, m, a) => {
-      // Ambil buffer gambar dari reply/attach
-      const imgSource = m.isImage ? m : m.quoted?.isImage ? m.quoted : null;
-      if (!imgSource) throw new Error('reply/attach gambarnya dulu, baru suruh edit');
-      const userPrompt = String(a?.prompt || a?.text || a?.value || '').trim();
-      if (!userPrompt) throw new Error('mau edit apa? contoh: ganti baju jadi formal, ubah background jadi pantai, hapus kursi');
-      const mode = String(a?.mode || '').toLowerCase().trim();
-      const buf = await (m.isImage ? m.download() : m.quoted.download());
-      if (!buf || buf.length < 500) throw new Error('gagal unduh gambar, coba lagi');
-
-      // Bangun prompt edit sesuai mode
-      const { expandPreset } = await import('../../plugins/ai-image/clotheschanger.js');
-      let editPrompt = userPrompt;
-      if (mode === 'clothes' || !mode || mode === 'outfit') {
-        const expanded = expandPreset(userPrompt);
-        editPrompt = `Change the person's outfit to: ${expanded}. Keep the face, pose, and background the same. Photorealistic.`;
-      } else if (mode === 'bg' || mode === 'background') {
-        editPrompt = `Change the background to: ${userPrompt}. Keep the person, pose, and lighting the same. Photorealistic.`;
-      } else if (mode === 'remove' || mode === 'hapus') {
-        editPrompt = `Remove ${userPrompt} from the image. Fill the area naturally. Photorealistic.`;
-      } else if (mode === 'age') {
-        editPrompt = `Change the person's age to look ${userPrompt}. Keep identity, background, and clothing the same. Photorealistic.`;
-      } else if (mode === 'hair') {
-        editPrompt = `Change the person's hairstyle to: ${userPrompt}. Keep face, clothing, and background the same. Photorealistic.`;
-      } else if (mode === 'gender') {
-        editPrompt = `Change the person's gender to ${userPrompt}. Keep pose, clothing style, and background the same. Photorealistic.`;
-      } else if (mode === 'faceswap') {
-        editPrompt = `Swap the face in this photo. ${userPrompt}. Photorealistic.`;
-      } else {
-        editPrompt = `${userPrompt}. Photorealistic edit.`;
-      }
-
-      const { runEditChain, applyHd, toBuffer } = await import('../../plugins/ai-image/clotheschanger.js');
-      const { result, usedApi } = await runEditChain(buf, editPrompt);
-      const hdMode = /\bhd2\b/i.test(userPrompt) ? '2x' : /\bhd\b/i.test(userPrompt) ? 'polish' : null;
-      const baseBuf = await toBuffer(result);
-      const finalBuf = hdMode ? await applyHd(baseBuf, hdMode) : baseBuf;
-      await conn.sendMessage(m.chat, {
-        image: Buffer.from(finalBuf),
-        caption: '🖼️ ' + userPrompt.slice(0, 150) + '\n_(engine: ' + usedApi + (hdMode ? ' + ' + hdMode : '') + ')_',
       }, { quoted: m });
     }
   },
@@ -719,7 +678,39 @@ export async function getAgentTools() {
   await awaitSkillPacks() // source pack src/source/ siap sebelum registry dibangun
   let mcp = {};
   try { mcp = await getMcpToolEntries(); } catch { /* MCP down gak boleh matiin agent */ }
-  return { ...TOOLS, ...getAllSkills(), ...mcp };
+  // tool REGISTRY DEKLARATIF (rara-agent-registry): gambar/edit gambar/browse+
+  // screenshot/baca-edit-tulis file dst. — SUMBER YANG SAMA dengan aisuperagent &
+  // anovaagent. Tool aksi grup inti (TOOLS) menang kalau namanya bentrok.
+  let reg = {};
+  try {
+    _installBuiltinTools();
+    reg = _regToLegacy((conn, m) => ({ m, sock: conn, db: null, mediaBuffer: null, legacy: legacyFromTools(conn, m) }));
+  } catch { /* registry gagal dimuat → raraagent tetap jalan dengan tool inti */ }
+  return { ...reg, ...TOOLS, ...getAllSkills(), ...mcp };
+}
+
+// Jembatan: tool registry yang membungkus implementasi lama (command, image,
+// download, code, vision, ...) dipanggil dari raraagent lewat executor
+// plugins/ai-agent/agent.js yang SAMA — satu implementasi, dua engine.
+function legacyFromTools(conn, m) {
+  const cache = {};
+  return new Proxy({}, {
+    get(_, name) {
+      if (typeof name !== 'string') return undefined;
+      return async (call) => {
+        if (!cache.map) {
+          const mod = await import('../../plugins/ai-agent/agent.js');
+          const img = (m?.isImage ? m : m?.quoted?.isImage ? m.quoted : null);
+          let buf = null;
+          try { if (img?.download) buf = await img.download(); } catch {}
+          const map = mod.buildExecutors(m, conn, null, buf, {}, null);
+          cache.map = map;
+        }
+        const fn = cache.map[name];
+        return fn ? fn(call, {}) : { ok: false, msg: 'tool ' + name + ' gak ada' };
+      };
+    },
+  });
 }
 
 // ================= RESOLVE NAMA MEMBER KE JID =================
@@ -1023,12 +1014,27 @@ import { getAiChain } from "./apikey/ai-chain.js";
 // 🔹 AI AGENT: Fungsi umum nanya ke AI — coba provider satu-satu sampai sukses
 // history opsional: [{role:'user'|'assistant', content}] — dipakai biar AI
 // TAHU percakapan sebelumnya (fix bug: user jawab "iya" dianggap sesi baru).
+// saklar: AGENT_BRAIN=chain → perilaku lama (langsung rantai konfigurasi)
+function _brainEnabled() { return String(process.env.AGENT_BRAIN || '9router').toLowerCase().trim() !== 'chain' }
+
 export async function askAI(system, user, history = []) {
   const histTrimmed = Array.isArray(history) ? history.slice(-12) : []
   // Fold history jadi teks buat provider GET (cuma bisa kirim 1 field teks)
   const histAsText = histTrimmed.length
     ? histTrimmed.map(h => `${h.role === 'user' ? 'User' : 'Asisten'}: ${h.content}`).join('\n') + '\n'
     : ''
+  // OTAK UTAMA raraagent: 9ROUTER LOKAL (127.0.0.1 — bukan 9RouterV2/tio_*).
+  // Owner 3 Okt: "ganti dari qwen di endpoint min1ai, migrasi ke 9router lokal".
+  // Gagal/mati → lanjut rantai konfigurasi di bawah (Min1AI dst.) sebagai cadangan.
+  // Circuit breaker + health-check cepat ada di rara-agent-brain.js.
+  if (_brainEnabled()) {
+    try {
+      const { brainChat } = await import('./rara-agent-brain.js')
+      const prompt = `${histAsText ? histAsText + '\n' : ''}${user}`
+      const txt = await brainChat(prompt, { systemPrompt: system, timeoutMs: 60000 })
+      if (txt && String(txt).trim()) return String(txt).trim()
+    } catch { /* lanjut rantai konfigurasi */ }
+  }
   const providers = getAiChain()
   if (!providers.length) throw new Error('Rantai AI kosong — cek src/lib/apikey/ai-providers.json')
   for (const p of providers) {
@@ -1310,7 +1316,13 @@ export async function quickWebSearch(query, { limit = 5, readTop = 2 } = {}) {
 // dipake e2e buat verifikasi blok webSearch/memory kecantol bener ke prompt.
 export function buildThinkSystemPrompt(ctx = {}) {
   // Tools gabungan: TOOLS inti + SKILLS registry (request owner 12 Sep 2026)
-  const allTools = { ...TOOLS, ...getAllSkills() }
+  // registry deklaratif (gambar/edit/browse+screenshot/file) ikut terlihat model
+  let regTools = {}
+  try {
+    _installBuiltinTools()
+    regTools = _regToLegacy(() => ({}))
+  } catch { /* registry gagal dimuat → pakai tool inti saja */ }
+  const allTools = { ...regTools, ...TOOLS, ...getAllSkills() }
   let toolsList = Object.entries(allTools)
     .map(([k, v]) => `- ${k}: ${v.desc}${v.args ? ' (butuh args: ' + v.args.join(', ') + ')' : ''}`)
     .join('\n')
