@@ -648,4 +648,4 @@ function shortLine(prompt, clothesDesc) {
   return short ? `✨ ${toSC("model baju")}: *${short}*` : "";
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler, runEditChain, applyHd, toBuffer };

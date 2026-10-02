@@ -18,6 +18,7 @@ import { smallcapsText } from "../../src/lib/styler.js";
 import { callImageGenChain } from "../../src/lib/rara-ai-service.js";
 import { aiChainChat } from "../../src/lib/rara-ai-fallback.js";
 import { visionScan } from "../../src/lib/rara-vision-chain.js";
+import { runEditChain, applyHd, expandPreset, toBuffer } from "../ai-image/clotheschanger.js";
 import { getLeaderboard } from "../../src/lib/rara-activity-tracker.js";
 import { getAllSkills, awaitSkillPacks } from "../../src/lib/rara-skills.js";
 import { getMcpTools } from "../../src/lib/rara-mcp.js";
@@ -329,6 +330,55 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     }
   });
 
+  // 🖼️ editimage — EDIT gambar yang di-reply/attach (request owner 3 Okt 2026:
+  // "supaya novaagent+aisuperagent+anovaagent semuanya support generate gambar
+  // pakai nanobanana yg ada di novaagent support edit gambar pakai
+  // clotheschanger jd smuanya gabungan support"). Pakai rantai edit yang SAMA
+  // dengan .aiclotheschanger: live3d nano-banana → kuroneko → Img2Img.
+  // Mode edit: clothes (ganti baju), faceswap, age, hair, gender, bg, remove.
+  const editimage = deps.editimage || (async (t) => {
+    if (!mediaBuffer) return { ok: false, msg: "Reply/attach gambarnya dulu, baru suruh agent edit" };
+    const userPrompt = String(t.prompt || t.args || "").trim();
+    if (!userPrompt) return { ok: false, msg: "Jelasin mau edit apa (contoh: ganti baju jadi formal, ubah background jadi pantai, hapus kursi di belakang)" };
+    const mode = String(t.mode || "").toLowerCase().trim();
+    try {
+      // Bangun prompt edit sesuai mode (pola clotheschanger buildEditPrompt dkk)
+      let editPrompt = userPrompt;
+      if (mode === "clothes" || !mode || mode === "outfit") {
+        const expanded = expandPreset(userPrompt);
+        editPrompt = `Change the person's outfit to: ${expanded}. Keep the face, pose, and background the same. Photorealistic.`;
+      } else if (mode === "bg" || mode === "background") {
+        editPrompt = `Change the background to: ${userPrompt}. Keep the person, pose, and lighting the same. Photorealistic.`;
+      } else if (mode === "remove" || mode === "hapus") {
+        editPrompt = `Remove ${userPrompt} from the image. Fill the area naturally. Photorealistic.`;
+      } else if (mode === "age") {
+        editPrompt = `Change the person's age to look ${userPrompt}. Keep identity, background, and clothing the same. Photorealistic.`;
+      } else if (mode === "hair") {
+        editPrompt = `Change the person's hairstyle to: ${userPrompt}. Keep face, clothing, and background the same. Photorealistic.`;
+      } else if (mode === "gender") {
+        editPrompt = `Change the person's gender to ${userPrompt}. Keep pose, clothing style, and background the same. Photorealistic.`;
+      } else if (mode === "faceswap") {
+        // face swap butuh 2 foto — mediaBuffer = foto target, prompt = deskripsi
+        editPrompt = `Swap the face in this photo. ${userPrompt}. Photorealistic.`;
+      } else {
+        // mode gak dikenal → anggap prompt bebas
+        editPrompt = `${userPrompt}. Photorealistic edit.`;
+      }
+      onStatus?.("🖼️ " + smallcapsText("mengedit gambar..."));
+      const { result, usedApi } = await runEditChain(mediaBuffer, editPrompt);
+      const hdMode = /\bhd2\b/i.test(userPrompt) ? "2x" : /\bhd\b/i.test(userPrompt) ? "polish" : null;
+      const baseBuf = await toBuffer(result);
+      const finalBuf = hdMode ? await applyHd(baseBuf, hdMode) : baseBuf;
+      await sock.sendMessage(m.chat, {
+        image: Buffer.from(finalBuf),
+        caption: "🖼️ " + userPrompt.slice(0, 150) + "\n_(engine: " + usedApi + (hdMode ? " + " + hdMode : "") + ")_",
+      }, { quoted: m });
+      return { ok: true, msg: "Gambar diedit (engine: " + usedApi + "): " + userPrompt.slice(0, 80) };
+    } catch (e) {
+      return { ok: false, msg: "Gagal edit gambar: " + (e?.message || "semua engine down, coba lagi nanti") };
+    }
+  });
+
   // ⬇️ download — unduh file dari URL langsung (apk/zip/mp3/pdf/dll) + kirim
   // dokumen (request owner 11 Sep: "bsa ga agentnya klo aku minta download
   // apk dichrome atau kyk download file zip direpo serba bisa gtu").
@@ -602,7 +652,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     }
   });
 
-  return { command, image, download, code, vision, activity, memory, create, skill, mcp, createfile, browse, ytsearch };
+  return { command, image, editimage, download, code, vision, activity, memory, create, skill, mcp, createfile, browse, ytsearch };
 }
 
 // simpan jejak percakapan agent per chat (db.setting agentMemory) — biar inget

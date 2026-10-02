@@ -46,6 +46,7 @@ export const TOOL_TOPIC = {
   setdesc: 'deskripsi',
   setpp: 'foto profil',
   genimage: 'gambar',
+  editimage: 'edit gambar',
   lockedit: 'kunci',
   unlockedit: 'unlock',
 }
@@ -62,6 +63,7 @@ export const TOOL_NATURAL_DOING = {
   closegc: 'nutup grupnya',
   opengc: 'buka grupnya',
   genimage: 'bikin gambarnya',
+  editimage: 'ngedit gambarnya',
   kick: 'ngeluarin dia dari grup',
   add: 'nambahin ke grup',
   promote: 'jadiin dia admin',
@@ -132,6 +134,61 @@ export const TOOLS = {
       await conn.sendMessage(m.chat, {
         image: Buffer.from(img.base64, 'base64'),
         caption: '🎨 ' + prompt.slice(0, 150) + (img.via ? '\n_(engine: ' + img.via + ')_' : '') + (img.ratio && img.ratio !== '1:1' ? ' _(rasio: ' + img.ratio + ')_' : ''),
+      }, { quoted: m });
+    }
+  },
+
+  // ─── EDIT GAMBAR (AI IMAGE EDIT — nano-banana chain, request owner 3 Okt 2026:
+  // "supaya novaagent+aisuperagent+anovaagent semuanya support generate gambar
+  // pakai nanobanana yg ada di novaagent support edit gambar pakai
+  // clotheschanger jd smuanya gabungan support"). Pakai rantai edit yang SAMA
+  // dengan .aiclotheschanger: live3d nano-banana → kuroneko → Img2Img.
+  // Mode: clothes (ganti baju), bg (ganti background), remove (hapus objek),
+  // age (ubah umur), hair (ganti rambut), gender (ganti gender), faceswap.
+  editimage: {
+    perm: 'user', args: ['prompt', 'mode'], danger: false,
+    desc: 'EDIT gambar yang di-reply/attach: ganti baju, ganti background, hapus objek, ubah umur, ganti rambut, ganti gender (contoh: "edit foto ini ganti baju jadi formal")',
+    done: '✅ Gambarnya udah aku edit di atas ya.',
+    run: async (conn, m, a) => {
+      // Ambil buffer gambar dari reply/attach
+      const imgSource = m.isImage ? m : m.quoted?.isImage ? m.quoted : null;
+      if (!imgSource) throw new Error('reply/attach gambarnya dulu, baru suruh edit');
+      const userPrompt = String(a?.prompt || a?.text || a?.value || '').trim();
+      if (!userPrompt) throw new Error('mau edit apa? contoh: ganti baju jadi formal, ubah background jadi pantai, hapus kursi');
+      const mode = String(a?.mode || '').toLowerCase().trim();
+      const buf = await (m.isImage ? m.download() : m.quoted.download());
+      if (!buf || buf.length < 500) throw new Error('gagal unduh gambar, coba lagi');
+
+      // Bangun prompt edit sesuai mode
+      const { expandPreset } = await import('../../plugins/ai-image/clotheschanger.js');
+      let editPrompt = userPrompt;
+      if (mode === 'clothes' || !mode || mode === 'outfit') {
+        const expanded = expandPreset(userPrompt);
+        editPrompt = `Change the person's outfit to: ${expanded}. Keep the face, pose, and background the same. Photorealistic.`;
+      } else if (mode === 'bg' || mode === 'background') {
+        editPrompt = `Change the background to: ${userPrompt}. Keep the person, pose, and lighting the same. Photorealistic.`;
+      } else if (mode === 'remove' || mode === 'hapus') {
+        editPrompt = `Remove ${userPrompt} from the image. Fill the area naturally. Photorealistic.`;
+      } else if (mode === 'age') {
+        editPrompt = `Change the person's age to look ${userPrompt}. Keep identity, background, and clothing the same. Photorealistic.`;
+      } else if (mode === 'hair') {
+        editPrompt = `Change the person's hairstyle to: ${userPrompt}. Keep face, clothing, and background the same. Photorealistic.`;
+      } else if (mode === 'gender') {
+        editPrompt = `Change the person's gender to ${userPrompt}. Keep pose, clothing style, and background the same. Photorealistic.`;
+      } else if (mode === 'faceswap') {
+        editPrompt = `Swap the face in this photo. ${userPrompt}. Photorealistic.`;
+      } else {
+        editPrompt = `${userPrompt}. Photorealistic edit.`;
+      }
+
+      const { runEditChain, applyHd, toBuffer } = await import('../../plugins/ai-image/clotheschanger.js');
+      const { result, usedApi } = await runEditChain(buf, editPrompt);
+      const hdMode = /\bhd2\b/i.test(userPrompt) ? '2x' : /\bhd\b/i.test(userPrompt) ? 'polish' : null;
+      const baseBuf = await toBuffer(result);
+      const finalBuf = hdMode ? await applyHd(baseBuf, hdMode) : baseBuf;
+      await conn.sendMessage(m.chat, {
+        image: Buffer.from(finalBuf),
+        caption: '🖼️ ' + userPrompt.slice(0, 150) + '\n_(engine: ' + usedApi + (hdMode ? ' + ' + hdMode : '') + ')_',
       }, { quoted: m });
     }
   },
@@ -1324,6 +1381,9 @@ Contoh:
 "tutup grup" → {"tool":"closegc","args":{},"execCommand":null,"reply":"Grup sudah ditutup, sekarang cuma admin yang bisa chat."}
 "buatkan gambar kucing astronot" → {"tool":"genimage","args":{"prompt":"seekor kucing astronot di bulan, kartun lucu"},"execCommand":null,"reply":"Gambarnya sedang dibuat."}
 "buatkan gambar kucing 9:16" → {"tool":"genimage","args":{"prompt":"kucing","ratio":"9:16"},"execCommand":null,"reply":"Gambarnya sedang dibuat rasio 9:16."}
+"edit foto ini ganti baju jadi formal" (reply/attach gambar) → {"tool":"editimage","args":{"prompt":"formal","mode":"clothes"},"execCommand":null,"reply":"Oke, fotonya lagi aku edit biar bajunya jadi formal."}
+"edit gambar ini background jadi pantai bali" (reply/attach gambar) → {"tool":"editimage","args":{"prompt":"pantai bali","mode":"bg"},"execCommand":null,"reply":"Siap, backgroundnya lagi diganti jadi pantai Bali."}
+"hapus kursi di foto ini" (reply/attach gambar) → {"tool":"editimage","args":{"prompt":"kursi","mode":"remove"},"execCommand":null,"reply":"Kursinya lagi dihapus dari fotonya ya."}
 "kick aizat 2" → {"tool":"kick","args":{"user":"aizat 2"},"execCommand":null,"reply":"aizat 2 sudah dikeluarkan dari grup."}
 "blokir 62812" → {"tool":"block","args":{"user":"62812"},"execCommand":null,"reply":"62812 sudah diblokir dan dikeluarkan dari grup."}
 "ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"execCommand":null,"reply":"Deskripsi grup sudah diganti jadi grup belajar."}
