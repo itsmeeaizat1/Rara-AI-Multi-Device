@@ -66,3 +66,5 @@ data/yt-proxy.txt.bak
 .buatfitur
 tmp-dl.mjs
 _remove_notifbox.cjs
+scan_plugins.py
+scan_plugins.js
