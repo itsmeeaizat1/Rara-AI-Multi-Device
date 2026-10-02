@@ -62,22 +62,25 @@ export default [
     execute: async ({ prompt, aspect_ratio, style }) => {
         if (!ctx().conn || !ctx().currentJid) return 'WA connection not ready'
         try {
-            const { generateImage } = await import('../../../scrapers/src/ai-image.js')
-            const imgUrls = await generateImage(prompt, { aspectRatio: aspect_ratio, style })
-            console.log('[generate_image] URLs received:', imgUrls?.length, imgUrls?.[0]?.slice(0, 80))
-            if (!imgUrls?.length) return 'Gagal generate gambar: tidak ada hasil dari server.'
+            // FIX 2 Okt 2026 (bug report owner "file module tidak ditemukan"):
+            // import lama ('../../../scrapers/src/ai-image.js') nunjuk ke file
+            // yang GAK PERNAH ADA di repo ini (dicek git log --all, nol hasil) —
+            // kemungkinan sisa referensi dari engine HIROBOT asli yang strukturnya
+            // beda, gak ke-port pas porting .hiai. Ganti ke engine image generation
+            // beneran yang sudah dipakai fitur lain (.agent, .aisticker):
+            // callImageGenChain — rantai gemini/xai/openai/qwen → nano-banana →
+            // pollinations (free fallback terakhir, SELALU ada hasil).
+            const { callImageGenChain } = await import('../../rara-ai-service.js')
+            const styleHint = style && style !== 'none' ? `, style: ${style}` : ''
+            const img = await callImageGenChain(`${prompt}${styleHint}`, { ratio: aspect_ratio })
+            if (!img?.base64) return 'Gagal generate gambar: tidak ada hasil dari server.'
 
-            try {
-                await ctx().conn.sendMessage(ctx().currentJid,
-                    { image: { url: imgUrls[0] }, caption: prompt },
-                    { quoted: ctx().currentM }
-                )
-            } catch (sendErr) {
-                console.warn('[generate_image] sendMessage gagal, coba sendFile:', sendErr.message)
-                await ctx().conn.sendFile(ctx().currentJid, imgUrls[0], 'ai-image.png', prompt, ctx().currentM)
-            }
+            await ctx().conn.sendMessage(ctx().currentJid,
+                { image: Buffer.from(img.base64, 'base64'), caption: prompt },
+                { quoted: ctx().currentM }
+            )
 
-            return `[SUDAH TERKIRIM] Gambar "${prompt}" berhasil digenerate dan sudah dikirim.`
+            return `[SUDAH TERKIRIM] Gambar "${prompt}" berhasil digenerate (engine: ${img.via || '-'}) dan sudah dikirim.`
         } catch (e) {
             console.error('[generate_image] Gagal generate:', e)
             return `Gagal generate gambar: ${e.message}`
@@ -99,25 +102,21 @@ export default [
                 return 'Tidak ada gambar yang terdeteksi — pastikan user melampirkan gambar langsung atau me-reply pesan yang berisi gambar/stiker.'
             }
 
-            const { nanoEditImage } = await import('../../../scrapers/src/nano.js')
-            const resultUrls = await nanoEditImage(imageUrl, instruction)
-            if (!resultUrls?.length) {
+            // FIX 2 Okt 2026: '../../../scrapers/src/nano.js' gak pernah ada di
+            // repo ini — leftover referensi HIROBOT asli yang gak ke-port. Ganti
+            // ke engine edit gambar yang udah dipakai fitur lain (.editimg dkk):
+            // nanoBananaEdit (kuroneko.js) — image-to-image, balikin SATU url.
+            const { nanoBananaEdit } = await import('../../../scraper/kuroneko.js')
+            const resultUrl = await nanoBananaEdit(imageUrl, instruction)
+            if (!resultUrl) {
                 return 'Edit selesai tapi tidak ada URL hasil yang bisa ditemukan di response.'
             }
 
             try {
-                await ctx().conn.sendFile(ctx().currentJid, resultUrls[0], 'nano.png', instruction, ctx().currentM)
+                await ctx().conn.sendMessage(ctx().currentJid, { image: { url: resultUrl }, caption: instruction }, { quoted: ctx().currentM })
             } catch (sendErr) {
-                console.warn('[ai_edit_image] sendFile gagal, fallback aiRich:', sendErr.message)
-                try {
-                    const rich = ctx().conn.aiRich()
-                    rich.addText(instruction)
-                    rich.addImage(resultUrls)
-                    await rich.send(ctx().currentJid, { quoted: ctx().currentM })
-                } catch (richErr) {
-                    console.warn('[ai_edit_image] aiRich juga gagal, fallback sendMessage:', richErr.message)
-                    await ctx().conn.sendMessage(ctx().currentJid, { image: { url: resultUrls[0] }, caption: instruction }, { quoted: ctx().currentM })
-                }
+                console.warn('[ai_edit_image] sendMessage gagal, coba sendFile:', sendErr.message)
+                await ctx().conn.sendFile(ctx().currentJid, resultUrl, 'nano.png', instruction, ctx().currentM)
             }
 
             return `Gambar berhasil diedit sesuai instruksi "${instruction}" dan sudah dikirim ke chat ini.`

@@ -2020,8 +2020,11 @@ export async function downloadUserImageAsUrl(m) {
     const buffer = await downloadMediaMessage(target, 'buffer', {});
     if (!buffer)
         return null;
-    const { default: upload } = await import('../../scrapers/src/upload.js');
-    const url = await upload(buffer, 'image');
+    // FIX 2 Okt 2026: '../../scrapers/src/upload.js' gak pernah ada di repo ini
+    // (dicek git log --all, nol hasil) — leftover referensi dari struktur
+    // HIROBOT asli yang gak ke-port. Ganti ke uploader kanonik repo sendiri.
+    const { uploadFile } = await import('../rara-uploader.js');
+    const url = await uploadFile(buffer, 'image.jpg');
     if (!url || !String(url).startsWith('http')) {
         throw new Error(`Upload gambar gagal: ${url}`);
     }
