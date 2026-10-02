@@ -1,3 +1,13 @@
+## 3 Okt 2026 — Fix .anovaagent off gak ngefek + rule dummy nyemarin repo
+**Akar:** (1) Parser on/off cuma terima urutan `.anovaagent off AF-005` (verb DULU, ID belakang). Owner ketik `.anovaagent AF-005 off` (ID dulu) → gak cocok subcommand apa pun → jatuh ke kartu default, rule TETAP aktif terus-terusan (spam "Hai! Ayo chatting..." tiap pesan). (2) `test/superagent-anova-suara-e2e` panggil `createRule()` 2x ke file produksi `src/database/ai/autoflow.json` TANPA stash/restore (beda pola rarabridge-e2e yang bener) → rule dummy "assalamualaikum→waalaikumsalam" + "jam 05:00 sholat subuh" ke-commit balik ke repo tiap suite jalan, nyemarin default pairing & VPS keisi rule bekas testing pas git pull.
+
+**Fix:**
+- `plugins/ai/autonovaai.js` — parser on/off TOLERAN urutan kebalik: deteksi `parts[1]` = on/off (swapped), terima `.anovaagent <ID> on|off` selain format resmi `.anovaagent on|off <ID>`. Reply tetap nunjukin format yang benar.
+- `test/superagent-anova-suara-e2e/e2e.mjs` — stash rule asli sebelum `createRule()`, restore di `finally` (pola rarabridge-e2e).
+- `src/database/ai/autoflow.json` — reset ke `[]` (default pairing bersih, sesuai aturan standing).
+
+**E2E:** suara 34/34 + rarabridge 88/88 + import 11/11 + formatguard 22/22 + agent 116/116. DB file tetap `[]` setelah semua suite (stash/restore terbukti).
+
 ## 2 Okt 2026 — Fix npm EALLOWGIT di Node 24 (fork baileys gagal install)
 **Akar:** npm 12+ (bundled Node 24) defaultnya blokir SEMUA dependency tipe git (`allow-git=none`, kebijakan keamanan baru merespons worm supply-chain). Fork baileys kita `itsmeeaizat-bailey` (alias `nova`) punya dependency internal `libsignal: git+https://github.com/whiskeysockets/libsignal-node.git` yang dibawaan dari package aslinya (bukan sesuatu yang kita publish) → `npm error code EALLOWGIT, Refusing to fetch "libsignal@git+..."` di VPS/Pterodactyl yang pakai Node 24, server crash exit 1.
 

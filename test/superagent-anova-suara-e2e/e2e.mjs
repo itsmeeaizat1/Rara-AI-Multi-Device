@@ -198,6 +198,12 @@ w("\n— .setanovaagent: konfirmasi rule DIBACAKAN jadi VN (mode on) —");
     action: { type: "reply", value: "waalaikumsalam" },
     scope: "all", cooldown: 10,
   }));
+  // ISOLASI (2 Okt 2026, bug: createRule() nulis ke src/database/ai/autoflow.json
+  // BENERAN tanpa stash/restore — rule dummy "assalamualaikum"/"jam 05:00" ke-
+  // commit balik ke repo tiap suite ini jalan, nyemarin default pairing & bikin
+  // VPS keisi rule bekas testing pas git pull). Stash dulu, restore di finally.
+  const { load: autoflowLoad, save: autoflowSave } = await import("../../src/lib/autoflow.js");
+  const _stashRules = autoflowLoad();
   try {
     const db = fakeDb();
     setVoiceCfg(db, "y@g.us", { on: true, voice: "gadis" }, VOICE_KEYS.anovaagent);
@@ -240,6 +246,7 @@ w("\n— .setanovaagent: konfirmasi rule DIBACAKAN jadi VN (mode on) —");
     check("mode OFF → gak ada VN", vn2.length === 0);
   } finally {
     _setAutonovaRuleAiForTest(undefined);
+    autoflowSave(_stashRules); // pulihkan rule asli — jangan nyemarin repo/VPS
   }
 }
 

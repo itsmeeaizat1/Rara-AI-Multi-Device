@@ -276,13 +276,19 @@ async function handler(m, { sock, conn, db }) {
     }
 
     // ---- .anovaagent on AF-1 / .anovaagent off AF-1 ----
-    if (sub === "on" || sub === "off") {
-      const id = (parts[1] || "").toUpperCase();
-      if (!id) return m.reply(raraWrap("anovaagent", `💡 Contoh: .anovaagent ${sub} AF-001`));
+    // TOLERAN URUTAN KEBALIK (2 Okt 2026, bug report owner: ".anovaagent AF-005 off"
+    // gak ngefek — ID ditulis SEBELUM on/off, bukan sesudah) — rule yang mau
+    // dimatikan malah tetap aktif terus-terusan karena command dianggap gak
+    // dikenal. Terima juga ".anovaagent <ID> on|off" selain format resmi.
+    const swapped = /^on$/i.test(parts[1] || "") || /^off$/i.test(parts[1] || "");
+    if (sub === "on" || sub === "off" || swapped) {
+      const verb = swapped ? parts[1].toLowerCase() : sub;
+      const id = (swapped ? parts[0] : parts[1] || "").toUpperCase();
+      if (!id) return m.reply(raraWrap("anovaagent", `💡 Contoh: .anovaagent ${verb} AF-001 (urutan dibalik juga boleh: .anovaagent AF-001 ${verb})`));
       const rules = load();
       const r = rules.find((x) => x.id === id);
       if (!r) return m.reply(raraWrap("anovaagent", `Rule ${id} tidak ketemu. Cek: .anovaagent list`, "error"));
-      r.enabled = sub === "on";
+      r.enabled = verb === "on";
       save(rules);
       return m.reply(
         raraWrap("anovaagent", `Rule ${id} ${r.enabled ? "dinyalakan" : "dimatikan"}`),
