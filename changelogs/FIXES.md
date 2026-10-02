@@ -1,3 +1,10 @@
+## 3 Okt 2026 — Fix lanjutan: allow-git value SALAH (true bukan enum valid)
+**Akar:** fix sebelumnya (`allow-git=true`) KEBALIK bikin tambah parah — npm 12+ validasi strict: opsi `allow-git` itu ENUM (`all`/`none`/`root`), BUKAN boolean. `true` ditolak ("invalid config... Must be one of: all, none, root") → npm fallback ke default (`none`?) atau malah bikin whole config dianggap gak sah, `npm install` tetap EALLOWGIT mentah-mentah di package libsignal, GAGAL TOTAL (laporan owner: "jd kena g bsa npm install sm sekali").
+
+**Fix:** `.npmrc` → `allow-git=all` (value enum yang bener, izinin semua dependency tipe git).
+
+VPS: pull main → `npm install` ulang (hapus `node_modules` dulu biar bersih) → restart.
+
 ## 3 Okt 2026 — Fix .anovaagent off gak ngefek + rule dummy nyemarin repo
 **Akar:** (1) Parser on/off cuma terima urutan `.anovaagent off AF-005` (verb DULU, ID belakang). Owner ketik `.anovaagent AF-005 off` (ID dulu) → gak cocok subcommand apa pun → jatuh ke kartu default, rule TETAP aktif terus-terusan (spam "Hai! Ayo chatting..." tiap pesan). (2) `test/superagent-anova-suara-e2e` panggil `createRule()` 2x ke file produksi `src/database/ai/autoflow.json` TANPA stash/restore (beda pola rarabridge-e2e yang bener) → rule dummy "assalamualaikum→waalaikumsalam" + "jam 05:00 sholat subuh" ke-commit balik ke repo tiap suite jalan, nyemarin default pairing & VPS keisi rule bekas testing pas git pull.
 
