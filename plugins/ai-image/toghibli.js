@@ -80,6 +80,8 @@ async function handler(m, { sock }) {
         
         const imageUrl = await uploadImage(buffer, 'image.jpg')
         
+        const url = `https://api-faa.my.id/faa/toghibli?url=${encodeURIComponent(imageUrl)}`
+        const res = await f(url, 'arrayBuffer')
         // GUARD 14 Sep 2026: f() bisa balikin null (status>=400 ketangkep)
         // ATAU ArrayBuffer 0 byte kalau API sempet redirect (server ganti tanpa
         // kabar) — cek dulu biar gak diam-diam kirim gambar rusak/kosong.
