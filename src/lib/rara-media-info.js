@@ -10,7 +10,7 @@
 //     { icon: "📥", label: "Input",  value: "Video" },
 //     { icon: "🎨", label: "Filter", value: "crop, circle" },
 //   ] })
-//   → *Rara Sticker*\n\n📥 *Input:* Video\n🎨 *Filter:* crop, circle
+//   → 「 ✦ STICKER ✦ 」 / • Input  : Video / • Filter : crop, circle
 
 /**
  * Bytes → "345.2 KB" / "1.2 MB" / "2.4 GB" (1 desimal, KB ke bawah).
@@ -25,14 +25,29 @@ export function fmtBytes(bytes) {
 
 /**
  * Bangun caption info hasil pemrosesan media.
- * @param {object} p — { header, fields: [{icon, label, value}] }
- * @returns {string} — field kosong (null/undefined/"") dilewati.
+ * REVISI OWNER 3 Okt 2026: balik desain lama + field lengkap per fitur — judul 「 ✦ HEADER ✦ 」,
+ * baris "• Label : nilai" rata (teks biasa, TANPA *bold* / emoji ikon). Parameter `icon` tetap
+ * DITERIMA (kompat 20 pemanggil) tapi diabaikan. Header "Rara X" -> "X" (brand sudah di footer bot).
+ * Field kosong (null/undefined/"") dilewati; semua kosong -> hanya judul.
+ * @param {object} p — { header, fields: [{label, value}], groups?: [{title, fields}] }
+ *   `groups` (opsional) = beberapa kelompok berjudul; `fields` = kelompok tunggal "Detail".
+ * @returns {string}
  */
-export function mediaInfoCaption({ header = "Rara", fields = [] } = {}) {
-  const body = (fields || [])
+export function mediaInfoCaption({ header = "Rara", fields = [], groups = null } = {}) {
+  const clean = (list) => (list || [])
     .filter((f) => f && f.value !== null && f.value !== undefined && String(f.value).trim() !== "")
-    .map((f) => `${f.icon || "▪️"} *${f.label}:* ${String(f.value).trim()}`);
-  const head = `*${String(header).trim() || "Rara"}*`;
-  if (!body.length) return head;
-  return `${head}\n\n${body.join("\n")}`;
+    .map((f) => [String(f.label || "").trim(), String(f.value).trim()])
+    .filter(([l]) => l);
+  const block = (title, rows) => {
+    if (!rows.length) return "";
+    const w = Math.max(...rows.map(([l]) => l.length));
+    return (title ? `「 ✦ ${title} ✦ 」\n` : "") + rows.map(([l, v]) => `• ${l.padEnd(w)} : ${v}`).join("\n");
+  };
+  const name = String(header).trim().replace(/^rara\s+/i, "") || "Rara";
+  const head = `「 ✦ ${name.toUpperCase()} ✦ 」`;
+  const blocks = Array.isArray(groups) && groups.length
+    ? groups.map((g) => block(g.title, clean(g.fields)))
+    : [block("", clean(fields))]; // satu kelompok -> tanpa judul tambahan, langsung di bawah header
+  const body = blocks.filter(Boolean);
+  return body.length ? `${head}\n\n${body.join("\n\n")}` : head;
 }

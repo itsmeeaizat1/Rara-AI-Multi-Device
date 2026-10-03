@@ -1,3 +1,12 @@
+## 3 Okt 2026 — Fix: 99 plugin sendMedia tidak pernah melewati pembungkus + .s selalu gagal + 2 tes usang
+**Akar 1 (sendMedia):** src/lib/rara-socket.js baris 613 memanggil `sock.sendMessage` (closure ke sock ASLI) sehingga 99 plugin yang mengirim lewat `sock.sendMedia` tidak pernah melewati pembungkus kartu info media. **Fix:** `(this && typeof this.sendMessage === "function" ? this : sock).sendMessage(...)` — sock asli perilaku identik, sock terbungkus ikut kena, destructuring `const { sendMedia } = sock` jatuh ke closure tanpa crash. Dibuktikan 6 asersi nyata; 14 suite yang menyentuh socket identik dengan main.
+
+**Akar 2 (.s):** plugin sticker selalu berakhir dengan pesan 'fitur gangguan' karena variabel yang salah tempat. **Fix:** variabel dipindah ke scope yang benar.
+
+**Akar 3 (tes usang):** media-info-e2e mencari folder lama sehingga crash di main; index-panel-e2e asersi `5j`/`9i` masih menuntut frasa 'yah kak' padahal desain lama sengaja dikembalikan ke `❗ Cara pemakaian salah` — asersi diperbarui mengunci desain yang berlaku (73/0, setara main).
+
+**Catatan jujur:** suite yang sudah gagal SEBELUM perubahan ini (sama persis di main): absen-live, agent (114/116), aiv, anime-card-mock, autojoin, bolanotify-live, depfeatures, googleaimode, jadibot-mock, kalori, key-patrol, limit-ticker, mcp-manager. GOTCHA: menjalankan suite massal mencemari src/database/* dan test/autojoin-e2e/tmp-db/ — jalankan di worktree terbuang atau `git checkout HEAD -- src/database/ test/autojoin-e2e/tmp-db/` sebelum commit; cooking-e2e rapuh terhadap state data/cooking antar-eksekusi.
+
 ## 3 Okt 2026 — Fix lanjutan: allow-git value SALAH (true bukan enum valid)
 **Akar:** fix sebelumnya (`allow-git=true`) KEBALIK bikin tambah parah — npm 12+ validasi strict: opsi `allow-git` itu ENUM (`all`/`none`/`root`), BUKAN boolean. `true` ditolak ("invalid config... Must be one of: all, none, root") → npm fallback ke default (`none`?) atau malah bikin whole config dianggap gak sah, `npm install` tetap EALLOWGIT mentah-mentah di package libsignal, GAGAL TOTAL (laporan owner: "jd kena g bsa npm install sm sekali").
 

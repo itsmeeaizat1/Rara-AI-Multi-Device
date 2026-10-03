@@ -96,8 +96,8 @@ w("\n— 3. network mati total → raraError —");
   await stHandler(m, {});
   globalThis.fetch = realFetch;
   const err = replies[replies.length - 1] || "";
-  // DESAIN CUTE (2 Okt): kaomoji susah ganti ❌ box
-  check("raraError cute ribbon", err.startsWith(`୨୧ ✧ ${toSC("speedtest")} ✧ ୨୧`) && /\(.*\)/.test(err) && !err.includes("❌"), err.slice(0, 60));
+  // 3 Okt: raraError balik desain lama — 「 ✦ SPEEDTEST ✦ 」 + ❌
+  check("raraError desain lama", err.startsWith(`「 ✦ ${toSC("SPEEDTEST")} ✦ 」`) && err.includes("❌"), err.slice(0, 60));
 }
 
 w("\n— 4. pluginConfig —");

@@ -66,19 +66,18 @@ w("\n— 3. salah pemakaian → raraSalah SINGKAT tanpa box —");
   const m = mkM(".ai-set model");
   await aiSetHandler(m, { sock: {}, config: botConfig() });
   const r = m._replies[0] || "";
-  // FIX BASI (2 Okt): raraSalah non-game = format cute 25 Sep (>_<) yah kak
-  check("mulai kaomoji yah kak (raraSalah cute)", r.startsWith(`(>_<) ${toSC("yah kak")}...`), r.slice(0, 40));
-  check("arahan ulangi ketik .ai-set", r.includes(toSC(`ulangi ketik .ai-set ya`)), "");
+  // 3 Okt: raraSalah balik desain lama — ❗ Cara pemakaian salah (tanpa kaomoji)
+  check("mulai ❗ Cara pemakaian salah (desain lama)", r.startsWith(`❗ ${toSC("Cara pemakaian salah")}`), r.slice(0, 40));
+  check("arahan ketik .ai-set buat lihat cara pemakaian", r.includes(toSC(`Ketik .ai-set buat lihat cara pemakaian`)), "");
   check("SINGKAT — gak ada box 「", !r.includes("「"), r.slice(0, 60));
 
   const m2 = mkM(".ai-set provider ngasalbanget");
   await aiSetHandler(m2, { sock: {}, config: botConfig() });
-  // FIX BASI (2 Okt): raraSalah cute — kaomoji, bukan ❗
-  check("provider invalid → salah cute (bukan box lama)", (m2._replies[0] || "").startsWith(`(>_<) ${toSC("yah kak")}`), m2._replies[0]);
+  check("provider invalid → ❗ salah singkat (tanpa kaomoji)", (m2._replies[0] || "").startsWith(`❗ ${toSC("Cara pemakaian salah")}`) && !/\(>_<\)/.test(m2._replies[0] || ""), m2._replies[0]);
 
   const m3 = mkM(".ai-set aksinyasar");
   await aiSetHandler(m3, { sock: {}, config: botConfig() });
-  check("aksi gak dikenal → salah singkat cute", (m3._replies[0] || "").startsWith(`(>_<) ${toSC("yah kak")}`) && (m3._replies[0] || "").includes(toSC("gak dikenal")), m3._replies[0]);
+  check("aksi gak dikenal → ❗ salah singkat", (m3._replies[0] || "").startsWith(`❗ ${toSC("Cara pemakaian salah")}`) && (m3._replies[0] || "").includes(toSC("gak dikenal")), m3._replies[0]);
 }
 
 w("\n— 4. owner-gate + mode + apikey —");
@@ -86,8 +85,8 @@ w("\n— 4. owner-gate + mode + apikey —");
   const m = mkM(".ai-set off", false);
   await aiSetHandler(m, { sock: {}, config: botConfig() });
   const r = m._replies[0] || "";
-  // DESAIN CUTE (2 Okt): raraError = ribbon + kaomoji, teks detail tetap utuh
-  check("non-owner .ai-set off → raraError cute", r.startsWith(`୨୧ ✧ ${toSC("ai-set")} ✧ ୨୧`) && /\(.*\)/.test(r) && r.includes(toSC("khusus owner")), r.slice(0, 60));
+  // 3 Okt: raraError balik desain lama — 「 ✦ NAMA ✦ 」 + ❌, teks detail tetap utuh
+  check("non-owner .ai-set off → raraError desain lama", r.startsWith(`「 ✦ ${toSC("AI-SET")} ✦ 」`) && r.includes("❌") && r.includes(toSC("khusus owner")), r.slice(0, 60));
 
   const cfg = botConfig();
   const m2 = mkM(".ai-set mode online");

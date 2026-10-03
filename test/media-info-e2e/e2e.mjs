@@ -1,7 +1,7 @@
-// E2E: field info hasil fitur pemroses media (request owner 19-20 Sep —
-// "apakah fitur lain bisa dibuat field juga kyk stiker, convert fitur kyk
-// tools dan makes sesuai field yang sesuai") — rara-media-info.js satu pintu
-// + 16 maker AI + sticker + converter + togif + vocalremover.
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
+// E2E: caption info hasil fitur pemroses media — rara-media-info.js satu pintu.
+// REWRITE 3 Okt 2026: (1) jalur maker dikoreksi plugins/ai -> plugins/ai-image (tes lama crash ENOENT di main),
+// (2) format baru 「 ✦ HEADER ✦ 」 + "• Label : nilai" (tanpa *bold*/emoji), (3) field khas sticker/convert/aio.
 // Jalankan dari repo root: node test/media-info-e2e/e2e.mjs
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -13,18 +13,17 @@ function t(label, cond, extra) {
   if (cond) pass++;
   else { fail++; out("FAIL: " + label + " " + (extra || "")); }
 }
-
 const REPO = path.resolve(".");
-const { fmtBytes, mediaInfoCaption } =
-  await import(pathToFileURL(path.join(REPO, "src/lib/rara-media-info.js")).href);
+const rd = (f) => fs.readFileSync(new URL(path.join(REPO, f), "file://"), "utf8");
+const { fmtBytes, mediaInfoCaption } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-media-info.js")).href);
 
 // ── fmtBytes ──
 t("fmtBytes: 353000 → '344.7 KB'", fmtBytes(353000) === "344.7 KB");
 t("fmtBytes: 5 MB → '5.0 MB'", fmtBytes(5 * 1024 * 1024) === "5.0 MB");
 t("fmtBytes: 2.5 GB → '2.5 GB'", fmtBytes(2.5 * 1024 ** 3) === "2.5 GB");
-t("fmtBytes: 0/invalid → '' (baris dilewati)", fmtBytes(0) === "" && fmtBytes(NaN) === "" && fmtBytes(-5) === "");
+t("fmtBytes: 0/invalid → ''", fmtBytes(0) === "" && fmtBytes(NaN) === "" && fmtBytes(-5) === "");
 
-// ── mediaInfoCaption: format ala downloader ──
+// ── mediaInfoCaption: desain lama ──
 {
   const cap = mediaInfoCaption({ header: "Rara Sticker", fields: [
     { icon: "📥", label: "Input", value: "Video" },
@@ -32,75 +31,59 @@ t("fmtBytes: 0/invalid → '' (baris dilewati)", fmtBytes(0) === "" && fmtBytes(
     { icon: "🎨", label: "Filter", value: "crop, circle" },
     { icon: "📦", label: "Ukuran", value: "344.7 KB" },
   ] });
-  const expect =
-`*Rara Sticker*
-
-📥 *Input:* Video
-⏱️ *Durasi:* 6.0 detik
-🎨 *Filter:* crop, circle
-📦 *Ukuran:* 344.7 KB`;
-  t("caption: header + baris berlabel emoji urut", cap === expect, JSON.stringify(cap));
+  const expect = "「 ✦ STICKER ✦ 」\n\n• Input  : Video\n• Durasi : 6.0 detik\n• Filter : crop, circle\n• Ukuran : 344.7 KB";
+  t("caption: judul 「 ✦ ✦ 」 + baris '• Label : nilai' rata", cap === expect, JSON.stringify(cap));
+  t("caption: tanpa *bold* dan tanpa emoji ikon", !/[*]/.test(cap) && !/[📥⏱️🎨📦]/u.test(cap));
 }
-t("caption: field null/undefined/kosong dilewati", 
+t("caption: field null/undefined/kosong dilewati",
   mediaInfoCaption({ header: "X", fields: [
-    { icon: "📥", label: "Input", value: null },
-    { icon: "📤", label: "Out", value: "Y" },
-    { icon: "z", label: "Z", value: "  " },
-  ] }) === "*X*\n\n📤 *Out:* Y");
-t("caption: tanpa field → header doang", mediaInfoCaption({ header: "X" }) === "*X*");
-t("caption: header kosong → fallback 'Rara'", mediaInfoCaption({}).startsWith("*Rara*"));
-t("caption: icon default kalau gak ada", mediaInfoCaption({ header: "X", fields: [{ label: "L", value: "V" }] }).includes("▪️ *L:* V"));
-
-// ── asersi source: fitur pemroses media pakai format baru ──
+    { label: "Input", value: null }, { label: "Out", value: "Y" }, { label: "Z", value: "  " }, { label: "U", value: undefined },
+  ] }) === "「 ✦ X ✦ 」\n\n• Out : Y");
+t("caption: tanpa field → judul saja", mediaInfoCaption({ header: "X" }) === "「 ✦ X ✦ 」");
+t("caption: header kosong → RARA", mediaInfoCaption({}) === "「 ✦ RARA ✦ 」");
+t("caption: prefix 'Rara ' pada header dibuang", mediaInfoCaption({ header: "Rara To GIF" }).startsWith("「 ✦ TO GIF ✦ 」"));
+t("caption: label kosong diabaikan", mediaInfoCaption({ header: "X", fields: [{ label: "", value: "V" }] }) === "「 ✦ X ✦ 」");
 {
-  const files = {
-    "plugins/sticker/sticker.js": ['mediaInfoCaption({ header: "Rara Sticker"', "Stiker Animasi WebP"],
-    "plugins/tools/converter.js": ['mediaInfoCaption({ header: "Rara Converter"', "Rara Converter"],
-    "plugins/convert/togif.js": ['mediaInfoCaption({ header: "Rara To GIF"'],
-    "plugins/convert/vocalremover.js": ['mediaInfoCaption({ header: "Rara Vocal Remover"'],
-  };
-  for (const [f, needles] of Object.entries(files)) {
-    const src = fs.readFileSync(path.join(REPO, f), "utf8");
-    for (const n of needles) t(`${f} → ${n.slice(0, 40)}`, src.includes(n));
+  const g = mediaInfoCaption({ header: "Convert", groups: [
+    { title: "Konversi", fields: [{ label: "Ke", value: "WAV" }, { label: "Codec", value: "pcm" }] },
+    { title: "Kosong", fields: [{ label: "a", value: null }] },
+    { title: "Ukuran", fields: [{ label: "Sebelum", value: "1 KB" }] },
+  ] });
+  t("groups: kelompok berjudul urut", g.indexOf("「 ✦ Konversi ✦ 」") < g.indexOf("「 ✦ Ukuran ✦ 」"), g);
+  t("groups: kelompok tanpa field sama sekali dibuang (tanpa judul yatim)", !g.includes("Kosong"), g);
+  t("groups: label rata PER kelompok", g.includes("• Ke    : WAV") && g.includes("• Codec : pcm") && g.includes("• Sebelum : 1 KB"), g);
+}
+
+// ── 16 maker AI (folder benar: ai-image) tetap memanggil mediaInfoCaption + punya field khasnya ──
+{
+  const makers = ["to3d","toanime","toblack","tocartoon","tocermin","tochibi","toemotebatu","tofigurev2","tofigurine","toghibli","tohijab","toisland","tojapanese","tomanga","tomekah","tooilpainting"];
+  for (const name of makers) {
+    const src = rd(`plugins/ai-image/${name}.js`);
+    t(`${name}.js → m.reply(mediaInfoCaption(...))`, src.includes("mediaInfoCaption("));
+    t(`${name}.js → field Input/Style/Engine/Hasil`, ['"Input"', '"Style"', '"Engine"', '"Hasil"'].every((l) => src.includes(`label: ${l}`)));
   }
 }
 
-// ── 16 maker AI: caption info hasil setelah sendMedia ──
+// ── field khas per fitur (dari sumber) ──
 {
-  const makers = {
-    "to3d": "Rara To 3D", "toanime": "Rara To Anime", "toblack": "Rara To Black",
-    "tocartoon": "Rara To Cartoon", "tocermin": "Rara To Cermin", "tochibi": "Rara To Chibi",
-    "toemotebatu": "Rara Emote Batu", "tofigurev2": "Rara Figure v2", "tofigurine": "Rara Figurine",
-    "toghibli": "Rara To Ghibli", "tohijab": "Rara To Hijab", "toisland": "Rara To Island",
-    "tojapanese": "Rara To Japanese", "tomanga": "Rara To Manga", "tomekah": "Rara To Mekah",
-    "tooilpainting": "Rara Oil Painting",
-  };
-  for (const [name, header] of Object.entries(makers)) {
-    const src = fs.readFileSync(path.join(REPO, `plugins/ai/${name}.js`), "utf8");
-    t(`${name}.js → caption info (header ${header})`,
-      src.includes("await m.reply(mediaInfoCaption(") && src.includes(`header: "${header}"`),
-      `cari: header: "${header}"`);
-    t(`${name}.js → field Input/Style/Engine/Hasil`,
-      src.includes('label: "Input"') && src.includes('label: "Style"') &&
-      src.includes('label: "Engine"') && src.includes('label: "Hasil"'));
-  }
+  const st = rd("plugins/sticker/sticker.js");
+  t("sticker: hoist videoDur (bug ReferenceError .s)", /let videoDur = null/.test(st) && (st.match(/let videoDur/g) || []).length === 1 && st.indexOf("let videoDur") < st.indexOf("if (isVideo) {"));
+  t("sticker: field Format/Ukuran sumber/Pack/Author", ['"Format"', '"Ukuran sumber"', '"Pack"', '"Author"'].every((l) => st.includes(`label: ${l}`)));
+  t("sticker: TIDAK klaim ukuran WebP final (jujur)", !st.includes('label: "Ukuran",') && st.includes("JUJUR"));
+  const cv = rd("plugins/convert/convert.js");
+  t("convert: 3 kelompok Konversi/Ukuran/Asal", ['title: "Konversi"', 'title: "Ukuran"', 'title: "Asal"'].every((x) => cv.includes(x)));
+  t("convert: field Sebelum/Sesudah/Selisih", ['"Sebelum"', '"Sesudah"', '"Selisih"'].every((l) => cv.includes(`label: ${l}`)));
+  t("convert: kartu lama raraBox 'Size:' dibuang", !cv.includes("`Size: ${sizeMB} MB`"));
+  const aio = rd("plugins/download/aio.js");
+  t("aio: pakai probeMedia + mediaResultCard, fallback raraBerhasil", aio.includes("probeMedia(") && aio.includes("mediaResultCard(") && aio.includes("|| raraBerhasil"));
 }
 
-// ── smoke import semua fitur yang diubah ──
-const all = ["plugins/sticker/sticker.js", "plugins/tools/converter.js",
-  "plugins/convert/togif.js", "plugins/convert/vocalremover.js",
-  ...Object.keys({
-    "to3d": 1, "toanime": 1, "toblack": 1, "tocartoon": 1, "tocermin": 1, "tochibi": 1,
-    "toemotebatu": 1, "tofigurev2": 1, "tofigurine": 1, "toghibli": 1, "tohijab": 1,
-    "toisland": 1, "tojapanese": 1, "tomanga": 1, "tomekah": 1, "tooilpainting": 1,
-  }).map((n) => `plugins/ai/${n}.js`)];
+// ── smoke import ──
+const all = ["plugins/sticker/sticker.js", "plugins/convert/convert.js", "plugins/convert/togif.js", "plugins/convert/vocalremover.js", "plugins/tools/converter.js", "plugins/download/aio.js",
+  ...["to3d","toanime","toblack","tocartoon","tocermin","tochibi","toemotebatu","tofigurev2","tofigurine","toghibli","tohijab","toisland","tojapanese","tomanga","tomekah","tooilpainting"].map((n) => `plugins/ai-image/${n}.js`)];
 for (const p of all) {
-  try {
-    await import(pathToFileURL(path.join(REPO, p)).href);
-    t("import " + p + " OK", true);
-  } catch (e) {
-    t("import " + p + " OK", false, e.message);
-  }
+  try { await import(pathToFileURL(path.join(REPO, p)).href); t("import " + p, true); }
+  catch (e) { t("import " + p, false, e.message); }
 }
 
 out(`\n${pass}/${pass + fail} pass`);
