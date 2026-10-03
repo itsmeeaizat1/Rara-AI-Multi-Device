@@ -8,6 +8,7 @@ import { CronJob } from "cron";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
+import { sendReplyWithNav as navReply } from "../../src/lib/rara-nav-buttons.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
