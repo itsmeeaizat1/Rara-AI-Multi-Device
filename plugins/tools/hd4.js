@@ -230,7 +230,7 @@ async function handler(m, { sock, args }) {
       "Mode: " + modeLabel.join(" + "),
       "Scale: " + scale + "x",
       "Model: " + model,
-      wantFx = useFx ? "Face enhance: ON" : "",
+      useFx ? "Face enhance: ON" : "",
       "Engine: image-upscaling.net + sharp",
     ].filter(Boolean).join("\n")));
 

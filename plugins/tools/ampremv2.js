@@ -436,6 +436,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // HELP
+    const savedSession = await loadSession();
     return m.reply(raraWrap("AM Premium V2", [
       "Alight Motion Premium Creator V2",
       "Auto register via RyezenStore + TempMail",
@@ -446,7 +447,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       usedPrefix + "ampremv2 list — Lihat daftar akun",
       "",
       "Sumber: ryezenstore.online + catchmail.io",
-      "Credits: " + (am.credit || 0),
+      "Akun tersimpan: " + (savedSession.accounts || []).length,
     ]));
   } catch (e) {
     console.error("[AM Premium V2]", e);
