@@ -224,6 +224,7 @@ export function makeMediaInfoSock(sock, ctx = {}, deps = {}) {
         const media = pickMedia(params);
         if (!media) return result;
         if (jid !== ctx.chat) return result; // hanya balasan ke chat pemanggil (bukan broadcast/forward)
+        if (options && options._raraMenuAudio) return result; // audio pengiring menu: bukan hasil media fitur (dilewati, TIDAK mengunci kartu media berikutnya)
         if (looksLikeOwnCard(params.caption)) { pending.done = true; return result; } // plugin punya kartu sendiri di caption
         pending.media = media; pending.params = params; pending.options = options; pending.jid = jid;
       } catch { /* opsional */ }

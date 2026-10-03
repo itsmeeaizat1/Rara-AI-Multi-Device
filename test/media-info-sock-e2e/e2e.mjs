@@ -308,5 +308,28 @@ w("\n— sendMedia (99 plugin) ikut melewati pembungkus —");
   check("rara-socket.js: sendMedia memakai this.sendMessage (bukan closure murni)", /\(this && typeof this\.sendMessage === "function" \? this : sock\)\.sendMessage\(jid, payload, \{ quoted \}\)/.test(src));
 }
 
+w("\n— AUDIO PENGIRING MENU tidak diberi kartu Detail Media (3 Okt 2026) —");
+{
+  // kasus laporan owner: .menu / .allmenu kirim kartu menu + audio, lalu muncul 'Detail Media' yang tak diinginkan
+  const mctx = { chat: "c@g.us", category: "main", header: "menu", command: "menu" };
+  const tagged = mk(mctx);
+  await tagged.sock.sendMessage("c@g.us", { audio: MP3, mimetype: "audio/mpeg", ptt: false }, { _raraMenuAudio: true });
+  check("audio bertanda _raraMenuAudio -> TIDAK ada kartu (hanya 1 kiriman)", tagged.sent.length === 1 && texts(tagged.sent).length === 0, tagged.sent.length);
+  check("audio bertanda tetap TERKIRIM apa adanya (opsi diteruskan ke sock asli)", !!tagged.sent[0].p.audio && tagged.sent[0].o && tagged.sent[0].o._raraMenuAudio === true);
+  const plain = mk(mctx);
+  await plain.sock.sendMessage("c@g.us", { audio: MP3, mimetype: "audio/mpeg", ptt: false });
+  check("audio TANPA tanda di kategori sama -> kartu tetap ada (perbaikan tidak terlalu lebar)", plain.sent.length === 2 && texts(plain.sent).length === 1, plain.sent.length);
+  const after = mk(mctx);
+  await after.sock.sendMessage("c@g.us", { audio: MP3, mimetype: "audio/mpeg" }, { _raraMenuAudio: true });
+  await after.sock.sendMessage("c@g.us", { image: JPG });
+  check("audio menu bertanda TIDAK mengunci: media fitur sesudahnya tetap dikartui (image + 1 kartu)", after.sent.length === 3 && texts(after.sent).length === 1, after.sent.length);
+  // sendMenuAudio asli menandai SEMUA kiriman audionya
+  const { sendMenuAudio } = await import("../../src/lib/send-menu.js");
+  const got = [];
+  const fake = { sendMessage: async (jid, c, o) => { got.push({ c, o }); return {}; } };
+  await sendMenuAudio(fake, { chat: "c@g.us", key: { id: "K" }, sender: "a@s.whatsapp.net" }, { setting: () => null }, false);
+  check("sendMenuAudio asli: semua sendMessage-nya membawa _raraMenuAudio", got.length > 0 && got.every((g) => g.o && g.o._raraMenuAudio === true), got.map((g) => !!(g.o && g.o._raraMenuAudio)).join(","));
+}
+
 w(`\n${pass} PASS / ${fail} FAIL`);
 process.exit(fail ? 1 : 0);
