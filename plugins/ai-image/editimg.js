@@ -121,7 +121,6 @@ async function handler(m, { sock }) {
     // Kirim hasil
     let caption = "";
     caption += `🎨 Instruksi: *${prompt}*\n`;
-    caption += `⚙️ Engine: *${usedApi}*\n`;
     
     // Jika result adalah Buffer, kirim langsung
     if (Buffer.isBuffer(result)) {

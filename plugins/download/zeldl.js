@@ -107,7 +107,7 @@ async function sendMedia(sock, m, { buffer, type, url, title }) {
   } else if (type === "document") {
     await sock.sendMessage(m.chat, { document: buffer, fileName: safeName(title, ext), mimetype: "application/octet-stream" }, { quoted: m });
   } else {
-    await sock.sendMessage(m.chat, { video: buffer, caption: `_(via zelapi) ${short(title || "media", 60)}`, mimetype: "video/mp4" }, { quoted: m });
+    await sock.sendMessage(m.chat, { video: buffer, caption: `${short(title || "media", 60)}`, mimetype: "video/mp4" }, { quoted: m });
   }
 }
 
@@ -152,7 +152,7 @@ async function handler(m, { sock }) {
     if (kind === "spotify") {
       const card = cardSpotify(r.data);
       await m.reply(raraWrap("zeldl", [
-        "✅ SPOTIFY (zelapi)",
+        "✅ SPOTIFY",
         "",
         card,
         "",

@@ -147,9 +147,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    const caption = result.engine && result.engine.toLowerCase().includes("remini")
-      ? `✅ Sticker → Image ${result.width}x${result.height}px\n✨ ${result.engine}${result.ms ? ` (${(result.ms / 1000).toFixed(1)}s)` : ""}`
-      : `✅ Sticker → Image ${result.width}x${result.height}px\n⚡ ${result.engine}`;
+    const caption = `✅ Sticker → Image ${result.width}x${result.height}px`;
     await sock.sendMessage(m.chat, { image: result.buffer, caption }, { quoted: m });
   } catch (e) {
     console.error("[toimage] error:", e.message);

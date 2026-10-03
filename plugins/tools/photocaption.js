@@ -191,7 +191,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           "Text: " + captionText,
           "Posisi: " + (POSITIONS[position] || position),
           "Style: " + style,
-          "Powered by sharp (local)",
         ], "info"),
       },
       { quoted: m }

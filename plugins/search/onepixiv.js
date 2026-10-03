@@ -43,7 +43,6 @@ async function handler(m, { sock }) {
     list.forEach((art, i) => {
       text += `${i + 1}. ${String(art.title || "").slice(0, 60)}${art.r18 ? " 🔞" : ""}\n   ${art.author} · ${art.width}x${art.height} · ID ${art.pid}\n`;
     });
-    text += `\nPowered by Onepunya API`;
     await m.reply(raraWrap("Onepunya Pixiv", text));
     // kirim artwork pertama sebagai preview
     const first = list[0];

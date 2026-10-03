@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
 
         genStatus.stop();
         await m.react("🐣");
-        let caption = `Prompt: *${prompt}*\nEngine: *pollinations*`;
+        let caption = `Prompt: *${prompt}*`;
         return await sock.sendMedia(m.chat, buffer, null, m, { type: "image", caption });
       } catch (e) {
         await genStatus.fail("Gagal generate gambar — coba lagi ya");
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
       }).catch((e) => ({ status: false, error: e.message }));
 
       if (visionResult.status) {
-        return aiStatus.finish(`🖼️ Engine: ${visionResult.engine}\n\n${visionResult.text}`);
+        return aiStatus.finish(`${visionResult.text}`);
       }
 
       await aiStatus.fail(visionResult.error || "Gagal menganalisis gambar");

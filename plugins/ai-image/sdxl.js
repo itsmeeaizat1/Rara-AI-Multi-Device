@@ -49,7 +49,6 @@ async function handler(m, { sock }) {
 
     let caption = "";
     caption += `🎨 Prompt: *${text}*\n`;
-    caption += `⚙️ Engine: *${via || result.model}*\n`;
     caption += `📐 Size: *1024x1024*\n`;
 
     await sock.sendMedia(m.chat, result.buffer, null, m, { type: "image", caption });

@@ -60,7 +60,6 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     let msg = "";
     msg += `Bahasa: *${lang}*\n`;
-    msg += `Engine: ocr.space cloud\n`;
     msg += `
 `;
     msg += `Teks:\n${extracted}\n`;

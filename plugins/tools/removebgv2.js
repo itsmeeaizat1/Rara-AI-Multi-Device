@@ -115,8 +115,7 @@ async function handler(m, { sock, config: botConfig }) {
           raraWrap("RemoveBG V2", [`Status: *background dihapus*`,
             `Mode: *Dokumen (no compress)*`,
             `Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
-            `Format: *png transparan*`,
-            `Engine: *ai onnx lokal*`].join("\n")) + "\n" +
+            `Format: *png transparan*`].join("\n")) + "\n" +
           tipText("Hasil full quality tanpa kompresi"),
       }, { quoted: m });
     } else {
@@ -127,8 +126,7 @@ async function handler(m, { sock, config: botConfig }) {
           raraWrap("RemoveBG V2", [`Status: *background dihapus*`,
             `Mode: *gambar*`,
             `Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
-            `Format: *png transparan*`,
-            `Engine: *ai onnx lokal*`].join("\n")) + "\n" +
+            `Format: *png transparan*`].join("\n")) + "\n" +
           tipText(`Untuk no compress: ${prefix}removebgv2 doc`),
       }, { quoted: m });
     }

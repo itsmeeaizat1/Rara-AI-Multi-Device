@@ -231,7 +231,6 @@ async function handler(m, { sock, args }) {
       "Scale: " + scale + "x",
       "Model: " + model,
       wantFx = useFx ? "Face enhance: ON" : "",
-      "Engine: image-upscaling.net + sharp",
     ].filter(Boolean).join("\n")));
 
     let processedBuffer = buffer;
@@ -277,7 +276,6 @@ async function handler(m, { sock, args }) {
       "Model: " + model,
       "Size: " + sizeLabel,
       "Steps: " + steps.join(" -> "),
-      "Engine: image-upscaling.net + sharp",
     ].join("\n"));
 
     if (wantDoc || processedBuffer.length > 5 * 1024 * 1024) {

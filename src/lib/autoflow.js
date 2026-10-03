@@ -161,7 +161,7 @@ async function execute(conn, m, rule, extra = {}) {
           const img = await callImageGenChain(prompt);
           await send({
             image: Buffer.from(img.base64, "base64"),
-            caption: "🎨 " + prompt.slice(0, 150) + (img.via ? "\n_(engine: " + img.via + ")_" : "") + (img.ratio && img.ratio !== "1:1" ? " _(rasio: " + img.ratio + ")_" : ""),
+            caption: "🎨 " + prompt.slice(0, 150) + (img.ratio && img.ratio !== "1:1" ? " _(rasio: " + img.ratio + ")_" : ""),
           });
         } catch (e) {
           console.log(`[AutoFlow] aiimage gagal: ${e.message}`);

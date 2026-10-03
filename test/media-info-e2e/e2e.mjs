@@ -118,6 +118,21 @@ t("caption: label kosong diabaikan", mediaInfoCaption({ header: "X", fields: [{ 
   t("kyio: judul kartu info bukan 'Kyio API'", !/mediaInfoCaption\(\{ *header: *["']Kyio API/.test(rd("src/lib/rara-kyio.js")));
 }
 
+// ── TANPA nama API/mesin di SEMUA teks hasil (request owner 3 Okt: "info field hanya info tentang fitur ... tidak menyebutkan api di semua fitur") ──
+{
+  const walk = (d) => fs.readdirSync(path.join(REPO, d), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(d + "/" + e.name) : e.name.endsWith(".js") ? [d + "/" + e.name] : []);
+  const semua = walk("plugins");
+  const nonKomentar = (src) => src.split("\n").filter((l) => !/^\s*(\/\/|\*|\/\*)/.test(l));
+  const cari = (re) => semua.flatMap((f) => nonKomentar(rd(f)).filter((l) => re.test(l)).map((l) => f.split("/").pop() + ": " + l.trim().slice(0, 70)));
+  const a = cari(/lines\.push\(`Source: \$\{method\}`\)/);
+  t("downloader: tidak ada baris 'Source: ${method}' (nama API/scraper)", a.length === 0, a.slice(0, 3).join(" | "));
+  const b = cari(/\((zelapi)\)|via zelapi|Powered by (sharp|Onepunya)/).filter((l) => !/API_KEY|apikeys|description/.test(l));
+  t("tidak ada akhiran '(zelapi)' / 'via zelapi' / 'Powered by sharp|Onepunya' di teks hasil", b.length === 0, b.slice(0, 3).join(" | "));
+  const c = cari(/(Engine|Mesin): *\*?(\$\{|["'`]?[A-Za-z])/).filter((l) => !/search\.js|console\.|label:|ENGINE|engine ===|\.engine\b|return \{|engine *[:=] *[\w"']|Engine AI lagi|Pilihan engine|TTS Engine|hiaiagent|aicall2/.test(l));
+  t("teks hasil: tidak ada baris 'Engine: <nama mesin>' di caption", c.length === 0, c.slice(0, 4).join(" | "));
+}
+
 // ── smoke import ──
 const all = ["plugins/sticker/sticker.js", "plugins/convert/convert.js", "plugins/convert/togif.js", "plugins/convert/vocalremover.js", "plugins/tools/converter.js", "plugins/download/aio.js",
   ...["to3d","toanime","toblack","tocartoon","tocermin","tochibi","toemotebatu","tofigurev2","tofigurine","toghibli","tohijab","toisland","tojapanese","tomanga","tomekah","tooilpainting"].map((n) => `plugins/ai-image/${n}.js`)];

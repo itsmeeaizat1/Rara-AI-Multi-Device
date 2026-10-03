@@ -34,7 +34,7 @@ const short = (s, n = 120) => { const t = String(s || "").replace(/\s+/g, " ").t
 
 function usageCard() {
   return raraWrap("zinfo", [
-    "ℹ️ INFO SUITE (zelapi):",
+    "ℹ️ INFO SUITE:",
     "",
     "▸ .ztokengratis — direktori provider AI gratis",
     "▸ .zgold — harga emas Treasury",
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
       if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zinfo", `Gold bermasalah: ${r.error}`)); }
       const g = r.gold;
       const last = Array.isArray(g.prices) ? g.prices[g.prices.length - 1] : null;
-      const lines = ["✅ EMAS TREASURY (zelapi)", ""];
+      const lines = ["✅ EMAS TREASURY", ""];
       const mv = v(g.movement);
       if (mv) lines.push(`📈 ${mv.toUpperCase()} ${v(g.percentage) ? g.percentage + "%" : ""}`);
       if (v(g.price)) lines.push(`💰 ${fmt(g.price)}`);
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
       const r = await infoCrypto(args[0] || "btc");
       if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zinfo", `Crypto bermasalah: ${r.error}`)); }
       const c = r.crypto;
-      const lines = [`✅ ${String(c.coin).toUpperCase()} (zelapi)`, ""];
+      const lines = [`✅ ${String(c.coin).toUpperCase()}`, ""];
       if (v(c.price)) lines.push(`💰 Rp ${fmt(c.price)}`);
       if (v(c.ma5)) lines.push(`📊 MA5 ${fmt(c.ma5)} · MA10 ${fmt(c.ma10)}`);
       if (v(c.rsi)) lines.push(`📈 RSI ${c.rsi}`);
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
       const chg = Number(q.change);
       const pct = Number(q.change_percent);
       const arrow = isNaN(chg) ? "" : (chg >= 0 ? "🟢 +" : "🔴 ");
-      const lines = ["✅ SAHAM (Google Finance via zelapi)", ""];
+      const lines = ["✅ SAHAM", ""];
       lines.push(`🏢 ${q.name || q.symbol}`);
       lines.push(` ticker ${q.symbol}`);
       if (v(q.price)) lines.push(`💰 ${fmt(q.price)} ${q.currency || ""}`);
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
       if (parts.length < 2) { await m.react("❌"); return m.reply(raraWrap("zinfo", "Format: .zongkir <asal> | <tujuan> | <berat kg>")); }
       const r = await infoOngkir(parts[0], parts[1], parts[2] || "1");
       if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zinfo", `Ongkir bermasalah: ${r.error}`)); }
-      const lines = [`✅ ONGKIR ${r.weight} Kg (zelapi)`, "", `📍 ${r.route.origin || parts[0]}`, `🎯 ${r.route.destination || parts[1]}`, ""];
+      const lines = [`✅ ONGKIR ${r.weight} Kg`, "", `📍 ${r.route.origin || parts[0]}`, `🎯 ${r.route.destination || parts[1]}`, ""];
       r.couriers.slice(0, 6).forEach((c) => {
         lines.push(`🚚 ${c.name}`);
         (c.services || []).slice(0, 3).forEach((s) => {
