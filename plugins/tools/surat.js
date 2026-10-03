@@ -140,7 +140,8 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   try {
     await m.react("🕒");
-    const aiResult = await UnlimitedAI(SURAT_PROMPT.replace("__INPUT__", args), "rara-ai");
+    const aiRes = await UnlimitedAI(SURAT_PROMPT.replace("__INPUT__", args), "rara-ai");
+    const aiResult = aiRes && aiRes.status ? String(aiRes.answer || "") : "";
 
     if (!aiResult || aiResult.trim().length < 20) {
       return m.reply(raraWrap("Surat", "❌ Gagal generate surat. Coba dengan detail yang lebih lengkap."));

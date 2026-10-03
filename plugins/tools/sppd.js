@@ -127,7 +127,8 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   await m.react("🕒");
 
   try {
-    const result = await UnlimitedAI(SPPD_PROMPT.replace("__INPUT__", args), "rara-ai");
+    const aiRes = await UnlimitedAI(SPPD_PROMPT.replace("__INPUT__", args), "rara-ai");
+    const result = aiRes && aiRes.status ? String(aiRes.answer || "") : "";
 
     if (!result || result.trim().length < 20) {
       return m.reply(raraWrap("SPPD", "❌ Gagal generate SPPD. Coba dengan detail yang lebih lengkap."));

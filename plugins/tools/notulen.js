@@ -103,7 +103,8 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   try {
     await m.react("🕒");
-    const result = await UnlimitedAI(NOTULEN_PROMPT.replace("__INPUT__", input), "rara-ai");
+    const aiRes = await UnlimitedAI(NOTULEN_PROMPT.replace("__INPUT__", input), "rara-ai");
+    const result = aiRes && aiRes.status ? String(aiRes.answer || "") : "";
 
     if (!result || result.trim().length < 20) {
       return m.reply(raraWrap("Notulen", "❌ Gagal generate notulen. Coba dengan catatan yang lebih lengkap."));
