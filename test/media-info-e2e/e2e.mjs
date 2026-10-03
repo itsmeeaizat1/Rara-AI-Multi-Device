@@ -78,6 +78,26 @@ t("caption: label kosong diabaikan", mediaInfoCaption({ header: "X", fields: [{ 
   t("aio: pakai probeMedia + mediaResultCard, fallback raraBerhasil", aio.includes("probeMedia(") && aio.includes("mediaResultCard(") && aio.includes("|| raraBerhasil"));
 }
 
+// ── baris info ringkas GIF reaksi anime (request owner 3 Okt: "jenis gambar/gif, ukuran") ──
+{
+  const { mediaInfoLine } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-media-info.js")).href);
+  t("mediaInfoLine: GIF + ukuran", mediaInfoLine({ kind: "GIF", bytes: 246272 }) === "GIF · 240.5 KB");
+  t("mediaInfoLine: tanpa ukuran = hanya jenis (jujur, tak ngarang)", mediaInfoLine({ kind: "Gambar" }) === "Gambar");
+  t("mediaInfoLine: kosong total = string kosong", mediaInfoLine({}) === "" && mediaInfoLine() === "");
+  t("mediaInfoLine: extra ikut digabung", mediaInfoLine({ kind: "GIF", bytes: 3 * 1024 * 1024, extra: "x" }) === "GIF · 3.0 MB · x");
+  const semua = fs.readdirSync(path.join(REPO, "plugins/anime")).filter((f) => /^anime-.+\.js$/.test(f));
+  // anime-baka sudah punya kartu penuh (mediaInfoCaption) dari tahap sebelumnya → dikecualikan supaya TIDAK dobel.
+  const SUDAH_KARTU_PENUH = ["anime-baka.js"];
+  const animeFiles = semua.filter((f) => !SUDAH_KARTU_PENUH.includes(f));
+  const tanpaInfo = animeFiles.filter((f) => !rd("plugins/anime/" + f).includes("mediaInfoLine("));
+  t(`anime-*: ${animeFiles.length} plugin GIF reaksi pakai mediaInfoLine (tak ada yang ketinggalan)`, tanpaInfo.length === 0, tanpaInfo.join(","));
+  const tanpaImpor = animeFiles.filter((f) => !/import \{ mediaInfoLine \}/.test(rd("plugins/anime/" + f)));
+  t("anime-*: semua yang memanggil mediaInfoLine juga mengimpornya (anti ReferenceError senyap)", tanpaImpor.length === 0, tanpaImpor.join(","));
+  const duaPesan = semua.filter((f) => rd("plugins/anime/" + f).includes("mediaInfoCaption(") && rd("plugins/anime/" + f).includes("mediaInfoLine("));
+  t("anime-*: TIDAK ada plugin dengan kartu penuh DAN baris info sekaligus (anti dobel)", duaPesan.length === 0, duaPesan.join(","));
+  t("anime-baka: tetap kartu penuh, tanpa baris info", rd("plugins/anime/anime-baka.js").includes("mediaInfoCaption(") && !rd("plugins/anime/anime-baka.js").includes("mediaInfoLine("));
+}
+
 // ── smoke import ──
 const all = ["plugins/sticker/sticker.js", "plugins/convert/convert.js", "plugins/convert/togif.js", "plugins/convert/vocalremover.js", "plugins/tools/converter.js", "plugins/download/aio.js",
   ...["to3d","toanime","toblack","tocartoon","tocermin","tochibi","toemotebatu","tofigurev2","tofigurine","toghibli","tohijab","toisland","tojapanese","tomanga","tomekah","tooilpainting"].map((n) => `plugins/ai-image/${n}.js`)];

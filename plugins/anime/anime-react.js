@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoLine } from "../../src/lib/rara-media-info.js";
 
 const REACTION_MAP = {
   animereact: "waifu", animehug: "hug", animekiss: "kiss", animecry: "cry",
@@ -60,7 +61,8 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     const senderName = m.pushName || "kamu";
     const caption = `${senderName} ${label} ${target} 💕`;
-    return await sock.sendMessage(m.chat, { image: buffer, caption, mentions });
+    const infoLine = mediaInfoLine({ kind: /\.gif(\?|$)/i.test(String(data.url)) ? "GIF" : "Gambar", bytes: buffer.length });
+    return await sock.sendMessage(m.chat, { image: buffer, caption: caption + "\n" + infoLine, mentions });
   } catch (err) {
     console.error("animereact error:", err);
     await m.react("❌");

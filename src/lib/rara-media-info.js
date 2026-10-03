@@ -24,6 +24,19 @@ export function fmtBytes(bytes) {
 }
 
 /**
+ * Satu baris info ringkas untuk DITEMPEL ke caption yang sudah ada (mis. GIF reaksi anime), tanpa pesan kedua.
+ * Request owner 3 Okt 2026: GIF reaksi cukup "jenis gambar/gif + ukuran". Field kosong dilewati.
+ * @param {object} p — { kind: "GIF"|"Gambar"|..., bytes?: number, extra?: string }
+ * @returns {string} contoh "GIF · 240.5 KB" (kosong bila tak ada data)
+ */
+export function mediaInfoLine({ kind = "", bytes = 0, extra = "" } = {}) {
+  return [kind, fmtBytes(bytes), extra]
+    .map((v) => String(v || "").trim())
+    .filter(Boolean)
+    .join(" · ");
+}
+
+/**
  * Bangun caption info hasil pemrosesan media.
  * REVISI OWNER 3 Okt 2026: balik desain lama + field lengkap per fitur — judul 「 ✦ HEADER ✦ 」,
  * baris "• Label : nilai" rata (teks biasa, TANPA *bold* / emoji ikon). Parameter `icon` tetap
