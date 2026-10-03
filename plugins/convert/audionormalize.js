@@ -5,6 +5,7 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "audionormalize",
@@ -44,7 +45,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, `input_${Date.now()}.mp3`);
-    const outputPath = path.join(tmpDir, `normalized_${Date.now()}.mp3`);
+    const outputPath = path.join(tmpDir, `normalized_${Date.now()}.ogg`);
 
     const buffer = await conn.downloadMediaMessage({ key: { remoteJid: m.key.remoteJid, id: m.quoted?.id }, message: quoted });
     fs.writeFileSync(inputPath, buffer);
@@ -67,6 +68,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         `Filter: ${MODES[mode].desc}`,
       ].join("\n")),
     });
+    await m.reply(mediaInfoCaption({ header: "Audio Normalize", fields: [
+      { label: "Mode", value: mode },
+      { label: "Filter", value: MODES[mode].desc },
+      { label: "Hasil", value: "Audio OGG Opus" },
+      { label: "Ukuran", value: (buf.length / 1024).toFixed(1) + " KB" },
+    ] }));
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);

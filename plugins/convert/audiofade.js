@@ -5,6 +5,7 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "audiofade",
@@ -41,7 +42,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
     const inputPath = path.join(tmpDir, `input_${Date.now()}.mp3`);
-    const outputPath = path.join(tmpDir, `faded_${Date.now()}.mp3`);
+    const outputPath = path.join(tmpDir, `faded_${Date.now()}.ogg`);
 
     const buffer = await conn.downloadMediaMessage({ key: { remoteJid: m.key.remoteJid, id: m.quoted?.id }, message: quoted });
     fs.writeFileSync(inputPath, buffer);
@@ -96,6 +97,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ptt: isPtt,
       caption: raraWrap("Audio Fade", `Berhasil!\nMode: ${mode}\n${desc}`),
     });
+    await m.reply(mediaInfoCaption({ header: "Audio Fade", fields: [
+      { label: "Mode", value: mode },
+      { label: "Detail", value: desc },
+      { label: "Hasil", value: "Audio OGG Opus" },
+      { label: "Ukuran", value: (buf.length / 1024).toFixed(1) + " KB" },
+    ] }));
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);

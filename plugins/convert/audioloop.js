@@ -5,6 +5,7 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "audioloop",
@@ -87,6 +88,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         fadeSec > 0 ? "Fade: " + fadeSec + " detik" : "Tanpa fade",
       ].join("\n")),
     });
+    await m.reply(mediaInfoCaption({ header: "Audio Loop", fields: [
+      { label: "Pengulangan", value: loopCount + "x" },
+      { label: "Fade", value: fadeSec ? fadeSec + " detik" : "Tidak" },
+      { label: "Hasil", value: "Audio OGG Opus" },
+      { label: "Ukuran", value: (buf.length / 1024).toFixed(1) + " KB" },
+    ] }));
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
