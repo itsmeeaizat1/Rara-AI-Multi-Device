@@ -13,7 +13,7 @@ function raraWrap(title, text) {
   }).join("\n");
   return `${toSC(title)}\n\n${scBody}`;
 }
-async function formatAndReply( text, cmdName) {
+async function formatAndReply(m, text, cmdName) {
   const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   // Convert all text to small caps, skip command lines
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     text += m.prefix + "approvalmember on — aktifkan\n";
     text += m.prefix + "approvalmember off — matikan\n\n";
     text += "Note: Bot harus jadi admin grup untuk fitur ini.";
-    return await formatAndReply( text, "approvalmember");
+    return await formatAndReply(m, text, "approvalmember");
   }
 
   try {
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     });
 
     if (!botParticipant || !botParticipant.admin) {
-      return formatAndReply(raraWrap("approvalmember", "Bot bukan admin di grup ini.\n\nJadikan bot admin dulu untuk menggunakan fitur ini."));
+      return formatAndReply(m, raraWrap("approvalmember", "Bot bukan admin di grup ini.\n\nJadikan bot admin dulu untuk menggunakan fitur ini."));
     }
     // WhatsApp group setting: membership_approval_mode
     // Baileys: groupSettingUpdate with memberApprovalMode
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
       text += "Member sekarang bisa langsung gabung tanpa persetujuan.";
     }
 
-    return await formatAndReply( text, "approvalmember");
+    return await formatAndReply(m, text, "approvalmember");
   } catch (error) {
     return m.reply(raraError("ApprovalMember", "Gagal ubah pengaturan nih — pastikan bot admin grup"));
   }

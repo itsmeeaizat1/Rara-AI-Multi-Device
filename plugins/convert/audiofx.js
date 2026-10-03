@@ -90,8 +90,8 @@ function buildEffectList(prefix) {
   emoji: "🎵",
   name: "audiofun",
   description: "Audio effects & voice changer (25 efek)",
-  usage: `${m.prefix}audiofun <efek> atau .audiofun list`,
-  example: `${m.prefix}audiofun bass (reply audio)`,
+  usage: `${prefix}audiofun <efek> atau .audiofun list`,
+  example: `${prefix}audiofun bass (reply audio)`,
 })
 }
 
