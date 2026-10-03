@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "🧿 Tato berhasil ditambahkan!" }, { quoted: m });
     await m.reply(mediaInfoCaption({ header: "Tato", fields: [
-      { label: "Efek", value: "Tato pada foto" }, { label: "Engine", value: "AI (api-faa)" },
+      { label: "Efek", value: "Tato pada foto" },
       { label: "Hasil", value: "Gambar" }, { label: "Ukuran", value: (imgBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));
     await m.reply(raraBerhasil("totato"));

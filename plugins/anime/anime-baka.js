@@ -87,7 +87,6 @@ async function handler(m, { sock }) {
         fields: [
           { label: "Input", value: mentioned ? "Tag User" : "Biasa" },
           { label: "Kategori", value: "Baka" },
-          { label: "Sumber", value: source },
           { label: "Hasil", value: url.endsWith(".gif") ? "Anime GIF" : "Anime Gambar" },
         ],
       })

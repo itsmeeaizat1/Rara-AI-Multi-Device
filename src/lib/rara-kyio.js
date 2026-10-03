@@ -179,7 +179,7 @@ async function sendBuffer(sock, m, buffer, mime, caption) {
   try {
     const { mediaInfoCaption } = await import("./rara-media-info.js");
     const jenis = { image: "Gambar", audio: "Audio", video: "Video" }[kind] || "Dokumen";
-    await m.reply(mediaInfoCaption({ header: "Kyio API", fields: [
+    await m.reply(mediaInfoCaption({ header: "Hasil", fields: [
       { label: "Perintah", value: String(m.command || "-") },
       { label: "Jenis", value: jenis },
       { label: "Format", value: String(mime || "-").split(";")[0] },

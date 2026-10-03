@@ -60,7 +60,7 @@ t("caption: label kosong diabaikan", mediaInfoCaption({ header: "X", fields: [{ 
   for (const name of makers) {
     const src = rd(`plugins/ai-image/${name}.js`);
     t(`${name}.js → m.reply(mediaInfoCaption(...))`, src.includes("mediaInfoCaption("));
-    t(`${name}.js → field Input/Style/Engine/Hasil`, ['"Input"', '"Style"', '"Engine"', '"Hasil"'].every((l) => src.includes(`label: ${l}`)));
+    t(`${name}.js → field Input/Style/Hasil (tanpa Engine)`, ['"Input"', '"Style"', '"Hasil"'].every((l) => src.includes(`label: ${l}`)) && !/label: *["']Engine["']/.test(src));
   }
 }
 
@@ -96,6 +96,26 @@ t("caption: label kosong diabaikan", mediaInfoCaption({ header: "X", fields: [{ 
   const duaPesan = semua.filter((f) => rd("plugins/anime/" + f).includes("mediaInfoCaption(") && rd("plugins/anime/" + f).includes("mediaInfoLine("));
   t("anime-*: TIDAK ada plugin dengan kartu penuh DAN baris info sekaligus (anti dobel)", duaPesan.length === 0, duaPesan.join(","));
   t("anime-baka: tetap kartu penuh, tanpa baris info", rd("plugins/anime/anime-baka.js").includes("mediaInfoCaption(") && !rd("plugins/anime/anime-baka.js").includes("mediaInfoLine("));
+}
+
+// ── TANPA Engine/API di field info (request owner 3 Okt: "yang menyebutkan api maupun lokal atau api external dihapus aja") ──
+{
+  const walk = (d) => fs.readdirSync(path.join(REPO, d), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(d + "/" + e.name) : e.name.endsWith(".js") ? [d + "/" + e.name] : []);
+  const semua = [...walk("plugins"), "src/lib/rara-kyio.js"];
+  const engine = semua.filter((f) => /label: *["']Engine["']/.test(rd(f)));
+  t("field info: TIDAK ada label Engine sama sekali (API maupun lokal)", engine.length === 0, engine.slice(0, 4).join(","));
+  // nama API/penyedia tidak boleh nongol di judul kartu (header) maupun field Sumber/Provider/Via/API
+  const API = /ikyy|neoxr|api-faa|faa ai|seaart|stemsplit|pollinations|prodia|replicate|removebackground|pixa\b|microlink|onepunya|qwa api|unlimitedai|waifu\.pics|nekos\.best|kyio api|zelapi|termai|inworld/i;
+  const bocor = [];
+  for (const f of semua) for (const line of rd(f).split("\n")) {
+    if (!/mediaInfoCaption\(\{ *header:/.test(line) && !/label: *["'](Sumber|Source|Provider|Server|Via|API)["']/.test(line)) continue;
+    if (f.endsWith("ai-set.js")) continue; // pengaturan AI: provider memang isi perintahnya, bukan info media
+    if (API.test(line)) bocor.push(f + ": " + line.trim().slice(0, 80));
+  }
+  t("judul kartu & field Sumber/Provider: TIDAK menyebut nama API/penyedia", bocor.length === 0, bocor.slice(0, 3).join(" | "));
+  t("anime-baka: tanpa field Sumber (nama API)", !/label: *["']Sumber["']/.test(rd("plugins/anime/anime-baka.js")));
+  t("kyio: judul kartu info bukan 'Kyio API'", !/mediaInfoCaption\(\{ *header: *["']Kyio API/.test(rd("src/lib/rara-kyio.js")));
 }
 
 // ── smoke import ──

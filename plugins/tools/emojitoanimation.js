@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     );
     await m.reply(mediaInfoCaption({ header: "Emoji To Animasi", fields: [
       { label: "Input", value: "Emoji " + emoji },
-      { label: "Engine", value: "Neoxr Emojito" },
+
       { label: "Hasil", value: "Stiker animasi (WebP)" },
       { label: "Ukuran", value: (webpBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));

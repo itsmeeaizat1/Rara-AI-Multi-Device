@@ -403,7 +403,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       });
       await m.reply(mediaInfoCaption({ header: "Voice Changer", fields: [
         { label: "Karakter", value: char.name }, { label: "Region", value: char.region },
-        { label: "Engine", value: "RVC (Genshin Impact)" }, { label: "Hasil", value: "Voice note OGG Opus" },
+{ label: "Hasil", value: "Voice note OGG Opus" },
         { label: "Ukuran", value: (outputBuf.length / 1024).toFixed(1) + " KB" },
       ] }));
 
@@ -495,7 +495,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
     await m.reply(mediaInfoCaption({ header: "Voice Changer", fields: [
       { label: "Efek", value: input }, { label: "Deskripsi", value: vm.desc },
-      { label: "Engine", value: "ffmpeg (lokal)" }, { label: "Hasil", value: "Voice note OGG Opus" },
+{ label: "Hasil", value: "Voice note OGG Opus" },
       { label: "Ukuran", value: (outputBuf.length / 1024).toFixed(1) + " KB" },
     ] }));
 

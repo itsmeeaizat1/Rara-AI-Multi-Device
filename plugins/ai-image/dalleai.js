@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     await m.reply(mediaInfoCaption({ header: "Rara DALL-E AI", fields: [
       { label: "Input", value: "Teks" },
       { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
-      { label: "Engine", value: result.model || 'Pollinations Flux' },
+
       { label: "Hasil", value: "Gambar (1024x1024)" },
     ] }));
     return;

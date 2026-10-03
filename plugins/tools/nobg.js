@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     );
     await m.reply(mediaInfoCaption({ header: "Remove Background", fields: [
       { label: "Input", value: "Foto" },
-      { label: "Engine", value: "Pixa (removebackground)" },
+
       { label: "Hasil", value: "Gambar tanpa latar" },
       { label: "Ukuran", value: (resultBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));

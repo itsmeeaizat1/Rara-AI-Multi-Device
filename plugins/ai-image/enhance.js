@@ -83,7 +83,7 @@ async function handler(m, { sock, config: botConfig }) {
       }, { quoted: m });
       await m.reply(mediaInfoCaption({ header: "Rara Enhance", fields: [
         { label: "Input", value: resultExt === ".mp4" ? "Video" : "Foto" },
-        { label: "Engine", value: "Remini / Replicate" },
+
         { label: "Hasil", value: resultExt === ".mp4" ? "Video HD" : "Gambar HD" },
       ] }));
     }

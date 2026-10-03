@@ -43,11 +43,11 @@ async function sendAudio(m, sock, url, fileName, mimetype = "audio/mpeg", info =
     await sock.sendMessage(m.chat, { document: { url }, fileName, mimetype }, { quoted: m });
   }
   if (info) {
-    await m.reply(mediaInfoCaption({ header: "Onepunya TTS", fields: [
+    await m.reply(mediaInfoCaption({ header: "Text to Speech", fields: [
       { label: "Input", value: "Teks (" + info.chars + " karakter)" },
       { label: "Mode", value: info.mode },
       { label: info.voiceLabel, value: info.voice },
-      { label: "Engine", value: "Onepunya API" },
+
       { label: "Hasil", value: (asDoc ? "Dokumen audio " : "Voice note ") + (mimetype === "audio/wav" ? "(WAV)" : "(MP3)") },
       { label: "Ukuran", value: size ? (size / 1024).toFixed(1) + " KB" : "" },
     ] }));

@@ -88,7 +88,6 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Rara To Chibi", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Chibi" },
-            { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
             { icon: "⬇️", label: "Hasil", value: "Gambar" },
         ] }))
         

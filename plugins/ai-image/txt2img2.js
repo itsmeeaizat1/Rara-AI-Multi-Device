@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     await m.reply(mediaInfoCaption({ header: "Rara Txt2Img V2", fields: [
       { label: "Input", value: "Teks" },
       { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
-      { label: "Engine", value: "Flux Klein 4B" },
+
       { label: "Hasil", value: "Gambar" },
     ] }));
   } catch (e) {

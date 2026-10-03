@@ -95,7 +95,6 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Rara Figure v2", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Figure v2" },
-            { icon: "⚙️", label: "Engine", value: "FAA AI API" },
             { icon: "⬇️", label: "Hasil", value: "Gambar" },
         ] }))
         

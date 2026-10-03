@@ -34,11 +34,11 @@ const MAX_TEXT = 2000;
 async function sendVn(m, sock, buffer, mimetype = "audio/mpeg", info = null) {
   await sock.sendMessage(m.chat, { audio: buffer, mimetype, ptt: true }, { quoted: m });
   if (info) {
-    await m.reply(mediaInfoCaption({ header: "Inworld TTS", fields: [
+    await m.reply(mediaInfoCaption({ header: "Text to Speech", fields: [
       { label: "Input", value: "Teks (" + info.chars + " karakter)" },
       { label: "Mode", value: info.mode },
       { label: "Suara", value: info.voice },
-      { label: "Engine", value: "Inworld AI (inworld-tts-2)" },
+
       { label: "Hasil", value: "Voice note" },
       { label: "Ukuran", value: (buffer.length / 1024).toFixed(1) + " KB" },
     ] }));

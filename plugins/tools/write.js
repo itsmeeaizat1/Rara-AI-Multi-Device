@@ -105,7 +105,6 @@ async function handler(m, { sock }) {
     await m.reply(mediaInfoCaption({ header: "Tulisan Tangan", fields: [
       { label: "Input", value: "Teks (" + text.length + " karakter)" },
       { label: "Baris", value: lines.length },
-      { label: "Engine", value: "Canvas lokal" },
       { label: "Hasil", value: "Gambar JPEG" },
       { label: "Ukuran", value: (buffer.length / 1024).toFixed(1) + " KB" },
     ] }));

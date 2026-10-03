@@ -114,7 +114,6 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     );
     await m.reply(mediaInfoCaption({ header: "MEGA", fields: [
       { label: "Nama", value: String(safeName).slice(0, 60) },
-      { label: "Engine", value: "megajs (langsung)" },
       { label: "Hasil", value: "Dokumen" },
       { label: "Ukuran", value: fmtSize(buffer.length) },
     ] }));

@@ -149,7 +149,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     }, { quoted: m });
     await m.reply(mediaInfoCaption({ header: "Word ke PDF", fields: [
       { label: "Input", value: "Dokumen Word (" + (buffer.length / 1024).toFixed(1) + " KB)" },
-      { label: "Engine", value: "mammoth + pdf-lib" },
       { label: "Hasil", value: "Dokumen PDF" },
       { label: "Ukuran", value: (pdfBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));

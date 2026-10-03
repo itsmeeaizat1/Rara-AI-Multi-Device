@@ -171,7 +171,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.reply(mediaInfoCaption({ header: "Kop Surat", fields: [
       { label: "Instansi", value: kopData.instansi },
       { label: "Kontak", value: [kopData.telepon, kopData.email, kopData.website].filter(Boolean).join(" | ").slice(0, 60) },
-      { label: "Engine", value: "pdf-lib" },
       { label: "Hasil", value: "Dokumen PDF" },
       { label: "Ukuran", value: (resultBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));

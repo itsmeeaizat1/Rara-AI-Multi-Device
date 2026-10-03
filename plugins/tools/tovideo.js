@@ -157,7 +157,6 @@ async function handler(m, { sock }) {
         })
         await m.reply(mediaInfoCaption({ header: "Sticker ke Video", fields: [
             { label: "Input", value: "Sticker animasi" },
-            { label: "Engine", value: "Konversi lokal (WebP ke GIF ke MP4)" },
             { label: "Hasil", value: "Video MP4" },
             { label: "Ukuran", value: (mp4Buffer.length / 1024).toFixed(1) + " KB" },
         ] }))

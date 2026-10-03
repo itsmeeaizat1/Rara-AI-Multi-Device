@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     await m.reply(mediaInfoCaption({ header: "Rara SDXL", fields: [
       { label: "Input", value: "Teks" },
       { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
-      { label: "Engine", value: via || result.model || 'SDXL' },
+
       { label: "Hasil", value: "Gambar (1024x1024)" },
     ] }));
     return;

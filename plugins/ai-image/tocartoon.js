@@ -89,7 +89,6 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Rara To Cartoon", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Kartun" },
-            { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
             { icon: "⬇️", label: "Hasil", value: "Gambar" },
         ] }))
         

@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "🧟 Kamu jadi zombie!" }, { quoted: m });
     await m.reply(mediaInfoCaption({ header: "Zombie", fields: [
-      { label: "Efek", value: "Jadi zombie" }, { label: "Engine", value: "AI (api-faa)" },
+      { label: "Efek", value: "Jadi zombie" },
       { label: "Hasil", value: "Gambar" }, { label: "Ukuran", value: (imgBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));
     await m.reply(raraBerhasil("tozombie"));

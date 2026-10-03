@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
       }, { quoted: m });
       await m.reply(mediaInfoCaption({ header: "Rara Anime2Real", fields: [
         { label: "Input", value: "Foto Anime" },
-        { label: "Engine", value: "IkyyXD Anime2Real" },
+
         { label: "Hasil", value: "Gambar Realistik" },
       ] }));
     } else {

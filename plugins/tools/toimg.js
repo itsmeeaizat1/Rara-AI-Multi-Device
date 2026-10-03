@@ -82,7 +82,6 @@ async function handler(m, { sock }) {
         })
         await m.reply(mediaInfoCaption({ header: "Sticker ke Gambar", fields: [
             { label: "Input", value: "Sticker" },
-            { label: "Engine", value: "Konversi lokal" },
             { label: "Hasil", value: "Gambar" },
             { label: "Ukuran", value: (buffer.length / 1024).toFixed(1) + " KB" },
         ] }))

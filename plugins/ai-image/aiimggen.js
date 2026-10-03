@@ -101,7 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(mediaInfoCaption({ header: "Rara AI Image Gen", fields: [
       { label: "Input", value: "Teks" },
       { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
-      { label: "Engine", value: "Pollinations / Prodia" },
+
       { label: "Hasil", value: "Gambar" },
     ] }));
   } catch (error) {

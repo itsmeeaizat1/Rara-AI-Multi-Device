@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "💑 Kamu punya pacar baru!" }, { quoted: m });
     await m.reply(mediaInfoCaption({ header: "Pacar", fields: [
-      { label: "Efek", value: "Foto bersama pacar" }, { label: "Engine", value: "AI (api-faa)" },
+      { label: "Efek", value: "Foto bersama pacar" },
       { label: "Hasil", value: "Gambar" }, { label: "Ukuran", value: (imgBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));
     await m.reply(raraBerhasil("topacar"));

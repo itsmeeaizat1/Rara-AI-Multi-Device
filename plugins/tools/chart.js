@@ -238,7 +238,6 @@ async function handler(m, { sock }) {
         { label: "Mode", value: "Leaderboard RPG" },
         { label: "Data", value: RPG_LABELS[type] },
         { label: "Jumlah data", value: players.length },
-        { label: "Engine", value: "Chart lokal" },
         { label: "Hasil", value: "Gambar PNG" },
         { label: "Ukuran", value: (png.length / 1024).toFixed(1) + " KB" },
       ] }));
@@ -295,7 +294,6 @@ async function handler(m, { sock }) {
       { label: "Mode", value: "Data custom" },
       { label: "Jumlah data", value: values.length },
       { label: "Nilai", value: values.join(", ").slice(0, 60) },
-      { label: "Engine", value: "Chart lokal" },
       { label: "Hasil", value: "Gambar PNG" },
       { label: "Ukuran", value: (png.length / 1024).toFixed(1) + " KB" },
     ] }));

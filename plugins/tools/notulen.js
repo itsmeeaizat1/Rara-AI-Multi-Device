@@ -128,7 +128,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     }, { quoted: m });
     await m.reply(mediaInfoCaption({ header: "Notulen", fields: [
       { label: "Input", value: input.trim().slice(0, 60) + (input.trim().length > 60 ? "..." : "") },
-      { label: "Engine", value: "UnlimitedAI + pdf-lib" },
+
       { label: "Hasil", value: "Dokumen PDF" },
       { label: "Ukuran", value: (pdfBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));

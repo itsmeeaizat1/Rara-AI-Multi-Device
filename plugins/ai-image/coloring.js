@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
       }, { quoted: m });
       await m.reply(mediaInfoCaption({ header: "Rara Mewarnai AI", fields: [
         { label: "Input", value: "Foto Sketsa" },
-        { label: "Engine", value: "IkyyXD Mewarnai" },
+
         { label: "Hasil", value: "Gambar Berwarna" },
       ] }));
     } else {

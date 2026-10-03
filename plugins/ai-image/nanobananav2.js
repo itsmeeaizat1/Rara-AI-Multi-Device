@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
       await m.reply(mediaInfoCaption({ header: "Rara NanoBanana V2", fields: [
         { label: "Input", value: "Foto" },
         { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
-        { label: "Engine", value: "Gemini Flash (IkyyXD)" },
+
         { label: "Hasil", value: "Gambar" },
       ] }));
     } else {

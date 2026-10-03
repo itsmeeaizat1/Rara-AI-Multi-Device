@@ -119,7 +119,7 @@ async function handler(m, { sock }) {
             { label: "Font", value: config.font + " " + config.fontSize },
             { label: "Bahasa", value: config.language },
             { label: "Resolusi", value: config.width + " x " + config.height },
-            { label: "Engine", value: "Carbon via Microlink" },
+
             { label: "Hasil", value: "Gambar" },
         ] }))
 

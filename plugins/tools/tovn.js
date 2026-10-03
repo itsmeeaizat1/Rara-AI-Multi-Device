@@ -117,7 +117,6 @@ async function handler(m, { sock }) {
         })
         await m.reply(mediaInfoCaption({ header: "Ke Voice Note", fields: [
             { label: "Input", value: isVideo ? "Video" : "Audio" },
-            { label: "Engine", value: "ffmpeg" },
             { label: "Hasil", value: "Voice note (OGG Opus)" },
             { label: "Ukuran", value: (vnBuffer.length / 1024).toFixed(1) + " KB" },
         ] }))

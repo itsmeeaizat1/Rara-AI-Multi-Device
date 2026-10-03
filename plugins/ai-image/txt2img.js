@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
             { label: "Input", value: "Teks" },
             { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
             { label: "Style", value: style },
-            { label: "Engine", value: "Neoxr Stable Diffusion" },
+
             { label: "Hasil", value: "Gambar" },
         ] }))
     } catch (error) {

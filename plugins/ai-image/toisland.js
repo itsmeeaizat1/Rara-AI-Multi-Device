@@ -90,7 +90,6 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Rara To Island", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Pulau Tropis" },
-            { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
             { icon: "⬇️", label: "Hasil", value: "Gambar" },
         ] }))
         

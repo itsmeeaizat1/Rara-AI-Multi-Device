@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
       await m.reply(mediaInfoCaption({ header: "Rara Photiu AI", fields: [
         { label: "Input", value: "Teks" },
         { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
-        { label: "Engine", value: "GPT Image (IkyyXD)" },
+
         { label: "Hasil", value: "Gambar" },
       ] }));
     } else {

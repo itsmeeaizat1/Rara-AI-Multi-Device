@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "🙈 Wajah sudah diblur otomatis!" }, { quoted: m });
     await m.reply(mediaInfoCaption({ header: "Blur Wajah", fields: [
-      { label: "Efek", value: "Blur wajah otomatis" }, { label: "Engine", value: "AI (api-faa)" },
+      { label: "Efek", value: "Blur wajah otomatis" },
       { label: "Hasil", value: "Gambar" }, { label: "Ukuran", value: (imgBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));
     await m.reply(raraBerhasil("toblur"));

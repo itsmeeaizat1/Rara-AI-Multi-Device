@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "🗾 Kamu sudah di Jepang!" }, { quoted: m });
     await m.reply(mediaInfoCaption({ header: "Jepang", fields: [
-      { label: "Efek", value: "Gaya Jepang" }, { label: "Engine", value: "AI (api-faa)" },
+      { label: "Efek", value: "Gaya Jepang" },
       { label: "Hasil", value: "Gambar" }, { label: "Ukuran", value: (imgBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));
     await m.reply(raraBerhasil("tojepang"));

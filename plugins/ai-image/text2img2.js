@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Rara Text2Img V2", fields: [
             { label: "Input", value: "Teks" },
             { label: "Prompt", value: m.fullArgs ? (m.fullArgs.length > 60 ? m.fullArgs.slice(0, 57) + "..." : m.fullArgs) : "" },
-            { label: "Engine", value: "AI Text2Img" },
+
             { label: "Hasil", value: "Gambar" },
         ] }))
   } catch (e) {

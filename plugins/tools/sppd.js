@@ -151,7 +151,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     }, { quoted: m });
     await m.reply(mediaInfoCaption({ header: "SPPD", fields: [
       { label: "Input", value: args.trim().slice(0, 60) + (args.trim().length > 60 ? "..." : "") },
-      { label: "Engine", value: "UnlimitedAI + pdf-lib" },
+
       { label: "Hasil", value: "Dokumen PDF" },
       { label: "Ukuran", value: (pdfBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));

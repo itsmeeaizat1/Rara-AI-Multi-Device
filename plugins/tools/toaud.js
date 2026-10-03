@@ -78,7 +78,6 @@ async function handler(m, { sock }) {
       );
       await m.reply(mediaInfoCaption({ header: "Video ke Audio", fields: [
           { label: "Input", value: "Video/audio (" + (mediaBuffer.length / 1024).toFixed(1) + " KB)" },
-          { label: "Engine", value: "ffmpeg" },
           { label: "Hasil", value: "Audio MP3 (192 kbps)" },
           { label: "Ukuran", value: (audioBuffer.length / 1024).toFixed(1) + " KB" },
       ] }))

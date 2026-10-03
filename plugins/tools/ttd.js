@@ -202,7 +202,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       { label: "Jenis", value: isImageMode ? "Tanda tangan gambar" : "Tanda tangan teks" },
       { label: "Nama", value: isImageMode ? "" : cleanArgs.slice(0, 40) },
       { label: "Halaman", value: opts.page ? String(opts.page) : "Terakhir" },
-      { label: "Engine", value: "pdf-lib" },
       { label: "Hasil", value: "Dokumen PDF" },
       { label: "Ukuran", value: (resultBuffer.length / 1024).toFixed(1) + " KB" },
     ] }));

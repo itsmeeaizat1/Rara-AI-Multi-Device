@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Quote WhatsApp", fields: [
             { label: "Input", value: (textToQuote || "Media").slice(0, 60) + (textToQuote && textToQuote.length > 60 ? "..." : "") },
             { label: "Pengirim", value: String(mainMsg.pushName || "User") },
-            { label: "Engine", value: "QWA API" },
+
             { label: "Hasil", value: "Gambar" },
             { label: "Ukuran", value: (Buffer.from(res.data).length / 1024).toFixed(1) + " KB" },
         ] }))

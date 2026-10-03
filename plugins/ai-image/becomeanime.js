@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
       }, { quoted: m });
       await m.reply(mediaInfoCaption({ header: "Rara Jadi Anime", fields: [
         { label: "Input", value: "Foto" },
-        { label: "Engine", value: "Gemini Flash (IkyyXD)" },
+
         { label: "Hasil", value: "Gambar Anime" },
       ] }));
     } else {

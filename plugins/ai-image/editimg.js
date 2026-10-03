@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Rara Edit Image", fields: [
           { label: "Input", value: "Foto" },
           { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
-          { label: "Engine", value: usedApi || "AI Img2Img" },
+
           { label: "Hasil", value: "Gambar" },
         ] }));
       } catch {

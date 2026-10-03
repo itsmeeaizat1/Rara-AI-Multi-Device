@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
     await m.reply(mediaInfoCaption({ header: "Rara SoLogo AI", fields: [
       { label: "Input", value: "Teks" },
       { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
-      { label: "Engine", value: "AI Logo Generator" },
+
       { label: "Hasil", value: "Gambar Logo" },
     ] }));
   } catch (error) {

@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
       await m.reply(mediaInfoCaption({ header: "Rara Flux 2 Pro", fields: [
         { label: "Input", value: "Teks / Foto" },
         { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
-        { label: "Engine", value: "Flux 2 Pro (IkyyXD)" },
+
         { label: "Hasil", value: "Gambar" },
       ] }));
     } else if (data?.status && data?.result) {

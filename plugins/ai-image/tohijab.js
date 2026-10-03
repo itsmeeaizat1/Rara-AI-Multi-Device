@@ -95,7 +95,6 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Rara To Hijab", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Hijab" },
-            { icon: "⚙️", label: "Engine", value: "FAA AI API" },
             { icon: "⬇️", label: "Hasil", value: "Gambar" },
         ] }))
         

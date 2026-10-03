@@ -94,7 +94,6 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Rara Emote Batu", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Emote Batu" },
-            { icon: "⚙️", label: "Engine", value: "FAA AI API" },
             { icon: "⬇️", label: "Hasil", value: "Gambar" },
         ] }))
         

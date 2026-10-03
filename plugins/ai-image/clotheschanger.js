@@ -390,7 +390,7 @@ async function runFeature(m, sock, personBuf, editPrompt, meta, hdMode, cmd) {
   await m.reply(mediaInfoCaption({ header: "Rara Clothes Changer", fields: [
     { label: "Input", value: "Foto" },
     { label: "Instruksi", value: editPrompt ? (editPrompt.length > 60 ? editPrompt.slice(0, 57) + "..." : editPrompt) : null },
-    { label: "Engine", value: usedApi || "AI Vision" },
+
     { label: "Hasil", value: "Gambar" },
   ] }));
 }

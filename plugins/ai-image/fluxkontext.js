@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
       await m.reply(mediaInfoCaption({ header: "Rara Flux Kontext", fields: [
         { label: "Input", value: "Teks / Foto" },
         { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
-        { label: "Engine", value: "Flux Kontext (IkyyXD)" },
+
         { label: "Hasil", value: "Gambar" },
       ] }));
     } else {
