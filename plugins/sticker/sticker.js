@@ -135,6 +135,8 @@ async function handler(m, { sock, config: botConfig }) {
     try {
     await m.react("🕒");
         let buffer
+        let videoDur = null // FIX 3 Okt: dulu `let` di dalam if(isVideo) tapi dipakai di caption (luar blok) -> ReferenceError tiap .s
+        let inputBytes = 0
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download()
         } else if (m.isMedia) {
@@ -155,7 +157,6 @@ async function handler(m, { sock, config: botConfig }) {
             const tempVideo = path.join(tempDir, `duration_check_${Date.now()}.mp4`)
             fs.writeFileSync(tempVideo, buffer)
             
-            let videoDur = null
             try {
                 const { stdout } = await execAsync(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${tempVideo}"`)
                 const duration = parseFloat(stdout.trim())
@@ -171,6 +172,7 @@ async function handler(m, { sock, config: botConfig }) {
             if (fs.existsSync(tempVideo)) fs.unlinkSync(tempVideo)
         }
         
+        inputBytes = buffer.length
         const packname = options.packname || botConfig.sticker?.packname || botConfig.bot?.name || 'Rara-AI'
         const author = options.author || botConfig.sticker?.author || botConfig.owner?.name || 'Bot'
         
@@ -214,13 +216,17 @@ async function handler(m, { sock, config: botConfig }) {
             options.rounded && "rounded",
             options.resize && `resize ${options.resize}`,
         ].filter(Boolean).join(", ")
-        await m.reply(mediaInfoCaption({ header: "Rara Sticker", fields: [
-            { icon: "📥", label: "Input", value: isVideo ? "Video" : "Foto" },
-            { icon: "⏱️", label: "Durasi", value: videoDur ? `${videoDur.toFixed(1)} detik` : null },
-            { icon: "🎨", label: "Filter", value: filters || null },
-            { icon: "👤", label: "Pack", value: `${packname} • ${author}` },
-            { icon: "📦", label: "Ukuran", value: fmtBytes(buffer.length) },
-            { icon: "⬇️", label: "Hasil", value: isVideo ? "Stiker Animasi WebP" : "Stiker WebP" },
+        // JUJUR: ukuran WebP FINAL dibuat di dalam sock.sendImageAsSticker/sendVideoAsSticker dan tidak dikembalikan,
+        // jadi yang dilaporkan = ukuran media SUMBER (sesudah filter crop/circle/resize kalau dipakai), bukan file .webp akhir.
+        await m.reply(mediaInfoCaption({ header: "Sticker", fields: [
+            { label: "Format", value: isVideo ? "WEBP animasi" : "WEBP" },
+            { label: "Sumber", value: isVideo ? "Video" : "Foto" },
+            { label: "Ukuran sumber", value: fmtBytes(inputBytes) },
+            { label: "Ukuran diproses", value: hasProcessing ? fmtBytes(buffer.length) : null },
+            { label: "Durasi", value: videoDur ? `${videoDur.toFixed(1)} detik` : null },
+            { label: "Filter", value: filters || null },
+            { label: "Pack", value: packname },
+            { label: "Author", value: author },
         ] }))
     } catch (error) {
         console.error('[sticker.js]', error.message || error)

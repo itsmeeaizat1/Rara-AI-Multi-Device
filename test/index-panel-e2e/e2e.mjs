@@ -112,7 +112,7 @@ t("5i .index optimize manual", optCard.toLowerCase().includes("optimasi") && opt
 
 // salah subcommand
 const salah = await run(["ngasal"]);
-t("5j sub asal → kartu salah", salah.includes("yah kak") && sc(salah).includes("index"), salah.slice(0, 80));
+t("5j sub asal → kartu salah (desain lama: ❗ Cara pemakaian salah, tanpa kaomoji/yah kak)", salah.includes("Cara pemakaian salah") && !salah.includes("yah kak") && sc(salah).includes("index"), salah.slice(0, 100));
 
 // pinglog & jam runtime control
 const fakeSockCtl = { generateMessageTag: () => "T", query: async () => "ok", ev: { on: () => {}, off: () => {} } };
@@ -182,7 +182,7 @@ t("9g .index watchdog off → berhenti", conn9.getWatchdogStatus().active === fa
 await run(["watchdog", "on"]);
 t("9h .index watchdog on → aktif lagi", conn9.getWatchdogStatus().active === true);
 const wdWrong = await run(["watchdog", "ngasal"]);
-t("9i sub watchdog asal → kartu salah", wdWrong.includes("yah kak"));
+t("9i sub watchdog asal → kartu salah (desain lama)", wdWrong.includes("Cara pemakaian salah") && !wdWrong.includes("yah kak"), wdWrong.slice(0, 100));
 conn9.stopWatchdog();
 t("9j cleanup: watchdog dimatiin lagi", conn9.getWatchdogStatus().active === false);
 

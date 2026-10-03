@@ -610,7 +610,9 @@ async function extendSocket(sock) {
       };
     delete payload.type;
     delete payload.mediaType;
-    return sock.sendMessage(jid, payload, { quoted });
+    // `this` (bukan closure `sock`): kalau sock dibungkus (kartu info media handler.js), sendMedia ikut melewati pembungkus.
+    // Untuk sock asli `this === sock`, jadi perilaku lama identik.
+    return (this && typeof this.sendMessage === "function" ? this : sock).sendMessage(jid, payload, { quoted });
   };
 
   sock.sendButton = async function (

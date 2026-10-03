@@ -1009,69 +1009,82 @@ function v2SpecCompact(commandName) {
 }
 
 function v2InfoBlock(commandName, manualSpec = []) {
+  // REVISI OWNER 3 Okt 2026: "desain lebih lengkap, field lebih lengkap dan tertata" — info registry
+  // dikelompokkan 3 judul (Info Fitur / Akses / Batas Pakai), label rata, bullet •. Field HANYA tampil
+  // kalau datanya ada di pluginConfig (fakta nyata, bukan karangan).
   try {
     const key = String(commandName || "").toLowerCase().replace(/\s+/g, "");
     const pl = getPlugin(key) || getPlugin(String(commandName || "").toLowerCase());
     const specArr = Array.isArray(manualSpec) ? manualSpec : [];
     if (!pl) {
-      // tanpa registry: spec manual caller tetap tampil (baris apa adanya)
-      const ms = specArr.map(String).map((s) => s.trim()).filter(Boolean);
+      const ms = specArr.map(String).map((x) => x.trim()).filter(Boolean);
       return ms.length ? ms.join(" • ") : null;
     }
     const cfg = pl.config || pl || {};
-    const rows = [];
     const has = {};
-    const row = (label, value) => {
+    const mk = () => [];
+    const fitur = mk(), akses = mk(), batas = mk();
+    const put = (arr, label, value) => {
       const v = value === null || value === undefined ? "" : String(value).trim();
-      if (!v) return;
-      rows.push(`${String(label).padEnd(INFO_LABEL_WIDTH)}: ${v}`);
+      if (v) arr.push([label, v]);
     };
     const cat = String(cfg.category || "").trim().toLowerCase();
-    if (cat && cat !== "main") { row("kategori", cat); }
-    if (cfg.isOwner === true) row("akses", "owner");
-    else if (cfg.isPremium === true) row("akses", "premium");
-    else { row("akses", "semua user · gratis"); has.gratis = true; }
-    if (cfg.isGroup === true && cfg.isPrivate !== true) row("tempat", "grup");
-    else if (cfg.isPrivate === true && cfg.isGroup !== true) row("tempat", "dm");
-    else row("tempat", "dm & grup");
-    const energi = Number(cfg.energi);
-    if (energi > 0) { row("energi", String(energi)); has.energi = true; }
-    const cd = Number(cfg.cooldown);
-    if (cd > 0) { row("cooldown", `${cd} dtk`); has.cd = true; }
-    // limit default registry = 1 (semua plugin) → cuma tampil kalau
-    // pluginnya eksplisit set nilai beda (bukan noise tiap kartu)
-    const lim = Number(cfg.limit);
-    if (lim > 0 && lim !== 1) row("limit", String(lim));
+    if (cat && cat !== "main") put(fitur, "kategori", cat);
+    const aliases = (Array.isArray(cfg.alias) ? cfg.alias : Array.isArray(cfg.aliases) ? cfg.aliases : [])
+      .map(String).map((x) => x.trim().toLowerCase()).filter(Boolean)
+      .filter((x) => x !== String(cfg.name || key).toLowerCase());
+    if (aliases.length) put(fitur, "alias", aliases.map((x) => `.${x}`).join(" · "));
+    put(fitur, "status", cfg.isEnabled === false ? "nonaktif" : "aktif");
+    // akses
+    if (cfg.isOwner === true) put(akses, "pengguna", "owner");
+    else if (cfg.isPremium === true) put(akses, "pengguna", "premium");
+    else put(akses, "pengguna", "semua user");
+    put(akses, "biaya", cfg.isOwner === true || cfg.isPremium === true ? "khusus" : "gratis");
+    if (!(cfg.isOwner === true || cfg.isPremium === true)) has.gratis = true;
+    if (cfg.isGroup === true && cfg.isPrivate !== true) put(akses, "tempat", "grup");
+    else if (cfg.isPrivate === true && cfg.isGroup !== true) put(akses, "tempat", "dm");
+    else put(akses, "tempat", "dm & grup");
     const reqs = [];
     if (cfg.isAdmin === true) reqs.push("admin grup");
     if (cfg.isBotAdmin === true) reqs.push("bot admin");
-    if (reqs.length) row("syarat", reqs.join(" + "));
-    const aliases = (Array.isArray(cfg.alias) ? cfg.alias : Array.isArray(cfg.aliases) ? cfg.aliases : [])
-      .map(String).map((s) => s.trim().toLowerCase()).filter(Boolean)
-      .filter((a) => a !== String(cfg.name || key).toLowerCase());
-    if (aliases.length) row("alias", aliases.map((a) => `.${a}`).join(" · "));
-    // spec manual caller (param spec raraGuideV2) — merge TANPA dobel fakta
-    // yang udah otomatis dari config (energi/cooldown/gratis), sisanya jadi
-    // baris "info" rapi (mis. "⚡ layanan lokal 9router").
+    if (reqs.length) put(akses, "syarat", reqs.join(" + "));
+    // batas pakai
+    const energi = Number(cfg.energi);
+    if (energi > 0) { put(batas, "energi", energi); has.energi = true; }
+    const cd = Number(cfg.cooldown);
+    if (cd > 0) { put(batas, "cooldown", `${cd} dtk`); has.cd = true; }
+    const lim = Number(cfg.limit);
+    if (lim > 0 && lim !== 1) put(batas, "limit", lim);
+    // spec manual caller (merge tanpa dobel fakta otomatis)
+    const extraInfo = [];
     for (const raw of specArr) {
-      const s = String(raw).replace(/^[⚡⏱💸✨📋]\s*/u, "").trim();
-      if (!s) continue;
-      if (/^energi\b/i.test(s)) {
-        if (!has.energi) { row("energi", s.replace(/^energi\s*/i, "")); has.energi = true; }
-        continue;
-      }
-      if (/^cooldown\b/i.test(s) || /^\d+\s*dtk/i.test(s)) {
-        if (!has.cd) { row("cooldown", s.replace(/^cooldown\s*/i, "")); has.cd = true; }
-        continue;
-      }
-      if (/^gratis$/i.test(s)) {
-        if (!has.gratis) { row("akses", "semua user · gratis"); has.gratis = true; }
-        continue;
-      }
-      row("info", s);
+      const t = String(raw).replace(/^[⚡⏱💸✨📋]\s*/u, "").trim();
+      if (!t) continue;
+      if (/^energi\b/i.test(t)) { if (!has.energi) { put(batas, "energi", t.replace(/^energi\s*/i, "")); has.energi = true; } continue; }
+      if (/^cooldown\b/i.test(t) || /^\d+\s*dtk/i.test(t)) { if (!has.cd) { put(batas, "cooldown", t.replace(/^cooldown\s*/i, "")); has.cd = true; } continue; }
+      if (/^gratis$/i.test(t)) continue;
+      extraInfo.push(t);
     }
-    return rows.length ? rows.join("\n") : null;
+    if (extraInfo.length) put(fitur, "info", extraInfo.join(" · "));
+    const group = (title, arr) => {
+      if (!arr.length) return "";
+      const w = Math.max(...arr.map(([l]) => l.length));
+      return `「 ✦ ${toSC(title)} ✦ 」\n` + arr.map(([l, v]) => `• ${(l[0].toUpperCase() + l.slice(1)).padEnd(w)} : ${v}`).join("\n");
+    };
+    const blocks = [group("Info Fitur", fitur), group("Akses", akses), group("Batas Pakai", batas)].filter(Boolean);
+    return blocks.length ? blocks.join("\n\n") : null;
   } catch { return null; }
+}
+// Deskripsi fitur dari pluginConfig registry (ada di ~1.470 plugin) — 1 kalimat di bawah judul kartu.
+function v2Description(commandName) {
+  try {
+    const key = String(commandName || "").toLowerCase().replace(/\s+/g, "");
+    const pl = getPlugin(key) || getPlugin(String(commandName || "").toLowerCase());
+    if (!pl) return "";
+    const cfg = pl.config || pl || {};
+    const d = String(cfg.description || cfg.desc || "").trim();
+    return d.length >= 8 ? d : "";
+  } catch { return ""; }
 }
 const V2_GAME_CATS = new Set(["game", "rpg", "rpgcinta", "rpg-cinta", "rpg-couple"]);
 function isGameCmd(commandName) {
@@ -1082,13 +1095,15 @@ function isGameCmd(commandName) {
 }
 // render klasik 「 ✦ 」 — fallback game + kompat
 function raraGuideClassic(commandName, intro, example, note) {
+  // GUARD LEBAR (1 Okt, dijaga lagi 3 Okt): intro & note = prosa -> scWrap (<=30 char/baris, standar allmenu).
+  // example = command VERBATIM -> TIDAK dipotong (harus bisa di-copas utuh).
   let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-  if (intro && String(intro).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scLine(intro)}\n`;
+  if (intro && String(intro).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scWrap(intro)}\n`;
   if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
   if (note) {
     const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
-    out += `\n📍 ${scLine(nl[0])}\n`;
-    if (nl.length > 1) out += nl.slice(1).map((l) => scLine(l)).join("\n") + "\n";
+    out += `\n📍 ${scWrap(nl[0], BOX_WRAP_WIDTH - 2)}\n`; // "📍 " = 2 karakter, ikut jatah lebar
+    if (nl.length > 1) out += nl.slice(1).map((l) => scWrap(l)).join("\n") + "\n";
   }
   return out.replace(/\n+$/, "");
 }
@@ -1120,6 +1135,13 @@ function raraGuide(commandName, a = {}, b = null, c = null) {
   // tetap ditempel di bawah supaya field tetap lengkap.
   let out = raraGuideClassic(commandName, intro, example, note);
   if (!isGameCmd(commandName)) {
+    const desc = v2Description(commandName);
+    if (desc) {
+      const nl = out.indexOf("\n");
+      const head = nl === -1 ? out : out.slice(0, nl);
+      const rest = nl === -1 ? "" : out.slice(nl + 1);
+      out = `${head}\n${scWrap(desc)}${rest ? `\n\n${rest}` : ""}`;
+    }
     const info = v2InfoBlock(commandName);
     if (info) out += `\n\n${info}`;
   }
@@ -1196,14 +1218,14 @@ export function raraDlUsage(brand, { prefix = ".", command, cara = null, contoh 
 // SINGKAT 3 baris — beda total dari kartu usage raraGuideV2 (aturan owner
 // 10 Sep: salah pemakaian singkat, usage detail).
 export function raraSalahV2(commandName, opts = {}) {
-  const {
-    kaomoji = "(>_<)",
-    pesan = "kakak ketik cmd yang salah, ulangi ketik yang bener ya~",
-    contoh = "",
-  } = opts;
-  let out = `${kaomoji} ${toSC("yah kak")}...\n`;
-  out += `${scLine(pesan)}\n`;
-  if (contoh) out += `➤ ${contoh}\n`;
+  // REVISI OWNER 3 Okt 2026: balik desain lama — ❗ Cara pemakaian salah + pesan + contoh (tanpa kaomoji / "yah kak").
+  // Opsi `kaomoji` tetap diterima (kompat 30 pemanggil) tapi diabaikan. `pesan` & `contoh` dari pemanggil dipakai apa adanya.
+  const { pesan = "", contoh = "" } = opts;
+  let out = `❗ ${toSC("Cara pemakaian salah")}`;
+  if (pesan && String(pesan).trim()) out += ` — ${scLine(pesan)}`;
+  out += "\n";
+  if (contoh) out += `${toSC("Contoh")}: ${contoh}\n`;
+  else if (commandName) out += `${scLine(`Ketik .${String(commandName).toLowerCase()} buat lihat cara pemakaian`)}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -1218,13 +1240,15 @@ function renderGuideV2Body(commandName, opts = {}) {
     modelAktif = null, models = [], spec = [], extra = [],
   } = opts;
   let out = `「 ✦ ${toSC(String(commandName).toUpperCase())} ✦ 」\n`;
+  const descV2 = isGameCmd(commandName) ? "" : v2Description(commandName);
+  if (descV2) out += `${scWrap(descV2)}\n\n`;
   if (sapaan && String(sapaan).trim() && !(cara && String(cara).trim())) out += `${scWrap(sapaan)}\n`;
   if (cara && String(cara).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scWrap(cara)}\n`;
   if (contoh) out += `\n💡 ${toSC("Contoh")}:\n${contoh}\n`;
   if (note) {
     const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
     if (nl.length) {
-      out += `\n📍 ${scWrap(nl[0])}\n`;
+      out += `\n📍 ${scWrap(nl[0], BOX_WRAP_WIDTH - 2)}\n`; // "📍 " = 2 karakter, ikut jatah lebar
       if (nl.length > 1) out += nl.slice(1).map((l) => scWrap(l)).join("\n") + "\n";
     }
   }

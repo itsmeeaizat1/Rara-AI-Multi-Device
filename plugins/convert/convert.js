@@ -7,6 +7,7 @@ import axios from "axios";
 import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
 import { raraBox, raraError, raraGuide, raraSalah, raraWrap, raraBerhasil, raraGagal, raraGangguan, toSC, scLine } from "../../src/lib/rara-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { mediaInfoCaption, fmtBytes } from "../../src/lib/rara-media-info.js";
 import {
   AUDIO_FORMATS,
   VIDEO_FORMATS,
@@ -248,17 +249,32 @@ async function handler(m, { sock }) {
       }, { quoted: m });
     }
 
-    await m.reply(
-      raraBox("Convert", [
-        `✅ Berhasil convert ke ${format.toUpperCase()}`,
-        `Format: ${fmt.desc}`,
-        `Size: ${sizeMB} MB`,
-        "",
-        "Mau format lain? Ketik",
-        ".convert <format> — session",
-        "masih aktif.",
-      ])
-    );
+    // FIELD KHAS CONVERT (3 Okt, owner: tiap fitur punya field sendiri) — hanya data NYATA dari proses ini.
+    const JENIS = { audio: "audio", video: "video", image: "gambar" };
+    const outKind = isAudio ? "audio" : isImage ? "image" : "video";
+    const selisih = inSize > 0 && buf.length > 0 ? Math.round(((buf.length - inSize) / inSize) * 100) : null;
+    await m.reply(mediaInfoCaption({ header: "Convert", groups: [
+      { title: "Konversi", fields: [
+        { label: "Jenis", value: JENIS[outKind] },
+        { label: "Ke", value: (() => {
+          // desc lazim "WAV (uncompressed)" -> nama format sudah di depan; ambil keterangan dalam kurung saja biar tak dobel
+          const ket = String(fmt.desc || "").replace(new RegExp(`^${format}\\s*`, "i"), "").replace(/^\(|\)$/g, "").trim();
+          return ket ? `${format.toUpperCase()} (${ket})` : format.toUpperCase();
+        })() },
+        { label: "Codec", value: fmt.codec && fmt.codec !== "copy" ? fmt.codec : null },
+        { label: "Mime", value: fmt.mime || IMAGE_MIME[format] || null },
+      ] },
+      { title: "Ukuran", fields: [
+        { label: "Sebelum", value: fmtBytes(inSize) },
+        { label: "Sesudah", value: fmtBytes(buf.length) },
+        { label: "Selisih", value: selisih === null ? null : `${selisih > 0 ? "+" : ""}${selisih}%` },
+      ] },
+      { title: "Asal", fields: [
+        { label: "Dari", value: session.platform },
+        { label: "Judul", value: session.title && session.title !== session.platform ? String(session.title).slice(0, 60) : null },
+      ] },
+    ] }));
+    await m.reply(`Mau format lain? Ketik .convert <format>, session masih aktif.`);
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
