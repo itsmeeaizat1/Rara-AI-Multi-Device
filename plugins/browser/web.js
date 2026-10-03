@@ -568,7 +568,7 @@ async function setWebSendMode(mode) {
 }
 
 async function sendWebLinkText(reply, url, title, modeNote) {
-  return m.reply(
+  return reply(
     (title ? `*${title}*\n\n` : "") +
       (modeNote
         ? "Ketuk link di bawah — dibuka di browser, chat gak bakal kegeser:\n\n"

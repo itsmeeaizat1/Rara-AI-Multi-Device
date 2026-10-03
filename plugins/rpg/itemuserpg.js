@@ -8,9 +8,9 @@ const pluginConfig = {
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 const ITEM_EFFECTS = {
-  ramuan: rpg => { regenHP(m, 50); return "HP +50"; },
-  elixir: rpg => { regenHP(m, 100); regenMana(m, 50); return "HP +100, Mana +50"; },
-  potion: rpg => { regenHP(m, 30); return "HP +30"; },
+  ramuan: (rpg, m) => { regenHP(m, 50); return "HP +50"; },
+  elixir: (rpg, m) => { regenHP(m, 100); regenMana(m, 50); return "HP +100, Mana +50"; },
+  potion: (rpg, m) => { regenHP(m, 30); return "HP +30"; },
 };
 async function handler(m, { sock }) {
   try {
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     if (getItemCount(m, text) <= 0) return m.reply(raraRpgBox("itemuserpg", `Item *${text}* tidak ditemukan di inventory.`, "error"));
     if (!ITEM_EFFECTS[text]) return m.reply(raraRpgBox("itemuserpg", `Item *${text}* tidak bisa digunakan.`, "error"));
     removeItem(m, text, 1, sock);
-    const effect = ITEM_EFFECTS[text](rpg);
+    const effect = ITEM_EFFECTS[text](rpg, m);
     saveRpg(m, rpg);
     await m.react("🐣");
   await animGeneric(m, sock, "🎒", "Using Item");
