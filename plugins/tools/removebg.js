@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/rara-error.js'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
     name: 'removebg',
     alias: ["removebg"],
@@ -48,6 +49,12 @@ async function handler(m, { sock }) {
             image: result,
             caption: `✅ *background dihapus*\n\nBackground gambar berhasil dihapus`
         }, { quoted: m });
+        await m.reply(mediaInfoCaption({ header: "Remove Background", fields: [
+            { label: "Input", value: "Foto" },
+            { label: "Engine", value: "Pixa (removebackground)" },
+            { label: "Hasil", value: "Gambar tanpa latar" },
+            { label: "Ukuran", value: (Buffer.from(result).length / 1024).toFixed(1) + " KB" },
+        ] }));
         try {
             fs.unlinkSync(pathnya);
         } catch (e) { console.error('[removebg.js]:', e.message); }

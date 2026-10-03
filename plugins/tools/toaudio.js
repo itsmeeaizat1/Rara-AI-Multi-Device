@@ -3,6 +3,7 @@ import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
     name: 'toaudio',
     alias: ["toaudio"],
@@ -109,6 +110,12 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, audioBuffer, null, m, {
             type: 'audio'
         })
+        await m.reply(mediaInfoCaption({ header: "Ke Audio", fields: [
+            { label: "Input", value: isVideo ? "Video" : "Audio" },
+            { label: "Engine", value: "ffmpeg" },
+            { label: "Hasil", value: "Audio MP3 (192 kbps)" },
+            { label: "Ukuran", value: (audioBuffer.length / 1024).toFixed(1) + " KB" },
+        ] }))
 
     } catch (error) {
         await m.reply(

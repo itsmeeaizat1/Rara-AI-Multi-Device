@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
     name: 'toimg',
     alias: ["toimg"],
@@ -79,6 +80,12 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, buffer, null, m, {
             type: 'image'
         })
+        await m.reply(mediaInfoCaption({ header: "Sticker ke Gambar", fields: [
+            { label: "Input", value: "Sticker" },
+            { label: "Engine", value: "Konversi lokal" },
+            { label: "Hasil", value: "Gambar" },
+            { label: "Ukuran", value: (buffer.length / 1024).toFixed(1) + " KB" },
+        ] }))
 
     } catch (error) {
     await m.react("❌");
