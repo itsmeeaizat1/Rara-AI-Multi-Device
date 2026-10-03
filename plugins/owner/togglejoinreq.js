@@ -35,7 +35,7 @@ function isEnabled(key) {
 function setEnabled(key, val) {
   try {
     const db = getDatabase();
-    db.setSetting(key, val);
+    db.setting(key, val);
     db.save();
   } catch (e) {
     console.error("togglejoinreq setEnabled error:", e.message);

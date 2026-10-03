@@ -58,7 +58,7 @@ async function handler(m, { args, sock, isOwner }) {
     config.emailOtp.enabled = false;
     config.emailOtp.user = "";
     config.emailOtp.pass = "";
-    db.setSetting("emailOtp", { enabled: false });
+    db.setting("emailOtp", { enabled: false });
     return await m.reply(raraWrap("Setemail", "✅ Email SMTP dimatikan."));
   }
 
@@ -110,7 +110,7 @@ async function handler(m, { args, sock, isOwner }) {
   config.emailOtp.pass = password;
   config.emailOtp.enabled = true;
 
-  db.setSetting("emailOtp", {
+  db.setting("emailOtp", {
     enabled: true,
     user: email,
     pass: password,
