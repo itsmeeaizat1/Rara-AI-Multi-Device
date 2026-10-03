@@ -3,6 +3,7 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
   name: "android1-get",
   alias: ["android1-get", "android1"],
@@ -56,6 +57,8 @@ async function handler(m, { sock }) {
         },
         { quoted: m },
       );
+      const info = mediaResultCard({ header: "Android1", title: app.name, type: "aplikasi", ext: "apk", ...(await probeMedia(app.url)) });
+      if (info) await m.reply(info);
     } else {
       let caption = `⚠️ Download URL tidak tersedia`;
 

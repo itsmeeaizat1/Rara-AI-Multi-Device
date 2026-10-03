@@ -2,6 +2,7 @@
 import te from "../../src/lib/rara-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "ptvsearch",
@@ -45,6 +46,9 @@ async function handler(m, { sock }) {
       mimetype: "video/mp4",
       ptv: true,
     });
+    const vurl = randomVideo.download || randomVideo.link;
+    const info = mediaResultCard({ header: "PTV Search", title: randomVideo.title, type: "video", ext: "mp4", ...(await probeMedia(vurl)) });
+    if (info) await m.reply(info);
   } catch (error) {
     m.reply(raraWrap("ptvsearch", te(m.prefix, m.command, m.pushName), "error"));
   }

@@ -64,3 +64,28 @@ export function mediaInfoCaption({ header = "Rara", fields = [], groups = null }
   const body = blocks.filter(Boolean);
   return body.length ? `${head}\n\n${body.join("\n\n")}` : head;
 }
+
+/**
+ * Kartu info gambar hasil fitur pencarian/acak: Jenis, Format, Ukuran, Dimensi (+ field tambahan).
+ * Request owner 3 Okt 2026: info field = info tentang hasil fitur, TANPA nama API/mesin.
+ * TAHAN GAGAL: buffer bukan gambar / sharp error -> tetap balik kartu dengan Jenis + Ukuran
+ * (fitur utama tidak boleh gagal cuma karena info gagal dibaca).
+ * @param {object} p — { header, buffer, extra?: [{label, value}] }
+ * @returns {Promise<string>}
+ */
+export async function imageInfoCaption({ header = "Gambar", buffer = null, extra = [] } = {}) {
+  let format = "", dim = "";
+  try {
+    const { default: sharp } = await import("sharp");
+    const meta = await sharp(buffer, { failOn: "none" }).metadata();
+    format = meta.format ? String(meta.format).toUpperCase() : "";
+    dim = meta.width && meta.height ? `${meta.width} x ${meta.height}` : "";
+  } catch { /* info opsional */ }
+  return mediaInfoCaption({ header, fields: [
+    { label: "Jenis", value: "Gambar" },
+    { label: "Format", value: format },
+    { label: "Ukuran", value: buffer?.length ? fmtBytes(buffer.length) : "" },
+    { label: "Dimensi", value: dim },
+    ...extra,
+  ] });
+}

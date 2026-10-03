@@ -133,6 +133,23 @@ t("caption: label kosong diabaikan", mediaInfoCaption({ header: "X", fields: [{ 
   t("teks hasil: tidak ada baris 'Engine: <nama mesin>' di caption", c.length === 0, c.slice(0, 4).join(" | "));
 }
 
+// ── kategori search: kartu info hasil (3 Okt 2026) ──
+{
+  const { imageInfoCaption } = await import("../../src/lib/rara-media-info.js");
+  const sharp = (await import("sharp")).default;
+  const png = await sharp({ create: { width: 300, height: 200, channels: 4, background: "#fff" } }).png().toBuffer();
+  const c = await imageInfoCaption({ header: "Cecan", buffer: png });
+  t("imageInfoCaption: Jenis+Format+Ukuran+Dimensi dari gambar nyata", /Jenis\s+: Gambar/.test(c) && /Format\s+: PNG/.test(c) && /Dimensi\s+: 300 x 200/.test(c) && /Ukuran/.test(c), c);
+  const rusak = await imageInfoCaption({ header: "Cecan", buffer: Buffer.from("bukan gambar") });
+  t("imageInfoCaption: buffer rusak TIDAK melempar, tetap ada Jenis", /Jenis\s+: Gambar/.test(rusak) && !/Dimensi/.test(rusak), rusak);
+  const kosong = await imageInfoCaption({ header: "Cecan", buffer: null });
+  t("imageInfoCaption: buffer null TIDAK melempar", /CECAN/.test(kosong), kosong);
+  for (const f of ["loli", "prettygirl", "pins"]) t(`search/${f}: memakai kartu info (bukan 'Status: berhasil' / 'Sumber: api')`,
+    /imageInfoCaption|mediaInfoCaption/.test(rd(`plugins/search/${f}.js`)) && !/Sumber: \*api\*/.test(rd(`plugins/search/${f}.js`)));
+  for (const f of ["android1-get", "apkmod-get", "nerdfont-ambil", "ptvsearch", "playaudio"]) t(`search/${f}: memakai mediaResultCard`, /mediaResultCard\(/.test(rd(`plugins/search/${f}.js`)));
+  t("pins: tidak ada 'config.' tanpa impor (bug fallback album crash)", !/\bconfig\.saluran/.test(rd("plugins/search/pins.js")));
+}
+
 // ── smoke import ──
 const all = ["plugins/sticker/sticker.js", "plugins/convert/convert.js", "plugins/convert/togif.js", "plugins/convert/vocalremover.js", "plugins/tools/converter.js", "plugins/download/aio.js",
   ...["to3d","toanime","toblack","tocartoon","tocermin","tochibi","toemotebatu","tofigurev2","tofigurine","toghibli","tohijab","toisland","tojapanese","tomanga","tomekah","tooilpainting"].map((n) => `plugins/ai-image/${n}.js`)];
