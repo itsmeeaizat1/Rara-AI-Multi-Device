@@ -46,8 +46,8 @@ URL: *${current.url || "(kosong)"}*
       return;
     }
     setMenuImageMode("asset", "", assetKey);
-    db.setSetting("menuImageMode", "asset");
-    db.setSetting("menuImageAsset", assetKey);
+    db.setting("menuImageMode", "asset");
+    db.setting("menuImageAsset", assetKey);
     await db.save();
     await m.reply(
       `✅ Berhasil set menu image!\nMode: *asset*\nAsset: *${assetKey}*\nPath: \`${config.assets[assetKey]}\``
@@ -68,8 +68,8 @@ URL: *${current.url || "(kosong)"}*
     try {
       const img = await getMenuImage("rara");
       setMenuImageMode("url", url, "");
-      db.setSetting("menuImageMode", "url");
-      db.setSetting("menuImageUrl", url);
+      db.setting("menuImageMode", "url");
+      db.setting("menuImageUrl", url);
       await db.save();
       await m.reply(
         `✅ Berhasil set menu image!\nMode: *url*\nURL: ${url}\nGambar akan di-cache otomatis`
