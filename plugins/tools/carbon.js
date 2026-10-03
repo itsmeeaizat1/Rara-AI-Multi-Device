@@ -2,6 +2,7 @@
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import mql from "@microlink/mql"
 import te from "../../src/lib/rara-error.js"
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
     name: "carbon",
@@ -112,6 +113,15 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, imageUrl, null, m, {
             type: "image"
         })
+        await m.reply(mediaInfoCaption({ header: "Carbon", fields: [
+            { label: "Input", value: "Kode (" + text.length + " karakter)" },
+            { label: "Tema", value: config.theme },
+            { label: "Font", value: config.font + " " + config.fontSize },
+            { label: "Bahasa", value: config.language },
+            { label: "Resolusi", value: config.width + " x " + config.height },
+            { label: "Engine", value: "Carbon via Microlink" },
+            { label: "Hasil", value: "Gambar" },
+        ] }))
 
     } catch (err) {
     await m.react("❌");

@@ -4,6 +4,7 @@ import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 const pluginConfig = {
@@ -55,6 +56,12 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
+    await m.reply(mediaInfoCaption({ header: "Emoji To Animasi", fields: [
+      { label: "Input", value: "Emoji " + emoji },
+      { label: "Engine", value: "Neoxr Emojito" },
+      { label: "Hasil", value: "Stiker animasi (WebP)" },
+      { label: "Ukuran", value: (webpBuffer.length / 1024).toFixed(1) + " KB" },
+    ] }));
   } catch (error) {
     await m.react("❌");
     m.reply(raraWrap("emojitoanimasi", te(m.prefix, m.command, m.pushName), "error"));

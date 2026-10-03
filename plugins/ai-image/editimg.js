@@ -4,6 +4,7 @@ import { Img2Img } from "../../src/scraper/img2img.js";
 import { live3d } from "../../src/scraper/seaart.js";
 import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "editimg",
@@ -132,6 +133,12 @@ async function handler(m, { sock }) {
         const imgRes = await axios.get(result, { responseType: "arraybuffer", timeout: 30000 });
         const imgBuf = Buffer.from(imgRes.data);
         await sock.sendMedia(m.chat, imgBuf, null, m, { type: "image", caption });
+        await m.reply(mediaInfoCaption({ header: "Rara Edit Image", fields: [
+          { label: "Input", value: "Foto" },
+          { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
+          { label: "Engine", value: usedApi || "AI Img2Img" },
+          { label: "Hasil", value: "Gambar" },
+        ] }));
       } catch {
         // Kalau gagal download, kirim URL
         await m.reply(caption + "\n\n" + result);

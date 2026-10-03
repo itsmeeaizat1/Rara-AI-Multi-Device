@@ -3,6 +3,7 @@
 import { dalleStyle } from "../../src/scraper/stable-diffusion.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "dalleai",
@@ -43,7 +44,14 @@ async function handler(m, { sock }) {
     caption += `⚙️ Engine: *${result.model}*\n`;
     caption += `📐 Size: *1024x1024*\n`;
     
-    return await sock.sendMedia(m.chat, result.buffer, null, m, { type: "image", caption });
+    await sock.sendMedia(m.chat, result.buffer, null, m, { type: "image", caption });
+    await m.reply(mediaInfoCaption({ header: "Rara DALL-E AI", fields: [
+      { label: "Input", value: "Teks" },
+      { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
+      { label: "Engine", value: result.model || 'Pollinations Flux' },
+      { label: "Hasil", value: "Gambar (1024x1024)" },
+    ] }));
+    return;
   } catch (err) {
     console.error("dalleai error:", err);
     await m.react("❌");

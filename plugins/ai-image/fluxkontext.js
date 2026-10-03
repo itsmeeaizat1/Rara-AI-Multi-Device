@@ -3,6 +3,7 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "fluxkontext",
@@ -124,6 +125,12 @@ async function handler(m, { sock }) {
         image: { url: resultUrl },
         caption: raraWrap("FluxKontext", `Prompt: ${text}`),
       }, { quoted: m });
+      await m.reply(mediaInfoCaption({ header: "Rara Flux Kontext", fields: [
+        { label: "Input", value: "Teks / Foto" },
+        { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
+        { label: "Engine", value: "Flux Kontext (IkyyXD)" },
+        { label: "Hasil", value: "Gambar" },
+      ] }));
     } else {
       await m.react("❌");
       await m.reply(raraWrap("FluxKontext", data?.error || data?.message || data?.result?.message || "Gagal memproses. Coba lagi nanti."));

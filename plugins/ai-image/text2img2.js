@@ -2,6 +2,7 @@
 import axios from 'axios'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap, toSC, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -74,6 +75,12 @@ async function handler(m, { sock }) {
     }
 
     await sock.sendMedia(m.chat, response.data, m.fullArgs, m, { type: 'image' })
+        await m.reply(mediaInfoCaption({ header: "Rara Text2Img V2", fields: [
+            { label: "Input", value: "Teks" },
+            { label: "Prompt", value: m.fullArgs ? (m.fullArgs.length > 60 ? m.fullArgs.slice(0, 57) + "..." : m.fullArgs) : "" },
+            { label: "Engine", value: "AI Text2Img" },
+            { label: "Hasil", value: "Gambar" },
+        ] }))
   } catch (e) {
     console.error(e)
     return m.reply(raraWrap("text2img2", te(m.prefix, m.command, m.pushName), "error"))

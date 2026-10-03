@@ -3,6 +3,7 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "jadigta",
@@ -61,6 +62,11 @@ async function handler(m, { sock }) {
         image: { url: resultUrl },
         caption: raraWrap("JadiGTA", "Berhasil mengubah foto ke GTA style"),
       }, { quoted: m });
+      await m.reply(mediaInfoCaption({ header: "Rara Jadi GTA", fields: [
+        { label: "Input", value: "Foto" },
+        { label: "Engine", value: "Gemini Flash (IkyyXD)" },
+        { label: "Hasil", value: "Gambar GTA Style" },
+      ] }));
     } else {
       await m.react("❌");
       await m.reply(raraWrap("JadiGTA", data?.error || data?.message || "Gagal memproses. Coba foto lain."));

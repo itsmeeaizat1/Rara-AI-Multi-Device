@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { live3d } from "../../src/scraper/seaart.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
   name: "rarabanana",
   alias: ["rarabanana", "novabanana"],
@@ -52,6 +53,12 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, resultBuffer, null, m, {
       type: "image",
     });
+    await m.reply(mediaInfoCaption({ header: "Rara Banana AI", fields: [
+      { label: "Input", value: "Foto" },
+      { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
+      { label: "Engine", value: "SeaArt Live3D" },
+      { label: "Hasil", value: "Gambar" },
+    ] }));
   } catch (error) {
     console.log(error);
     await m.react("🐣");

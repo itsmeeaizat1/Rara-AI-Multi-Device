@@ -4,6 +4,7 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "ikyy-text2img",
@@ -51,6 +52,12 @@ async function handler(m, { sock }) {
         image: Buffer.from(res.data),
         caption: raraWrap("Ikyy Text2Img", `Prompt: ${text}`),
       }, { quoted: m });
+      await m.reply(mediaInfoCaption({ header: "Rara Text2Img", fields: [
+        { label: "Input", value: "Teks" },
+        { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
+        { label: "Engine", value: "GPT Image (IkyyXD)" },
+        { label: "Hasil", value: "Gambar" },
+      ] }));
     } else {
       try {
         const errData = JSON.parse(res.data.toString());

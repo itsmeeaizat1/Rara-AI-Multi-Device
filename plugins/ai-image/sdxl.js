@@ -7,6 +7,7 @@ import { stableDiffusion, _setSdHttpForTest } from "../../src/scraper/stable-dif
 import { zelImageEndpoint } from "../../src/scraper/zelapi.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "sdxl",
@@ -51,7 +52,14 @@ async function handler(m, { sock }) {
     caption += `⚙️ Engine: *${via || result.model}*\n`;
     caption += `📐 Size: *1024x1024*\n`;
 
-    return await sock.sendMedia(m.chat, result.buffer, null, m, { type: "image", caption });
+    await sock.sendMedia(m.chat, result.buffer, null, m, { type: "image", caption });
+    await m.reply(mediaInfoCaption({ header: "Rara SDXL", fields: [
+      { label: "Input", value: "Teks" },
+      { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
+      { label: "Engine", value: via || result.model || 'SDXL' },
+      { label: "Hasil", value: "Gambar (1024x1024)" },
+    ] }));
+    return;
   } catch (err) {
     console.error("sdxl error:", err);
     await m.react("❌");

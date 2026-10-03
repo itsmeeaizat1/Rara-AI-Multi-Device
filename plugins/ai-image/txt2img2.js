@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { Txt2Img2 } from "../../src/scraper/txt2img2.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "txt2img2",
@@ -41,6 +42,12 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, result.url, `🎨 *Flux Klein 4B*\n\nPrompt: *${result.prompt}*`, m, {
       type: "image",
     });
+    await m.reply(mediaInfoCaption({ header: "Rara Txt2Img V2", fields: [
+      { label: "Input", value: "Teks" },
+      { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
+      { label: "Engine", value: "Flux Klein 4B" },
+      { label: "Hasil", value: "Gambar" },
+    ] }));
   } catch (e) {
     console.error(e);
     m.reply(raraError("Txt2Img2", "❌ Gagal generate gambar, coba lagi nanti"));
