@@ -222,7 +222,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         // 🕒 TICKER LIVE (13 Sep 2026): sisa premium < 24 jam → countdown hidup
         const sisaMs = premData.expired - Date.now();
         if (!isExpired && sisaMs > 0 && sisaMs < 24 * 3600000) {
-          premTicker = { expired: premData.expired, name: premData.name || m.pushName || nm };
+          premTicker = { expired: premData.expired, name: premData.name || m.pushName };
         }
         premStatus = bracketBox(isExpired ? "❌" : "✅", "Status Premium Kamu", [
           "Nama: *" + (premData.name || m.pushName || "Unknown") + "*",

@@ -140,7 +140,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     await m.reply(raraWrap("Hot Seat - Jawaban", [
       "Q: " + currentQuestion.q,
-      "@" + target.split("@")[0] + ":",
+      "@" + game.target.split("@")[0] + ":",
       text,
       "",
       "Grup vote: " + prefix + "hotseat vote 👍 atau " + prefix + "hotseat vote 👎",
