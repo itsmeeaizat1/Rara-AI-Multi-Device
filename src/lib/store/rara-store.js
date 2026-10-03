@@ -38,7 +38,7 @@ export function premiumRoles() {
 // BELI SATUAN (TOPUP) — 4 JALUR
 // ═══════════════════════════════════════════
 // JALUR AKUN   : limit, koin          → user.energi / user.koin
-// JALUR RPG    : diamond, harta(gold), gems, tokens → user.rpg.<currency>
+// JALUR RPG    : diamond, harta(gold), gems, tokens, cash → user.rpg.<currency>
 // JALUR ITEM   : rpgitem (40 item di ITEM_DB)  → user.rpg.inventory
 // JALUR CINTA  : affection           → user.rpg.cinta.affection
 //
@@ -49,6 +49,7 @@ export function premiumRoles() {
 // harta   : Rp 10.000 per 1.000 gold (harta karun RPG)
 // gems    : Rp 10.000 per 10 gems
 // tokens  : Rp 10.000 per 100 tokens
+// cash    : Rp 10.000 per 100.000 cash (uang RPG: gaji nguli, pet, dst)
 // affection: Rp 10.000 per 100 affection
 export const TOPUP_ITEMS = {
   // ── JALUR AKUN ──
@@ -130,6 +131,19 @@ export const TOPUP_ITEMS = {
     pricePerPack: 10000,
     min: 100,
     max: 5000,
+  },
+  cash: {
+    key: "cash",
+    name: "Uang RPG (Cash)",
+    unit: "cash",
+    icon: "💵",
+    jalur: "rpg",
+    apply: "rpgCurrency:cash",
+    command: "buycash",
+    packSize: 100000,
+    pricePerPack: 10000,
+    min: 100000,
+    max: 10000000,
   },
   // ── JALUR CINTA (rpg cinta) ──
   affection: {

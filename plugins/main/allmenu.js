@@ -140,7 +140,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const platform = process.platform;
     const totalUsers = db.getUserCount();
     const allUsers = db.getAllUsers();
-    const totalRegistered = Object.values(allUsers).filter(u => u.registeredAt || u.isRegistered).length;
+    const totalRegistered = Object.values(allUsers).filter(u => u.isRegistered).length;
     const totalPremium = Object.values(allUsers).filter(u => u.isPremium).length;
     const totalBanned = Object.values(allUsers).filter(u => u.isBanned).length;
     const totalUnregistered = Object.values(allUsers).filter(u => u.unregisteredAt).length;

@@ -91,7 +91,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       if (live > 0) totalGroups = live;
     } catch {}
     const totalPremium = Array.isArray(premium) ? premium.length : 0;
-    const totalRegistered = Object.values(users).filter((u) => u?.name || u?.registered).length;
+    const totalRegistered = Object.values(users).filter((u) => u?.isRegistered).length;
 
     const memUsage = process.memoryUsage();
     const totalMem = os.totalmem();

@@ -374,14 +374,30 @@ class Database {
     if (cleanJid.length > 15 || cleanJid.startsWith("120")) return null;
     const existing = this.db.data.users[cleanJid] || {};
 
-    const existingBalance =
-      existing.balance !== undefined ? existing.balance : 0;
-    if (existing.balance !== undefined) delete existing.balance;
-    const existingLimit =
-      existing.limit !== undefined
-        ? existing.limit
-        : config.energi?.default || 25;
-    if (existing.limit !== undefined) delete existing.limit;
+    // Alias lama -> field resmi. FIX 3 Okt 2026: dulu `limit`/`balance` liar DIBUANG kalau
+    // energi/koin sudah ada (hadiah fisch/minecraft/dashboard menguap). Sekarang DIGABUNG:
+    //   limit   -> energi  (ditambah; -1 = unlimited menang, energi -1 tidak dirusak)
+    //   balance -> koin    (ditambah)
+    const wildBalance = Number(existing.balance);
+    const existingBalance = Number.isFinite(wildBalance) ? wildBalance : 0;
+    const hadBalance = existing.balance !== undefined;
+    if (hadBalance) delete existing.balance;
+    const wildLimit = Number(existing.limit);
+    const hadLimit = existing.limit !== undefined;
+    if (hadLimit) delete existing.limit;
+    const baseEnergi = data.energi ?? existing.energi;
+    let existingLimit;
+    if (!hadLimit || !Number.isFinite(wildLimit)) {
+      existingLimit = config.energi?.default || 25;
+    } else if (wildLimit === -1 || baseEnergi === -1) {
+      existingLimit = -1;
+    } else if (baseEnergi === undefined || baseEnergi === null) {
+      existingLimit = wildLimit; // tidak ada energi -> limit lama jadi energi (perilaku lama)
+    } else {
+      existingLimit = baseEnergi + wildLimit; // energi ada + limit liar -> gabung
+    }
+    const mergedEnergi = hadLimit && Number.isFinite(wildLimit) ? existingLimit : undefined;
+    const mergedKoinBonus = hadBalance ? existingBalance : 0;
 
     this.db.data.users[cleanJid] = {
       ...existing,
@@ -389,12 +405,12 @@ class Database {
       jid: cleanJid,
       name: data.name || existing.name || "Unknown",
       number: cleanJid,
-      energi: data.energi ?? existing.energi ?? existingLimit,
+      energi: mergedEnergi !== undefined ? mergedEnergi : (data.energi ?? existing.energi ?? existingLimit),
       isPremium: data.isPremium ?? existing.isPremium ?? false,
       isBanned: data.isBanned ?? existing.isBanned ?? false,
       exp: data.exp ?? existing.exp ?? 0,
       level: data.level ?? existing.level ?? 1,
-      koin: data.koin ?? existing.koin ?? existingBalance,
+      koin: (data.koin ?? existing.koin ?? 0) === -1 ? -1 : (data.koin ?? existing.koin ?? 0) + mergedKoinBonus,
       saldo: data.saldo ?? existing.saldo ?? 0,
       unlockedFeatures:
         data.unlockedFeatures ?? existing.unlockedFeatures ?? [],
@@ -1069,5 +1085,9 @@ function getDatabase() {
   }
   return dbInstance;
 }
+
+// Pengait untuk config.isPremium (config.js tidak boleh impor file ini: siklus impor). Tidak
+// melempar saat DB belum siap -> isPremium cukup jatuh ke sumber lain.
+globalThis.__raraGetDatabase = () => dbInstance || null;
 
 export { Database, initDatabase, getDatabase };

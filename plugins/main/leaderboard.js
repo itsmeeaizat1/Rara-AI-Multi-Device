@@ -284,19 +284,21 @@ async function showRpgLeaderboard(m, sock, subType) {
     gems:     { title: 'TOP GLOBAL GEMS',      key: 'gems',       label: (u) => `${formatNumber(u.gems)} gems` },
     boss:     { title: 'TOP GLOBAL BOSS KILL', key: 'bossKills',  label: (u) => `${u.bossKills} boss kills` },
     dungeon:  { title: 'TOP GLOBAL DUNGEON',  key: 'dungeonClears', label: (u) => `${u.dungeonClears} dungeon clears` },
-    limit:    { title: 'TOP GLOBAL LIMIT',     key: 'limit',      label: (u) => `${formatNumber(u.limit)} limit` },
+    limit:    { title: 'TOP GLOBAL LIMIT',     key: 'energi',     label: (u) => `${formatNumber(u.energi)} limit` },
   }
 
   const field = FIELDS[subType] || FIELDS['gold']
-  users.sort((a, b) => b[field.key] - a[field.key])
+  // energi -1 = unlimited: hitung sebagai 0 di peringkat biar tidak merusak urutan/total
+  const fv = (u) => (field.key === 'energi' && u.energi === -1 ? 0 : (u[field.key] || 0))
+  users.sort((a, b) => fv(b) - fv(a))
   const top10 = users.slice(0, 10)
-  const totalField = users.reduce((s, u) => s + (u[field.key] || 0), 0)
+  const totalField = users.reduce((s, u) => s + fv(u), 0)
   const mentions = []
 
   let text = ""
   top10.forEach((u, i) => {
     const medal = MEDALS[i] || `${i + 1}.`
-    const pct = totalField > 0 ? ((u[field.key] / totalField) * 100).toFixed(1) : 0
+    const pct = totalField > 0 ? ((fv(u) / totalField) * 100).toFixed(1) : 0
     const isMe = u.jid === senderJid ? " *(You)*" : ""
     const jobName = JOB_DB[u.job]?.name || 'Pemula'
     text += `\n${medal} @${u.jid.split('@')[0]}${isMe}`
@@ -466,7 +468,7 @@ const ALL_FIELDS = [
   { key: 'gems',        group: 'rpg', title: 'top global gems',      label: (u) => `${formatNumber(u.gems)} gems`,            raw: 'Gems' },
   { key: 'bossKills',   group: 'rpg', title: 'top global boss',      label: (u) => `${u.bossKills} boss kills`,              raw: 'Boss' },
   { key: 'dungeonClears', group: 'rpg', title: 'top global dungeon', label: (u) => `${u.dungeonClears} dungeon clears`,      raw: 'Dungeon' },
-  { key: 'limit',       group: 'rpg', title: 'top global limit',     label: (u) => `${formatNumber(u.limit)} limit`,         raw: 'Limit' },
+  { key: 'energi',      group: 'rpg', title: 'top global limit',     label: (u) => `${formatNumber(u.energi)} limit`,         raw: 'Limit' },
 ]
 
 // Section header — pembeda kategori di .leaderboard all (mini game di atas, rpg, couple di bawah)

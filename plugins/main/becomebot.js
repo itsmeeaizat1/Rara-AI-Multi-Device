@@ -4,6 +4,7 @@ import { startJadibot, isJadibotActive } from '../../src/lib/rara-jadibot-manage
 import { getJadibotAccess } from '../owner/setjadibot.js'
 import { getDatabase } from '../../src/lib/rara-database.js'
 import { normalizePhone } from '../../src/lib/config/session-cli.js'
+import { isOwner, isPremium } from '../../config.js'
 
 const pluginConfig = {
     name: 'jadibot',
@@ -21,22 +22,18 @@ const pluginConfig = {
     isEnabled: true
 }
 
+// FIX 3 Okt 2026: dulu baca db.setting('premiumUsers') (tidak pernah diisi .addprem) dan
+// tidak mengecek owner. Sekarang pakai isOwner/isPremium resmi config.js (sumber yang sama
+// dengan m.isOwner/m.isPremium di middleware, termasuk hasil .addprem + masa kedaluwarsa).
 function isPremiumUser(jid) {
-    try {
-        const db = getDatabase()
-        const premiumUsers = db.setting('premiumUsers') || []
-        const num = jid.replace(/[^0-9]/g, '')
-        return premiumUsers.some(p => {
-            const pNum = typeof p === 'string' ? p.replace(/[^0-9]/g, '') : (p.jid || '').replace(/[^0-9]/g, '')
-            return pNum === num
-        })
-    } catch {
-        return false
-    }
+    try { return isOwner(jid) || isPremium(jid) } catch { return false }
 }
 
-function canUseJadibot(sender) {
+export function canUseJadibot(sender) {
     const access = getJadibotAccess()
+
+    // Owner selalu boleh, apa pun modenya
+    try { if (isOwner(sender)) return { allowed: true } } catch {}
     
     if (access.mode === 'all') return { allowed: true }
     

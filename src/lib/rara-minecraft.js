@@ -446,7 +446,8 @@ function applyJackpotReward(db, mcUser, sender, result) {
       const cleanJid = sender.split("@")[0];
       const user = db.db.data.users[cleanJid];
       if (user) {
-        user.limit = (user.limit || 0) + val;
+        // FIX 3 Okt 2026: dulu user.limit (field mati) -> hadiah menguap. Sekarang energi (sumber resmi).
+        if (user.energi !== -1) user.energi = (user.energi ?? 0) + val;
         db.markDirty("users");
       }
       applied = { desc: `📌 +${val} Limit`, type };
@@ -516,7 +517,7 @@ function applyJackpotReward(db, mcUser, sender, result) {
       const cleanJid = sender.split("@")[0];
       const user = db.db.data.users[cleanJid];
       if (user) {
-        user.limit = -1;
+        user.energi = -1;
         db.markDirty("users");
       }
       applied = { desc: `♾️ UNLIMITED Limit!`, type };
@@ -535,7 +536,7 @@ function applyJackpotReward(db, mcUser, sender, result) {
           Date.now() + 365 * 86400000,
         ).toISOString();
         user.energi = -1;
-        user.limit = -1;
+        user.energi = -1;
         db.markDirty("users");
       }
       applied = {

@@ -78,7 +78,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const runtimeStr = formatUptime(uptime);
     const totalUsers = db.getUserCount();
     const allUsers = db.getAllUsers();
-    const totalRegistered = Object.values(allUsers).filter(u => u.registeredAt || u.isRegistered).length;
+    const totalRegistered = Object.values(allUsers).filter(u => u.isRegistered).length;
     const totalPremium = Object.values(allUsers).filter(u => u.isPremium).length;
     const allGroups = db.getAllGroups();
     let totalGroups = Object.keys(allGroups).length;

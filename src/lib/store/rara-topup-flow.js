@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-topup-flow.js — Factory plugin beli satuan (satu alur untuk SEMUA jalur toko)
-// Dipakai: buylimit, buykoin, buydiamond, buyharta, buygems, buytokens, buycinta
+// Dipakai: buylimit, buykoin, buydiamond, buyharta, buygems, buytokens, buycash, buycinta
 // Alur: validate → terekam pending → QRIS → notif owner → .approvetopup → masuk otomatis
 import fs from "fs";
 import config from "../../../config.js";

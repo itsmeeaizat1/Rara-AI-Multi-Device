@@ -206,7 +206,7 @@ export async function buildMenuInfo(m, ctx = {}) {
     try {
       totalUsers = db.getUserCount();
       const allUsers = db.getAllUsers();
-      totalRegistered = Object.values(allUsers).filter(u => u.registeredAt || u.isRegistered).length;
+      totalRegistered = Object.values(allUsers).filter(u => u.isRegistered).length;
       totalPremium = Object.values(allUsers).filter(u => u.isPremium).length;
       totalBanned = Object.values(allUsers).filter(u => u.isBanned).length;
       const allGroups = db.getAllGroups();

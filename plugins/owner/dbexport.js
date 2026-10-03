@@ -115,7 +115,7 @@ function buildUsersSheet(wb, db) {
   Object.values(db.data.users || {}).forEach((u, i) => {
     ws.addRow([
       i + 1, u.name || "-", u.number || "-",
-      u.premium ? "Ya" : "Tidak", u.limit ?? "-", u.energi ?? "-",
+      u.premium ? "Ya" : "Tidak", u.energi ?? "-", u.energi ?? "-",
       u.rpg ? "Ya" : "Tidak",
     ]);
   });
