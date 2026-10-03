@@ -19,7 +19,8 @@ async function handler(m, { sock }) {
     const from = m.key.remoteJid;
     await sock.sendMessage(from, { react: { text: "🕒", key: m.key } });
     const seed = Math.floor(Math.random() * 10000);
-    const url = `https://image.pollinations.ai/prompt/${query} aesthetic portrait, seed=${seed}&width=512&height=768&nologo=true`;
+    const query = "ulzzang Girl"; // subjek foto (dulu variabel ini tidak pernah dideklarasikan -> ReferenceError)
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(query + " aesthetic portrait")}?seed=${seed}&width=512&height=768&nologo=true`;
     await sock.sendMessage(from, { image: { url }, caption: "ulzzang Girl ~" }, { quoted: m });
     await sock.sendMessage(from, { react: { text: "🐣", key: m.key } });
   } catch (err) {
