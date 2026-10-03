@@ -1,5 +1,4 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -55,11 +54,12 @@ async function handler(m, { sock }) {
   const story = await generateDrama(names);
 
   if (!story) {
-    return m.reply(raraError("Drama Story", "gagal bikin ceritanya, coba lagi ya kak..."), "drama");
+    return m.reply("❌ Yah, gagal bikin ceritanya nih 😵\nCoba lagi yuk!", "drama");
   }
 
-  const lines = [`Karakter: ${names.join(", ")}`, "", ...String(story || "").split("\n"), "", "♡ Dibuat oleh Rara AI ♡"];
-  return m.reply(raraWrap("Drama Story", lines, "info"), "drama");
+  const header = "🎭 *drama story*\n\nKarakter: " + names.join(", ") + "\n\n";
+  const footer = "\n\n Dibuat oleh Rara AI";
+  return m.reply( header + story + footer, "drama");
 }
 
 export { pluginConfig as config, handler };

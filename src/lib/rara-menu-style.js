@@ -161,23 +161,13 @@ function buildBox(headerTitle, lines = []) {
 
 // raraCaption: caption panduan pakai fitur (no-input guide) — pakai buildBox modern style
 function raraCaption({ emoji = "", name = "", description = "", usage = "", example = "", note = "" } = {}) {
-  // REWORK 25 Sep — kartu usage → DESAIN V2 kaomoji + emoji muka cute.
-  // usage/example VERBATIM; description/note smallcaps; spec dari pluginConfig.
-  // Game category tetap render box lama (desain khas game sendiri).
-  if (isGameCmd(name)) return raraCaptionClassic({ emoji, name, description, usage, example, note });
-  const title = name ? toSC(name) : toSC("Guide");
-  let out = `${cuteHeader(title)}\n`;
-  out += `${v2Kaomoji(name)} ${toSC(String(title).toLowerCase())}!!\n`;
-  if (description && String(description).trim()) out += `\n${scLine(description)}\n`;
-  if (usage || example || note) {
-    out += `\n📍`;
-    if (usage && String(usage).trim()) out += ` ${toSC("Cara")}: ${String(usage).replace(/\`/g, "").trim()}`;
-    if (example && String(example).trim()) out += ` ${toSC("Contoh")}: ${String(example).replace(/\`/g, "").trim()}`;
-    if (note && String(note).trim()) out += `, ${scLine(note)}~`;
-    out += `\n`;
+  // REVISI OWNER 3 Okt 2026: balik desain lama — selalu layout klasik (tanpa kaomoji). Non-game tetap
+  // dapat blok info registry di bawah supaya field lengkap.
+  let out = raraCaptionClassic({ emoji, name, description, usage, example, note });
+  if (!isGameCmd(name)) {
+    const info = v2InfoBlock(name);
+    if (info) out += `\n\n${info}`;
   }
-  const cspec = v2SpecCompact(name);
-  if (cspec) out += `\n${cspec}\n`;
   return out.replace(/\n+$/, "");
 }
 // render box lama — fallback game + kompat
@@ -384,21 +374,13 @@ function raraWrap(title, body, type = "info") {
   }
   lines = collapsed;
 
-  // REWORK 25 Sep (owner: "semua plugin diubah usage jadi desain kaomoji") —
-  // kind "guide" = kartu USAGE → render V2 kaomoji + emoji muka cute. Body
-  // tetap VERBATIM (isi command "Contoh: .xxx" gak boleh ke-smallcaps).
-  // Game/rpg/rpg-cinta/rpg-couple tetap box lama (desain khas game sendiri).
+  // REVISI OWNER 3 Okt 2026: kartu guide balik desain lama — 「 ✦ JUDUL ✦ 」 + isi apa adanya (tanpa kaomoji).
+  // Non-game tetap dapat blok info registry (kategori/akses/tempat/cooldown/alias) di bawah supaya field lengkap.
   if (type === "guide" && !isGameCmd(title)) {
-    const gname = toSC(String(title || "guide").toLowerCase());
-    let gout = `${cuteHeader(title || "guide")}\n`;
-    gout += `${v2Kaomoji(title)} ${gname}!!\n`;
-    if (lines.length) {
-      const bodyTxt = lines.map((l) => (typeof l === "object" && l !== null) ? `◈ ${l.subHeader || l.sub || ""}` : l).join("\n");
-      gout += `\n${bodyTxt}\n`;
-    }
-    const gspec = v2SpecCompact(title);
-    if (gspec) gout += `\n${gspec}\n`;
-    return gout.replace(/\n+$/, "");
+    let gout = buildBox(title, lines);
+    const ginfo = v2InfoBlock(title);
+    if (ginfo) gout = `${String(gout).replace(/\n+$/, "")}\n\n${ginfo}`;
+    return gout;
   }
 
   // Prefix icon di baris pertama untuk status type (error/success/warn)
@@ -655,13 +637,8 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
   // tanpa border │/╭─/╰────, WhatsApp wrap sendiri gak ada garis yang
   // bisa putus — teks mengalir natural tanpa wrapLine 30-char.
   if (intro) {
-    // CUTE REWORK 2 Okt 2026 (owner: "menu allmenu menu category jga diubah
-    // jd cute") — header ribbon + kaomoji kayak kartu usage V2.
-    out += `${girlyHeader(introTitle)}\n`;
-    // hati ditambah cuma kalau kaomoji belum bawa hati (V2_KAOMOJI_POOL
-    // beberapa entri udah diakhiri ♡ — jangan dobel)
-    const _k = v2Kaomoji(introTitle);
-    out += `${_k}${_k.endsWith("\u2661") ? "" : "\u2661"} ${scFn(String(introTitle).toLowerCase())}!!\n\n`;
+    // REVISI OWNER 3 Okt 2026: balik desain lama — header 「 ✦ Judul ✦ 」, tanpa kaomoji intro.
+    out += `「 ✦ ${scFn(introTitle)} ✦ 」\n`;
     // intro bisa string (multi-line) atau array of lines
     const introLines = Array.isArray(intro) ? intro : intro.split("\n");
     for (const line of introLines) {
@@ -682,20 +659,15 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
   }
   
   // ── Info section: BOX TERPISAH per kategori (Info User, Info Waktu, dst) ──
-  // CUTE REWORK 2 Okt 2026 (owner: "pertahankan garis disekitar infosection
-  // sebagai pembatas field") — judul 「 ✦ X ✦ 」 DIPERTAHANKAN sebagai
-  // pembatas field + blok info dibungkus divider bintang di awal & akhir,
-  // judul section dikasih jarak (headerGap) biar gak berdempet.
-  const infoOut = raraInfoSections(info, sc, { bullet: infoBullet, headerGap: true });
-  if (infoOut) {
-    out += `${GIRLY_MENU_DIVIDER}\n`;
-    out += infoOut;
-    out += `${GIRLY_MENU_DIVIDER}\n\n`;
-  }
+  // REVISI OWNER 3 Okt 2026: balik desain lama — judul 「 ✦ X ✦ 」 sebagai pembatas field, tanpa divider ♡
+  // dan tanpa jarak ekstra setelah judul.
+  const infoOut = raraInfoSections(info, sc, { bullet: infoBullet });
+  out += infoOut;
+  if (infoOut) out += "\n";
 
   // ── Legend symbol akses fitur (request owner) ──
   if (legend && legend.length > 0) {
-    out += `${girlyHeader("Keterangan Symbol")}\n\n`;
+    out += `「 ✦ ${scFn("Keterangan Symbol")} ✦ 」\n`;
     for (const l of legend) {
       if (l && l.sym) out += `${l.sym} : ${scFn(l.desc || "")}\n`;
     }
@@ -716,7 +688,7 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
     
     // Proper close prev + open new section
     if (i > 0) out += `\n`;
-    out += `${girlyHeader(catName)}\n\n`;
+    out += `「 ✦ ${catName} ✦ 」\n`;
     
     // Commands: .command polos tanpa symbol ✦ (request owner 10 Sep:
     // "hapus symbol ✦ yg disamping cmd list bkn di title" — ✦ tetap di
@@ -877,9 +849,10 @@ function boxRows(text) {
 }
 
 function raraError(commandName, detail) {
-  // DESAIN CUTE (2 Okt 2026): header ribbon + kaomoji susah, bukan ❌ polos
-  let out = `${cuteHeader(commandName || "error")}\n`;
-  out += `${pickRandom(CUTE_ERR_POOL)} ${scLine(detail || "gagal, coba lagi ya kak...")}\n`;
+  // REVISI OWNER 3 Okt 2026: balik desain lama (tanpa kaomoji) — 「 ✦ NAMA ✦ 」 + ❌
+  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("ERROR");
+  let out = `「 ✦ ${title} ✦ 」\n`;
+  out += `❌ ${scLine(detail || "Gagal, coba lagi ya")}\n`;
   return out;
 }
 
@@ -889,9 +862,10 @@ function raraError(commandName, detail) {
  * @param {string} [detail] - detail opsional
  */
 function raraEmpty(commandName, detail) {
-  // DESAIN CUTE (2 Okt 2026): kaomoji datar khas pesan kosong
-  let out = `${cuteHeader(commandName || "kosong")}\n`;
-  out += `${pickRandom(CUTE_EMPTY_POOL)} ${scLine(detail || "datanya kosong kak...")}\n`;
+  // REVISI OWNER 3 Okt 2026: balik desain lama (tanpa kaomoji)
+  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("KOSONG");
+  let out = `「 ✦ ${title} ✦ 」\n`;
+  out += `❌ ${scLine(detail || "Kosong, tidak ada data")}\n`;
   return out;
 }
 
@@ -904,29 +878,16 @@ function raraEmpty(commandName, detail) {
 // REWORK 2026-09-10 (owner): layout section — ⚠ sapaan natural tetap di atas,
 // 📝 Cara Pakai (hint) + 💡 Contoh (example VERBATIM).
 function raraNoInput(commandName, hint, example) {
-  // REWORK 25 Sep — DESAIN V2: frase noInput random jadi sapaan, hint jadi
-  // cara, example jadi contoh, spec otomatis dari pluginConfig. Game → klasik.
-  if (isGameCmd(commandName)) {
-    let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-    out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
-    if (hint && String(hint).trim()) out += `\n📝 ${toSC("Cara Pakai")}:\n${scLine(hint)}\n`;
-    if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
-    return out.replace(/\n+$/, "");
+  // REVISI OWNER 3 Okt 2026: balik desain lama — 「 ✦ NAMA ✦ 」 + ⚠ + Cara Pakai + Contoh (tanpa kaomoji).
+  // Blok info registry (kategori/akses/tempat/cooldown/alias) tetap ditempel untuk non-game.
+  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
+  if (hint && String(hint).trim()) out += `\n📝 ${toSC("Cara Pakai")}:\n${scLine(hint)}\n`;
+  if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
+  if (!isGameCmd(commandName)) {
+    const info = v2InfoBlock(commandName);
+    if (info) out += `\n${info}\n`;
   }
-  const name = toSC(String(commandName).toLowerCase());
-  let out = `${cuteHeader(commandName)}\n`;
-  out += `${v2Kaomoji(commandName)} ${name}!!\n`;
-  out += `\n${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
-  if ((hint && String(hint).trim()) || example) {
-    if (hint && String(hint).trim()) {
-      out += `\n📍 ${toSC("Cara")}: ${scLine(hint)}\n`;
-      if (example) out += `${toSC("Contoh")}: ${example}\n`;
-    } else if (example) {
-      out += `\n📍 ${toSC("Contoh")}: ${example}\n`;
-    }
-  }
-  const info = v2InfoBlock(commandName);
-  if (info) out += `\n${CUTE_DIVIDER}\n${info}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -936,9 +897,9 @@ function raraNoInput(commandName, hint, example) {
  * @param {string} [mediaType] - "image" | "sticker" | "video" | "audio"
  */
 function raraNoQuoted(commandName, mediaType) {
-  // DESAIN CUTE (2 Okt 2026): kaomoji susah ganti ⚠, frasa random tetap
-  let out = `${cuteHeader(commandName)}\n`;
-  out += `${pickRandom(CUTE_ERR_POOL)} ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}\n`;
+  // REVISI OWNER 3 Okt 2026: balik desain lama (tanpa kaomoji)
+  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}\n`;
   if (mediaType) out += scLine(`Butuh: ${mediaType}`) + "\n";
   return out.replace(/\n+$/, "");
 }
@@ -949,9 +910,10 @@ function raraNoQuoted(commandName, mediaType) {
  * @param {string} message - pesan sukses
  */
 function raraSuccess(commandName, message) {
-  // DESAIN CUTE (2 Okt 2026): kaomoji senang ganti ✅ polos
-  let out = `${cuteHeader(commandName || "sukses")}\n`;
-  out += `${pickRandom(CUTE_OK_POOL)} ${scLine(message || "beres kak!!")}\n`;
+  // REVISI OWNER 3 Okt 2026: balik desain lama (tanpa kaomoji)
+  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("SUKSES");
+  let out = `「 ✦ ${title} ✦ 」\n`;
+  out += `✅ ${scLine(message || "Berhasil!")}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -997,9 +959,11 @@ const CUTE_ERR_POOL = ["(>_<)", "(;ω;)", "(´•̥ ω •̥`)", "(｡•́︿�
 const CUTE_OK_POOL = ["(≧▽≦)", "(๑˃ᴗ˂)ﻭ", "(◍•ᴗ•◍)", "(≧▽≦) ♡", "(๑>ᴗ<)و", "(⌒‿⌒)"];
 const CUTE_EMPTY_POOL = ["(._.)", "(´･_･`)", "(︶︹︶)", "(´-ω-`)", "(;-;)"];
 function cuteHeader(name) {
-  return `୨୧ ✧ ${toSC(String(name || "").toLowerCase())} ✧ ୨୧`;
+  // REVISI OWNER 3 Okt 2026: balik ke desain lama (tanpa ୨୧ / kaomoji) — header klasik 「 ✦ nama ✦ 」.
+  // Nama fungsi dipertahankan supaya 20+ pemanggil tidak perlu diubah.
+  return `「 ✦ ${toSC(String(name || "").toLowerCase())} ✦ 」`;
 }
-const CUTE_DIVIDER = "── ⋆ ⋆ ──";
+const CUTE_DIVIDER = ""; // REVISI 3 Okt 2026: divider cute dibuang (blok info cukup dipisah baris kosong)
 // ── TEMA KHAS CEWEK MENU (2 Okt 2026, owner: "jd bair bot ini menu tema
 // khas cewek gt") — khusus MENU (.menu/.allmenu/.allmenucategory): pita
 // bow 🎀 mengapit header ribbon + divider hati-bintang. Kartu usage/reply
@@ -1130,18 +1094,10 @@ function raraGuideClassic(commandName, intro, example, note) {
 }
 
 function raraSalah(commandName, message) {
-  // REWORK 25 Sep (owner: pesan salah cmd versi cute "yah kak kakak ketik
-  // cmd yang salah, ulangi ketik ...") — kaomoji + kalimat custom caller
-  // + ➤ arahan singkat. Game category tetap format lama (khas game).
-  if (isGameCmd(commandName)) {
-    let out = `❗ ${toSC("Cara pemakaian salah")}`;
-    if (message && String(message).trim()) out += ` — ${scLine(message)}`;
-    out += `\n${scLine(`Ketik .${String(commandName).toLowerCase()} buat lihat cara pemakaian`)}`;
-    return out.replace(/\n+$/, "");
-  }
-  let out = `(>_<) ${toSC("yah kak")}...\n`;
-  if (message && String(message).trim()) out += `${scLine(message)}\n`;
-  out += `➤ ${scLine(`ulangi ketik .${String(commandName).toLowerCase()} ya`)}`;
+  // REVISI OWNER 3 Okt 2026: balik desain lama — pesan salah pemakaian singkat tanpa kaomoji ("yah kak" dibuang)
+  let out = `❗ ${toSC("Cara pemakaian salah")}`;
+  if (message && String(message).trim()) out += ` — ${scLine(message)}`;
+  out += `\n${scLine(`Ketik .${String(commandName).toLowerCase()} buat lihat cara pemakaian`)}`;
   return out.replace(/\n+$/, "");
 }
 
@@ -1159,29 +1115,14 @@ function raraGuide(commandName, a = {}, b = null, c = null) {
   const intro = a;
   const example = b;
   const note = c;
-  // REWORK 25 Sep — SEMUA plugin non-game otomatis ke DESAIN V2 kaomoji
-  // (owner: "semua plugin diterapin dr ai sampai plugin owner diubah usage
-  // dan pesan eror cmd"). Intro per-plugin jadi sapaan; contoh VERBATIM;
-  // note di-smallcaps; spec dari pluginConfig asli (fakta nyata).
-  // Game/minigame/rpg/rpg-cinta → render klasik (desain khas game sendiri).
-  if (isGameCmd(commandName)) return raraGuideClassic(commandName, intro, example, note);
-  const name = toSC(String(commandName).toLowerCase());
-  let out = `${cuteHeader(commandName)}\n`;
-  out += `${v2Kaomoji(commandName)} ${name}!!\n`;
-  // GUARD LEBAR SERAGAM (1 Okt 2026): intro & note = kalimat prosa → scWrap
-  // (potong ≤30 char/baris, standar kayak allmenu). example = command
-  // VERBATIM → TETAP scLine biasa, gak dipotong (harus bisa di-copas utuh).
-  if (intro && String(intro).trim()) out += `\n${scWrap(intro)}\n`;
-  if (example || note) {
-    const exLines = String(example || "").split("\n").map((l) => l.trim()).filter(Boolean);
-    if (exLines.length) out += `\n📍 ${toSC("Contoh")}: ${exLines.join(" · ")}\n`;
-    if (note) {
-      const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
-      if (nl.length) out += nl.map((l) => scWrap(l)).join("\n") + "~\n";
-    }
+  // REVISI OWNER 3 Okt 2026: balik ke desain lama — layout klasik 「 ✦ nama ✦ 」 + Cara Pakai + Contoh + catatan
+  // (field terpisah & lengkap, TANPA kaomoji / ୨୧). Blok info registry (kategori, akses, tempat, cooldown, alias)
+  // tetap ditempel di bawah supaya field tetap lengkap.
+  let out = raraGuideClassic(commandName, intro, example, note);
+  if (!isGameCmd(commandName)) {
+    const info = v2InfoBlock(commandName);
+    if (info) out += `\n\n${info}`;
   }
-  const info = v2InfoBlock(commandName);
-  if (info) out += `\n${CUTE_DIVIDER}\n${info}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -1270,40 +1211,31 @@ export function raraSalahV2(commandName, opts = {}) {
 // raraGuide SATU-SATUNYA (owner 2 Okt: "v2 dihapus aja jadi raraGuide,
 // jangan raraGuideV2 — dua nama buat desain sama cuma bikin ribet").
 function renderGuideV2Body(commandName, opts = {}) {
+  // REVISI OWNER 3 Okt 2026: balik desain lama — opsi kaomoji/sapaan tetap diterima (kompat caller) tapi
+  // TIDAK ditampilkan. Layout: 「 ✦ NAMA ✦ 」 + Cara Pakai + Contoh + catatan + model + blok info registry.
   const {
-    kaomoji = "ヾ(≧▽≦*)o 😆", sapaan = "", cara = "", contoh = "", note = "",
+    sapaan = "", cara = "", contoh = "", note = "",
     modelAktif = null, models = [], spec = [], extra = [],
   } = opts;
-  // GUARD LEBAR SERAGAM (1 Okt 2026, kecuali game — caller yang nentuin
-  // routing, raraGuideV2 sendiri gak dipanggil buat game): sapaan/cara/note
-  // kalimat prosa → scWrap (≤30 char/baris, standar kayak allmenu). contoh
-  // = command VERBATIM → gak dipotong.
-  const name = toSC(String(commandName).toLowerCase());
-  let out = `${cuteHeader(commandName)}\n`;
-  out += `${kaomoji} ${name}!!\n`;
-  if (sapaan && String(sapaan).trim()) out += `\n${scWrap(sapaan)}\n`;
-  if (cara || contoh || note) {
-    // prefix "📍 Cara: " makan jatah lebar baris pertama — wrap cara di
-    // (width - panjang prefix) biar baris pertama + prefix TETAP ≤30 total,
-    // konsisten standar allmenu (bukan cuma teks cara-nya doang yang ≤30).
-    const caraPrefix = `📍 ${toSC("Cara")}: `;
-    out += `\n${caraPrefix}${scWrap(cara, Math.max(10, BOX_WRAP_WIDTH - caraPrefix.length))}\n`;
-    if (contoh) out += `${toSC("Contoh")}: ${contoh}\n`;
-    if (note) {
-      const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
-      if (nl.length) out += nl.map((l) => scWrap(l)).join("\n") + "~\n";
+  let out = `「 ✦ ${toSC(String(commandName).toUpperCase())} ✦ 」\n`;
+  if (sapaan && String(sapaan).trim() && !(cara && String(cara).trim())) out += `${scWrap(sapaan)}\n`;
+  if (cara && String(cara).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scWrap(cara)}\n`;
+  if (contoh) out += `\n💡 ${toSC("Contoh")}:\n${contoh}\n`;
+  if (note) {
+    const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
+    if (nl.length) {
+      out += `\n📍 ${scWrap(nl[0])}\n`;
+      if (nl.length > 1) out += nl.slice(1).map((l) => scWrap(l)).join("\n") + "\n";
     }
   }
-  if (Array.isArray(extra) && extra.length) {
-    out += `\n${extra.map(String).join("\n")}\n`;
-  }
+  if (Array.isArray(extra) && extra.length) out += `\n${extra.map(String).join("\n")}\n`;
   if (modelAktif) out += `\n✨ ${toSC("Model aktif")}: ${modelAktif}\n`;
   if (Array.isArray(models) && models.length) {
     out += `📋 ${toSC("Model tersedia")}: ${models.map(String).join(" · ")}\n`;
   }
   const info = v2InfoBlock(commandName, spec);
-  if (info) out += `\n${CUTE_DIVIDER}\n${info}\n`;
-  return out.replace(/\n+$/, "");
+  if (info) out += `\n${info}\n`;
+  return out;
 }
 
 export function raraAiUsage(brand, { prefix = ".", command, modelAktif = null, models = [], extra = [] } = {}) {
@@ -1326,12 +1258,12 @@ export function raraAiUsage(brand, { prefix = ".", command, modelAktif = null, m
     for (const l of extra) linesL.push("", l);
     return raraBox(brand, linesL);
   }
+  // REVISI OWNER 3 Okt 2026: balik desain lama — 「 ✦ BRAND ✦ 」 + Cara Pakai + Contoh + Model (tanpa kaomoji).
+  // Blok info registry tetap ditempel supaya field lengkap.
   const cmd = `${prefix}${command || brand}`;
-  const name = toSC(String(brand).toLowerCase());
-  let out = `${cuteHeader(brand)}\n`;
-  out += `${v2Kaomoji(brand)} ${name}!!\n`;
-  out += `\n📍 ${toSC("Cara")}: ${cmd} [pertanyaan]\n`;
-  out += `${toSC("Contoh")}: ${cmd} apa itu AI?\n`;
+  let out = `「 ✦ ${toSC(String(brand).toUpperCase())} ✦ 」\n`;
+  out += `📝 ${toSC("Cara Pakai")}:\n${cmd} [pertanyaan]\n`;
+  out += `\n💡 ${toSC("Contoh")}:\n${cmd} apa itu AI?\n`;
   if (modelAktif) out += `\n✨ ${toSC("Model aktif")}: ${modelAktif}\n`;
   if (Array.isArray(models) && models.length) {
     out += `\n📋 ${toSC("Model tersedia")}:\n`;
@@ -1339,7 +1271,7 @@ export function raraAiUsage(brand, { prefix = ".", command, modelAktif = null, m
   }
   if (Array.isArray(extra) && extra.length) out += `\n${extra.map(String).join("\n")}\n`;
   const info = v2InfoBlock(command || brand);
-  if (info) out += `\n${CUTE_DIVIDER}\n${info}\n`;
+  if (info) out += `\n${info}\n`;
   return out.replace(/\n+$/, "");
 }
 
