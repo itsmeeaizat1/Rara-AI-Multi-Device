@@ -20,7 +20,7 @@ const pluginConfig = {
 
 // Database-backed store: sender -> [{ id, day, startTime, endTime, subject, room, lecturer }]
 function getStore(db) {
-  if (!db.setting("eduSchedules")) db.setSetting("eduSchedules", {});
+  if (!db.setting("eduSchedules")) db.setting("eduSchedules", {}); // setting(key, value) = getter+setter (setSetting tidak ada)
   return db.setting("eduSchedules");
 }
 function saveStore(db) { db.save(); }
@@ -63,6 +63,7 @@ function formatDay(day) {
 
 async function handler(m, { sock, args }) {
   const sender = m.sender;
+  const db = getDatabase();
   const cmd = (args[0] || "").toLowerCase();
   const cmdArgs = args.slice(1);
 
@@ -262,7 +263,8 @@ async function handler(m, { sock, args }) {
 
     // === CLEAR ===
     else if (cmd === "clear" || cmd === "reset") {
-      scheduleStore.set(sender, []);
+      getStore(db)[sender] = [];
+      saveStore(db);
       await m.reply(raraWrap("Jadwal", "Semua jadwal dihapus!"));
     }
 
