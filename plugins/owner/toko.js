@@ -23,6 +23,7 @@ import {
   notifyBuyer,
   formatRupiah,
   formatDate,
+  searchProducts,
 } from "../../src/lib/rara-store.js";
 
 const pluginConfig = {

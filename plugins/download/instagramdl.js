@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
     for (const item of result.medias) {
       if (item.type === "video") {
         await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "video", contextInfo: ctxInfo });
-        await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: result.title, sourceUrl: text });
+        await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: result.title, sourceUrl: url });
       } else if (item.type === "audio") {
         await sock.sendMessage(m.chat, { audio: { url: item.url }, mimetype: "audio/mpeg", contextInfo: ctxInfo }, { quoted: m });
       } else {

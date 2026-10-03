@@ -540,7 +540,7 @@ const pluginConfig = {
 };
 
 // ─── Handler ───
-async function handler(m, { sock }) {
+async function handler(m, { sock, config: botConfig }) {
   try {
     await m.react("🕒");
     const groupId = m.key?.remoteJid || "";

@@ -73,12 +73,12 @@ async function handleSession(m, sock) {
 │ ⏱️ ${formatDuration(duration)}
 │ 👥 ${winners} pemenang\n\n_Mengambil daftar grup..._`, "success"));
 
+    const currentGroup = session.chatId; // di luar try: dipakai juga di catch
     try {
       const rawGroups = await fetchGroupsSafe(sock);
       const groups = Array.isArray(rawGroups)
         ? rawGroups
         : Object.values(rawGroups);
-      const currentGroup = session.chatId;
       const otherGroups = groups.filter((g) => g.id !== currentGroup);
 
       const buttons = [
