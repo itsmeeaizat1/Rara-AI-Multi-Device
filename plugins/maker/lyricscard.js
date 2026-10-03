@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraWrap, raraBerhasil } from '../../src/lib/rara-menu-style.js'
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -20,6 +20,7 @@ const pluginConfig = {
   example: ".lyricscard Dont stop believing|Don't Stop|Journey|dark",
   isGroupOnly: false,
 };
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const THEMES = {
   dark:    { c1: '#0a0a0f', c2: '#1a1a2e', text: '#e0e0e0', accent: '#64ffda', sub: '#888888' },
@@ -132,10 +133,11 @@ async function handler(m, { conn, text, usedPrefix, command }) {
 
     const outBuf = cv.toBuffer('image/png');
     await m.react("🐣");
-    await conn.sendMessage(m.key.remoteJid, {
-      image: outBuf,
-      caption: raraBerhasil(),
-    });
+    await conn.sendMessage(m.key.remoteJid, { image: outBuf });
+    await m.reply(mediaInfoCaption({ header: "Lyrics Card", fields: [
+      { label: "Lagu", value: song }, { label: "Artis", value: artist },
+      { label: "Tema", value: themeName }, { label: "Hasil", value: "Gambar PNG" },
+    ] }));
   } catch (e) {
     console.error("lyricscard error:", e);
     return m.reply(raraWrap("lyricscard", "Gagal buat lyrics card. Coba lagi.", "error"));

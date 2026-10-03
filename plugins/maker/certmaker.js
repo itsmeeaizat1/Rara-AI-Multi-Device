@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraWrap, raraBerhasil } from '../../src/lib/rara-menu-style.js'
+import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -20,6 +20,7 @@ const pluginConfig = {
   example: ".certmaker Budi Santoso|Siswa Terbaik|Kepala Sekolah|2026-08-18",
   isGroupOnly: false,
 };
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 async function handler(m, { conn, text, usedPrefix, command }) {
   try {
@@ -142,10 +143,11 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     fs.writeFileSync(outPath, buf);
 
     await m.react("🐣");
-    await conn.sendMessage(m.key.remoteJid, {
-      image: buf,
-      caption: raraBerhasil(),
-    });
+    await conn.sendMessage(m.key.remoteJid, { image: buf });
+    await m.reply(mediaInfoCaption({ header: "Certificate Maker", fields: [
+      { label: "Nama", value: name }, { label: "Judul", value: title },
+      { label: "Penerbit", value: issuer }, { label: "Tanggal", value: date }, { label: "Hasil", value: "Gambar PNG" },
+    ] }));
 
     fs.unlinkSync(outPath);
   } catch (e) {
