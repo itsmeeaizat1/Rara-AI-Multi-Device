@@ -104,9 +104,9 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config, db, args, text }) {
+  const cmdUsed = (m.command || "").toLowerCase(); // di luar try: dipakai juga di catch
   try {
     const prefix = config.command?.prefix || ".";
-    const cmdUsed = (m.command || "").toLowerCase();
     const providerKey = PROVIDER_COMMANDS[cmdUsed] || cmdUsed;
 
     const providers = getAllProviders();

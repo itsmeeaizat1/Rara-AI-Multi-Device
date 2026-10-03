@@ -21,7 +21,7 @@ const redeemCodes = new Map();
 async function handler(m, { sock }) {
   try {
     const subCmd = (m.args[0] || "").toLowerCase();
-    const isOwner = m.isOwner || m.sender === config?.owner;
+    const isOwner = !!m.isOwner;
 
     // OWNER: create redeem code
     if (subCmd === "create" && isOwner) {
