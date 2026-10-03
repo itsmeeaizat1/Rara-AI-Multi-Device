@@ -782,7 +782,6 @@ ${truncateText(parsed.customText, 180)}`);
 Text custom:
 ${truncateText(parsed.customText, 180)}`);
         fireScheduleTicker({ ...buildTaskPayload(id, parsed), id }, sock, m); // 🔹 ≤24 jam → live countdown
-        fireScheduleTicker({ ...buildTaskPayload(id, parsed), id }, sock, m); // 🔹 ≤24 jam → live countdown
       } catch (error) {
         await m.reply(
           error.message?.startsWith("❌")
@@ -833,7 +832,7 @@ ${truncateText(parsed.customText, 180)}`);
 
 Text custom:
 ${truncateText(parsed.customText, 180)}`);
-        fireScheduleTicker({ ...buildTaskPayload(id, parsed), id }, sock, m); // 🔹 ≤24 jam → live countdown
+        fireScheduleTicker({ ...buildTaskPayload(task.id, parsed), id: task.id }, sock, m); // 🔹 ≤24 jam → live countdown
       } catch (error) {
         await m.reply(
           error.message?.startsWith("❌")
