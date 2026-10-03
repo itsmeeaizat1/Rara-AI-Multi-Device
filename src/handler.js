@@ -1308,7 +1308,9 @@ try {
   // Run the plugin handler
   try {
     // Auto typing/read - check DB setting first, fallback to config
-    const dbInstance = sock.db || m.db;
+    // FIX 3 Okt 2026: dulu `sock.db || m.db` -> TIDAK PERNAH diisi di produksi (undefined), jadi procNotif/autoRead/
+    // autoTyping selalu jatuh ke default & `.procnotif off` tak pernah berpengaruh. Pakai getDatabase() seperti bagian lain.
+    const dbInstance = sock.db || m.db || getDatabase();
     const autoTypingOn = dbInstance?.setting?.("autoTyping") ?? config.features?.autoTyping ?? false;
     const autoReadOn = dbInstance?.setting?.("autoRead") ?? config.features?.autoRead ?? false;
     
