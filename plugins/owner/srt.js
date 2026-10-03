@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import config from '../../config.js';
 import { getDatabase } from '../../src/lib/rara-database.js';
 import te from '../../src/lib/rara-error.js';
-import { prepareWAMessageMedia, generateWAMessageFromContent, generateWAMessage, jidNormalizedUser } from 'nova';
+import { prepareWAMessageMedia, generateWAMessageFromContent, generateWAMessage, jidNormalizedUser } from 'rara';
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {

@@ -4,7 +4,7 @@ import { fileTypeFromBuffer } from "file-type";
 import { config } from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
-import { generateWAMessage } from "nova";
+import { generateWAMessage } from "rara";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const botConfig = config;

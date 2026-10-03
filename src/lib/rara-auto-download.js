@@ -5,7 +5,7 @@ import {
   generateWAMessage,
   generateWAMessageFromContent,
   jidNormalizedUser,
-} from "nova";
+} from "rara";
 import { getDatabase } from "./rara-database.js";
 import { logger } from "./rara-logger.js";
 import { aiodl, detectPlatform } from "../scraper/aio.js";

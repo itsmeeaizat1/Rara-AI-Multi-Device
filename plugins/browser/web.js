@@ -35,7 +35,7 @@ import fs from "node:fs/promises";
 import fsSync from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
+import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "rara";
 import { config } from "../../config.js";
 import { sendRichMessage } from "../../src/lib/rara-rich-response.js";
 import {

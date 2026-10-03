@@ -10,7 +10,7 @@ import fs from "fs";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { raraWrap, bracketBox, tipText, toSC } from "../../src/lib/rara-menu-style.js";
-import { generateWAMessageFromContent } from "nova";
+import { generateWAMessageFromContent } from "rara";
 import axios from "axios";
 
 const pluginConfig = {

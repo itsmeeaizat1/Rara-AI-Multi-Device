@@ -3,7 +3,7 @@ import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../sr
 
 import axios from 'axios'
 import crypto from 'crypto'
-import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'nova'
+import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'rara'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 

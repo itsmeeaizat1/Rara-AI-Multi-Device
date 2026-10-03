@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { downloadMediaMessage } from "nova";
+import { downloadMediaMessage } from "rara";
 import { isLid, lidToJid, lidToJidSafe } from "./rara-lid.js";
 import config from "../../config.js";
 const messageCache = new Map();
@@ -902,7 +902,7 @@ async function handleAntiRemove(messageUpdate, sock, db) {
           msgType === "audioMessage" ||
           msgType === "stickerMessage"
         ) {
-          const { downloadMediaMessage } = await import("nova");
+          const { downloadMediaMessage } = await import("rara");
           const fakeMsg = {
             key: cached.key,
             message: { [msgType]: msgContent[msgType] },
@@ -941,7 +941,7 @@ async function handleAntiRemove(messageUpdate, sock, db) {
             await sock.sendMessage(chatId, sendContent, { quoted: headerMsg });
           }
         } else {
-          const { generateWAMessageFromContent } = await import("nova");
+          const { generateWAMessageFromContent } = await import("rara");
           const cleanContent = {};
           for (const k of contentKeys) {
             if (typeof msgContent[k] === "object" && msgContent[k] !== null) {
@@ -1064,7 +1064,7 @@ async function handleAntiRemoveFromUpsert(msg, sock, db) {
           msgType === "audioMessage" ||
           msgType === "stickerMessage"
         ) {
-          const { downloadMediaMessage } = await import("nova");
+          const { downloadMediaMessage } = await import("rara");
           const fakeMsg = {
             key: cached.key,
             message: { [msgType]: msgContent[msgType] },
@@ -1103,7 +1103,7 @@ async function handleAntiRemoveFromUpsert(msg, sock, db) {
             await sock.sendMessage(chatId, sendContent, { quoted: headerMsg });
           }
         } else {
-          const { generateWAMessageFromContent } = await import("nova");
+          const { generateWAMessageFromContent } = await import("rara");
           const cleanContent = {};
           for (const k of contentKeys) {
             if (typeof msgContent[k] === "object" && msgContent[k] !== null) {

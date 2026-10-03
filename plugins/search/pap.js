@@ -3,7 +3,7 @@ import {
   generateWAMessage,
   generateWAMessageFromContent,
   prepareWAMessageMedia,
-} from "nova";
+} from "rara";
 import te from "../../src/lib/rara-error.js";
 import { f } from "../../src/lib/rara-http.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";

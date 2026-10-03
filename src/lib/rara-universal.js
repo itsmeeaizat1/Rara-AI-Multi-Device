@@ -37,7 +37,7 @@ async function prepareThumbnail(sock, preferredPath) {
     // (404) → selalu gagal senyap di semua install. Fork baileys bot ini
     // terpasang sebagai alias "rara" (npm:itsmeeaizat-bailey) dan SAMA-SAMA
     // nge-export prepareWAMessageMedia.
-    const { prepareWAMessageMedia } = await import("nova");
+    const { prepareWAMessageMedia } = await import("rara");
     const buffer = fs.readFileSync(imagePath);
     const media = await prepareWAMessageMedia(
       { image: buffer },

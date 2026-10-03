@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
 
     // Use the WA proto to update group settings
     // memberApprovalMode is set via groupSettingsUpdate
-    const { proto } = await import("nova");
+    const { proto } = await import("rara");
 
     const patch = {
       memberApprovalMode: isOn

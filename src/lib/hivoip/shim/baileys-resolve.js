@@ -1,4 +1,6 @@
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 const DEFAULT_CANDIDATES = [
+    'rara',
     'nova',
     'baileys',
     '@whiskeysockets/baileys',

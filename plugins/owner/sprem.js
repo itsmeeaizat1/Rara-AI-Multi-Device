@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { generateWAMessageFromContent, proto } from "nova";
+import { generateWAMessageFromContent, proto } from "rara";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {

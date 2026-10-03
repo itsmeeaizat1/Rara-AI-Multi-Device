@@ -15,7 +15,7 @@ import {
   proto,
   areJidsSameUser,
   generateForwardMessageContent,
-} from "nova";
+} from "rara";
 import {
   isLid,
   isLidConverted,
@@ -26,7 +26,7 @@ import {
 import fs from "fs";
 import { smallcapsText, toSC } from "./styler.js";
 import path from "path";
-import { downloadMediaMessage, getContentType } from "nova";
+import { downloadMediaMessage, getContentType } from "rara";
 import { addExifToWebp, imageToWebpFFmpeg, DEFAULT_METADATA } from "./rara-exif.js";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import ffmpeg from "fluent-ffmpeg";

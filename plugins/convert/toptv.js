@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    const { generateWAMessageFromContent, proto } = await import("nova");
+    const { generateWAMessageFromContent, proto } = await import("rara");
     const videoMsg = quoted.message?.videoMessage || quoted;
 
     const ptv = generateWAMessageFromContent(m.chat, proto.Message.fromObject({

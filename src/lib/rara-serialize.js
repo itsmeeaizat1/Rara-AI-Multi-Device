@@ -8,7 +8,7 @@ import {
   generateWAMessage,
   areJidsSameUser,
   normalizeMessageContent,
-} from "nova";
+} from "rara";
 import { writeFileSync, mkdirSync, existsSync, unlinkSync } from "fs";
 import { join } from "path";
 import config, {

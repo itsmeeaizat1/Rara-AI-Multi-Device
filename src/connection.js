@@ -5,7 +5,7 @@ import {
   useMultiFileAuthState,
   makeCacheableSignalKeyStore,
   fetchLatestBaileysVersion,
-} from "nova";
+} from "rara";
 import { Boom } from "@hapi/boom";
 // Router outbound multi-platform (29 Sep): scheduler kirim ke jid tg_... → bridge
 import { wrapOutboundSends } from "./lib/rarabridge/manager.js";

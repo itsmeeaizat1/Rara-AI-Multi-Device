@@ -4,7 +4,7 @@ import path from 'path'
 import crypto from 'crypto'
 import { exec } from 'child_process'
 import { promisify } from 'util'
-import { downloadMediaMessage } from 'nova'
+import { downloadMediaMessage } from 'rara'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";

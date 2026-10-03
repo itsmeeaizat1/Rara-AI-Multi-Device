@@ -7,7 +7,7 @@
  *   3. Topup Limit   → harga dari energi.topup di src/lib/config/features.js
  *   4. Donasi        → metode dari donasi di config/setpayment.js
  *
- * Native carousel = interactiveMessage.carouselMessage. Library "nova"
+ * Native carousel = interactiveMessage.carouselMessage. Library "rara"
  * (ourin-baileys fork) handle otomatis via ourin.handleCarousel — cukup
  * kirim plain object lewat sock.sendMessage(jid, { interactiveMessage: {...} }).
  *

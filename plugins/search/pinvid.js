@@ -9,7 +9,7 @@ import {
   generateWAMessage,
   generateWAMessageFromContent,
   jidNormalizedUser,
-} from "nova";
+} from "rara";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";

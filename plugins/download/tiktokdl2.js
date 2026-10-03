@@ -2,7 +2,7 @@
 import axios from 'axios'
 import * as cheerio from 'cheerio'
 import crypto from 'crypto'
-import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'nova'
+import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'rara'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap, raraLine, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
