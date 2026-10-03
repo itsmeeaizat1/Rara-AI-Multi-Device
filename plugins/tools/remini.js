@@ -24,7 +24,7 @@ import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 // Worker thread pool: inference Swin2SR jalan di thread terpisah — bot tetap
 // responsif selama render (dulu ngeblok event loop total, command lain mati)
-import { enhanceLocalAsync, hdQueueInfo, isModelCached } from "../../src/lib/rara-hd-pool.js";
+import { enhanceLocalAsync, hdQueueInfo, isModelCached, isEnhanceCached, enhanceMissingMb } from "../../src/lib/rara-hd-pool.js";
 // Engine utama (request owner 12 Sep 2026 revisi: "balik lagi pakai Photiu, cm
 // poles dikit agar jernih"): PHOTIU AI + pass poles FFmpeg. Pipeline FFmpeg
 // upscale penuh tetep ada buat .remini 2/4/6/8 + fallback.
@@ -40,9 +40,9 @@ const pluginConfig = {
   name: "remini",
   alias: ["remini", "enhance"],
   category: "tools",
-  description: "AI Photo Enhancer ala Remini — Ihancer AI + poles FFmpeg (unblur, face enhance)",
-  usage: ".remini (reply gambar) — Ihancer AI + poles FFmpeg, tanpa watermark\n.remini 2 / 4 / 6 / 8 — pilih faktor upscale FFmpeg (2x HD s/d 8x Ultra HD)\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
-  example: ".remini\n.remini face\n.remini doc",
+  description: "AI Photo Enhancer ala Remini — ONNX lokal (Real-ESRGAN + GPEN wajah), cadangan Ihancer AI + poles FFmpeg",
+  usage: ".remini (reply gambar) — ONNX lokal (Real-ESRGAN + pemulih wajah), tanpa API luar & tanpa watermark; cadangan Ihancer AI\n.remini wajah — pulihkan wajah saja (lebih cepat)\n.remini 2 / 4 / 6 / 8 — pilih faktor upscale FFmpeg (2x HD s/d 8x Ultra HD)\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
+  example: ".remini\n.remini wajah\n.remini doc",
   cooldown: 20,
   energi: 2,
   isEnabled: true,
@@ -297,6 +297,35 @@ async function hdLocalSharpUpscale(inputBuffer) {
   };
 }
 
+// ═══ JALUR UTAMA: ENHANCER ONNX LOKAL (Real-ESRGAN x2 + SCRFD + GPEN wajah) ═══
+// Request owner 3 Okt 2026: ".remini ganti pakai onnx lokal, tapi jangan bikin CPU naik & gagal render".
+// 100% lokal, tanpa API luar, tanpa watermark. CPU dijaga 1 thread (ENHANCE_THREADS), tile kecil, berjalan di
+// worker thread (bot tetap responsif). Saklar darurat: env REMINI_ONNX=off → langsung ke rantai lama.
+// Input dibatasi ONNX_MAX_SIDE (640 → hasil 1280px) supaya waktu render terukur (±40 dtk @1 core).
+const ONNX_MAX_SIDE = Math.max(256, Math.min(1024, Number(process.env.REMINI_ONNX_MAX_SIDE) || 640));
+const ONNX_TIMEOUT_MS = Math.max(60_000, Number(process.env.REMINI_ONNX_TIMEOUT_MS) || 6 * 60 * 1000);
+function onnxEnabled() { return String(process.env.REMINI_ONNX || "on").toLowerCase() !== "off"; }
+
+async function onnxEnhance(m, mediaBuffer, { facesOnly = false } = {}) {
+  const q = hdQueueInfo();
+  if (q.busy) {
+    try { await m.react("🕒"); } catch {}
+    m.reply(raraWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""}. Kamu antrian ke-${q.ahead + 1}, hasil otomatis dikirim.`, "info"), "remini").catch?.(() => {});
+  }
+  const missing = enhanceMissingMb();
+  if (!isEnhanceCached() && missing > 0) {
+    try { await m.react("🧠"); } catch {}
+    m.reply(raraWrap("remini", `Model AI lokal belum ada di server. Sedang diunduh otomatis (±${missing}MB, cukup sekali saja), proses pertama lebih lama.`, "info"), "remini").catch?.(() => {});
+  }
+  try { await m.react("🎨"); } catch {}
+  return enhanceLocalAsync(mediaBuffer, "enhance", {
+    maxSide: ONNX_MAX_SIDE,
+    upscale: !facesOnly,
+    faces: true,
+    timeoutMs: ONNX_TIMEOUT_MS,
+  });
+}
+
 // ═══ Handler ═══
 
 async function handler(m, { sock, args }) {
@@ -435,7 +464,25 @@ async function handler(m, { sock, args }) {
         engineNote = "Engine: Upscale Lokal Sharp (fallback terakhir)";
       };
 
-      if (!factorArg) {
+      // ── JALUR UTAMA BARU: ONNX lokal. Gagal/dimatikan → jatuh ke rantai lama di bawah (tak diubah). ──
+      let onnxDone = false;
+      if (!factorArg && onnxEnabled()) {
+        try {
+          const r = await onnxEnhance(m, mediaBuffer, { facesOnly: argList.includes("wajah") });
+          resultBuffer = r.buffer;
+          label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
+          outWidth = r.width;
+          outHeight = r.height;
+          engineNote = `Engine: ONNX Lokal (${r.stages.join(" + ") || "tanpa perubahan"}), tanpa watermark & tanpa API luar`;
+          onnxDone = true;
+        } catch (eo) {
+          console.error("[REMINI] ONNX lokal gagal, lanjut ke engine cadangan:", eo.message, (eo.stack || "").split("\n")[1] || "");
+        }
+      }
+
+      if (onnxDone) {
+        // hasil sudah siap — lewati rantai lama
+      } else if (!factorArg) {
         // ── jalur default: IHANCER AI PRO + poles FFmpeg (engine utama) ──
         // UPGRADE 19 Sep 2026 (owner: "biar enhance lbh tinggi, jernihnya HD
         // bgt"): parameter pro + enhancing-more — VERIFIED LIVE output naik

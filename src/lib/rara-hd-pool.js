@@ -16,6 +16,7 @@
 import { Worker } from "worker_threads";
 import { enhanceLocal } from "./rara-hd-local.js";
 export { isModelCached } from "./rara-hd-local.js";
+export { isEnhanceCached, enhanceMissingMb } from "./rara-enhance-onnx.js";
 
 const WORKER_URL = new URL("./rara-hd-worker.js", import.meta.url);
 const DEFAULT_JOB_TIMEOUT = 10 * 60 * 1000; // render 4k/5k 3-5 mnt + unduhan model pertama
@@ -31,7 +32,14 @@ function startWorker() {
   const w = new Worker(WORKER_URL, { type: "module" });
   w.unref();
 
-  w.on("message", ({ id, ok, result, error }) => {
+  w.on("message", ({ id, ok, result, error, progress }) => {
+    // pesan progress (mode enhance): bukan hasil akhir — teruskan ke callback job, jangan settle
+    if (progress) {
+      if (running && running.id === id && typeof running.onProgress === "function") {
+        try { running.onProgress(progress.stage, progress.done, progress.total); } catch {}
+      }
+      return;
+    }
     if (w.__stale) {
       // job basi akhirnya kelar juga — sekarang worker ini IDLE, aman terminate
       staleWorkers.delete(w);
@@ -45,6 +53,13 @@ function startWorker() {
     if (!running || running.id !== id) return;
     const job = running;
     running = null;
+    // postMessage (structured clone) mengubah Buffer jadi Uint8Array polos. Kalau dibiarkan, pemanggil yang
+    // cek Buffer.isBuffer() (Baileys, sharp, dll) menganggap hasil bukan buffer. Bungkus ulang TANPA salin
+    // (Buffer.from(arrayBuffer, offset, length) berbagi memori yang sama).
+    if (ok && result?.buffer && !Buffer.isBuffer(result.buffer) && result.buffer instanceof Uint8Array) {
+      const u = result.buffer;
+      result.buffer = Buffer.from(u.buffer, u.byteOffset, u.byteLength);
+    }
     settle(job, ok ? null : new Error(error || "hd worker error"), result);
     pump();
   });
@@ -116,7 +131,9 @@ function pump() {
     const job = queue.shift();
     running = job;
     armTimeout(job);
-    enhanceLocal(job.buffer, job.mode, job.opts)
+    (job.mode === "enhance"
+      ? import("./rara-enhance-onnx.js").then((m) => m.enhancePhoto(job.buffer, { ...job.opts, onProgress: job.onProgress }))
+      : enhanceLocal(job.buffer, job.mode, job.opts))
       .then((r) => { if (!job.__timedOut) settle(job, null, r); })
       .catch((e) => { if (!job.__timedOut) settle(job, e); })
       .finally(() => { if (running === job) running = null; pump(); });
@@ -149,7 +166,8 @@ export function enhanceLocalAsync(buffer, mode = "hd", opts = {}) {
     if (!Buffer.isBuffer(buffer) || !buffer.length) return reject(new Error("no_buffer"));
     // copy input biar buffer asli gak kepinda ke worker (dipakai lagi caller)
     const input = Buffer.from(buffer);
-    const job = { id: ++seq, buffer: input, mode, opts, resolve, reject };
+    const { onProgress, ...cloneableOpts } = opts || {}; // fungsi tak bisa di-postMessage
+    const job = { id: ++seq, buffer: input, mode, opts: cloneableOpts, onProgress, resolve, reject };
     queue.push(job);
     pump();
   });

@@ -219,8 +219,11 @@ w("\n— ihancer scraper (engine utama baru 17 Sep — seam mock) —");
   _clearIhancerHttpForTest();
 }
 
-w("\n— plugin .remini: engine utama IHANCER lewat handler (seam) —");
+w("\n— plugin .remini: engine CADANGAN IHANCER lewat handler (seam) —");
 {
+  // 3 Okt 2026: jalur utama .remini kini ONNX lokal; Ihancer jadi cadangan. Untuk menguji perilaku cadangan,
+  // ONNX dimatikan lewat saklar darurat REMINI_ONNX=off (jalur ONNX diuji di test/enhance-onnx-e2e).
+  process.env.REMINI_ONNX = "off";
   const { _setIhancerHttpForTest, _clearIhancerHttpForTest } = await import("../../src/scraper/ihancer.js");
   const { handler: rHandler } = await import("../../plugins/tools/remini.js");
 
@@ -258,6 +261,7 @@ w("\n— plugin .remini: engine utama IHANCER lewat handler (seam) —");
   check("caption nunjukin resolusi hasil (800x600)", cap.includes("800x600"), cap.slice(0, 200));
   check("react 🎨 → 🐣", reacts.includes("🎨") && reacts.includes("🐣"), reacts.join(","));
   _clearIhancerHttpForTest();
+  delete process.env.REMINI_ONNX; // pulihkan: jangan bocor ke bagian tes berikutnya
 }
 
 w("\n— polish pass: poles tanpa upscale (Photiu + polish) —");
