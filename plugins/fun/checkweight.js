@@ -19,6 +19,8 @@ const pluginConfig = {
 
 async function handler(m, { sock, config: botConfig }) {
     const berat = Math.floor(Math.random() * 60) + 40
+    // skor 0-100 = posisi nilai di rentang acaknya (dulu 'percent' tak pernah dideklarasikan -> AI selalu gagal diam-diam)
+    const percent = Math.round(((berat - 40) / 59) * 100)
     const mentioned = m.mentionedJid?.[0] || m.sender
     
     let desc = ''
@@ -39,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     try {
         const aiResult = await cekFunAI({
             botConfig: botConfig || {},
-            cekType: "berat",
+            cekType: `berat badan ${berat} kg`,
             percent: percent,
             fallbackDesc: desc,
         });
