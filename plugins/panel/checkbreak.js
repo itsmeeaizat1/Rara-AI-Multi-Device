@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from '../../src/lib/rara-database.js'
 import { hasAccessToServer, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
 import * as timeHelper from '../../src/lib/rara-time.js'

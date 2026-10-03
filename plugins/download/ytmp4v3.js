@@ -3,6 +3,7 @@
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({

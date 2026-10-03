@@ -1,7 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraHeader,
-    separator,
-  tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraHeader, separator, tipText, raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 import { fetchPrayerTimes, buildPrayerMessage, PRAYER_LABELS, PRAYER_EMOJIS, ADVANCE_REMINDER_MINUTES } from "../../src/lib/rara-sholat-scheduler.js";
 
 const pluginConfig = {

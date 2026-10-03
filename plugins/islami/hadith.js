@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import {  raraHeader,  separator, tipText, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { raraHeader, separator, tipText, raraWrap, raraCaption, raraError } from "../../src/lib/rara-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {

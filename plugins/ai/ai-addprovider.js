@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/rara-database.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraCaption, tipText } from "../../src/lib/rara-menu-style.js";
 import { DEFAULT_PROVIDERS } from "../../src/lib/rara-ai-service.js";
 
 

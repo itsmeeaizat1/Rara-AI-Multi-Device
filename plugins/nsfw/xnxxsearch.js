@@ -2,7 +2,7 @@
 // xnxxsearch.js — Search video NSFW
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";
-import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "xnxxsearch",

@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // smartdigest.js — Activity Digest (integrated with automation hub)
 import { getDatabase } from '../../src/lib/rara-database.js'
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "smartdigest",

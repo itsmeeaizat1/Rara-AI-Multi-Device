@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // servermonitor.js — VPS Health Monitor + Auto-Alert (integrated with automation hub)
 import os from 'os'
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import { getDatabase } from '../../src/lib/rara-database.js'
