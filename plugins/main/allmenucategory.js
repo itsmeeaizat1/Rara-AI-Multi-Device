@@ -11,7 +11,7 @@ import {
 import path from "path";
 import { sendMenuCard } from "../../src/lib/rara-menu-card.js";
 import { buildNavButtons } from "../../src/lib/rara-menu-card.js";
-import { toSC, raraMenuLayout, getAccessSymbols } from "../../src/lib/rara-menu-style.js";
+import { toSC, raraMenuLayout, getAccessSymbols, raraError } from "../../src/lib/rara-menu-style.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";

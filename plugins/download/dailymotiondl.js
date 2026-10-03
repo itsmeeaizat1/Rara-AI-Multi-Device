@@ -7,6 +7,7 @@ import os from "os";
 import path from "path";
 import { DailymotionDL } from "../../src/scraper/dailymotion.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { offerConvert } from "../../src/lib/rara-convert.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({

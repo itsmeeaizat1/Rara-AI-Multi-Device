@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
+import { tipText, raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 
 const __filename = fileURLToPath(import.meta.url);

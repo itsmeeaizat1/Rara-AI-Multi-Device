@@ -4,6 +4,7 @@ import { Client as GeniusClient } from 'genius-lyrics'
 import axios from 'axios'
 import config from '../../config.js'
 import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js'
+import { enrichLyricsMeta, lyricsCaption } from "../../src/lib/rara-lyrics-format.js";
 
 const pluginConfig = {
     name: "lirikv2",
