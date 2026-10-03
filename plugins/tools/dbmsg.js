@@ -3,7 +3,7 @@
 // Simpan pesan (vn/video/sticker/img/teks) dengan nama, panggil kembali kapan pun.
 import fs from "fs";
 import path from "path";
-import { proto } from "nova";
+import { proto } from "rara";
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {

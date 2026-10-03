@@ -2,7 +2,7 @@
 import FormData from "form-data";
 import fetch from "node-fetch";
 import mime from "mime-types";
-import { downloadMediaMessage, getContentType } from "nova";
+import { downloadMediaMessage, getContentType } from "rara";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 

@@ -7,8 +7,8 @@
  * Support multi-language translation via rara-i18n.js
  */
 
-import proto from "nova";
-import { generateWAMessageFromContent } from "nova";
+import proto from "rara";
+import { generateWAMessageFromContent } from "rara";
 import { getDatabase } from "./rara-database.js";
 import { translateUI, translateButton, needsTranslation, preTranslateButton } from "./rara-i18n.js";
 

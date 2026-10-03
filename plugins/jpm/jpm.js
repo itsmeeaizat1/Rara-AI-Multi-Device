@@ -15,7 +15,7 @@ import {
   prepareWAMessageMedia,
   generateWAMessageFromContent,
   proto,
-} from "nova";
+} from "rara";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";

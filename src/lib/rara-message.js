@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { generateWAMessageFromContent, proto } from "nova";
+import { generateWAMessageFromContent, proto } from "rara";
 import fs from "fs";
 import path from "path";
 import { saluranCtx } from "./rara-context.js";

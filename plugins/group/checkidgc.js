@@ -2,7 +2,7 @@
 import sharp from "sharp";
 import config from "../../config.js";
 import axios from "axios";
-import { generateWAMessageFromContent, proto } from "nova";
+import { generateWAMessageFromContent, proto } from "rara";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 

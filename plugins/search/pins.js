@@ -3,7 +3,7 @@ import {
   generateWAMessage,
   generateWAMessageFromContent,
   jidNormalizedUser,
-} from "nova";
+} from "rara";
 import axios from "axios";
 import crypto from "crypto";
 import te from "../../src/lib/rara-error.js";

@@ -18,7 +18,7 @@ import { hasAccessToServer, getUserRole } from "../../src/lib/rara-roles-cpanel.
 import { isGcSeller } from "./gcseller.js";
 import { checkPanelJeda, setPanelLastUsed } from "../../src/lib/rara-panel-jeda.js";
 import * as timeHelper from "../../src/lib/rara-time.js";
-import { downloadMediaMessage } from "nova";
+import { downloadMediaMessage } from "rara";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getPanel, listPanels } from "../../src/lib/panel/index.js";
 

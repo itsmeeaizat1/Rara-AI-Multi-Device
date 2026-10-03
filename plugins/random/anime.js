@@ -2,7 +2,7 @@
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
-import { prepareWAMessageMedia, generateWAMessageFromContent } from "nova";
+import { prepareWAMessageMedia, generateWAMessageFromContent } from "rara";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const nexrayTypes = [

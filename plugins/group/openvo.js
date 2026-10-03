@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
-import { downloadContentFromMessage } from 'nova'
+import { downloadContentFromMessage } from 'rara'
 import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
     name: "openvo",

@@ -29,7 +29,7 @@ const renderLatexToPng = async (latex, options = {}) => {
 };
 
 const createMediaUploadFn = async (sock) => {
-  const { prepareWAMessageMedia } = await import("nova");
+  const { prepareWAMessageMedia } = await import("rara");
   return async (imageBuffer, mediaType) => {
     const media = await prepareWAMessageMedia(
       { image: imageBuffer },

@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { downloadMediaMessage, getContentType } from "nova";
+import { downloadMediaMessage, getContentType } from "rara";
 import { ImageUploadService } from "node-upload-images";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";

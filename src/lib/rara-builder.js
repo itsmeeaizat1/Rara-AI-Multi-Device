@@ -32,7 +32,7 @@
 
 const VERSION = '4.6';
 
-import { generateWAMessageFromContent, prepareWAMessageMedia } from 'nova';
+import { generateWAMessageFromContent, prepareWAMessageMedia } from 'rara';
 import crypto from 'crypto';
 import sharp from 'sharp';
 import ffmpeg from 'fluent-ffmpeg';

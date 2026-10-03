@@ -139,7 +139,7 @@ function fmtList(targets) {
 async function grabMedia(m) {
   try {
     if (_mediaDownloadForTest) return await _mediaDownloadForTest(m);
-    const { downloadMediaMessage, getContentType } = await import("nova");
+    const { downloadMediaMessage, getContentType } = await import("rara");
     const pick = (key, message) => {
       const type = getContentType(message);
       if (!type || type === "conversation" || type === "extendedTextMessage" || type === "protocolMessage") return null;

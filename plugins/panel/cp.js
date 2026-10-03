@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
-import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from "nova";
+import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from "rara";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import crypto from 'crypto'

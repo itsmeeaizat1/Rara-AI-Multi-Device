@@ -24,7 +24,7 @@
 
 import fs from "fs";
 import path from "path";
-import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
+import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "rara";
 import { buildCategoryButton, buildCategoryRows } from "./rara-category-list.js";
 import { toSC } from "./rara-menu-style.js";
 import { smallcapsText } from "./styler.js";

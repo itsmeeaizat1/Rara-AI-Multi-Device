@@ -73,8 +73,8 @@ let _downloadFn = null;
 async function downloadContentFromMessage(msg, type) {
   if (!_downloadFn) {
     // 🔹 FIX 18 Sep 2026: @whiskeysockets/baileys GAK ada di package.json →
-    // mati di fresh install. Fork bot (alias "nova") nge-export fungsi yang sama.
-    const baileys = await import("nova");
+    // mati di fresh install. Fork bot (alias "rara") nge-export fungsi yang sama.
+    const baileys = await import("rara");
     _downloadFn = baileys.downloadContentFromMessage;
   }
   return _downloadFn(msg, type);

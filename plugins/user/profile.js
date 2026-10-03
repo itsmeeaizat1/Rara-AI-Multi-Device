@@ -2,7 +2,7 @@
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getRole } from "./level.js";
-import { getDevice } from "nova";
+import { getDevice } from "rara";
 
 const pluginConfig = {
   name: "profileuser",
