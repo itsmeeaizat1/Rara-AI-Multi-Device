@@ -3,6 +3,7 @@ import axios from "axios";
 import { uploadToCatbox } from "../../src/lib/rara-uploader.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "tomirror",
@@ -46,6 +47,10 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "📱 Mirror iPhone style!" }, { quoted: m });
+    await m.reply(mediaInfoCaption({ header: "Mirror", fields: [
+      { label: "Efek", value: "Mirror ala iPhone" }, { label: "Engine", value: "AI (api-faa)" },
+      { label: "Hasil", value: "Gambar" }, { label: "Ukuran", value: (imgBuffer.length / 1024).toFixed(1) + " KB" },
+    ] }));
     await m.reply(raraBerhasil("tomirror"));
   } catch (e) {
     console.error("tomirror error:", e.message);
