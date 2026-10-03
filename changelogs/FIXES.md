@@ -1,3 +1,20 @@
+## 3 Okt 2026 - Fix: .remini "model AI tidak terunduh padahal katanya otomatis"
+**Gejala (owner):** `.remini` bilang "Model AI lokal belum ada, sedang diunduh otomatis", tapi model tidak pernah terunduh dan tidak ada penjelasan apa pun.
+**Diagnosa (semua dibuktikan, bukan ditebak):** URL Hugging Face `facefusion/models-3.0.0` HIDUP dan unduhan engine BERFUNGSI (3 model ±149 MB dalam 3 dtk, CRC lolos di sandbox). Masalahnya ada di CARA unduh:
+1. Unduhan lazy di dalam worker render, berbagi batas 6 menit dengan render -> VPS lambat timeout sebelum render dimulai.
+2. Semua kegagalan ditelan `catch (eo)` di plugin (hanya `console.error`), lalu DIAM-DIAM lari ke Ihancer/Photiu/FFmpeg. User mengira "sedang diunduh", padahal gagal.
+3. Seluruh file dibuffer di RAM (+228 MB RSS untuk 70 MB) -> di VPS kecil bisa di-kill OOM tanpa pesan.
+4. Tidak ada cara mengecek status model di VPS.
+**Fix:**
+- `ensureModel`: STREAMING ke `.part` + CRC32 bertahap, callback `onProgress`. RSS unduhan 70 MB: +43 MB (dulu +228 MB), file byte-identik dgn unduhan lama. Mock tanpa body stream tetap jatuh ke `arrayBuffer()`.
+- BARU `prefetchEnhanceModels()`: pra-unduh berurutan DI LUAR worker (batas render tidak terpakai), hanya model yang kurang, progres per 10% ke log server.
+- BARU `describeDownloadError()`: alasan ramah user (403 IP diblokir, 429, 5xx, 404, HTML diblokir jaringan, CRC rusak, abort lambat, DNS, disk penuh, izin). Kode teknis tetap di log.
+- Plugin: unduh gagal -> reaksi warning + pesan jelas berisi alasan; hasil TETAP dikirim lewat rantai cadangan (rantai lama tidak diubah). Loading tetap reaksi emoji, tanpa pesan progres edit-in-place.
+- BARU `.remini model` (owner): status 3 model (siap/BELUM + ukuran) dan `.remini model unduh` (unduh sekarang, lapor hasil/kode error).
+**Tes:** BARU `remini-download-e2e` 48/48 (streaming, kegagalan tak meninggalkan file/`.part`, semua alasan error, prefetch, plugin asli lewat jalur foto & subperintah owner). Uji nyata: folder kosong -> unduh asli HF -> render ONNX -> "Engine: ONNX Lokal" terkirim (11 dtk). Regresi: enhance-onnx 42/42, remini-ffmpeg 58/58, plugins-import 11, formatguard 22, category-structure 47.
+**BELUM terbukti:** penyebab pasti di VPS owner. Sandbox tidak bisa meniru jaringan VPS; kini kegagalannya TERLIHAT (pesan ke user + log `[REMINI] unduh model ONNX GAGAL: <kode>`). Kalau 403 -> IP VPS diblokir HF; isi `HF_ENDPOINT`/pakai mirror atau unggah manual ke `src/data/models/ff/`.
+**Gotcha:** `MODEL_DIR` dihitung dari `process.cwd()` saat modul dimuat -> tes isolasi wajib `process.chdir(tmp)` SEBELUM import; worker butuh `node_modules` (symlink ke tmp). Jangan jalankan tes yang mengunduh di cwd repo kalau tak mau menyentuh model asli (`src/data/models/` di-gitignore).
+
 ## 3 Okt 2026 - Fix: premium hasil .addprem tidak dikenali gate + item (limit/balance) tidak sinkron + hitung register salah
 **Gejala:** `.addprem` membalas "berhasil" tapi `.jadibot` dan fitur premium lain tetap menjawab "khusus premium"; owner sendiri juga ditolak jadibot.
 **Akar 1 (premium terpecah dua):** `.addprem`/`.approveprem`/`.addpremall` menulis ke `db.data.premium`, sedangkan `config.isPremium` (dipakai middleware, `m.isPremium`, 65 plugin `isPremium: true`) HANYA membaca `src/database/premium-db/premium.json` yang cuma diisi jalur sewa. Terbukti lewat handler `.addprem` asli: balasan sukses tapi `config.isPremium()` = false. **Fix:** `config.isPremium` juga membaca `db.data.premium` (lazy via `globalThis.__raraGetDatabase` supaya tidak ada siklus impor config <-> rara-database). **Akar 2 (jadibot):** `becomebot.js` membaca `db.setting('premiumUsers')` (tidak pernah diisi siapa pun) dan tidak mengecek owner; kini memakai `isOwner`/`isPremium` resmi, `canUseJadibot` diekspor untuk tes.
