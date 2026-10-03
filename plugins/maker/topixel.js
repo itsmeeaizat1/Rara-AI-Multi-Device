@@ -4,6 +4,7 @@ import { downloadMediaMessage, getContentType } from "rara";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
   name: "topixel",
   alias: ["topixel"],
@@ -104,14 +105,11 @@ async function handler(m, { sock }) {
   try {
     const pixelatedBuffer = await pixelArt(media, level);
     
-    await sock.sendMessage(
-      m.chat, 
-      { 
-        image: pixelatedBuffer, 
-        caption: `👾 *PIXEL ART BERHASIL!*\n\nIni dia fotomu dalam gaya pixel art retro 8-bit. Keren kan?` 
-      }, 
-      { quoted: m }
-    );
+    await sock.sendMessage(m.chat, { image: pixelatedBuffer }, { quoted: m });
+    await m.reply(mediaInfoCaption({ header: "Pixel Art", fields: [
+      { label: "Gaya", value: "Pixel art retro 8-bit" }, { label: "Level", value: String(level) },
+      { label: "Hasil", value: "Gambar PNG" }, { label: "Ukuran", value: (pixelatedBuffer.length / 1024).toFixed(1) + " KB" },
+    ] }));
   } catch (err) {
     m.reply(raraWrap("topixel", te(m.prefix, m.command, m.pushName), "error"));
   }

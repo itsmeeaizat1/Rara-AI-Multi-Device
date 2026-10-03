@@ -2,6 +2,7 @@
 import axios from 'axios'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
     name: "balogo",
     alias: ["balogo"],
@@ -46,6 +47,10 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, response, null, m, {
             type: 'image',
         })
+        await m.reply(mediaInfoCaption({ header: "Blue Archive Logo", fields: [
+            { label: "Teks kiri", value: textL }, { label: "Teks kanan", value: textR },
+            { label: "Hasil", value: "Gambar" }, { label: "Ukuran", value: (response.length / 1024).toFixed(1) + " KB" },
+        ] }));
     } catch (error) {
         await m.react("❌")
         m.reply(raraWrap("balogo", te(m.prefix, m.command, m.pushName), "error"))

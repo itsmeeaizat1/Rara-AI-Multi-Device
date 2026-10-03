@@ -4,6 +4,7 @@ import config from "../../config.js";
 import { uploadTo0x0 } from "../../src/lib/rara-tmpfiles.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
   name: "fakeff",
   alias: ["fakeff"],
@@ -36,6 +37,10 @@ async function handler(m, { sock }) {
         type: "image",
       },
     );
+    await m.reply(mediaInfoCaption({ header: "Fake Lobby FF", fields: [
+      { label: "Nickname", value: nama }, { label: "Game", value: "Free Fire" },
+      { label: "Hasil", value: "Gambar" },
+    ] }));
     await m.react("🐣");
   } catch (error) {
     await m.react("❌");
