@@ -23,6 +23,8 @@ async function handler(m, { sock, config: botConfig }) {
 
         
     const tahun = Math.floor(Math.random() * 80) + 20
+    // skor 0-100 = posisi nilai di rentang acaknya (dulu 'percent' tak pernah dideklarasikan -> AI selalu gagal diam-diam)
+    const percent = Math.round(((tahun - 20) / 79) * 100)
     const bulan = Math.floor(Math.random() * 12)
     const hari = Math.floor(Math.random() * 30)
     
@@ -42,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
     try {
         const aiResult = await cekFunAI({
             botConfig: botConfig || {},
-            cekType: "sisaumur",
+            cekType: `sisa umur ${tahun} tahun`,
             percent: percent,
             fallbackDesc: desc,
         });

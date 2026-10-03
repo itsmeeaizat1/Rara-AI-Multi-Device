@@ -21,6 +21,8 @@ async function handler(m, { sock, config: botConfig }) {
         const mentioned = m.mentionedJid[0] || m.sender
 
         const tinggi = Math.floor(Math.random() * 50) + 150
+    // skor 0-100 = posisi nilai di rentang acaknya (dulu 'percent' tak pernah dideklarasikan -> AI selalu gagal diam-diam)
+    const percent = Math.round(((tinggi - 150) / 49) * 100)
     
     let desc = ''
     if (tinggi >= 190) {
@@ -40,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
     try {
         const aiResult = await cekFunAI({
             botConfig: botConfig || {},
-            cekType: "tinggi",
+            cekType: `tinggi badan ${tinggi} cm`,
             percent: percent,
             fallbackDesc: desc,
         });
