@@ -151,13 +151,26 @@ function stageContext(task, stageIdx) {
   return done.length ? done.join("\n") : "(tahap pertama, belum ada hasil sebelumnya)";
 }
 
+let _activeSock = null;
+async function automationTools() {
+  try {
+    if (!_activeSock) return {};
+    const ownerJidStr = ownerJid();
+    if (!ownerJidStr) return {};
+    const { buildAutomationExecutors } = await import("./agent.js");
+    return buildAutomationExecutors(_activeSock, ownerJidStr, getDatabase(), null);
+  } catch { return {}; }
+}
+
 async function runStage(task, stageIdx) {
   const stage = task.stages[stageIdx];
   const doRun = _stageRunner !== null ? _stageRunner : async (prompt) => {
     try {
       const res = await runAgent(prompt, {
-        execTools: {}, // headless: tanpa tool chat — penalaran + riset web
-        toolbox: "penalaran mandiri; riset/browsing web via search engine bawaan (mode research)",
+        // tool AMAN untuk automation (browse+screenshot, baca file, skill, mcp, ...);
+        // output ke DM owner. editfile/writefile/create SENGAJA tidak ada.
+        execTools: await automationTools(),
+        toolbox: "penalaran mandiri; riset/browsing web via search engine bawaan (mode research); tool aman: browse+screenshot, screenshot, listfiles, readfile, skill, mcp",
       });
       if (res?.answer) return res.answer;
       return null;
@@ -191,6 +204,7 @@ function withTimeout(promise, ms) {
 }
 
 async function runTaskLoop(sock, id) {
+  _activeSock = sock || _activeSock;
   if (running.has(id)) return;
   running.add(id);
   try {

@@ -35,6 +35,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { execFileSync } from "child_process";
 import { aiChainChat } from "./rara-ai-fallback.js";
+import { brainChat } from "./rara-agent-brain.js";
+import { listToolNames, hasTool, describeTools, exampleJson, normalizeToolCall } from "./rara-agent-registry.js";
+import { installBuiltinTools } from "./rara-agent-tools.js";
 import { searchWeb, fetchPagePreview } from "./rara-websearch.js";
 
 const __libFilename = fileURLToPath(import.meta.url);
@@ -48,7 +51,9 @@ const POOL_OFFER = 12;
 // dilipatgandakan — jawaban riset harus Lengkap, bukan ringkasan tipis.
 const PAGE_TEXT_CAP = 10000;
 
-let _aiChat = aiChainChat;
+// OTAK AGENT: 9router lokal dulu, rantai lama (Min1AI dst.) sebagai cadangan
+// (rara-agent-brain.js). Saklar env AGENT_BRAIN=chain mengembalikan perilaku lama.
+let _aiChat = brainChat;
 let _search = searchWeb;
 let _preview = fetchPagePreview;
 let _browserSearch; // undefined = pakai chromium asli; null = DISABLED (e2e)
@@ -60,7 +65,7 @@ export function setAgentDeps({ aiChat, search, preview, browserSearch } = {}) {
   if (browserSearch !== undefined) _browserSearch = browserSearch;
 }
 export function resetAgentDeps() {
-  _aiChat = aiChainChat;
+  _aiChat = brainChat;
   _search = searchWeb;
   _preview = fetchPagePreview;
   _browserSearch = undefined; // undefined = pakai chromium asli
@@ -122,21 +127,9 @@ const ACT_ACTIONS = [
 // jadi "ambil link grup" — bug nyata dilaporkan owner 12 Sep 2026)
 const FEATURE_TOGGLE_WORDS = /\b(antilink|antibadword|antisticker|antivoice|antispam)\b/i;
 const MAX_TOOLS = 4;
-const TOOL_LIST = [
-  "command", // jalanin command bot lain (sticker, quotes, dll)
-  "image",   // generate gambar (callImageGen)
-  "download", // unduh file dari URL (apk/zip/dll) + kirim dokumen
-  "vision",  // scan gambar yang di-reply/attach (visionScan)
-  "activity",// statistik aktivitas grup (activity tracker)
-  "memory",  // ingat percakapan agent sebelumnya
-  "create",  // BUAT FITUR BARU + pasang (owner only — codegen + hot-load)
-  "code",    // BIKIN KODE PROGRAM (html/js/python/dll) + kirim file
-  "skill",   // SKILL BUILT-IN + PACK (kbbi/gempa/hoki/lirik/calc/translate/kurs/qr/wiki/cuaca/dll)
-  "mcp",     // TOOL SERVER MCP (context7/deepwiki/mslearn/gitmcp — sesuai server terpasang)
-  "createfile", // bikin file teks dari konten (txt/md/json/dll) + kirim dokumen
-  "browse",  // buka link & baca isi halaman web (quick read)
-  "ytsearch", // CARI VIDEO YOUTUBE — browser beneran + thumbnail preview (request owner 14 Sep)
-];
+// TOOL_LIST diturunkan dari registry (rara-agent-registry) — nambah tool = defineTool()
+// tanpa sentuh file ini. Fungsi (bukan konstanta) biar tool runtime ikut terbaca.
+const toolNames = () => listToolNames();
 
 export const SYS_PLAN = `Kamu adalah perencana aksi AI agent. Balas HANYA objek JSON murni tanpa kalimat pembuka/penjelas/markdown. Karakter PERTAMA harus { dan TERAKHIR }.
 
@@ -157,9 +150,10 @@ Action valid: kick (keluarkan member), add (tambah member), promote (jadikan adm
 PENTING: kalau user minta "aktifkan/nyalain/matiin antilink" (atau antibadword/antisticker/antivoice/antispam) itu MENYALAKAN FITUR MODERASI, action-nya "antilink" dst dengan value on/off — BUKAN action "link" (action "link" HANYA kalau user eksplisit minta link undangan grup, kata "link" berdiri sendiri, bukan bagian dari nama fitur "antilink").
 Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (atau nomor 62xxx kalau user kasih nomor); action yang gak butuh target isi null. Rename/desc/antilink/antibadword/antisticker/antivoice/antispam isi value.
 
-3. TOOLS serba bisa (tugas minta AI ngerjain pakai kemampuan bot: bikin gambar, scan gambar, jalanin fitur/command bot, cek aktivitas grup, inget percakapan, bikin fitur baru):
-{"mode": "tools", "tools": [{"tool": "command", "cmd": "sticker", "args": "kucing"}, {"tool": "image", "prompt": "kucing astronot di bulan"}, {"tool": "vision", "question": "apa yang ada di gambar ini?"}, {"tool": "activity", "query": "siapa paling aktif"}, {"tool": "memory", "query": "tadi nanya apa"}, {"tool": "download", "url": "https://situs.com/app.apk"}, {"tool": "code", "spec": "halaman html toko kue dengan kartu produk", "lang": "html", "name": "tokokue"}, {"tool": "skill", "skill": "kbbi", "args": "makan"}, {"tool": "mcp", "server": "deepwiki", "mcpTool": "ask_question", "data": {"repoName": "facebook/react", "question": "apa itu React"}}, {"tool": "createfile", "name": "catatan", "content": "isi file persis yang diminta user", "data": null}, {"tool": "browse", "url": "https://situs.com/artikel"}, {"tool": "ytsearch", "query": "bot alya md", "download": false}, {"tool": "create", "name": "namafitur", "spec": "deskripsi lengkap fitur baru yang diminta user"}], "voice": false}
-Tool valid: command (jalanin command bot lain, cmd TANPA titik + args), image (generate gambar dari prompt), vision (analisis gambar yang user reply/attach), activity (statistik aktivitas grup), memory (ingat riwayat percakapan agent di chat), download (UNDUH FILE dari link URL langsung — apk/zip/mp3/pdf/dll — user kasih link .apk/.zip → isi "url"; link wajib LANGSUNG ke file, bukan halaman web), code (BIKIN KODE PROGRAM apa pun — html/css/javascript/python/php/dll — user minta kode/program/aplikasi/web/script/login page/dll → isi "spec" = detail lengkap SEakan user ngomong ke programmer: semua section/fitur/tampilan yang diminta (misal "web login topup: form login, pilihan paket, tombol topup, footer"), "lang" = bahasa pemrograman, "name" = nama file singkat tanpa spasi; kode FULL dibikin generator khusus + dilengkapi otomatis kalau kepotong, hasil = FILE siap jalan langsung dibuka), skill (PAKAI SKILL BUILT-IN — arti kata, cek gempa, nomor hoki, lirik lagu, kalkulator, translate, kurs, qr code, wikipedia, cuaca, dll — isi "skill" = nama skill persis dari daftar TOOLBOX yang tersedia, "args" = string/objek argumen skill), mcp (PANGGIL TOOL SERVER MCP — dokumentasi library/repo GitHub/docs Microsoft — isi "server" + "mcpTool" persis dari daftar TOOLBOX yang tersedia, "data" = args objek), createfile (BIKIN FILE TEKS dari konten yang diminta user — KHUSUS file teks (txt/md/json/csv/dll) → isi "name" = nama file, "content" = isi file PERSIS seakan-akan file sudah jadi final — JANGAN pernah disingkat/elipsis/placeholder; KALAU USER MINTA KODE PROGRAM/aplikasi/web/script → WAJIB pakai tool code BUKAN createfile), browse (BUKA LINK & BACA ISI halaman web → isi "url"; user suruh "buka link ini/baca halaman ini" → isi url, hasil dibaca langsung), ytsearch (CARI VIDEO YOUTUBE → isi "query" = judul/topik video, "download" = true HANYA kalau user eksplisit minta UNDUH/PUTAR/NONTON videonya — default false cukup kirim thumbnail preview + deskripsi + link; user suruh "carikan/cairkan video X di youtube" → isi query + download false), create (BUAT FITUR BARU + pasang otomatis — hanya owner). Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
+3. TOOLS serba bisa (tugas minta AI ngerjain pakai kemampuan bot: bikin gambar, EDIT gambar (ganti baju/wajah/umur/rambut/gender/background/hapus objek), scan gambar, jalanin fitur/command bot, cek aktivitas grup, inget percakapan, bikin fitur baru):
+{"mode": "tools", "tools": {{TOOL_EXAMPLES}}}
+Tool valid: {{TOOL_DESCRIPTIONS}}. Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
+UNTUK KODE PROGRAM/aplikasi/web/script → pakai tool code (BUKAN createfile). Edit file yang SUDAH ADA di repo → readfile dulu, baru editfile. Tool berlabel [OWNER saja] hanya boleh kalau pengirim owner. Buka web → browse/screenshot (screenshot selalu disertakan).
 ATURAN HAK AKSES (owner 25 Sep): tool command jalan ATAS NAMA user yang manggil. Command owner/premium/partner-only di luar hak user DITOLAK executor dengan pesan jelas — sampaikan penolakan itu apa adanya ke user (JANGAN janjiin sukses), jangan diulangin nyoba command yang sama.
 TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):
 {{TOOLBOX}}
@@ -168,6 +162,16 @@ TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai y
 Kalau riwayat percakapan masih dalam persona yang sama → LANJUT persona yang sama. Bikin kode program → pakai tools mode dengan tool code. Tugas butuh info dari internet → research.
 
 Kalau kamu TAHU jawabannya → persona (jawab sendiri). Kalau butuh data TERBARU atau gak yakin → research. Kalau ragu → research. skill/mcp cuma kalau data emang domain tool-nya (lihat ATURAN PRIORITAS).`;
+
+/** Prompt planner HASIL RENDER: placeholder diisi dari registry saat dipanggil. */
+export function renderPlanPrompt() {
+  installBuiltinTools();
+  return SYS_PLAN
+    .replace("{{TOOL_EXAMPLES}}", () => exampleJson())
+    .replace("{{TOOL_DESCRIPTIONS}}", () => describeTools());
+}
+/** Daftar nama tool aktif (kompat lama: dulu konstanta TOOL_LIST). */
+export function getToolList() { installBuiltinTools(); return listToolNames(); }
 
 // persona prompt — request owner 11 Sep: "klo disuruh profesi jd anak kecil
 // atau pacar dia persona berubah sesuai yg diinginkan user" — agent in-character.
@@ -272,6 +276,10 @@ export function detectActLocal(task) {
  * @returns {Promise<{mode,answer,queries,sources,steps,results,viaLocal,voice}|{error}>}
  */
 export async function runAgent(task, { onPhase, act, execTools, history, context, toolbox, memBlock, skillBlock, ai } = {}) {
+  // registry WAJIB terpasang sebelum prompt/normalisasi dipakai (idempotent, murah).
+  // Tanpa ini, pemanggil yang gak lewat buildExecutors (tes, agentloop, autotask)
+  // kehilangan SEMUA tool diam-diam karena normalizeToolCall balikin null.
+  installBuiltinTools();
   // 🔹 override AI per-call (mis. .9router ag → model 9router lokal) — tanpa sentuh deps global
   const aiChat = ai || _aiChat;
   const phase = (p, info) => { try { onPhase?.(p, info); } catch {} };
@@ -300,7 +308,10 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   // (request owner 12 Sep: ".aisuperagent upgrade ... dilengkapi mcp, skills
   // dan tool tambahan kyk raraagent") — planner cuma boleh milih yang ada
   const toolboxStr = String(toolbox || "").trim();
-  const sysPlan = toolboxStr ? SYS_PLAN.replace("{{TOOLBOX}}", toolboxStr) : SYS_PLAN.replace("TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):\n{{TOOLBOX}}", "(tool skill/mcp gak terpasang di bot ini)");
+  // prompt planner DINAMIS: daftar tool + contoh JSON dihitung dari registry
+  // SETIAP run (tool runtime/plugin yang baru didaftarkan langsung terbaca)
+  const basePlan = renderPlanPrompt();
+  const sysPlan = toolboxStr ? basePlan.replace("{{TOOLBOX}}", () => toolboxStr) : basePlan.replace("TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):\n{{TOOLBOX}}", "(tool skill/mcp gak terpasang di bot ini)");
   try {
     plan = parseJsonLocal(await aiChat(`Tugas user: ${task}${ctxLine}${histLine}${mem}${skl}`, { systemPrompt: sysPlan }));
   } catch {}
@@ -308,7 +319,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   // {"mode":"skill","skill":"kbbi","args":"makan"} LANGSUNG di level atas
   // (tanpa array "tools") — tanpa normalisasi ini jatuh nyasar ke research.
   // Wrap jadi {"mode":"tools","tools":[{tool:"skill",...}]} biar jalan bener.
-  if (plan && !Array.isArray(plan.tools) && plan.mode && TOOL_LIST.includes(String(plan.mode).toLowerCase().trim())) {
+  if (plan && !Array.isArray(plan.tools) && plan.mode && hasTool(String(plan.mode).toLowerCase().trim())) {
     const flatTool = String(plan.mode).toLowerCase().trim();
     plan = { ...plan, mode: "tools", voice: !!plan.voice, tools: [{ ...plan, tool: flatTool }] };
   }
@@ -340,28 +351,19 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   if (Array.isArray(plan?.tools) && plan.tools.length && execTools && Object.keys(execTools).length) {
     const tools = plan.tools
       .map(x => {
-        const tool = String(x?.tool || "").toLowerCase().trim();
-        return {
-          tool,
-          cmd: x?.cmd ? String(x.cmd).replace(/^[.\/#!]/, "").toLowerCase() : null,
-          args: x?.args != null ? String(x.args) : null,
-          prompt: x?.prompt != null ? String(x.prompt) : null,
-          question: x?.question != null ? String(x.question) : null,
-          query: x?.query != null ? String(x.query) : null,
-          name: x?.name ? String(x.name).toLowerCase().replace(/[^a-z0-9.]/g, "").slice(0, 24) : null, // titik dipertahanin — "loginweb.html" (createfile/code nama file + ext)
-          spec: x?.spec != null ? String(x.spec) : null,
-          url: x?.url != null ? String(x.url).trim() : null,
-          lang: x?.lang != null ? String(x.lang).toLowerCase().trim() : null,
-          skill: x?.skill != null ? String(x.skill).toLowerCase().trim() : null,
-          server: x?.server != null ? String(x.server).toLowerCase().trim() : null,
-          mcpTool: x?.mcpTool ? String(x.mcpTool).trim() : (x?.mcp_tool ? String(x.mcp_tool).trim() : null),
-          content: x?.content != null ? String(x.content) : null,
-          // data = args RAW (objek/apa pun) — JANGAN di-String() (skill/mcp
-          // butuh objek args utuh; String({}) = "[object Object]")
-          data: x?.data !== undefined ? x.data : (x?.args !== undefined && typeof x.args === "object" ? x.args : null),
-        };
+        // sanitasi dari SKEMA registry (bukan whitelist field manual): field liar
+        // dibuang, tipe dipaksa, enum divalidasi. Perilaku khusus lama dipertahankan:
+        // cmd dibersihkan dari awalan [.\/#!] + lowercase; name file dijaga titiknya.
+        const call = normalizeToolCall(x);
+        if (!call) return null;
+        if (call.cmd) call.cmd = String(call.cmd).replace(/^[.\/#!]/, "").toLowerCase();
+        if (call.name && ["createfile", "code", "create"].includes(call.tool)) call.name = String(call.name).toLowerCase().replace(/[^a-z0-9.]/g, "").slice(0, 24);
+        if (call.skill) call.skill = String(call.skill).toLowerCase().trim();
+        if (call.server) call.server = String(call.server).toLowerCase().trim();
+        return call;
       })
-      .filter(x => TOOL_LIST.includes(x.tool) && execTools[x.tool])
+      .filter(Boolean)
+      .filter(x => hasTool(x.tool) && execTools[x.tool])
       .slice(0, MAX_TOOLS);
     if (tools.length) {
       steps.push({ phase: "plan", mode: "tools", ok: true, tools: tools.map(x => x.tool) });

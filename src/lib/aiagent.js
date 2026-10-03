@@ -38,7 +38,7 @@ async function resolveParticipantId(conn, m, jid) {
 // → fallback ke tool.done (akurat, statis). Cuma tool yang topiknya rawan
 // ketukar (info grup: nama/deskripsi/foto profil/gambar/tutup-buka) yang
 // dicek — tool lain (kick/block/dll) tetap bebas natural.
-export const TOOL_TOPIC = {
+const _TOOL_TOPIC_STATIC = {
   searchsite: 'situs web',
   closegc: 'tutup',
   opengc: 'dibuka',
@@ -57,7 +57,7 @@ export const TOOL_TOPIC = {
 // kayak asisten asli lagi ngomong "oke bentar ya", bukan status teknis
 // "sedang mengeksekusi: closegc..."). Dipakai raraai.js pas status loading
 // sebelum tool.run() — fallback generik kalau tool gak ada di map.
-export const TOOL_NATURAL_DOING = {
+const _TOOL_NATURAL_DOING_STATIC = {
   searchsite: 'nyariin di situs web-nya...',
   closegc: 'nutup grupnya',
   opengc: 'buka grupnya',
@@ -96,6 +96,22 @@ export const TOOL_NATURAL_DOING = {
   download: 'download filenya',
   createfile: 'buatin filenya',
 }
+
+// Statis (tool aksi grup) + dinamis dari registry (rara-agent-registry). Proxy
+// supaya `TOOL_TOPIC[nama]`, `Object.entries(TOOL_TOPIC)` dan `in` tetap jalan
+// seperti objek biasa — pemanggil lama (raraai.js) TANPA perubahan.
+import { topicMap as _regTopicMap, doingMap as _regDoingMap, toLegacyTools as _regToLegacy } from './rara-agent-registry.js'
+import { installBuiltinTools as _installBuiltinTools } from './rara-agent-tools.js'
+const _merged = (stat, dyn) => new Proxy(stat, {
+  get: (t, k) => (k in t ? t[k] : dyn()[k]),
+  has: (t, k) => k in t || k in dyn(),
+  ownKeys: (t) => [...new Set([...Reflect.ownKeys(t), ...Object.keys(dyn())])],
+  getOwnPropertyDescriptor: (t, k) => (k in t
+    ? Object.getOwnPropertyDescriptor(t, k)
+    : (k in dyn() ? { value: dyn()[k], enumerable: true, configurable: true, writable: true } : undefined)),
+})
+export const TOOL_TOPIC = _merged(_TOOL_TOPIC_STATIC, _regTopicMap)
+export const TOOL_NATURAL_DOING = _merged(_TOOL_NATURAL_DOING_STATIC, _regDoingMap)
 
 export const TOOLS = {
   // ─── BUKA/TUTUP GRUP ───
@@ -662,7 +678,39 @@ export async function getAgentTools() {
   await awaitSkillPacks() // source pack src/source/ siap sebelum registry dibangun
   let mcp = {};
   try { mcp = await getMcpToolEntries(); } catch { /* MCP down gak boleh matiin agent */ }
-  return { ...TOOLS, ...getAllSkills(), ...mcp };
+  // tool REGISTRY DEKLARATIF (rara-agent-registry): gambar/edit gambar/browse+
+  // screenshot/baca-edit-tulis file dst. — SUMBER YANG SAMA dengan aisuperagent &
+  // anovaagent. Tool aksi grup inti (TOOLS) menang kalau namanya bentrok.
+  let reg = {};
+  try {
+    _installBuiltinTools();
+    reg = _regToLegacy((conn, m) => ({ m, sock: conn, db: null, mediaBuffer: null, legacy: legacyFromTools(conn, m) }));
+  } catch { /* registry gagal dimuat → raraagent tetap jalan dengan tool inti */ }
+  return { ...reg, ...TOOLS, ...getAllSkills(), ...mcp };
+}
+
+// Jembatan: tool registry yang membungkus implementasi lama (command, image,
+// download, code, vision, ...) dipanggil dari raraagent lewat executor
+// plugins/ai-agent/agent.js yang SAMA — satu implementasi, dua engine.
+function legacyFromTools(conn, m) {
+  const cache = {};
+  return new Proxy({}, {
+    get(_, name) {
+      if (typeof name !== 'string') return undefined;
+      return async (call) => {
+        if (!cache.map) {
+          const mod = await import('../../plugins/ai-agent/agent.js');
+          const img = (m?.isImage ? m : m?.quoted?.isImage ? m.quoted : null);
+          let buf = null;
+          try { if (img?.download) buf = await img.download(); } catch {}
+          const map = mod.buildExecutors(m, conn, null, buf, {}, null);
+          cache.map = map;
+        }
+        const fn = cache.map[name];
+        return fn ? fn(call, {}) : { ok: false, msg: 'tool ' + name + ' gak ada' };
+      };
+    },
+  });
 }
 
 // ================= RESOLVE NAMA MEMBER KE JID =================
@@ -966,12 +1014,27 @@ import { getAiChain } from "./apikey/ai-chain.js";
 // 🔹 AI AGENT: Fungsi umum nanya ke AI — coba provider satu-satu sampai sukses
 // history opsional: [{role:'user'|'assistant', content}] — dipakai biar AI
 // TAHU percakapan sebelumnya (fix bug: user jawab "iya" dianggap sesi baru).
+// saklar: AGENT_BRAIN=chain → perilaku lama (langsung rantai konfigurasi)
+function _brainEnabled() { return String(process.env.AGENT_BRAIN || '9router').toLowerCase().trim() !== 'chain' }
+
 export async function askAI(system, user, history = []) {
   const histTrimmed = Array.isArray(history) ? history.slice(-12) : []
   // Fold history jadi teks buat provider GET (cuma bisa kirim 1 field teks)
   const histAsText = histTrimmed.length
     ? histTrimmed.map(h => `${h.role === 'user' ? 'User' : 'Asisten'}: ${h.content}`).join('\n') + '\n'
     : ''
+  // OTAK UTAMA raraagent: 9ROUTER LOKAL (127.0.0.1 — bukan 9RouterV2/tio_*).
+  // Owner 3 Okt: "ganti dari qwen di endpoint min1ai, migrasi ke 9router lokal".
+  // Gagal/mati → lanjut rantai konfigurasi di bawah (Min1AI dst.) sebagai cadangan.
+  // Circuit breaker + health-check cepat ada di rara-agent-brain.js.
+  if (_brainEnabled()) {
+    try {
+      const { brainChat } = await import('./rara-agent-brain.js')
+      const prompt = `${histAsText ? histAsText + '\n' : ''}${user}`
+      const txt = await brainChat(prompt, { systemPrompt: system, timeoutMs: 60000 })
+      if (txt && String(txt).trim()) return String(txt).trim()
+    } catch { /* lanjut rantai konfigurasi */ }
+  }
   const providers = getAiChain()
   if (!providers.length) throw new Error('Rantai AI kosong — cek src/lib/apikey/ai-providers.json')
   for (const p of providers) {
@@ -1253,7 +1316,13 @@ export async function quickWebSearch(query, { limit = 5, readTop = 2 } = {}) {
 // dipake e2e buat verifikasi blok webSearch/memory kecantol bener ke prompt.
 export function buildThinkSystemPrompt(ctx = {}) {
   // Tools gabungan: TOOLS inti + SKILLS registry (request owner 12 Sep 2026)
-  const allTools = { ...TOOLS, ...getAllSkills() }
+  // registry deklaratif (gambar/edit/browse+screenshot/file) ikut terlihat model
+  let regTools = {}
+  try {
+    _installBuiltinTools()
+    regTools = _regToLegacy(() => ({}))
+  } catch { /* registry gagal dimuat → pakai tool inti saja */ }
+  const allTools = { ...regTools, ...TOOLS, ...getAllSkills() }
   let toolsList = Object.entries(allTools)
     .map(([k, v]) => `- ${k}: ${v.desc}${v.args ? ' (butuh args: ' + v.args.join(', ') + ')' : ''}`)
     .join('\n')
@@ -1324,6 +1393,9 @@ Contoh:
 "tutup grup" → {"tool":"closegc","args":{},"execCommand":null,"reply":"Grup sudah ditutup, sekarang cuma admin yang bisa chat."}
 "buatkan gambar kucing astronot" → {"tool":"genimage","args":{"prompt":"seekor kucing astronot di bulan, kartun lucu"},"execCommand":null,"reply":"Gambarnya sedang dibuat."}
 "buatkan gambar kucing 9:16" → {"tool":"genimage","args":{"prompt":"kucing","ratio":"9:16"},"execCommand":null,"reply":"Gambarnya sedang dibuat rasio 9:16."}
+"edit foto ini ganti baju jadi formal" (reply/attach gambar) → {"tool":"editimage","args":{"prompt":"formal","mode":"clothes"},"execCommand":null,"reply":"Oke, fotonya lagi aku edit biar bajunya jadi formal."}
+"edit gambar ini background jadi pantai bali" (reply/attach gambar) → {"tool":"editimage","args":{"prompt":"pantai bali","mode":"bg"},"execCommand":null,"reply":"Siap, backgroundnya lagi diganti jadi pantai Bali."}
+"hapus kursi di foto ini" (reply/attach gambar) → {"tool":"editimage","args":{"prompt":"kursi","mode":"remove"},"execCommand":null,"reply":"Kursinya lagi dihapus dari fotonya ya."}
 "kick aizat 2" → {"tool":"kick","args":{"user":"aizat 2"},"execCommand":null,"reply":"aizat 2 sudah dikeluarkan dari grup."}
 "blokir 62812" → {"tool":"block","args":{"user":"62812"},"execCommand":null,"reply":"62812 sudah diblokir dan dikeluarkan dari grup."}
 "ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"execCommand":null,"reply":"Deskripsi grup sudah diganti jadi grup belajar."}

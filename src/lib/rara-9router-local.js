@@ -132,6 +132,7 @@ export async function ensure9RouterRunning({ waitMs = 30000, log = () => {} } = 
       return { up: false, spawned: false, error: "paket 9router belum terpasang — jalankan npm install" };
     }
     healSqlWasm(); // sebelum spawn biar server pertama langsung dapet db sehat
+    ensureRouter9AuthFiles(); // server pertama langsung memakai secret yang sama dengan kita
 
     const port = getRouter9Port();
     const logDir = path.join(ROUTER9_REPO_ROOT, "logs");
@@ -168,9 +169,46 @@ export async function ensure9RouterRunning({ waitMs = 30000, log = () => {} } = 
 }
 
 // ── token manajemen internal 9router ──
+// ── BOOTSTRAP FILE AUTH (3 Okt 2026, report owner: "machine-id HILANG,
+// cli-secret HILANG ... HTTP 401" di VPS /home/container, padahal npm install
+// sukses dan model live terbaca 637) ──
+// AKAR (dibaca dari kode server 9router 0.5.75, api/keys/route.js): 9router
+// membuat ~/.9router/machine-id dan ~/.9router/auth/cli-secret SECARA LAZY —
+// hanya saat sebuah request manajemen SUDAH terautentikasi. Kalau kedua file itu
+// belum ada, getRouter9CliToken() balik "" → kita kirim request TANPA token →
+// server menolak 401 SEBELUM sempat membuat file → file tetap tidak ada → 401
+// selamanya. Self-heal lama (kill → respawn) tidak menolong karena file memang
+// tidak pernah dibuat, bukan cuma proses basi.
+// FIX: kita buat sendiri file itu, dengan format PERSIS sama dengan server
+// (machine-id = uuid, cli-secret = randomBytes(32).hex, mode 0600). Server
+// membaca file yang sudah ada lebih dulu, jadi token kita = token server.
+// Idempoten & TIDAK PERNAH menimpa file yang sudah ada (menimpa saat server
+// hidup akan memutus sinkronisasi secret yang sudah ada di memorinya).
+export function ensureRouter9AuthFiles() {
+  const dir = getRouter9DataDir();
+  const created = [], errors = [];
+  const readTrim = (f) => { try { return fs.readFileSync(f, "utf8").trim(); } catch { return ""; } };
+  const write = (f, content, label) => {
+    try {
+      fs.mkdirSync(path.dirname(f), { recursive: true });
+      fs.writeFileSync(f, content, { mode: 0o600 });
+      try { fs.chmodSync(f, 0o600); } catch { /* best effort (umask) */ }
+      created.push(label);
+    } catch (e) {
+      errors.push(`${label}: ${e?.code || e?.message || e}`);
+    }
+  };
+  const midFile = path.join(dir, "machine-id");
+  const secretFile = path.join(dir, "auth", "cli-secret");
+  if (!readTrim(midFile)) write(midFile, crypto.randomUUID(), "machine-id");
+  if (!readTrim(secretFile)) write(secretFile, crypto.randomBytes(32).toString("hex"), "cli-secret");
+  return { dir, created, errors };
+}
+
 export function getRouter9CliToken() {
   if (process.env.ROUTER9_CLI_TOKEN) return process.env.ROUTER9_CLI_TOKEN;
   try {
+    ensureRouter9AuthFiles(); // file hilang → buat (lihat komentar bootstrap di atas)
     const dir = getRouter9DataDir();
     const mid = fs.readFileSync(path.join(dir, "machine-id"), "utf8").trim();
     const secret = fs.readFileSync(path.join(dir, "auth", "cli-secret"), "utf8").trim();

@@ -166,8 +166,10 @@ const raraAgentSrc = fs.readFileSync(R + "/src/lib/rara-agent.js", "utf-8");
 t("5a. aiagent: contoh placeholder KODE LENGKAP dihapus", !aiagentSrc.includes('content":"<!DOCTYPE html> ... KODE LENGKAP ..."'));
 t("5b. aiagent: createfile desc larang placeholder", /HARAM/.test(aiagentSrc) && /MELANJUTKAN kode yang kepotong/.test(aiagentSrc));
 t("5c. aiagent: contoh baru = kode utuh nyata", aiagentSrc.includes("Toko Kue</h1>") && aiagentSrc.includes("RULE kode di content"));
-t("5d. rara-agent: createfile arahin kode program ke tool code", /KALAU USER MINTA KODE PROGRAM\/aplikasi\/web\/script → WAJIB pakai tool code BUKAN createfile/.test(raraAgentSrc));
-t("5e. rara-agent: code spec diminta detail + dilengkapi otomatis", /dilengkapi otomatis kalau kepotong/.test(raraAgentSrc));
+const { renderPlanPrompt } = await import(R + "/src/lib/rara-agent.js");
+const planRendered = renderPlanPrompt();
+t("5d. rara-agent: createfile arahin kode program ke tool code (prompt hasil render)", /KODE PROGRAM pakai tool code/.test(planRendered) && /UNTUK KODE PROGRAM\/aplikasi\/web\/script → pakai tool code \(BUKAN createfile\)/.test(planRendered));
+t("5e. rara-agent: code spec diminta detail + dilengkapi otomatis (prompt hasil render)", /dilengkapi otomatis kalau kepotong/.test(planRendered) && /detail lengkap/.test(planRendered));
 t("5f. agent.js: code tool pakai generateCompleteCode", agentSrc.includes("generateCompleteCode") && agentSrc.includes("melengkapi kode"));
 t("5g. CODE_EXTS html ada", CODE_EXTS.has("html") && CODE_EXTS.has("py"));
 

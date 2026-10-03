@@ -7,10 +7,18 @@
 // Model tetap ke-load SEKALI di worker ini (cache pipeline panas antar job).
 import { parentPort } from "worker_threads";
 import { enhanceLocal } from "./rara-hd-local.js";
+// Mode "enhance" = enhancer ONNX murni (Real-ESRGAN + SCRFD + GPEN). Di-import LAZY: model Swin2SR lama
+// (transformers.js) tidak ikut dimuat kalau cuma .remini default yang jalan, dan sebaliknya.
+let _enh = null;
+const loadEnhance = async () => _enh || (_enh = await import("./rara-enhance-onnx.js"));
 
 parentPort.on("message", async ({ id, buffer, mode, opts } = {}) => {
   try {
-    const r = await enhanceLocal(Buffer.from(buffer), mode, opts || {});
+    // progress antar-thread: tile/tahap dikirim balik (ringan, dibatasi di sisi pengirim)
+    const onProgress = (stage, done, total) => parentPort.postMessage({ id, progress: { stage, done, total } });
+    const r = mode === "enhance"
+      ? await (await loadEnhance()).enhancePhoto(Buffer.from(buffer), { ...(opts || {}), onProgress })
+      : await enhanceLocal(Buffer.from(buffer), mode, opts || {});
     // zero-copy transfer hasil ke main thread
     const ab = r.buffer.buffer.slice(
       r.buffer.byteOffset,

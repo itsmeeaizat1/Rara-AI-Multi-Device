@@ -29,6 +29,7 @@ import {
   getRouter9Base, getRouter9Port, ROUTER9_DEFAULT_MODEL,
 } from "../../src/lib/rara-9router-local.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
+import { getBrainStatus, getBrainModel, setBrainModel, getBrainMode } from "../../src/lib/rara-agent-brain.js";
 import { getSession, appendTurn, toMessages } from "../../src/lib/rara-ai-session.js";
 
 const pluginConfig = {
@@ -36,7 +37,7 @@ const pluginConfig = {
   alias: ["ai9", "router9", "rararouter"], // nama lama tetap jalan
   category: "ai",
   description: "9Router Lokal — chat AI 747 model via 9router native yang jalan bareng bot (tanpa API luar)",
-  usage: ".9router <pesan> | .9router gambar <prompt> | .9router model [keyword] | .9router setmodel <id> | .9router status | .9router sync (owner) | .9router restart (owner)",
+  usage: ".9router <pesan> | .9router gambar <prompt> | .9router model [keyword] | .9router setmodel <id> | .9router status | .9router otak | .9router sync (owner) | .9router restart (owner)",
   example: ".9router jelaskan siapa presiden indonesia\n.9router buatkan gambar kucing\n.9router model glm\n.9router setmodel glm/glm-4.7\n.9router status",
   isOwner: false,
   isPremium: false,
@@ -238,6 +239,70 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
   }
 
   // ── .9router sync (owner) — kirim key provider dari 9routerapikey.json ──
+  // ── .9router otak — OTAK AI AGENT (aisuperagent/anovaagent/raraagent) ──
+  // 3 Okt 2026 (owner: "ganti dari qwen min1ai, migrasi ke 9router lokal"):
+  // agent kini memakai 9router lokal dulu, rantai lama sebagai cadangan.
+  //   .9router otak                      → status jujur (siapa yang menjawab)
+  //   .9router otak model <id>           → (owner) ganti model otak agent
+  //   .9router otak mode 9router|chain|9router-only → (owner) saklar runtime
+  if (sub === "otak" || sub === "brain") {
+    const act = (argList[1] || "").toLowerCase();
+    if (act === "model" || act === "mode") {
+      if (!m.isOwner) return m.reply(raraBox("9Router — Otak Agent", ["Khusus owner."]));
+      const val = argList.slice(2).join(" ").trim();
+      if (!val) {
+        return m.reply(raraBox("9Router — Otak Agent", [
+          act === "model" ? "Format: .9router otak model <id>" : "Format: .9router otak mode 9router|chain|9router-only",
+          act === "model" ? "Lihat daftar: .9router model <kata>" : "9router = 9router dulu, cadangan rantai lama",
+        ]));
+      }
+      if (act === "mode") {
+        if (!["9router", "chain", "9router-only"].includes(val.toLowerCase())) {
+          return m.reply(raraBox("9Router — Otak Agent", ["Mode harus: 9router, chain, atau 9router-only."]));
+        }
+        process.env.AGENT_BRAIN = val.toLowerCase();
+        return m.reply(raraBox("9Router — Otak Agent", [
+          `Mode otak agent → ${getBrainMode()}`,
+          "Berlaku langsung (sampai bot restart; permanen: set env AGENT_BRAIN).",
+        ]));
+      }
+      // act === "model": validasi ke daftar model LIVE, jangan simpan buta
+      try {
+        const found = await router9FindModel(val);
+        if (!found) {
+          return m.reply(raraBox("9Router — Otak Agent", [`Model "${val}" gak ditemukan di 9Router.`, "Cari: .9router model <kata>"]));
+        }
+        setBrainModel(found.id);
+        const warn = found.tools === false ? "Catatan: model ini tidak menandai dukungan tools; agent tetap jalan lewat JSON." : null;
+        return m.reply(raraBox("9Router — Otak Agent", [
+          `Model otak agent → ${getBrainModel()}`,
+          `Reasoning: ${found.reasoning ? "ya" : "tidak"} • Vision: ${found.vision ? "ya" : "tidak"} • Konteks: ${found.ctx || "-"}`,
+          warn,
+          "Berlaku langsung (sampai bot restart; permanen: env AGENT_BRAIN_MODEL).",
+        ].filter(Boolean)));
+      } catch (e) {
+        return m.reply(raraBox("9Router — Otak Agent", ["Gagal validasi model: " + String(e.message).slice(0, 140), "Pastikan 9router hidup: .9router status"]));
+      }
+    }
+    const b = getBrainStatus();
+    const l = b.last || {};
+    const lines = [
+      `Mode         : ${b.mode}`,
+      `Model otak   : ${b.model}`,
+      `Otak terakhir: ${l.brain ? (l.brain === "9router" ? "9Router lokal" : "Rantai cadangan") : "belum ada panggilan"}`,
+      l.model ? `Model akhir  : ${l.model}` : null,
+      l.ms != null ? `Latensi akhir: ${l.ms}ms` : null,
+      l.error ? `Alasan cadangan: ${String(l.error).slice(0, 90)}` : null,
+      "---",
+      `Dijawab 9Router: ${b.counts.router9} • cadangan: ${b.counts.chain} • dilewati: ${b.counts.skipped}`,
+      b.breakerOpen ? `Breaker TERBUKA — 9router dilewati ${b.breakerRemainingSec} dtk lagi` : `Gagal beruntun: ${b.consecutiveFails}/3`,
+      "---",
+      "Ganti model : .9router otak model <id> (owner)",
+      "Ganti mode  : .9router otak mode 9router|chain|9router-only (owner)",
+    ].filter(Boolean);
+    return m.reply(raraBox("9Router — Otak Agent", lines));
+  }
+
   if (sub === "sync") {
     if (!m.isOwner) {
       return m.reply(raraBox("9Router", ["Khusus owner."]));
