@@ -9,7 +9,7 @@
 import { aioDl, teraboxDl } from "../../src/scraper/nexray-dl.js";
 import { registerChoice } from "../../src/lib/rara-aio2-session.js";
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
-import { toSC, raraWrap, raraGuide, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { toSC, raraWrap, raraGuide, raraSalah } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -177,7 +177,7 @@ async function handler(m, { sock, config: botConfig }) {
     }));
   }
   if (!/^https?:\/\//i.test(url)) {
-    return m.reply(raraSalahV2("aio2", {
+    return m.reply(raraSalah("aio2", {
  kaomoji: "(;∀;)",
       pesan: "linknya gak valid kak, harus diawali http atau https~ ulangi ya",
       contoh: `${prefix}aio2 link`,

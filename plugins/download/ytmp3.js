@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/ytmp3 → Sanka AIO → ytdl fallback
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { raraGuide, raraSalahV2, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
     }));
   }
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
-    return m.reply(raraSalahV2("ytmp3", {
+    return m.reply(raraSalah("ytmp3", {
  kaomoji: "(・_・;)",
       pesan: "linknya kok bukan dari youtube kak? ulangi yang bener ya~",
       contoh: `${m.prefix}${m.command || "ytmp3"} link youtube`,

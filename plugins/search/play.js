@@ -10,7 +10,7 @@
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/rara-ytdlp.js";
-import { raraWrap, raraBerhasil, raraGagal, raraGangguan, raraGuide, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraBerhasil, raraGagal, raraGangguan, raraGuide, raraSalah } from "../../src/lib/rara-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 
@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
   // SALAH CMD CUTE (owner 25 Sep): ketik link padahal .play mau judul lagu
   if (/^(https?:\/\/|www\.)|\b(?:facebook|fb\.watch|tiktok|instagram|youtu\.?be)\.com/i.test(query)) {
     await m.react("🐣");
-    return m.reply(raraSalahV2("play", {
+    return m.reply(raraSalah("play", {
  kaomoji: "(>_<)",
       pesan: "kakak malah ketik linknya, padahal ini mah mau judul lagunya~",
       contoh: `${m.prefix}play nama lagu`,

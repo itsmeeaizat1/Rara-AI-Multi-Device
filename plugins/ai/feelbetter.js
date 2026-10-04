@@ -2,7 +2,7 @@
 import { FeelBetter } from "../../src/scraper/feeb.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import te from "../../src/lib/rara-error.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraSalah } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "feelbetter",

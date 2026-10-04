@@ -4,7 +4,7 @@
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { raraGuide, raraSalahV2, raraWrap, raraLine, toSC, raraError, raraEmpty, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraWrap, raraLine, toSC, raraError, raraEmpty, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     }));
   }
   if (!url.match(/instagram\.com|instagr\.am/i)) {
-    return m.reply(raraSalahV2("instagram", {
+    return m.reply(raraSalah("instagram", {
  kaomoji: "(´･_･`)",
       pesan: "linknya bukan link instagram nih, cek lagi ya~",
       contoh: `${m.prefix}${m.command || "instagramdl"} link instagram`,

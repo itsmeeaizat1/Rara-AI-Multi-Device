@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltexthex — teks ↔ heksadesimal (port altftool.com/tools/all/text-to-hex)
-import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltexthex", alias: ["texthex", "hex", "texttohex"], category: "tools",
@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
       const hex = text.replace(/\s+/g, "");
       if (!/^([0-9a-fA-F]{2})+$/.test(hex)) {
         await m.react("❌");
-        return m.reply(raraSalahV2("ftooltexthex", {
+        return m.reply(raraSalah("ftooltexthex", {
           kaomoji: "(・_・;)",
           pesan: "string heksadesimalnya gak valid — harus pasangan digit 0-9 a-f dan genap jumlahnya",
           contoh: `${prefix}ftooltexthex dec 68616c6f`,
@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       result = Buffer.from(hex, "hex").toString("utf-8");
     } else {
       await m.react("❌");
-      return m.reply(raraSalahV2("ftooltexthex", {
+      return m.reply(raraSalah("ftooltexthex", {
         kaomoji: "(・_・;)",
         pesan: "pilih enc atau dec ya",
         contoh: `${prefix}ftooltexthex enc halo`,

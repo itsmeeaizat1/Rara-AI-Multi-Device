@@ -786,7 +786,6 @@ export {
   formatNumber, broadcastFormat,
   raraUsage, infoBox, listBox, closeBoxRight,
   CATEGORY_NAMES, CATEGORY_EMOJIS,
-  raraSalah,
 
 };
 
@@ -1095,11 +1094,20 @@ function raraGuideClassic(commandName, intro, example, note) {
   return out.replace(/\n+$/, "");
 }
 
-function raraSalah(commandName, message) {
-  // REVISI OWNER 3 Okt 2026: balik desain lama — pesan salah pemakaian singkat tanpa kaomoji ("yah kak" dibuang)
+// raraSalah — SATU-SATUNYA reply salah pemakaian (owner 4 Okt 2026: "jgn
+// tambah v2, hapus aja, cm raraSalah aja"). Desain modern 3 Okt: ❗ Cara
+// pemakaian salah + pesan + contoh (tanpa kaomoji / "yah kak"). Dukung 2
+// signature: (name, "pesan string") lama, atau (name, { pesan, contoh })
+// bekas pintu V2 — opsi kaomoji diabaikan demi kompatibilitas pemanggil lama.
+export function raraSalah(commandName, messageOrOpts) {
+  const isObj = messageOrOpts && typeof messageOrOpts === "object" && !Array.isArray(messageOrOpts);
+  const pesan = isObj ? (messageOrOpts.pesan || "") : (messageOrOpts || "");
+  const contoh = isObj ? (messageOrOpts.contoh || "") : "";
   let out = `❗ ${toSC("Cara pemakaian salah")}`;
-  if (message && String(message).trim()) out += ` — ${scLine(message)}`;
-  out += `\n${scLine(`Ketik .${String(commandName).toLowerCase()} buat lihat cara pemakaian`)}`;
+  if (pesan && String(pesan).trim()) out += ` — ${scLine(pesan)}`;
+  out += "\n";
+  if (contoh) out += `${toSC("Contoh")}: ${contoh}\n`;
+  else if (commandName) out += `${scLine(`Ketik .${String(commandName).toLowerCase()} buat lihat cara pemakaian`)}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -1191,24 +1199,6 @@ export function raraDlUsage(brand, { prefix = ".", command, cara = null, contoh 
 // fitur, dan WAJIB BEDA antar plugin (owner 25 Sep: "tiap plugin
 // sapaannya beda beda g sama") — jangan pakai kaomoji/sapaan plugin lain —
 // raraGuide/raraDlUsage/raraAiUsage lama TETAP dipakai plugin belum dimigrasi.
-// raraSalahV2 — REPLY SALAH PEMAKAIAN versi cute (owner 25 Sep: "hrs kirim
-// pesan salah cmd kyk 'yah kak kakak ketik cmd yang salah, ulangi ketik
-// .play nama lagu'"): kaomoji lucu + "yah kak..." + kalimat cute smallcaps
-// (WAJIB custom & beda-beda per plugin) + ➤ contoh yang bener VERBATIM.
-// SINGKAT 3 baris — beda total dari kartu usage raraGuideV2 (aturan owner
-// 10 Sep: salah pemakaian singkat, usage detail).
-export function raraSalahV2(commandName, opts = {}) {
-  // REVISI OWNER 3 Okt 2026: balik desain lama — ❗ Cara pemakaian salah + pesan + contoh (tanpa kaomoji / "yah kak").
-  // Opsi `kaomoji` tetap diterima (kompat 30 pemanggil) tapi diabaikan. `pesan` & `contoh` dari pemanggil dipakai apa adanya.
-  const { pesan = "", contoh = "" } = opts;
-  let out = `❗ ${toSC("Cara pemakaian salah")}`;
-  if (pesan && String(pesan).trim()) out += ` — ${scLine(pesan)}`;
-  out += "\n";
-  if (contoh) out += `${toSC("Contoh")}: ${contoh}\n`;
-  else if (commandName) out += `${scLine(`Ketik .${String(commandName).toLowerCase()} buat lihat cara pemakaian`)}\n`;
-  return out.replace(/\n+$/, "");
-}
-
 // renderGuideV2Body — badan kartu V2 (kaomoji + info blok) — dipakai
 // raraGuide SATU-SATUNYA (owner 2 Okt: "v2 dihapus aja jadi raraGuide,
 // jangan raraGuideV2 — dua nama buat desain sama cuma bikin ribet").

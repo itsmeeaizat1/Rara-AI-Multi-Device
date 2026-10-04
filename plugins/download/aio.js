@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   }
 
   if (!url.startsWith("http")) {
-    return m.reply(raraSalahV2("aio", {
+    return m.reply(raraSalah("aio", {
  kaomoji: "(;ω;)",
       pesan: "linknya gak valid nih kak, harus diawali http atau https~",
       contoh: `${m.prefix}aio link`,

@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolroman — konversi angka Arab ↔ angka Romawi (port altftool.com/tools/all/roman-numeral-converter)
 // Auto-detect: angka → Romawi, huruf romawi → angka. Range standar 1-3999.
-import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolroman", alias: ["roman", "romannumeral", "romawi"], category: "tools",
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
       const n = parseInt(raw, 10);
       if (n < 1 || n > 3999) {
         await m.react("❌");
-        return m.reply(raraSalahV2("ftoolroman", {
+        return m.reply(raraSalah("ftoolroman", {
           kaomoji: "(・_・;)",
           pesan: "angkanya di luar rentang 1-3999",
           contoh: `${prefix}ftoolroman 2026`,
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
       const n = fromRoman(raw);
       if (n === null || n < 1 || n > 3999) {
         await m.react("❌");
-        return m.reply(raraSalahV2("ftoolroman", {
+        return m.reply(raraSalah("ftoolroman", {
           kaomoji: "(・_・;)",
           pesan: "kombinasi huruf romawinya gak valid",
           contoh: `${prefix}ftoolroman MMXXVI`,
@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
       result = String(n); label = `${raw} (Romawi) → ${n} (Arab)`;
     } else {
       await m.react("❌");
-      return m.reply(raraSalahV2("ftoolroman", {
+      return m.reply(raraSalah("ftoolroman", {
         kaomoji: "(・_・;)",
         pesan: "input harus angka biasa atau huruf romawi (I V X L C D M)",
         contoh: `${prefix}ftoolroman 2026`,

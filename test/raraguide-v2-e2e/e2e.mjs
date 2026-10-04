@@ -137,10 +137,10 @@ w("\n— handler no-input → kartu V2 (fakta spec nyata) —");
 }
 
 // ─── 4M. SALAH CMD CUTE — "yah kak kakak ketik cmd yang salah..." (owner 25 Sep) ───
-w("\n— raraSalahV2 + handler salah pemakaian → cute —");
+w("\n— raraSalah + handler salah pemakaian → cute —");
 {
-  const { raraSalahV2 } = await import("../../src/lib/rara-menu-style.js");
-  const out = raraSalahV2("play", {
+  const { raraSalah } = await import("../../src/lib/rara-menu-style.js");
+  const out = raraSalah("play", {
     kaomoji: "(>_<)",
     pesan: "kakak malah ketik linknya, padahal ini mah mau judul lagunya~",
     contoh: ".play nama lagu",

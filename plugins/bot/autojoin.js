@@ -14,7 +14,7 @@ import {
   parseWaktuAutojoin, formatWaktuAutojoin, extractGroupCode, isChannelLink,
   _autojoinForTest,
 } from "../../src/lib/rara-autojoin.js";
-import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autojoin",
@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "cancel" || sub === "batal") {
       const id = m.args[1];
       if (!id) {
-        return m.reply(raraSalahV2("autojoin", { pesan: "id tugas kosong — lihat id di " + prefix + "autojoin list", contoh: prefix + "autojoin cancel AJ-XXXX1" }), "autojoin");
+        return m.reply(raraSalah("autojoin", { pesan: "id tugas kosong — lihat id di " + prefix + "autojoin list", contoh: prefix + "autojoin cancel AJ-XXXX1" }), "autojoin");
       }
       const t = cancelAutojoinTask(String(id).toUpperCase(), owner);
       if (!t) {
@@ -107,7 +107,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ─── pasang tugas: group|channel <link> <waktu> ───
     if (!["group", "gc", "grup", "channel", "ch", "saluran"].includes(sub)) {
-      return m.reply(raraSalahV2("autojoin", { pesan: "target gak dikenal — group/gc · channel/ch · list · cancel", contoh: prefix + "autojoin gc https://chat.whatsapp.com/xxx 7d" }), "autojoin");
+      return m.reply(raraSalah("autojoin", { pesan: "target gak dikenal — group/gc · channel/ch · list · cancel", contoh: prefix + "autojoin gc https://chat.whatsapp.com/xxx 7d" }), "autojoin");
     }
     const target = ["group", "gc", "grup"].includes(sub) ? "group" : "channel";
     const link = m.args[1] || "";

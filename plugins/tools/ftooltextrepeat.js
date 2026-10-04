@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltextrepeat — ulang teks berkalang-kali (port altftool.com/tools/all/text-repeater)
 // Cap 20x + 3000 karakter biar gak jadi senjata spam.
-import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltextrepeat", alias: ["textrepeat", "repeattext", "ulangteks"], category: "tools",
@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = raw.slice(pipe + 1).trim();
     if (!Number.isFinite(n) || n < 1 || !text) {
       await m.react("❌");
-      return m.reply(raraSalahV2("ftooltextrepeat", {
+      return m.reply(raraSalah("ftooltextrepeat", {
         kaomoji: "(・_・;)",
         pesan: "jumlahnya harus angka lebih dari 0 dan teksnya gak boleh kosong",
         contoh: `${prefix}ftooltextrepeat 5|halo dunia`,

@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooljwt — decoder JSON Web Token native offline (port altftool.com/tools/all/jwt-decoder)
 // Decode header + payload base64url + status kadaluarsa. Signature TIDAK diverifikasi (cuma decode).
-import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooljwt", alias: ["jwt", "jwtdecode", "decodejwt"], category: "tools",
@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
     const parts = token.split(".");
     if (parts.length !== 3 || !parts[0] || !parts[1]) {
       await m.react("❌");
-      return m.reply(raraSalahV2("ftooljwt", {
+      return m.reply(raraSalah("ftooljwt", {
         kaomoji: "(・_・;)",
         pesan: "format token JWT gak valid — harus 3 bagian dipisah titik: header.payload.signature",
         contoh: `${prefix}ftooljwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.abc`,
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
       payload = b64urlToJson(parts[1]);
     } catch (e) {
       await m.react("❌");
-      return m.reply(raraSalahV2("ftooljwt", {
+      return m.reply(raraSalah("ftooljwt", {
         kaomoji: "(・_・;)",
         pesan: "bagian header/payload bukan base64 JSON yang valid",
         contoh: `${prefix}ftooljwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.abc`,

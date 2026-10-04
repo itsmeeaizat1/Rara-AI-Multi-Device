@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolurlcode — encode/decode URL (port altftool.com/tools/all/url-encoder-decoder)
-import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolurlcode", alias: ["urlcode", "urlencode", "urldecode"], category: "tools",
@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
         result = decodeURIComponent(text);
       } catch (e) {
         await m.react("❌");
-        return m.reply(raraSalahV2("ftoolurlcode", {
+        return m.reply(raraSalah("ftoolurlcode", {
           kaomoji: "(・_・;)",
           pesan: "stringnya gak bisa didecode — ada pola % yang gak valid",
           contoh: `${prefix}ftoolurlcode dec halo%20dunia`,
@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     } else {
       await m.react("❌");
-      return m.reply(raraSalahV2("ftoolurlcode", {
+      return m.reply(raraSalah("ftoolurlcode", {
         kaomoji: "(・_・;)",
         pesan: "pilih enc atau dec ya",
         contoh: `${prefix}ftoolurlcode enc halo dunia`,

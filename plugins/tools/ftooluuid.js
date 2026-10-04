@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooluuid — generator UUID v4 (port altftool.com/tools/all/uuid-generator) pakai crypto.randomUUID().
 import { randomUUID } from "node:crypto";
-import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftooluuid", alias: ["uuid", "uuidgen", "guid"], category: "tools",
@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
       n = parseInt(raw, 10);
       if (!Number.isFinite(n) || n < 1) {
         await m.react("❌");
-        return m.reply(raraSalahV2("ftooluuid", {
+        return m.reply(raraSalah("ftooluuid", {
           kaomoji: "(・_・;)",
           pesan: "jumlahnya harus angka lebih dari 0",
           contoh: `${prefix}ftooluuid 5`,

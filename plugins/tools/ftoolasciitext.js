@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolasciitext — teks ↔ kode ASCII/Unicode (port altftool.com/tools/all/text-ascii)
-import { raraGuide, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolasciitext", alias: ["asciitext", "kodeascii", "textascii"], category: "tools",
@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
       const nums = text.split(/[\s,]+/).filter(Boolean);
       if (!nums.every((n) => /^\d+$/.test(n) && Number(n) <= 0x10ffff)) {
         await m.react("❌");
-        return m.reply(raraSalahV2("ftoolasciitext", {
+        return m.reply(raraSalah("ftoolasciitext", {
           kaomoji: "(・_・;)",
           pesan: "kodenya harus angka dipisah spasi atau koma",
           contoh: `${prefix}ftoolasciitext dec 104 97 108 111`,
@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       result = nums.map((n) => String.fromCodePoint(Number(n))).join("");
     } else {
       await m.react("❌");
-      return m.reply(raraSalahV2("ftoolasciitext", {
+      return m.reply(raraSalah("ftoolasciitext", {
         kaomoji: "(・_・;)",
         pesan: "pilih enc atau dec ya",
         contoh: `${prefix}ftoolasciitext enc abc`,
