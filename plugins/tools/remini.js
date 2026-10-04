@@ -25,6 +25,7 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 // Worker thread pool: inference Swin2SR jalan di thread terpisah — bot tetap
 // responsif selama render (dulu ngeblok event loop total, command lain mati)
 import { enhanceLocalAsync, hdQueueInfo, isModelCached, isEnhanceCached, enhanceMissingMb } from "../../src/lib/rara-hd-pool.js";
+import { prefetchEnhanceModels, describeDownloadError, ENHANCE_MODELS } from "../../src/lib/rara-enhance-onnx.js";
 // Engine utama (request owner 12 Sep 2026 revisi: "balik lagi pakai Photiu, cm
 // poles dikit agar jernih"): PHOTIU AI + pass poles FFmpeg. Pipeline FFmpeg
 // upscale penuh tetep ada buat .remini 2/4/6/8 + fallback.
@@ -41,7 +42,7 @@ const pluginConfig = {
   alias: ["remini", "enhance"],
   category: "tools",
   description: "AI Photo Enhancer ala Remini — ONNX lokal (Real-ESRGAN + GPEN wajah), cadangan Ihancer AI + poles FFmpeg",
-  usage: ".remini (reply gambar) — ONNX lokal (Real-ESRGAN + pemulih wajah), tanpa API luar & tanpa watermark; cadangan Ihancer AI\n.remini wajah — pulihkan wajah saja (lebih cepat)\n.remini 2 / 4 / 6 / 8 — pilih faktor upscale FFmpeg (2x HD s/d 8x Ultra HD)\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
+  usage: ".remini (reply gambar) — ONNX lokal (Real-ESRGAN + pemulih wajah), tanpa API luar & tanpa watermark; cadangan Ihancer AI\n.remini wajah — pulihkan wajah saja (lebih cepat)\n.remini 2 / 4 / 6 / 8 — pilih faktor upscale FFmpeg (2x HD s/d 8x Ultra HD)\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen\n.remini model — (owner) status model ONNX; .remini model unduh — unduh sekarang",
   example: ".remini\n.remini wajah\n.remini doc",
   cooldown: 20,
   energi: 2,
@@ -316,6 +317,25 @@ async function onnxEnhance(m, mediaBuffer, { facesOnly = false } = {}) {
   if (!isEnhanceCached() && missing > 0) {
     try { await m.react("🧠"); } catch {}
     m.reply(raraWrap("remini", `Model AI lokal belum ada di server. Sedang diunduh otomatis (±${missing}MB, cukup sekali saja), proses pertama lebih lama.`, "info"), "remini").catch?.(() => {});
+    // PRA-UNDUH (3 Okt 2026, owner: "g keunduh pdhal katanya otomatis"): dulu unduhan terjadi lazy DI DALAM worker render
+    // dan berbagi batas 6 menit dengan render; kegagalannya ditelan diam-diam lalu lari ke engine cadangan. Sekarang
+    // diunduh di sini (di luar worker), progres ke log, dan kegagalan DIBERITAHUKAN ke user beserta alasannya.
+    let lastPct = -10;
+    try {
+      await prefetchEnhanceModels({
+        onProgress: (x) => {
+          const pct = x.total ? Math.floor((x.done / x.total) * 100) : 0;
+          if (pct >= lastPct + 10 || pct === 100) { lastPct = pct; console.log(`[REMINI] unduh model ${x.index}/${x.count} ${x.label}: ${pct}%`); }
+        },
+      });
+      console.log("[REMINI] semua model ONNX siap");
+    } catch (e) {
+      const why = describeDownloadError(e);
+      console.error("[REMINI] unduh model ONNX GAGAL:", e.message);
+      try { await m.react("⚠️"); } catch {}
+      m.reply(raraWrap("remini", `Model AI lokal gagal diunduh: ${why}. Hasil kali ini dibuat pakai engine cadangan (kualitas bisa berbeda). Owner bisa cek dengan .remini model.`, "error"), "remini").catch?.(() => {});
+      throw e; // lanjut ke engine cadangan seperti biasa (rantai lama tidak diubah)
+    }
   }
   try { await m.react("🎨"); } catch {}
   return enhanceLocalAsync(mediaBuffer, "enhance", {
@@ -328,7 +348,38 @@ async function onnxEnhance(m, mediaBuffer, { facesOnly = false } = {}) {
 
 // ═══ Handler ═══
 
+// .remini model [unduh] — status/pemicu unduh model ONNX (owner saja, tanpa gambar). 3 Okt 2026.
+async function modelCommand(m, sub) {
+  if (!m.isOwner) return m.reply(raraWrap("remini", "Perintah ini khusus owner.", "error"), "remini");
+  const fsx = fs;
+  const rows = Object.entries(ENHANCE_MODELS).map(([k, meta]) => {
+    const f = path.join(process.cwd(), "src", "data", "models", "ff", meta.file);
+    let size = 0; try { size = fsx.statSync(f).size; } catch {}
+    const ok = size > 1_000_000;
+    return `• ${meta.label}: ${ok ? "siap (" + (size / 1e6).toFixed(1) + " MB)" : "BELUM ada (±" + meta.mb + " MB)"}`;
+  });
+  const missing = enhanceMissingMb();
+  if (sub !== "unduh") {
+    return m.reply(raraWrap("remini", `Status model ONNX lokal:\n${rows.join("\n")}\n\n${missing > 0 ? `Kurang ±${missing} MB. Ketik .remini model unduh untuk mengunduh sekarang.` : "Semua model siap."}`, "info"), "remini");
+  }
+  if (missing <= 0) return m.reply(raraWrap("remini", "Semua model sudah siap, tidak ada yang perlu diunduh.", "info"), "remini");
+  try { await m.react("🧠"); } catch {}
+  m.reply(raraWrap("remini", `Mengunduh model (±${missing} MB), mohon tunggu.`, "info"), "remini").catch?.(() => {});
+  const t0 = Date.now();
+  try {
+    const n = await prefetchEnhanceModels();
+    try { await m.react("✅"); } catch {}
+    return m.reply(raraWrap("remini", `Selesai: ${n} model terunduh dalam ${((Date.now() - t0) / 1000).toFixed(0)} detik. .remini kini memakai engine ONNX lokal.`, "success"), "remini");
+  } catch (e) {
+    console.error("[REMINI] .remini model unduh GAGAL:", e.message);
+    try { await m.react("❌"); } catch {}
+    return m.reply(raraWrap("remini", `Gagal mengunduh: ${describeDownloadError(e)}.\nKode: ${String(e.message).slice(0, 120)}`, "error"), "remini");
+  }
+}
+
 async function handler(m, { sock, args }) {
+  const _a0 = String((args && args[0]) || "").toLowerCase();
+  if (_a0 === "model" || _a0 === "models") return modelCommand(m, String((args && args[1]) || "").toLowerCase());
   const img = m.isImage || (m.quoted && (m.quoted.type === "imageMessage" || m.quoted.isImage));
 
   if (!img) {

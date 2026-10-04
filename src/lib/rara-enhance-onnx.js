@@ -60,6 +60,11 @@ function crc32Hex(buf) {
   return ((crc ^ 0xffffffff) >>> 0).toString(16).padStart(8, "0");
 }
 
+/** CRC32 bertahap untuk unduhan streaming (tanpa buffer penuh di RAM). crc = nilai internal (mulai 0xffffffff). */
+const _CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32Update(crc, chunk) { for (let i = 0; i < chunk.length; i++) crc = _CRC_T[(crc ^ chunk[i]) & 0xff] ^ (crc >>> 8); return crc; }
+function crc32Finish(crc) { return ((crc ^ 0xffffffff) >>> 0).toString(16).padStart(8, "0"); }
+
 function modelPath(key) { return path.join(MODEL_DIR, ENHANCE_MODELS[key].file); }
 
 /** Cek cepat tanpa network: semua model sudah ada? (buat notice UX "akan unduh ±145MB"). */
@@ -87,7 +92,7 @@ async function officialCrc(file, fetchImpl) {
 }
 
 /** Pastikan model ada & valid (CRC32 == file .hash resmi). Unduh ke file .part lalu rename atomik. */
-export async function ensureModel(key, { fetchImpl = fetch, timeoutMs = 10 * 60 * 1000 } = {}) {
+export async function ensureModel(key, { fetchImpl = fetch, timeoutMs = 10 * 60 * 1000, onProgress = null } = {}) {
   const meta = ENHANCE_MODELS[key];
   if (!meta) throw new Error(`model_tidak_dikenal:${key}`);
   const dest = modelPath(key);
@@ -115,16 +120,40 @@ export async function ensureModel(key, { fetchImpl = fetch, timeoutMs = 10 * 60 
         fetchImpl(`${HF}/${meta.file}`, { signal: ac.signal }),
       ]);
       if (!res.ok) throw new Error(`unduh_model_gagal:${meta.file}:HTTP_${res.status}`);
-      const buf = Buffer.from(await res.arrayBuffer());
-      if (buf.length < 1_000_000) throw new Error(`unduh_model_terlalu_kecil:${meta.file}:${buf.length}B`);
+      // STREAMING ke disk (3 Okt 2026): dulu seluruh file (66-76MB) dibuffer di RAM (+228MB RSS) -> di VPS kecil
+      // bisa di-kill OOM tanpa pesan apa pun. Sekarang ditulis per potongan + CRC bertahap. Mock tanpa body stream
+      // (tes) tetap jatuh ke arrayBuffer().
+      let size = 0, got;
+      const total = Number(res.headers && typeof res.headers.get === "function" ? res.headers.get("content-length") : 0) || 0;
+      const emit = () => { try { onProgress && onProgress({ key, file: meta.file, label: meta.label, done: size, total: total || meta.mb * 1_000_000 }); } catch {} };
+      if (res.body && typeof res.body.getReader === "function") {
+        const out = fs.openSync(part, "w");
+        let crc = 0xffffffff;
+        try {
+          const reader = res.body.getReader();
+          for (;;) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = Buffer.from(value.buffer, value.byteOffset, value.byteLength);
+            fs.writeSync(out, chunk);
+            crc = crc32Update(crc, chunk);
+            size += chunk.length;
+            emit();
+          }
+        } finally { try { fs.closeSync(out); } catch {} }
+        got = crc32Finish(crc);
+      } else {
+        const buf = Buffer.from(await res.arrayBuffer());
+        size = buf.length;
+        got = crc32Hex(buf);
+        fs.writeFileSync(part, buf);
+        emit();
+      }
+      if (size < 1_000_000) throw new Error(`unduh_model_terlalu_kecil:${meta.file}:${size}B`);
       if (hashRes.ok) {
         const want = (await hashRes.text()).trim().toLowerCase();
-        if (/^[0-9a-f]{8}$/.test(want)) {
-          const got = crc32Hex(buf);
-          if (got !== want) throw new Error(`model_korup:${meta.file}:crc_${got}_harusnya_${want}`);
-        }
+        if (/^[0-9a-f]{8}$/.test(want) && got !== want) throw new Error(`model_korup:${meta.file}:crc_${got}_harusnya_${want}`);
       }
-      fs.writeFileSync(part, buf);
       fs.renameSync(part, dest);
       _verified.add(key);
       return dest;
@@ -135,6 +164,38 @@ export async function ensureModel(key, { fetchImpl = fetch, timeoutMs = 10 * 60 
   })().finally(() => _dl.delete(key));
   _dl.set(key, job);
   return job;
+}
+
+/** Alasan gagal unduh -> kalimat singkat untuk user (kode teknis tetap di log). */
+export function describeDownloadError(err) {
+  const msg = String((err && err.message) || err || "");
+  if (/HTTP_(401|403)/.test(msg)) return "server model menolak akses (403), IP VPS mungkin diblokir Hugging Face";
+  if (/HTTP_429/.test(msg)) return "server model sedang membatasi permintaan (429), coba lagi beberapa menit";
+  if (/HTTP_5\d\d/.test(msg)) return "server model sedang bermasalah (5xx)";
+  if (/HTTP_404/.test(msg)) return "file model tidak ditemukan di server (404)";
+  if (/terlalu_kecil/.test(msg)) return "server membalas halaman error, bukan file model (kemungkinan diblokir jaringan)";
+  if (/model_korup/.test(msg)) return "file terunduh rusak (checksum tidak cocok)";
+  if (/abort/i.test(msg)) return "unduhan terlalu lama dan dibatalkan (koneksi VPS lambat)";
+  if (/ENOSPC/.test(msg)) return "disk VPS penuh";
+  if (/EACCES|EPERM/.test(msg)) return "folder model tidak bisa ditulis (izin)";
+  if (/ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ECONNRESET|fetch failed|terminated|network|socket/i.test(msg)) return "VPS tidak bisa menjangkau huggingface.co (DNS/koneksi)";
+  return "unduhan gagal (" + msg.slice(0, 80) + ")";
+}
+
+/**
+ * Pra-unduh SEMUA model yang belum ada, berurutan, DI LUAR worker render (batas waktu render tidak ikut terpakai).
+ * onProgress({ index, count, label, done, total }) — pemanggil yang membatasi laju. Melempar error model pertama yang gagal.
+ */
+export async function prefetchEnhanceModels({ keys = Object.keys(ENHANCE_MODELS), onProgress = null, fetchImpl = fetch } = {}) {
+  const todo = keys.filter((k) => !isEnhanceCached([k]));
+  for (let i = 0; i < todo.length; i++) {
+    const k = todo[i];
+    await ensureModel(k, {
+      fetchImpl,
+      onProgress: (x) => { try { onProgress && onProgress({ index: i + 1, count: todo.length, label: ENHANCE_MODELS[k].label, done: x.done, total: x.total }); } catch {} },
+    });
+  }
+  return todo.length;
 }
 
 const _sess = new Map();
