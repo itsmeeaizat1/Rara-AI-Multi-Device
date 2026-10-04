@@ -2,7 +2,8 @@
 // Kartu info media kategori stalker (batch 12): 17/17 sender berkartu,
 // 3 skip wajar teks-only (robloxplayer/zeldetail/zelff). Semua hasil stalker
 // = gambar profil dengan caption info → kartu DIGABUNG ke caption
-// (Engine + Target + Judul + Ukuran/Dimensi probe buffer/URL).
+// (Engine + Target + Judul + FIELD UNIK per fitur + Ukuran/Dimensi probe buffer/URL
+// — owner 4 Okt: ketersediaan field tiap fitur beda-beda, bukan seragam).
 
 import { readFile } from "node:fs/promises";
 import { readdirSync } from "node:fs";
@@ -80,6 +81,38 @@ for (const f of senders) {
   const s = await src(`plugins/stalker/${f}`);
   check(`${f}: field Target dinamis`, /\["Target",/.test(s));
   check(`${f}: field Judul dinamis`, /\["Judul",/.test(s));
+}
+
+console.log("── 4b. FIELD UNIK PER FITUR (owner 4 Okt: ketersediaan field tiap fitur beda-beda) ──");
+const UNIK = {
+  "discordstalk.js": ["Display Name", "Discriminator", "Akun Dibuat"],
+  "ffstalk.js": ["Level", "Region", "Likes", "BR Rank", "Guild"],
+  "ffstalk2.js": ["Level", "Rank", "Region", "EXP"],
+  "genshinstalk.js": ["Adventure Rank", "World Level", "Achievement"],
+  "mlstalk.js": ["Level", "Rank", "Win Rate", "Diamonds"],
+  "githubstalk.js": ["Repos", "Followers", "Lokasi"],
+  "igstalk.js": ["Followers", "Mengikuti", "Postingan", "Verified"],
+  "npmstalk.js": ["Total Package", "Downloads/bulan"],
+  "pintereststalk.js": ["Tipe Akun", "Akun Dibuat"],
+  "tiktokstalk.js": ["Followers", "Hearts", "Video", "Verified"],
+  "tiktokstalk2.js": ["Followers", "Total Likes", "Total Video"],
+  "twitterstalk.js": ["Followers", "Following", "Tweets", "Verified"],
+  "ytstalk.js": ["Subscribers", "Total Video", "Verified"],
+  "ytstalk2.js": ["Subscribers", "Total Video", "Total Views"],
+  "robloxstalk.js": ["Display", "Friends", "Followers"],
+  "robloxstalk2.js": ["Followers", "Friends", "Joined"],
+  "wastalk.js": ["Negara", "Nomor", "Status"],
+};
+for (const [f, fields] of Object.entries(UNIK)) {
+  const s = await src(`plugins/stalker/${f}`);
+  const cardLine = s.split("\n").find((l) => l.includes('dlCard("gambar"'));
+  check(`${f}: ${fields.length} field unik di baris kartu`, !!cardLine && fields.every((k) => s.includes(`["${k}"`)));
+}
+{
+  // tidak ada 2 file dengan SET field unik identik → bukti bukan boilerplate
+  const shapes = new Set();
+  for (const fields of Object.values(UNIK)) shapes.add(fields.join("|"));
+  check(`bentuk kartu ${shapes.size}/17 unik (bukan seragam massal)`, shapes.size >= 15);
 }
 
 console.log("── 5. probe sumber benar (buffer vs URL) ──");

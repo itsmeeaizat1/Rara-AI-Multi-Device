@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
                 caption += `📝 ${pkg.description}\n\n`
             })
         }
-        const card = await dlCard("gambar", { url: d.avatar }, [["Engine", "API firefly.maiku"], ["Target", "@" + username], ["Judul", String(d.name || d.username || "-").slice(0, 40)]]);
+        const card = await dlCard("gambar", { url: d.avatar }, [["Engine", "API firefly.maiku"], ["Target", "@" + username], ["Judul", String(d.name || d.username || "-").slice(0, 40)], ["Total Package", String(s.total_packages ?? "-")], ["Downloads/bulan", String(s.total_monthly_downloads ?? "-")]]);
         await sock.sendMessage(m.chat, {
             image: { url: d.avatar },
             caption: card ? `${caption}\n\n${card}` : caption

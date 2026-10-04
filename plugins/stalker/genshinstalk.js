@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     caption += `Gimana, statnya bagus nggak? Pamerin ke teman-temanmu yuk! 🚀`;
 
     if (imageUrl) {
-      const card = await dlCard("gambar", { url: imageUrl }, [["Engine", "API nexray.eu.cc"], ["Target", "UID " + data.result.id], ["Judul", String(r.nickname || "-").slice(0, 40)]]);
+      const card = await dlCard("gambar", { url: imageUrl }, [["Engine", "API nexray.eu.cc"], ["Target", "UID " + data.result.id], ["Judul", String(r.nickname || "-").slice(0, 40)], ["Adventure Rank", String(r.level || "-")], ["World Level", String(r.world_level || "-")], ["Achievement", String(r.achievements || "-")]]);
       await sock.sendMessage(m.chat, {
         image: { url: imageUrl },
         caption: card ? `${caption}\n\n${card}` : caption

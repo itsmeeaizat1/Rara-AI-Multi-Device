@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
             `🎬 *videos:* ${shortNum(s.videos)}\n\n` +
             `📝 *bio:*\n${d.signature || '-'}\n\n` +
             `🔗 https://tiktok.com/@${d.username}`
-        const card = await dlCard("gambar", { url: d.avatar }, [["Engine", "API firefly.maiku"], ["Target", "@" + d.username], ["Judul", String(d.nickname || d.username || "-").slice(0, 40)]]);
+        const card = await dlCard("gambar", { url: d.avatar }, [["Engine", "API firefly.maiku"], ["Target", "@" + d.username], ["Judul", String(d.nickname || d.username || "-").slice(0, 40)], ["Followers", String(s?.followers ?? "-")], ["Hearts", String(s?.hearts ?? "-")], ["Video", String(s?.videos ?? "-")], ["Verified", d.verified ? "Ya" : "Tidak"]]);
         await sock.sendMessage(m.chat, {
             image: { url: d.avatar },
             caption: card ? `${caption}\n\n${card}` : caption

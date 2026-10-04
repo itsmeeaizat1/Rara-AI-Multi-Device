@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
             res += '*standard whatsapp account*';
         }
 
-        const card = await dlCard("gambar", { url: img }, [["Engine", "WhatsApp (native)"], ["Target", "+" + num.split('@')[0]], ["Judul", String(name).slice(0, 40)]]);
+        const card = await dlCard("gambar", { url: img }, [["Engine", "WhatsApp (native)"], ["Target", "+" + num.split('@')[0]], ["Judul", String(name).slice(0, 40)], ["Negara", String(country || "-").slice(0, 40)], ["Nomor", String(formattedNumber)], ["Status", String(bio?.status || "-").slice(0, 40)]]);
         await sock.sendMessage(m.chat, {
             image: { url: img },
             caption: card ? `${res}\n\n${card}` : res,

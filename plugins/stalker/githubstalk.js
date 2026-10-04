@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
             `👤 *following:* ${d.following}\n\n` +
             `📝 *bio:*\n${d.bio || '-'}\n\n` +
             `🔗 ${d.url}`
-        const card = await dlCard("gambar", { url: d.avatar }, [["Engine", "API firefly.maiku"], ["Target", "@" + username], ["Judul", String(d.name || d.username || "-").slice(0, 40)]]);
+        const card = await dlCard("gambar", { url: d.avatar }, [["Engine", "API firefly.maiku"], ["Target", "@" + username], ["Judul", String(d.name || d.username || "-").slice(0, 40)], ["Repos", String(d.public_repos ?? "-")], ["Followers", String(d.followers ?? "-")], ["Lokasi", String(d.location || "-").slice(0, 40)]]);
         await sock.sendMessage(m.chat, {
             image: { url: d.avatar },
             caption: card ? `${caption}\n\n${card}` : caption

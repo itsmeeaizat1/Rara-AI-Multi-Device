@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
             `🔗 https://instagram.com/${d.username}`
         const profilePic = d.profile_pic
         if (profilePic) {
-            const card = await dlCard("gambar", { url: profilePic }, [["Engine", "API firefly.maiku"], ["Target", "@" + (d.username || username)], ["Judul", String(d.full_name || d.username || "-").slice(0, 40)]]);
+            const card = await dlCard("gambar", { url: profilePic }, [["Engine", "API firefly.maiku"], ["Target", "@" + (d.username || username)], ["Judul", String(d.full_name || d.username || "-").slice(0, 40)], ["Followers", String(d.stats?.followers ?? "-")], ["Mengikuti", String(d.stats?.following ?? "-")], ["Postingan", String(d.stats?.posts ?? "-")], ["Verified", d.is_verified ? "Ya" : "Tidak"]]);
             await sock.sendMessage(m.chat, {
                 image: { url: profilePic },
                 caption: card ? `${caption}\n\n${card}` : caption

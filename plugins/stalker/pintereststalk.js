@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     const imageUrl = r.image?.original || r.image?.large || r.image?.medium || r.image?.small;
 
     if (imageUrl) {
-      const card = await dlCard("gambar", { url: imageUrl }, [["Engine", "API nexray.eu.cc"], ["Target", "@" + r.username], ["Judul", String(r.full_name || r.username || "-").slice(0, 40)]]);
+      const card = await dlCard("gambar", { url: imageUrl }, [["Engine", "API nexray.eu.cc"], ["Target", "@" + r.username], ["Judul", String(r.full_name || r.username || "-").slice(0, 40)], ["Tipe Akun", String(r.account_type || "-")], ["Akun Dibuat", String(r.created_at || "-").slice(0, 40)]]);
       await sock.sendMessage(m.chat, {
         image: { url: imageUrl },
         caption: card ? `${caption}\n\n${card}` : caption

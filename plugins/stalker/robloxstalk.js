@@ -212,7 +212,7 @@ async function handler(m, { sock }) {
       `https://roblox.com/users/${res.id}/profile`;
     await m.react("🐣");
     if (res.avatar) {
-      const card = await dlCard("gambar", { url: res.avatar }, [["Engine", "Roblox API"], ["Target", "@" + username], ["Judul", String(res.username || "-").slice(0, 40)]]);
+      const card = await dlCard("gambar", { url: res.avatar }, [["Engine", "Roblox API"], ["Target", "@" + username], ["Judul", String(res.username || "-").slice(0, 40)], ["Display", String(res.displayName || "-").slice(0, 40)], ["Friends", String(res.social?.friends ?? "-")], ["Followers", String(res.social?.followers ?? "-")]]);
       await sock.sendMessage(
         m.chat,
         {

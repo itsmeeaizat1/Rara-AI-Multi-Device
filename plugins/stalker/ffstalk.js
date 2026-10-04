@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
     const isValidUrl = r.banner_image && (r.banner_image.startsWith("http://") || r.banner_image.startsWith("https://"));
 
     if (isValidUrl) {
-      const card = await dlCard("gambar", { url: r.banner_image }, [["Engine", "API nexray.eu.cc"], ["Target", "UID " + r.uid], ["Judul", String(r.name || "-").slice(0, 40)]]);
+      const card = await dlCard("gambar", { url: r.banner_image }, [["Engine", "API nexray.eu.cc"], ["Target", "UID " + r.uid], ["Judul", String(r.name || "-").slice(0, 40)], ["Level", String(r.level || "-")], ["Region", String(r.region || "-")], ["Likes", String(r.likes || "-")], ["BR Rank", String(r.br_rank_point || "-")], ["Guild", String(r.guild_name && r.guild_name !== "None" ? r.guild_name : "-").slice(0, 40)]]);
       await sock.sendMessage(m.chat, {
         image: { url: r.banner_image },
         caption: card ? `${caption}\n\n${card}` : caption

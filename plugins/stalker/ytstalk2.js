@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
       try {
         const imgRes = await axios.get(avatarUrl, { responseType: "arraybuffer", timeout: 15000, headers: { "User-Agent": "Mozilla/5.0" } });
         const imgBuf = Buffer.from(imgRes.data);
-        const card = await dlCard("gambar", { buffer: imgBuf }, [["Engine", "API nexray.web.id"], ["Target", "@" + username], ["Judul", String(r.title || r.name || username).slice(0, 40)]]);
+        const card = await dlCard("gambar", { buffer: imgBuf }, [["Engine", "API nexray.web.id"], ["Target", "@" + username], ["Judul", String(r.title || r.name || username).slice(0, 40)], ["Subscribers", String(r.subscribers ?? r.subscriberCount ?? "-")], ["Total Video", String(r.video_count ?? r.videoCount ?? "-")], ["Total Views", String(r.total_views ?? r.totalViews ?? "-")]]);
         return await sock.sendMessage(m.chat, { image: imgBuf, caption: card ? `${msg}\n\n${card}` : msg });
       } catch {}
     }

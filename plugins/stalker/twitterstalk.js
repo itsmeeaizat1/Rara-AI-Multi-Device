@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
         });
         const ppBuf = Buffer.from(ppRes.data);
         const caption = raraWrap("Twitter Stalk", lines);
-        const card = await dlCard("gambar", { buffer: ppBuf }, [["Engine", "API siputzx.my.id"], ["Target", "@" + (d.username || username)], ["Judul", String(d.name || d.fullName || "-").slice(0, 40)]]);
+        const card = await dlCard("gambar", { buffer: ppBuf }, [["Engine", "API siputzx.my.id"], ["Target", "@" + (d.username || username)], ["Judul", String(d.name || d.fullName || "-").slice(0, 40)], ["Followers", String(d.followers ?? "-")], ["Following", String(d.following ?? "-")], ["Tweets", String(d.tweets ?? d.statuses_count ?? "-")], ["Verified", d.verified === undefined ? "-" : d.verified ? "Ya" : "Tidak"]]);
         await sock.sendMessage(m.chat, { image: ppBuf, caption: card ? `${caption}\n\n${card}` : caption }, { quoted: m });
         return;
       } catch {

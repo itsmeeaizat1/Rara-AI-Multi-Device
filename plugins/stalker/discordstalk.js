@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
       `📅 *dibuat:* ${createdDate}\n\n` +
       `_Discord User Lookup_`;
     if (d.avatar_url) {
-      const card = await dlCard("gambar", { url: d.avatar_url }, [["Engine", "API neoxr.eu"], ["Target", "User ID " + userId], ["Judul", String(d.username || "-").slice(0, 40)]]);
+      const card = await dlCard("gambar", { url: d.avatar_url }, [["Engine", "API neoxr.eu"], ["Target", "User ID " + userId], ["Judul", String(d.username || "-").slice(0, 40)], ["Display Name", String(d.global_name || "-").slice(0, 40)], ["Discriminator", "#" + (d.discriminator || "0")], ["Akun Dibuat", String(createdDate)]]);
       await sock.sendMessage(
         m.chat,
         {
