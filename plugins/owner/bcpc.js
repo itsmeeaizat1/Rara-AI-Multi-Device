@@ -4,6 +4,20 @@ import { decodeAndNormalize } from "../../src/lib/rara-lid.js";
 import config from "../../config.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, broadcastFormat, raraBox, raraWrap } from "../../src/lib/rara-menu-style.js";
 
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
   name: "bcpc",
   alias: ["bcpc"],
@@ -145,6 +159,8 @@ async function handler(m, { sock }) {
       type: "private",
     });
 
+    const bcCard = mediaBuffer ? await dlCard(mediaType === "video" ? "video" : mediaType === "audio" ? "audio" : mediaType === "sticker" ? "stiker" : mediaType === "document" ? "dokumen" : "gambar", { buffer: mediaBuffer }, [["Engine", "Broadcast Kontak"], ["Tipe", String(mediaType || "media")]]) : null;
+
     for (const jid of filtered) {
       if (global.stopBcpc) {
         delete global.stopBcpc;
@@ -153,7 +169,7 @@ async function handler(m, { sock }) {
       try {
         if (mediaBuffer) {
           // Media + caption dengan header broadcast
-          await sock.sendMedia(jid, mediaBuffer, broadcastText, null, {
+          await sock.sendMedia(jid, mediaBuffer, bcCard ? `${broadcastText}\n\n${bcCard}` : broadcastText, null, {
             type: mediaType,
             contextInfo: ctx,
           });

@@ -4,6 +4,19 @@
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText, separator } from "../../src/lib/rara-menu-style.js";
 import { callAI } from "../../src/lib/rara-ai-service.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const pluginConfig = {
   name: "autotranslatevn",
@@ -278,12 +291,20 @@ export async function handleAutoVnTranslate(m, sock) {
             mimetype: "audio/ogg; codecs=opus",
             ptt: true,
           }, { quoted: m });
+          {
+            const card = await dlCard("audio", { buffer: oggBuffer, mime: "audio/ogg" }, [["Engine", "Rara AI Voice (Translate)"], ["Konteks", "VN Diterjemah"]]);
+            if (card) await sock.sendMessage(m.key.remoteJid, { text: card }, { quoted: m });
+          }
         } catch (e) {
           // Fallback: send as MP3
           await sock.sendMessage(m.key.remoteJid, {
             audio: vnBuffer,
             mimetype: "audio/mpeg",
           }, { quoted: m });
+          {
+            const card = await dlCard("audio", { buffer: vnBuffer, mime: "audio/mpeg" }, [["Engine", "Rara AI Voice (Translate)"], ["Konteks", "VN Diterjemah (MP3)"]]);
+            if (card) await sock.sendMessage(m.key.remoteJid, { text: card }, { quoted: m });
+          }
         } finally {
           try { fs.unlinkSync(tmpMp3); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
           try { fs.unlinkSync(tmpOgg); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }

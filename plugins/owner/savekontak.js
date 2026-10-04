@@ -1,4 +1,18 @@
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: "savekontak",
@@ -64,12 +78,16 @@ async function handler(m, { sock, args }) {
             return m.reply(raraWrap("Savekontak", "❌ Tidak ada kontak yang bisa diekstrak."));
         }
 
-        await sock.sendMessage(m.chat, {
-            document: Buffer.from(vcards, "utf8"),
-            fileName: `${baseName}_${count}_Kontak.vcf`,
-            mimetype: "text/vcard",
-            caption: `✅ *Berhasil mengekstrak ${count} kontak ke dalam VCF.*`
-        }, { quoted: m });
+        {
+            const vcfBuf = Buffer.from(vcards, "utf8");
+            const card = await dlCard("dokumen", { buffer: vcfBuf, mime: "text/vcard" }, [["Engine", "VCF Kontak"], ["Total", String(count)], ["Base", String(baseName || "-").slice(0, 40)]]);
+            await sock.sendMessage(m.chat, {
+                document: vcfBuf,
+                fileName: `${baseName}_${count}_Kontak.vcf`,
+                mimetype: "text/vcard",
+                caption: card ? `✅ *Berhasil mengekstrak ${count} kontak ke dalam VCF.*\n\n${card}` : `✅ *Berhasil mengekstrak ${count} kontak ke dalam VCF.*`
+            }, { quoted: m });
+        }
 
         await sock.sendMessage(m.chat, {
             contacts: {

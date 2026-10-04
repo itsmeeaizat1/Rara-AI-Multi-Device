@@ -8,6 +8,18 @@ import { downloadMediaMessage } from 'rara'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const run = promisify(exec)
 
@@ -91,17 +103,19 @@ async function handler(m, { sock }) {
         if (!mediaBuf || mediaBuf.length < 1000) throw new Error("Media terlalu kecil atau gagal download")
 
         if (isImage) {
+            const icard = await dlCard("gambar", { buffer: mediaBuf }, [["Engine", "Upload Saluran"], ["Tipe", "Gambar"], ["Saluran", String(chId || "-").slice(0, 40)]]);
             await sock.sendMessage(chId, {
                 image: mediaBuf,
-                caption: caption || undefined
+                caption: icard ? `${caption || ""}\n\n${icard}` : (caption || undefined)
             })
             return m.reply(raraWrap("Upch", "✅ Gambar berhasil dikirim ke saluran"))
         }
 
         if (isVideo) {
+            const vcard = await dlCard("video", { buffer: mediaBuf }, [["Engine", "Upload Saluran"], ["Tipe", "Video"], ["Saluran", String(chId || "-").slice(0, 40)]]);
             await sock.sendMessage(chId, {
                 video: mediaBuf,
-                caption: caption || undefined
+                caption: vcard ? `${caption || ""}\n\n${vcard}` : (caption || undefined)
             })
             return m.reply(raraWrap("Upch", "✅ Video berhasil dikirim ke saluran"))
         }
@@ -116,6 +130,10 @@ async function handler(m, { sock }) {
                 ptt: true,
                 waveform: Array.from(waveform)
             })
+            {
+                const acard = await dlCard("audio", { buffer: opusBuf, mime: "audio/ogg" }, [["Engine", "Upload Saluran"], ["Tipe", "VN PTV"]]);
+                if (acard) await m.reply(acard);
+            }
             return m.reply(raraWrap("Upch", "✅ Audio berhasil dikirim ke saluran"))
         }
 

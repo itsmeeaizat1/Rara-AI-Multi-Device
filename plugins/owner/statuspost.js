@@ -6,6 +6,19 @@
 //   .swpost warna #hex [teks] → status teks custom warna
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const pluginConfig = {
   name: "statuspost",
@@ -60,11 +73,12 @@ async function handler(m, { sock }) {
       try {
         const buf = await m.quoted.download();
         const isVideo = type === "videoMessage";
+        const card = await dlCard(isVideo ? "video" : "gambar", { buffer: buf }, [["Engine", "WhatsApp Status"], ["Tipe", isVideo ? "Video" : "Gambar"]]);
         await sock.sendMessage(
           "status@broadcast",
           isVideo
-            ? { video: buf, caption: teks || "" }
-            : { image: buf, caption: teks || "" }
+            ? { video: buf, caption: card ? `${teks || ""}\n\n${card}` : (teks || "") }
+            : { image: buf, caption: card ? `${teks || ""}\n\n${card}` : (teks || "") }
         );
         return m.reply(
           raraWrap("Status Post", [

@@ -5,6 +5,19 @@ import fs from "fs";
 import path from "path";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 const pluginConfig = {
   name: "get",
   alias: ["get"],
@@ -273,22 +286,24 @@ Type: ${mimeType || "unknown"}
         { quoted: m },
       );
     } else if (category === "video") {
+      const card = await dlCard("video", { buffer, mime: mimeType }, [["Engine", "HTTP Response"], ["Kategori", String(category || "-")]]);
       await sock.sendMessage(
         m.chat,
         {
           video: buffer,
           mimetype: mimeType,
-          caption: header,
+          caption: card ? `${header}\n\n${card}` : header,
         },
         { quoted: m },
       );
     } else if (category === "image") {
+      const card = await dlCard("gambar", { buffer, mime: mimeType }, [["Engine", "HTTP Response"], ["Kategori", String(category || "-")]]);
       await sock.sendMessage(
         m.chat,
         {
           image: buffer,
           mimetype: mimeType,
-          caption: header,
+          caption: card ? `${header}\n\n${card}` : header,
         },
         { quoted: m },
       );
@@ -354,14 +369,16 @@ Type: ${mimeType || "unknown"}
         );
       }
     } else {
+      const card = await dlCard("dokumen", { buffer, mime: mimeType }, [["Engine", "HTTP Response"], ["Kategori", String(category || "-")]]);
       const fileName = `response_${Date.now()}.${ext}`;
+      const docCaption = header + "\n\n📎 Full response dikirim sebagai file";
       await sock.sendMessage(
         m.chat,
         {
           document: buffer,
           fileName,
           mimetype: mimeType || "application/octet-stream",
-          caption: header + "\n\n📎 Full response dikirim sebagai file",
+          caption: card ? `${docCaption}\n\n${card}` : docCaption,
         },
         { quoted: m },
       );

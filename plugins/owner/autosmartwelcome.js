@@ -30,6 +30,19 @@ import { raraError, raraBox, toSC } from "../../src/lib/rara-menu-style.js";
 import { callAI } from "../../src/lib/rara-ai-service.js";
 import { createWideDiscordCard } from "../../src/lib/rara-welcome-card.js";
 import config from "../../config.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const pluginConfig = {
   name: "autosmartwelcome",
@@ -277,9 +290,10 @@ export async function sendSmartWelcome(sock, groupJid, participantJid, metadata)
       const ppUrl = await sock.profilePictureUrl(participantJid, "image").catch(() => null);
       const buffer = await createWideDiscordCard(username, ppUrl, groupName, memberCount);
       const caption = welcomeText || generateFallbackWelcome(participantJid, metadata);
+      const card = await dlCard("gambar", { buffer }, [["Engine", "Canvas Welcome Auto"], ["Member", String(username || "-").slice(0, 40)], ["Grup", String(groupName || "-").slice(0, 40)], ["Total Member", String(memberCount || "-")]]);
       await sock.sendMessage(groupJid, {
         image: buffer,
-        caption,
+        caption: card ? `${caption}\n\n${card}` : caption,
         mentions: [participantJid],
       });
     } catch (err) {

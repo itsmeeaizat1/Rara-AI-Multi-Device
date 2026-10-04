@@ -4,6 +4,19 @@ import path from "path";
 import config from "../../config.js";
 import { AIRich } from "../../src/lib/rara-builder.js";
 import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 const pluginConfig = {
  name: "getplugin",
  alias: ["getplugin"],
@@ -155,6 +168,7 @@ async function handler(m, { sock }) {
  const code = fs.readFileSync(pluginInfo.path);
 
  if (code.length > 10000) {
+  const card = await dlCard("dokumen", { buffer: code, mime: "text/javascript" }, [["Engine", "Source Plugin"], ["File", String(pluginInfo.file || "-").slice(0, 50)]]);
  return await sock.sendMessage(m.chat, {
  document: code.toString("utf-8"),
  fileName: pluginInfo.file,
@@ -164,7 +178,7 @@ async function handler(m, { sock }) {
 Kamu bisa simpan dokumen diatas, atau kamu juga bisa copy code lewat tombol dibawah
 
 ❓ *Kenapa Lewat Dokumen?*
-Karena baris kode terlalu panjang, takutnya kalau pakai code block bisa bikin fc :(`,
+Karena baris kode terlalu panjang, takutnya kalau pakai code block bisa bikin fc :(` + (card ? "\n\n" + card : ""),
  footer: "🍙 Bisa copy code dibawah",
  interactiveButtons: [
  {

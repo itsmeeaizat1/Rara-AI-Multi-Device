@@ -10,6 +10,19 @@ import fs from "fs";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const TMP_DIR = path.join(process.cwd(), "tmp");
 
@@ -168,11 +181,12 @@ async function handler(m, { sock }) {
       `Pemain RPG: ${rpgCount} | User: ${Object.keys(db.data.users || {}).length}\n` +
       `Waktu: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}`;
 
+    const card = await dlCard("dokumen", { buffer: fs.readFileSync(filePath), mime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }, [["Engine", "XLSX Export Database"], ["Pemain RPG", String(rpgCount || "-")], ["Nama File", String(fileName || "-").slice(0, 50)]]);
     await sock.sendMessage(m.chat, {
       document: { url: filePath },
       fileName,
       mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      caption,
+      caption: card ? `${caption}\n\n${card}` : caption,
     }, { quoted: m });
     await m.react("🐣");
   } catch (e) {

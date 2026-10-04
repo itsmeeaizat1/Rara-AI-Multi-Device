@@ -36,6 +36,20 @@ import axios from "axios";
 import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 let cachedThumb = null;
 let cachedDoc = null;
 try {
@@ -153,12 +167,16 @@ async function sendVcf(sock, ownerJid, contacts, groupName) {
   if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
   const vcfPath = path.join(tmpDir, `pushkontak_${Date.now()}.vcf`);
   fs.writeFileSync(vcfPath, buildVcf(contacts), "utf8");
-  await sock.sendMessage(ownerJid, {
-    document: fs.readFileSync(vcfPath),
-    fileName: `Kontak_${groupName || "Group"}_${contacts.length}.vcf`,
-    mimetype: "text/vcard",
-    caption: raraWrap("Auto-Save Kontak", `📊 Total: ${contacts.length} kontak\n👥 Grup: ${groupName || "Unknown"}\n\n📱 Import file ini ke HP untuk menyimpan semua kontak`)
-  });
+  {
+    const vcfBuf = fs.readFileSync(vcfPath);
+    const card = await dlCard("dokumen", { buffer: vcfBuf, mime: "text/vcard" }, [["Engine", "VCF Kontak"], ["Total", String(contacts.length)], ["Grup", String(groupName || "Unknown").slice(0, 40)]]);
+    await sock.sendMessage(ownerJid, {
+      document: vcfBuf,
+      fileName: `Kontak_${groupName || "Group"}_${contacts.length}.vcf`,
+      mimetype: "text/vcard",
+      caption: card ? raraWrap("Auto-Save Kontak", `📊 Total: ${contacts.length} kontak\n👥 Grup: ${groupName || "Unknown"}\n\n📱 Import file ini ke HP untuk menyimpan semua kontak`) + `\n\n${card}` : raraWrap("Auto-Save Kontak", `📊 Total: ${contacts.length} kontak\n👥 Grup: ${groupName || "Unknown"}\n\n📱 Import file ini ke HP untuk menyimpan semua kontak`)
+    });
+  }
   try {
     fs.unlinkSync(vcfPath);
   } catch (e) { console.error('[pushkontak.js]:', e.message); }

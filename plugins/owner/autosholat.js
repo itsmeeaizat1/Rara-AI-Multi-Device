@@ -14,6 +14,19 @@ import {
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraLine } from "../../src/lib/rara-menu-style.js";
 import { initSholatScheduler, stopSholatScheduler } from "../../src/lib/rara-sholat-scheduler.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 function raraWrap(title, text) {
   const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
@@ -238,6 +251,10 @@ async function runAutoSholat(sock) {
               mimetype: "audio/mpeg",
               ptt: false,
             }, { quoted: msgTeks });
+            {
+              const card = await dlCard("audio", { url: AUDIO_ADZAN }, [["Engine", "Audio Adzan"], ["Sholat", String(sholat || "-")], ["Kota", String(kotaSetting?.nama || "-")]]);
+              if (card) await sock.sendMessage(jid, { text: card }, { quoted: msgTeks });
+            }
 
             if (closeGroup) {
               await sock.groupSettingUpdate(jid, "announcement");

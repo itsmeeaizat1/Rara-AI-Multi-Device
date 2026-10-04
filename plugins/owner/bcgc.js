@@ -6,6 +6,20 @@ import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, broadcastFormat, raraWrap, raraBox } from "../../src/lib/rara-menu-style.js";
 
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
   name: "bcgc",
   alias: ["bcgc"],
@@ -216,7 +230,10 @@ async function handler(m, { sock }) {
         if (mediaType === "sticker") {
           // Sticker tidak bisa pakai caption, kirim sticker dulu lalu text info
           await sock.sendMessage(gid, { sticker: mediaBuffer, contextInfo: ctx });
-          await sock.sendMessage(gid, { text: broadcastText, contextInfo: ctx });
+          {
+            const card = await dlCard("stiker", { buffer: mediaBuffer, mime: "image/webp" }, [["Engine", "Broadcast Grup"], ["Tipe", "Stiker"]]);
+            await sock.sendMessage(gid, { text: card ? `${broadcastText}\n\n${card}` : broadcastText, contextInfo: ctx });
+          }
         } else if (mediaType === "audio") {
           // Audio: kirim audio dulu, lalu text info terpisah
           await sock.sendMessage(gid, {
@@ -225,22 +242,31 @@ async function handler(m, { sock }) {
             ptt: qmsg.ptt || false,
             contextInfo: ctx,
           });
-          await sock.sendMessage(gid, { text: broadcastText, contextInfo: ctx });
+          {
+            const card = await dlCard("audio", { buffer: mediaBuffer, mime: qmsg.mimetype }, [["Engine", "Broadcast Grup"], ["Tipe", "Audio"]]);
+            await sock.sendMessage(gid, { text: card ? `${broadcastText}\n\n${card}` : broadcastText, contextInfo: ctx });
+          }
         } else if (mediaType === "document") {
-          await sock.sendMessage(gid, {
-            document: mediaBuffer,
-            mimetype: qmsg.mimetype || "application/octet-stream",
-            fileName: qmsg.fileName || "file",
-            caption: broadcastText,
-            contextInfo: ctx,
-          });
+          {
+            const card = await dlCard("dokumen", { buffer: mediaBuffer, mime: qmsg.mimetype }, [["Engine", "Broadcast Grup"], ["Tipe", "Dokumen"], ["Nama File", String(qmsg.fileName || "file").slice(0, 50)]]);
+            await sock.sendMessage(gid, {
+              document: mediaBuffer,
+              mimetype: qmsg.mimetype || "application/octet-stream",
+              fileName: qmsg.fileName || "file",
+              caption: card ? `${broadcastText}\n\n${card}` : broadcastText,
+              contextInfo: ctx,
+            });
+          }
         } else if (mediaBuffer) {
           // Image/video: caption = broadcast text dengan header info
-          await sock.sendMessage(gid, {
-            [mediaType]: mediaBuffer,
-            caption: broadcastText,
-            contextInfo: ctx,
-          });
+          {
+            const card = await dlCard(mediaType === "video" ? "video" : "gambar", { buffer: mediaBuffer }, [["Engine", "Broadcast Grup"], ["Tipe", mediaType === "video" ? "Video" : "Gambar"]]);
+            await sock.sendMessage(gid, {
+              [mediaType]: mediaBuffer,
+              caption: card ? `${broadcastText}\n\n${card}` : broadcastText,
+              contextInfo: ctx,
+            });
+          }
         } else {
           // Text only
           await sock.sendMessage(gid, { text: broadcastText, contextInfo: ctx });

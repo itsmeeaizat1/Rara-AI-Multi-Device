@@ -1,5 +1,19 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 
+
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
@@ -49,9 +63,10 @@ async function handler(m, { sock, config: botConfig }) {
     const buffer = Buffer.from(await res.arrayBuffer());
 
     await m.react("🐣");
+    const card = await dlCard("gambar", { buffer }, [["Engine", "WhatsApp CDN"], ["Konteks", "Foto Profil Grup"], ["Target", String(m.chat || "-").slice(0, 40)]]);
     await sock.sendMessage(m.chat, {
       image: buffer,
-      caption: "Clone foto profil grup berhasil.",
+      caption: card ? `Clone foto profil grup berhasil.\n\n${card}` : "Clone foto profil grup berhasil.",
     });
 
     const text =

@@ -34,6 +34,19 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const execAsync = promisify(exec);
 const TMP_DIR = path.join(process.cwd(), "tmp");
@@ -373,6 +386,10 @@ async function sendAivReply(sock, gid, cfg, aiReply, quotedMsg) {
     ? await sock.sendMessage(gid, { audio: ogg, mimetype: "audio/ogg; codecs=opus", ptt: true }, opts)
     : await sock.sendMessage(gid, { audio: mp3, mimetype: "audio/mpeg" }, opts);
   trackSent(gid, sent?.key?.id);
+  {
+    const card = await dlCard("audio", { buffer: ogg || mp3, mime: ogg ? "audio/ogg" : "audio/mpeg" }, [["Engine", "Rara AI Voice"], ["Konteks", "Interaksi VN Auto"], ["Sumber", "Jawaban AI TTS"]]);
+    if (card) await sock.sendMessage(gid, { text: card }, opts);
+  }
   return "vn";
 }
 

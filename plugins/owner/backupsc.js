@@ -6,6 +6,19 @@ import archiver from "archiver";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch owner) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 const pluginConfig = {
   name: "backupsc",
   alias: ["backupsc"],
@@ -184,6 +197,7 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
+    const card = await dlCard("dokumen", { buffer: fs.readFileSync(zipFilePath), mime: "application/zip" }, [["Engine", "Zip Backup Script"], ["Nama File", String(zipFileName || "-").slice(0, 50)], ["Ukuran", `${fileSizeMB} MB`]]);
     await sock.sendMessage(
       m.chat,
       {
@@ -197,7 +211,7 @@ async function handler(m, { sock }) {
           `📊 sIze: \`${fileSizeMB} MB\`\n` +
           `📁 File: \`${fileCount}\`\n` +
           `📅 Tanggal: \`${moment().tz("Asia/Jakarta").format("DD/MM/YYYY")}\`\n` +
-          "",
+          "" + (card ? "\n\n" + card : ""),
         contextInfo: {
           forwardingScore: 0,
           isForwarded: false,
