@@ -3,10 +3,9 @@ import fs from 'fs'
 import path from 'path'
 import { exec } from 'child_process'
 import { promisify } from 'util'
-import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraCaption, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption, fmtBytes } from "../../src/lib/rara-media-info.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 const execAsync = promisify(exec)
 
 const pluginConfig = {
@@ -131,9 +130,10 @@ async function handler(m, { sock, config: botConfig }) {
         return
     }
     const options = parseOptions(m.args || [])
+    let videoDur = null
     
     try {
-    await m.react("🕒");
+        await m.react("🕒");
         let buffer
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download()
@@ -155,7 +155,6 @@ async function handler(m, { sock, config: botConfig }) {
             const tempVideo = path.join(tempDir, `duration_check_${Date.now()}.mp4`)
             fs.writeFileSync(tempVideo, buffer)
             
-            let videoDur = null
             try {
                 const { stdout } = await execAsync(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${tempVideo}"`)
                 const duration = parseFloat(stdout.trim())
@@ -201,27 +200,42 @@ async function handler(m, { sock, config: botConfig }) {
             if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath)
         }
         
+        let webpBuf = null
         if (isImage) {
-            await sock.sendImageAsSticker(m.chat, buffer, m, { packname, author })
+            await sock.sendImageAsSticker(m.chat, buffer, m, { packname, author, onWebp: (b) => { webpBuf = b; } })
         } else if (isVideo) {
-            await sock.sendVideoAsSticker(m.chat, buffer, m, { packname, author })
+            await sock.sendVideoAsSticker(m.chat, buffer, m, { packname, author, onWebp: (b) => { webpBuf = b; } })
         }
         await m.react("🐣");
-        // format info hasil (request owner 19-20 Sep — field sesuai fitur)
+        
         const filters = [
             options.crop && "crop",
             options.circle && "circle",
             options.rounded && "rounded",
             options.resize && `resize ${options.resize}`,
         ].filter(Boolean).join(", ")
-        await m.reply(mediaInfoCaption({ header: "Rara Sticker", fields: [
-            { icon: "📥", label: "Input", value: isVideo ? "Video" : "Foto" },
-            { icon: "⏱️", label: "Durasi", value: videoDur ? `${videoDur.toFixed(1)} detik` : null },
-            { icon: "🎨", label: "Filter", value: filters || null },
-            { icon: "👤", label: "Pack", value: `${packname} • ${author}` },
-            { icon: "📦", label: "Ukuran", value: fmtBytes(buffer.length) },
-            { icon: "⬇️", label: "Hasil", value: isVideo ? "Stiker Animasi WebP" : "Stiker WebP" },
-        ] }))
+
+        let card = "";
+        try {
+            if (webpBuf) {
+                const info = await probeBuffer(webpBuf);
+                card = mediaResultCard({
+                    header: "sticker",
+                    type: "stiker",
+                    request: [
+                        ["Input", isVideo ? "Video" : "Foto"],
+                        ["Filter", filters],
+                        ["Pack", `${packname} • ${author}`]
+                    ],
+                    size: info.size,
+                    mime: info.mime || "image/webp",
+                    width: info.width,
+                    height: info.height,
+                    duration: videoDur || undefined
+                });
+            }
+        } catch { /* best-effort */ }
+        await m.reply(card || raraBerhasil("Sticker"));
     } catch (error) {
         console.error('[sticker.js]', error.message || error)
         m.reply(raraGangguan("Sticker"))

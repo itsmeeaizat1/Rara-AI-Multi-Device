@@ -2,6 +2,7 @@
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 import { addExifToWebp, isAnimatedWebp, DEFAULT_METADATA } from '../../src/lib/rara-exif.js'
+import { mediaResultCard, probeBuffer } from '../../src/lib/rara-media-result.js'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
@@ -67,12 +68,14 @@ async function handler(m, { sock, config: botConfig }) {
         }
         
         const exifOpts = { packname, author, emojis: ['🤖'] }
+        let hasilBuf = null
         const riff = buffer.slice(0, 4).toString('ascii')
         const webpSig = buffer.length >= 12 ? buffer.slice(8, 12).toString('ascii') : ''
         const isWebp = riff === 'RIFF' && webpSig === 'WEBP'
         
         if (isWebp) {
             const stickerBuffer = await addExifToWebp(buffer, exifOpts)
+            hasilBuf = stickerBuffer
             await sock.sendMessage(m.chat, {
                 sticker: stickerBuffer,
                 contextInfo: { isForwarded: false, forwardingScore: 0 }
@@ -80,6 +83,7 @@ async function handler(m, { sock, config: botConfig }) {
         } else {
             const isVideo = buffer.slice(0, 3).toString('hex') === '000000' ||
                             buffer.slice(4, 8).toString('ascii') === 'ftyp'
+            exifOpts.onWebp = (b) => { hasilBuf = b }
             
             if (isVideo) {
                 await sock.sendVideoAsSticker(m.chat, buffer, m, exifOpts)
@@ -88,7 +92,20 @@ async function handler(m, { sock, config: botConfig }) {
             }
         }
         await m.react("🐣");
-        await m.reply(raraBerhasil("Swm"));
+        let card = ""
+        try {
+            if (hasilBuf) {
+                const info = await probeBuffer(hasilBuf)
+                card = mediaResultCard({
+                    header: "swm",
+                    type: "stiker",
+                    request: [["Pack", packname], ["Author", author]],
+                    size: info.size, mime: info.mime || "image/webp",
+                    width: info.width, height: info.height,
+                })
+            }
+        } catch { /* best-effort */ }
+        await m.reply(card || raraBerhasil("Swm"));
     } catch (error) {
         console.error('[SWM] Error:', error.message)
         m.reply(raraGangguan("Swm"))

@@ -10,6 +10,7 @@ import sharp from "sharp";
 import { config } from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 // Register Anton font (Impact-like, free Google Font)
 const FONT_PATH = path.join(process.cwd(), "assets", "fonts", "Anton.ttf");
@@ -224,12 +225,32 @@ async function handler(m, { sock }) {
     }
 
     // Send as sticker
+    let webpBuf = null;
     await sock.sendImageAsSticker(m.chat, stickerBuffer, m, {
       packname: config.sticker?.packname || "Rara-AI",
       author: config.sticker?.author || "Bot",
+      onWebp: (b) => { webpBuf = b; },
     });
       await m.react("🐣");
-      await m.reply(raraBerhasil("smemev2"));
+      let card = "";
+      try {
+        if (webpBuf) {
+          const info = await probeBuffer(webpBuf);
+          card = mediaResultCard({
+            header: "smemev2",
+            type: "stiker",
+            request: [
+              ["Teks atas", topText],
+              ["Teks bawah", bottomText],
+            ],
+            size: info.size,
+            mime: info.mime || "image/webp",
+            width: info.width,
+            height: info.height,
+          });
+        }
+      } catch { /* best-effort */ }
+      await m.reply(card || raraBerhasil("smemev2"));
   } catch (error) {
     console.error("[SMEMEV2] Error:", error.message);
     await m.reply(raraGangguan("smemev2"));

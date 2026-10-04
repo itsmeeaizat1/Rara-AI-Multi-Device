@@ -4,6 +4,7 @@ import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "brat",
@@ -55,6 +56,7 @@ async function sendBratMenu(m, sock, text) {
       }),
     },
   ];
+  let webpBuf = null;
   await sock.sendButton(m.chat, getAssetBuffer("sticker-thumb"), caption, m, {
     buttons,
     footer: "Rara-AI Brat Generator",
@@ -76,8 +78,23 @@ async function handler(m, { sock }) {
     await sock.sendImageAsSticker(m.chat, pngBuffer, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
+      onWebp: (b) => { webpBuf = b; },
+
     });
-    await m.reply(raraBerhasil("brat"));
+        let card = "";
+    try {
+      if (webpBuf) {
+        const info = await probeBuffer(webpBuf);
+        card = mediaResultCard({
+          header: "brat",
+          type: "stiker",
+          request: [["Teks", String(text).slice(0, 80)]],
+          size: info.size, mime: info.mime || "image/webp",
+          width: info.width, height: info.height,
+        });
+      }
+    } catch { /* best-effort */ }
+    await m.reply(card || raraBerhasil("brat"));
   } catch (error) {
     console.error("[brat] Error:", error.message);
     await m.react("❌");

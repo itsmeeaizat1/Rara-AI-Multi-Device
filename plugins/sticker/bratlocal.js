@@ -10,6 +10,7 @@ import fetch from "node-fetch";
 import te from "../../src/lib/rara-error.js";
 import config from "../../config.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -412,6 +413,7 @@ async function handler(m, { sock }) {
 
     const inputText = normalizeText(text);
 
+    let webpBuf = null;
     if (isVideo) {
       await m.react("🐣");
       const videoBuffer = await createBratVideo(inputText, template);
@@ -420,7 +422,8 @@ async function handler(m, { sock }) {
 
       await sock.sendVideoAsSticker(m.chat, tempPath, m, {
         packname: config.sticker.packname,
-        author: config.sticker.author
+        author: config.sticker.author,
+        onWebp: (b) => { webpBuf = b; }
       });
 
       try { fs.unlinkSync(tempPath); } catch (e) { console.error('[bratlocal.js]:', e.message); }
@@ -429,9 +432,27 @@ async function handler(m, { sock }) {
       const imageBuffer = await createBratImage(inputText, template);
       await sock.sendImageAsSticker(m.chat, imageBuffer, m, {
         packname: config.sticker.packname,
-        author: config.sticker.author
+        author: config.sticker.author,
+        onWebp: (b) => { webpBuf = b; }
       });
     }
+
+    let card = "";
+    try {
+      if (webpBuf) {
+        const info = await probeBuffer(webpBuf);
+        card = mediaResultCard({
+          header: "bratlocal",
+          type: "stiker",
+          request: [["Teks", String(text).slice(0, 80)]],
+          size: info.size,
+          mime: info.mime || "image/webp",
+          width: info.width,
+          height: info.height
+        });
+      }
+    } catch { /* best-effort */ }
+    if (card) await m.reply(card);
   } catch (error) {
     await m.react("❌");
     m.reply(raraWrap("bratlocal", te(m.prefix, m.command, m.pushName), "error"));

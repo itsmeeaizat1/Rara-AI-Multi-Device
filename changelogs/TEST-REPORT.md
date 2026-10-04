@@ -1,3 +1,7 @@
+## 4 Okt 2026 — feat/media-field-ai (batch 3: kategori STIKER)
+
+sticker-media-info BARU 58/58 (probeBuffer webp via sharp live, kartu Jenis: stiker + Format WEBP + Ukuran + Dimensi, hook onWebp di sendImageAsSticker/sendVideoAsSticker, 29 asersi plugin, pack ringkasan tanpa probe per stiker, anti-throw). Regresi: media-info 67/67 (asersi sticker.js disejajarkan ke kartu baru) · ai-media-info 46/46 · formatguard 22/22 · menu-layout 4/4 · plugins-import 10/11 (1 gagal = skia.node, kegagalan lingkungan worktree yang identik di file asli maker/fakebankjago.js & smemev2.js yang gak disentuh — bukan efek perubahan; di main murni pun gagal sama).
+
 ## 4 Okt 2026 — feat/media-field-ai (batch 2: kategori AI AGENT)
 
 ai-media-info 46/46 · editimage-agent 19/19 (TOOLS.editimage dipulihkan) · agentloop 40/40 (asesi desain final) · hiaiagent 19/19 · ocode 43/43. Regresi: plugins-import 11/11 · formatguard 22/22 · agent 116/116 · media-info 67/67 · react-loading 32/32 · menu-layout 4/4.

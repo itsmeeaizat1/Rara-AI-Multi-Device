@@ -5,6 +5,7 @@ import sharp from "sharp";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "stikergrid",
@@ -289,6 +290,8 @@ async function processCollage(session, chatJid, sock, m) {
     // Build collage
     const collageBuffer = await buildCollage(session.images);
 
+    const photoCount = session.images.length;
+
     // Clear session
     clearTimeout(session.timer);
     sessions.delete(chatJid);
@@ -297,10 +300,30 @@ async function processCollage(session, chatJid, sock, m) {
     const packname = config.sticker?.packname || config.bot?.name || "Rara-AI";
     const author = config.sticker?.author || config.owner?.name || "Bot";
 
-    await sock.sendImageAsSticker(chatJid, collageBuffer, m, { packname, author });
+    let webpBuf = null;
+    await sock.sendImageAsSticker(chatJid, collageBuffer, m, {
+      packname,
+      author,
+      onWebp: (b) => { webpBuf = b; }
+    });
 
     await m.react("🐣");
-      await m.reply(raraBerhasil("stikergrid"));
+    let card = "";
+    try {
+      if (webpBuf) {
+        const info = await probeBuffer(webpBuf);
+        card = mediaResultCard({
+          header: "stikergrid",
+          type: "stiker",
+          request: [["Jumlah foto", photoCount ? `${photoCount} foto` : ""]],
+          size: info.size,
+          mime: info.mime || "image/webp",
+          width: info.width,
+          height: info.height,
+        });
+      }
+    } catch { /* best-effort */ }
+    await m.reply(card || raraBerhasil("stikergrid"));
   } catch (err) {
     console.log("[StikerGrid] Error:", err.message);
     clearTimeout(session?.timer);

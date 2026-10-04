@@ -3,6 +3,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import { raraWrap, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "emojimix",
@@ -86,12 +87,27 @@ async function handler(m, { sock }) {
     const res = await axios.get(imageUrl, { responseType: "arraybuffer", timeout: 15000 });
     const buffer = Buffer.from(res.data);
 
+    let webpBuf = null;
     await sock.sendImageAsSticker(m.chat, buffer, m, {
       packname: config.sticker?.packname || "Rara AI",
       author: config.sticker?.author || "Aizat",
+      onWebp: (b) => { webpBuf = b; },
     });
     await m.react("🐣");
-    await m.reply(raraBerhasil("emojimix"));
+    let card = "";
+    try {
+      if (webpBuf) {
+        const info = await probeBuffer(webpBuf);
+        card = mediaResultCard({
+          header: "emojimix",
+          type: "stiker",
+          request: [["Emoji", `${emoji1} + ${emoji2}`]],
+          size: info.size, mime: info.mime || "image/webp",
+          width: info.width, height: info.height,
+        });
+      }
+    } catch { /* best-effort */ }
+    await m.reply(card || raraBerhasil("emojimix"));
   } catch (err) {
     console.error("[EmojiMix]", err);
     await m.react("❌");

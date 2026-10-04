@@ -2,6 +2,7 @@
 // stickerfilter.js — Apply filter ke sticker (local @napi-rs/canvas, no API)
 import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
 import { addExifToWebp } from "../../src/lib/rara-exif.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 import { raraWrap, raraError, raraGuide, raraNoQuoted, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
@@ -141,7 +142,18 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, { sticker: exifBuf }, { quoted: m });
     await m.react("🐣");
-    await m.reply(raraBerhasil("stickerfilter"));
+    let card = "";
+    try {
+        const info = await probeBuffer(exifBuf);
+        card = mediaResultCard({
+            header: "stickerfilter",
+            type: "stiker",
+            request: [["Filter", filter]],
+            size: info.size, mime: info.mime || "image/webp",
+            width: info.width, height: info.height,
+        });
+    } catch { /* best-effort */ }
+    await m.reply(card || raraBerhasil("stickerfilter"));
   } catch (err) {
     console.error("[StickerFilter]", err);
     await m.react("❌");

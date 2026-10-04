@@ -11,6 +11,8 @@ import path from "path";
 import { config } from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
+
 const pluginConfig = {
   name: "smeme",
   alias: ["smeme"],
@@ -146,12 +148,32 @@ async function handler(m, { sock }) {
       },
     });
     const buffer = Buffer.from(response.data);
+    let webpBuf = null;
     await sock.sendImageAsSticker(m.chat, buffer, m, {
       packname: config.sticker?.packname || "Rara-AI",
       author: config.sticker?.author || "Bot",
+      onWebp: (b) => { webpBuf = b; },
     });
       await m.react("🐣");
-      await m.reply(raraBerhasil("smeme"));
+      let card = "";
+      try {
+        if (webpBuf) {
+          const info = await probeBuffer(webpBuf);
+          card = mediaResultCard({
+            header: "smeme",
+            type: "stiker",
+            request: [
+              ["Teks atas", top],
+              ["Teks bawah", bottom],
+            ],
+            size: info.size,
+            mime: info.mime || "image/webp",
+            width: info.width,
+            height: info.height,
+          });
+        }
+      } catch { /* best-effort */ }
+      await m.reply(card || raraBerhasil("smeme"));
   } catch (error) {
     console.log("[SMEME] Error:", error.message);
     m.reply(raraGangguan("smeme"));

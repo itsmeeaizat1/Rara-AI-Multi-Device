@@ -2,6 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 // ─── Frame definitions ───
 const FRAMES = {
@@ -793,7 +794,22 @@ export default {
         contextInfo: { isForwarded: false, forwardingScore: 0, premium: 1 },
       }, { quoted: m });
         await m.react("🐣");
-        await m.reply(raraBerhasil("Polaroid"));
+        let card = "";
+        try {
+          if (sticker) {
+            const info = await probeBuffer(sticker);
+            card = mediaResultCard({
+              header: "stikerframe",
+              type: "stiker",
+              request: [["Bingkai", useFrame]],
+              size: info.size,
+              mime: info.mime || "image/webp",
+              width: info.width,
+              height: info.height,
+            });
+          }
+        } catch { /* best-effort */ }
+        await m.reply(card || raraBerhasil("Polaroid"));
     } catch (e) {
       console.log("[StikerFrame] Error:", e.message);
       await m.reply(raraWrap("StikerFrame", [

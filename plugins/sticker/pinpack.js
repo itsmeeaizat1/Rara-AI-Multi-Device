@@ -7,6 +7,7 @@ import axios from "axios"
 import config from "../../config.js"
 import te from "../../src/lib/rara-error.js"
 import { addExifToWebp } from "../../src/lib/rara-exif.js"
+import { mediaResultCard } from "../../src/lib/rara-media-result.js"
 import { raraError, raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js"
 
 function getSharp() { return _sharp }
@@ -139,7 +140,19 @@ async function handler(m, { sock }) {
                 await m.reply(raraGagal("PinPack"))
             }
         }
-        await m.reply(raraBerhasil("pinpack"));
+        let card = "";
+        try {
+            card = mediaResultCard({
+                header: "pinpack",
+                platform: "Pinterest",
+                request: [
+                    ["Paket", packname],
+                    ["Jumlah", `${stickerBuffers.length} stiker`],
+                    ["Author", author],
+                ],
+            });
+        } catch { /* best-effort */ }
+        await m.reply(card || raraBerhasil("pinpack"));
     } catch (error) {
         console.error("[PinPack] Error:", error.message)
         m.reply(raraGangguan("pinpack"))

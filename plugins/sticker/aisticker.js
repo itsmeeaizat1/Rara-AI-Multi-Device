@@ -9,6 +9,7 @@
 import { callImageGenChain } from "../../src/lib/rara-ai-service.js";
 import { upscaleImage, polishImage } from "../../src/lib/rara-remini-ffmpeg.js";
 import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "aisticker",
@@ -103,14 +104,40 @@ async function handler(m, { sock, args, config: botConfig }) {
     const packname = botConfig?.sticker?.packname || botConfig?.bot?.name || "Rara-AI";
     const author = botConfig?.sticker?.author || botConfig?.owner?.name || "Bot";
 
-    await sock.sendImageAsSticker(m.chat, buf, m, { packname, author });
+    let webpBuf = null;
+    await sock.sendImageAsSticker(m.chat, buf, m, {
+      packname,
+      author,
+      onWebp: (b) => { webpBuf = b; }
+    });
     await m.react("🐣");
+
+    let card = "";
+    try {
+      if (webpBuf) {
+        const info = await probeBuffer(webpBuf);
+        card = mediaResultCard({
+          header: "aisticker",
+          type: "stiker",
+          request: [
+            ["Prompt", String(cleanPrompt).slice(0, 80)],
+            ["Engine", `${img.via || "nano-banana"}${hdNote || ""}`]
+          ],
+          size: info.size,
+          mime: info.mime || "image/webp",
+          width: info.width,
+          height: info.height
+        });
+      }
+    } catch { /* best-effort */ }
+
     await m.reply(
-      raraWrap("AI Sticker", [
-        "✅ Sticker AI jadi!",
-        `🎨 Prompt: ${cleanPrompt}`,
-        `⚡ Engine: ${img.via || "nano-banana"}${hdNote}`,
-      ].join("\n"))
+      card ||
+        raraWrap("AI Sticker", [
+          "✅ Sticker AI jadi!",
+          `🎨 Prompt: ${cleanPrompt}`,
+          `⚡ Engine: ${img.via || "nano-banana"}${hdNote}`,
+        ].join("\n"))
     );
   } catch (e) {
     console.error("[aisticker]", e.message || e);

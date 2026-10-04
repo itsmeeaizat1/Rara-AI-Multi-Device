@@ -2,6 +2,7 @@
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraReply, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "bratcewek",
@@ -32,12 +33,28 @@ async function handler(m, { sock }) {
   try {
   await m.react("🕒");
     const url = `https://api.deline.web.id/maker/cewekbrat?text=${encodeURIComponent(text)}`;
+    let webpBuf = null;
     await sock.sendImageAsSticker(m.chat, url, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
+      onWebp: (b) => { webpBuf = b; },
+
     });
       await m.react("🐣");
-      await m.reply(raraBerhasil("bratcewek"));
+            let card = "";
+      try {
+        if (webpBuf) {
+          const info = await probeBuffer(webpBuf);
+          card = mediaResultCard({
+            header: "bratcewek",
+            type: "stiker",
+            request: [["Teks", String(text).slice(0, 80)]],
+            size: info.size, mime: info.mime || "image/webp",
+            width: info.width, height: info.height,
+          });
+        }
+      } catch { /* best-effort */ }
+      await m.reply(card || raraBerhasil("bratcewek"));
   } catch (error) {
     console.error("[bratcewek] Error:", error.message);
     const msg = raraGangguan("bratcewek");

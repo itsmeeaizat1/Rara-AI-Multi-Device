@@ -6,6 +6,7 @@ import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraReply, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "bratpatrick",
@@ -38,13 +39,29 @@ async function handler(m, { sock }) {
   await m.react("🕒");
     const pngBuffer = await bratGen(text, { C_BG: "#ff69b4", C_TEXT: "#ffffff" });
     await fs.promises.writeFile(tempFile, pngBuffer);
+    let webpBuf = null;
     await sock.sendImageAsSticker(m.chat, tempFile, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
+      onWebp: (b) => { webpBuf = b; },
+
     });
     await fs.promises.unlink(tempFile).catch(() => {});
       await m.react("🐣");
-      await m.reply(raraBerhasil("bratpatrick"));
+            let card = "";
+      try {
+        if (webpBuf) {
+          const info = await probeBuffer(webpBuf);
+          card = mediaResultCard({
+            header: "bratpatrick",
+            type: "stiker",
+            request: [["Teks", String(text).slice(0, 80)]],
+            size: info.size, mime: info.mime || "image/webp",
+            width: info.width, height: info.height,
+          });
+        }
+      } catch { /* best-effort */ }
+      await m.reply(card || raraBerhasil("bratpatrick"));
   } catch (error) {
     await fs.promises.unlink(tempFile).catch(() => {});
     console.error("[bratpatrick] Error:", error.message);

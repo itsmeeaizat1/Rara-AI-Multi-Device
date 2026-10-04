@@ -54,7 +54,7 @@ t("caption: icon default kalau gak ada", mediaInfoCaption({ header: "X", fields:
 // ── asersi source: fitur pemroses media pakai format baru ──
 {
   const files = {
-    "plugins/sticker/sticker.js": ['mediaInfoCaption({ header: "Rara Sticker"', "Stiker Animasi WebP"],
+    "plugins/sticker/sticker.js": ['mediaResultCard({', 'header: "sticker"'],
     "plugins/tools/converter.js": ['mediaInfoCaption({ header: "Rara Converter"', "Rara Converter"],
     "plugins/convert/togif.js": ['mediaInfoCaption({ header: "Rara To GIF"'],
     "plugins/convert/vocalremover.js": ['mediaInfoCaption({ header: "Rara Vocal Remover"'],

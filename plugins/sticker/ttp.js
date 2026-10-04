@@ -5,6 +5,7 @@ import { createCanvas } from "@napi-rs/canvas";
 import config from "../../config.js";
 import { addExifToWebp } from "../../src/lib/rara-exif.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "ttp",
@@ -86,7 +87,21 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, { sticker: stickerBuffer }, { quoted: m });
     await m.react("🐣");
-    await m.reply(raraBerhasil("ttp"));
+
+    let card = "";
+    try {
+      if (stickerBuffer) {
+        const info = await probeBuffer(stickerBuffer);
+        card = mediaResultCard({
+          header: "ttp",
+          type: "stiker",
+          request: [["Teks", String(text).slice(0, 80)]],
+          size: info.size, mime: info.mime || "image/webp",
+          width: info.width, height: info.height,
+        });
+      }
+    } catch { /* best-effort */ }
+    await m.reply(card || raraBerhasil("ttp"));
   } catch (err) {
     console.error("[TTP]", err);
     await m.react("❌");

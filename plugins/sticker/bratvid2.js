@@ -6,6 +6,7 @@ import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
     name: "bratvid2",
@@ -36,13 +37,29 @@ async function handler(m, { sock }) {
             outputFormat: "mp4",
         });
         await fs.promises.writeFile(tempFile, buffer);
+        let webpBuf = null;
         await sock.sendVideoAsSticker(m.chat, tempFile, m, {
             packname: config.sticker.packname,
             author: config.sticker.author,
+      onWebp: (b) => { webpBuf = b; },
+
         });
         await fs.promises.unlink(tempFile).catch(() => {});
         await m.react("🐣");
-        await m.reply(raraBerhasil("bratvid2"));
+                let card = "";
+        try {
+          if (webpBuf) {
+            const info = await probeBuffer(webpBuf);
+            card = mediaResultCard({
+              header: "bratvid2",
+              type: "stiker",
+              request: [["Teks", String(text).slice(0, 80)]],
+              size: info.size, mime: info.mime || "image/webp",
+              width: info.width, height: info.height,
+            });
+          }
+        } catch { /* best-effort */ }
+        await m.reply(card || raraBerhasil("bratvid2"));
     } catch (error) {
         await fs.promises.unlink(tempFile).catch(() => {});
         console.error("[bratvid2] Error:", error.message);

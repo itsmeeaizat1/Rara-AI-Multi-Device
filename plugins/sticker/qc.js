@@ -8,6 +8,7 @@ const { createCanvas, loadImage } = canvasPkg;
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap } from "../../src/lib/rara-menu-style.js"
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js"
 
 const pluginConfig = {
     name: 'qc',
@@ -261,11 +262,24 @@ async function handler(m, { sock }) {
 
         await m.react("🐣")
 
+        let webpBuf = null;
         await sock.sendImageAsSticker(m.chat, buffer, m, {
             packname: config.sticker?.packname || 'Rara-AI',
-            author: config.sticker?.author || 'Bot'
+            author: config.sticker?.author || 'Bot',
+            onWebp: (b) => { webpBuf = b; }
         })
-        await m.reply(raraBerhasil("Qc"));
+let card = "";
+        try {
+            const info = await probeBuffer(webpBuf);
+            card = mediaResultCard({
+                header: "qc",
+                type: "stiker",
+                request: [["Nama", username], ["Teks", String(message).slice(0, 80)]],
+                size: info.size, mime: info.mime || "image/webp",
+                width: info.width, height: info.height,
+            });
+        } catch { /* best-effort */ }
+        await m.reply(card || raraBerhasil("Qc"));
     } catch (error) {
         console.error("[qc] Error:", error.message)
         await m.react("❌")

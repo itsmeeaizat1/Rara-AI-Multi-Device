@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
@@ -44,12 +45,27 @@ async function handler(m, { sock }) {
         }
         await fs.promises.writeFile(tempFile, videoBuffer)
         await m.react("🐣")
+        let webpBuf = null;
         await sock.sendVideoAsSticker(m.chat, tempFile, m, {
             packname: config.sticker.packname,
-            author: config.sticker.author
+            author: config.sticker.author,
+            onWebp: (b) => { webpBuf = b; },
         })
         await fs.promises.unlink(tempFile)
-        await m.reply(raraBerhasil("Bratvid"));
+        let card = "";
+        try {
+          if (webpBuf) {
+            const info = await probeBuffer(webpBuf);
+            card = mediaResultCard({
+              header: "Bratvid",
+              type: "stiker",
+              request: [["Teks", String(text).slice(0, 80)]],
+              size: info.size, mime: info.mime || "image/webp",
+              width: info.width, height: info.height,
+            });
+          }
+        } catch { /* best-effort */ }
+        await m.reply(card || raraBerhasil("Bratvid"));
     } catch (error) {
         m.reply(raraGangguan("Bratvid"))
     }

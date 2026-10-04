@@ -349,6 +349,10 @@ async function extendSocket(sock) {
     } catch (e) {
       console.log("[Sticker] EXIF error:", e.message);
     }
+    // Hook opsional (kartu info media kategori stiker, 4 Okt 2026):
+    // plugin bisa nangkap buffer webp hasil asli via options.onWebp —
+    // dipanggil best-effort, gak pernah ganggu pengiriman.
+    try { if (typeof options.onWebp === "function") options.onWebp(webpBuffer); } catch { /* best-effort */ }
     return sock.sendMessage(
       jid,
       {
@@ -373,6 +377,7 @@ async function extendSocket(sock) {
     } catch (e) {
       console.log("[Sticker] EXIF error:", e.message);
     }
+    try { if (typeof options.onWebp === "function") options.onWebp(webpBuffer); } catch { /* best-effort */ }
     return sock.sendMessage(
       jid,
       {

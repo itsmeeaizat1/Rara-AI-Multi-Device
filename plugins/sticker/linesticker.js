@@ -4,6 +4,7 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import config from "../../config.js";
 import { raraWrap, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "linesticker",
@@ -108,9 +109,20 @@ async function handler(m, { sock }) {
     }
 
     if (sent > 0) {
-      await m.reply(raraWrap("Linesticker", `Berhasil kirim ${sent}/${data.stickerUrls.length} sticker`));
       await m.react("🐣");
-    await m.reply(raraBerhasil("linesticker"));
+      let card = "";
+      try {
+        card = mediaResultCard({
+          header: "linesticker",
+          platform: "LINE",
+          title: data.title,
+          request: [
+            ["Paket", data.title || "LINE sticker"],
+            ["Terjirim", `${sent}/${data.stickerUrls.length} stiker`],
+          ],
+        });
+      } catch { /* best-effort */ }
+      await m.reply(card || raraWrap("Linesticker", `Berhasil kirim ${sent}/${data.stickerUrls.length} sticker`));
     } else {
       await m.react("❌");
       m.reply(raraGagal("LineSticker"));

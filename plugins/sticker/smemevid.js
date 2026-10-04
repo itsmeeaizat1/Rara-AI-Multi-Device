@@ -7,6 +7,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg'
 import { createCanvas } from '@napi-rs/canvas'
 import config from '../../config.js'
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
@@ -135,9 +136,11 @@ async function handler(m, { sock }) {
 
         const stickerConfig = config.sticker || { packname: 'Rara-AI', author: 'Bot' }
 
+        let webpBuf = null;
         await sock.sendVideoAsSticker(m.chat, outputVideo, m, {
             packname: stickerConfig.packname,
-            author: stickerConfig.author
+            author: stickerConfig.author,
+            onWebp: (b) => { webpBuf = b; }
         })
         try {
             fs.unlinkSync(inputVideo)
@@ -146,7 +149,25 @@ async function handler(m, { sock }) {
         } catch (e) { console.error('[smemevid.js]:', e.message); }
 
         await m.react("🐣");
-        await m.reply(raraBerhasil("Smemevid"));
+        let card = "";
+        try {
+            if (webpBuf) {
+                const info = await probeBuffer(webpBuf);
+                card = mediaResultCard({
+                    header: "smemevid",
+                    type: "stiker",
+                    request: [
+                        ["Teks atas", top],
+                        ["Teks bawah", bottom]
+                    ],
+                    size: info.size,
+                    mime: info.mime || "image/webp",
+                    width: info.width,
+                    height: info.height
+                });
+            }
+        } catch { /* best-effort */ }
+        await m.reply(card || raraBerhasil("Smemevid"));
     } catch (error) {
         m.reply(raraGangguan("SmemeVid"))
     }

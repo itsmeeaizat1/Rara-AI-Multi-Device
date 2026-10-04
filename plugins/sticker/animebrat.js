@@ -6,6 +6,7 @@ import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraReply, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
     name: "animebrat",
@@ -39,13 +40,29 @@ async function handler(m, { sock }) {
         // Anime style: dark bg + pink/red text
         const pngBuffer = await bratGen(text, { C_BG: "#0a0a23", C_TEXT: "#ff6b9d" });
         await fs.promises.writeFile(tempFile, pngBuffer);
+        let webpBuf = null;
         await sock.sendImageAsSticker(m.chat, tempFile, m, {
             packname: config.sticker.packname,
             author: config.sticker.author,
+      onWebp: (b) => { webpBuf = b; },
+
         });
         await fs.promises.unlink(tempFile).catch(() => {});
         await m.react("🐣");
-        await m.reply(raraBerhasil("animebrat"));
+                let card = "";
+        try {
+          if (webpBuf) {
+            const info = await probeBuffer(webpBuf);
+            card = mediaResultCard({
+              header: "animebrat",
+              type: "stiker",
+              request: [["Teks", String(text).slice(0, 80)]],
+              size: info.size, mime: info.mime || "image/webp",
+              width: info.width, height: info.height,
+            });
+          }
+        } catch { /* best-effort */ }
+        await m.reply(card || raraBerhasil("animebrat"));
     } catch (error) {
         await fs.promises.unlink(tempFile).catch(() => {});
         console.error("[animebrat] Error:", error.message);
