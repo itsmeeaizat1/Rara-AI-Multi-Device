@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import axios from "axios";
 import { tipText, raraWrap, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -53,21 +54,34 @@ function tempPath(ext) {
 
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
+    const url = m.text?.trim();
   try {
         await m.react("🕒");
     // Try IkyyXD terabox first
-    const ikyyResult = await ikyyDl("terabox", url);
-    if (ikyyResult?.medias?.length) {
-      const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title: ikyyResult.title || "Terabox Video", format: "Video", method: "IkyyXD" });
-      await sock.sendMessage(m.chat, {
-        video: { url: video.url }, caption: _cap,
-        contextInfo: { forwardingScore: 0, isForwarded: false },
-      }, { quoted: m });
-      return;
+    if (url) {
+      const ikyyResult = await ikyyDl("terabox", url);
+      if (ikyyResult?.medias?.length) {
+        const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
+        const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title: ikyyResult.title || "Terabox Video", format: "Video", method: "IkyyXD" });
+        let card = "";
+        try {
+          const info = await probeMedia(video.url);
+          card = mediaResultCard({
+            header: pluginConfig.name,
+            type: "video",
+            title: ikyyResult.title || "Terabox Video",
+            platform: "Terabox",
+            request: [["URL", url]],
+            size: info.size, mime: info.mime, duration: info.duration,
+          });
+        } catch { /* best-effort */ }
+        await sock.sendMessage(m.chat, {
+          video: { url: video.url }, caption: card || _cap,
+          contextInfo: { forwardingScore: 0, isForwarded: false },
+        }, { quoted: m });
+        return;
+      }
     }
-
-    const url = m.text?.trim();
 
     if (!url) {
       return m.reply(raraGuide("Terabox", "Masukkan URL file Terabox yang mau diunduh!", `${prefix}terabox https://terabox.com/s/xxxx`));
@@ -79,10 +93,24 @@ const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title
     const filePath = tempPath(ext);
     fs.writeFileSync(filePath, buffer);
 
+    let docCard = "";
+    try {
+      const info = await probeBuffer(buffer);
+      docCard = mediaResultCard({
+        header: pluginConfig.name,
+        type: "dokumen",
+        title: `terabox_${Date.now()}${ext}`,
+        platform: "Terabox",
+        request: [["URL", url]],
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
+
     await sock.sendMessage(m.chat, {
       document: fs.readFileSync(filePath),
       mimetype: "application/octet-stream",
       fileName: `terabox_${Date.now()}${ext}`,
+      ...(docCard ? { caption: docCard } : {}),
     });
 
     const text =

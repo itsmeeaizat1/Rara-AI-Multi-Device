@@ -3,6 +3,19 @@
 // Primary: IkyyXD /download/applemusic | Fallback: manual info (no audio)
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { raraWrap, raraError, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -73,6 +86,9 @@ async function handler(m, { sock }) {
         audio: { url: audio.url },
         mimetype: "audio/mpeg",
       }, { quoted: m });
+      // kartu teks setelah audio (audio gak bisa caption)
+      const musCard = await dlCard("audio", { url: audio.url }, [["Judul", String(result.title || "Apple Music Track").slice(0, 40)], ["Penyanyi", result.author || "-"]]);
+      if (musCard) await m.reply(musCard);
     } else {
       await m.react("❌");
       await m.reply(raraWrap("AppleMusic DL", [

@@ -1,12 +1,13 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// instagramdl — Download video/foto Instagram
+// instagramdl - Download video/foto Instagram
 // Primary: IkyyXD /download/instagram (apikey + query) → all-in-one | Fallback: builtin ig.js
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
 import { raraGuide, raraSalah, raraWrap, raraLine, toSC, raraError, raraEmpty, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 
-// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+// Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
@@ -154,13 +155,27 @@ async function handler(m, { sock }) {
     await m.react("🐣");
 
     for (const item of result.medias) {
+      let card = "";
+      try {
+        const info = await probeMedia(item.url);
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: item.type === "image" ? "foto" : item.type,
+          title: result.title || "Instagram Media",
+          platform: "Instagram",
+          request: [["URL", url]],
+          ...info,
+        });
+      } catch { /* best-effort */ }
+
       if (item.type === "video") {
-        await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "video", contextInfo: ctxInfo });
+        await sock.sendMedia(m.chat, item.url, card || result.title || null, m, { type: "video", contextInfo: ctxInfo });
         await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: result.title, sourceUrl: url });
       } else if (item.type === "audio") {
         await sock.sendMessage(m.chat, { audio: { url: item.url }, mimetype: "audio/mpeg", contextInfo: ctxInfo }, { quoted: m });
+        if (card) await m.reply(card);
       } else {
-        await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "image", contextInfo: ctxInfo });
+        await sock.sendMedia(m.chat, item.url, card || result.title || null, m, { type: "image", contextInfo: ctxInfo });
         await m.reply(raraBerhasil("Instagram DL"));
       }
       break;

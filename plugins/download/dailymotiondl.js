@@ -8,6 +8,19 @@ import path from "path";
 import { DailymotionDL } from "../../src/scraper/dailymotion.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -121,7 +134,7 @@ async function handler(m, { sock }) {
           mimetype: "video/mp4",
           fileName:
             (result.title || "video").replace(/[<>:"/\\|?*]/g, "") + ".mp4",
-          caption,
+          caption: ((await dlCard("dokumen", { buffer: buffer, mime: "video/mp4" }, [["Judul", String(result.title || "Dailymotion Video").slice(0, 40)], ["Kualitas", result.quality || "Video"]])) || caption),
         },
         { quoted: m },
       );

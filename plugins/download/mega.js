@@ -1,12 +1,13 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// .mega — downloader file MEGA.nz via package megajs (16 Sep 2026, request
+// .mega - downloader file MEGA.nz via package megajs (16 Sep 2026, request
 // owner: audit dependencies → megajs terverifikasi hidup, fitur MEGA belum ada).
-// TANPA API eksternal — direct protokol MEGA. STRICT satuan: error asli keluar.
+// TANPA API eksternal - direct protokol MEGA. STRICT satuan: error asli keluar.
 
 import { File as MegaFile } from "megajs";
 import {
   raraError, raraCaption, raraWrap, tipText,
 } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "mega",
@@ -24,10 +25,10 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const MAX_SIZE = 100 * 1024 * 1024; // 100 MB — jaga memori VPS
+const MAX_SIZE = 100 * 1024 * 1024; // 100 MB - jaga memori VPS
 const MEGA_RE = /https?:\/\/(?:mega\.nz|mega\.co\.nz)\/[^\s]+/i;
 
-// seam utk e2e — inject implementasi MEGA palsu, gak ngenet
+// seam utk e2e - inject implementasi MEGA palsu, gak ngenet
 let _mega = { File: MegaFile };
 export function _setMegaForTest(impl) { _mega = impl; }
 
@@ -61,7 +62,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     const linkMatch = raw.match(MEGA_RE);
     if (!linkMatch) {
       await m.reply(
-        raraError("Mega", "Link MEGA tidak ditemukan — kirim link lengkap https://mega.nz/file/... atau https://mega.nz/folder/..."),
+        raraError("Mega", "Link MEGA tidak ditemukan - kirim link lengkap https://mega.nz/file/... atau https://mega.nz/folder/..."),
         "mega",
       );
       await m.react("❌");
@@ -91,7 +92,7 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
       const text =
         raraWrap("Mega", [
           `File : *${file.name}*`,
-          `Ukuran : *${fmtSize(size)}* — melebihi batas *100 MB* 😅`,
+          `Ukuran : *${fmtSize(size)}* - melebihi batas *100 MB* 😅`,
           "Solusi : kompres dulu atau pecah file, lalu unggah ulang",
         ].join("\n"));
       await m.reply(text, "mega");
@@ -106,9 +107,21 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     }
 
     const safeName = String(file.name || "mega-file").replace(/[/\\:*?"<>|]/g, "_");
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "dokumen",
+        title: safeName,
+        platform: "MEGA.nz",
+        request: [["Nama File", safeName]],
+        size: info.size || size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(
       m.chat,
-      { document: buffer, fileName: safeName, mimetype: "application/octet-stream" },
+      { document: buffer, fileName: safeName, mimetype: "application/octet-stream", caption: card || undefined },
       { quoted: m },
     );
 
@@ -118,9 +131,9 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
     const msg = String(error?.message || error || "");
     let teks;
     if (/not found|no such|attributes/i.test(msg)) {
-      teks = raraError("Mega", "File MEGA tidak ditemukan — cek link lengkap beserta key-nya (xxxx#yyyy)");
+      teks = raraError("Mega", "File MEGA tidak ditemukan - cek link lengkap beserta key-nya (xxxx#yyyy)");
     } else if (/decrypt|key/i.test(msg)) {
-      teks = raraError("Mega", "Gagal dekripsi — key link MEGA tidak valid atau terpotong");
+      teks = raraError("Mega", "Gagal dekripsi - key link MEGA tidak valid atau terpotong");
     } else {
       teks = raraError("Mega", `Gagal mengunduh: ${msg.slice(0, 120) || "kesalahan jaringan"}`);
     }

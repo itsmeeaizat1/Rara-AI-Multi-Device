@@ -3,6 +3,7 @@
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBox, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -61,19 +62,24 @@ async function handler(m, { sock }) {
     // Send first result preview
     const track = results[0];
     if (track.previewUrl) {
-      const _cap = mediaCaption({
-        platformIcon: "🎵", platformName: "iTunes",
-        title: track.trackName,
-        author: track.artistName,
-        description: track.collectionName || null,
-        format: "Preview (30s)",
-        method: "iTunes",
-      });
-      await m.reply(_cap);
       await sock.sendMessage(from, {
         audio: { url: track.previewUrl },
         mimetype: "audio/mpeg",
       }, { quoted: m });
+
+      try {
+        const info = await probeMedia(track.previewUrl);
+        const card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "audio",
+          title: track.trackName,
+          author: track.artistName,
+          platform: "iTunes",
+          request: [["Judul", track.trackName], ["Artis", track.artistName], ["Album", track.collectionName || "-"]],
+          size: info.size, mime: info.mime, duration: info.duration,
+        });
+        if (card) await m.reply(card);
+      } catch { /* best-effort */ }
     }
 
     let _lines = [];

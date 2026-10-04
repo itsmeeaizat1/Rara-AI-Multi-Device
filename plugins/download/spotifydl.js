@@ -4,6 +4,7 @@ import path from "node:path";
 import axios from "axios";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -89,18 +90,25 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("spotifydl", url);
     if (ikyyResult?.medias?.length) {
       const audio = ikyyResult.medias.find(m => m.type === "audio") || ikyyResult.medias[0];
-      const caption = mediaCaption({
-        platformIcon: "🎵", platformName: "Spotify",
-        title: ikyyResult.title || "Spotify Track",
-        author: ikyyResult.author || null,
-        format: "🎶 MP3", method: "IkyyXD",
-      });
-      await m.reply(caption);
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         audio: { url: audio.url },
         mimetype: "audio/mpeg",
       }, { quoted: m });
+
+      try {
+        const info = await probeMedia(audio.url);
+        const card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "audio",
+          title: ikyyResult.title || "Spotify Track",
+          author: ikyyResult.author || undefined,
+          platform: "Spotify",
+          request: [["URL", url]],
+          size: info.size, mime: info.mime, duration: info.duration,
+        });
+        if (card) await m.reply(card);
+      } catch { /* best-effort */ }
       return;
     }
 
@@ -141,7 +149,20 @@ async function handler(m, { sock }) {
         }
       } : {},
     }, { quoted: m });
-    await m.reply(caption);
+
+    try {
+      const info = await probeBuffer(buffer, { mime: "audio/mpeg" });
+      const card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "audio",
+        title,
+        author: artist || undefined,
+        platform: "Spotify",
+        request: [["URL", url]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
     await m.react("🐣");
     await m.reply(raraBerhasil("spotifydl"));
   } catch (err) {

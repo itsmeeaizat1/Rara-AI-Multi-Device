@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import { tipText, raraWrap, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -72,12 +73,25 @@ async function handler(m, { sock, config: botConfig }) {
       method: "direct",
     });
 
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "dokumen",
+        title: fileName,
+        platform: "SFile",
+        request: [["Nama File", fileName], ["URL", url]],
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
+
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       document: buffer,
       mimetype: "application/octet-stream",
       fileName,
-      caption: _cap,
+      caption: card || _cap,
     }, { quoted: m });
     await m.reply(raraBerhasil("sfiledl2"));
   } catch (error) {

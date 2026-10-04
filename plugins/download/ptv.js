@@ -2,6 +2,7 @@
 // ptv.js — Download video Pinterest (pakai scraper pindl.js lokal)
 import { PinDL } from "../../src/scraper/pindl.js";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -74,9 +75,22 @@ async function handler(m, { sock }) {
       method: "Scraper Lokal",
     });
 
+    let card = "";
+    try {
+      const info = await probeMedia(mediaUrl);
+      card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "video",
+        title: result.title || "Pinterest Video",
+        platform: "Pinterest",
+        request: [["URL", url]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+    } catch { /* best-effort */ }
+
     await sock.sendMessage(m.chat, {
       video: { url: mediaUrl },
-      caption,
+      caption: card || caption,
     }, { quoted: m });
     await m.react("🐣");
     await m.reply(raraBerhasil("ptv"));

@@ -20,6 +20,7 @@ const pluginConfig = {
 };
 
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -89,8 +90,23 @@ async function handler(m, { sock }) {
         format: "Video (No Watermark)", method: "IkyyXD",
       });
       await m.react("🐣");
+      let ikyyCard = "";
+      try {
+        const info = await probeMedia(video.url);
+        ikyyCard = mediaResultCard({
+          header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+          title: ikyyResult.title || "TikTok Video",
+          author: ikyyResult.author || null,
+          type: "video",
+          platform: "TikTok",
+          duration: ikyyResult.duration || null,
+          size: info.size,
+          mime: info.mime,
+        });
+      } catch {}
+
       await sock.sendMessage(m.chat, {
-        video: { url: video.url }, caption,
+        video: { url: video.url }, caption: ikyyCard || caption,
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m });
       return;
@@ -113,9 +129,27 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeMedia(r.play);
+      card = mediaResultCard({
+        header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+        title: r.title || "TikTok Video",
+        author: r.author?.nickname || null,
+        authorHandle: r.author?.unique_id || null,
+        type: "video",
+        platform: "TikTok",
+        duration: r.duration || null,
+        views: r.play_count || null,
+        likes: r.digg_count || null,
+        size: info.size,
+        mime: info.mime,
+      });
+    } catch {}
+
     await sock.sendMessage(m.chat, {
         video: { url: r.play },
-        caption,
+        caption: card || caption,
     }, { quoted: m });
       await m.reply(raraBerhasil("tiktokv2"));
   } catch (e) {

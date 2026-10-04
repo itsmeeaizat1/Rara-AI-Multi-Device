@@ -2,6 +2,7 @@
 // teraboxv2.js — Download TeraBox v2 (pakai scraper terabox.js lokal)
 import { TeraBoxDL } from "../../src/scraper/terabox.js";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -84,17 +85,31 @@ async function handler(m, { sock }) {
 
     // Cek apakah video atau file
     const isVideo = (result.type || result.filename || "").match(/mp4|avi|mkv|mov/i);
+
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: pluginConfig.name,
+        type: isVideo ? "video" : "dokumen",
+        title: result.title || result.filename || "TeraBox File",
+        platform: "TeraBox",
+        request: [["URL", url]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+    } catch { /* best-effort */ }
+
     if (isVideo) {
       await sock.sendMessage(m.chat, {
         video: buffer,
-        caption,
+        caption: card || caption,
       }, { quoted: m });
     } else {
       await sock.sendMessage(m.chat, {
         document: buffer,
         fileName: result.title || result.filename || "terabox_file",
         mimetype: result.mimetype || "application/octet-stream",
-        caption,
+        caption: card || caption,
       }, { quoted: m });
     }
 

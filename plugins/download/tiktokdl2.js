@@ -7,6 +7,7 @@ import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap, raraLine, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -187,13 +188,35 @@ async function handler(m, { sock }) {
                     'Referer': 'https://www.tiktok.com/'
                 }
             })
+            const videoBuf = Buffer.from(videoRes.data);
+            let card = "";
+            try {
+                const info = await probeBuffer(videoBuf, { mime: "video/mp4" });
+                card = mediaResultCard({
+                    header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+                    title: "TikTok Video",
+                    author: result.username || null,
+                    type: "video",
+                    platform: "TikTok",
+                    duration: result.duration || null,
+                    views: result.views || null,
+                    likes: result.likes || null,
+                    comments: result.comments || null,
+                    shares: result.shares || null,
+                    quality: "SD",
+                    size: info.size || videoBuf.length,
+                    mime: info.mime || "video/mp4",
+                    width: info.width,
+                    height: info.height,
+                });
+            } catch {}
 
             await sock.sendMessage(
                 m.chat,
                 {
-                    video: Buffer.from(videoRes.data),
+                    video: videoBuf,
                     mimetype: 'video/mp4',
-                    caption,
+                    caption: card || caption,
                 },
                 { quoted: m }
             )
@@ -224,6 +247,30 @@ async function handler(m, { sock }) {
 
             if (mediaList.length === 0) {
                 throw new Error('Gagal mengunduh gambar slide')
+            }
+            let slideCard = "";
+            try {
+                if (mediaList[0]?.image) {
+                    const info = await probeBuffer(mediaList[0].image, { mime: "image/jpeg" });
+                    slideCard = mediaResultCard({
+                        header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+                        title: "TikTok Photo Slide",
+                        author: result.username || null,
+                        type: "foto",
+                        platform: "TikTok",
+                        views: result.views || null,
+                        likes: result.likes || null,
+                        comments: result.comments || null,
+                        shares: result.shares || null,
+                        size: info.size,
+                        mime: info.mime,
+                        width: info.width,
+                        height: info.height,
+                    });
+                }
+            } catch {}
+            if (slideCard && mediaList[0]) {
+                mediaList[0].caption = slideCard;
             }
 
             const opener = generateWAMessageFromContent(
@@ -267,6 +314,19 @@ async function handler(m, { sock }) {
             }
 
             if (result.mp3.length > 0) {
+                let mp3Card = "";
+                try {
+                    const info = await probeMedia(result.mp3[0]);
+                    mp3Card = mediaResultCard({
+                        header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+                        title: "TikTok Audio",
+                        author: result.username || null,
+                        type: "audio",
+                        platform: "TikTok",
+                        size: info.size,
+                        mime: info.mime,
+                    });
+                } catch {}
                 await sock.sendMessage(
                     m.chat,
                     {
@@ -274,7 +334,8 @@ async function handler(m, { sock }) {
                         mimetype: 'audio/mpeg'
                     },
                     { quoted: m }
-                )
+                );
+                if (mp3Card) await m.reply(mp3Card);
             }
             return
         }

@@ -5,6 +5,19 @@ import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -103,8 +116,10 @@ async function handler(m, { sock }) {
     const ctxInfo = saluranCtx();
 
     for (const item of result.medias) {
+      // kartu info media (batch download)
+      const itemCard = await dlCard(item.type === "audio" ? "audio" : item.type === "video" ? "video" : "gambar", { url: item.url }, [["Judul", String(result.title || "media").slice(0, 40)]]);
       if (item.type === "video") {
-        await sock.sendMedia(m.chat, item.url, result.title || null, m, {
+        await sock.sendMedia(m.chat, item.url, (itemCard || result.title || null), m, {
           type: "video",
           contextInfo: ctxInfo,
         });
@@ -114,8 +129,10 @@ async function handler(m, { sock }) {
           mimetype: "audio/mpeg",
           contextInfo: ctxInfo,
         }, { quoted: m });
+        // kartu teks setelah audio (audio gak bisa caption)
+        if (itemCard) await m.reply(itemCard);
       } else {
-        await sock.sendMedia(m.chat, item.url, result.title || null, m, {
+        await sock.sendMedia(m.chat, item.url, (itemCard || result.title || null), m, {
           type: "image",
           contextInfo: ctxInfo,
         });

@@ -15,6 +15,19 @@ import {
 } from "../../src/scraper/zeldl.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { fetchBuffer } from "../../src/lib/rara-utils.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // seam test: mock unduh file
 let _fetchBufferForTest;
@@ -102,12 +115,18 @@ async function sendMedia(sock, m, { buffer, type, url, title }) {
   const ext = extOf(url);
   if (type === "audio") {
     await sock.sendMessage(m.chat, { audio: buffer, mimetype: "audio/mpeg", ptt: false, fileName: safeName(title, ext === "mp3" ? "mp3" : ext) }, { quoted: m });
+    // kartu teks setelah audio (audio gak bisa caption)
+    const c = await dlCard("audio", { buffer: buffer, mime: "audio/mpeg" }, [["Judul", (title || "media").slice(0, 40)]]);
+    if (c) await m.reply(c);
   } else if (type === "image") {
-    await sock.sendMessage(m.chat, { image: buffer }, { quoted: m });
+    const c = await dlCard("gambar", { buffer: buffer }, [["Judul", (title || "media").slice(0, 40)]]);
+    await sock.sendMessage(m.chat, { image: buffer, caption: c || undefined }, { quoted: m });
   } else if (type === "document") {
-    await sock.sendMessage(m.chat, { document: buffer, fileName: safeName(title, ext), mimetype: "application/octet-stream" }, { quoted: m });
+    const c = await dlCard("dokumen", { buffer: buffer }, [["Judul", (title || "media").slice(0, 40)]]);
+    await sock.sendMessage(m.chat, { document: buffer, fileName: safeName(title, ext), mimetype: "application/octet-stream", caption: c || undefined }, { quoted: m });
   } else {
-    await sock.sendMessage(m.chat, { video: buffer, caption: `_(via zelapi) ${short(title || "media", 60)}`, mimetype: "video/mp4" }, { quoted: m });
+    const c = await dlCard("video", { buffer: buffer }, [["Judul", (title || "media").slice(0, 40)]]);
+    await sock.sendMessage(m.chat, { video: buffer, caption: (c || `_(via zelapi) ${short(title || "media", 60)}`), mimetype: "video/mp4" }, { quoted: m });
   }
 }
 

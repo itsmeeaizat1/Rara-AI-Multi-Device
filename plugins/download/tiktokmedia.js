@@ -10,6 +10,7 @@ import { raraWrap, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -109,9 +110,28 @@ async function handler(m, { sock }) {
         download: "HD",
       }) + (video.link ? `\n🔗 *Link:* ${video.link}` : "");
 
+      let card = "";
+      try {
+        const info = await probeMedia(video.download);
+        card = mediaResultCard({
+          header: command || (Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name),
+          title: video.title || "TikTok Video",
+          author: video.author?.nickname || null,
+          authorHandle: video.author?.uniqueId || null,
+          type: "video",
+          platform: "TikTok",
+          duration: video.duration || null,
+          views: video.stats?.plays || null,
+          likes: video.stats?.likes || null,
+          quality: "HD",
+          size: info.size,
+          mime: info.mime,
+        });
+      } catch {}
+
       await sock.sendMessage(m.chat, {
         video: { url: video.download },
-        caption,
+        caption: card || caption,
         contextInfo: mediaPreviewCard({
           title: video.title || "TikTok Video",
           body: `TikTok • Search: ${query}`,
@@ -143,11 +163,26 @@ async function handler(m, { sock }) {
         method: "TikTok Search",
       }) + (video.link ? `\nDari video: ${video.link}` : "");
 
+      let audioCard = "";
+      try {
+        const info = await probeMedia(video.music);
+        audioCard = mediaResultCard({
+          header: command || (Array.isArray(pluginConfig.name) ? pluginConfig.name[1] : pluginConfig.name),
+          title: musicTitle,
+          author: video.musicInfo?.author || video.author?.nickname || null,
+          type: "audio",
+          platform: "TikTok",
+          size: info.size,
+          mime: info.mime,
+        });
+      } catch {}
+
       await sock.sendMessage(m.chat, {
         audio: { url: video.music },
         mimetype: "audio/mpeg",
       }, { quoted: m });
-      await m.reply(caption);
+      if (audioCard) await m.reply(audioCard);
+      else await m.reply(caption);
       await m.react("🐣");
       await offerConvert(sock, m, { mediaUrl: video.music, type: "audio", platform: "TikTok", title: musicTitle, sourceUrl: video.link });
       return;
@@ -172,10 +207,25 @@ async function handler(m, { sock }) {
         method: "TikTok Search",
       }) + (post.link ? `\nLink: ${post.link}` : "");
 
+      let imgCard = "";
+      try {
+        const info = await probeMedia(images[0]);
+        imgCard = mediaResultCard({
+          header: command || (Array.isArray(pluginConfig.name) ? pluginConfig.name[2] : pluginConfig.name),
+          title: post.title || "TikTok Photo Post",
+          author: post.author?.nickname || null,
+          authorHandle: post.author?.uniqueId || null,
+          type: "foto",
+          platform: "TikTok",
+          size: info.size,
+          mime: info.mime,
+        });
+      } catch {}
+
       for (let i = 0; i < images.length; i++) {
         const content = { image: { url: images[i] } };
         if (i === 0) {
-          content.caption = caption;
+          content.caption = imgCard || caption;
           content.contextInfo = mediaPreviewCard({
             title: post.title || "TikTok Photo",
             body: `TikTok • Search: ${query}`,

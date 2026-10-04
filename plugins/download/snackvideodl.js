@@ -2,6 +2,7 @@
 import { snackvideo } from 'btch-downloader'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -76,10 +77,25 @@ async function handler(m, { sock }) {
             author: result.author || null,
             format: "Video", method: "btch-downloader",
         })
+
+        let card = "";
+        try {
+            const info = await probeMedia(result.videoUrl);
+            card = mediaResultCard({
+                header: pluginConfig.name,
+                type: "video",
+                title: result.title || result.author || "SnackVideo",
+                author: result.author || undefined,
+                platform: "SnackVideo",
+                request: [["URL", url]],
+                size: info.size, mime: info.mime, duration: info.duration,
+            });
+        } catch { /* best-effort */ }
+
         await m.react("🐣")
         await sock.sendMessage(m.chat, {
             video: { url: result.videoUrl },
-            caption,
+            caption: card || caption,
             contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m })
         

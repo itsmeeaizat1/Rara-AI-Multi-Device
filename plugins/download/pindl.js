@@ -9,6 +9,7 @@ import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { f } from "../../src/lib/rara-http.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -78,11 +79,23 @@ async function handler(m, { sock }) {
         method: "IkyyXD",
       });
       for (const item of ikyyResult.medias) {
+        let card = "";
+        try {
+          const info = await probeMedia(item.url);
+          card = mediaResultCard({
+            header: pluginConfig.name,
+            type: item.type === "video" ? "video" : "foto",
+            title: ikyyResult.title || "Pinterest Media",
+            platform: "Pinterest",
+            request: [["URL", url]],
+            size: info.size, mime: info.mime, duration: info.duration,
+          });
+        } catch { /* best-effort */ }
         if (item.type === "video") {
-          await sock.sendMessage(m.chat, { video: { url: item.url }, caption, contextInfo: ctxInfo }, { quoted: m });
+          await sock.sendMessage(m.chat, { video: { url: item.url }, caption: card || caption, contextInfo: ctxInfo }, { quoted: m });
           await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Pinterest", title: ikyyResult.title, sourceUrl: url });
         } else {
-          await sock.sendMessage(m.chat, { image: { url: item.url }, caption, contextInfo: ctxInfo }, { quoted: m });
+          await sock.sendMessage(m.chat, { image: { url: item.url }, caption: card || caption, contextInfo: ctxInfo }, { quoted: m });
         }
         break;
       }
@@ -102,9 +115,21 @@ async function handler(m, { sock }) {
       method: "pinterestdl",
     });
     for (const media of result.media) {
+      let card = "";
+      try {
+        const info = await probeMedia(media.url);
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: media.type === "video" ? "video" : "foto",
+          title: result.title || "Pinterest Media",
+          platform: "Pinterest",
+          request: [["URL", url]],
+          size: info.size, mime: info.mime, duration: info.duration,
+        });
+      } catch { /* best-effort */ }
       if (media.type === "video") {
         await sock.sendMessage(m.chat, {
-          video: { url: media.url }, caption: fbCaption,
+          video: { url: media.url }, caption: card || fbCaption,
           contextInfo: mediaPreviewCard({ title: result.title || "Pinterest Media", body: "Pinterest • Video", sourceUrl: url, thumbnailUrl: result.author?.avatar || "" }),
         }, { quoted: m });
         await offerConvert(sock, m, { mediaUrl: media.url, type: "video", platform: "Pinterest", title: result.title, sourceUrl: url });
@@ -146,6 +171,7 @@ async function handler(m, { sock }) {
         } else {
           await sock.sendMessage(m.chat, {
             image: { url: media.url },
+            caption: card || fbCaption,
             contextInfo: mediaPreviewCard({ title: result.title || "Pinterest Media", body: "Pinterest • Image", sourceUrl: url, thumbnailUrl: result.author?.avatar || media.url }),
           }, { quoted: m });
         }

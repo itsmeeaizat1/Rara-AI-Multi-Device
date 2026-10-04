@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// onedl.js — Onepunya API: DOWNLOADER (6 platform, auto-detect dari URL).
+// onedl.js - Onepunya API: DOWNLOADER (6 platform, auto-detect dari URL).
 // .onedl <url> [mp3|144p|360p|480p|720p|1080p]
 //   YouTube/YT Music  → format MP4 (kualitas) atau MP3
 //   Facebook          → MP4 atau MP3
@@ -7,12 +7,13 @@
 //   TikTok            → video no-watermark
 //   SnackVideo        → video
 //   Douyin            → video
-// Sumber: onepunya.qzz.io (key .setkey onepunya) — engine Onepunya, beda dari
+// Sumber: onepunya.qzz.io (key .setkey onepunya) - engine Onepunya, beda dari
 // .aio/.alldl yang udah ada; jadi alternatif kalau downloader lain down.
 import axios from "axios";
 import { getApiKey } from "../../src/lib/rara-api-keys.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { youtubeDownload, tiktokDownload, douyinDownload, instaDownload, facebookDownload, snackvideoDownload } from "../../src/lib/rara-onepunya.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "onedl",
@@ -33,7 +34,7 @@ const pluginConfig = {
 const QUALITIES = ["144p", "360p", "480p", "720p", "1080p"];
 
 function detectPlatform(u) {
-  // NOTE: jangan pakai (?:^|\.) — URL https://youtube.com punya "//" sebelum
+  // NOTE: jangan pakai (?:^|\.) - URL https://youtube.com punya "//" sebelum
   // domain, jadi prefix-anchor itu gak pernah match (bug ketemu e2e).
   if (/youtu\.be|youtube\.com/.test(u)) return "youtube";
   if (/facebook\.com|fb\.watch|fb\.me/.test(u)) return "facebook";
@@ -81,13 +82,13 @@ async function handler(m, { sock }) {
       const res = platform === "tiktok" ? await tiktokDownload(apiKey, url)
         : platform === "snackvideo" ? await snackvideoDownload(apiKey, url)
         : await douyinDownload(apiKey, url);
-      // bentuk respon variasi antar platform — cari URL media di kedalaman objek
+      // bentuk respon variasi antar platform - cari URL media di kedalaman objek
       const found = findMediaUrl(res);
       if (!found) throw new Error("Gak nemu URL media di respon server.");
       media = { url: found.url, filename: `onepunya-${platform}-${Date.now()}.${found.ext}`, mimetype: found.mimetype, isAudio: false };
       detail = `🎵 ${res?.title || platform} (${platform})`;
     } else {
-      // instagram — respon generik
+      // instagram - respon generik
       const res = await instaDownload(apiKey, url);
       const found = findMediaUrl(res);
       if (!found) throw new Error("Gak nemu URL media di respon server.");
@@ -101,22 +102,46 @@ async function handler(m, { sock }) {
     try {
       const dl = await axios.get(media.url, { responseType: "arraybuffer", timeout: 180_000 });
       const buf = Buffer.from(dl.data);
+      const info = await probeBuffer(buf, { mime: media.mimetype });
+      const card = mediaResultCard({
+        header: pluginConfig.name,
+        type: media.isAudio ? "audio" : media.mimetype.startsWith("image") ? "foto" : "video",
+        title: media.filename,
+        platform: platform,
+        request: [["Platform", platform], ["Kualitas", quality]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height, duration: info.duration,
+      });
+
       if (media.isAudio) {
         await sock.sendMessage(m.chat, { audio: buf, mimetype: "audio/mpeg", ptt: false, fileName: media.filename }, { quoted: m });
+        if (card) await m.reply(card);
       } else if (media.mimetype === "image/jpeg" || media.mimetype === "image/png") {
-        await sock.sendMessage(m.chat, { image: buf, fileName: media.filename, caption: media.filename }, { quoted: m });
+        await sock.sendMessage(m.chat, { image: buf, fileName: media.filename, caption: card || media.filename }, { quoted: m });
       } else {
-        await sock.sendMessage(m.chat, { video: buf, mimetype: media.mimetype, fileName: media.filename }, { quoted: m });
+        await sock.sendMessage(m.chat, { video: buf, mimetype: media.mimetype, fileName: media.filename, caption: card || undefined }, { quoted: m });
       }
     } catch {
-      await sock.sendMessage(m.chat, { document: { url: media.url }, fileName: media.filename, mimetype: media.mimetype }, { quoted: m });
+      let card = "";
+      try {
+        const info = await probeMedia(media.url);
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: media.isAudio ? "audio" : media.mimetype.startsWith("image") ? "foto" : "video",
+          title: media.filename,
+          platform: platform,
+          request: [["Platform", platform], ["Kualitas", quality]],
+          ...info,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMessage(m.chat, { document: { url: media.url }, fileName: media.filename, mimetype: media.mimetype, caption: card || undefined }, { quoted: m });
+      if (media.isAudio && card) await m.reply(card);
     }
   } catch (e) {
     return m.reply(raraWrap("Onepunya Downloader", `Gagal: ${String(e.message || e).slice(0, 200)}`));
   }
 }
 
-// cari URL media (mp4/mp3/jpg/png/webp) di kedalaman objek respon — struktur
+// cari URL media (mp4/mp3/jpg/png/webp) di kedalaman objek respon - struktur
 // respon tiap platform beda-beda dan gak konsisten di dok API
 function findMediaUrl(obj, depth = 0) {
   if (!obj || typeof obj !== "object" || depth > 5) return null;

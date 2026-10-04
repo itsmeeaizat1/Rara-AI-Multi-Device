@@ -3,6 +3,19 @@
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { raraWrap, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -71,7 +84,7 @@ async function handler(m, { sock }) {
       });
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
-        video: { url: video.url }, caption,
+        video: { url: video.url }, caption: ((await dlCard("video", { url: video.url }, [["Judul", (result.title || "TikTok Video").slice(0, 40)]])) || caption),
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m });
     } else {

@@ -8,6 +8,7 @@ import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 import { getdlTikTokSearch } from "../../src/scraper/getdl-tiktok.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -198,9 +199,22 @@ async function handler(m, { sock }) {
       try {
         await m.react("🕒");
         await m.react("⏬");
+        let card = "";
+        try {
+          const info = await probeMedia(video.playUrl);
+          card = mediaResultCard({
+            header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+            title: video.title || "TikTok Video",
+            type: "video",
+            platform: "TikTok",
+            duration: video.duration || null,
+            size: info.size,
+            mime: info.mime,
+          });
+        } catch {}
         await sock.sendMessage(m.chat, {
           video: { url: video.playUrl },
-          caption: tiktokCaption({
+          caption: card || tiktokCaption({
             title: video.title || "TikTok Video",
             duration: video.duration || null,
             download: "SD",
@@ -290,9 +304,24 @@ async function handler(m, { sock }) {
         duration: ikyyResult.duration || null,
         download: "HD",
       });
+      let card = "";
+      try {
+        const info = await probeMedia(video.url);
+        card = mediaResultCard({
+          header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+          title: ikyyResult.title || "TikTok Video",
+          author: ikyyResult.author || null,
+          type: "video",
+          platform: "TikTok",
+          duration: ikyyResult.duration || null,
+          quality: "HD",
+          size: info.size,
+          mime: info.mime,
+        });
+      } catch {}
       await sock.sendMessage(m.chat, {
         video: { url: video.url },
-        caption,
+        caption: card || caption,
         contextInfo: mediaPreviewCard({
           title: ikyyResult.title || "TikTok Video",
           body: "TikTok • Video HD",
@@ -329,9 +358,29 @@ async function handler(m, { sock }) {
         download: zann?.type === "nowatermark_hd" ? "HD" : "SD",
       });
 
+      let card = "";
+      try {
+        const info = await probeMedia(zann.url);
+        card = mediaResultCard({
+          header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+          title: result.title || "TikTok Video",
+          author: result.author?.nickname || null,
+          authorHandle: result.author?.fullname || null,
+          type: "video",
+          platform: "TikTok",
+          duration: result.durations || null,
+          views: result.stats?.views || null,
+          likes: result.stats?.likes || null,
+          comments: result.stats?.comment || null,
+          shares: result.stats?.share || null,
+          quality: zann?.type === "nowatermark_hd" ? "HD" : "SD",
+          size: info.size || (zann?.type === "nowatermark_hd" ? result.size_nowm_hd : result.size_nowm),
+          mime: info.mime,
+        });
+      } catch {}
       await sock.sendMessage(m.chat, {
         video: { url: zann.url },
-        caption,
+        caption: card || caption,
         contextInfo: mediaPreviewCard({
           title: result.title || "TikTok Video",
           body: `TikTok • ${result.author?.nickname || "Video"}`,

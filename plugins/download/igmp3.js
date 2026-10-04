@@ -1,10 +1,11 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// igmp3.js — Download audio dari Instagram (pakai scraper ig.js lokal)
+// igmp3.js - Download audio dari Instagram (pakai scraper ig.js lokal)
 import { PinDL } from "../../src/scraper/pindl.js";
 import { igDownload } from "../../src/scraper/ig.js";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
-// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+// Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
@@ -96,7 +97,21 @@ async function handler(m, { sock }) {
       ptt: false,
       fileName: `${title}.mp3`,
     }, { quoted: m });
-    await m.reply(caption);
+    try {
+      const info = await probeBuffer(buffer, { mime: "audio/mpeg" });
+      const card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "audio",
+        title: title,
+        platform: "Instagram",
+        request: [["Judul", title]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+      else await m.reply(caption);
+    } catch {
+      await m.reply(caption);
+    }
     await m.react("🐣");
     await m.reply(raraBerhasil("igmp3"));
   } catch (err) {

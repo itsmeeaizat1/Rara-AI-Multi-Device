@@ -1,10 +1,11 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// gdrivedl — Download file dari Google Drive via IkyyXD
+// gdrivedl - Download file dari Google Drive via IkyyXD
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 
-// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+// Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
@@ -62,9 +63,21 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const file = result.medias[0];
       await m.react("🐣");
-const _cap = mediaCaption({ platformIcon: "📁", platformName: "Google Drive", title: result.title || "Google Drive File", format: "File", method: "IkyyXD" });
+let card = "";
+      try {
+        const info = await probeMedia(file.url);
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "dokumen",
+          title: result.title || "Google Drive File",
+          platform: "Google Drive",
+          request: [["URL", url]],
+          ...info,
+        });
+      } catch { /* best-effort */ }
+      const _cap = mediaCaption({ platformIcon: "📁", platformName: "Google Drive", title: result.title || "Google Drive File", format: "File", method: "IkyyXD" });
       await sock.sendMessage(m.chat, {
-        document: { url: file.url }, caption: _cap,
+        document: { url: file.url }, caption: card || _cap,
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m });
     } else {

@@ -10,6 +10,19 @@ import { toSC, raraWrap, raraError, raraGuide, raraBox, bracketBox, raraBerhasil
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -158,16 +171,19 @@ async function downloadYouTube(url, format, sock, m, meta = {}) {
       thumbnailUrl: meta.thumbnail || "",
     });
     if (format === "audio") {
+      // kartu teks setelah audio (audio gak bisa caption)
+      const ytAudCard = await dlCard("audio", { buffer: buffer, mime: "audio/mpeg" }, [["Judul", String(title).slice(0, 40)], ["Platform", "YouTube"]]);
       await sock.sendMessage(m.chat, {
         audio: buffer,
         mimetype: "audio/mpeg",
         fileName: title.replace(/[^\w\s-]/g, "").trim().slice(0, 40) + ".mp3",
         contextInfo: ytCard,
       }, { quoted: m });
+      if (ytAudCard) await m.reply(ytAudCard);
     } else {
       await sock.sendMessage(m.chat, {
         video: buffer,
-        caption,
+        caption: ((await dlCard("video", { buffer: buffer }, [["Judul", String(title).slice(0, 40)], ["Platform", "YouTube"]])) || caption),
         contextInfo: ytCard,
       }, { quoted: m });
       await offerConvert(sock, m, { buffer, type: "video", platform: "YouTube", title, sourceUrl: url });
@@ -225,19 +241,22 @@ async function handleAIO(url, format, platformName, sock, m) {
     method: "AIO Scraper",
   });
 
+  // kartu info media (batch download)
+  const aioCard = await dlCard((format === "audio" && picked.type !== "video") ? "audio" : (format === "image" || picked.type === "image") ? "gambar" : "video", { buffer: buffer }, [["Judul", String(result.title || "media").slice(0, 40)], ["Platform", platformName || "-"]]);
   if (format === "audio" && picked.type !== "video") {
     await sock.sendMessage(m.chat, {
       audio: buffer, mimetype: "audio/mpeg",
       fileName: (result.title || "audio").replace(/[^\w\s-]/g, "").trim().slice(0, 40) + ".mp3",
       contextInfo: ctxInfo,
     }, { quoted: m });
+    if (aioCard) await m.reply(aioCard);
   } else if (format === "image" || picked.type === "image") {
     await sock.sendMessage(m.chat, {
-      image: buffer, caption, contextInfo: ctxInfo,
+      image: buffer, caption: (aioCard || caption), contextInfo: ctxInfo,
     }, { quoted: m });
   } else {
     await sock.sendMessage(m.chat, {
-      video: buffer, caption, contextInfo: ctxInfo,
+      video: buffer, caption: (aioCard || caption), contextInfo: ctxInfo,
     }, { quoted: m });
     await offerConvert(sock, m, { buffer, type: "video", platform: platformName, title: result.title, sourceUrl: url });
   }

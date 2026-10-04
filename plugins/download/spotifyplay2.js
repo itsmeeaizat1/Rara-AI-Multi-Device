@@ -12,6 +12,7 @@
 // rip 320kbps (klaim lama di kode ini valid).
 import axios from "axios";
 import { raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "spotifyplay2",
@@ -135,7 +136,21 @@ async function handler(m, { sock }) {
     // 2. Enrich Genre (satu-satunya field yang emang gak ada di API ini)
     const genre = await fetchItunesGenre(title, artist);
 
-    // 3. Card info DIBAWAH media — builder & field LOKAL punya fitur ini
+    // 3. Card info DIBAWAH media
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer, { mime: "audio/mpeg" });
+      card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "audio",
+        title,
+        author: artist || undefined,
+        platform: "Spotify",
+        request: [["Judul", title], ["Artis", artist || "-"], ["Album", album || "-"]],
+        size: info.size, mime: info.mime, duration: formatMsToDuration(durationRaw) || info.duration,
+      });
+    } catch { /* best-effort */ }
+
     const cardText = buildSpotifyPlay2Card({
       title,
       album,
@@ -144,7 +159,7 @@ async function handler(m, { sock }) {
       artist,
       url: trackUrl,
     });
-    await m.reply(cardText);
+    await m.reply(card || cardText);
 
     await m.react("🐣");
     await m.reply(raraBerhasil("spotifyplay2"));

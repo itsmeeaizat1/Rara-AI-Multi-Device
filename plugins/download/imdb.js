@@ -1,8 +1,9 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// imdb.js — Info film dari IMDB
+// imdb.js - Info film dari IMDB
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBox, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "imdb",
@@ -38,7 +39,19 @@ async function handler(m, { sock }) {
     let msg = raraBox("IMDB", _lines);
 
     if (d.Poster && d.Poster !== "N/A") {
-      await sock.sendMessage(from, { image: { url: d.Poster }, caption: msg }, { quoted: m });
+      let card = "";
+      try {
+        const info = await probeMedia(d.Poster);
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "foto",
+          title: `${d.Title} (${d.Year})`,
+          platform: "IMDB",
+          request: [["Genre", d.Genre], ["Rating", d.imdbRating]],
+          ...info,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMessage(from, { image: { url: d.Poster }, caption: card || msg }, { quoted: m });
     } else {
       await m.reply(msg);
     }

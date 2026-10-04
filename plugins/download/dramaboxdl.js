@@ -3,6 +3,19 @@
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -64,7 +77,7 @@ async function handler(m, { sock }) {
       await m.react("🐣");
 const _cap = mediaCaption({ platformIcon: "🎬", platformName: "DramaBox", title: result.title || "DramaBox Video", format: "Video", method: "IkyyXD" });
       await sock.sendMessage(m.chat, {
-        video: { url: video.url }, caption: _cap,
+        video: { url: video.url }, caption: ((await dlCard("video", { url: video.url }, [["Judul", String(result.title || "DramaBox Video").slice(0, 40)]])) || _cap),
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m });
     } else {

@@ -12,6 +12,7 @@ import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { shopeeNoWm } from "../../src/scraper/shopee-nowm.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -129,9 +130,23 @@ async function handler(m, { sock }) {
       method: "ShopeeNoWatermark",
     });
 
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "video",
+        title: data.title || "Shopee Video",
+        platform: "Shopee",
+        quality: video.quality || undefined,
+        request: [["URL", url]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+    } catch { /* best-effort */ }
+
     await sock.sendMessage(m.chat, {
       video: buffer,
-      caption,
+      caption: card || caption,
       contextInfo: mediaPreviewCard({
         title: data.title || "Shopee Video",
         body: "Shopee • No Watermark",

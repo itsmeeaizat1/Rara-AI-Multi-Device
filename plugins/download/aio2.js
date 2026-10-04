@@ -11,6 +11,19 @@ import { registerChoice } from "../../src/lib/rara-aio2-session.js";
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
 import { toSC, raraWrap, raraGuide, raraSalah } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "aio2",
@@ -150,10 +163,13 @@ async function sendSingle(m, sock, media, meta) {
   try {
     const buf = await fetchChoiceBuffer(media.url);
     await m.react("🐣");
+    // kartu info media (batch download)
+    const docCard = await dlCard("dokumen", { buffer: buf, mime: mime }, [["Judul", String(meta.title || "media").slice(0, 40)], ["Format", ext]]);
     await sock.sendMessage(m.chat, {
       document: buf,
       mimetype: mime,
       fileName: `${slug(meta.title)}.${ext}`,
+      caption: docCard || undefined,
     }, { quoted: m });
   } catch (e) {
     await m.react("❌");

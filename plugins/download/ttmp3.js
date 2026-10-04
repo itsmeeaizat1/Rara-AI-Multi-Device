@@ -8,6 +8,19 @@ import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { raraWrap, raraLine, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -166,6 +179,9 @@ async function handler(m, { sock }) {
         thumbnailUrl: result.cover || result.author?.avatar || "",
       }),
     }, { quoted: m });
+    // kartu teks setelah audio (audio gak bisa caption)
+    const audCard = await dlCard("audio", Buffer.isBuffer(audioSource) ? { buffer: audioSource, mime: "audio/mpeg" } : { url: audioSource }, [["Judul", (result.title || result.author || "TikTok Audio").slice(0, 40)]]);
+    if (audCard) await m.reply(audCard);
     // cleanup
     cleanupTempFiles();
     await m.reply(raraBerhasil("Ttmp3"));

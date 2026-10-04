@@ -4,6 +4,19 @@ import ytdl from "@distube/ytdl-core";
 import axios from "axios";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -108,6 +121,9 @@ async function handler(m, { sock }) {
         },
       },
     });
+    // kartu teks setelah audio (audio gak bisa caption)
+    const aCard = await dlCard("audio", { buffer: buffer, mime: "audio/mp4" }, [["Judul", (title || "YouTube Audio").slice(0, 40)]]);
+    if (aCard) await m.reply(aCard);
     await m.reply(msg);
     await m.reply(raraBerhasil("ytmp3v3"));
   } catch (err) {

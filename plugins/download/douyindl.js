@@ -24,6 +24,19 @@ import {
 import { haidarDouyin, sylvaticaDouyin } from "../../src/lib/rara-douyin-dl.js";
 import axios from "axios";
 import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -117,6 +130,12 @@ async function handleKeywordSearch(m, sock, keyword) {
       await new Promise((res) => setTimeout(res, 800));
       await sock.sendMessage(m.chat, { image: { url: img } }).catch(() => {});
     }
+    // kartu ringkasan foto Douyin (batch download)
+    try {
+      const firstInfo = await probeMedia(item.images[0]).catch(() => null);
+      const sumCard = mediaResultCard({ header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name, type: "gambar", request: [["Judul", String(title).slice(0, 40)], ["Jumlah foto", String(item.images.length)]], size: firstInfo?.size, mime: firstInfo?.mime, width: firstInfo?.width, height: firstInfo?.height });
+      if (sumCard) await m.reply(sumCard);
+    } catch {}
     await m.react("🐣");
     return;
   }
@@ -137,7 +156,7 @@ async function handleKeywordSearch(m, sock, keyword) {
     (item.link ? `🔗 ${item.link}\n` : "") +
     `🔖 Sumber: ${r.source}`;
   await sock.sendMessage(m.chat, {
-    video: { url: videoUrl }, caption: cap,
+    video: { url: videoUrl }, caption: ((await dlCard("video", { url: videoUrl }, [["Judul", String(title).slice(0, 40)], ["Watermark", "tanpa watermark"]])) || cap),
     contextInfo: mediaPreviewCard({
       title,
       body: `Douyin • by ${author || "Unknown"}`,

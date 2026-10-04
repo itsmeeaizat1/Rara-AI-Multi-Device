@@ -1,12 +1,13 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// likeedl — Download video Likee
+// likeedl - Download video Likee
 // Primary: IkyyXD /download/likee → all-in-one | Fallback: builtin likee.js
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import likee from "../../src/scraper/likee.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 
-// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+// Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
@@ -66,7 +67,19 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const video = result.medias.find(m => m.type === "video") || result.medias[0];
       await m.react("🐣");
-      return await sock.sendMedia(m.chat, video.url, result.title || null, m, {
+      let card = "";
+      try {
+        const info = await probeMedia(video.url);
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "video",
+          title: result.title || "Likee Video",
+          platform: "Likee",
+          request: [["URL", url]],
+          ...info,
+        });
+      } catch { /* best-effort */ }
+      return await sock.sendMedia(m.chat, video.url, card || result.title || null, m, {
         type: "video",
         contextInfo: { forwardingScore: 0, isForwarded: false },
       });
@@ -78,7 +91,19 @@ async function handler(m, { sock }) {
       const data = await likee(url);
       if (data?.status && (data?.video || data?.url)) {
         await m.react("🐣");
-        await sock.sendMedia(m.chat, data.video || data.url, data?.title || null, m, {
+        let card = "";
+        try {
+          const info = await probeMedia(data.video || data.url);
+          card = mediaResultCard({
+            header: pluginConfig.name,
+            type: "video",
+            title: data?.title || "Likee Video",
+            platform: "Likee",
+            request: [["URL", url]],
+            ...info,
+          });
+        } catch { /* best-effort */ }
+        await sock.sendMedia(m.chat, data.video || data.url, card || data?.title || null, m, {
           type: "video",
           contextInfo: { forwardingScore: 0, isForwarded: false },
         });

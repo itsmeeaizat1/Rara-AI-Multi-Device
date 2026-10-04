@@ -7,6 +7,19 @@ import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -99,7 +112,7 @@ async function handler(m, { sock }) {
         download: "SD",
       });
       await sock.sendMessage(m.chat, {
-        video: { url: video.url }, caption,
+        video: { url: video.url }, caption: ((await dlCard("video", { url: video.url }, [["Judul", (ikyyResult.title || "TikTok Video").slice(0, 40)]])) || caption),
         contextInfo: mediaPreviewCard({ title: ikyyResult.title || "TikTok Video", body: "TikTok V3", sourceUrl: text, thumbnailUrl: ikyyResult.thumbnail || "" }),
       }, { quoted: m });
       await offerConvert(sock, m, { mediaUrl: video.url, type: "video", platform: "TikTok", title: ikyyResult.title, sourceUrl: text });
@@ -141,7 +154,7 @@ async function handler(m, { sock }) {
 
       await sock.sendMessage(m.chat, {
         video: buffer,
-        caption,
+        caption: ((await dlCard("video", { buffer: buffer }, [["Judul", (r.title || r.desc || "TikTok Video").slice(0, 40)], ["Kualitas", "SD"]])) || caption),
         contextInfo: mediaPreviewCard({ title: r.title || r.desc || "TikTok Video", body: "TikTok V3", sourceUrl: url, thumbnailUrl: r.cover || "" }),
       }, { quoted: m });
       await offerConvert(sock, m, { buffer, type: "video", platform: "TikTok", title: r.title || r.desc, sourceUrl: url });
@@ -150,6 +163,13 @@ async function handler(m, { sock }) {
         await sock.sendMessage(m.chat, { image: { url: img }, contextInfo: mediaPreviewCard({ title: r.title || r.desc || "TikTok Photo", body: "TikTok V3 • Image", sourceUrl: url, thumbnailUrl: r.cover || img }) }, { quoted: m });
       }
     }
+
+    // kartu ringkasan foto TikTok (batch download)
+    try {
+      const firstInfo = await probeMedia(r.images[0]).catch(() => null);
+      const sumCard = mediaResultCard({ header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name, type: "gambar", request: [["Jumlah foto", String(r.images.length)]], size: firstInfo?.size, mime: firstInfo?.mime, width: firstInfo?.width, height: firstInfo?.height });
+      if (sumCard) await m.reply(sumCard);
+    } catch {}
 
     // Audio
     if (r.music) {
@@ -161,6 +181,9 @@ async function handler(m, { sock }) {
         audio: Buffer.from(audRes.data),
         mimetype: "audio/mp4", ptt: false,
       }, { quoted: m });
+      // kartu teks setelah audio (audio gak bisa caption)
+      const audCard = await dlCard("audio", { buffer: Buffer.from(audRes.data), mime: "audio/mp4" }, [["Judul", (r.title || r.desc || "TikTok Audio").slice(0, 40)]]);
+      if (audCard) await m.reply(audCard);
     }
   } catch (err) {
     console.error("[tiktokv3]", err);

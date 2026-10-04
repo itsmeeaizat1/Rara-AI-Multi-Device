@@ -27,6 +27,19 @@ import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC, bracketBox, tipText, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -398,6 +411,8 @@ async function runSessionDownload(sock, m, session, choice) {
   });
 
   try {
+    // kartu info media (batch download)
+    const sendCard = await dlCard((result.type === "audio" || isAudio) ? "audio" : (result.type === "image" || isImage) ? "gambar" : "video", { buffer: buffer }, [["Judul", String(title).slice(0, 40)], ["Platform", result.platform || platform.name || "-"]]);
     if (result.type === "audio" || isAudio) {
       await sock.sendMessage(
         m.chat,
@@ -409,12 +424,14 @@ async function runSessionDownload(sock, m, session, choice) {
         },
         { quoted: m }
       );
+      // kartu teks setelah audio (audio gak bisa caption)
+      if (sendCard) await m.reply(sendCard);
     } else if (result.type === "image" || isImage) {
       await sock.sendMessage(
         m.chat,
         {
           image: buffer,
-          caption,
+          caption: (sendCard || caption),
           contextInfo: ctxInfo,
         },
         { quoted: m }
@@ -424,7 +441,7 @@ async function runSessionDownload(sock, m, session, choice) {
         m.chat,
         {
           video: buffer,
-          caption,
+          caption: (sendCard || caption),
           contextInfo: ctxInfo,
         },
         { quoted: m }

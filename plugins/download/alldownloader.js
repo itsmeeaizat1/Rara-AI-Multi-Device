@@ -36,6 +36,18 @@ import {
   raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan,
   toSC, bracketBox, tipText,
 } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -272,6 +284,8 @@ async function sendMedia(sock, m, session, opt, meta) {
     download: opt.label,
   });
 
+  // kartu info media (batch download)
+  const card = await dlCard(opt.type === "audio" ? "audio" : opt.type === "image" ? "gambar" : "video", opt.buffer ? { buffer: opt.buffer } : { url: opt.url }, [["Judul", String(title).slice(0, 40)], ["Kualitas", opt.label || "-"]]);
   if (opt.type === "audio") {
     await sock.sendMessage(
       m.chat,
@@ -283,6 +297,8 @@ async function sendMedia(sock, m, session, opt, meta) {
       },
       { quoted: m }
     );
+    // kartu teks setelah audio (audio gak bisa caption)
+    if (card) await m.reply(card);
   } else if (opt.type === "image") {
     const urls = opt.urls?.length ? opt.urls : [opt.url];
     for (let i = 0; i < urls.length; i++) {
@@ -292,7 +308,7 @@ async function sendMedia(sock, m, session, opt, meta) {
           m.chat,
           {
             image: buf,
-            caption: i === 0 ? caption : undefined,
+            caption: i === 0 ? (card || caption) : undefined,
             contextInfo: ctxInfo,
           },
           { quoted: m }
@@ -304,7 +320,7 @@ async function sendMedia(sock, m, session, opt, meta) {
       m.chat,
       {
         video: opt.buffer,
-        caption,
+        caption: (card || caption),
         contextInfo: ctxInfo,
       },
       { quoted: m }

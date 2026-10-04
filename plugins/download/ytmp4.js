@@ -8,6 +8,19 @@ import { downloadVideo, isYtDlpAvailable } from "../../src/scraper/rara-ytdlp.js
 import { raraGuide, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -137,10 +150,10 @@ async function handler(m, { sock }) {
               document: vid.buffer,
               mimetype: "video/mp4",
               fileName: `${(vid.title || "video").replace(/[^a-zA-Z0-9 _-]/g, "").slice(0, 40)}-${quality}p.mp4`,
-              caption: capV,
+              caption: ((await dlCard("dokumen", { buffer: vid.buffer }, [["Judul", (vid.title || "video").slice(0, 40)], ["Kualitas", quality + "p"]])) || capV),
             }, { quoted: m });
           } else {
-            await sock.sendMessage(m.chat, { video: vid.buffer, caption: capV }, { quoted: m });
+            await sock.sendMessage(m.chat, { video: vid.buffer, caption: ((await dlCard("video", { buffer: vid.buffer }, [["Judul", (vid.title || "video").slice(0, 40)], ["Kualitas", quality + "p"]])) || capV) }, { quoted: m });
           }
           return await m.reply(raraBerhasil("ytmp4"));
         }
@@ -171,7 +184,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       video: { url: result.download },
-      caption,
+      caption: ((await dlCard("video", { url: result.download }, [["Judul", (result.title || ytMeta.title || "YouTube Video").slice(0, 40)]])) || caption),
       contextInfo: { externalAdReply: { title: result.title || ytMeta.title || "YouTube Video", body: "Rara AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
     }, { quoted: m });
     await m.reply(raraBerhasil("ytmp4"));

@@ -6,6 +6,19 @@ import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { raraGuide, raraSalah, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -137,12 +150,16 @@ async function handler(m, { sock }) {
         fileName: `${result.title || "audio"}.mp3`,
         contextInfo: { externalAdReply: { title: result.title || "YouTube MP3", body: "Rara AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
       }, { quoted: m });
+      // kartu teks setelah audio (audio gak bisa caption)
+      const fCard = await dlCard("audio", { buffer: mp3Buffer, mime: "audio/mpeg" }, [["Judul", (result.title || "audio").slice(0, 40)]]);
+      if (fCard) await m.reply(fCard);
     } else {
       await sock.sendMedia(m.chat, result.download, null, m, {
         type: "audio", mimetype: "audio/mpeg", ptt: false,
         fileName: result.title || "audio.mp3",
       });
-      await m.reply(raraBerhasil("ytmp3"));
+      const uCard = await dlCard("audio", { url: result.download }, [["Judul", (result.title || "audio").slice(0, 40)]]);
+      if (uCard) await m.reply(uCard); else await m.reply(raraBerhasil("ytmp3"));
     }
     await m.reply(caption);
   } catch (err) {

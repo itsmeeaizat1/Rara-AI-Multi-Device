@@ -3,6 +3,19 @@
 import axios from "axios";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -85,7 +98,8 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("videy", url);
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "Videy", m, {
+      const vCard1 = await dlCard("video", { url: video.url }, [["Judul", (ikyyResult.title || "Videy Video").slice(0, 40)]]);
+      await sock.sendMedia(m.chat, video.url, (vCard1 || ikyyResult.title || "Videy"), m, {
         type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
       });
       return;
@@ -117,7 +131,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, {
       video: buffer,
-      caption,
+      caption: ((await dlCard("video", { buffer: buffer }, [["Judul", "Videy Video"]])) || caption),
     }, { quoted: m });
     await m.react("🐣");
     await m.reply(raraBerhasil("videy"));

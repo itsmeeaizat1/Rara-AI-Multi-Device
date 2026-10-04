@@ -4,8 +4,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import { tipText, raraWrap, raraCaption, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
-// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+// Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
@@ -64,6 +65,18 @@ async function handler(m, { sock, config: botConfig }) {
     const fileName = url.split("/").pop() || `video_${Date.now()}.mp4`;
     const fileSize = (buffer.length / 1024 / 1024).toFixed(2);
 
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer, { mime: "video/mp4" });
+      card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "video",
+        title: fileName,
+        platform: "Direct MP4",
+        request: [["Nama File", fileName]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height, duration: info.duration,
+      });
+    } catch { /* best-effort */ }
     const _cap = mediaCaption({
       platformIcon: "🎬", platformName: "MP4",
       title: fileName,
@@ -74,7 +87,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       video: buffer,
-      caption: _cap,
+      caption: card || _cap,
     }, { quoted: m });
     await m.reply(raraBerhasil("mp4"));
   } catch (error) {

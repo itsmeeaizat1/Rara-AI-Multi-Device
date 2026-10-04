@@ -4,8 +4,9 @@ import config from '../../config.js'
 import path from 'path'
 import fs from 'fs'
 import te from '../../src/lib/rara-error.js'
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 
-// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+// Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
@@ -100,9 +101,21 @@ async function handler(m, { sock }) {
             return m.reply(raraWrap("githubdl", `Branch ${branch} tidak ditemukan. Default: ${defaultBranch}`, "error"))
         }
         
+        let card = "";
+        try {
+          const info = await probeMedia(zipUrl);
+          card = mediaResultCard({
+            header: pluginConfig.name,
+            type: "dokumen",
+            title: `${repo} (${branch})`,
+            platform: "GitHub",
+            request: [["Repo", `${username}/${repo}`], ["Branch", branch]],
+            ...info,
+          });
+        } catch { /* best-effort */ }
         const _cap = mediaCaption({ platformIcon: "🐙", platformName: "GitHub", title: `${repo} (${branch})`, format: "ZIP Archive", method: "github" });
         await sock.sendMessage(m.chat, {
-            document: { url: zipUrl }, caption: _cap,
+            document: { url: zipUrl }, caption: card || _cap,
             fileName: `${repo} - Branch: ${branch}.zip`,
             mimetype: 'application/zip',
             contextInfo: { forwardingScore: 0, isForwarded: false },

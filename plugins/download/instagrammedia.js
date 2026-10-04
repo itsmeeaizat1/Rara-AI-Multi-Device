@@ -1,10 +1,10 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// instagrammedia.js — Download Instagram per format (URL-based):
+// instagrammedia.js - Download Instagram per format (URL-based):
 //   .igvideo <url> → kirim video aja
 //   .igimage <url> → kirim foto aja (carousel/slideshow)
 //   .igaudio <url> → ekstrak MP3 dari video (ffmpeg libmp3lame)
 // Fetch chain sama kayak instagramdl: IkyyXD → ikyyAio → ig.js lokal.
-// Catatan: keyword search IG gak mungkin — Meta blokir semua search tanpa login.
+// Catatan: keyword search IG gak mungkin - Meta blokir semua search tanpa login.
 
 import axios from "axios";
 import fs from "fs";
@@ -16,8 +16,9 @@ import instagramDownloader from "../../src/scraper/ig.js";
 import { raraWrap, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { mediaResultCard, probeMedia, probeBuffer } from "../../src/lib/rara-media-result.js";
 
-// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+// Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
@@ -52,7 +53,7 @@ const pluginConfig = {
   name: ["igvideo", "igimage", "igaudio"],
   alias: ["igvideo", "igimage", "igaudio"],
   category: "download",
-  description: "Download Instagram per format — video / foto / audio dari link post",
+  description: "Download Instagram per format - video / foto / audio dari link post",
   usage: ".igvideo <url> · .igimage <url> · .igaudio <url>",
   example: ".igvideo https://www.instagram.com/reel/xxx",
   isOwner: false,
@@ -172,11 +173,22 @@ async function handler(m, { sock }) {
       const videos = result.medias.filter((i) => i.type === "video");
       if (!videos.length) {
         await m.react("❗");
-        return m.reply(raraWrap("Instagram Media", `Post ini gak ada video — coba .igimage buat ambil fotonya`));
+        return m.reply(raraWrap("Instagram Media", `Post ini gak ada video - coba .igimage buat ambil fotonya`));
       }
       for (const item of videos.slice(0, 5)) {
-        // format owner 19 Sep — disamakan ke semua downloader
-        const caption = tiktokCaption({
+        let card = "";
+        try {
+          const info = await probeMedia(item.url);
+          card = mediaResultCard({
+            header: command,
+            type: "video",
+            title,
+            platform: "Instagram",
+            request: [["URL", url]],
+            ...info,
+          });
+        } catch { /* best-effort */ }
+        const caption = card || tiktokCaption({
           header: "Instagram Downloader",
           title,
           download: "MP4",
@@ -203,14 +215,25 @@ async function handler(m, { sock }) {
       const images = result.medias.filter((i) => i.type === "image" || /\.(jpe?g|png|webp)(\?|$)/i.test(itemUrlSafe(i)));
       if (!images.length) {
         await m.react("❗");
-        return m.reply(raraWrap("Instagram Media", `Post ini gak ada foto — coba .igvideo buat ambil videonya`));
+        return m.reply(raraWrap("Instagram Media", `Post ini gak ada foto - coba .igvideo buat ambil videonya`));
       }
-      // format owner 19 Sep — disamakan ke semua downloader
-      const caption = tiktokCaption({
+      let card = "";
+      try {
+        const info = await probeMedia(images[0]?.url);
+        card = mediaResultCard({
+          header: command,
+          type: "foto",
+          title,
+          platform: "Instagram",
+          request: [["Jumlah Foto", images.length]],
+          ...info,
+        });
+      } catch { /* best-effort */ }
+      const caption = card || (tiktokCaption({
         header: "Instagram Downloader",
         title,
         download: `Foto (${images.length})`,
-      }) + `\n🔗 *Link:* ${url}`;
+      }) + `\n🔗 *Link:* ${url}`);
       for (let i = 0; i < images.slice(0, 10).length; i++) {
         const content = { image: { url: images[i].url } };
         if (i === 0) {
@@ -234,11 +257,11 @@ async function handler(m, { sock }) {
       const video = result.medias.find((i) => i.type === "video" || i.type === "audio");
       if (!video) {
         await m.react("❗");
-        return m.reply(raraWrap("Instagram Media", `Post ini gak ada video/audio buat diekstrak audionya — coba .igimage`));
+        return m.reply(raraWrap("Instagram Media", `Post ini gak ada video/audio buat diekstrak audionya - coba .igimage`));
       }
       const isDirectAudio = video.type === "audio" || /\.(mp3|m4a|ogg|opus)(\?|$)/i.test(video.url);
       const audioBuffer = isDirectAudio ? null : await extractMp3(video.url);
-      // format owner 19 Sep — disamakan ke semua downloader
+      // format owner 19 Sep - disamakan ke semua downloader
       const caption = tiktokCaption({
         header: "Instagram Downloader",
         title,
@@ -251,14 +274,43 @@ async function handler(m, { sock }) {
           ptt: false,
           fileName: `${title.slice(0, 40)}.mp3`.replace(/[\\/:*?"<>|]/g, ""),
         }, { quoted: m });
+        try {
+          const info = await probeBuffer(audioBuffer, { mime: "audio/mpeg" });
+          const card = mediaResultCard({
+            header: command,
+            type: "audio",
+            title,
+            platform: "Instagram",
+            request: [["URL", url]],
+            size: info.size, mime: info.mime, duration: info.duration,
+          });
+          if (card) await m.reply(card);
+          else await m.reply(caption);
+        } catch {
+          await m.reply(caption);
+        }
       } else {
         await sock.sendMessage(m.chat, {
           audio: { url: video.url },
           mimetype: "audio/mp4",
           ptt: false,
         }, { quoted: m });
+        try {
+          const info = await probeMedia(video.url);
+          const card = mediaResultCard({
+            header: command,
+            type: "audio",
+            title,
+            platform: "Instagram",
+            request: [["URL", url]],
+            ...info,
+          });
+          if (card) await m.reply(card);
+          else await m.reply(caption);
+        } catch {
+          await m.reply(caption);
+        }
       }
-      await m.reply(caption);
       await m.react("🐣");
       return;
     }

@@ -1,13 +1,14 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// mediafiredl — Download file dari MediaFire
+// mediafiredl - Download file dari MediaFire
 // Primary: IkyyXD /download/mediafire | Fallback: builtin mediafire.js
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import te from "../../src/lib/rara-error.js";
 import mediafire from "../../src/scraper/mediafire.js";
 import { raraGuide, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { raraError } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 
-// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+// Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
@@ -74,9 +75,21 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const file = result.medias[0];
       await m.react("🐣");
+      let card = "";
+      try {
+        const info = await probeMedia(file.url);
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "dokumen",
+          title: result.title || "MediaFire File",
+          platform: "MediaFire",
+          request: [["URL", url]],
+          ...info,
+        });
+      } catch { /* best-effort */ }
       const _cap = mediaCaption({ platformIcon: "🔥", platformName: "MediaFire", title: result.title || "MediaFire File", format: "File", method: "IkyyXD" });
       return await sock.sendMessage(m.chat, {
-        document: { url: file.url }, caption: _cap,
+        document: { url: file.url }, caption: card || _cap,
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m });
     }
@@ -87,9 +100,22 @@ async function handler(m, { sock }) {
       const data = await mediafire(url);
       if (data?.download_url || data?.link) {
         await m.react("🐣");
+        const fileUrl = data.download_url || data.link;
+        let card = "";
+        try {
+          const info = await probeMedia(fileUrl);
+          card = mediaResultCard({
+            header: pluginConfig.name,
+            type: "dokumen",
+            title: data?.title || data?.name || "MediaFire File",
+            platform: "MediaFire",
+            request: [["URL", url]],
+            ...info,
+          });
+        } catch { /* best-effort */ }
         const _cap2 = mediaCaption({ platformIcon: "🔥", platformName: "MediaFire", title: data?.title || data?.name || "MediaFire File", format: data?.ext || "File", method: "builtin" });
         await sock.sendMessage(m.chat, {
-          document: { url: data.download_url || data.link }, caption: _cap2,
+          document: { url: fileUrl }, caption: card || _cap2,
           contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m });
         await m.reply(raraBerhasil("mediafiredl"));

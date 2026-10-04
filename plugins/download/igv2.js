@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// igv2 — Download video/foto Instagram via IkyyXD igv2 endpoint
+// igv2 - Download video/foto Instagram via IkyyXD igv2 endpoint
 // Primary: IkyyXD /download/igv2 → all-in-one | Fallback: builtin ig.js
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
@@ -8,8 +8,9 @@ import instagramDownloader from "../../src/scraper/ig.js";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 
-// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+// Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
@@ -70,13 +71,25 @@ async function handler(m, { sock }) {
       const ctxInfo = mediaPreviewCard({ title: result.title || "Instagram Media", body: "Instagram", sourceUrl: url, thumbnailUrl: result.thumbnail || "" });
       await m.react("🐣");
       for (const item of result.medias) {
+        let card = "";
+        try {
+          const info = await probeMedia(item.url);
+          card = mediaResultCard({
+            header: pluginConfig.name,
+            type: item.type === "video" ? "video" : "foto",
+            title: result.title || "Instagram Media",
+            platform: "Instagram",
+            request: [["URL", url]],
+            ...info,
+          });
+        } catch { /* best-effort */ }
         if (item.type === "video") {
           const _cap = tiktokCaption({ header: "Instagram Downloader", title: result.title || "Instagram Media", download: "MP4" });
-          await sock.sendMessage(m.chat, { video: { url: item.url }, caption: _cap, contextInfo: ctxInfo }, { quoted: m });
+          await sock.sendMessage(m.chat, { video: { url: item.url }, caption: card || _cap, contextInfo: ctxInfo }, { quoted: m });
           await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: result.title, sourceUrl: url });
         } else {
           const _cap2 = tiktokCaption({ header: "Instagram Downloader", title: result.title || "Instagram Media", download: "Foto" });
-          await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap2, contextInfo: ctxInfo }, { quoted: m });
+          await sock.sendMessage(m.chat, { image: { url: item.url }, caption: card || _cap2, contextInfo: ctxInfo }, { quoted: m });
           await m.reply(raraBerhasil("IG V2"));
         }
         break;
@@ -93,13 +106,25 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         await m.reply(raraBerhasil("IG V2"));
         for (const item of igResult.media) {
+          let card = "";
+          try {
+            const info = await probeMedia(item.url);
+            card = mediaResultCard({
+              header: pluginConfig.name,
+              type: item.type === "video" ? "video" : "foto",
+              title: igResult.title || "Instagram Media",
+              platform: "Instagram",
+              request: [["URL", url]],
+              ...info,
+            });
+          } catch { /* best-effort */ }
           if (item.type === "video") {
             const _cap3 = tiktokCaption({ header: "Instagram Downloader", title: igResult.title || "Instagram Media", download: "MP4" });
-            await sock.sendMessage(m.chat, { video: { url: item.url }, caption: _cap3, contextInfo: ctxInfo }, { quoted: m });
+            await sock.sendMessage(m.chat, { video: { url: item.url }, caption: card || _cap3, contextInfo: ctxInfo }, { quoted: m });
             await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: igResult.title, sourceUrl: url });
           } else {
             const _cap4 = tiktokCaption({ header: "Instagram Downloader", title: igResult.title || "Instagram Media", download: "Foto" });
-            await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap4, contextInfo: ctxInfo }, { quoted: m });
+            await sock.sendMessage(m.chat, { image: { url: item.url }, caption: card || _cap4, contextInfo: ctxInfo }, { quoted: m });
           }
           break;
         }

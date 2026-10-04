@@ -6,6 +6,19 @@
 
 import axios from "axios";
 import { raraWrap, raraGuide, toSC } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -145,15 +158,19 @@ async function nixdlFetchFile(mediaUrl, filename, type) {
 }
 
 async function sendMedia(sock, m, { buffer, type, filename, title, caption }) {
+  // kartu info media (batch download)
+  const card = await dlCard(type === "audio" ? "audio" : type === "image" ? "gambar" : "video", { buffer: buffer }, [["Judul", String(title || "media").slice(0, 40)]]);
   if (type === "audio") {
     await sock.sendMessage(m.chat, {
       audio: buffer, mimetype: "audio/mpeg", ptt: false,
       fileName: filename || `${safeName(title, "mp3")}`,
     }, { quoted: m });
+    // kartu teks setelah audio (audio gak bisa caption)
+    if (card) await m.reply(card);
   } else if (type === "image") {
-    await sock.sendMessage(m.chat, { image: buffer, caption: caption || undefined }, { quoted: m });
+    await sock.sendMessage(m.chat, { image: buffer, caption: card || caption || undefined }, { quoted: m });
   } else {
-    await sock.sendMessage(m.chat, { video: buffer, caption: caption || undefined, mimetype: "video/mp4" }, { quoted: m });
+    await sock.sendMessage(m.chat, { video: buffer, caption: card || caption || undefined, mimetype: "video/mp4" }, { quoted: m });
   }
 }
 

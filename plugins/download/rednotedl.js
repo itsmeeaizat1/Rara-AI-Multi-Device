@@ -2,6 +2,7 @@
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { RedNoteDL } from "../../src/scraper/rednote.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -70,16 +71,43 @@ async function handler(m, { sock }) {
 
     if (result.type === "video" && result.results?.[0]) {
       const _cap = mediaCaption({ platformIcon: "🔴", platformName: "RedNote", title: result.title || "RedNote Video", format: "Video", method: "IkyyXD" });
+      let card = "";
+      try {
+        const info = await probeMedia(result.results[0]);
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "video",
+          title: result.title || "RedNote Video",
+          platform: "RedNote",
+          request: [["URL", text]],
+          size: info.size, mime: info.mime, duration: info.duration,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(m.chat, {
-        video: { url: result.results[0] }, caption: _cap,
+        video: { url: result.results[0] }, caption: card || _cap,
         contextInfo: mediaPreviewCard({ title: result.title || "RedNote Video", body: "RedNote", sourceUrl: text, thumbnailUrl: result.thumbnail || "" }),
       }, { quoted: m });
     } else if (result.results?.length > 0) {
       for (let i = 0; i < Math.min(result.results.length, 5); i++) {
         const _imgCap = i === 0 ? mediaCaption({ platformIcon: "🔴", platformName: "RedNote", title: result.title || "RedNote", format: "Image", method: "IkyyXD" }) : null;
+        let card = "";
+        if (i === 0) {
+          try {
+            const info = await probeMedia(result.results[i]);
+            card = mediaResultCard({
+              header: pluginConfig.name,
+              type: "foto",
+              title: result.title || "RedNote Photo",
+              platform: "RedNote",
+              request: [["URL", text]],
+              size: info.size, mime: info.mime,
+            });
+          } catch { /* best-effort */ }
+        }
+        const cap = card || _imgCap;
         await sock.sendMessage(m.chat, {
           image: { url: result.results[i] },
-          ...( _imgCap ? { caption: _imgCap } : {}),
+          ...( cap ? { caption: cap } : {}),
           ...( i === 0 ? { contextInfo: mediaPreviewCard({ title: result.title || "RedNote", body: "RedNote • Image", sourceUrl: text, thumbnailUrl: result.thumbnail || result.results[0] }) } : {}),
         }, { quoted: m });
       }

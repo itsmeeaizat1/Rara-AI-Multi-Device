@@ -1,6 +1,19 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { cocofun } from 'btch-downloader'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -75,7 +88,7 @@ async function handler(m, { sock }) {
         
         const _cap = mediaCaption({ platformIcon: "🥥", platformName: "CocoFun", title: "CocoFun Video", format: "Video", method: "btch-downloader" });
         await sock.sendMessage(m.chat, {
-          video: { url: videoUrl }, caption: _cap,
+          video: { url: videoUrl }, caption: ((await dlCard("video", { url: videoUrl }, [["Judul", "CocoFun Video"], ["Watermark", result.no_watermark ? "tanpa watermark" : "ada watermark"]])) || _cap),
           contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m });
         await m.react("🐣"); await m.react("🐣"); m.reply(raraBerhasil("Cocofundl"));

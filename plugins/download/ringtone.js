@@ -3,6 +3,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { raraBox, raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -91,20 +92,25 @@ async function handler(m, { sock }) {
     });
     const buffer = Buffer.from(audioRes.data);
 
-    const _cap = mediaCaption({
-      platformIcon: "🔔", platformName: "Ringtone",
-      title: first.title,
-      format: "MP3 Audio",
-      method: "meloboom",
-    });
-    await m.reply(_cap);
-
     await sock.sendMessage(m.chat, {
       audio: buffer,
       mimetype: "audio/mpeg",
       ptt: false,
       fileName: `${first.title}.mp3`,
     }, { quoted: m });
+
+    try {
+      const info = await probeBuffer(buffer, { mime: "audio/mpeg" });
+      const card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "audio",
+        title: first.title || "Ringtone",
+        platform: "Meloboom",
+        request: [["Kata Kunci", query]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
 
     // List hasil lainnya
     const lines = [`Hasil: ${query}`, ""];

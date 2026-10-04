@@ -2,6 +2,7 @@
 // soundclouddl.js — Download lagu dari SoundCloud via IkyyXD
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -63,19 +64,25 @@ async function handler(m, { sock }) {
 
     if (result?.medias?.length) {
       const audio = result.medias.find(m => m.type === "audio") || result.medias[0];
-      const caption = mediaCaption({
-        platformIcon: "☁️", platformName: "SoundCloud",
-        title: result.title || "SoundCloud Track",
-        author: result.author || null,
-        duration: result.duration || null,
-        format: "🎶 MP3", method: "IkyyXD",
-      });
-      await m.reply(caption);
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         audio: { url: audio.url },
         mimetype: "audio/mpeg",
       }, { quoted: m });
+
+      try {
+        const info = await probeMedia(audio.url);
+        const card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "audio",
+          title: result.title || "SoundCloud Track",
+          author: result.author || undefined,
+          platform: "SoundCloud",
+          request: [["URL", url]],
+          size: info.size, mime: info.mime, duration: result.duration || info.duration,
+        });
+        if (card) await m.reply(card);
+      } catch { /* best-effort */ }
     } else {
       await m.react("❌");
       await m.reply(raraGagal("SoundCloud DL"));

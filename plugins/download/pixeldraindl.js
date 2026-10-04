@@ -7,6 +7,7 @@ import fs from 'fs'
 import { f } from '../../src/lib/rara-http.js'
 import te from '../../src/lib/rara-error.js'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -91,8 +92,20 @@ async function handler(m, { sock }) {
     if (sizeInMB > 0 && sizeInMB <= 100) {
 
       const _cap = mediaCaption({ platformIcon: "🟦", platformName: "PixelDrain", title: file.name || "PixelDrain File", format: "File", method: "pixeldrain" });
+      let card = "";
+      try {
+        const info = await probeMedia(file.url);
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "dokumen",
+          title: file.name || file.filename || "PixelDrain File",
+          platform: "PixelDrain",
+          request: [["Nama", file.filename || file.name || "File"], ["URL", url]],
+          size: info.size || (sizeInMB * 1024 * 1024), mime: info.mime,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(m.chat, {
-        document: { url: file.url }, caption: _cap,
+        document: { url: file.url }, caption: card || _cap,
         fileName: file.filename,
         mimetype: 'application/octet-stream',
         contextInfo: { forwardingScore: 0, isForwarded: false },
