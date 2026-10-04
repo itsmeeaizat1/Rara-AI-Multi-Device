@@ -16,6 +16,7 @@
 //   per tugas (gak ditanya ulang); 3 menit tanpa jawaban → otomatis DITOLAK.
 // ============================================================
 import { raraBox } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard } from "../../src/lib/rara-media-result.js";
 import { toSC } from "../../src/lib/styler.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
@@ -282,11 +283,21 @@ async function handler(m, { sock, args, config: botConfig }) {
     // ringkasan agent — panjang → document, pendek → text biasa
     if (summary) {
         if ((result.summary || "").length > MAX_OUTPUT_CHARS) {
+            const laporanBuf = Buffer.from(result.summary, "utf8");
+            let ocodeCap = raraBox("OpenCode", ["Ringkasan lengkap agent."]);
+            try {
+                const card = mediaResultCard({
+                    header: "ocode",
+                    request: [["Fitur", "Laporan agent OpenCode"], ["Berkas", "ocode-laporan.txt"], ["Karakter", String(result.summary.length)]],
+                    size: laporanBuf.length,
+                });
+                if (card) ocodeCap = card;
+            } catch {}
             await sock.sendMessage(m.chat, {
-                document: Buffer.from(result.summary, "utf8"),
+                document: laporanBuf,
                 fileName: "ocode-laporan.txt",
                 mimetype: "text/plain",
-                caption: raraBox("OpenCode", ["Ringkasan lengkap agent."]),
+                caption: ocodeCap,
             });
         } else {
             await m.reply(summary);

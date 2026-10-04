@@ -104,6 +104,21 @@ console.log("── 5. 14 plugin AI memakai kartu ──");
   // interview sengaja dilewati (voice = bagian percakapan wawancara, bukan produk media)
 }
 
+console.log("── 5b. kategori AI AGENT: 4 titik kirim ──");
+{
+  const ag = await readFile(new URL("../../plugins/ai-agent/agent.js", import.meta.url), "utf-8");
+  check("agent genimage → kartu header \"agent\" + Engine + Prompt", ag.includes("header: \"agent\"") && ag.includes("genimage") && ag.includes("img.via"));
+  check("agent editimage → kartu Engine + hd", ag.includes("editimage") && /usedApi \+ \(hdMode/.test(ag));
+  check("agent unduh file → kartu Ukuran pasti buffer", ag.includes("size: buf.length") && ag.includes("unduh file"));
+  const oc = await readFile(new URL("../../plugins/ai-agent/ocode.js", import.meta.url), "utf-8");
+  check("ocode laporan → kartu header \"ocode\" + jumlah karakter", oc.includes("header: \"ocode\"") && oc.includes("result.summary.length"));
+  const plain = ["agentloop.js", "autotask.js", "hiaiagent.js", "mcp.js", "setanovaagent.js", "skill.js"];
+  for (const f of plain) {
+    const src = await readFile(new URL("../../plugins/ai-agent/" + f, import.meta.url), "utf-8");
+    check(`${f} bebas kartu (teks saja)`, !src.includes("mediaResultCard"));
+  }
+}
+
 console.log("── 6. probeBuffer tak pernah throw ──");
 {
   let threw = false;

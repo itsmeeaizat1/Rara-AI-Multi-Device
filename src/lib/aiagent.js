@@ -46,6 +46,7 @@ const _TOOL_TOPIC_STATIC = {
   setdesc: 'deskripsi',
   setpp: 'foto profil',
   genimage: 'gambar',
+  editimage: 'edit gambar',
   lockedit: 'kunci',
   unlockedit: 'unlock',
 }
@@ -62,6 +63,7 @@ const _TOOL_NATURAL_DOING_STATIC = {
   closegc: 'nutup grupnya',
   opengc: 'buka grupnya',
   genimage: 'bikin gambarnya',
+  editimage: 'ngedit gambarnya',
   kick: 'ngeluarin dia dari grup',
   add: 'nambahin ke grup',
   promote: 'jadiin dia admin',
@@ -149,6 +151,63 @@ export const TOOLS = {
         image: Buffer.from(img.base64, 'base64'),
         caption: '🎨 ' + prompt.slice(0, 150) + (img.via ? '\n_(engine: ' + img.via + ')_' : '') + (img.ratio && img.ratio !== '1:1' ? ' _(rasio: ' + img.ratio + ')_' : ''),
       }, { quoted: m });
+    }
+  },
+
+  // 🖼️ editimage — EDIT gambar reply/attach di SEMUA agent AI novaagent
+  // (pemulihan 4 Okt 2026: registry TOOLS kehilangan editimage pasca-revert;
+  // rasa yang sama dengan .agent: rantai edit clotheschanger + kartu info media).
+  editimage: {
+    perm: 'user', args: ['prompt', 'mode'], danger: false,
+    desc: 'edit gambar yang di-reply/attach (ganti baju, background, hapus objek, ubah umur/rambut/gender)',
+    done: '✅ Gambarnya udah diedit di atas ya.',
+    run: async (conn, m, a) => {
+      let buf = null;
+      try {
+        if (m.isImage && typeof m.download === "function") buf = await m.download();
+        else if (m.quoted && typeof m.quoted.download === "function") buf = await m.quoted.download();
+      } catch { /* biarkan buf null -> error jujur */ }
+      if (!buf || !buf.length) throw new Error("Reply/attach gambarnya dulu, baru suruh agent edit");
+      const userPrompt = String(a?.prompt || a?.text || "").trim();
+      if (!userPrompt) throw new Error("Jelasin mau edit apa (contoh: ganti baju jadi formal)");
+      const mode = String(a?.mode || "").toLowerCase().trim();
+      const { runEditChain, applyHd, expandPreset, toBuffer } =
+        await import("../../plugins/ai-image/clotheschanger.js");
+      let editPrompt = userPrompt;
+      if (mode === "clothes" || !mode || mode === "outfit") {
+        const expanded = expandPreset(userPrompt);
+        editPrompt = `Change the person's outfit to: ${expanded}. Keep the face, pose, and background the same. Photorealistic.`;
+      } else if (mode === "bg" || mode === "background") {
+        editPrompt = `Change the background to: ${userPrompt}. Keep the person, pose, and lighting the same. Photorealistic.`;
+      } else if (mode === "remove" || mode === "hapus") {
+        editPrompt = `Remove ${userPrompt} from the image. Fill the area naturally. Photorealistic.`;
+      } else if (mode === "age") {
+        editPrompt = `Change the person's age to look ${userPrompt}. Keep identity, background, and clothing the same. Photorealistic.`;
+      } else if (mode === "hair") {
+        editPrompt = `Change the person's hairstyle to: ${userPrompt}. Keep face, clothing, and background the same. Photorealistic.`;
+      } else if (mode === "gender") {
+        editPrompt = `Change the person's gender to ${userPrompt}. Keep pose, clothing style, and background the same. Photorealistic.`;
+      } else if (mode === "faceswap") {
+        editPrompt = `Swap the face in this photo. ${userPrompt}. Photorealistic.`;
+      } else {
+        editPrompt = `${userPrompt}. Photorealistic edit.`;
+      }
+      const { result, usedApi } = await runEditChain(buf, editPrompt);
+      const hdMode = /\bhd2\b/i.test(userPrompt) ? "2x" : /\bhd\b/i.test(userPrompt) ? "polish" : null;
+      const baseBuf = await toBuffer(result);
+      const finalBuf = Buffer.from(hdMode ? await applyHd(baseBuf, hdMode) : baseBuf);
+      let cap = "🖼️ " + userPrompt.slice(0, 150);
+      try {
+        const { mediaResultCard, probeBuffer } = await import("./rara-media-result.js");
+        const info = await probeBuffer(finalBuf);
+        const card = mediaResultCard({
+          header: "agent",
+          request: [["Fitur", "NovaAgent editimage"], ["Engine", String(usedApi) + (hdMode ? " + " + hdMode : "")], ["Prompt", userPrompt.slice(0, 80)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+        if (card) cap = card;
+      } catch { /* best-effort */ }
+      await conn.sendMessage(m.chat, { image: finalBuf, caption: cap }, { quoted: m });
     }
   },
 

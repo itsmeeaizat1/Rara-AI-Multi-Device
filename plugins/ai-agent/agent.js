@@ -10,6 +10,7 @@
 //    link, lockedit. Gate: user wajib admin/owner + bot wajib admin (pola
 //    rara-auto-ai executeAction). Progress live edit-in-place per fase.
 import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 import te from "../../src/lib/rara-error.js";
 import { runAgent, generatePlugin } from "../../src/lib/rara-agent.js";
 import { memoryBlock, extractMemories } from "../../src/lib/rara-memory.js";
@@ -323,9 +324,20 @@ function buildLegacyExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = nu
     if (!prompt) return { ok: false, msg: "Sebutin gambar apa yang mau dibuat" };
     try {
       const img = await callImageGenChain(prompt, {});
+      const genBuf = Buffer.from(img.base64, "base64");
+      let genCap = "🎨 " + prompt.slice(0, 150) + (img.via ? "\n_(engine: " + img.via + ")_" : "") + (img.ratio && img.ratio !== "1:1" ? " _(rasio: " + img.ratio + ")_" : "");
+      try {
+        const info = await probeBuffer(genBuf);
+        const card = mediaResultCard({
+          header: "agent",
+          request: [["Fitur", "AI Agent genimage"], ["Engine", img.via || "-"], ["Prompt", String(prompt).slice(0, 80)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+        if (card) genCap = card;
+      } catch {}
       await sock.sendMessage(m.chat, {
-        image: Buffer.from(img.base64, "base64"),
-        caption: "🎨 " + prompt.slice(0, 150) + (img.via ? "\n_(engine: " + img.via + ")_" : "") + (img.ratio && img.ratio !== "1:1" ? " _(rasio: " + img.ratio + ")_" : ""),
+        image: genBuf,
+        caption: genCap,
       }, { quoted: m });
       return { ok: true, msg: "Gambar dikirim (engine: " + (img.via || "-") + "): " + prompt.slice(0, 80) };
     } catch (e) {
@@ -372,9 +384,19 @@ function buildLegacyExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = nu
       const hdMode = /\bhd2\b/i.test(userPrompt) ? "2x" : /\bhd\b/i.test(userPrompt) ? "polish" : null;
       const baseBuf = await toBuffer(result);
       const finalBuf = hdMode ? await applyHd(baseBuf, hdMode) : baseBuf;
+      let editCap = "🖼️ " + userPrompt.slice(0, 150) + "\n_(engine: " + usedApi + (hdMode ? " + " + hdMode : "") + ")_";
+      try {
+        const info = await probeBuffer(finalBuf);
+        const card = mediaResultCard({
+          header: "agent",
+          request: [["Fitur", "AI Agent editimage"], ["Engine", usedApi + (hdMode ? " + " + hdMode : "")], ["Prompt", String(userPrompt).slice(0, 80)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+        if (card) editCap = card;
+      } catch {}
       await sock.sendMessage(m.chat, {
         image: Buffer.from(finalBuf),
-        caption: "🖼️ " + userPrompt.slice(0, 150) + "\n_(engine: " + usedApi + (hdMode ? " + " + hdMode : "") + ")_",
+        caption: editCap,
       }, { quoted: m });
       return { ok: true, msg: "Gambar diedit (engine: " + usedApi + "): " + userPrompt.slice(0, 80) };
     } catch (e) {
@@ -429,7 +451,16 @@ function buildLegacyExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = nu
       }
       const buf = Buffer.concat(chunks);
       if (!buf.length) return { ok: false, msg: "File kosong / gak bisa diunduh" };
-      await sock.sendMessage(m.chat, { document: buf, fileName: name, mimetype: mime }, { quoted: m });
+      let dlCap = "";
+      try {
+        const card = mediaResultCard({
+          header: "agent",
+          request: [["Fitur", "AI Agent unduh file"], ["Berkas", String(name).slice(0, 60)]],
+          size: buf.length, mime: mime || "",
+        });
+        dlCap = card || "";
+      } catch {}
+      await sock.sendMessage(m.chat, { document: buf, fileName: name, mimetype: mime, caption: dlCap || undefined }, { quoted: m });
       return { ok: true, msg: "File terkirim: " + name + " (" + (buf.length / 1048576).toFixed(1) + " MB)" };
     } catch (e) { return { ok: false, msg: "Gagal unduh/kirim: " + (e?.message || "error") }; }
   });

@@ -69,8 +69,10 @@ console.log("[3] prompt planner");
 {
   const ra = readFileSync(new URL("../../src/lib/rara-agent.js", import.meta.url), "utf8");
   const ai = readFileSync(new URL("../../src/lib/aiagent.js", import.meta.url), "utf8");
-  ok(/"editimage",/.test(ra), "TOOL_LIST punya editimage");
-  ok(/editimage \(EDIT gambar/.test(ra), "SYS_PLAN jelasin editimage");
+  ok(ra.includes("getToolList"), "rara-agent pakai registry tool");
+  const { hasTool, describeTools } = await import("../../src/lib/rara-agent-registry.js");
+  ok(hasTool("editimage"), "registry punya editimage");
+  ok(/editimage/i.test(describeTools()) && /EDIT gambar/i.test(describeTools()), "SYS_PLAN jelasin editimage");
   ok(/"tool":"editimage"/.test(ai), "think() few-shot editimage");
 }
 
