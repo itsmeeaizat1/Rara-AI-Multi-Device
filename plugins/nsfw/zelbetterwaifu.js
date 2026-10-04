@@ -5,6 +5,20 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { sendImage } from "../../src/lib/rara-message.js";
 import { fetchBuffer } from "../../src/lib/rara-utils.js";
 import { zelImageEndpoint } from "../../src/scraper/zelapi.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch nsfw) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // seam test: mock unduh gambar
 let _fetchBufferForTest;
@@ -43,7 +57,8 @@ async function handler(m, { sock }) {
       try {
         const buf = await getBuf(u);
         if (!buf || buf.length < 1000) continue;
-        await sendImage(sock, m.chat, buf, "_(engine: zelapi betterwaifu)_", { quoted: m });
+        const card = await dlCard("gambar", { buffer: buf }, [["Engine", "ZelAPI BetterWaifu"], ["Prompt", String(prompt).slice(0, 60)], ["Model", "sdxl-v2"]]);
+        await sendImage(sock, m.chat, buf, card ? `_(engine: zelapi betterwaifu)_\n\n${card}` : "_(engine: zelapi betterwaifu)_", { quoted: m });
         sent++;
       } catch {}
     }

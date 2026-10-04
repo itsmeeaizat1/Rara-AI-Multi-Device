@@ -12,6 +12,20 @@ import {
 } from "../../src/scraper/zeldl.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { fetchBuffer } from "../../src/lib/rara-utils.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch nsfw) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 let _fetchBufferForTest;
 export function _setFetchBufferForTest(fn) { _fetchBufferForTest = fn; }
@@ -75,9 +89,18 @@ async function handler(m, { sock }) {
         const buf = await getBuf(direct.url);
         if (buf && buf.length > 1000) {
           const t = mediaTypeOf(direct.url);
-          if (t === "audio") await sock.sendMessage(m.chat, { audio: buf, mimetype: "audio/mpeg", ptt: false, fileName: safeName(r.data?.title, "mp3") }, { quoted: m });
-          else if (t === "image") await sock.sendMessage(m.chat, { image: buf }, { quoted: m });
-          else await sock.sendMessage(m.chat, { video: buf, mimetype: "video/mp4" }, { quoted: m });
+          const dlFields = [["Engine", "ZelAPI"], ["Kind", ZEL_DL_NSFW_KINDS[kind].label], ["Judul", String(r.data?.title || "-").slice(0, 60)]];
+          if (t === "audio") {
+            await sock.sendMessage(m.chat, { audio: buf, mimetype: "audio/mpeg", ptt: false, fileName: safeName(r.data?.title, "mp3") }, { quoted: m });
+            const acard = await dlCard("audio", { buffer: buf }, dlFields);
+            if (acard) await m.reply(acard);
+          } else if (t === "image") {
+            const icard = await dlCard("gambar", { buffer: buf }, dlFields);
+            await sock.sendMessage(m.chat, { image: buf, caption: icard || undefined }, { quoted: m });
+          } else {
+            const vcard = await dlCard("video", { buffer: buf }, dlFields);
+            await sock.sendMessage(m.chat, { video: buf, mimetype: "video/mp4", caption: vcard || undefined }, { quoted: m });
+          }
         }
       } catch { /* link list udah dikirim */ }
     }
