@@ -2,6 +2,19 @@
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/rara-database.js'
 import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 const pluginConfig = {
     name: "automedia",
     alias: ["automedia"],
@@ -81,7 +94,8 @@ async function autoMediaHandler(m, sock) {
         const buffer = await m.download()
         if (!buffer || buffer.length === 0) return false
         
-        await sock.sendMedia(m.chat, buffer, null, m, { 
+        const card = await dlCard("gambar", { buffer }, [["Engine", "Auto Media Convert"], ["Asal", "Stiker"], ["Tipe", "Gambar"]]);
+        await sock.sendMedia(m.chat, buffer, card || null, m, { 
             type: 'image',
         })
         

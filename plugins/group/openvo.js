@@ -2,6 +2,20 @@
 import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
 import { downloadContentFromMessage } from 'rara'
 import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
     name: "openvo",
     alias: ["openvo", "rvo"],
@@ -67,11 +81,13 @@ async function handler(m, { sock }) {
         const targetQuoted = m.quoted ? m.quoted : m
 
         if (mediaType === 'image') {
-            await sock.sendMedia(m.chat, buffer, null, targetQuoted, {
+            const card = await dlCard("gambar", { buffer }, [["Engine", "View-Once Unlock"], ["Tipe", "Gambar"]])
+            await sock.sendMedia(m.chat, buffer, card || null, targetQuoted, {
                 type: 'image'
             })
         } else if (mediaType === 'video') {
-            await sock.sendMedia(m.chat, buffer, null, targetQuoted, {
+            const card = await dlCard("video", { buffer }, [["Engine", "View-Once Unlock"], ["Tipe", "Video"]])
+            await sock.sendMedia(m.chat, buffer, card || null, targetQuoted, {
                 type: 'video'
             })
         } else if (mediaType === 'audio') {
@@ -80,6 +96,8 @@ async function handler(m, { sock }) {
                 mimetype: 'audio/ogg; codecs=opus',
                 ptt: true
             })
+            const card = await dlCard("audio", { buffer, mime: 'audio/ogg' }, [["Engine", "View-Once Unlock"], ["Tipe", "VN"]])
+            if (card) await m.reply(card)
         }
 
     } catch (error) {

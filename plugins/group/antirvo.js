@@ -3,6 +3,19 @@ import { getDatabase } from "../../src/lib/rara-database.js";
 import { downloadContentFromMessage } from "rara";
 import config from "../../config.js";
 import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const pluginConfig = {
   name: "antirvo",
@@ -83,16 +96,17 @@ export async function handleAntiRvo(m, sock, db) {
     const senderNum = m.sender?.split("@")[0] || "?";
     const header = `Anti ViewOnce\nDari: @${senderNum}\nTipe: ${mediaType.toUpperCase()}`;
 
+    const card = await dlCard(mediaType === "video" ? "video" : mediaType === "audio" ? "audio" : "gambar", { buffer, mime: content?.mimetype }, [["Engine", "Rara Anti ViewOnce"], ["Pengirim", `@${senderNum}`], ["Tipe", mediaType.toUpperCase()], ["Caption Asli", String(caption || "-").slice(0, 50)]]);
     if (mediaType === "image") {
       await sock.sendMessage(m.chat, {
         image: buffer,
-        caption: caption ? `${header}\nCaption: ${caption}` : header,
+        caption: card ? (caption ? `${header}\nCaption: ${caption}\n\n${card}` : `${header}\n\n${card}`) : (caption ? `${header}\nCaption: ${caption}` : header),
         mentions: m.sender ? [m.sender] : [],
       });
     } else if (mediaType === "video") {
       await sock.sendMessage(m.chat, {
         video: buffer,
-        caption: caption ? `${header}\nCaption: ${caption}` : header,
+        caption: card ? (caption ? `${header}\nCaption: ${caption}\n\n${card}` : `${header}\n\n${card}`) : (caption ? `${header}\nCaption: ${caption}` : header),
         mentions: m.sender ? [m.sender] : [],
       });
     } else if (mediaType === "audio") {
@@ -102,7 +116,7 @@ export async function handleAntiRvo(m, sock, db) {
         ptt: true,
       });
       await sock.sendMessage(m.chat, {
-        text: `${header} (Audio VN)`,
+        text: card ? `${header} (Audio VN)\n\n${card}` : `${header} (Audio VN)`,
         mentions: m.sender ? [m.sender] : [],
       });
     }

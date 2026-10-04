@@ -4,6 +4,20 @@ import { getDatabase } from "../../src/lib/rara-database.js";
 import fs from "fs";
 import path from "path";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
   name: "rulesgrup",
   alias: ["rulesgrup"],
@@ -54,7 +68,8 @@ async function handler(m, { sock, config: botConfig }) {
     botConfig.saluran?.name || botConfig.bot?.name || "Rara-AI";
 
   if (imageBuffer) {
-    await sock.sendMedia(m.chat, imageBuffer, rulesText, m, {
+    const card = await dlCard("gambar", { buffer: imageBuffer }, [["Engine", "Kartu Rules Lokal"], ["Aset", "rara-rules.jpg"]]);
+    await sock.sendMedia(m.chat, imageBuffer, card ? `${rulesText}\n\n${card}` : rulesText, m, {
       type: "image",
     });
   } else {

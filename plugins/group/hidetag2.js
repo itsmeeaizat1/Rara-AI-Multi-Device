@@ -3,6 +3,20 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import config from '../../config.js'
 import { getParticipantJids } from '../../src/lib/rara-lid.js'
 import te from '../../src/lib/rara-error.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
     name: 'hidetag2',
     alias: ["hidetag2", "h2"],
@@ -48,11 +62,12 @@ async function handler(m, { sock }) {
             const type = Object.keys(qMsg)[0]
             if (type === 'imageMessage') {
                 const media = await q.download()
+                const card = await dlCard("gambar", { buffer: media }, [["Engine", "Hidetag Media"], ["Tipe", "Gambar"]])
                 return sock.sendMessage(
                     m.chat,
                     {
                         image: media,
-                        caption: qMsg.imageMessage?.caption || '',
+                        caption: card ? `${qMsg.imageMessage?.caption || ''}\n\n${card}` : (qMsg.imageMessage?.caption || ''),
                         mentions: users
                     },
                     { quoted: fakeQuoted }
@@ -60,11 +75,12 @@ async function handler(m, { sock }) {
             }
             if (type === 'videoMessage') {
                 const media = await q.download()
+                const card = await dlCard("video", { buffer: media }, [["Engine", "Hidetag Media"], ["Tipe", "Video"]])
                 return sock.sendMessage(
                     m.chat,
                     {
                         video: media,
-                        caption: qMsg.videoMessage?.caption || '',
+                        caption: card ? `${qMsg.videoMessage?.caption || ''}\n\n${card}` : (qMsg.videoMessage?.caption || ''),
                         mentions: users
                     },
                     { quoted: fakeQuoted }
@@ -72,15 +88,18 @@ async function handler(m, { sock }) {
             }
             if (type === 'stickerMessage') {
                 const media = await q.download()
-                return sock.sendMessage(
+                await sock.sendMessage(
                     m.chat,
                     { sticker: media, mentions: users },
                     { quoted: fakeQuoted }
                 )
+                const card = await dlCard("stiker", { buffer: media, mime: "image/webp" }, [["Engine", "Hidetag Media"], ["Tipe", "Stiker"]])
+                if (card) await sock.sendMessage(m.chat, { text: card, mentions: users }, { quoted: fakeQuoted })
+                return
             }
             if (type === 'audioMessage') {
                 const media = await q.download()
-                return sock.sendMessage(
+                await sock.sendMessage(
                     m.chat,
                     {
                         audio: media,
@@ -90,10 +109,13 @@ async function handler(m, { sock }) {
                     },
                     { quoted: fakeQuoted }
                 )
+                const card = await dlCard("audio", { buffer: media, mime: qMsg.audioMessage?.mimetype }, [["Engine", "Hidetag Media"], ["Tipe", "Audio"]])
+                if (card) await sock.sendMessage(m.chat, { text: card, mentions: users }, { quoted: fakeQuoted })
+                return
             }
             if (type === 'documentMessage') {
                 const media = await q.download()
-                return sock.sendMessage(
+                await sock.sendMessage(
                     m.chat,
                     {
                         document: media,
@@ -103,6 +125,9 @@ async function handler(m, { sock }) {
                     },
                     { quoted: fakeQuoted }
                 )
+                const card = await dlCard("dokumen", { buffer: media, mime: qMsg.documentMessage?.mimetype }, [["Engine", "Hidetag Media"], ["Tipe", "Dokumen"], ["Nama File", String(qMsg.documentMessage?.fileName || 'file').slice(0, 50)]])
+                if (card) await sock.sendMessage(m.chat, { text: card, mentions: users }, { quoted: fakeQuoted })
+                return
             }
             const quotedText =
                 q.text ||

@@ -2,6 +2,20 @@
 import { getParticipantJids } from '../../src/lib/rara-lid.js'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
     name: ['ht', 'hidetag'],
     alias: ["ht", "hidetag"],
@@ -39,9 +53,10 @@ async function handler(m, { sock }) {
                 const media = await quoted.download()
                 const caption = qMsg.imageMessage?.caption || text || ''
 
+                const card = await dlCard("gambar", { buffer: media }, [["Engine", "Hidetag Media"], ["Tipe", "Gambar"]])
                 return sock.sendMessage(m.chat, {
                     image: media,
-                    caption,
+                    caption: card ? `${caption}\n\n${card}` : caption,
                     mentions
                 })
             }
@@ -51,9 +66,10 @@ async function handler(m, { sock }) {
                 const media = await quoted.download()
                 const caption = qMsg.videoMessage?.caption || text || ''
 
+                const card = await dlCard("video", { buffer: media }, [["Engine", "Hidetag Media"], ["Tipe", "Video"]])
                 return sock.sendMessage(m.chat, {
                     video: media,
-                    caption,
+                    caption: card ? `${caption}\n\n${card}` : caption,
                     mentions
                 })
             }
@@ -66,6 +82,11 @@ async function handler(m, { sock }) {
                     sticker: media,
                     mentions
                 })
+
+                {
+                    const card = await dlCard("stiker", { buffer: media, mime: "image/webp" }, [["Engine", "Hidetag Media"], ["Tipe", "Stiker"]])
+                    if (card) await sock.sendMessage(m.chat, { text: card, mentions })
+                }
 
                 if (text) {
                     await sock.sendMessage(m.chat, {
@@ -88,6 +109,11 @@ async function handler(m, { sock }) {
                     mentions
                 })
 
+                {
+                    const card = await dlCard("audio", { buffer: media, mime: audioMsg.mimetype }, [["Engine", "Hidetag Media"], ["Tipe", "Audio"]])
+                    if (card) await sock.sendMessage(m.chat, { text: card, mentions })
+                }
+
                 if (text) {
                     await sock.sendMessage(m.chat, {
                         text,
@@ -108,6 +134,11 @@ async function handler(m, { sock }) {
                     fileName: docMsg.fileName || 'file',
                     mentions
                 })
+
+                {
+                    const card = await dlCard("dokumen", { buffer: media, mime: docMsg.mimetype }, [["Engine", "Hidetag Media"], ["Tipe", "Dokumen"], ["Nama File", String(docMsg.fileName || 'file').slice(0, 50)]])
+                    if (card) await sock.sendMessage(m.chat, { text: card, mentions })
+                }
 
                 if (text) {
                     await sock.sendMessage(m.chat, {

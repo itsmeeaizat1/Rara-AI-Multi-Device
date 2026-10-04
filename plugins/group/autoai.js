@@ -7,6 +7,19 @@ import { promisify } from "util";
 import fs from "fs";
 import path from "path";
 import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 const execAsync = promisify(exec);
 
 const pluginConfig = {
@@ -470,6 +483,10 @@ async function generateVoiceResponse(text, sock, chatId, quotedMsg) {
         },
         { quoted: quotedMsg },
       );
+      {
+        const card = await dlCard("audio", { buffer: audioBuffer, mime: "audio/ogg" }, [["Engine", "Rara AI Voice"], ["Format", "TTS VN"], ["Sumber", "Jawaban AI"]]);
+        if (card) await sock.sendMessage(chatId, { text: card }, { quoted: quotedMsg });
+      }
 
       fs.unlinkSync(mp3Path);
       fs.unlinkSync(oggPath);
@@ -487,6 +504,10 @@ async function generateVoiceResponse(text, sock, chatId, quotedMsg) {
         },
         { quoted: quotedMsg },
       );
+      {
+        const card = await dlCard("audio", { buffer: audioBuffer, mime: "audio/ogg" }, [["Engine", "Rara AI Voice"], ["Format", "TTS VN"], ["Sumber", "Jawaban AI"]]);
+        if (card) await sock.sendMessage(chatId, { text: card }, { quoted: quotedMsg });
+      }
 
       fs.unlinkSync(mp3Path);
 

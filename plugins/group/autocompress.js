@@ -1,6 +1,19 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const pluginConfig = {
   name: "autocompress",
@@ -117,7 +130,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         ctx.font = "16px Arial";
         ctx.fillText("Compress Test", 30, 55);
         const buf = canvas.toBuffer("image/jpeg", { quality: data.quality / 100 });
-        await conn.sendMessage(groupId, { image: buf, caption: raraWrap("Auto Compress", `Test compress: ${data.maxWidth}px, Q${data.quality}, ${buf.length} bytes`, "info") });
+        const card = await dlCard("gambar", { buffer: buf }, [["Engine", "Auto Compress (canvas)"], ["Lebar Max", `${data.maxWidth}px`], ["Kualitas", `Q${data.quality}`]]);
+        const acCap = raraWrap("Auto Compress", `Test compress: ${data.maxWidth}px, Q${data.quality}, ${buf.length} bytes`, "info");
+        await conn.sendMessage(groupId, { image: buf, caption: card ? `${acCap}\n\n${card}` : acCap });
       } catch (e) {
         return m.reply(raraWrap("Auto Compress", [
           "Canvas module tidak tersedia.",

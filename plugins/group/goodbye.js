@@ -5,6 +5,20 @@ import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { detectCountry, fillWelcomeTemplate } from "../../src/lib/rara-welcome-card.js";
 import config from "../../config.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
@@ -159,9 +173,10 @@ const engineText = raraGameBox({
   // lama) → teks polos. Pesan tidak pernah hilang.
   if (ppBuffer) {
     try {
+      const card = await dlCard("gambar", { buffer: ppBuffer }, [["Engine", "WhatsApp CDN"], ["Tipe", "Foto Profil Member"], ["Konteks", "Member Keluar"]]);
       await sock.sendMessage(groupJid, {
         image: ppBuffer,
-        caption: engineText,
+        caption: card ? `${engineText}\n\n${card}` : engineText,
         mentions: [participantJid],
       });
       return;

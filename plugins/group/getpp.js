@@ -1,4 +1,18 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
     name: "getpp",
     alias: ["getpp"],
@@ -37,7 +51,8 @@ async function handler(m, { sock }) {
         ppUrl = 'https://files.catbox.moe/ejy4ky.jpg'
     }
 
-    await sock.sendMedia(m.chat, ppUrl, `Foto profil milik @${targetNum}`, m, {
+    const card = await dlCard("gambar", { url: ppUrl }, [["Engine", "WhatsApp CDN"], ["Target", `@${targetNum}`], ["Tipe", "Foto Profil"]]);
+    await sock.sendMedia(m.chat, ppUrl, card ? `Foto profil milik @${targetNum}\n\n${card}` : `Foto profil milik @${targetNum}`, m, {
         type: 'image',
         mentions: [target]
     })

@@ -4,6 +4,20 @@ import axios from 'axios'
 import { getParticipantJid, resolveAnyLidToJid } from '../../src/lib/rara-lid.js'
 import * as timeHelper from '../../src/lib/rara-time.js'
 import te from '../../src/lib/rara-error.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
     name: "groupinfo",
     alias: ["groupinfo"],
@@ -70,9 +84,10 @@ async function handler(m, { sock, db }) {
 
             try {
                 const ppBuffer = Buffer.from((await axios.get(ppUrl, { responseType: 'arraybuffer', timeout: 10000 })).data)
+                const card = await dlCard("gambar", { buffer: ppBuffer }, [["Engine", "WhatsApp CDN"], ["Tipe", "Foto Profil Grup"]]);
                 await sock.sendMessage(m.chat, {
                     image: ppBuffer,
-                    caption: text,
+                    caption: card ? `${text}\n\n${card}` : text,
                     mentions
                 }, { quoted: m })
             } catch {

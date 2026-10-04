@@ -2,6 +2,20 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { raraError, raraEmpty, raraGuide, raraNoInput, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -278,9 +292,11 @@ export default {
 
       const caption = lines.join("\n");
       if (qrPath) {
+        const qrBuf = fs.readFileSync(qrPath);
+        const card = await dlCard("gambar", { buffer: qrBuf }, [["Engine", "QRIS Donasi"], ["Tipe", "QR Code Pembayaran"]]);
         await sock.sendMessage(
           m.chat,
-          { image: fs.readFileSync(qrPath), caption },
+          { image: qrBuf, caption: card ? `${caption}\n\n${card}` : caption },
           { quoted: m },
         );
       } else {
@@ -434,9 +450,10 @@ export default {
       if (qrPath2) {
         try {
           const qrBuffer = fs.readFileSync(qrPath2);
+          const card2 = await dlCard("gambar", { buffer: qrBuffer }, [["Engine", "QRIS Donasi"], ["Tipe", "QR Status Kampanye"]]);
           await sock.sendMessage(groupId, {
             image: qrBuffer,
-            caption: statusCaption,
+            caption: card2 ? `${statusCaption}\n\n${card2}` : statusCaption,
           }, { quoted: m });
         } catch (e) {
           await m.reply(statusCaption);
