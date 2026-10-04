@@ -4,6 +4,19 @@ import { Img2Img } from "../../src/scraper/img2img.js";
 import { live3d } from "../../src/scraper/seaart.js";
 import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "editimg",
@@ -124,14 +137,16 @@ async function handler(m, { sock }) {
     
     // Jika result adalah Buffer, kirim langsung
     if (Buffer.isBuffer(result)) {
-      await sock.sendMedia(m.chat, result, null, m, { type: "image", caption });
+      const c = await dlCard("gambar", { buffer: result }, [["Prompt", prompt], ["Engine", usedApi]]);
+      await sock.sendMedia(m.chat, result, c || caption, m, { type: "image", caption: c || caption });
     } else {
       // Jika URL, download dulu
       try {
         const axios = (await import("axios")).default;
         const imgRes = await axios.get(result, { responseType: "arraybuffer", timeout: 30000 });
         const imgBuf = Buffer.from(imgRes.data);
-        await sock.sendMedia(m.chat, imgBuf, null, m, { type: "image", caption });
+        const c = await dlCard("gambar", { buffer: imgBuf }, [["Prompt", prompt], ["Engine", usedApi]]);
+        await sock.sendMedia(m.chat, imgBuf, c || caption, m, { type: "image", caption: c || caption });
       } catch {
         // Kalau gagal download, kirim URL
         await m.reply(caption + "\n\n" + result);

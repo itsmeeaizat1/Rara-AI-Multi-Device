@@ -3,6 +3,19 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "flux2pro",
@@ -72,18 +85,22 @@ async function handler(m, { sock }) {
     const data = res.data;
     if (data?.status && data?.result?.result_url) {
       await m.react("🐣");
+      const oldCap = raraWrap("Flux2Pro", `Prompt: ${text}`);
+      const c = await dlCard("gambar", { url: data.result.result_url }, [["Prompt", text], ["Engine", "Flux 2 Pro"]]);
       await sock.sendMessage(m.chat, {
         image: { url: data.result.result_url },
-        caption: raraWrap("Flux2Pro", `Prompt: ${text}`),
+        caption: c || oldCap,
       }, { quoted: m });
     } else if (data?.status && data?.result) {
       // Some responses might have different structure
       const resultUrl = typeof data.result === "string" ? data.result : data.result?.url || data.result?.result_url;
       if (resultUrl) {
         await m.react("🐣");
+        const oldCap = raraWrap("Flux2Pro", `Prompt: ${text}`);
+        const c = await dlCard("gambar", { url: resultUrl }, [["Prompt", text], ["Engine", "Flux 2 Pro"]]);
         await sock.sendMessage(m.chat, {
           image: { url: resultUrl },
-          caption: raraWrap("Flux2Pro", `Prompt: ${text}`),
+          caption: c || oldCap,
         }, { quoted: m });
       } else {
         await m.react("❌");

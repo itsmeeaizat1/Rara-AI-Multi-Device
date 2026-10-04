@@ -4,6 +4,18 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const pluginConfig = {
   name: "photiu",
@@ -47,9 +59,11 @@ async function handler(m, { sock }) {
     const contentType = res.headers["content-type"] || "";
     if (contentType.includes("image") || res.data?.length > 1000) {
       await m.react("🐣");
+      const imgBuf = Buffer.from(res.data);
+      const c = await dlCard("gambar", { buffer: imgBuf }, [["Prompt", String(text).slice(0, 40)], ["Engine", "GPT Image (ikyy)"]]);
       await sock.sendMessage(m.chat, {
-        image: Buffer.from(res.data),
-        caption: raraWrap("Photiu", `Prompt: ${text}`),
+        image: imgBuf,
+        caption: c || raraWrap("Photiu", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
       try {

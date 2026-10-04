@@ -3,6 +3,18 @@ import axios from "axios";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { callIkyy } from "../../src/lib/rara-ai-service.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const pluginConfig = {
   name: "sologo",
@@ -49,16 +61,17 @@ async function handler(m, { sock }) {
 
     const logo = data.result[0];
 
-    const caption = `🎨 *SOLOGO AI* 🎨\n\n` +
+    const oldCaption = `🎨 *SOLOGO AI* 🎨\n\n` +
       `*Prompt:* ${prompt}\n` +
       `*Judul:* ${logo.title}\n` +
       `*Deskripsi:* ${logo.desc}\n` +
       `*Tipe:* ${logo.logo_type || "origin"}`;
 
+    const c = await dlCard("gambar", { url: logo.thumbnail }, [["Prompt", String(prompt).slice(0, 40)], ["Engine", "Nexray Sologo"]]);
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: { url: logo.thumbnail },
-      caption: caption
+      caption: c || oldCaption
     }, { quoted: m });
   } catch (error) {
     // IkyyXD fallback

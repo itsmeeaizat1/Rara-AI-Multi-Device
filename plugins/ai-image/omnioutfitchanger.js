@@ -22,6 +22,18 @@ import {
   addItem,
   clearSession,
 } from "../../src/lib/rara-outfit-session.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const ITEM_Q =
   "Deskripsikan pakaian/item fashion di foto ini secara singkat dan spesifik " +
@@ -299,14 +311,16 @@ async function handler(m, { sock }) {
       clearSession(jid);
       await m.react("🐣");
       const itemCount = sess.items.length;
+      const oldCap1 = boxLeft(
+        toSC("omni outfit changer"),
+        `✨ ${toSC("try-on selesai")} - ${itemCount} ${toSC(itemCount === 1 ? "item" : "item")}\n⚙️ ${toSC("engine: " + usedEngine)}`
+      );
+      const c1 = await dlCard("gambar", { buffer: outBuf }, [["Item", `${itemCount} item`], ["Engine", usedEngine]]);
       return sock.sendMessage(
         m.chat,
         {
           image: outBuf,
-          caption: boxLeft(
-            toSC("omni outfit changer"),
-            `✨ ${toSC("try-on selesai")} — ${itemCount} ${toSC(itemCount === 1 ? "item" : "item")}\n⚙️ ${toSC("engine: " + usedEngine)}`
-          ),
+          caption: c1 || oldCap1,
         },
         { quoted: m }
       );
@@ -348,16 +362,18 @@ async function handler(m, { sock }) {
       const editPrompt = buildTextPrompt(promptText);
       const result = await runEditChain(personBuf, editPrompt);
       const outBuf = await toBuffer(result);
-      clearSession(jid); // session lama gak nyangkut — hasil prompt itu final
+      clearSession(jid); // session lama gak nyangkut - hasil prompt itu final
       await m.react("🐣");
+      const oldCap2 = boxLeft(
+        toSC("omni outfit changer"),
+        `✨ ${toSC("try-on selesai")} - ${toSC("dari prompt")}: "${promptText.slice(0, 120)}"\n⚙️ ${toSC("engine: nano-banana (prompt)")}`
+      );
+      const c2 = await dlCard("gambar", { buffer: outBuf }, [["Prompt", promptText.slice(0, 120)], ["Engine", "nano-banana (prompt)"]]);
       return sock.sendMessage(
         m.chat,
         {
           image: outBuf,
-          caption: boxLeft(
-            toSC("omni outfit changer"),
-            `✨ ${toSC("try-on selesai")} — ${toSC("dari prompt")}: "${promptText.slice(0, 120)}"\n⚙️ ${toSC("engine: nano-banana (prompt)")}`
-          ),
+          caption: c2 || oldCap2,
         },
         { quoted: m }
       );

@@ -4,6 +4,19 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -83,20 +96,13 @@ async function handler(m, { sock, config: botConfig }) {
     const filePath = tempPath(".png");
     fs.writeFileSync(filePath, buffer);
 
+    const imgBuf = fs.readFileSync(filePath);
+    const c = await dlCard("gambar", { buffer: imgBuf }, [["Prompt", String(prompt).slice(0, 40)], ["Engine", "Miaou AI"]]);
+    const oldCap = raraWrap("AI Image", [`Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`, "Status: *Berhasil*"].join("\n"));
     await sock.sendMessage(m.chat, {
-      image: fs.readFileSync(filePath),
-      caption: `AI Image: ${prompt.slice(0, 200)}`,
+      image: imgBuf,
+      caption: c || oldCap,
     }, { quoted: m });
-
-    const text =
-      raraWrap("AI Image", [`Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
-        "Status: *Berhasil*"].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}aiimggen <prompt> untuk gambar lain`) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
-
-    await m.reply(text);
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

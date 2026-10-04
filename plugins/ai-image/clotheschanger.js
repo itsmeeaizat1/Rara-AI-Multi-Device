@@ -13,6 +13,19 @@ import { visionScan } from "../../src/lib/rara-vision-chain.js";
 import { polishImage, upscaleImage } from "../../src/lib/rara-remini-ffmpeg.js";
 import { raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "aiclotheschanger",
@@ -345,14 +358,16 @@ async function downloadQuoted(m) {
 }
 
 // ── Kirim hasil + caption (fail-safe URL → teks) ──
-async function sendResult(sock, m, result, caption) {
+async function sendResult(sock, m, result, caption, engine) {
   if (Buffer.isBuffer(result)) {
-    await sock.sendMedia(m.chat, result, null, m, { type: "image", caption });
+    const c = await dlCard("gambar", { buffer: result }, [["Mode", "Clothes Changer"], ["Input", "Foto (reply)"], ["Engine", engine || "nano-banana chain"]]);
+    await sock.sendMedia(m.chat, result, c || caption, m, { type: "image", caption: c || caption });
     return;
   }
   try {
     const imgBuf = await toBuffer(result);
-    await sock.sendMedia(m.chat, imgBuf, null, m, { type: "image", caption });
+    const c = await dlCard("gambar", { buffer: imgBuf }, [["Mode", "Clothes Changer"], ["Input", "Foto (reply)"], ["Engine", engine || "nano-banana chain"]]);
+    await sock.sendMedia(m.chat, imgBuf, c || caption, m, { type: "image", caption: c || caption });
   } catch {
     await m.reply(caption + "\n\n" + result);
   }
@@ -385,7 +400,7 @@ async function runFeature(m, sock, personBuf, editPrompt, meta, hdMode, cmd) {
   }
   caption += `⚙️ ${toSC("engine")}: *${usedApi}*`;
   if (hdNote) caption += ` | ✨ *${toSC(hdNote)}*`;
-  await sendResult(sock, m, finalResult, caption);
+  await sendResult(sock, m, finalResult, caption, usedApi);
 }
 
 // ══════════════════════ HANDLER + DISPATCHER ══════════════════════

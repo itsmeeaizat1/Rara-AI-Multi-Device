@@ -1,6 +1,19 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { Txt2Img2 } from "../../src/scraper/txt2img2.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch ai-image) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "txt2img2",
@@ -38,7 +51,8 @@ async function handler(m, { sock }) {
       { return await m.reply(raraWrap(m.command, result.error || "Generate gagal, coba lagi ya", "error")); };
     }
 
-    await sock.sendMedia(m.chat, result.url, `🎨 *Flux Klein 4B*\n\nPrompt: *${result.prompt}*`, m, {
+    const txt2Card = await dlCard("gambar", { url: result.url }, [["Prompt", String(result.prompt || prompt).slice(0, 40)], ["Engine", "Flux Klein 4B"]]);
+    await sock.sendMedia(m.chat, result.url, (txt2Card || null), m, {
       type: "image",
     });
   } catch (e) {

@@ -56,8 +56,8 @@ t("caption: icon default kalau gak ada", mediaInfoCaption({ header: "X", fields:
   const files = {
     "plugins/sticker/sticker.js": ['mediaResultCard({', 'header: "sticker"'],
     "plugins/tools/converter.js": ['mediaResultCard({', 'header: "converter"'],  // migrasi batch 4: mediaInfoCaption lama diganti kartu modern
-    "plugins/convert/togif.js": ['mediaInfoCaption({ header: "Rara To GIF"'],
-    "plugins/convert/vocalremover.js": ['mediaInfoCaption({ header: "Rara Vocal Remover"'],
+    "plugins/convert/togif.js": ['mediaResultCard({', 'header: "togif"'],  // migrasi batch 6: kartu modern
+    "plugins/convert/vocalremover.js": ['mediaResultCard({'],  // migrasi batch 6: kartu modern
   };
   for (const [f, needles] of Object.entries(files)) {
     const src = fs.readFileSync(path.join(REPO, f), "utf8");
@@ -65,24 +65,31 @@ t("caption: icon default kalau gak ada", mediaInfoCaption({ header: "X", fields:
   }
 }
 
-// ── 16 maker AI: caption info hasil setelah sendMedia ──
+// ── 16 maker AI (ai-image, batch 10): dlCard kartu modern + field per fitur ──
 {
   const makers = {
-    "to3d": "Rara To 3D", "toanime": "Rara To Anime", "toblack": "Rara To Black",
-    "tocartoon": "Rara To Cartoon", "tocermin": "Rara To Cermin", "tochibi": "Rara To Chibi",
-    "toemotebatu": "Rara Emote Batu", "tofigurev2": "Rara Figure v2", "tofigurine": "Rara Figurine",
-    "toghibli": "Rara To Ghibli", "tohijab": "Rara To Hijab", "toisland": "Rara To Island",
-    "tojapanese": "Rara To Japanese", "tomanga": "Rara To Manga", "tomekah": "Rara To Mekah",
-    "tooilpainting": "Rara Oil Painting",
+    "to3d": ["SeaArt Live3D", "3D Render (Pixar CGI)"],
+    "toanime": ["SeaArt Live3D", "Anime (Ghibli)"],
+    "toblack": ["SeaArt Live3D", "Skin Tone Gelap"],
+    "tocartoon": ["SeaArt Live3D", "Kartun"],
+    "tocermin": ["SeaArt Live3D", "Efek Cermin"],
+    "tochibi": ["SeaArt Live3D", "Chibi"],
+    "toemotebatu": ["FAA TomoAI", "Emote Batu"],
+    "tofigurev2": ["FAA Figura v3", "Figure v2"],
+    "tofigurine": ["SeaArt Live3D", "Action Figure"],
+    "toghibli": ["FAA toghibli", "Ghibli"],
+    "tohijab": ["FAA tohijab", "Hijab"],
+    "toisland": ["SeaArt Live3D", "Pulau Tropis"],
+    "tojapanese": ["FAA tojapanese", "Japanese"],
+    "tomanga": ["SeaArt Live3D", "Manga"],
+    "tomekah": ["FAA tomekah", "Background Mekah"],
+    "tooilpainting": ["SeaArt Live3D", "Lukisan Minyak"],
   };
-  for (const [name, header] of Object.entries(makers)) {
+  for (const [name, needles] of Object.entries(makers)) {
     const src = fs.readFileSync(path.join(REPO, `plugins/ai-image/${name}.js`), "utf8");
-    t(`${name}.js → caption info (header ${header})`,
-      src.includes("await m.reply(mediaInfoCaption(") && src.includes(`header: "${header}"`),
-      `cari: header: "${header}"`);
-    t(`${name}.js → field Input/Style/Engine/Hasil`,
-      src.includes('label: "Input"') && src.includes('label: "Style"') &&
-      src.includes('label: "Engine"') && src.includes('label: "Hasil"'));
+    t(`${name}.js → dlCard kartu modern`, src.includes("dlCard(") && src.includes("mediaResultCard"));
+    t(`${name}.js → field spesifik (${needles.join(" / ")})`,
+      needles.every((nd) => src.includes(nd)));
   }
 }
 

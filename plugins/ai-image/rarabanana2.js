@@ -1,6 +1,18 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { fluxImage } from "../../src/scraper/seaart.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const pluginConfig = {
   name: "rarabanana2",
@@ -33,8 +45,10 @@ async function handler(m, { sock }) {
   await m.react("🕒");
     const result = await fluxImage(prompt, "1:1");
     const imageUrl = result.url;
+    const c = await dlCard("gambar", { url: imageUrl }, [["Prompt", String(prompt).slice(0, 40)], ["Engine", "SeaArt Flux Image"]]);
     await sock.sendMedia(m.chat, imageUrl, null, m, {
       type: "image",
+      caption: c || undefined,
     });
   } catch (error) {
     console.log(error);

@@ -1,8 +1,20 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 import te from '../../src/lib/rara-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch ai-image) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -83,16 +95,10 @@ async function handler(m, { sock }) {
         }
         
         const result = await live3d(buffer, PROMPT)
-        await sock.sendMedia(m.chat, result.image, null, m, {
-            type: 'image',
+        const tomangaCard = await dlCard("gambar", { buffer: result.image }, [["Style", "Manga"], ["Engine", "SeaArt Live3D"], ["Prompt", String(PROMPT).slice(0, 40)]]);
+        await sock.sendMedia(m.chat, result.image, (tomangaCard || null), m, {
+            type: 'image'
         })
-        // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-        await m.reply(mediaInfoCaption({ header: "Rara To Manga", fields: [
-            { icon: "📥", label: "Input", value: "Foto" },
-            { icon: "🎨", label: "Style", value: "Manga" },
-            { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
-            { icon: "⬇️", label: "Hasil", value: "Gambar" },
-        ] }))
         
     } catch (error) {
         m.reply(raraWrap("tomanga", te(m.prefix, m.command, m.pushName), "error"))

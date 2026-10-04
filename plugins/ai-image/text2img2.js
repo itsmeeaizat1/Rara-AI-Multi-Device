@@ -2,6 +2,18 @@
 import axios from 'axios'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap, toSC, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -73,7 +85,8 @@ async function handler(m, { sock }) {
       throw new Error('Invalid image data received')
     }
 
-    await sock.sendMedia(m.chat, response.data, m.fullArgs, m, { type: 'image' })
+    const c = await dlCard("gambar", { buffer: response.data }, [["Prompt", String(m.fullArgs).slice(0, 40)], ["Engine", "AbzTech GenImg"]]);
+    await sock.sendMedia(m.chat, response.data, m.fullArgs, m, { type: 'image', caption: c || undefined })
   } catch (e) {
     console.error(e)
     return m.reply(raraWrap("text2img2", te(m.prefix, m.command, m.pushName), "error"))

@@ -7,6 +7,18 @@ import { stableDiffusion, _setSdHttpForTest } from "../../src/scraper/stable-dif
 import { zelImageEndpoint } from "../../src/scraper/zelapi.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 const pluginConfig = {
   name: "sdxl",
@@ -46,12 +58,13 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let caption = "";
-    caption += `🎨 Prompt: *${text}*\n`;
-    caption += `⚙️ Engine: *${via || result.model}*\n`;
-    caption += `📐 Size: *1024x1024*\n`;
+    let oldCaption = "";
+    oldCaption += `🎨 Prompt: *${text}*\n`;
+    oldCaption += `⚙️ Engine: *${via || result.model}*\n`;
+    oldCaption += `📐 Size: *1024x1024*\n`;
 
-    return await sock.sendMedia(m.chat, result.buffer, null, m, { type: "image", caption });
+    const c = await dlCard("gambar", { buffer: result.buffer }, [["Prompt", text], ["Engine", via || result.model]]);
+    return await sock.sendMedia(m.chat, result.buffer, null, m, { type: "image", caption: c || oldCaption });
   } catch (err) {
     console.error("sdxl error:", err);
     await m.react("❌");

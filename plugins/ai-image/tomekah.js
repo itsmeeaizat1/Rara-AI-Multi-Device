@@ -1,10 +1,22 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 import axios from 'axios'
 import { uploadImage } from '../../src/lib/rara-uploader.js'
 import { f } from '../../src/lib/rara-http.js'
 import te from '../../src/lib/rara-error.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch ai-image) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -89,16 +101,10 @@ async function handler(m, { sock }) {
             throw new Error('Response gambar dari API kosong/gagal')
         }
         const resultBuffer = Buffer.from(res)
-        await sock.sendMedia(m.chat, resultBuffer, null, m, {
-            type: 'image',
+        const tomekahCard = await dlCard("gambar", { buffer: resultBuffer }, [["Input", "Foto (reply)"], ["Style", "Background Mekah"], ["Engine", "FAA tomekah"]]);
+        await sock.sendMedia(m.chat, resultBuffer, (tomekahCard || null), m, {
+            type: 'image'
         })
-        // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-        await m.reply(mediaInfoCaption({ header: "Rara To Mekah", fields: [
-            { icon: "📥", label: "Input", value: "Foto" },
-            { icon: "🎨", label: "Style", value: "Background Mekah" },
-            { icon: "⚙️", label: "Engine", value: "FAA AI API" },
-            { icon: "⬇️", label: "Hasil", value: "Gambar" },
-        ] }))
         
     } catch (error) {
         m.reply(raraWrap("tomekah", te(m.prefix, m.command, m.pushName), "error"))

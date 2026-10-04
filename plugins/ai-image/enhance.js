@@ -4,6 +4,19 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -70,15 +83,19 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
+    const mediaBuf = fs.readFileSync(resultPath);
+    const mediaType = resultExt === ".mp4" ? "video" : "gambar";
+    const c = await dlCard(mediaType, { buffer: mediaBuf }, [["Mode", "HD Upscale"], ["Input", mediaType === "video" ? "Video (reply)" : "Foto (reply)"], ["Engine", "AI Enhance"]]);
+
     if (resultExt === ".mp4") {
       await sock.sendMessage(m.chat, {
-        video: fs.readFileSync(resultPath),
-        caption,
+        video: mediaBuf,
+        caption: c || caption,
       }, { quoted: m });
     } else {
       await sock.sendMessage(m.chat, {
-        image: fs.readFileSync(resultPath),
-        caption,
+        image: mediaBuf,
+        caption: c || caption,
       }, { quoted: m });
     }
   } catch (error) {
