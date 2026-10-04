@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 // ============================================================
 // Nomor Kosong Plugin v2
@@ -285,10 +286,21 @@ async function handler(m, { sock }) {
       const dir = path.dirname(exportPath);
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(exportPath, txt);
+      let card = "";
+      try {
+        const info = await probeBuffer(fs.readFileSync(exportPath));
+        card = mediaResultCard({
+          header: "nokos",
+          type: "dokumen",
+          request: [["Jumlah", String(data.numbers.length)], ["Negara", data.country || "-"]],
+          size: info.size, mime: info.mime,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(m.chat, {
         document: fs.readFileSync(exportPath),
         mimetype: "text/plain",
         fileName: `nokos_${data.numbers.length}nums_${Date.now()}.txt`,
+        caption: card,
       }, { quoted: m });
     } catch {
       let body = `Export Nomor Kosong (${data.numbers.length} nomor)\n\n`;

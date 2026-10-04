@@ -2,6 +2,7 @@
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "rvo",
@@ -44,12 +45,21 @@ async function handler(m, { sock }) {
 
     const caption = originalCaption ? `\`Pesan :\`\n${originalCaption}` : "";
 
+    let rcard = "";
+    try {
+      const rinfo = await probeBuffer(buffer);
+      rcard = mediaResultCard({
+        header: "rvo",
+        type: quoted.isImage ? "gambar" : "video",
+        size: rinfo.size, mime: rinfo.mime, width: rinfo.width, height: rinfo.height,
+      });
+    } catch { /* best-effort */ }
     if (quoted.isImage) {
       await sock.sendMessage(
         m.chat,
         {
           image: buffer,
-          caption,
+          caption: (rcard || caption),
         },
         { quoted: m },
       );
@@ -58,7 +68,7 @@ async function handler(m, { sock }) {
         m.chat,
         {
           video: buffer,
-          caption,
+          caption: (rcard || caption),
         },
         { quoted: m },
       );
@@ -71,8 +81,27 @@ async function handler(m, { sock }) {
         },
         { quoted: m },
       );
+      try {
+        const ainfo = await probeBuffer(buffer, { mime: "audio/mpeg" });
+        const acard = mediaResultCard({
+          header: "rvo",
+          type: "audio",
+          size: ainfo.size, mime: ainfo.mime, duration: ainfo.duration,
+        });
+        if (acard) await m.reply(acard);
+      } catch { /* best-effort */ }
     } else {
       const ext = quoted.type?.replace("Message", "") || "bin";
+      let docCard = "";
+      try {
+        const dinfo = await probeBuffer(buffer);
+        docCard = mediaResultCard({
+          header: "rvo",
+          type: "dokumen",
+          request: [["Format", ext]],
+          size: dinfo.size, mime: dinfo.mime,
+        });
+      } catch { /* best-effort */ }
       await m.react("🐣");
       await sock.sendMessage(
         m.chat,
@@ -82,7 +111,7 @@ async function handler(m, { sock }) {
           mimetype:
             quoted.message?.[quoted.type]?.mimetype ||
             "application/octet-stream",
-          caption: caption || "📎 View once media",
+          caption: (docCard || caption || "📎 View once media"),
         },
         { quoted: m },
       );

@@ -6,6 +6,7 @@ import FormData from "form-data";
 import sharp from "sharp";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "reminiv2",
@@ -282,21 +283,41 @@ async function handler(m, { sock, args }) {
 
     if (wantDoc || processedBuffer.length > 5 * 1024 * 1024) {
       const autoDoc = processedBuffer.length > 5 * 1024 * 1024;
+      let docCard = "";
+      try {
+        const dinfo = await probeBuffer(processedBuffer);
+        docCard = mediaResultCard({
+          header: "reminiv2",
+          type: "dokumen",
+          request: [["Skala", scale + "x"]],
+          size: dinfo.size, mime: dinfo.mime,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(
         m.chat,
         {
           document: processedBuffer,
           mimetype: "image/jpeg",
           fileName: "Rara-HD-" + scale + "x-" + Date.now() + ".jpg",
-          caption: caption + (autoDoc ? "\nMode: Auto-Document (>5MB)" : "\nMode: Document (no compress)"),
+          caption: (docCard || caption + (autoDoc ? "\nMode: Auto-Document (>5MB)" : "\nMode: Document (no compress)")),
         },
         { quoted: m },
       );
     } else {
       await m.react("🐣");
+      let imgCard = "";
+      try {
+        const info = await probeBuffer(processedBuffer);
+        imgCard = mediaResultCard({
+          header: "reminiv2",
+          type: "gambar",
+          request: [["Skala", scale + "x"]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(
         m.chat,
-        { image: processedBuffer, caption, jpegQuality: 100 },
+        { image: processedBuffer, caption: (imgCard || caption), jpegQuality: 100 },
         { quoted: m },
       );
     }

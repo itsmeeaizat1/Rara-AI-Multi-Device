@@ -19,6 +19,7 @@ const pluginConfig = {
 };
 
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const sankaConfig = getSankaConfig();
 const API_BASE = sankaConfig.baseUrl;
 const API_KEY = sankaConfig.apikey;
@@ -139,7 +140,16 @@ async function handler(m, { sock, args }) {
           const imgRes = await axios.get(thumb, { responseType: "arraybuffer", timeout: 15000, validateStatus: () => true });
           if (imgRes.status === 200) {
             const buf = Buffer.from(imgRes.data);
-            await sock.sendMessage(m.chat, { image: buf, caption: txt }, { quoted: m });
+            let card = "";
+            try {
+              const info = await probeBuffer(buf);
+              card = mediaResultCard({
+                header: "comicsanka",
+                type: "gambar",
+                size: info.size, mime: info.mime, width: info.width, height: info.height,
+              });
+            } catch { /* best-effort */ }
+            await sock.sendMessage(m.chat, { image: buf, caption: (card || txt) }, { quoted: m });
             return;
           }
         } catch (e) { console.error('[comicsanka.js]:', e.message); }
@@ -260,7 +270,16 @@ async function handler(m, { sock, args }) {
           const imgRes = await axios.get(thumb, { responseType: "arraybuffer", timeout: 15000, validateStatus: () => true });
           if (imgRes.status === 200) {
             const buf = Buffer.from(imgRes.data);
-            await sock.sendMessage(m.chat, { image: buf, caption: txt }, { quoted: m });
+            let card2 = "";
+            try {
+              const info = await probeBuffer(buf);
+              card2 = mediaResultCard({
+                header: "comicsanka",
+                type: "gambar",
+                size: info.size, mime: info.mime, width: info.width, height: info.height,
+              });
+            } catch { /* best-effort */ }
+            await sock.sendMessage(m.chat, { image: buf, caption: (card2 || txt) }, { quoted: m });
             return;
           }
         } catch (e) { console.error('[comicsanka.js]:', e.message); }

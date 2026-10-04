@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Photo Caption — Tambah caption text di atas/bawah gambar (local via sharp + SVG, no API)
 import sharp from "sharp";
@@ -183,16 +184,31 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       return m.reply(raraWrap("Photo Caption", "Gagal processing caption.", "warn"));
     }
 
+    let card = "";
+    try {
+      const info = await probeBuffer(result);
+      card = mediaResultCard({
+        header: "photocaption",
+        type: "gambar",
+        request: [
+          ["Teks", String(captionText).slice(0, 80)],
+          ["Posisi", String(POSITIONS[position] || position)],
+          ["Style", String(style)],
+        ],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    const oldCap = raraWrap("Photo Caption", [
+      "Text: " + captionText,
+      "Posisi: " + (POSITIONS[position] || position),
+      "Style: " + style,
+      "Powered by sharp (local)",
+    ], "info");
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: raraWrap("Photo Caption", [
-          "Text: " + captionText,
-          "Posisi: " + (POSITIONS[position] || position),
-          "Style: " + style,
-          "Powered by sharp (local)",
-        ], "info"),
+        caption: (card || oldCap),
       },
       { quoted: m }
     );

@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 async function saveTemp(buffer, ext) {
   const tmpdir = os.tmpdir();
@@ -192,10 +193,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     }
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeBuffer(resultBuffer);
+      card = mediaResultCard({
+        header: "ttd",
+        type: "dokumen",
+        request: [["Hasil", "PDF tanda tangan"]],
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       document: resultBuffer,
       mimetype: "application/pdf",
       fileName: `ttd_${Date.now()}.pdf`,
+      caption: card,
     }, { quoted: m });
   } catch (error) {
     await m.react("❌");

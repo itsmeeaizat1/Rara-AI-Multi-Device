@@ -2,6 +2,7 @@
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import te from '../../src/lib/rara-error.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
     name: "txt2qr",
     alias: ["txt2qr"],
@@ -32,9 +33,19 @@ async function handler(m, { sock }) {
             timeout: 30000
         })
         await m.react("🐣");
+        let card = "";
+        try {
+            const info = await probeBuffer(Buffer.from(res.data));
+            card = mediaResultCard({
+                header: "txt2qr",
+                type: "gambar",
+                request: [["Teks", text.substring(0, 80)]],
+                size: info.size, mime: info.mime, width: info.width, height: info.height,
+            });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
             image: Buffer.from(res.data),
-            caption: `📱 *qr code*\n\n${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`
+            caption: (card || `📱 *qr code*\n\n${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`)
         }, { quoted: m })
         
     } catch (error) {

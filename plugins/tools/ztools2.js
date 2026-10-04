@@ -15,6 +15,7 @@ import {
 } from "../../src/scraper/zeltools.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "ztools2",
@@ -155,7 +156,17 @@ async function handler(m, { sock }) {
     const d = r.data;
 
     if (kind === "qr") {
-      await sock.sendMessage(m.chat, { image: r.buffer, caption: "_(QR via zelapi)_" }, { quoted: m });
+      let qcard = "";
+      try {
+        const qinfo = await probeBuffer(r.buffer);
+        qcard = mediaResultCard({
+          header: "ztools2",
+          type: "gambar",
+          request: [["Fitur", "qr"]],
+          size: qinfo.size, mime: qinfo.mime, width: qinfo.width, height: qinfo.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMessage(m.chat, { image: r.buffer, caption: (qcard || "_(QR via zelapi)_") }, { quoted: m });
     } else if (kind === "readqr") {
       const txt = d?.data?.text || d?.result?.text;
       if (!txt) { await m.react("❌"); return m.reply(raraWrap("ztools2", "QR gak kebaca — pastikan gambarnya jelas")); }
@@ -175,7 +186,17 @@ async function handler(m, { sock }) {
       const url = v(d.result) || (typeof d?.result === "object" ? v(d.result?.url) : null);
       if (!url || !/^https?:\/\//.test(url)) { await m.react("❌"); return m.reply(raraWrap("ztools2", "Efek ephoto gagal — coba lagi / efek lain (.zepho list)")); }
       const buf = await fetchImg(url);
-      await sock.sendMessage(m.chat, { image: buf, caption: `_(ephoto360 ${params.effect} via zelapi)_` }, { quoted: m });
+      let ecard = "";
+      try {
+        const einfo = await probeBuffer(buf);
+        ecard = mediaResultCard({
+          header: "ztools2",
+          type: "gambar",
+          request: [["Efek", params.effect]],
+          size: einfo.size, mime: einfo.mime, width: einfo.width, height: einfo.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMessage(m.chat, { image: buf, caption: (ecard || `_(ephoto360 ${params.effect} via zelapi)_`) }, { quoted: m });
     } else if (kind === "whatanime") {
       const card = cardWhatanime(d);
       if (!card) { await m.react("❌"); return m.reply(raraWrap("ztools2", "Gak nemu anime dari gambar itu — coba screenshot scene yang lebih jelas")); }
@@ -196,7 +217,17 @@ async function handler(m, { sock }) {
           else {
             lines.push("", "isi lengkap nyusul sebagai file…");
             await m.reply(raraWrap("ztools2", lines.join("\n")));
-            await sock.sendMessage(m.chat, { document: Buffer.from(content, "utf-8"), fileName: first.replace(/[\\/:*?"<>|]/g, "_"), mimetype: "text/plain", caption: "_(via zelapi)_" }, { quoted: m });
+            let dcard = "";
+            try {
+              const dinfo = await probeBuffer(Buffer.from(content, "utf-8"));
+              dcard = mediaResultCard({
+                header: "ztools2",
+                type: "dokumen",
+                request: [["Fitur", kind], ["Isi", `${content.length.toLocaleString("id-ID")} karakter`]],
+                size: dinfo.size, mime: dinfo.mime,
+              });
+            } catch { /* best-effort */ }
+            await sock.sendMessage(m.chat, { document: Buffer.from(content, "utf-8"), fileName: first.replace(/[\\/:*?"<>|]/g, "_"), mimetype: "text/plain", caption: (dcard || "_(via zelapi)_") }, { quoted: m });
             return m.react("🐣");
           }
         }
@@ -207,7 +238,17 @@ async function handler(m, { sock }) {
         if (content.length <= 3000) await m.reply(raraWrap("ztools2", `✅ ${kind.toUpperCase()} (zelapi)\n\n${short(content, 2800)}`));
         else {
           await m.reply(raraWrap("ztools2", `✅ ${kind.toUpperCase()} (zelapi) — ${content.length.toLocaleString("id-ID")} karakter, file nyusul…`));
-          await sock.sendMessage(m.chat, { document: Buffer.from(content, "utf-8"), fileName: `${kind}-content.txt`, mimetype: "text/plain", caption: "_(via zelapi)_" }, { quoted: m });
+          let ccard = "";
+          try {
+            const cinfo = await probeBuffer(Buffer.from(content, "utf-8"));
+            ccard = mediaResultCard({
+              header: "ztools2",
+              type: "dokumen",
+              request: [["Fitur", kind]],
+              size: cinfo.size, mime: cinfo.mime,
+            });
+          } catch { /* best-effort */ }
+          await sock.sendMessage(m.chat, { document: Buffer.from(content, "utf-8"), fileName: `${kind}-content.txt`, mimetype: "text/plain", caption: (ccard || "_(via zelapi)_") }, { quoted: m });
         }
       }
     }

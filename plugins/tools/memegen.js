@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Meme Generator — Buat meme dari 100+ template via Imgflip API (free, no login)
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
@@ -131,16 +132,30 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (result.success && result.data?.url) {
       try {
         const imgBuf = await downloadImage(result.data.url);
+        let card = "";
+        try {
+          const info = await probeBuffer(imgBuf);
+          card = mediaResultCard({
+            header: "memegenapi",
+            type: "gambar",
+            request: [
+              ["Template ID", String(templateId).slice(0, 80)],
+              ["Teks", String(textParts.join(" | ")).slice(0, 80)],
+            ],
+            size: info.size, mime: info.mime, width: info.width, height: info.height,
+          });
+        } catch { /* best-effort */ }
+        const oldCap = raraWrap("Meme Generator", [
+          "Meme berhasil dibuat!",
+          "Template ID: " + templateId,
+          "Text: " + textParts.join(" | "),
+          "Source: Imgflip API",
+        ], "info");
         await conn.sendMessage(
           m.key.remoteJid,
           {
             image: imgBuf,
-            caption: raraWrap("Meme Generator", [
-              "Meme berhasil dibuat!",
-              "Template ID: " + templateId,
-              "Text: " + textParts.join(" | "),
-              "Source: Imgflip API",
-            ], "info"),
+            caption: (card || oldCap),
           },
           { quoted: m }
         );

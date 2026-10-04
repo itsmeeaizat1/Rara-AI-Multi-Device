@@ -12,6 +12,7 @@ import axios from "axios";
 import { getApiKey } from "../../src/lib/rara-api-keys.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { ttsGeneration, ttsVoiceList, vitsLanguages, vitsModels, vitsTtsGenerate, animeSpeech, animeSpeakerIds } from "../../src/lib/rara-onepunya.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "onettts",
@@ -34,9 +35,30 @@ const DEFAULT_VITS_MODEL = "csukuangfj/vits-piper-id_ID-news_tts-medium";
 async function sendAudio(m, sock, url, fileName, mimetype = "audio/mpeg") {
   try {
     const dl = await axios.get(url, { responseType: "arraybuffer", timeout: 120_000 });
-    await sock.sendMessage(m.chat, { audio: Buffer.from(dl.data), mimetype, ptt: true, fileName }, { quoted: m });
+    const audioBuf = Buffer.from(dl.data);
+    await sock.sendMessage(m.chat, { audio: audioBuf, mimetype, ptt: true, fileName }, { quoted: m });
+    try {
+      const info = await probeBuffer(audioBuf, { mime: mimetype });
+      const card = mediaResultCard({
+        header: "onettts",
+        type: "audio",
+        request: [["File", fileName]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
   } catch {
-    await sock.sendMessage(m.chat, { document: { url }, fileName, mimetype }, { quoted: m });
+    let docCard = "";
+    try {
+      const dinfo = await probeMedia(url);
+      docCard = mediaResultCard({
+        header: "onettts",
+        type: "dokumen",
+        request: [["File", fileName]],
+        size: dinfo.size, mime: dinfo.mime,
+      });
+    } catch { /* best-effort */ }
+    await sock.sendMessage(m.chat, { document: { url }, fileName, mimetype, caption: docCard }, { quoted: m });
   }
 }
 

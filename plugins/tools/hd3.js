@@ -6,6 +6,7 @@ import axios from "axios";
 import FormData from "form-data";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const config = {
   name: "hd3",
@@ -294,7 +295,17 @@ async function handler(m, { sock }) {
 
     if (dlRes.status !== 200 || !dlRes.data) {
       // Fallback: kirim via URL
-      return await sock.sendMedia(m.chat, resultUrl, null, m, { type: "image" });
+      let card = "";
+      try {
+        const info = await probeMedia(resultUrl);
+        card = mediaResultCard({
+          header: "hd3",
+          type: "gambar",
+          request: [["Engine", "BeautyPlus"]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
+      return await sock.sendMedia(m.chat, resultUrl, (card || null), m, { type: "image" });
     }
 
     const resultBuffer = Buffer.from(dlRes.data);
@@ -303,21 +314,41 @@ async function handler(m, { sock }) {
 
     if (resultBuffer.length > 5 * 1024 * 1024) {
       // Auto document mode kalau > 5MB (no compress)
+      let docCard = "";
+      try {
+        const dinfo = await probeBuffer(resultBuffer);
+        docCard = mediaResultCard({
+          header: "hd3",
+          type: "dokumen",
+          request: [["Engine", "BeautyPlus"]],
+          size: dinfo.size, mime: dinfo.mime,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(
         m.chat,
         {
           document: resultBuffer,
           mimetype: "image/jpeg",
           fileName: `HD-BP-${Date.now()}.jpg`,
-          caption,
+          caption: (docCard || caption),
         },
         { quoted: m },
       );
     } else {
       await m.react("🐣");
+      let imgCard = "";
+      try {
+        const info = await probeBuffer(resultBuffer);
+        imgCard = mediaResultCard({
+          header: "hd3",
+          type: "gambar",
+          request: [["Engine", "BeautyPlus"]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(
         m.chat,
-        { image: resultBuffer, caption, jpegQuality: 100 },
+        { image: resultBuffer, caption: (imgCard || caption), jpegQuality: 100 },
         { quoted: m },
       );
     }

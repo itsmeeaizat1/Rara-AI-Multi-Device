@@ -2,6 +2,7 @@
 import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
 import { removeBgLocal } from "../../src/scraper/removebg-v2.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "removebgv2",
@@ -106,13 +107,23 @@ async function handler(m, { sock, config: botConfig }) {
     const resultMB = resultSize / 1024 / 1024;
     const useDoc = wantDoc || resultMB > 5;
     // Kirim hasil
+    let vcard = "";
+    try {
+      const vinfo = await probeBuffer(resultBuffer);
+      vcard = mediaResultCard({
+        header: "removebgv2",
+        type: "gambar",
+        request: [["Engine", "ai onnx lokal"]],
+        size: vinfo.size, mime: vinfo.mime, width: vinfo.width, height: vinfo.height,
+      });
+    } catch { /* best-effort */ }
     if (useDoc) {
       await sock.sendMessage(m.chat, {
         document: resultBuffer,
         fileName: "removebg_result.png",
         mimetype: "image/png",
         caption:
-          raraWrap("RemoveBG V2", [`Status: *background dihapus*`,
+          vcard || raraWrap("RemoveBG V2", [`Status: *background dihapus*`,
             `Mode: *Dokumen (no compress)*`,
             `Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
             `Format: *png transparan*`,
@@ -124,7 +135,7 @@ async function handler(m, { sock, config: botConfig }) {
       await sock.sendMessage(m.chat, {
         image: resultBuffer,
         caption:
-          raraWrap("RemoveBG V2", [`Status: *background dihapus*`,
+          vcard || raraWrap("RemoveBG V2", [`Status: *background dihapus*`,
             `Mode: *gambar*`,
             `Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
             `Format: *png transparan*`,

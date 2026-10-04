@@ -5,6 +5,21 @@ import path from "node:path";
 import os from "node:os";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media pdftools (best-effort, fallback caption lama)
+async function pdfCard(buf, fitur, label, value) {
+  try {
+    const info = await probeBuffer(buf);
+    return mediaResultCard({
+      header: "pdftools",
+      type: "dokumen",
+      request: [["Fitur", fitur], [label, value]],
+      size: info.size, mime: info.mime,
+    });
+  } catch { return ""; }
+}
+
 
 const pluginConfig = {
   name: "pdftools",
@@ -176,7 +191,7 @@ async function imgToPdf(m, sock) {
       document: { url: filepath },
       fileName: "images_" + Date.now() + ".pdf",
       mimetype: "application/pdf",
-      caption: "Image to PDF berhasil\n\nHalaman: " + processed + "\nUkuran: " + formatSize(pdfBytes.length),
+      caption: (pdfCard(pdfBytes, "Image to PDF", "Halaman", String(processed)) || "Image to PDF berhasil\n\nHalaman: " + processed + "\nUkuran: " + formatSize(pdfBytes.length)),
     }, { quoted: m });
 
     cleanupTemp(filepath);
@@ -228,7 +243,7 @@ async function mergePdf(m, sock) {
       document: { url: filepath },
       fileName: "merged_" + Date.now() + ".pdf",
       mimetype: "application/pdf",
-      caption: "Merge PDF berhasil\n\nTotal halaman: " + mergedPdf.getPageCount() + "\nUkuran: " + formatSize(pdfBytes.length),
+      caption: (pdfCard(pdfBytes, "Merge PDF", "Halaman", String(mergedPdf.getPageCount())) || "Merge PDF berhasil\n\nTotal halaman: " + mergedPdf.getPageCount() + "\nUkuran: " + formatSize(pdfBytes.length)),
     }, { quoted: m });
 
     cleanupTemp(filepath);
@@ -420,7 +435,7 @@ async function rotatePdf(m, sock) {
       document: { url: filepath },
       fileName: "rotated_" + Date.now() + ".pdf",
       mimetype: "application/pdf",
-      caption: "Rotasi PDF berhasil (+90 derajat)\n\nHalaman: " + pages.length + "\nUkuran: " + formatSize(pdfBytes.length),
+      caption: (pdfCard(pdfBytes, "Rotasi PDF", "Halaman", String(pages.length)) || "Rotasi PDF berhasil (+90 derajat)\n\nHalaman: " + pages.length + "\nUkuran: " + formatSize(pdfBytes.length)),
     }, { quoted: m });
 
     cleanupTemp(filepath);
@@ -462,7 +477,7 @@ async function compressPdf(m, sock) {
       document: { url: filepath },
       fileName: "compressed_" + Date.now() + ".pdf",
       mimetype: "application/pdf",
-      caption: caption,
+      caption: (pdfCard(pdfBytes, "Compress PDF", "Reduksi", reduction + "%") || caption),
     }, { quoted: m });
 
     cleanupTemp(filepath);

@@ -20,6 +20,7 @@ const pluginConfig = {
 };
 
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const sankaConfig = getSankaConfig();
 const API_BASE = sankaConfig.baseUrl;
 const API_KEY = sankaConfig.apikey;
@@ -75,6 +76,16 @@ async function handler(m, { sock, args }) {
       },
       { quoted: m },
     );
+    try {
+      const info = await probeBuffer(audioBuffer, { mime: "audio/ogg" });
+      const card = mediaResultCard({
+        header: "ttsnahidasanka",
+        type: "audio",
+        request: [["Teks", String(text).slice(0, 80)]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
   } catch (e) {
     await m.react("❌");
     console.error("[TTSNAHIDASANKA] Error:", e.message);

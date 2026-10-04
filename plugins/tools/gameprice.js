@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
@@ -67,9 +68,28 @@ async function handler(m, { sock }) {
         }
 
         if (imageBuffer) {
-            await sock.sendMessage(m.chat, { image: imageBuffer, caption: boxText }, { quoted: m });
+            let card = "";
+            try {
+                const info = await probeBuffer(imageBuffer);
+                card = mediaResultCard({
+                    header: "gameprice",
+                    type: "gambar",
+                    size: info.size, mime: info.mime, width: info.width, height: info.height,
+                });
+            } catch { /* best-effort */ }
+            await sock.sendMessage(m.chat, { image: imageBuffer, caption: (card || boxText) }, { quoted: m });
         } else if (thumbUrl) {
-            await sock.sendMessage(m.chat, { image: { url: thumbUrl }, caption: boxText }, { quoted: m });
+            let card = "";
+            try {
+                const info = await probeMedia(thumbUrl);
+                card = mediaResultCard({
+                    header: "gameprice",
+                    type: "gambar",
+                    url: thumbUrl,
+                    size: info.size, mime: info.mime,
+                });
+            } catch { /* best-effort */ }
+            await sock.sendMessage(m.chat, { image: { url: thumbUrl }, caption: (card || boxText) }, { quoted: m });
         } else {
             await m.react("🐣");
             await m.reply(boxText);

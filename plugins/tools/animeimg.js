@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "animeimg",
@@ -88,18 +89,28 @@ async function handler(m, { sock, args }) {
     caption += `Kategori: ${category.label}\n`;
     caption += `Source: nekos.life`;
 
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer, { mime: isGif ? "video/mp4" : "image/png" });
+      card = mediaResultCard({
+        header: "animeimg",
+        type: isGif ? "video" : "gambar",
+        request: [["Kategori", category.label]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     if (isGif) {
       // Send as video/gif for animated
       await sock.sendMessage(
         m.chat,
-        { video: buffer, gifPlayback: true, caption },
+        { video: buffer, gifPlayback: true, caption: (card || caption) },
         { quoted: m },
       );
     } else {
       await m.react("🐣");
       await sock.sendMessage(
         m.chat,
-        { image: buffer, caption },
+        { image: buffer, caption: (card || caption) },
         { quoted: m },
       );
     }

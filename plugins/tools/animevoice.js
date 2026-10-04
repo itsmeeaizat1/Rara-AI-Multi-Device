@@ -2,6 +2,7 @@
 import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "animevoice",
@@ -293,6 +294,16 @@ async function handler(m, { sock, args }) {
       },
       { quoted: m },
     );
+    try {
+      const info = await probeBuffer(audioBuffer, { mime: "audio/ogg" });
+      const card = mediaResultCard({
+        header: "animevoice",
+        type: "audio",
+        request: [["Bahasa", lang], ["Teks", String(text).slice(0, 80)]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
   } catch (e) {
     await m.react("❌");
     console.error("[ANIMEVOICE] Error:", e.message);

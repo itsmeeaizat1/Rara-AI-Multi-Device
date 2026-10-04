@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 
 import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
@@ -46,10 +47,20 @@ async function handler(m, { sock, config: botConfig }) {
 
     const buffer = Buffer.from(await res.arrayBuffer());
 
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: "qrcode",
+        type: "gambar",
+        request: [["Data", String(text).slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       image: buffer,
-      caption: `QR Code untuk: ${text}`,
-    });
+      caption: (card || `QR Code untuk: ${text}`),
+    }, { quoted: m });
 
     const out =
       raraWrap("QR Code", [`Text: *${text}*`,

@@ -2,6 +2,7 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const NOTULEN_PROMPT = `Kamu adalah asisten notulen meeting profesional. Susun ulang catatan meeting kasar menjadi notulen yang rapi dan terstruktur.
 
@@ -119,10 +120,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     m.reply(raraWrap("Notulen", "Render notulen ke PDF..."));
     const pdfBuffer = await renderNotulenPDF(text);
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeBuffer(pdfBuffer);
+      card = mediaResultCard({
+        header: "notulen",
+        type: "dokumen",
+        
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,
       mimetype: "application/pdf",
       fileName: `notulen_${Date.now()}.pdf`,
+      caption: card,
     }, { quoted: m });
   } catch (error) {
     await m.react("❌");

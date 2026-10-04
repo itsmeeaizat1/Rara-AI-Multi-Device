@@ -16,6 +16,7 @@ import {
   _setZelToolsHttpForTest, _setZelToolsKeyForTest,
 } from "../../src/scraper/zeltools.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "ztools",
@@ -181,11 +182,21 @@ async function handler(m, { sock }) {
       if (out.length <= 3500) {
         await m.reply(raraWrap("ztools", `✅ ${label}:\n\n\`\`\`\n${out.slice(0, 3400)}\n\`\`\``));
       } else {
+        let card = "";
+        try {
+          const info = await probeBuffer(Buffer.from(out, "utf-8"));
+          card = mediaResultCard({
+            header: "ztools",
+            type: "dokumen",
+            request: [["Fitur", kind]],
+            size: info.size, mime: info.mime,
+          });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
           document: Buffer.from(out, "utf-8"),
           fileName: `${kind === "obfuscate" ? "obfuscated" : "converted"}.js`,
           mimetype: "application/javascript",
-          caption: `_(via zelapi ${kind})_`,
+          caption: (card || `_(via zelapi ${kind})_`),
         }, { quoted: m });
       }
     } else if (kind === "domain") {
@@ -196,11 +207,21 @@ async function handler(m, { sock }) {
       const { card, html } = cardSource(d);
       await m.reply(raraWrap("ztools", "✅ GET SOURCE (zelapi)\n\n" + card));
       if (html && html.length > 300) {
+        let scard = "";
+        try {
+          const sinfo = await probeBuffer(Buffer.from(html, "utf-8"));
+          scard = mediaResultCard({
+            header: "ztools",
+            type: "dokumen",
+            request: [["Fitur", "source"], ["Judul", String(d.title || "-").slice(0, 60)]],
+            size: sinfo.size, mime: sinfo.mime,
+          });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
           document: Buffer.from(html, "utf-8"),
           fileName: `${(d.title || "source").replace(/[\\/:*?"<>|]/g, "").slice(0, 50) || "source"}.html`,
           mimetype: "text/html",
-          caption: "_(source via zelapi)_",
+          caption: (scard || "_(source via zelapi)_"),
         }, { quoted: m });
       }
     } else if (kind === "webtest") {

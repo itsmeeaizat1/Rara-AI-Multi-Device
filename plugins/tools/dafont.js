@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { DaFont } from "../../src/scraper/dafont.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 if (!global.dafontSessions) global.dafontSessions = {};
 
@@ -117,18 +118,39 @@ async function dafontAnswerHandler(m, sock) {
     `📜 License: ${v.license || "-"}`;
 
   if (v.preview) {
-    await sock.sendMedia(m.chat, v.preview, detail, m, { type: "image" });
+    let card = "";
+    try {
+      const info = await probeMedia(v.preview);
+      card = mediaResultCard({
+        header: "dafont",
+        type: "gambar",
+        request: [["Font", v.name]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    await sock.sendMedia(m.chat, v.preview, (card || detail), m, { type: "image" });
   } else {
     await m.reply(detail);
   }
 
   if (v.download) {
+    let docCard = "";
+    try {
+      const dinfo = await probeMedia(v.download);
+      docCard = mediaResultCard({
+        header: "dafont",
+        type: "dokumen",
+        request: [["Font", v.name], ["Format", "ZIP"]],
+        size: dinfo.size, mime: dinfo.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(
       m.chat,
       {
         document: { url: v.download },
         fileName: v.name + ".zip",
         mimetype: "application/zip",
+        ...(docCard ? { caption: docCard } : {}),
       },
       { quoted: m },
     );

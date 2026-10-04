@@ -5,6 +5,7 @@ import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { Canvas } from "skia-canvas";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "txttopdf",
@@ -1553,11 +1554,21 @@ async function handler(m, { sock, config: botConfig }) {
       const tplName = format === "cv" && opts.tpl ? " (" + (CV_TEMPLATES[opts.tpl] ? CV_TEMPLATES[opts.tpl].name : "Professional") + ")" : "";
       const formatLabel = (aiGenerated ? "AI Generated " : "") + (format === "cv" ? "CV Template" + tplName : format === "surat" ? "Surat Template" : "Standard PDF");
       const imgLabel = opts.img > 0 ? "\nUpscale: " + opts.img + "x HD image" : "";
+      let pdfCard = "";
+      try {
+        const pinfo = await probeMedia("file://" + filePath);
+        pdfCard = mediaResultCard({
+          header: "txttopdf",
+          type: "dokumen",
+          request: [["Format", formatLabel], ["Halaman", String(pageCount)], ["Kata", String(wordCount)]],
+          size: pinfo.size, mime: pinfo.mime,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(m.chat, {
         document: { url: filePath },
         fileName: "dokumen_" + timestamp + ".pdf",
         mimetype: "application/pdf",
-        caption: raraWrap("TxtToPDF Berhasil", [
+        caption: (pdfCard || raraWrap("TxtToPDF Berhasil", [
           "Format: " + formatLabel,
           "Font: " + fontName,
           "Warna: " + colorDisplay,
@@ -1566,7 +1577,7 @@ async function handler(m, { sock, config: botConfig }) {
           "Halaman: " + pageCount,
           "Kata: " + wordCount,
           "Ukuran: " + sizeKB + " KB" + imgLabel,
-        ].join("\n")),
+        ].join("\n"))),
       });
 
       // Send HD image if requested
@@ -1580,25 +1591,45 @@ async function handler(m, { sock, config: botConfig }) {
 
           if (opts.imgmode === "doc") {
             // Send as document — no WA compression, full HD quality
+            let hdDocCard = "";
+            try {
+              const hinfo = await probeBuffer(imgBuf);
+              hdDocCard = mediaResultCard({
+                header: "txttopdf",
+                type: "dokumen",
+                request: [["Fitur", "HD " + opts.img + "x"], ["Resolusi", resLabel]],
+                size: hinfo.size, mime: hinfo.mime,
+              });
+            } catch { /* best-effort */ }
             await sock.sendMessage(m.chat, {
               document: { url: imgPath },
               fileName: "hd_" + opts.img + "x_" + timestamp + ".png",
               mimetype: "image/png",
-              caption: raraWrap("HD " + opts.img + "x (Document)", [
+              caption: (hdDocCard || raraWrap("HD " + opts.img + "x (Document)", [
                 "Resolusi: " + resLabel,
                 "Ukuran: " + imgKB + " KB",
                 "Mode: Document (no compression)",
-              ].join("\n")),
+              ].join("\n"))),
             });
           } else {
             // Send as image — WA compresses but inline preview
+            let hdImgCard = "";
+            try {
+              const himg = await probeBuffer(imgBuf);
+              hdImgCard = mediaResultCard({
+                header: "txttopdf",
+                type: "gambar",
+                request: [["Fitur", "HD " + opts.img + "x"], ["Resolusi", resLabel]],
+                size: himg.size, mime: himg.mime, width: himg.width, height: himg.height,
+              });
+            } catch { /* best-effort */ }
             await sock.sendMessage(m.chat, {
               image: { url: imgPath },
-              caption: raraWrap("HD Preview " + opts.img + "x", [
+              caption: (hdImgCard || raraWrap("HD Preview " + opts.img + "x", [
                 "Resolusi: " + resLabel,
                 "Ukuran: " + imgKB + " KB",
                 "Mode: Gambar (WA compressed)",
-              ].join("\n")),
+              ].join("\n"))),
             });
           }
 
@@ -1619,11 +1650,21 @@ async function handler(m, { sock, config: botConfig }) {
       const stats = fs.statSync(filePath);
       const sizeKB = (stats.size / 1024).toFixed(1);
       const wordCount = content.split(/\s+/).length;
+      let docWCard = "";
+      try {
+        const winfo = await probeMedia("file://" + filePath);
+        docWCard = mediaResultCard({
+          header: "txttopdf",
+          type: "dokumen",
+          request: [["Format", "Word .doc"]],
+          size: winfo.size, mime: winfo.mime,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(m.chat, {
         document: { url: filePath },
         fileName: "dokumen_" + timestamp + ".doc",
         mimetype: "application/msword",
-        caption: raraWrap("TxtToWord Berhasil", [
+        caption: (docWCard || raraWrap("TxtToWord Berhasil", [
           "Format: Word .doc",
           "Font: " + fontName,
           "Warna: " + colorDisplay,
@@ -1631,7 +1672,7 @@ async function handler(m, { sock, config: botConfig }) {
           "Size: " + opts.size + "pt",
           "Kata: " + wordCount,
           "Ukuran: " + sizeKB + " KB",
-        ].join("\n")),
+        ].join("\n"))),
       });
 
       // Send HD image for Word too

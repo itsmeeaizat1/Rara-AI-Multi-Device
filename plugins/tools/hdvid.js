@@ -5,6 +5,7 @@ import path from "path";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
@@ -70,7 +71,16 @@ async function handler(m, { sock }) {
 
     const resultBuffer = fs.readFileSync(outputPath);
 
-    await sock.sendMedia(m.chat, resultBuffer, `*proses selesai* \n\nIni dia hasil videonya kak, udah jauh lebih mulus dan HD kan? 😍`, m, {
+    let card = "";
+    try {
+      const info = await probeBuffer(resultBuffer, { mime: "video/mp4" });
+      card = mediaResultCard({
+        header: "hdvid",
+        type: "video",
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+    } catch { /* best-effort */ }
+    await sock.sendMedia(m.chat, resultBuffer, (card || `*proses selesai* \n\nIni dia hasil videonya kak, udah jauh lebih mulus dan HD kan? 😍`), m, {
       type: "video",
       mimetype: "video/mp4",
       fileName: `HDVID-${Date.now()}.mp4`,

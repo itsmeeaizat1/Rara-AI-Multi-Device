@@ -2,6 +2,7 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const KONTRAK_PROMPT = `Kamu adalah ahli hukum Indonesia. Buatkan draft kontrak/perjanjian resmi berdasarkan informasi user.
 
@@ -140,10 +141,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     // PDF
     m.reply(raraWrap("Kontrak", "Render kontrak ke PDF..."));
     const pdfBuffer = await renderKontrakPDF(text);
+    let card = "";
+    try {
+      const info = await probeBuffer(pdfBuffer);
+      card = mediaResultCard({
+        header: "kontraktool",
+        type: "dokumen",
+        
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,
       mimetype: "application/pdf",
       fileName: `kontrak_${Date.now()}.pdf`,
+      caption: card,
     }, { quoted: m });
   } catch (error) {
     console.error("kontrak error:", error);

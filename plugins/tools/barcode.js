@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 
@@ -99,10 +100,21 @@ async function handler(m, { sock, config: botConfig }) {
       throw new Error("Buffer too small, mungkin data invalid");
     }
     // Send barcode image
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: "barcode",
+        type: "gambar",
+        request: [["Type", typeInfo.name], ["Data", String(data).slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    const oldCap = "Type: " + typeInfo.name + " | Data: " + (data.length > 40 ? data.substring(0, 40) + "..." : data);
     await sock.sendMessage(m.chat, {
       image: buffer,
-      caption: "Type: " + typeInfo.name + " | Data: " + (data.length > 40 ? data.substring(0, 40) + "..." : data),
-    });
+      caption: (card || oldCap),
+    }, { quoted: m });
 
     const out = raraWrap("Barcode Generator", [
       "Type: " + typeInfo.name,

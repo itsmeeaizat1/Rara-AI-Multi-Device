@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "deepaiedit",
@@ -162,9 +163,19 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (result.output_url) {
       // Send edited image
       try {
+        let card = "";
+        try {
+          const info = await probeMedia(result.output_url);
+          card = mediaResultCard({
+            header: "deepaiedit",
+            type: "gambar",
+            request: [["Prompt", String(prompt).slice(0, 80)], ["Engine", "DeepAI"]],
+            size: info.size, mime: info.mime, width: info.width, height: info.height,
+          });
+        } catch { /* best-effort */ }
         await conn.sendMessage(m.key.remoteJid, {
           image: { url: result.output_url },
-          caption: raraWrap("DeepAI Image Editor V2", [
+          caption: card || raraWrap("DeepAI Image Editor V2", [
             "EDIT BERHASIL",
             "",
             "Prompt: " + prompt,

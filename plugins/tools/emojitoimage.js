@@ -4,6 +4,7 @@ import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 const pluginConfig = {
@@ -57,10 +58,20 @@ async function handler(m, { sock }) {
 
     const imgUrl = data.data.url;
 
+    let card = "";
+    try {
+      const info = await probeMedia(imgUrl);
+      card = mediaResultCard({
+        header: "emojitoimage",
+        type: "gambar",
+        request: [["Emoji", emoji], ["Style", validStyle]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMedia(
       m.chat,
       imgUrl,
-      `🖼️ *emoji to image*\n\nEmoji: ${emoji}\nStyle: ${validStyle}\nCode: ${data.data.code || "-"}`,
+      (card || `🖼️ *emoji to image*\n\nEmoji: ${emoji}\nStyle: ${validStyle}\nCode: ${data.data.code || "-"}`),
       m,
       { type: "image", contextInfo: saluranCtx() },
     );

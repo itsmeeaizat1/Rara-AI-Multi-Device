@@ -4,6 +4,7 @@ import path from "path";
 import { pixa } from "../../src/scraper/removebackground.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "nobg",
@@ -64,11 +65,20 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
+    let card = "";
+    try {
+      const info = await probeBuffer(resultBuffer);
+      card = mediaResultCard({
+        header: "nobg",
+        type: "gambar",
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     return await sock.sendMessage(
       m.chat,
       {
         image: resultBuffer,
-        caption: "✅ *BACKGROUND REMOVED*",
+        caption: (card || "✅ *BACKGROUND REMOVED*"),
       },
       { quoted: m }
     );

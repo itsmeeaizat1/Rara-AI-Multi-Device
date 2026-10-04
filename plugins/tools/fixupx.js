@@ -8,6 +8,7 @@
 
 import { zelFixupxTweet, _setZelBypassHttpForTest } from "../../src/scraper/zelbypass.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "fixupx",
@@ -70,7 +71,16 @@ async function handler(m, { sock }) {
       const from = m.chat || m.key.remoteJid;
       const first = r.media[0];
       const isVideo = /\.mp4($|\?)/i.test(first);
-      await sock.sendMessage(from, isVideo ? { video: { url: first }, caption } : { image: { url: first }, caption }, { quoted: m });
+      let fcard = "";
+      try {
+        const finfo = await probeMedia(first);
+        fcard = mediaResultCard({
+          header: "fixupx",
+          type: isVideo ? "video" : "gambar",
+          size: finfo.size, mime: finfo.mime, width: finfo.width, height: finfo.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMessage(from, isVideo ? { video: { url: first }, caption: (fcard || caption) } : { image: { url: first }, caption: (fcard || caption) }, { quoted: m });
       // media tambahan (kalau ada lebih dari 1) dikirim polos tanpa caption
       for (const extra of r.media.slice(1, 4)) {
         const extraIsVideo = /\.mp4($|\?)/i.test(extra);

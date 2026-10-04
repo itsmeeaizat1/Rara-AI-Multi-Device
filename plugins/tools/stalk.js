@@ -11,6 +11,7 @@ import { zelStalk, ZEL_STALK_REGISTRY, _setZelHttpForTest, _setZelKeyForTest } f
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { sendImage } from "../../src/lib/rara-message.js";
 import { fetchBuffer } from "../../src/lib/rara-utils.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 export { _setZelHttpForTest, _setZelKeyForTest };
 
@@ -149,7 +150,17 @@ async function handler(m, { sock }) {
     if (card.avatar) {
       try {
         const buf = await getBuf(card.avatar);
-        return await sendImage(sock, m.chat, buf, raraWrap("stalk", card.text), { quoted: m });
+        let mcard = "";
+        try {
+          const minfo = await probeBuffer(buf);
+          mcard = mediaResultCard({
+            header: "stalk",
+            type: "gambar",
+            request: [["Platform", platform]],
+            size: minfo.size, mime: minfo.mime, width: minfo.width, height: minfo.height,
+          });
+        } catch { /* best-effort */ }
+        return await sendImage(sock, m.chat, buf, (mcard || raraWrap("stalk", card.text)), { quoted: m });
       } catch {
         // gagal download avatar → tetep kirim teks
       }

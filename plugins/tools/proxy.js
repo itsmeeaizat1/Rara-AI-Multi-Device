@@ -11,6 +11,7 @@ import path from "path";
 import { fetchProxies, pickAlive, COUNTRIES } from "../../src/scraper/proxyscrape.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "proxy",
@@ -80,11 +81,21 @@ async function handler(m, { sock }) {
       const filePath = path.join(TMP_DIR, fileName);
       fs.writeFileSync(filePath, content, "utf-8");
       await m.react("🐣");
+      let card = "";
+      try {
+        const info = await probeBuffer(Buffer.from(content, "utf8"));
+        card = mediaResultCard({
+          header: "proxy",
+          type: "dokumen",
+          request: [["Jumlah", String(proxies.length)], ["Negara", country ? country.toUpperCase() : "semua"], ["Protokol", protocol]],
+          size: info.size, mime: info.mime,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(m.chat, {
         document: { url: filePath },
         fileName,
         mimetype: "text/plain",
-        caption: `🌐 ${proxies.length} proxy (${country ? country.toUpperCase() : "semua negara"} | ${protocol})\nSumber: ProxyScrape v4`,
+        caption: (card || `🌐 ${proxies.length} proxy (${country ? country.toUpperCase() : "semua negara"} | ${protocol})\nSumber: ProxyScrape v4`),
       }, { quoted: m });
       return;
     }

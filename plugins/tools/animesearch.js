@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "animesearch",
@@ -91,9 +92,18 @@ async function searchAnime(m, sock, query) {
       });
       if (imgRes.status === 200) {
         const buf = Buffer.from(imgRes.data);
+        let card = "";
+        try {
+          const info = await probeBuffer(buf);
+          card = mediaResultCard({
+            header: "animesearch",
+            type: "gambar",
+            size: info.size, mime: info.mime, width: info.width, height: info.height,
+          });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
           image: buf,
-          caption: txt,
+          caption: (card || txt),
         }, { quoted: m });
         return;
       }
@@ -141,9 +151,18 @@ async function searchManga(m, sock, query) {
       });
       if (imgRes.status === 200) {
         const buf = Buffer.from(imgRes.data);
+        let card = "";
+        try {
+          const info = await probeBuffer(buf);
+          card = mediaResultCard({
+            header: "animesearch",
+            type: "gambar",
+            size: info.size, mime: info.mime, width: info.width, height: info.height,
+          });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
           image: buf,
-          caption: txt,
+          caption: (card || txt),
         }, { quoted: m });
         return;
       }
@@ -182,9 +201,18 @@ async function searchCharacter(m, sock, query) {
       });
       if (imgRes.status === 200) {
         const buf = Buffer.from(imgRes.data);
+        let card = "";
+        try {
+          const info = await probeBuffer(buf);
+          card = mediaResultCard({
+            header: "animesearch",
+            type: "gambar",
+            size: info.size, mime: info.mime, width: info.width, height: info.height,
+          });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
           image: buf,
-          caption: txt,
+          caption: (card || txt),
         }, { quoted: m });
         return;
       }

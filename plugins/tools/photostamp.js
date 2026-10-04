@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Photo Stamp — Tambah timestamp/date stamp ke foto (local via sharp + SVG, no API)
 import sharp from "sharp";
@@ -197,16 +198,31 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       return m.reply(raraWrap("Photo Stamp", "Gagal processing stamp.", "warn"));
     }
 
+    let card = "";
+    try {
+      const info = await probeBuffer(result);
+      card = mediaResultCard({
+        header: "photostamp",
+        type: "gambar",
+        request: [
+          ["Stamp", String(stampText).slice(0, 80)],
+          ["Posisi", String(position)],
+          ["Style", String(style)],
+        ],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    const oldCap = raraWrap("Photo Stamp", [
+      "Stamp: " + stampText,
+      "Posisi: " + position,
+      "Style: " + style,
+      "Powered by sharp (local)",
+    ], "info");
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: raraWrap("Photo Stamp", [
-          "Stamp: " + stampText,
-          "Posisi: " + position,
-          "Style: " + style,
-          "Powered by sharp (local)",
-        ], "info"),
+        caption: (card || oldCap),
       },
       { quoted: m }
     );

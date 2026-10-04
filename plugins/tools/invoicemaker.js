@@ -1,3 +1,4 @@
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
@@ -110,11 +111,26 @@ async function handler(m, { sock }) {
     caption += `💰 Total: *Rp${data.total.toLocaleString("id-ID")}*`;
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeMedia(imageUrl);
+      card = mediaResultCard({
+        header: "invoicemaker",
+        type: "gambar",
+        url: imageUrl,
+        request: [
+          ["Toko", String(store).slice(0, 80)],
+          ["Invoice", String(invoice).slice(0, 80)],
+          ["Status", String(status).slice(0, 80)],
+        ],
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(
       m.chat,
       {
         image: { url: imageUrl },
-        caption,
+        caption: (card || caption),
         contextInfo: {
           forwardingScore: 0,
           isForwarded: false,

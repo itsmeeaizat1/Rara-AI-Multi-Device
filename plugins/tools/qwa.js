@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
@@ -120,9 +121,19 @@ async function handler(m, { sock }) {
             responseType: 'arraybuffer'
         })
         await m.react("🐣");
+        let card = "";
+        try {
+            const info = await probeBuffer(Buffer.from(res.data));
+            card = mediaResultCard({
+                header: "qwa",
+                type: "gambar",
+                request: [["Teks", String(textToQuote).slice(0, 80)]],
+                size: info.size, mime: info.mime, width: info.width, height: info.height,
+            });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
             image: Buffer.from(res.data),
-            caption: `✅ Berhasil membuat quote WhatsApp!`
+            caption: (card || `✅ Berhasil membuat quote WhatsApp!`)
         }, { quoted: m })
     } catch (error) {
     await m.react("❌");

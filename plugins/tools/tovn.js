@@ -3,6 +3,7 @@ import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../sr
 import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
     name: 'tovn',
     alias: ["tovn"],
@@ -114,6 +115,16 @@ async function handler(m, { sock }) {
             type: 'audio', mimetype: 'audio/ogg; codecs=opus',
             ptt: true
         })
+        try {
+            const info = await probeBuffer(vnBuffer, { mime: 'audio/ogg' })
+            const card = mediaResultCard({
+                header: "tovn",
+                type: "audio",
+                request: [["Hasil", "voice note"]],
+                size: info.size, mime: info.mime, duration: info.duration,
+            })
+            if (card) await m.reply(card)
+        } catch { /* best-effort */ }
     } catch (error) {
     await m.react("❌");
         await m.reply(raraWrap("ERROR", 

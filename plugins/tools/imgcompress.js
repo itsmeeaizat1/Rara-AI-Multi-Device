@@ -5,6 +5,7 @@ import path from "node:path";
 import os from "node:os";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "imgcompress",
@@ -145,10 +146,19 @@ async function handler(m, { sock }) {
       caption += "Resize: " + meta.width + "x" + meta.height + " -> max 1920px\n";
     }
 
+    let card = "";
+    try {
+      const info = await probeMedia("file://" + outPath);
+      card = mediaResultCard({
+        header: "imgcompress",
+        type: "gambar",
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: { url: outPath },
-      caption: caption,
+      caption: (card || caption),
     }, { quoted: m });
 
     cleanup(outPath);

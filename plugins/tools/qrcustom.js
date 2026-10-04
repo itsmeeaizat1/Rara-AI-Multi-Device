@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from '../../src/lib/rara-error.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import config from "../../config.js";
 const pluginConfig = {
     name: ['qrcustom', 'qrcode', 'qr'],
@@ -72,9 +73,19 @@ async function handler(m, { sock }) {
         const apiUrl = `${BASE_URL}/api/v1/tools/qrcustom?${params.toString()}`
         
         await m.react("🐣");
+        let card = "";
+        try {
+            const info = await probeMedia(apiUrl);
+            card = mediaResultCard({
+                header: "qrcustom",
+                type: "gambar",
+                request: [["Data", data.substring(0, 80)]],
+                size: info.size, mime: info.mime, width: info.width, height: info.height,
+            });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
             image: { url: apiUrl },
-            caption: `📱 *qr code*\n${data.substring(0, 50)}${data.length > 50 ? '...' : ''}`
+            caption: (card || `📱 *qr code*\n${data.substring(0, 50)}${data.length > 50 ? '...' : ''}`)
         }, { quoted: m })
     } catch (err) {
     await m.react("❌");

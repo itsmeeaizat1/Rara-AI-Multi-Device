@@ -2,6 +2,7 @@
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import mql from "@microlink/mql"
 import te from "../../src/lib/rara-error.js"
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
     name: "carbon",
@@ -109,7 +110,17 @@ async function handler(m, { sock }) {
 
         if (!imageUrl) throw new Error("Gagal generate carbon gambar")
 
-        await sock.sendMedia(m.chat, imageUrl, null, m, {
+        let card = "";
+        try {
+            const info = await probeMedia(imageUrl);
+            card = mediaResultCard({
+                header: "carbon",
+                type: "gambar",
+                request: [["Teks", String(text).replace(/^\S+\s*/, "").slice(0, 80)]],
+                size: info.size, mime: info.mime, width: info.width, height: info.height,
+            });
+        } catch { /* best-effort */ }
+        await sock.sendMedia(m.chat, imageUrl, (card || null), m, {
             type: "image"
         })
 

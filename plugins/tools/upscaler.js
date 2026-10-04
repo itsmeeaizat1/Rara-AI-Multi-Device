@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,10 +61,20 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
+    let card = "";
+    try {
+      const info = await probeBuffer(fs.readFileSync(filePath));
+      card = mediaResultCard({
+        header: "upscaler",
+        type: "gambar",
+        request: [["Efek", "HD/2x"]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: fs.readFileSync(filePath),
-      caption: text,
+      caption: (card || text),
     });
   } catch (error) {
     await m.react("❌");

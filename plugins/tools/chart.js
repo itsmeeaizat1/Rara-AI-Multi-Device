@@ -9,6 +9,7 @@ import { createCanvas } from "@napi-rs/canvas";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getLeaderboard, formatRp } from "../../src/lib/rara-rpg-service.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "chart",
@@ -232,7 +233,17 @@ async function handler(m, { sock }) {
         items: players.map((p) => ({ label: p.name, value: p.value })),
         money: type === "cash",
       });
-      await sock.sendMedia(m.chat, png, null, m, { type: "image" });
+      let card = "";
+      try {
+        const info = await probeBuffer(png);
+        card = mediaResultCard({
+          header: "chart",
+          type: "gambar",
+          request: [["Kategori", RPG_LABELS[type] || String(type)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMedia(m.chat, png, (card || null), m, { type: "image" });
       await m.react("🐣");
       return;
     }
@@ -281,7 +292,17 @@ async function handler(m, { sock }) {
       subtitle: "Custom chart — Rara AI",
       items: values.map((v, i) => ({ label: labels[i] || `#${i + 1}`, value: v })),
     });
-    await sock.sendMedia(m.chat, png, null, m, { type: "image" });
+    let card = "";
+    try {
+      const info = await probeBuffer(png);
+      card = mediaResultCard({
+        header: "chart",
+        type: "gambar",
+        request: [["Data", `${labels.length} item`]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    await sock.sendMedia(m.chat, png, (card || null), m, { type: "image" });
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");

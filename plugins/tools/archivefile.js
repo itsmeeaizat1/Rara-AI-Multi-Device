@@ -10,6 +10,7 @@ import { createWriteStream, createReadStream } from "node:fs";
 import { createGzip, createGunzip } from "node:zlib";
 import { pipeline } from "node:stream/promises";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "arsipfile",
@@ -152,11 +153,21 @@ async function createZip(m, sock) {
     zip.writeZip(zipPath);
 
     const zipBuffer = fs.readFileSync(zipPath);
+    let card = "";
+    try {
+      const info = await probeBuffer(zipBuffer);
+      card = mediaResultCard({
+        header: "arsipfile",
+        type: "dokumen",
+        request: [["Format", "ZIP"], ["File", String(files.length)]],
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       document: { url: zipPath },
       fileName: "archive_" + Date.now() + ".zip",
       mimetype: "application/zip",
-      caption: "Arsip ZIP dibuat\n\nFile: " + files.length + "\nUkuran: " + formatSize(zipBuffer.length),
+      caption: (card || "Arsip ZIP dibuat\n\nFile: " + files.length + "\nUkuran: " + formatSize(zipBuffer.length)),
     }, { quoted: m });
 
     cleanup(tmpDir);
@@ -267,11 +278,21 @@ async function createTar(m, sock) {
     }, fileNames);
 
     const tarBuffer = fs.readFileSync(tarPath);
+    let card = "";
+    try {
+      const info = await probeBuffer(tarBuffer);
+      card = mediaResultCard({
+        header: "arsipfile",
+        type: "dokumen",
+        request: [["Format", "TAR.GZ"], ["File", String(files.length)]],
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       document: { url: tarPath },
       fileName: "archive_" + Date.now() + ".tar.gz",
       mimetype: "application/gzip",
-      caption: "Arsip TAR.GZ dibuat\n\nFile: " + files.length + "\nUkuran: " + formatSize(tarBuffer.length),
+      caption: (card || "Arsip TAR.GZ dibuat\n\nFile: " + files.length + "\nUkuran: " + formatSize(tarBuffer.length)),
     }, { quoted: m });
 
     cleanup(tmpDir);
@@ -371,11 +392,21 @@ async function createGz(m, sock) {
     const gzBuffer = fs.readFileSync(outputPath);
     const originalName = path.basename(file.name, path.extname(file.name)) || "file";
 
+    let card = "";
+    try {
+      const info = await probeBuffer(gzBuffer);
+      card = mediaResultCard({
+        header: "arsipfile",
+        type: "dokumen",
+        request: [["Format", "GZIP"], ["Rasio", Math.round((1 - gzBuffer.length / file.buffer.length) * 100) + "%"]],
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       document: { url: outputPath },
       fileName: originalName + ".gz",
       mimetype: "application/gzip",
-      caption: "GZIP dibuat\n\nAsli: " + formatSize(file.buffer.length) + "\nKompres: " + formatSize(gzBuffer.length) + "\nRasio: " + Math.round((1 - gzBuffer.length / file.buffer.length) * 100) + "%",
+      caption: (card || "GZIP dibuat\n\nAsli: " + formatSize(file.buffer.length) + "\nKompres: " + formatSize(gzBuffer.length) + "\nRasio: " + Math.round((1 - gzBuffer.length / file.buffer.length) * 100) + "%"),
     }, { quoted: m });
 
     cleanup(tmpDir);

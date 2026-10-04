@@ -6,7 +6,7 @@ import { downloadContentFromMessage } from "rara";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption, fmtBytes } from "../../src/lib/rara-media-info.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
   name: "converter",
   alias: ["converter"],
@@ -99,12 +99,26 @@ async function handler(m, { sock }) {
     const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: "converter",
+        type: "dokumen",
+        request: [
+          ["Input", String(ext).toUpperCase()],
+          ["Output", String(targetFormat).toUpperCase()],
+        ],
+        size: info.size, mime: `application/${targetFormat}`,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(
       m.chat,
       {
         document: { url: result.url },
         fileName: `converted_${Date.now()}.${targetFormat}`,
         mimetype: `application/${targetFormat}`,
+        caption: card,
         contextInfo: {
           forwardingScore: 0,
           isForwarded: false,
@@ -112,13 +126,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-    // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-    await m.reply(mediaInfoCaption({ header: "Rara Converter", fields: [
-      { icon: "📥", label: "Input", value: `${String(ext).toUpperCase()} (${fmtBytes(buffer.length)})` },
-      { icon: "📤", label: "Output", value: String(targetFormat).toUpperCase() },
-      { icon: "⚙️", label: "Engine", value: "Rara Converter" },
-      { icon: "⬇️", label: "Hasil", value: "Dokumen" },
-    ] }));
   } catch (err) {
     await m.react("❌");
     console.error("[Converter] Error:", err.message);

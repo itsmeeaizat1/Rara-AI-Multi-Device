@@ -2,6 +2,7 @@
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
 import config from "../../config.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "am-data",
@@ -78,9 +79,22 @@ async function handler(m, { sock }) {
     let msg = raraWrap("Alight Motion Data", [`*judul* → ${info.title || "-"}`, `*ukuran* → ${fmtSize(info.size)}`, `*download* → ${info.downloads ?? 0}x`, `*likes* → ${info.likes ?? 0}`, `*versi* → \`${info.amVersionString || "-"}\``, `*platform* → ${info.amPlatform || "-"}`, `*max ff* → v${info.maxFFVer || "-"}`, `*tanggal* → ${fmtDate(info.shareDate)}`, ``, `🎬 *project*`, projects, ``, `*effects* → ${effects}`].join("\n"));
 
     if (info.largeThumbUrl) {
-      await sock.sendMedia(m.chat, info.largeThumbUrl, null, m, {
+      let card = "";
+      try {
+        const pInfo = await probeMedia(info.largeThumbUrl);
+        card = mediaResultCard({
+          header: "am-data",
+          type: "gambar",
+          request: [["URL", url.length > 80 ? url.slice(0, 80) : url]],
+          size: pInfo.size,
+          mime: pInfo.mime,
+          width: pInfo.width,
+          height: pInfo.height,
+        });
+      } catch {}
+      await sock.sendMedia(m.chat, info.largeThumbUrl, card || msg, m, {
         type: "image",
-        caption: msg,
+        caption: card || msg,
       });
     } else {
       await m.react("🐣");

@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
@@ -107,9 +108,22 @@ async function handler(m, { sock, args }) {
     caption += `Size: ${width}x${height}`;
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeBuffer(resultBuffer);
+      card = mediaResultCard({
+        header: "text2img",
+        type: "gambar",
+        request: [
+          ["Prompt", String(cleanPrompt || prompt).slice(0, 80)],
+          ["Model", String(model)],
+        ],
+        size: info.size, mime: info.mime, width: info.width || width, height: info.height || height,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(
       m.chat,
-      { image: resultBuffer, caption },
+      { image: resultBuffer, caption: (card || caption) },
       { quoted: m },
     );
   } catch (e) {

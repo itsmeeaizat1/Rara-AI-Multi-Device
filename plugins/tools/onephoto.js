@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // onephoto.js — Onepunya API: UPSCALE_IMAGE (GFPGAN/RestoreFormer) + REMOVE_BG.
 // .oneupscale <reply foto> [model] [rescale] — perbaiki/enhance wajah & foto lama
@@ -54,7 +55,17 @@ async function handler(m, { sock }) {
       const out = res?.url || "";
       if (!out) throw new Error("Server gak balikin hasil.");
       const dl = await axios.get(out, { responseType: "arraybuffer", timeout: 120_000 });
-      await sock.sendMessage(m.chat, { image: Buffer.from(dl.data), caption: "✨ Background dihapus — Onepunya API" }, { quoted: m });
+      const dlBuffer = Buffer.from(dl.data);
+      let card = "";
+      try {
+        const info = await probeBuffer(dlBuffer);
+        card = mediaResultCard({
+          header: "onenobg",
+          type: "gambar",
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMessage(m.chat, { image: dlBuffer, caption: (card || "✨ Background dihapus — Onepunya API") }, { quoted: m });
       return;
     }
 
@@ -71,7 +82,18 @@ async function handler(m, { sock }) {
     const out = res?.url || "";
     if (!out) throw new Error("Server gak balikin hasil.");
     const dl = await axios.get(out, { responseType: "arraybuffer", timeout: 120_000 });
-    await sock.sendMessage(m.chat, { image: Buffer.from(dl.data), caption: `🪄 ${model} · rescale ${rescale}x — Onepunya API` }, { quoted: m });
+    const dlBuffer = Buffer.from(dl.data);
+    let card = "";
+    try {
+      const info = await probeBuffer(dlBuffer);
+      card = mediaResultCard({
+        header: "oneupscale",
+        type: "gambar",
+        request: [["Model", String(model)], ["Rescale", `${rescale}x`]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    await sock.sendMessage(m.chat, { image: dlBuffer, caption: (card || `🪄 ${model} · rescale ${rescale}x — Onepunya API`) }, { quoted: m });
   } catch (e) {
     return m.reply(raraWrap("Onepunya Photo", `Gagal: ${String(e.message || e).slice(0, 200)}`));
   }

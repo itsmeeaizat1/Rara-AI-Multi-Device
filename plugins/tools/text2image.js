@@ -2,6 +2,7 @@
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "text2image",
@@ -44,11 +45,21 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: "text2image",
+        type: "gambar",
+        request: [["Prompt", String(prompt).slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     return await sock.sendMessage(
       m.chat,
       {
         image: buffer,
-        caption: `🎨 *TEXT TO IMAGE*\n\nPrompt: ${prompt}`,
+        caption: (card || `🎨 *TEXT TO IMAGE*\n\nPrompt: ${prompt}`),
       },
       { quoted: m }
     );

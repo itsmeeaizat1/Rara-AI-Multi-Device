@@ -2,6 +2,7 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import mammoth from "mammoth";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 function wrapText(text, font, size, maxWidth) {
   const words = text.split(" ");
@@ -141,10 +142,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const { pdfBuffer, textPreview } = await convertDocxToPdf(buffer);
     const filename = `converted_${Date.now()}.pdf`;
 
+    let card = "";
+    try {
+      const info = await probeBuffer(pdfBuffer);
+      card = mediaResultCard({
+        header: "word2pdf",
+        type: "dokumen",
+        request: [["Input", "DOCX"]],
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,
       mimetype: "application/pdf",
       fileName: filename,
+      caption: card,
     }, { quoted: m });
 
     // Text preview

@@ -2,6 +2,7 @@
 // Photo Watermark — Tambah watermark text ke gambar (local via sharp, no API)
 import sharp from "sharp";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "photowatermark",
@@ -158,15 +159,25 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       return m.reply(raraWrap("Photo Watermark", "Gagal processing watermark.", "warn"));
     }
 
+    let card = "";
+    try {
+      const info = await probeBuffer(result);
+      card = mediaResultCard({
+        header: "photowatermark",
+        type: "gambar",
+        request: [["Teks", wmText], ["Posisi", position]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: raraWrap("Photo Watermark", [
+        caption: (card || raraWrap("Photo Watermark", [
           "Text: " + wmText,
           "Posisi: " + position,
           "Powered by sharp (local)",
-        ], "info"),
+        ], "info")),
       },
       { quoted: m }
     );

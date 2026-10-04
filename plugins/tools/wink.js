@@ -2,6 +2,7 @@
 // Plugin .wink — enhance/restorasi foto AI Meitu (port engine lama wink.js, tanpa key)
 import crypto from "crypto";
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "wink",
@@ -108,9 +109,19 @@ async function handler(m, { sock, config: botConfig }) {
     const res = await fetch(result.url, { signal: AbortSignal.timeout(120000) });
     const buf = Buffer.from(await res.arrayBuffer());
     await m.react("⚡");
+    let card = "";
+    try {
+      const info = await probeBuffer(buf);
+      card = mediaResultCard({
+        header: "wink",
+        type: "gambar",
+        request: [["Engine", "Wink Meitu"]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       image: buf,
-      caption: raraWrap("Wink", "Enhance selesai" + (result.width && result.height ? " (" + result.width + "x" + result.height + ")" : "")),
+      caption: (card || raraWrap("Wink", "Enhance selesai" + (result.width && result.height ? " (" + result.width + "x" + result.height + ")" : ""))),
       mimetype: "image/png",
     }, { quoted: m });
   } catch (error) {

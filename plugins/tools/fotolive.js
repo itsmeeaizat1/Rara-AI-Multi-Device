@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { exec } from "child_process";
@@ -241,16 +242,31 @@ async function handler(m, { sock }) {
     // Kirim sebagai video dengan gifPlayback = true
     // WhatsApp render sebagai animated looping image (Live Photo)
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeBuffer(liveBuffer);
+      card = mediaResultCard({
+        header: "fotolive",
+        type: "video",
+        request: [
+          ["Durasi", String(durLabel)],
+          ["Resolusi", `${resolution}p`],
+          ["FPS", String(fps)],
+        ],
+        size: info.size, mime: info.mime, width: info.width, height: info.height, duration: info.duration,
+      });
+    } catch { /* best-effort */ }
+    const oldCap =
+      `\n` +
+      `*durasi:* ${durLabel}\n` +
+      `*resolusi:* ${resolution}p\n` +
+      `*fps:* ${fps}\n` +
+      `*ukuran:* ${formatSize(liveSize)}\n` +
+      (wasTrimmed ? `*trimmed:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : '');
     await sock.sendMessage(m.chat, {
       video: liveBuffer,
       gifPlayback: true,
-      caption:
-        `\n` +
-        `*durasi:* ${durLabel}\n` +
-        `*resolusi:* ${resolution}p\n` +
-        `*fps:* ${fps}\n` +
-        `*ukuran:* ${formatSize(liveSize)}\n` +
-        (wasTrimmed ? `*trimmed:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : ''),
+      caption: (card || oldCap),
     }, { quoted: m });
 
     // Cleanup output

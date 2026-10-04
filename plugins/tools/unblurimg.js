@@ -3,6 +3,7 @@
 // Tested: v1 PASS (53KB->4.1MB), v2 PASS (53KB->663KB), v3 FAIL (Cloudflare block)
 import crypto from "node:crypto";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "unblurimg",
@@ -187,9 +188,19 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // Send result
     try {
+      let ucard = "";
+      try {
+        const uinfo = await probeBuffer(result.buffer);
+        ucard = mediaResultCard({
+          header: "unblurimg",
+          type: "gambar",
+          request: [["Skala", scale + "x"], ["Model", model]],
+          size: uinfo.size, mime: uinfo.mime, width: uinfo.width, height: uinfo.height,
+        });
+      } catch { /* best-effort */ }
       await conn.sendMessage(m.key.remoteJid, {
         image: result.buffer,
-        caption: raraWrap("UnblurImage AI", [
+        caption: ucard || raraWrap("UnblurImage AI", [
           "UNBLUR & UPSCALE BERHASIL",
           "",
           "Scale: " + scale + "x",

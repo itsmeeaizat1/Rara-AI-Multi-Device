@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/rara-error.js'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
     name: 'removebg',
     alias: ["removebg"],
@@ -44,9 +45,18 @@ async function handler(m, { sock }) {
         const result = await pixa(pathnya);
         
         await m.react("🐣");
+        let rcard = "";
+        try {
+          const info = await probeBuffer(result);
+          rcard = mediaResultCard({
+            header: "removebg",
+            type: "gambar",
+            size: info.size, mime: info.mime, width: info.width, height: info.height,
+          });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
             image: result,
-            caption: `✅ *background dihapus*\n\nBackground gambar berhasil dihapus`
+            caption: (rcard || `✅ *background dihapus*\n\nBackground gambar berhasil dihapus`)
         }, { quoted: m });
         try {
             fs.unlinkSync(pathnya);

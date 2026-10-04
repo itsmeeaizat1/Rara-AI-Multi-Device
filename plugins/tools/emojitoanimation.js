@@ -4,6 +4,7 @@ import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
 const pluginConfig = {
@@ -55,6 +56,17 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
+    // sticker gak bisa caption → kartu dikirim sebagai teks setelahnya
+    try {
+      const info = await probeBuffer(webpBuffer);
+      const card = mediaResultCard({
+        header: "emojitoanimasi",
+        type: "stiker",
+        request: [["Emoji", String(emoji || "").slice(0, 40)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
   } catch (error) {
     await m.react("❌");
     m.reply(raraWrap("emojitoanimasi", te(m.prefix, m.command, m.pushName), "error"));

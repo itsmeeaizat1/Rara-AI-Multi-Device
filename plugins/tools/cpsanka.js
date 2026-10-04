@@ -19,6 +19,7 @@ const pluginConfig = {
 };
 
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const sankaConfig = getSankaConfig();
 const API_BASE = sankaConfig.baseUrl;
 const API_KEY = sankaConfig.apikey;
@@ -54,16 +55,36 @@ async function handler(m, { sock }) {
     const cweBuf = Buffer.from(cweRes.data);
 
     // Send cowo image
+    let cowoCard = "";
+    try {
+      const info = await probeBuffer(cowoBuf);
+      cowoCard = mediaResultCard({
+        header: "cpsanka",
+        type: "gambar",
+        request: [["Bagian", "cowo"]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       image: cowoBuf,
-      caption: "Anime Couple (Cowo)",
+      caption: (cowoCard || "Anime Couple (Cowo)"),
     }, { quoted: m });
 
     // Send cwe image
+    let cweCard = "";
+    try {
+      const info = await probeBuffer(cweBuf);
+      cweCard = mediaResultCard({
+        header: "cpsanka",
+        type: "gambar",
+        request: [["Bagian", "cwe"]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: cweBuf,
-      caption: "Anime Couple (Cewe)",
+      caption: (cweCard || "Anime Couple (Cewe)"),
     });
   } catch (e) {
     await m.react("❌");

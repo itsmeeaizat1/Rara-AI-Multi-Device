@@ -2,6 +2,7 @@
 // Photo Tools — Kompres, konversi, resize, crop, border, mirror (all local via sharp)
 import sharp from "sharp";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "phototools",
@@ -305,9 +306,18 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     caption += "\nPowered by sharp (local, no API)";
 
+    let card = "";
+    try {
+      const info = await probeBuffer(result);
+      card = mediaResultCard({
+        header: "phototools",
+        type: "gambar",
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await conn.sendMessage(
       m.key.remoteJid,
-      { image: result, caption: raraWrap("Photo Tools", caption, "info") },
+      { image: result, caption: (card || raraWrap("Photo Tools", caption, "info")) },
       { quoted: m }
     );
   } catch (e) {

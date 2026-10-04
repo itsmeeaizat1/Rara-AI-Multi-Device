@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
     name: 'toimg',
     alias: ["toimg"],
@@ -76,7 +77,17 @@ async function handler(m, { sock }) {
             return
         }
 
-        await sock.sendMedia(m.chat, buffer, null, m, {
+        let card = "";
+        try {
+            const info = await probeBuffer(buffer);
+            card = mediaResultCard({
+                header: "toimg",
+                type: "gambar",
+                request: [["Input", "stiker"]],
+                size: info.size, mime: info.mime, width: info.width, height: info.height,
+            });
+        } catch { /* best-effort */ }
+        await sock.sendMedia(m.chat, buffer, (card || null), m, {
             type: 'image'
         })
 

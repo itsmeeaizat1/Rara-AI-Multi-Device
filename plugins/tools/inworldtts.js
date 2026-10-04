@@ -8,6 +8,7 @@
 // contoh: "Halo semuanya [nada antusias dan ceria] apa kabar?").
 // Key: .setkey inworld <key> (dari https://platform.inworld.ai/api-keys)
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import {
   inworldSynthesize, inworldListVoices, resolveDefaultVoice, inworldTranscribe, getInworldKey,
 } from "../../src/lib/rara-inworld.js";
@@ -32,6 +33,15 @@ const MAX_TEXT = 2000;
 
 async function sendVn(m, sock, buffer, mimetype = "audio/mpeg") {
   await sock.sendMessage(m.chat, { audio: buffer, mimetype, ptt: true }, { quoted: m });
+  try {
+    const info = await probeBuffer(buffer, { mime: mimetype });
+    const card = mediaResultCard({
+      header: "inworldtts",
+      type: "audio",
+      size: info.size, mime: info.mime, duration: info.duration,
+    });
+    if (card) await m.reply(card);
+  } catch { /* best-effort */ }
 }
 
 async function handler(m, { sock }) {

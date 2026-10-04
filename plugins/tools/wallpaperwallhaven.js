@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
@@ -139,9 +140,20 @@ async function handler(m, { sock, config: botConfig }) {
     const caption = `Wallhaven: ${query || "Random"}\nKategori: ${catLabel}\nResolusi: ${wp.resolution}\nUkuran: ${(wp.file_size / 1024).toFixed(0)} KB\nTotal hasil: ${total.toLocaleString()}`;
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeBuffer(imageBuffer);
+      card = mediaResultCard({
+        header: "wallpaperwallhaven",
+        type: "gambar",
+        request: query ? [["Pencarian", String(query).slice(0, 80)]] : [],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    const oldCap = raraWrap("Wallhaven Wallpaper", caption);
     await sock.sendMessage(m.chat, {
       image: imageBuffer,
-      caption: raraWrap("Wallhaven Wallpaper", caption),
+      caption: (card || oldCap),
     }, { quoted: m });
   } catch (error) {
     await m.react("❌");

@@ -3,6 +3,7 @@ import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
     name: 'toaudio',
     alias: ["toaudio"],
@@ -109,6 +110,16 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, audioBuffer, null, m, {
             type: 'audio'
         })
+        try {
+            const info = await probeBuffer(audioBuffer, { mime: 'audio/mpeg' })
+            const card = mediaResultCard({
+                header: "toaudio",
+                type: "audio",
+                request: [["Sumber", "video / audio"]],
+                size: info.size, mime: info.mime, duration: info.duration,
+            })
+            if (card) await m.reply(card)
+        } catch { /* best-effort */ }
 
     } catch (error) {
         await m.reply(

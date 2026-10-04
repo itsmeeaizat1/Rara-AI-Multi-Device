@@ -9,6 +9,7 @@ import axios from "axios";
 import config from "../../config.js";
 import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
   name: "nulis",
   alias: ["nulis"],
@@ -94,10 +95,20 @@ async function handler(m, { sock }) {
       ctx.fillText(line, startX, startY + i * lineHeight);
     });
     const buffer = canvas.toBuffer("image/jpeg");
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: "nulis",
+        type: "gambar",
+        request: [["Teks", String(text).slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMedia(
       m.chat,
       buffer,
-      `✅ *lulisan tangan*\n\nHatihati ketahuan! 📖`,
+      (card || `✅ *lulisan tangan*\n\nHatihati ketahuan! 📖`),
       m,
       { type: "image", contextInfo: saluranCtx() },
     );

@@ -2,6 +2,7 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const SURAT_PROMPT = `Kamu adalah asisten pembuat surat resmi Indonesia. Buatkan surat resmi yang profesional dan sesuai format standar Indonesia berdasarkan informasi user.
 
@@ -150,10 +151,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const pdfBuffer = await renderSuratPDF(aiResult.trim());
     const filename = `surat_${Date.now()}.pdf`;
 
+    let card = "";
+    try {
+      const info = await probeBuffer(pdfBuffer);
+      card = mediaResultCard({
+        header: "surattool",
+        type: "dokumen",
+        
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,
       mimetype: "application/pdf",
       fileName: filename,
+      caption: card,
     }, { quoted: m });
 
     // Also send text preview

@@ -3,6 +3,7 @@
 // Efek: grayscale, sepia, invert, blur, sharpen, vintage, cold, warm, dark, bright, neon, vintage2, dramatik, pastel, noir
 import sharp from "sharp";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "photofilter",
@@ -209,15 +210,25 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // Send result
+    let card = "";
+    try {
+      const info = await probeBuffer(result);
+      card = mediaResultCard({
+        header: "photofilter",
+        type: "gambar",
+        request: [["Filter", FILTERS[input].label]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: raraWrap("Photo Filter", [
+        caption: (card || raraWrap("Photo Filter", [
           "Filter: " + FILTERS[input].label,
           "Efek: " + input,
           "Powered by sharp (local)",
-        ], "info"),
+        ], "info")),
       },
       { quoted: m }
     );

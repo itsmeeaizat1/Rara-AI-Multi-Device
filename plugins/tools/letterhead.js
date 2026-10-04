@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 function wrapText(text, font, size, maxWidth) {
   const words = text.split(" ");
@@ -162,10 +163,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const resultBuffer = await addKopToPDF(pdfBuffer, kopData);
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeBuffer(resultBuffer);
+      card = mediaResultCard({
+        header: "kop",
+        type: "dokumen",
+        request: [["Input", "PDF"]],
+        size: info.size, mime: info.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       document: resultBuffer,
       mimetype: "application/pdf",
       fileName: `kop_${Date.now()}.pdf`,
+      caption: card,
     }, { quoted: m });
   } catch (error) {
     await m.react("❌");

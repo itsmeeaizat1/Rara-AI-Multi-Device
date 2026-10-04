@@ -4,6 +4,7 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { pdfToImages, MAX_PAGES, DEFAULT_PAGES } from "../../src/lib/rara-pdftoimg.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "pdftoimg",
@@ -72,6 +73,18 @@ async function handler(m, { sock }) {
       });
       if (i < res.images.length - 1) await new Promise((r) => setTimeout(r, 800));
     }
+    // kartu ringkasan 1x di akhir (bukan per halaman — anti spam)
+    try {
+      const last = res.images[res.images.length - 1];
+      const info = await probeBuffer(last.png);
+      const card = mediaResultCard({
+        header: "pdftoimg",
+        type: "gambar",
+        request: [["File", name], ["Halaman", `${res.images.length}/${res.totalPages}`]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
   } catch (e) {
     await m.react("❌");
     m.reply(raraWrap("pdftoimg", "Gagal: " + (e?.message || e), "error"));

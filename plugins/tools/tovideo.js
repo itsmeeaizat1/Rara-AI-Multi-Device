@@ -6,6 +6,7 @@ import te from '../../src/lib/rara-error.js'
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg'
 import ffmpeg from 'fluent-ffmpeg'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
 const pluginConfig = {
@@ -151,7 +152,17 @@ async function handler(m, { sock }) {
             return m.reply(raraWrap("Tovideo", `❌ *gagal*\n\nVideo output kosong`))
         }
 
-        await sock.sendMedia(m.chat, mp4Buffer, null, m, {
+        let card = "";
+        try {
+            const info = await probeBuffer(mp4Buffer, { mime: 'video/mp4' });
+            card = mediaResultCard({
+                header: "tovideo",
+                type: "video",
+                request: [["Input", "GIF"]],
+                size: info.size, mime: info.mime, duration: info.duration,
+            });
+        } catch { /* best-effort */ }
+        await sock.sendMedia(m.chat, mp4Buffer, (card || null), m, {
             type: 'video'
         })
     } catch (error) {

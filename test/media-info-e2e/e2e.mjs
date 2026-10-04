@@ -55,7 +55,7 @@ t("caption: icon default kalau gak ada", mediaInfoCaption({ header: "X", fields:
 {
   const files = {
     "plugins/sticker/sticker.js": ['mediaResultCard({', 'header: "sticker"'],
-    "plugins/tools/converter.js": ['mediaInfoCaption({ header: "Rara Converter"', "Rara Converter"],
+    "plugins/tools/converter.js": ['mediaResultCard({', 'header: "converter"'],  // migrasi batch 4: mediaInfoCaption lama diganti kartu modern
     "plugins/convert/togif.js": ['mediaInfoCaption({ header: "Rara To GIF"'],
     "plugins/convert/vocalremover.js": ['mediaInfoCaption({ header: "Rara Vocal Remover"'],
   };

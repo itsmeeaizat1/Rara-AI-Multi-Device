@@ -36,6 +36,7 @@ import { photiuUpscale } from "../../src/scraper/photiu.js";
 // ganti pakai api ini" — ihancer.com/api/enhance, port verbatim kode owner ke
 // src/scraper/ihancer.js, live 1 dtk tanpa API key)
 import { ihancerEnhance } from "../../src/scraper/ihancer.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "remini",
@@ -633,14 +634,24 @@ async function handler(m, { sock, args }) {
 
     const resTag = outWidth ? ` (${outWidth}x${outHeight})` : "";
     const caption = `*Remini AI Enhanced*\nMode: ${label}\n${engineNote}\nQuality: ${sizeMB}MB${resTag}`;
+    let rcard = "";
+    try {
+      const rinfo = await probeBuffer(resultBuffer);
+      rcard = mediaResultCard({
+        header: "remini",
+        type: "gambar",
+        request: [["Mode", label]],
+        size: rinfo.size, mime: rinfo.mime, width: rinfo.width, height: rinfo.height,
+      });
+    } catch { /* best-effort */ }
     if (wantDoc || autoDoc || resultBuffer.length > 5 * 1024 * 1024) {
       return await sock.sendMessage(
         m.chat,
-        { document: resultBuffer, mimetype: "image/jpeg", fileName: `Remini-${label.replace(/\s+/g, "")}-${Date.now()}.jpg`, caption },
+        { document: resultBuffer, mimetype: "image/jpeg", fileName: `Remini-${label.replace(/\s+/g, "")}-${Date.now()}.jpg`, caption: (rcard || caption) },
         { quoted: m }
       );
     }
-    return await sock.sendMessage(m.chat, { image: resultBuffer, caption, jpegQuality: 100 }, { quoted: m });
+    return await sock.sendMessage(m.chat, { image: resultBuffer, caption: (rcard || caption), jpegQuality: 100 }, { quoted: m });
   } catch (e) {
     console.error("[REMINI]", e.message);
     await m.react("❌");

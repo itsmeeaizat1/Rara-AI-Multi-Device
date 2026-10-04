@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // qrgen.js — QR Code Generator v2 (qrcode npm, local generation)
 import QRCode from "qrcode";
@@ -41,11 +42,21 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
-    const caption = `✅ *Qr code*
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: "qrgen",
+        type: "gambar",
+        request: [["Content", String(text).slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    const oldCap = `✅ *Qr code*
 
 Content: ${text.slice(0, 60)}${text.length > 60 ? "..." : ""}
 Engine: qrcode (local)`;
-    return await sock.sendMessage(m.chat, { image: buffer, caption });
+    return await sock.sendMessage(m.chat, { image: buffer, caption: (card || oldCap) }, { quoted: m });
   } catch (err) {
     console.error("qrgen error:", err);
     await m.react("❌");

@@ -6,6 +6,7 @@ import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import ffmpeg from "fluent-ffmpeg";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
@@ -114,11 +115,21 @@ async function handler(m, { sock }) {
     if (!animated) {
       const pngBuffer = await sharp(buffer).png().toBuffer();
       await m.react("🐣");
+      let pngCard = "";
+      try {
+        const info = await probeBuffer(pngBuffer);
+        pngCard = mediaResultCard({
+          header: "tomp4",
+          type: "gambar",
+          request: [["Input", "stiker statis"]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
       return await sock.sendMessage(
         m.chat,
         {
           image: pngBuffer,
-          caption: "✅ *STIKER STATIS DIUBAH KE GAMBAR*",
+          caption: (pngCard || "✅ *STIKER STATIS DIUBAH KE GAMBAR*"),
         },
         { quoted: m }
       );
@@ -135,11 +146,21 @@ async function handler(m, { sock }) {
     await m.react("🐣");
 
     const sizeKb = (mp4Buffer.length / 1024).toFixed(1);
+    let vidCard = "";
+    try {
+      const vinfo = await probeBuffer(mp4Buffer, { mime: "video/mp4" });
+      vidCard = mediaResultCard({
+        header: "tomp4",
+        type: "video",
+        request: [["Input", "stiker animasi"], ["Format", "MP4 (H.264)"]],
+        size: vinfo.size, mime: vinfo.mime, duration: vinfo.duration,
+      });
+    } catch { /* best-effort */ }
     return await sock.sendMessage(
       m.chat,
       {
         video: mp4Buffer,
-        caption: `*Stiker → MP4*\n\n*Format:* MP4 (H.264)\n*Ukuran:* ${sizeKb} KB`,
+        caption: (vidCard || `*Stiker → MP4*\n\n*Format:* MP4 (H.264)\n*Ukuran:* ${sizeKb} KB`),
       },
       { quoted: m }
     );

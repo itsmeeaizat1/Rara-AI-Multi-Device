@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "reminiv3",
@@ -83,10 +84,20 @@ async function handler(m, { sock, args }) {
     caption += `Source: image.pollinations.ai\n`;
     if (enhance) caption += `Mode: enhance + upscale`;
 
+    let card = "";
+    try {
+      const info = await probeBuffer(resultBuffer);
+      card = mediaResultCard({
+        header: "reminiv3",
+        type: "gambar",
+        request: [["Engine", "Pollinations AI (flux)"]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await m.react("🐣");
     await sock.sendMessage(
       m.chat,
-      { image: resultBuffer, caption },
+      { image: resultBuffer, caption: (card || caption) },
       { quoted: m },
     );
   } catch (e) {

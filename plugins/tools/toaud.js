@@ -4,6 +4,7 @@ import path from "path";
 import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "toaud",
@@ -66,7 +67,7 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
 
-      return await sock.sendMessage(
+      await sock.sendMessage(
         m.chat,
         {
           audio: audioBuffer,
@@ -75,6 +76,17 @@ async function handler(m, { sock }) {
         },
         { quoted: m }
       );
+      try {
+        const info = await probeBuffer(audioBuffer, { mime: "audio/mpeg" });
+        const card = mediaResultCard({
+          header: "toaud",
+          type: "audio",
+          request: [["Hasil", "MP3"]],
+          size: info.size, mime: info.mime, duration: info.duration,
+        });
+        if (card) await m.reply(card);
+      } catch { /* best-effort */ }
+      return;
     } finally {
       try {
         if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);

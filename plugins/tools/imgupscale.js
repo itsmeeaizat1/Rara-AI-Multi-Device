@@ -2,6 +2,7 @@
 // ImgUpscaler — Upscale & enhance gambar via imgupscaler.com API, no token needed
 // Supports scale 2x and 4x
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "imgupscale",
@@ -216,9 +217,19 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // Send result
     try {
+      let upCard = "";
+      try {
+        const info = await probeBuffer(result.buffer);
+        upCard = mediaResultCard({
+          header: "imgupscale",
+          type: "gambar",
+          request: [["Skala", scale + "x"]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
       await conn.sendMessage(m.key.remoteJid, {
         image: result.buffer,
-        caption: raraWrap("ImgUpscaler", [
+        caption: upCard || raraWrap("ImgUpscaler", [
           "UPSCALE BERHASIL",
           "",
           "Scale: " + scale + "x",

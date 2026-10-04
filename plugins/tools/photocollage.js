@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Photo Collage — Gabung 2-4 foto jadi satu grid (local via sharp, no API)
 import sharp from "sharp";
@@ -198,15 +199,29 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       return m.reply(raraWrap("Photo Collage", "Gagal bikin nih collage.", "warn"));
     }
 
+    let card = "";
+    try {
+      const info = await probeBuffer(result);
+      card = mediaResultCard({
+        header: "photocollage",
+        type: "gambar",
+        request: [
+          ["Layout", String(LAYOUTS[layout]?.label || layout)],
+          ["Jumlah Foto", `${needed} gambar`],
+        ],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    const oldCap = raraWrap("Photo Collage", [
+      "Layout: " + LAYOUTS[layout]?.label,
+      "Foto: " + needed + " gambar",
+      "Powered by sharp (local)",
+    ], "info");
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: raraWrap("Photo Collage", [
-          "Layout: " + LAYOUTS[layout].label,
-          "Foto: " + needed + " gambar",
-          "Powered by sharp (local)",
-        ], "info"),
+        caption: (card || oldCap),
       },
       { quoted: m }
     );

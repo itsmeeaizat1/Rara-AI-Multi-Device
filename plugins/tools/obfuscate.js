@@ -7,6 +7,7 @@ import JavaScriptObfuscator from "javascript-obfuscator";
 import {
   raraError, raraCaption, raraWrap, tipText,
 } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "obfuscate",
@@ -87,9 +88,18 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
       await m.reply(text, "obfuscate");
     } else {
       const namaFile = `obfuscated-${Date.now()}.js`;
+      let card = "";
+      try {
+        const info = await probeBuffer(Buffer.from(out, "utf8"));
+        card = mediaResultCard({
+          header: "obfuscate",
+          type: "dokumen",
+          size: info.size, mime: info.mime,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(
         m.chat,
-        { document: Buffer.from(out, "utf8"), fileName: namaFile, mimetype: "text/javascript" },
+        { document: Buffer.from(out, "utf8"), fileName: namaFile, mimetype: "text/javascript", caption: card },
         { quoted: m },
       );
       const text =

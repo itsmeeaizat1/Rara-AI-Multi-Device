@@ -1,3 +1,4 @@
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
@@ -64,9 +65,22 @@ async function handler(m, { sock }) {
         });
         if (imgRes.status === 200) {
           const buf = Buffer.from(imgRes.data);
+          let card = "";
+          try {
+            const info = await probeBuffer(buf);
+            card = mediaResultCard({
+              header: "quoteanimesanka",
+              type: "gambar",
+              request: [
+                ["Anime", String(q.anime || "").slice(0, 80)],
+                ["Karakter", String(q.character || "").slice(0, 80)],
+              ],
+              size: info.size, mime: info.mime, width: info.width, height: info.height,
+            });
+          } catch { /* best-effort */ }
           await sock.sendMessage(m.chat, {
             image: buf,
-            caption: txt,
+            caption: (card || txt),
           }, { quoted: m });
           return;
         }

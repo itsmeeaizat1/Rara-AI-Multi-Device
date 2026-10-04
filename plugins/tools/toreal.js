@@ -3,6 +3,7 @@ import axios from "axios";
 import FormData from "form-data";
 import { nexrayUpscale } from "../../src/scraper/nexray-maker.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "toreal",
@@ -80,7 +81,17 @@ async function handler(m, { sock }) {
 
  Image enhanced to realistic
 Engine: nexray AI`;
-    return await sock.sendMessage(m.chat, { image: result.buffer, caption });
+    let card = "";
+    try {
+      const info = await probeBuffer(result.buffer);
+      card = mediaResultCard({
+        header: "toreal",
+        type: "gambar",
+        request: [["Engine", "nexray AI"]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    return await sock.sendMessage(m.chat, { image: result.buffer, caption: (card || caption) });
   } catch (err) {
     console.error("toreal error:", err);
     await m.react("❌");

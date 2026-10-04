@@ -5,6 +5,7 @@ import sharp from "sharp";
 import te from "../../src/lib/rara-error.js";
 import cfg from "../../config.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBox } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "hd",
@@ -131,23 +132,43 @@ async function handler(m, { sock, args }) {
     const longSide = Math.max(outW, outH);
     const shortSide = Math.min(outW, outH);
     if (wantDoc || longSide > 1920 || shortSide > 1080 || resultBuffer.length > 5 * 1024 * 1024) {
+      let docCard = "";
+      try {
+        const dinfo = await probeBuffer(resultBuffer);
+        docCard = mediaResultCard({
+          header: "hd",
+          type: "dokumen",
+          request: [["Skala", scale + "x"]],
+          size: dinfo.size, mime: dinfo.mime,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(
         m.chat,
         {
           document: resultBuffer,
           mimetype: "image/jpeg",
           fileName: `hd-enhanced-${scale}x.jpg`,
-          caption,
+          caption: (docCard || caption),
         },
         { quoted: m }
       );
     } else {
       await m.react("🐣");
+      let imgCard = "";
+      try {
+        const info = await probeBuffer(resultBuffer);
+        imgCard = mediaResultCard({
+          header: "hd",
+          type: "gambar",
+          request: [["Skala", scale + "x"]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(
         m.chat,
         {
           image: resultBuffer,
-          caption,
+          caption: (imgCard || caption),
         },
         { quoted: m }
       );

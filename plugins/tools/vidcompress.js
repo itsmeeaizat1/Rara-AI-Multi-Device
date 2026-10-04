@@ -6,6 +6,7 @@ import path from "node:path";
 import os from "node:os";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 ffmpeg.setFfmpegPath(ffmpegPath.path);
 
@@ -244,6 +245,16 @@ async function handler(m, { sock }) {
         fileName: "audio_" + Date.now() + ".mp3",
         mimetype: "audio/mpeg",
       }, { quoted: m });
+      try {
+        const ainfo = await probeBuffer(audioBuffer);
+        const acard = mediaResultCard({
+          header: "vidcompress",
+          type: "audio",
+          request: [["Hasil", "MP3"]],
+          size: ainfo.size, mime: ainfo.mime, duration: ainfo.duration,
+        });
+        if (acard) await m.reply(acard);
+      } catch { /* best-effort */ }
 
       cleanup(inputPath);
       cleanup(audioPath);
@@ -273,9 +284,19 @@ async function handler(m, { sock }) {
     caption += "Sesudah: " + formatSize(compressedSize) + "\n";
     caption += "Pengurangan: " + (ratio > 0 ? ratio + "%" : "0% (sudah optimal)");
     await m.react("🐣");
+    let vcard = "";
+    try {
+      const vinfo = await probeMedia("file://" + outputPath);
+      vcard = mediaResultCard({
+        header: "vidcompress",
+        type: "video",
+        request: [["Preset", preset.label], ["Reduksi", (ratio > 0 ? ratio + "%" : "0%")]],
+        size: vinfo.size, mime: vinfo.mime,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       video: { url: outputPath },
-      caption: caption,
+      caption: (vcard || caption),
     }, { quoted: m });
 
     cleanup(inputPath);
