@@ -6,6 +6,19 @@
 import { getApiKey } from "../../src/lib/rara-api-keys.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { pixivSearch, pixiv18Search } from "../../src/lib/rara-onepunya.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "onepixiv",
@@ -49,7 +62,10 @@ async function handler(m, { sock }) {
     const first = list[0];
     const imgUrl = first?.urls?.regular || first?.urls?.original || "";
     if (imgUrl) {
-      try { await sock.sendMessage(m.chat, { image: { url: imgUrl }, caption: `🎨 ${first.title} — ${first.author}` }, { quoted: m }); } catch {}
+      try {
+        const c = await dlCard("gambar", { url: imgUrl }, [["Judul", String(first.title || "Pixiv Artwork").slice(0, 40)], ["Author", String(first.author || "-").slice(0, 40)]]);
+        await sock.sendMessage(m.chat, { image: { url: imgUrl }, caption: c || `🎨 ${first.title} — ${first.author}` }, { quoted: m });
+      } catch {}
     }
   } catch (e) {
     return m.reply(raraWrap("Onepunya Pixiv", `Gagal: ${String(e.message || e).slice(0, 200)}`));

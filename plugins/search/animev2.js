@@ -1,6 +1,19 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
     name: "animev2",
@@ -67,9 +80,11 @@ async function handler(m, { sock }) {
         const imageUrl = top5[0]?.images?.jpg?.image_url || top5[0]?.images?.jpg?.large_image_url || null
 
         if (imageUrl) {
+            const card = await dlCard("gambar", { url: imageUrl }, [["Judul", String(top5[0]?.title || query).slice(0, 40)], ["Query", String(query).slice(0, 40)]]);
+            const finalCaption = card ? `${card}\n\n${listText}` : listText;
             if (sock && typeof sock.sendMedia === 'function') {
                 try {
-                    await sock.sendMedia(m.chat, imageUrl, listText, m, { type: 'image' })
+                    await sock.sendMedia(m.chat, imageUrl, finalCaption, m, { type: 'image' })
                     return
                 } catch (e) {
                     console.error('[animev2] sock.sendMedia error:', e?.message || e)
@@ -80,7 +95,7 @@ async function handler(m, { sock }) {
                 try {
                     await sock.sendMessage(m.chat, {
                         image: { url: imageUrl },
-                        caption: listText
+                        caption: finalCaption
                     }, { quoted: m })
                     return
                 } catch (e) {

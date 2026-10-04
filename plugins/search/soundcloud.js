@@ -2,6 +2,19 @@
 import { load } from "cheerio";
 import fetch from "node-fetch";
 import { raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "soundcloud",
@@ -92,7 +105,8 @@ async function handler(m, { args, sock }) {
     txt += `Kalo mau download lagunya, pake fitur \`${m.prefix}playsc\` aja kak! 😉`;
     await m.react("🐣");
     if (thumb) {
-      await sock.sendMedia(m.chat, thumb, txt.trim(), m, { type: "image" });
+      const c = await dlCard("gambar", { url: thumb }, [["Kueri", String(args.join(" ")).slice(0, 40)], ["Hasil", `${limit} lagu`]]);
+      await sock.sendMedia(m.chat, thumb, c || txt.trim(), m, { type: "image" });
     } else {
       await m.reply(txt.trim());
     }

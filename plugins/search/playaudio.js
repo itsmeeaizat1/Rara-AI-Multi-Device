@@ -11,6 +11,19 @@ import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio } from "../../src/scraper/rara-ytdlp.js";
 import config from "../../config.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const CUKI_APIKEY = config.APIkey?.cuki || "cuki-x";
 
@@ -129,6 +142,8 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
+    const c = await dlCard("audio", { buffer: audioResult.buffer, mime: "audio/mpeg" }, [["Judul", String(audioResult.title || "audio").slice(0, 40)], ["Kualitas", `${quality}kbps`]]);
+    if (c) await m.reply(c);
   } catch (err) {
     console.error("[PlayAudio]", err);
     m.reply(

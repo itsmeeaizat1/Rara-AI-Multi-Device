@@ -8,6 +8,19 @@ import axios from "axios";
 import { getApiKey } from "../../src/lib/rara-api-keys.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { youtubeSearch, ytmusicPlay } from "../../src/lib/rara-onepunya.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "oneyoutube",
@@ -43,14 +56,19 @@ async function handler(m, { sock }) {
       await m.reply(raraWrap("Onepunya YT Music", `🎵 ${song.title || query}\n👤 ${song.author || "-"} · ⏱ ${song.duration || "-"}\n\n⬇️ Lagu lagi dikirim...`));
       try {
         const res = await axios.get(song.audioUrl, { responseType: "arraybuffer", timeout: 120_000 });
+        const audBuf = Buffer.from(res.data);
         await sock.sendMessage(m.chat, {
-          audio: Buffer.from(res.data),
+          audio: audBuf,
           mimetype: "audio/mpeg",
           ptt: false,
           fileName: `${String(song.title || "song").replace(/[\\/:*?"<>|]/g, "_").slice(0, 80)}.mp3`,
         }, { quoted: m });
+        const c = await dlCard("audio", { buffer: audBuf, mime: "audio/mpeg" }, [["Judul", String(song.title || query).slice(0, 40)], ["Channel", String(song.author || "-").slice(0, 40)]]);
+        if (c) await m.reply(c);
       } catch {
         await sock.sendMessage(m.chat, { document: { url: song.audioUrl }, fileName: `${String(song.title || "song").slice(0, 80)}.mp3`, mimetype: "audio/mpeg" }, { quoted: m });
+        const c = await dlCard("audio", { url: song.audioUrl }, [["Judul", String(song.title || query).slice(0, 40)], ["Channel", String(song.author || "-").slice(0, 40)]]);
+        if (c) await m.reply(c);
       }
       return;
     } catch (e) {

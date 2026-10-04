@@ -3,6 +3,20 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
   name: "apkmod-get",
   alias: ["apkmod-get", "apkmod"],
@@ -53,6 +67,7 @@ async function handler(m, { sock }) {
         {
           document: { url: file.url?.trim() },
           fileName: file.filename || `${app.name}.apk`,
+          caption: ((await dlCard("dokumen", { url: file.url?.trim() }, [["Nama", String(app.name || "APK").slice(0, 40)], ["Query", String(query).slice(0, 40)]])) || undefined),
           mimetype: "application/vnd.android.package-archive",
           contextInfo: {
             forwardingScore: 0,

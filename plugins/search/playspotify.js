@@ -21,6 +21,19 @@ import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
 import { raraGagal, raraGangguan, raraGuide, raraBerhasil } from "../../src/lib/rara-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "playspotify",
@@ -162,7 +175,8 @@ async function handler(m, { sock }) {
     // Step 5: Tawaran convert di bawahnya
     await offerConvert(sock, m, { buffer, type: "audio", platform: "Spotify", title, sourceUrl: "https://spotidown.app/" });
     await m.react("🐣");
-    await m.reply(raraBerhasil("Playspotify"));
+    const c = await dlCard("audio", { buffer, mime: "audio/mpeg" }, [["Judul", String(title).slice(0, 40)], ["Artis", String(artist).slice(0, 40)]]);
+    if (c) await m.reply(c);
   } catch (err) {
     console.error("[Playspotify]", err.message || err);
     await m.react("❌");

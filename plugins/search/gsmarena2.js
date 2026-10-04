@@ -2,6 +2,19 @@
 // gsmarena2.js — GSM Arena v2 (siputzx API, no npm dependency)
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "gsmarena2",
@@ -74,7 +87,9 @@ async function handler(m, { sock }) {
     if (imgUrl && imgUrl.startsWith("http")) {
       try {
         const imgRes = await axios.get(imgUrl, { responseType: "arraybuffer", timeout: 15000, headers: { "User-Agent": "Mozilla/5.0" } });
-        return await sock.sendMessage(m.chat, { image: Buffer.from(imgRes.data), caption: msg });
+        const imgBuf = Buffer.from(imgRes.data);
+        const card = await dlCard("gambar", { buffer: imgBuf }, [["HP", String(r.name || r.title || query).slice(0, 40)], ["Brand", String(r.brand || "-")]]);
+        return await sock.sendMessage(m.chat, { image: imgBuf, caption: card ? `${card}\n\n${msg}` : msg });
       } catch {}
     }
     return m.reply(msg);

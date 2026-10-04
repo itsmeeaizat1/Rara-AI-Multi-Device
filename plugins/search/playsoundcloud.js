@@ -3,6 +3,19 @@ import { scSearch } from "./soundcloud.js";
 import scdl from "../../src/scraper/soundclouddl.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "playsoundcloud",
@@ -52,6 +65,8 @@ async function handler(m, { args, sock }) {
 
     await sock.sendMedia(m.chat, downloadInfo.thumbnail || track.artwork, txt.trim(), m, { type: "image" });
     await sock.sendMedia(m.chat, downloadInfo.download_url, downloadInfo.title, m, { type: "audio" });
+    const c = await dlCard("audio", { url: downloadInfo.download_url }, [["Judul", String(downloadInfo.title || "SoundCloud Audio").slice(0, 40)], ["Uploader", String(downloadInfo.uploader || "-").slice(0, 40)]]);
+    if (c) await m.reply(c);
   } catch (e) {
     m.reply(raraError("PlaySoundcloud", `Gagal download lagu nih: ${e.message}`));
   }

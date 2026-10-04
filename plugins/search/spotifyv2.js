@@ -2,6 +2,20 @@
 // spotifyv2.js — Info track Spotify via spotify-url-info (parse URL)
 import spotifyUrlInfo from 'spotify-url-info'
 import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
     name: "spotifyv2",
@@ -62,7 +76,7 @@ async function handler(m, { sock }) {
             try {
                 await sock.sendMessage(m.chat, {
                     image: { url: cover },
-                    caption: text
+                    caption: ((await dlCard("gambar", { url: cover }, [["Judul", String(name).slice(0, 40)], ["Penyanyi", String(artists).slice(0, 40)]])) || text)
                 }, { quoted: m })
                 return
             } catch {

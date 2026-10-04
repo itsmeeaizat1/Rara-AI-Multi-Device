@@ -13,6 +13,19 @@ import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/rara-ytdl
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan, raraGuide, raraSalah } from "../../src/lib/rara-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const IKYY = "https://api.ikyyxd.my.id";
 
@@ -255,7 +268,8 @@ async function sendPlayAudio(sock, m, video, kbps) {
 
   // 4. Tawaran convert di bawahnya
   await offerConvert(sock, m, { buffer: audio.buffer, type: "audio", platform: "YouTube", title: titleForLyrics, sourceUrl: video.url });
-  await m.reply(raraBerhasil("Play"));
+  const c = await dlCard("audio", { buffer: audio.buffer, mime: "audio/mpeg" }, [["Judul", String(titleForLyrics).slice(0, 40)], ["Bitrate", `${kbps}kbps`]]);
+  if (c) await m.reply(c);
 }
 
 async function handler(m, { sock }) {

@@ -12,6 +12,19 @@ import { raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 import { visionScan } from "../../src/lib/rara-vision-chain.js";
 import { searchWeb } from "../../src/lib/rara-websearch.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "lens",
@@ -166,7 +179,9 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       // preview frame dikirim sebagai gambar biar kecewa gak 😄
       try {
-        await sock.sendMedia(m.chat, { url: anime.image }, raraWrap("Lens", `🎬 ${title}${anime.episode != null ? " — Episode " + anime.episode : ""} @ ${fmtTimestamp(anime.at)}`), m, { type: "image" });
+        const prevCap = raraWrap("Lens", `🎬 ${title}${anime.episode != null ? " — Episode " + anime.episode : ""} @ ${fmtTimestamp(anime.at)}`);
+        const cardCap = await dlCard("gambar", { url: anime.image }, [["Judul", String(title).slice(0, 40)], ["Episode", String(anime.episode ?? "-")], ["Momen", fmtTimestamp(anime.at)]]);
+        await sock.sendMedia(m.chat, { url: anime.image }, cardCap || prevCap, m, { type: "image" });
       } catch (e) { console.error("[lens] preview:", e.message); }
     }
 

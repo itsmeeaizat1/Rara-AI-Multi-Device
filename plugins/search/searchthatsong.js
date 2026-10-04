@@ -3,6 +3,19 @@ import http from "http";
 import https from "https";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "searchthatsong",
@@ -136,9 +149,10 @@ async function handler(m, { sock }) {
     if (result.relevantChunk) caption += `\n*match:* ${result.relevantChunk}\n`;
     
     if (result.albumArtwork) {
+      const imgCard = await dlCard("gambar", { url: result.albumArtwork }, [["Judul", String(result.song || "Song").slice(0, 40)], ["Artis", String(result.artist || "-").slice(0, 40)]]);
       await sock.sendMessage(m.chat, {
         image: { url: result.albumArtwork },
-        caption: caption.trim()
+        caption: imgCard || caption.trim()
       }, { quoted: m });
     } else {
       await m.reply(caption.trim());
@@ -154,6 +168,8 @@ async function handler(m, { sock }) {
         mimetype: "audio/mpeg",
         ptt: false
       }, { quoted: m });
+      const c = await dlCard("audio", { url: result.previewUrl }, [["Judul", String(result.song || "Song").slice(0, 40)], ["Artis", String(result.artist || "-").slice(0, 40)]]);
+      if (c) await m.reply(c);
     }
   } catch (error) {
     console.error("[SearchThatSong]", error.message);

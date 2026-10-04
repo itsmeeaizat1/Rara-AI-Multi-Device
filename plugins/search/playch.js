@@ -12,6 +12,19 @@ import te from "../../src/lib/rara-error.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const run = promisify(exec);
 const pluginConfig = {
   name: "playch",
@@ -159,7 +172,8 @@ async function handler(m, { sock }) {
       ptt: true,
       waveform: Array.from(waveform),
     });
-    { const __navText = raraWrap("${title}", `✅ *${title}* berhasil dikirim ke saluran`); await m.reply( __navText, "playch"); };
+    const c = await dlCard("audio", { buffer: opusBuf, mime: "audio/ogg; codecs=opus" }, [["Judul", String(title).slice(0, 40)], ["Saluran", String(chId)]]);
+    if (c) await m.reply(c); else { const __navText = raraWrap("${title}", `✅ *${title}* berhasil dikirim ke saluran`); await m.reply( __navText, "playch"); };
   } catch (e) {
     console.error("[PlayCh]", e);
     m.reply(raraWrap("playch", te(m.prefix, m.command, m.pushName), "error"));

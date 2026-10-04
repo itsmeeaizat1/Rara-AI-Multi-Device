@@ -8,6 +8,19 @@ function getSharp() {
 }
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 async function nerdfonts() {
   try {
     const { data } = await axios.get(
@@ -80,6 +93,7 @@ async function handler(m, { sock }) {
     const data = res.find(
       (d, i) => d?.name.toLowerCase() === query.toLowerCase(),
     );
+    const docCard = await dlCard("dokumen", { url: data.download_url }, [["Font", String(data.name || query).slice(0, 40)], ["Versi", String(data.version || "-")]]);
     sock.sendMessage(m.chat, {
       document: { url: data.download_url },
       fileName: data.name,
@@ -93,8 +107,7 @@ async function handler(m, { sock }) {
       )
         .resize(50, 50)
         .toBuffer(),
-      caption: `*done*
-Jika kamu ingin mendownload lagi, ketik ${m.prefix}nerdfont lagi`,
+      caption: docCard || `*done*\nJika kamu ingin mendownload lagi, ketik ${m.prefix}nerdfont lagi`,
     });
   } catch (err) {
     return m.reply(raraWrap("nerdfont-ambil", te(m.prefix, m.command, m.pushName), "error"));

@@ -8,6 +8,19 @@ import { toWhatsAppVideo } from "../../src/lib/rara-ffmpeg.js";
 import { raraGuide, raraSalah, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const IKYY = "https://api.ikyyxd.my.id";
 
@@ -200,11 +213,12 @@ async function sendPlayVideo(sock, m, video, quality) {
   await m.react("🐣");
 
   // 2. Baru videonya (caption info nempel di situ)
+  const vCard = await dlCard("video", { buffer: vid.buffer }, [["Judul", String(titleForLyrics).slice(0, 40)], ["Kualitas", quality === "1080" ? "HD" : quality + "p"]]);
   await sock.sendMessage(
     m.chat,
     {
       video: vid.buffer,
-      caption: captionLines.join("\n"),
+      caption: vCard || captionLines.join("\n"),
       mimetype: "video/mp4",
       fileName: `${(vid.title || video.title).replace(/[^\w\s-]/g, "").substring(0, 50)}.mp4`,
       contextInfo: mediaPreviewCard({
@@ -220,7 +234,7 @@ async function sendPlayVideo(sock, m, video, quality) {
 
   // 3. Tawaran convert di bawahnya
   await offerConvert(sock, m, { buffer: vid.buffer, type: "video", platform: "YouTube", title: titleForLyrics, sourceUrl: video.url });
-  await m.reply(raraBerhasil("Playvideo"));
+  if (!vCard) await m.reply(raraBerhasil("Playvideo"));
 }
 
 async function handler(m, { sock }) {

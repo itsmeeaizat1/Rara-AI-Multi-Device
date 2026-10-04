@@ -2,6 +2,20 @@
 // ytv2.js — YouTube search via Innertube API (youtubei.js, no API key)
 import { Innertube } from 'youtubei.js'
 import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
     name: "ytv2",
@@ -60,7 +74,7 @@ async function handler(m, { sock }) {
             try {
                 await sock.sendMessage(m.chat, {
                     image: { url: thumb },
-                    caption: text
+                    caption: ((await dlCard("gambar", { url: thumb }, [["Query", String(query).slice(0, 40)]])) || text)
                 }, { quoted: m })
                 return
             } catch {

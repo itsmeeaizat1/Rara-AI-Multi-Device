@@ -5,6 +5,20 @@ import axios from 'axios'
 import config from '../../config.js'
 import { raraError, raraEmpty, raraNoInput, raraGuide } from '../../src/lib/rara-menu-style.js'
 import { enrichLyricsMeta, lyricsCaption } from "../../src/lib/rara-lyrics-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
     name: "lirikv2",
@@ -108,7 +122,7 @@ async function handler(m, { sock }) {
             try {
                 await sock.sendMessage(m.chat, {
                     image: { url: result.thumbnail },
-                    caption: text
+                    caption: ((await dlCard("gambar", { url: result.thumbnail }, [["Judul", String(result.title || query).slice(0, 40)], ["Penyanyi", String(result.artist || "-").slice(0, 40)]])) || text)
                 }, { quoted: m })
                 return
             } catch {

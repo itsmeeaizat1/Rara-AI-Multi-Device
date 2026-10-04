@@ -12,6 +12,20 @@
 import { searchSongLyrics } from "../../src/scraper/genius-lyrics.js";
 import { raraGuide, raraEmpty, raraError, toSC } from "../../src/lib/rara-menu-style.js";
 import { lyricsCaption, enrichLyricsMeta } from "../../src/lib/rara-lyrics-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "lirik2",
@@ -70,7 +84,7 @@ async function handler(m, { sock }) {
     // Kirim dengan thumbnail kalau ada
     if (d.thumbnail) {
       try {
-        await sock.sendMessage(m.chat, { image: { url: d.thumbnail }, caption }, { quoted: m });
+        await sock.sendMessage(m.chat, { image: { url: d.thumbnail }, caption: ((await dlCard("gambar", { url: d.thumbnail }, [["Judul", String(d.title || query).slice(0, 40)], ["Penyanyi", String(d.artist || "-").slice(0, 40)]])) || caption) }, { quoted: m });
         return;
       } catch {
         // Thumbnail gagal → fallback ke text

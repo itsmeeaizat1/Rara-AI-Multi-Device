@@ -6,6 +6,20 @@ import te from '../../src/lib/rara-error.js'
 import { searchSongLyrics } from '../../src/scraper/genius-lyrics.js'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
 import { lyricsCaption, enrichLyricsMeta } from "../../src/lib/rara-lyrics-format.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 async function fetchLyrics(judul) {
   try {
@@ -69,7 +83,7 @@ async function handler(m, { sock }) {
                         try {
                             await sock.sendMessage(m.chat, {
                                 image: { url: g.thumbnail },
-                                caption: caption2
+                                caption: ((await dlCard("gambar", { url: g.thumbnail }, [["Judul", String(g.title || query).slice(0, 40)], ["Penyanyi", String(g.artist || "-").slice(0, 40)]])) || caption2)
                             }, { quoted: m })
                             return
                         } catch {}
@@ -98,7 +112,7 @@ async function handler(m, { sock }) {
         if (data.thumbnail && data.thumbnail !== '-') {
             await sock.sendMessage(m.chat, {
                 image: { url: data.thumbnail },
-                caption: texts
+                caption: ((await dlCard("gambar", { url: data.thumbnail }, [["Judul", String(title).slice(0, 40)], ["Penyanyi", String(artist).slice(0, 40)]])) || texts)
             }, { quoted: m })
         } else {
             { const __navText = (texts); await m.reply(__navText); }

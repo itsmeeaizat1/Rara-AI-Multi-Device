@@ -26,6 +26,19 @@ const pluginConfig = {
 
 // Upload via engine rara-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
 import { uploadImage } from "../../src/lib/rara-uploader.js"
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 async function uploadToTempfiles(buffer) {
     return uploadImage(buffer, 'image.jpg')
@@ -107,7 +120,8 @@ async function handler(m, { sock }) {
             `📊 *similarity:* ${similarity}%\n\n` +
             `🔗 https://anilist.co/anime/${d.anilist || ''}`
         if (d.image) {
-            await sock.sendMedia(m.chat, d.image, caption, m, {
+            const card = await dlCard("gambar", { url: d.image }, [["Judul", String(animeName).slice(0, 40)], ["Episode", String(d.episode || "Movie/OVA")]]);
+            await sock.sendMedia(m.chat, d.image, card ? `${card}\n\n${caption}` : caption, m, {
                 type: 'image'
             })
         } else {

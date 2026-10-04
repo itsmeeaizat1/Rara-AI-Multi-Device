@@ -14,6 +14,19 @@
 import te from "../../src/lib/rara-error.js";
 import raraApi from "../../src/lib/rara-apimanager.js";
 import { raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "spotplay",
@@ -85,7 +98,8 @@ async function handler(m, { sock }) {
     });
     await m.reply(cardText);
     await m.react("🐣");
-    await m.reply(raraBerhasil("spotplay"));
+    const c = await dlCard("audio", { url: result.downloadLink }, [["Judul", String(title).slice(0, 40)], ["Artis", String(artist || "-").slice(0, 40)]]);
+    if (c) await m.reply(c);
   } catch (e) {
     console.log(e);
     await m.react("❌");

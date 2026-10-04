@@ -13,6 +13,19 @@ import {
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch search) - helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const execAsync = promisify(exec);
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-RaraMD";
 
@@ -192,6 +205,18 @@ async function handler(m, { sock }) {
         );
       }
     }
+
+    try {
+      const firstBuf = mediaList[0]?.video;
+      const firstInfo = firstBuf ? await probeBuffer(firstBuf).catch(() => null) : null;
+      const sumCard = mediaResultCard({
+        header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+        type: "video",
+        request: [["Query", String(query).slice(0, 40)], ["Jumlah video", String(mediaList.length)]],
+        size: firstInfo?.size, mime: firstInfo?.mime, width: firstInfo?.width, height: firstInfo?.height, duration: firstInfo?.duration
+      });
+      if (sumCard) await m.reply(sumCard);
+    } catch {}
   } catch (error) {
     console.error("[PinVid] Error:", error.message);
     m.reply(raraWrap("pinvid", te(m.prefix, m.command, m.pushName), "error"));
