@@ -19,7 +19,7 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 // engine bersama (mulai .googleairich, logika relay/pindah ke src/lib/rara-airich.js)
-import { sendRichResponse } from "../../src/lib/rara-airich.js";
+import { sendRichResponse, notifyRichDownload } from "../../src/lib/rara-airich.js";
 
 // re-export buat e2e (struktur & polish sekarang hidup di engine)
 export { polishPayload, buildRichResponse } from "../../src/lib/rara-airich.js";
@@ -59,6 +59,7 @@ async function handler(m, { sock }) {
     const htmlPayload = await fetchPayload();
     await m.react("🛠️");
 
+    await notifyRichDownload(m);
     await sendRichResponse(sock, m.chat, htmlPayload, { title: "Space Rush 🚀\n*Tap kiri/kanan* buat manuver — hindari meteor!" });
 
     await m.react("🐣");

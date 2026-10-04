@@ -8,6 +8,7 @@ import {
   fetchCertificate, polishPayload, buildRichResponse, sendRichResponse,
   applyAirichVariant, airichMode,
   _setAirichHttpForTest, _resetAirichHttpForTest,
+  notifyRichDownload,
 } from "../../src/lib/rara-airich.js";
 
 const DB = "/tmp/airich-engine-db.json";
@@ -145,6 +146,28 @@ w("\n— tanpa cert fetch (offline murni) —");
   await sendRichResponse(sock3, "g@test", HTML, { title: "offline" });
   t("  relay sukses TANPA nyentuh http (cert lokal)", httpCalled === 0 && relays3.length === 1, "http=" + httpCalled);
   _resetAirichHttpForTest();
+}
+
+// ═══ 6. notif tombol unduh (request owner 4 Okt 2026) ═══
+w("\n— notif tombol unduh —");
+{
+  let replied = null;
+  const mMock = { reply: async (t) => { replied = t; return t; } };
+  const r = await notifyRichDownload(mMock);
+  t("  notifyRichDownload ngirim reply", typeof r === "string" && !!replied);
+  t("  isi notif menyebut tombol Unduh", (replied || "").includes("Unduh"), JSON.stringify(replied).slice(0, 80));
+  const throwM = { reply: async () => { throw new Error("boom"); } };
+  const r2 = await notifyRichDownload(throwM);
+  t("  notifyRichDownload anti-throw (gagal reply = null)", r2 === null);
+}
+{
+  const fs = await import("node:fs/promises");
+  for (const f of ["plugins/airich/googleairich.js", "plugins/airich/youtubeairich.js", "plugins/airich/plane.js", "plugins/ai/aicard.js"]) {
+    const src = await fs.readFile(new URL("../../" + f, import.meta.url), "utf-8");
+    t("  " + f.split("/").pop() + " manggil notifyRichDownload sebelum kartu", src.includes("await notifyRichDownload(m);"));
+  }
+  const hub = await fs.readFile(new URL("../../plugins/airich/airich.js", import.meta.url), "utf-8");
+  t("  hub .airich tips nyebut tombol Unduh", hub.includes("Unduh"));
 }
 
 w("\n===== " + pass + " PASS, " + fail + " FAIL =====");

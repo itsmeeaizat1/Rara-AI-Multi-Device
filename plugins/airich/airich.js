@@ -46,8 +46,10 @@ async function handler(m, { sock }) {
     "🚀 .plane",
     "   Game Space Rush (tap kiri/kanan, hindari meteor)",
     "",
-    "_Tips: kalau kartu gak muncul, pastikan WhatsApp_",
-    "_kamu versi terbaru — AI Rich butuh client 2.25.xx+_",
+    "_Tips: WA nampilin kartu AI Rich sebagai lampiran._",
+    "_Klik tombol *Unduh* di kartu untuk membuka fiturnya._",
+    "",
+    "_Pastikan WhatsApp kamu versi terbaru (2.25.xx+)._",
   ].join("\n"), "guide"));
 }
 

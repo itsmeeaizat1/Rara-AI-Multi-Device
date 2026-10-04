@@ -3,6 +3,7 @@
 // SATU-SATUNYA engine AI rich Rara (GenAI card port) — HTML bubble NIXCODE udah dihapus total 29 Sep.
 import { raraGuide, raraError } from "../../src/lib/rara-menu-style.js";
 import { AIRich } from "../../src/lib/rara-airich-hi.js";
+import { notifyRichDownload } from "../../src/lib/rara-airich.js";
 
 const pluginConfig = {
   name: "aicard",
@@ -80,6 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
     const rich = new AIRich(sock);
     parseToRich(rich, bodyText);
 
+    await notifyRichDownload(m);
     await rich.send(m.chat, {});
     await m.react("⚡");
   } catch (error) {

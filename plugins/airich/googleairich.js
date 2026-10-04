@@ -13,7 +13,7 @@
 //   delay-reveal). Tanpa JS pun gak rusak.
 // ============================================================
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
-import { sendRichResponse } from "../../src/lib/rara-airich.js";
+import { sendRichResponse, notifyRichDownload } from "../../src/lib/rara-airich.js";
 
 const pluginConfig = {
   name: "googleairich",
@@ -144,6 +144,7 @@ async function handler(m, { sock }) {
       html = buildGoogleHtml({ query: null, results: [] });
     }
 
+    await notifyRichDownload(m);
     await sendRichResponse(sock, m.chat, html, {
       title: query ? `Google 🔍 ${query}` : "Google 🔍",
       responseId: "7c3f9d51-" + Date.now().toString(16) + "-48d3-9e1a-b7f2c8d94e02",

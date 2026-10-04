@@ -27,6 +27,7 @@
 // ============================================================
 import axios from "axios";
 import crypto from "crypto";
+import { raraWrap } from "./rara-menu-style.js";
 
 const CERT_URL = "https://raw.githubusercontent.com/noxXza/data/refs/heads/main/certificate.json";
 
@@ -213,4 +214,17 @@ export async function sendRichResponse(sock, chat, html, opts = {}) {
     throw err;
   }
   return msg;
+}
+
+// ── notif tombol unduh (request owner 4 Okt 2026): WA nampilin bubble AI Rich
+//    sebagai lampiran — user harus KLIK TOMBOL UNDUH baru kartu muncul.
+//    Kirim teks kecil DULUAN sebelum kartu biar user gak bingung. ──
+export async function notifyRichDownload(m) {
+  try {
+    return await m.reply(raraWrap("AI Rich", [
+      "ℹ️ Kartu AI Rich sedang dikirim.",
+      "",
+      "Klik tombol *Unduh* di kartu untuk membuka fiturnya.",
+    ].join("\n"), "info"));
+  } catch { return null; }
 }

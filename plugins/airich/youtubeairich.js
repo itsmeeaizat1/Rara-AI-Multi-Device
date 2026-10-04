@@ -14,7 +14,7 @@
 // 🔹 Tanpa JS: daftar video tetep keliatan (progressive enhancement).
 // ============================================================
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
-import { sendRichResponse } from "../../src/lib/rara-airich.js";
+import { sendRichResponse, notifyRichDownload } from "../../src/lib/rara-airich.js";
 
 const pluginConfig = {
   name: "youtubeairich",
@@ -309,6 +309,7 @@ async function handler(m, { sock }) {
     }
 
     try {
+      await notifyRichDownload(m);
       await sendRichResponse(sock, m.chat, html, {
         title: query ? "YouTube ▶️ " + query : "YouTube ▶️",
         responseId: "8d4a0e62-" + Date.now().toString(16) + "-48d3-9e1a-b7f2c8d94e03",
