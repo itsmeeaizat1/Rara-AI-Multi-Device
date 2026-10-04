@@ -5,7 +5,6 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "mp4toaudio",
@@ -64,7 +63,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (format === "opus") extraFlags = " -ar 48000";
     if (format === "ac3") extraFlags = " -ar 48000 -ac 2";
 
-    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -vn -c:a ' + fmt.codec + extraFlags + (format === "opus" ? ' -b:a 64k' : ' -q:a 2') + ' "' + outputPath + '"');
+    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -vn -c:a ' + fmt.codec + extraFlags + ' -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
       return m.reply(raraGagal("MP4toAudio"));
@@ -83,12 +82,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "Size: " + (buf.length / 1024).toFixed(0) + " KB",
       ].join("\n")),
     });
-    await m.reply(mediaInfoCaption({ header: "MP4 ke Audio", fields: [
-      { label: "Format", value: fmt.desc },
-      { label: "Codec", value: fmt.codec },
-      { label: "Hasil", value: "Audio" },
-      { label: "Ukuran", value: (buf.length / 1024).toFixed(1) + " KB" },
-    ] }));
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);

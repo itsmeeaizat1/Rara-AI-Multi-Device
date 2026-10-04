@@ -438,6 +438,7 @@ async function handler(m, { sock, args }) {
     let label;
     let outWidth = 0;
     let outHeight = 0;
+    let engineNote = "Engine: Remini AI (tanpa watermark)";
 
     // Engine lokal (Swin2SR) — dipakai untuk mode real, pilihan ukuran, dan
     // fallback CodeFormer/BeautyPlus. Antrian + notice unduh model + react per tahap.
@@ -464,6 +465,7 @@ async function handler(m, { sock, args }) {
         const r = await reminiEnhance(mediaBuffer, bpMode);
         resultBuffer = r.buffer;
         label = r.label;
+        engineNote = "Engine: BeautyPlus AI (bisa ada watermark)";
       } catch (e1) {
         console.error("[REMINI] BeautyPlus gagal:", e1.message);
         // fallback: local AI tanpa watermark
@@ -473,6 +475,7 @@ async function handler(m, { sock, args }) {
           label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
           outWidth = r.width;
           outHeight = r.height;
+          engineNote = "Engine: Local AI 4x Restore (fallback — tanpa watermark)";
         } catch (e3) {
           throw e1.message === "quota_limited" ? e1 : e3;
         }
@@ -493,6 +496,7 @@ async function handler(m, { sock, args }) {
         resultBuffer = await ffmpegUpscale(mediaBuffer, f);
         const preset = FFMPEG_PRESETS[f];
         label = `${preset.label} (${f}x)`;
+        engineNote = `Engine: FFmpeg ${preset.label} — ${preset.description} (${((Date.now() - t0) / 1000).toFixed(1)}s, tanpa watermark)`;
       };
       const swinFallback = async () => {
         const r = await runLocal("real");
@@ -500,6 +504,7 @@ async function handler(m, { sock, args }) {
         label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
         outWidth = r.width;
         outHeight = r.height;
+        engineNote = "Engine: Local AI 4x Restore (fallback — tanpa watermark)";
       };
       const sharpLastResort = async () => {
         const r = await hdLocalSharpUpscale(mediaBuffer);
@@ -507,6 +512,7 @@ async function handler(m, { sock, args }) {
         label = `${r.label} (${(r.ms / 1000).toFixed(1)}s)`;
         outWidth = r.width;
         outHeight = r.height;
+        engineNote = "Engine: Upscale Lokal Sharp (fallback terakhir)";
       };
 
       // ── JALUR UTAMA BARU: ONNX lokal. Gagal/dimatikan → jatuh ke rantai lama di bawah (tak diubah). ──
@@ -518,6 +524,7 @@ async function handler(m, { sock, args }) {
           label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
           outWidth = r.width;
           outHeight = r.height;
+          engineNote = `Engine: ONNX Lokal (${r.stages.join(" + ") || "tanpa perubahan"}), tanpa watermark & tanpa API luar`;
           onnxDone = true;
         } catch (eo) {
           console.error("[REMINI] ONNX lokal gagal, lanjut ke engine cadangan:", eo.message, (eo.stack || "").split("\n")[1] || "");
@@ -553,6 +560,7 @@ async function handler(m, { sock, args }) {
             resultBuffer = ih;
             label = "Ihancer AI Pro 4x (JPEG)";
           }
+          engineNote = "Engine: Ihancer AI Pro 4x HD + FFmpeg Polish (tanpa watermark)";
           // rekam resolusi hasil buat caption + auto-doc
           try {
             const sharpMod = await import("sharp");
@@ -568,6 +576,7 @@ async function handler(m, { sock, args }) {
             const r = await photiuUpscale(mediaBuffer, { timeout: 90000 });
             resultBuffer = await polishImage(r.data.buffer);
             label = `Photiu AI + Poles (${r.data.format.toUpperCase()})`;
+            engineNote = "Engine: Photiu AI + FFmpeg Polish (fallback — tanpa watermark)";
           } catch (e1) {
             console.error("[REMINI] Photiu gagal:", e1.message);
             // fallback 2: FFmpeg pipeline 4x (preset kode owner)
@@ -608,6 +617,7 @@ async function handler(m, { sock, args }) {
       label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
       outWidth = r.width;
       outHeight = r.height;
+      engineNote = "Engine: Local AI (tanpa watermark)";
     }
     const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
 
@@ -622,7 +632,7 @@ async function handler(m, { sock, args }) {
     const autoDoc = longSide > 1920 || shortSide > 1080;
 
     const resTag = outWidth ? ` (${outWidth}x${outHeight})` : "";
-    const caption = `*Remini AI Enhanced*\nMode: ${label}\nQuality: ${sizeMB}MB${resTag}`;
+    const caption = `*Remini AI Enhanced*\nMode: ${label}\n${engineNote}\nQuality: ${sizeMB}MB${resTag}`;
     if (wantDoc || autoDoc || resultBuffer.length > 5 * 1024 * 1024) {
       return await sock.sendMessage(
         m.chat,

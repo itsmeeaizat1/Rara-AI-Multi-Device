@@ -70,8 +70,7 @@ Aturan:
 - Bikin kreatif, lucu, absurd tapi tetap sopan
 - Maksimal 15 baris total`;
 
-    const aiRes = await UnlimitedAI(prompt, "rara-ai");
-    const result = aiRes && aiRes.status ? String(aiRes.answer || "") : "";
+    const result = await UnlimitedAI(prompt, "rara-ai");
 
     if (!result || result.trim().length < 10) {
       await m.reply(raraWrap("Pohon", "AI lagi cari buku catatan keluarga, coba lagi ya."));

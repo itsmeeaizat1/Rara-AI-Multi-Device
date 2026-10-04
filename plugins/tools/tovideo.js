@@ -6,7 +6,6 @@ import te from '../../src/lib/rara-error.js'
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg'
 import ffmpeg from 'fluent-ffmpeg'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
 const pluginConfig = {
@@ -155,11 +154,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, mp4Buffer, null, m, {
             type: 'video'
         })
-        await m.reply(mediaInfoCaption({ header: "Sticker ke Video", fields: [
-            { label: "Input", value: "Sticker animasi" },
-            { label: "Hasil", value: "Video MP4" },
-            { label: "Ukuran", value: (mp4Buffer.length / 1024).toFixed(1) + " KB" },
-        ] }))
     } catch (error) {
     await m.react("❌");
         console.error('[ToVideo] Error:', error.message)

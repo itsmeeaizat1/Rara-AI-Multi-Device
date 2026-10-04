@@ -66,6 +66,7 @@ function mediaCaption({
     lines.push(`Desc: ${String(description).trim().slice(0, 120)}`);
   }
   if (format) lines.push(`Format: ${format}`);
+  if (method) lines.push(`Source: ${method}`);
   return lines.join("\n");
 }
 

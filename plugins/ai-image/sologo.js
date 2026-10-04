@@ -3,7 +3,6 @@ import axios from "axios";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { callIkyy } from "../../src/lib/rara-ai-service.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "sologo",
@@ -61,12 +60,6 @@ async function handler(m, { sock }) {
       image: { url: logo.thumbnail },
       caption: caption
     }, { quoted: m });
-    await m.reply(mediaInfoCaption({ header: "Rara SoLogo AI", fields: [
-      { label: "Input", value: "Teks" },
-      { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
-
-      { label: "Hasil", value: "Gambar Logo" },
-    ] }));
   } catch (error) {
     // IkyyXD fallback
     try {

@@ -3,7 +3,6 @@ import axios from "axios";
 import { uploadToCatbox } from "../../src/lib/rara-uploader.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "topacar",
@@ -47,10 +46,6 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "💑 Kamu punya pacar baru!" }, { quoted: m });
-    await m.reply(mediaInfoCaption({ header: "Pacar", fields: [
-      { label: "Efek", value: "Foto bersama pacar" },
-      { label: "Hasil", value: "Gambar" }, { label: "Ukuran", value: (imgBuffer.length / 1024).toFixed(1) + " KB" },
-    ] }));
     await m.reply(raraBerhasil("topacar"));
   } catch (e) {
     console.error("topacar error:", e.message);

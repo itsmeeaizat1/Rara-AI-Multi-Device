@@ -1,7 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "animebaka",
@@ -25,14 +24,12 @@ async function handler(m, { sock }) {
     await sock.sendMessage(from, { react: { text: "🕒", key: m.key } });
 
     let url = "";
-    let source = "";
     try {
       const res = await axios.get("https://api.waifu.pics/sfw/bully", {
         timeout: 10000,
         headers: { "User-Agent": "Mozilla/5.0" },
       });
       url = res.data?.url || "";
-      if (url) source = "waifu.pics";
     } catch {
       try {
         const res2 = await axios.get("https://nekos.best/api/v2/baka", {
@@ -40,7 +37,6 @@ async function handler(m, { sock }) {
           headers: { "User-Agent": "Mozilla/5.0" },
         });
         url = res2.data?.results?.[0]?.url || "";
-        if (url) source = "nekos.best";
       } catch {}
     }
 
@@ -81,18 +77,7 @@ async function handler(m, { sock }) {
       await sock.sendMessage(from, { image: { url }, caption, mentions }, { quoted: m });
     }
 
-    await m.reply(
-      mediaInfoCaption({
-        header: "Rara Anime Baka",
-        fields: [
-          { label: "Input", value: mentioned ? "Tag User" : "Biasa" },
-          { label: "Kategori", value: "Baka" },
-          { label: "Hasil", value: url.endsWith(".gif") ? "Anime GIF" : "Anime Gambar" },
-        ],
-      })
-    );
-
-    await sock.sendMessage
+    await sock.sendMessage(from, { react: { text: "🐣", key: m.key } });
   } catch (err) {
     const from = m.key.remoteJid;
     console.error("animebaka error:", err);

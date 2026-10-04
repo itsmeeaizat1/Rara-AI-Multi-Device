@@ -9,7 +9,6 @@ import fs from "fs";
 import { uploadTo0x0 } from "../../src/lib/rara-tmpfiles.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
   name: "fakeml",
   alias: ["fakeml"],
@@ -81,11 +80,6 @@ async function handler(m, { sock }) {
         type: "image",
       },
     );
-    await m.react("🐣");
-    await m.reply(mediaInfoCaption({ header: "Fake ML Profile", fields: [
-      { label: "Nickname", value: name }, { label: "Game", value: "Mobile Legends" },
-      { label: "Hasil", value: "Gambar" },
-    ] }));
     await m.react("🐣");
   } catch (error) {
     await m.react("❌");

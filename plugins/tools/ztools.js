@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
     const d = r.data;
 
     if (kind === "code") {
-      await m.reply(raraWrap("ztools", "✅ CODE RUNNER\n\n" + cardCode(d)));
+      await m.reply(raraWrap("ztools", "✅ CODE RUNNER (zelapi)\n\n" + cardCode(d)));
     } else if (kind === "obfuscate" || kind === "convert") {
       const out = typeof d?.result === "string" ? d.result : (typeof d?.result === "object" && d.result ? JSON.stringify(d.result) : null);
       if (!out) { await m.react("❌"); return m.reply(raraWrap("ztools", "Output kosong dari zelapi")); }
@@ -185,25 +185,27 @@ async function handler(m, { sock }) {
           document: Buffer.from(out, "utf-8"),
           fileName: `${kind === "obfuscate" ? "obfuscated" : "converted"}.js`,
           mimetype: "application/javascript",
+          caption: `_(via zelapi ${kind})_`,
         }, { quoted: m });
       }
     } else if (kind === "domain") {
       const card = cardDomain(d);
       if (!card) { await m.react("❌"); return m.reply(raraWrap("ztools", `Domain gak ketemu: ${v(d?.message) || v(d?.error) || "coba domain lain"}`)); }
-      await m.reply(raraWrap("ztools", "✅ DOMAIN CHECKER\n\n" + card));
+      await m.reply(raraWrap("ztools", "✅ DOMAIN CHECKER (zelapi)\n\n" + card));
     } else if (kind === "source") {
       const { card, html } = cardSource(d);
-      await m.reply(raraWrap("ztools", "✅ GET SOURCE\n\n" + card));
+      await m.reply(raraWrap("ztools", "✅ GET SOURCE (zelapi)\n\n" + card));
       if (html && html.length > 300) {
         await sock.sendMessage(m.chat, {
           document: Buffer.from(html, "utf-8"),
           fileName: `${(d.title || "source").replace(/[\\/:*?"<>|]/g, "").slice(0, 50) || "source"}.html`,
           mimetype: "text/html",
+          caption: "_(source via zelapi)_",
         }, { quoted: m });
       }
     } else if (kind === "webtest") {
       if (v(d?.result?.result?.resultJson?.meta)) {
-        await m.reply(raraWrap("ztools", "✅ WEBSITE SPEED TEST\n\n" + cardWebtest(d)));
+        await m.reply(raraWrap("ztools", "✅ WEBSITE SPEED TEST (zelapi)\n\n" + cardWebtest(d)));
       } else {
         await m.react("❌");
         return m.reply(raraWrap("ztools", `Tes gagal — ${v(d?.result?.result?.error) || v(d?.message) || "coba lagi / cek URL-nya"}`));

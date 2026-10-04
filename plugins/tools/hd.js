@@ -122,7 +122,7 @@ async function handler(m, { sock, args }) {
     let caption = "";
     caption += `Scale: ${finalScale}x (${outW}x${outH})\n`;
     caption += `Size: ${sizeMB}MB\n`;
-    if (capped) caption += `scale diturunin dari ${scale}x (batas ${MAX_OUTPUT_PX}px)\n`;
+    caption += `Engine: Sharp Lanczos3 (Local)${capped ? ` — scale diturunin dari ${scale}x (batas ${MAX_OUTPUT_PX}px)` : ""}\n`;
     
     // Hasil DI ATAS 1080p → otomatis document (instruksi owner: WA bakal
     // nge-compress kalau dikirim sebagai image — document jaga kualitas HD).

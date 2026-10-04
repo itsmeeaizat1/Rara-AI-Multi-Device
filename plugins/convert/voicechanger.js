@@ -6,7 +6,6 @@ import fs from 'fs'
 import path from 'path'
 import os from 'os'
 import { raraWrap } from '../../src/lib/rara-menu-style.js'
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "voicechanger",
@@ -75,7 +74,7 @@ const LOCAL_MODELS = {
   },
   "ghost": {
     desc: "Suara hantu (low pitch + heavy reverb + vibrato)",
-    filter: "asetrate=44100*0.75,aresample=44100,aecho=0.9:0.95:300:0.6,vibrato=f=3:d=1",
+    filter: "asetrate=44100*0.75,aresample=44100,aecho=0.9:0.95:300:0.6,vibrato=f=3:d=2",
     type: "local",
   },
   "alien": {
@@ -85,7 +84,7 @@ const LOCAL_MODELS = {
   },
   "monster": {
     desc: "Suara monster (very deep + distortion)",
-    filter: "asetrate=44100*0.6,aresample=44100,bass=g=15,acrusher=level_in=6:level_out=7:bits=4:mode=log:aa=1,asoftclip=type=tanh",
+    filter: "asetrate=44100*0.6,aresample=44100,bass=g=15,acrusher=level_in=6:level_out=7:bits=4:mode=log:aa=1,distort=0.3",
     type: "local",
   },
   "robot": {
@@ -110,7 +109,7 @@ const LOCAL_MODELS = {
   },
   "baby": {
     desc: "Suara bayi (high pitch + vibrato + fast)",
-    filter: "asetrate=44100*1.45,aresample=44100,atempo=1.1,vibrato=f=6:d=1,treble=g=3",
+    filter: "asetrate=44100*1.45,aresample=44100,atempo=1.1,vibrato=f=6:d=1.5,treble=g=3",
     type: "local",
   },
   "oldman": {
@@ -140,7 +139,7 @@ const LOCAL_MODELS = {
   },
   "underwater": {
     desc: "Suara bawah air (lowpass + slow vibrato)",
-    filter: "lowpass=f=800,vibrato=f=2:d=1,asetrate=44100*0.9,aresample=44100",
+    filter: "lowpass=f=800,vibrato=f=2:d=2,asetrate=44100*0.9,aresample=44100",
     type: "local",
   },
   "megaphone": {
@@ -401,11 +400,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           "AI Voice Conversion - Genshin Impact",
         ].join("\n")),
       });
-      await m.reply(mediaInfoCaption({ header: "Voice Changer", fields: [
-        { label: "Karakter", value: char.name }, { label: "Region", value: char.region },
-{ label: "Hasil", value: "Voice note OGG Opus" },
-        { label: "Ukuran", value: (outputBuf.length / 1024).toFixed(1) + " KB" },
-      ] }));
 
       // Cleanup
       try {
@@ -493,11 +487,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         vm.desc,
       ].join("\n")),
     });
-    await m.reply(mediaInfoCaption({ header: "Voice Changer", fields: [
-      { label: "Efek", value: input }, { label: "Deskripsi", value: vm.desc },
-{ label: "Hasil", value: "Voice note OGG Opus" },
-      { label: "Ukuran", value: (outputBuf.length / 1024).toFixed(1) + " KB" },
-    ] }));
 
     try { fs.unlinkSync(inputPath); fs.unlinkSync(outputPath); } catch (e) { console.error('[voicechanger.js]:', e.message); }
     try {

@@ -3,7 +3,6 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import config from '../../config.js'
 import { f } from '../../src/lib/rara-http.js'
 import te from '../../src/lib/rara-error.js'
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
     name: 'text2img3',
     alias: ["text2img3", "txt2img"],
@@ -44,13 +43,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, data.url, null, m, {
             type: 'image'
         })
-        await m.reply(mediaInfoCaption({ header: "Rara Txt2Img", fields: [
-            { label: "Input", value: "Teks" },
-            { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
-            { label: "Style", value: style },
-
-            { label: "Hasil", value: "Gambar" },
-        ] }))
     } catch (error) {
         m.reply(raraWrap("text2img3", te(m.prefix, m.command, m.pushName), "error"))
     }

@@ -4,8 +4,7 @@
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
-import { probeMedia, mediaResultCard } from "../../src/lib/rara-media-result.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -34,6 +33,7 @@ function mediaCaption({
     lines.push(`Desc: ${String(description).trim().slice(0, 120)}`);
   }
   if (format) lines.push(`Format: ${format}`);
+  if (method) lines.push(`Source: ${method}`);
   return lines.join("\n");
 }
 
@@ -124,23 +124,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    // FIELD HASIL (3 Okt, owner): ukuran/format dari HEAD media; judul/pembuat/durasi/kualitas dari scraper. Field tak diketahui dilewati.
-    const first = result.medias[0];
-    let card = "";
-    try {
-      const probed = await probeMedia(first.url);
-      card = mediaResultCard({
-        header: "AIO",
-        title: result.title,
-        type: first.type === "video" || first.type === "audio" ? first.type : first.type === "image" ? "foto" : "",
-        ext: first.ext,
-        quality: first.quality,
-        duration: result.duration,
-        author: result.author && result.author !== result.title ? result.author : "",
-        ...probed,
-      });
-    } catch { /* kartu opsional — jangan ganggu hasil */ }
-    await m.reply(card || raraBerhasil("aio"));
+    await m.reply(raraBerhasil("aio"));
   } catch (error) {
     console.error("[aio.js]:", error.message);
     await m.react("❌");

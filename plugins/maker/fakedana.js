@@ -3,7 +3,6 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { Canvas, loadImage, FontLibrary } from 'skia-canvas'
 import te from '../../src/lib/rara-error.js'
 import { fileURLToPath } from "url";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 // FIX 12 Sep: path font gak boleh nempel ke process.cwd() — import crash kalau
 // bot dijalanin dari direktori lain (ketahuan plugins-import-e2e)
 const _epfFont = fileURLToPath(new URL("../../assets/fonts/Epep.ttf", import.meta.url));
@@ -67,9 +66,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, fake, null, m, {
             type: 'image',
         })
-        await m.reply(mediaInfoCaption({ header: "Fake Dana", fields: [
-            { label: "Saldo", value: "Rp " + saldo }, { label: "Hasil", value: "Gambar" },
-        ] }));
     } catch (error) {
         m.reply(raraWrap("fakedana", te(m.prefix, m.command, m.pushName), "error"))
     }

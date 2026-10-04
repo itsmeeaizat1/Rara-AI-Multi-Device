@@ -4,7 +4,6 @@ import path from "path";
 import { pixa } from "../../src/scraper/removebackground.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "nobg",
@@ -73,12 +72,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m }
     );
-    await m.reply(mediaInfoCaption({ header: "Remove Background", fields: [
-      { label: "Input", value: "Foto" },
-
-      { label: "Hasil", value: "Gambar tanpa latar" },
-      { label: "Ukuran", value: (resultBuffer.length / 1024).toFixed(1) + " KB" },
-    ] }));
   } catch (err) {
     console.error("nobg error:", err);
     await m.react("❌");

@@ -80,7 +80,8 @@ async function handler(m, { sock }) {
     if (!reply) throw new Error("balasan AI kosong");
 
     await m.react("🐣");
-    return m.reply(reply.trim());
+    const src = engine !== "sensenova" ? `\n\n⚙️ Engine: ${engine}` : "";
+    return m.reply(reply.trim() + src);
   } catch (err) {
     console.error("aisensenova error:", err);
     await m.react("❌");

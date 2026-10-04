@@ -5,7 +5,6 @@ import FormData from 'form-data'
 import * as cheerio from 'cheerio'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const EFFECT_URLS = {
     glitchtext: 'https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html',
     writetext: 'https://en.ephoto360.com/write-text-on-wet-glass-online-589.html',
@@ -144,10 +143,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, imageUrl, null, m, {
             type: 'image'
         })
-        await m.reply(mediaInfoCaption({ header: "Ephoto360", fields: [
-            { label: "Efek", value: command }, { label: "Teks", value: text.slice(0, 60) },
-            { label: "Hasil", value: "Gambar" },
-        ] }));
     } catch (error) {
         await m.react("❌");
         m.reply(raraWrap("ephoto", te(m.prefix, m.command, m.pushName), "error"))

@@ -3,7 +3,6 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
-import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
   name: "apkmod-get",
   alias: ["apkmod-get", "apkmod"],
@@ -62,8 +61,6 @@ async function handler(m, { sock }) {
         },
         { quoted: m },
       );
-      const info = mediaResultCard({ header: "APKMod", title: file.filename || app.name, type: "aplikasi", ext: "apk", ...(await probeMedia(file.url?.trim())) });
-      if (info) await m.reply(info);
     } else {
       let caption = `⚠️ Download URL tidak tersedia`;
       await sock.sendMessage(

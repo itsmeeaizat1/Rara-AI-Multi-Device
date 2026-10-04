@@ -3,7 +3,6 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "flux2pro",
@@ -77,12 +76,6 @@ async function handler(m, { sock }) {
         image: { url: data.result.result_url },
         caption: raraWrap("Flux2Pro", `Prompt: ${text}`),
       }, { quoted: m });
-      await m.reply(mediaInfoCaption({ header: "Rara Flux 2 Pro", fields: [
-        { label: "Input", value: "Teks / Foto" },
-        { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
-
-        { label: "Hasil", value: "Gambar" },
-      ] }));
     } else if (data?.status && data?.result) {
       // Some responses might have different structure
       const resultUrl = typeof data.result === "string" ? data.result : data.result?.url || data.result?.result_url;

@@ -132,12 +132,12 @@ async function handler(m, { sock }) {
       await m.react("🧠");
       const r = await ffSearch(q);
       if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zff", `FF search bermasalah: ${r.error}`)); }
-      await m.reply(raraWrap("zff", `✅ FF SEARCH\n\n${cardSearch(r.results)}`));
+      await m.reply(raraWrap("zff", `✅ FF SEARCH (zelapi)\n\n${cardSearch(r.results)}`));
     } else if (action === "profile") {
       await m.react("🧠");
       const r = await ffProfile(args[0]);
       if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zff", `FF profile bermasalah: ${r.error}`)); }
-      await m.reply(raraWrap("zff", "✅ FF PROFILE\n\n" + cardProfile(r.profile)));
+      await m.reply(raraWrap("zff", "✅ FF PROFILE (zelapi)\n\n" + cardProfile(r.profile)));
     } else if (action === "stats") {
       const uid = args[0];
       const mode = (args[1] || "br").toLowerCase();
@@ -147,14 +147,14 @@ async function handler(m, { sock }) {
       if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zff", `FF stats bermasalah: ${r.error}`)); }
       const card = cardStats(mode, r.stats);
       if (!card) { await m.react("❌"); return m.reply(raraWrap("zff", "Stats-nya kosong buat mode ini — coba mode lain (br/cs)")); }
-      await m.reply(raraWrap("zff", `✅ FF STATS ${mode.toUpperCase()}\n\n${card}`));
+      await m.reply(raraWrap("zff", `✅ FF STATS ${mode.toUpperCase()} (zelapi)\n\n${card}`));
     } else if (action === "like") {
       const uid = args[0];
       const region = (args[1] || "SG").toUpperCase();
       await m.react("🧠");
       const r = await ffLike(uid, region);
       if (!r.ok) { await m.react("❌"); return m.reply(raraWrap("zff", `FF like bermasalah: ${r.error}`)); }
-      await m.reply(raraWrap("zff", `✅ LIKE TERKIRIM\n\n❤️ like dikirim ke uid ${r.uid} (region ${r.region})`));
+      await m.reply(raraWrap("zff", `✅ LIKE TERKIRIM (zelapi)\n\n❤️ like dikirim ke uid ${r.uid} (region ${r.region})`));
     }
     await m.react("🐣");
   } catch (e) {

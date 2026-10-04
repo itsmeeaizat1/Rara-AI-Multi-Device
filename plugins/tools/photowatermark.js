@@ -165,6 +165,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         caption: raraWrap("Photo Watermark", [
           "Text: " + wmText,
           "Posisi: " + position,
+          "Powered by sharp (local)",
         ], "info"),
       },
       { quoted: m }

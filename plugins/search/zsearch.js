@@ -34,7 +34,7 @@ const short = (s, n = 90) => { const t = String(s || "").replace(/\s+/g, " ").tr
 
 function usageCard() {
   return raraWrap("zsearch", [
-    "🔍 SEARCH SUITE:",
+    "🔍 SEARCH SUITE (zelapi):",
     "",
     "▸ .zapkmody <app> — cari APK mod",
     "▸ .zcookpad <masakan> — cari resep",

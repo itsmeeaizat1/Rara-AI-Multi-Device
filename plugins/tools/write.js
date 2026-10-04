@@ -9,7 +9,6 @@ import axios from "axios";
 import config from "../../config.js";
 import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
   name: "nulis",
   alias: ["nulis"],
@@ -102,12 +101,6 @@ async function handler(m, { sock }) {
       m,
       { type: "image", contextInfo: saluranCtx() },
     );
-    await m.reply(mediaInfoCaption({ header: "Tulisan Tangan", fields: [
-      { label: "Input", value: "Teks (" + text.length + " karakter)" },
-      { label: "Baris", value: lines.length },
-      { label: "Hasil", value: "Gambar JPEG" },
-      { label: "Ukuran", value: (buffer.length / 1024).toFixed(1) + " KB" },
-    ] }));
   } catch (error) {
     m.reply(raraWrap("nulis", te(m.prefix, m.command, m.pushName), "error"));
   }

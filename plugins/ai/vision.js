@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.react("🐣");
 
-    let msg = `Pertanyaan:\n"${prompt}"\n\nHasil Analisis:\n${result.text}`;
+    let msg = `Engine: ${result.engine}\n\nPertanyaan:\n"${prompt}"\n\nHasil Analisis:\n${result.text}`;
 
     return m.reply(msg);
   } catch (err) {

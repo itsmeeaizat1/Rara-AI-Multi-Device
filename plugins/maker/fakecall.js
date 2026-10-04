@@ -3,7 +3,6 @@
 import { raraReply } from "../../src/lib/rara-menu-style.js";
 import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
 import path from "path";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "fakecall",
@@ -153,9 +152,6 @@ async function handler(m, { sock }) {
 
     const pngBuffer = await generateFakeCall(nama, durasi, avatar);
     await sock.sendMedia(m.chat, pngBuffer, null, m, { type: "image" });
-    await m.reply(mediaInfoCaption({ header: "Fake Call", fields: [
-      { label: "Nama", value: nama }, { label: "Durasi", value: durasi }, { label: "Hasil", value: "Gambar" },
-    ] }));
     await m.react("\u{1F423}");
   } catch (err) {
     console.error("[fakecall] Error:", err.message);

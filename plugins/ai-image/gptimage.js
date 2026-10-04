@@ -3,7 +3,6 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "gptimage",
@@ -52,12 +51,6 @@ async function handler(m, { sock }) {
         image: Buffer.from(res.data),
         caption: raraWrap("GPT Image", `Prompt: ${text}`),
       }, { quoted: m });
-      await m.reply(mediaInfoCaption({ header: "Rara GPT Image", fields: [
-        { label: "Input", value: "Teks" },
-        { label: "Prompt", value: text.length > 60 ? text.slice(0, 57) + "..." : text },
-
-        { label: "Hasil", value: "Gambar" },
-      ] }));
     } else {
       // Maybe it returned JSON error
       try {

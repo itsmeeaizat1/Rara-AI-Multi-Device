@@ -9,7 +9,6 @@ import fs from "fs";
 import path from "path";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
   name: "fakestory",
   alias: ["fakestory"],
@@ -251,11 +250,6 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, resultBuffer, null, m, {
       type: "image",
     });
-    await m.reply(mediaInfoCaption({ header: "Fake Story", fields: [
-      { label: "Username", value: username },
-      { label: "Gambar", value: imageTopBuffer === imageBottomBuffer ? "1 (dipakai dua kali)" : "2 gambar berbeda" },
-      { label: "Hasil", value: "Gambar" },
-    ] }));
   } catch (error) {
     await m.react("❌");
     m.reply(raraWrap("fakestory", te(m.prefix, m.command, m.pushName), "error"));

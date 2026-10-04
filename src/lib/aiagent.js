@@ -147,7 +147,7 @@ export const TOOLS = {
       const img = await callImageGenChain(prompt, { ratio: a?.ratio || undefined });
       await conn.sendMessage(m.chat, {
         image: Buffer.from(img.base64, 'base64'),
-        caption: '🎨 ' + prompt.slice(0, 150) + (img.ratio && img.ratio !== '1:1' ? ' _(rasio: ' + img.ratio + ')_' : ''),
+        caption: '🎨 ' + prompt.slice(0, 150) + (img.via ? '\n_(engine: ' + img.via + ')_' : '') + (img.ratio && img.ratio !== '1:1' ? ' _(rasio: ' + img.ratio + ')_' : ''),
       }, { quoted: m });
     }
   },

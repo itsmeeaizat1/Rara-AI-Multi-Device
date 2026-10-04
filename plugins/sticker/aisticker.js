@@ -109,7 +109,7 @@ async function handler(m, { sock, args, config: botConfig }) {
       raraWrap("AI Sticker", [
         "✅ Sticker AI jadi!",
         `🎨 Prompt: ${cleanPrompt}`,
-        ...(hdNote ? [hdNote.replace(/[()]/g, "").trim()] : []),
+        `⚡ Engine: ${img.via || "nano-banana"}${hdNote}`,
       ].join("\n"))
     );
   } catch (e) {

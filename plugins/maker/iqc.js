@@ -3,7 +3,6 @@ import moment from "moment-timezone";
 import axios from "axios";
 import { createRequire } from "module";
 import { raraError, raraGuide } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "iqc",
@@ -131,10 +130,6 @@ async function handler(m, { sock }) {
     // Dikirim sebagai gambar biasa (bukan stiker) — hasilnya mockup screenshot
     // chat iPhone/Android yang portrait, akan gepeng/rusak kalau dipaksa jadi stiker 512x512
     await sock.sendMessage(m.chat, { image: buffer, caption }, { quoted: m });
-    await m.reply(mediaInfoCaption({ header: "IQC Chat", fields: [
-      { label: "Mode", value: mode }, { label: "Teks", value: text.slice(0, 60) },
-      { label: "Jam", value: time }, { label: "Hasil", value: "Gambar" },
-    ] }));
   } catch (error) {
     console.error("[IQC]", error.message);
     await m.react("❌");

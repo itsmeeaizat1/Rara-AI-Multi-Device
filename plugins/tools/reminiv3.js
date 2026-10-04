@@ -79,6 +79,7 @@ async function handler(m, { sock, args }) {
 
     const resultBuffer = Buffer.from(res.data);
     let caption = `HD V3 - Done\n`;
+    caption += `Engine: Pollinations AI (flux)\n`;
     caption += `Source: image.pollinations.ai\n`;
     if (enhance) caption += `Mode: enhance + upscale`;
 

@@ -11,7 +11,6 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { Canvas, loadImage, FontLibrary } from 'skia-canvas'
 import te from '../../src/lib/rara-error.js'
 import { fileURLToPath } from "url";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const _font1Path = fileURLToPath(new URL("../../assets/fonts/Fontspring-DEMO-ceraroundpro-medium.otf", import.meta.url));
 const _font2Path = fileURLToPath(new URL("../../assets/fonts/Roboto_Medium.ttf", import.meta.url));
@@ -76,9 +75,9 @@ async function handler(m, { sock }) {
         return m.reply(raraWrap("fakebankjago", [
             "Bikin screenshot chat fake bank ala Bank Jago.",
             "",
-            `📌 Format: ${m.prefix}fakebankjago <nama>,<nominal>`,
+            `📌 Format: ${m.prefix}fakebank <nama>,<nominal>`,
             "",
-            `💡 Contoh: ${m.prefix}fakebankjago Aizat,10000`,
+            `💡 Contoh: ${m.prefix}fakebank Aizat,10000`,
         ]))
     }
     if(isNaN(nominal)) { return m.reply(raraWrap("fakebankjago", "Nominal harus berupa angka kak.", "error")); }
@@ -96,10 +95,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, fake, null, m, {
             type: 'image',
         })
-        await m.reply(mediaInfoCaption({ header: "Fake Bank Jago", fields: [
-            { label: "Nama", value: nama.trim() }, { label: "Saldo", value: "Rp " + saldo },
-            { label: "Sapaan", value: "Selamat " + waktu }, { label: "Hasil", value: "Gambar" },
-        ] }));
     } catch (error) {
         await m.react("❌");
         m.reply(raraWrap("fakebankjago", te(m.prefix, m.command, m.pushName), "error"))

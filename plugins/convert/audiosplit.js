@@ -5,15 +5,6 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
-import { execFile } from "child_process";
-
-function probeDurationSec(file) {
-  return new Promise((resolve) => {
-    execFile("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file],
-      { timeout: 30000 }, (err, out) => resolve(err ? 0 : parseFloat(String(out).trim()) || 0));
-  });
-}
 
 const pluginConfig = {
   name: "audiosplit",
@@ -56,7 +47,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (startSec >= endSec) return m.reply(raraWrap("Info", "Start harus lebih kecil dari end!"));
 
       const duration = endSec - startSec;
-      const outputPath = path.join(tmpDir, `trimmed_${Date.now()}.ogg`);
+      const outputPath = path.join(tmpDir, `trimmed_${Date.now()}.mp3`);
       await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${startSec} -t ${duration} -c:a libopus -b:a 64k "${outputPath}"`);
 
       if (!fs.existsSync(outputPath)) return m.reply(raraGagal("AudioSplit"));
@@ -65,23 +56,21 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         audio: buf, mimetype: "audio/ogg; codecs=opus", ptt: false,
         caption: raraWrap("Audio Split", `Trimmed: ${start} - ${end} (${duration} detik)`),
       });
-      await m.reply(mediaInfoCaption({ header: "Audio Split", fields: [
-        { label: "Mode", value: "Trim" }, { label: "Rentang", value: `${start} - ${end}` },
-        { label: "Durasi", value: `${duration} detik` }, { label: "Ukuran", value: (buf.length / 1024).toFixed(1) + " KB" },
-      ] }));
       fs.unlinkSync(inputPath);
       fs.unlinkSync(outputPath);
     }
 
     else if (sub === "half") {
       const probePath = path.join(tmpDir, `probe_${Date.now()}.txt`);
-      // ffmpeg -i tanpa output selalu exit 1 (queueFFmpeg melempar) -> pakai ffprobe (exit 0)
-      const totalSec = Math.floor(await probeDurationSec(inputPath));
-      if (!totalSec) return m.reply(raraGagal("AudioSplit"));
+      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" 2>"${probePath}"`);
+      const probe = fs.readFileSync(probePath, 'utf8');
+      const durMatch = probe.match(/Duration:\s(\d{2}):(\d{2}):(\d{2})/);
+      if (!durMatch) return m.reply(raraGagal("AudioSplit"));
+      const totalSec = parseInt(durMatch[1]) * 3600 + parseInt(durMatch[2]) * 60 + parseInt(durMatch[3]);
       const halfSec = Math.floor(totalSec / 2);
 
-      const out1 = path.join(tmpDir, `split1_${Date.now()}.ogg`);
-      const out2 = path.join(tmpDir, `split2_${Date.now()}.ogg`);
+      const out1 = path.join(tmpDir, `split1_${Date.now()}.mp3`);
+      const out2 = path.join(tmpDir, `split2_${Date.now()}.mp3`);
 
       await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -t ${halfSec} -c:a libopus -b:a 64k "${out1}"`);
       await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${halfSec} -c:a libopus -b:a 64k "${out2}"`);
@@ -95,10 +84,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           audio: fs.readFileSync(out2), mimetype: "audio/ogg; codecs=opus", ptt: false,
           caption: raraWrap("Audio Split", `Bagian 2 (${halfSec} - ${totalSec} detik)`),
         });
-        await m.reply(mediaInfoCaption({ header: "Audio Split", fields: [
-          { label: "Mode", value: "Half (2 bagian)" }, { label: "Bagian 1", value: `0 - ${halfSec} detik` },
-          { label: "Bagian 2", value: `${halfSec} - ${totalSec} detik` },
-        ] }));
         fs.unlinkSync(out1);
         fs.unlinkSync(out2);
       } else {
@@ -115,24 +100,22 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
 
       const probePath = path.join(tmpDir, `probe_${Date.now()}.txt`);
-      // ffmpeg -i tanpa output selalu exit 1 (queueFFmpeg melempar) -> pakai ffprobe (exit 0)
-      const totalSec = Math.floor(await probeDurationSec(inputPath));
-      if (!totalSec) return m.reply(raraGagal("AudioSplit"));
+      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" 2>"${probePath}"`);
+      const probe = fs.readFileSync(probePath, 'utf8');
+      const durMatch = probe.match(/Duration:\s(\d{2}):(\d{2}):(\d{2})/);
+      if (!durMatch) return m.reply(raraGagal("AudioSplit"));
+      const totalSec = parseInt(durMatch[1]) * 3600 + parseInt(durMatch[2]) * 60 + parseInt(durMatch[3]);
       const partDur = Math.floor(totalSec / parts);
 
       for (let i = 0; i < parts; i++) {
         const start = i * partDur;
-        const outPath = path.join(tmpDir, `part${i + 1}_${Date.now()}.ogg`);
+        const outPath = path.join(tmpDir, `part${i + 1}_${Date.now()}.mp3`);
         await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${start} -t ${partDur} -c:a libopus -b:a 64k "${outPath}"`);
         if (fs.existsSync(outPath)) {
           await conn.sendMessage(m.key.remoteJid, {
             audio: fs.readFileSync(outPath), mimetype: "audio/ogg; codecs=opus", ptt: false,
             caption: raraWrap("Audio Split", `Part ${i + 1}/${parts} (${start} - ${start + partDur} detik)`),
           });
-          await m.reply(mediaInfoCaption({ header: "Audio Split", fields: [
-            { label: "Mode", value: "Parts" }, { label: "Bagian", value: `${i + 1}/${parts}` },
-            { label: "Rentang", value: `${start} - ${start + partDur} detik` },
-          ] }));
           fs.unlinkSync(outPath);
         }
       }

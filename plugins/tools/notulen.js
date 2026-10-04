@@ -2,7 +2,6 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const NOTULEN_PROMPT = `Kamu adalah asisten notulen meeting profesional. Susun ulang catatan meeting kasar menjadi notulen yang rapi dan terstruktur.
 
@@ -103,8 +102,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   try {
     await m.react("🕒");
-    const aiRes = await UnlimitedAI(NOTULEN_PROMPT.replace("__INPUT__", input), "rara-ai");
-    const result = aiRes && aiRes.status ? String(aiRes.answer || "") : "";
+    const result = await UnlimitedAI(NOTULEN_PROMPT.replace("__INPUT__", input), "rara-ai");
 
     if (!result || result.trim().length < 20) {
       return m.reply(raraWrap("Notulen", "❌ Gagal generate notulen. Coba dengan catatan yang lebih lengkap."));
@@ -126,12 +124,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       mimetype: "application/pdf",
       fileName: `notulen_${Date.now()}.pdf`,
     }, { quoted: m });
-    await m.reply(mediaInfoCaption({ header: "Notulen", fields: [
-      { label: "Input", value: input.trim().slice(0, 60) + (input.trim().length > 60 ? "..." : "") },
-
-      { label: "Hasil", value: "Dokumen PDF" },
-      { label: "Ukuran", value: (pdfBuffer.length / 1024).toFixed(1) + " KB" },
-    ] }));
   } catch (error) {
     await m.react("❌");
     console.error("notulen error:", error);

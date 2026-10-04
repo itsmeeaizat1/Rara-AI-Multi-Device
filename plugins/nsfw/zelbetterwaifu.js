@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
       try {
         const buf = await getBuf(u);
         if (!buf || buf.length < 1000) continue;
-        await sendImage(sock, m.chat, buf, "", { quoted: m });
+        await sendImage(sock, m.chat, buf, "_(engine: zelapi betterwaifu)_", { quoted: m });
         sent++;
       } catch {}
     }

@@ -78,7 +78,8 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     const caption = `✅ *to real*
 
- Image enhanced to realistic`;
+ Image enhanced to realistic
+Engine: nexray AI`;
     return await sock.sendMessage(m.chat, { image: result.buffer, caption });
   } catch (err) {
     console.error("toreal error:", err);

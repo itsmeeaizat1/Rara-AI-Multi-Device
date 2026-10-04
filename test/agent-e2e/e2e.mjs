@@ -742,8 +742,8 @@ w("\n— plugin: no-arg → usage —");
   };
   await agHandler(m, { sock: {} });
   const u = sent[0] || "";
-  check("header ✧ agent ✧ (desain V2 — teks biasa 1 Okt)", u.toLowerCase().includes("୨୧ ✧ agent ✧ ୨୧"));
-  check("kaomoji + baris contoh 📍 (desain V2 — teks biasa 1 Okt)", /\(๑ᵔ⤙ᵔ๑\)♡/.test(u) && u.toLowerCase().includes("contoh"));
+  check("header 「 ✦ AGENT ✦ 」 (desain lama revisi owner 3 Okt)", u.includes("「 ✦ AGENT ✦ 」"));
+  check("tanpa kaomoji + ada blok Contoh (desain lama revisi owner 3 Okt)", !/\(๑ᵔ⤙ᵔ๑\)♡/.test(u) && u.toLowerCase().includes("contoh"));
   check("contoh verbatim", u.includes(".agent <tugas apa pun>"));
   check("pluginConfig benar", agConfig.name === "aisuperagent" && agConfig.category === "ai agent" && agConfig.isEnabled); // kategori ai agent 25 Sep
 }

@@ -2,7 +2,6 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import mammoth from "mammoth";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 function wrapText(text, font, size, maxWidth) {
   const words = text.split(" ");
@@ -147,11 +146,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       mimetype: "application/pdf",
       fileName: filename,
     }, { quoted: m });
-    await m.reply(mediaInfoCaption({ header: "Word ke PDF", fields: [
-      { label: "Input", value: "Dokumen Word (" + (buffer.length / 1024).toFixed(1) + " KB)" },
-      { label: "Hasil", value: "Dokumen PDF" },
-      { label: "Ukuran", value: (pdfBuffer.length / 1024).toFixed(1) + " KB" },
-    ] }));
 
     // Text preview
     let preview = textPreview.trim();

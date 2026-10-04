@@ -303,6 +303,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       return m.reply(raraWrap("Photo Tools", "Gagal processing. Coba gambar lain.", "warn"));
     }
 
+    caption += "\nPowered by sharp (local, no API)";
+
     await conn.sendMessage(
       m.key.remoteJid,
       { image: result, caption: raraWrap("Photo Tools", caption, "info") },

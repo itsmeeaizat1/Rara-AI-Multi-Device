@@ -1,10 +1,10 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
+import FormData from "form-data";
 import fetch from "node-fetch";
+import mime from "mime-types";
 import { downloadMediaMessage, getContentType } from "rara";
 import te from "../../src/lib/rara-error.js";
-import { uploadToCatbox } from "../../src/lib/rara-uploader.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "gura",
@@ -21,6 +21,27 @@ const pluginConfig = {
   energi: 1,
   isEnabled: true,
 };
+
+async function uploadToCatbox(buffer, filename = "file.jpg") {
+  const form = new FormData();
+  form.append("reqtype", "fileupload");
+  form.append("fileToUpload", buffer, {
+    filename,
+    contentType: mime.lookup(filename) || "image/jpeg",
+  });
+
+  const res = await fetch("https://catbox.moe/user/api.php", {
+    method: "POST",
+    body: form,
+    headers: form.getHeaders(),
+    timeout: 30000,
+  });
+
+  if (!res.ok) throw new Error("Catbox gagal");
+  const url = await res.text();
+  if (!url.startsWith("http")) throw new Error("Invalid response");
+  return url;
+}
 
 async function handler(m, { sock }) {
   let media = null;
@@ -52,11 +73,7 @@ async function handler(m, { sock }) {
     const buffer = Buffer.from(await res.arrayBuffer());
 
     await m.react("🐣");
-    await sock.sendMessage(m.chat, { image: buffer }, { quoted: m });
-    await m.reply(mediaInfoCaption({ header: "Gura", fields: [
-      { label: "Efek", value: "Gura Canvas" }, { label: "Hasil", value: "Gambar" },
-      { label: "Ukuran", value: (buffer.length / 1024).toFixed(1) + " KB" },
-    ] }));
+    await sock.sendMessage(m.chat, { image: buffer, caption: "🦈 *RAWWRR! Gura is here!*" }, { quoted: m });
   } catch (err) {
     await m.react("❌");
     m.reply(raraWrap("gura", te(m.prefix, m.command, m.pushName), "error"));

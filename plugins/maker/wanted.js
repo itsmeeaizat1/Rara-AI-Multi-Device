@@ -7,7 +7,6 @@
 // desaturasi sepia + judul "WANTED" + "DEAD OR ALIVE" + reward acak.
 import { createCanvas, loadImage } from "@napi-rs/canvas";
 import { raraError, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "wanted",
@@ -142,11 +141,10 @@ async function handler(m, { sock }) {
     const poster = await generateWantedPoster(buffer);
     await m.react("🐣");
 
-    await sock.sendMessage(m.chat, { image: poster }, { quoted: m });
-    await m.reply(mediaInfoCaption({ header: "Wanted Poster", fields: [
-      { label: "Gaya", value: "Poster buronan" }, { label: "Hasil", value: "Gambar" },
-      { label: "Ukuran", value: (poster.length / 1024).toFixed(1) + " KB" },
-    ] }));
+    await sock.sendMessage(m.chat, {
+      image: poster,
+      caption: raraWrap("wanted", "🤠 *WANTED POSTER JADI!*"),
+    }, { quoted: m });
   } catch (error) {
     console.error("[wanted]", error.message);
     await m.react("❌");

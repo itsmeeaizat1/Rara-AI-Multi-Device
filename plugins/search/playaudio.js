@@ -11,7 +11,6 @@ import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio } from "../../src/scraper/rara-ytdlp.js";
 import config from "../../config.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
-import { mediaResultCard } from "../../src/lib/rara-media-result.js";
 
 const CUKI_APIKEY = config.APIkey?.cuki || "cuki-x";
 
@@ -130,9 +129,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-    const info = mediaResultCard({ header: "Play Audio", title: audioResult.title, type: "audio", ext: "mp3",
-      size: audioResult.buffer.length, bitrate: Number(quality) || undefined });
-    if (info) await m.reply(info);
   } catch (err) {
     console.error("[PlayAudio]", err);
     m.reply(

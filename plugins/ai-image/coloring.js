@@ -3,7 +3,6 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "mewarnai",
@@ -61,11 +60,6 @@ async function handler(m, { sock }) {
         image: { url: resultUrl },
         caption: raraWrap("Mewarnai", "Berhasil: Warnai foto sketsa otomatis"),
       }, { quoted: m });
-      await m.reply(mediaInfoCaption({ header: "Rara Mewarnai AI", fields: [
-        { label: "Input", value: "Foto Sketsa" },
-
-        { label: "Hasil", value: "Gambar Berwarna" },
-      ] }));
     } else {
       await m.react("❌");
       await m.reply(raraWrap("Mewarnai", data?.error?.message || data?.error || data?.message || "Gagal memproses. Coba foto lain."));

@@ -1,3 +1,13 @@
+## 4 Okt 2026 — revert/media-field-full: revert sistem kartu info media ke state pra-field
+
+Baterai penuh (semua hijau): plugins-import 11/11 · formatguard 22/22 · menu-layout 4/4 · react-loading 32/32 · media-info 67/67 · agent 116/116 · remini-ffmpeg 58/58 · remini-download 48/48 · usage-unified 36/36 · dl-usage 18/18 · raraguide-v2 28/28 · ai-usage 21/21 · ai-set 25/25 · speedtest 29/29 · index-panel 73/73 · rara-dashboard 55/55 · router9 11/11.
+
+Catatan penting:
+- Base revert = `23458c67` (komit tepat sebelum field pertama `cb84bb83`), BUKAN `427e544b` — base pertama masih memuat desain cute, design-revert owner datang di antara keduanya.
+- `raraSalahV2` + GUARD LEBAR wrap diport dari main karena revisi desain owner 3 Okt (bukan bagian sistem field).
+- 2 asersi agent-e2e basi (harap desain V2 cute) — terverifikasi gagal juga di checkout main murni; disejajarkan ke desain 3 Okt.
+- Binari skia/sharp di test-merge-all sempat rusak (rsync partial) — dipulihkan dari nova-repo.
+
 # TEST-REPORT.md — Nova AI WhatsApp Bot v24.1.0
 
 Hasil uji fitur di sandbox. Tanggal: 2026-09-24.

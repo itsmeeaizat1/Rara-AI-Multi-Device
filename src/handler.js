@@ -1339,8 +1339,8 @@ try {
     // Multi-language (fix 18 Sep 2026): sock dibungkus translate-aware supaya
     // jalur sock.sendMessage LANGSUNG (menu tombol, caption media, hasil
     // fitur yang gak lewat m.reply) ikut ke-translate ke bahasa user.
-    // Info field media DITANAM DI MASING-MASING PLUGIN (owner 3 Okt 2026: bukan gate pusat) — plugin yang tahu persis
-    // hasilnya menyusun kartunya sendiri lewat mediaInfoCaption; handler tidak menebak / menambah kartu apa pun.
+    // REVERT 4 Okt 2026: kartu field media dimatikan total (owner minta kembali ke versi pra-field;
+    // pemasangan ulang utk fitur non-menu menyusul setelah bot dipastikan sehat). Tanpa pembungkus media.
     const dispatchSock = makeLangAwareSock(sock, m.sender);
     try {
       await plugin.handler(m, { sock: dispatchSock, conn: dispatchSock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000, isJadibot: !!jadibotCtx.isJadibot, jadibotId: jadibotCtx.jadibotId || null });

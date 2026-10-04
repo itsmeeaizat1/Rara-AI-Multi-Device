@@ -8,7 +8,6 @@ import * as _canvas from '@napi-rs/canvas'
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
   name: "fakestory2",
   alias: ["fakestory2"],
@@ -210,9 +209,6 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, resultBuffer, null, m, {
       type: "image",
     });
-    await m.reply(mediaInfoCaption({ header: "Fake Story 2", fields: [
-      { label: "Username", value: username }, { label: "Gambar", value: "1" }, { label: "Hasil", value: "Gambar" },
-    ] }));
   } catch (error) {
     await m.react("❌");
     m.reply(raraWrap("fakestory2", te(m.prefix, m.command, m.pushName), "error"));

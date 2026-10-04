@@ -11,7 +11,6 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   inworldSynthesize, inworldListVoices, resolveDefaultVoice, inworldTranscribe, getInworldKey,
 } from "../../src/lib/rara-inworld.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "inworldtts",
@@ -31,18 +30,8 @@ const pluginConfig = {
 
 const MAX_TEXT = 2000;
 
-async function sendVn(m, sock, buffer, mimetype = "audio/mpeg", info = null) {
+async function sendVn(m, sock, buffer, mimetype = "audio/mpeg") {
   await sock.sendMessage(m.chat, { audio: buffer, mimetype, ptt: true }, { quoted: m });
-  if (info) {
-    await m.reply(mediaInfoCaption({ header: "Text to Speech", fields: [
-      { label: "Input", value: "Teks (" + info.chars + " karakter)" },
-      { label: "Mode", value: info.mode },
-      { label: "Suara", value: info.voice },
-
-      { label: "Hasil", value: "Voice note" },
-      { label: "Ukuran", value: (buffer.length / 1024).toFixed(1) + " KB" },
-    ] }));
-  }
 }
 
 async function handler(m, { sock }) {
@@ -118,7 +107,7 @@ async function handler(m, { sock }) {
       const teks = rest.join("|").trim().slice(0, MAX_TEXT);
       if (!teks) return m.reply(raraWrap("Inworld AI", "Teksnya kosong."));
       const res = await inworldSynthesize({ text: teks, designPrompt: String(desc).trim() });
-      await sendVn(m, sock, res.buffer, "audio/mpeg", { chars: teks.length, mode: "Desain suara", voice: String(desc).trim().slice(0, 60) });
+      await sendVn(m, sock, res.buffer);
       return;
     }
 
@@ -148,7 +137,7 @@ async function handler(m, { sock }) {
     teks = teks.slice(0, MAX_TEXT);
     if (!voiceId) voiceId = await resolveDefaultVoice();
     const res = await inworldSynthesize({ text: teks, voiceId });
-    await sendVn(m, sock, res.buffer, "audio/mpeg", { chars: teks.length, mode: "TTS standar", voice: voiceId });
+    await sendVn(m, sock, res.buffer);
   } catch (e) {
     m.reply(raraWrap("Inworld AI", String(e?.message || e), "error"));
   }

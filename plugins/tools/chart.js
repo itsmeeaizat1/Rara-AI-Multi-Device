@@ -9,7 +9,6 @@ import { createCanvas } from "@napi-rs/canvas";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getLeaderboard, formatRp } from "../../src/lib/rara-rpg-service.js";
 import te from "../../src/lib/rara-error.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "chart",
@@ -234,13 +233,6 @@ async function handler(m, { sock }) {
         money: type === "cash",
       });
       await sock.sendMedia(m.chat, png, null, m, { type: "image" });
-      await m.reply(mediaInfoCaption({ header: "Chart", fields: [
-        { label: "Mode", value: "Leaderboard RPG" },
-        { label: "Data", value: RPG_LABELS[type] },
-        { label: "Jumlah data", value: players.length },
-        { label: "Hasil", value: "Gambar PNG" },
-        { label: "Ukuran", value: (png.length / 1024).toFixed(1) + " KB" },
-      ] }));
       await m.react("🐣");
       return;
     }
@@ -290,13 +282,6 @@ async function handler(m, { sock }) {
       items: values.map((v, i) => ({ label: labels[i] || `#${i + 1}`, value: v })),
     });
     await sock.sendMedia(m.chat, png, null, m, { type: "image" });
-    await m.reply(mediaInfoCaption({ header: "Chart", fields: [
-      { label: "Mode", value: "Data custom" },
-      { label: "Jumlah data", value: values.length },
-      { label: "Nilai", value: values.join(", ").slice(0, 60) },
-      { label: "Hasil", value: "Gambar PNG" },
-      { label: "Ukuran", value: (png.length / 1024).toFixed(1) + " KB" },
-    ] }));
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");

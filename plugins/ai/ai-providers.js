@@ -273,7 +273,7 @@ async function handler(m, { sock, config, db, args, text }) {
         try { await m.react("🐣"); } catch {}
         await sock.sendMessage(m.chat, {
           image: Buffer.from(img.base64, "base64"),
-          caption: "🎨 " + cleanPrompt.slice(0, 150),
+          caption: "🎨 " + cleanPrompt.slice(0, 150) + (img.via && img.via !== providerKey ? "\n_(engine: " + img.via + ")_" : ""),
         }, { quoted: m });
         return { handled: true };
       } catch (e) {

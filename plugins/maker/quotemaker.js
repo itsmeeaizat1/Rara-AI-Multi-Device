@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { raraWrap, raraBerhasil } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -20,7 +20,6 @@ const pluginConfig = {
   example: ".quotemaker Hidup itu singkat, jadi buatlah berarti | Aizat | dark",
   isGroupOnly: false,
 };
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const BG_PRESETS = {
   dark:    { c1: '#0f0f1a', c2: '#1a1a2e', text: '#ffffff', accent: '#64ffda' },
@@ -124,10 +123,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     fs.writeFileSync(outPath, buf);
 
     await m.react("🐣");
-    await conn.sendMessage(m.key.remoteJid, { image: buf });
-    await m.reply(mediaInfoCaption({ header: "Quote Maker", fields: [
-      { label: "Penulis", value: author || "-" }, { label: "Latar", value: bgName }, { label: "Hasil", value: "Gambar PNG" },
-    ] }));
+    await conn.sendMessage(m.key.remoteJid, {
+      image: buf,
+      caption: raraBerhasil(),
+    });
 
     fs.unlinkSync(outPath);
   } catch (e) {

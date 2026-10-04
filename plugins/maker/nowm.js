@@ -294,7 +294,7 @@ async function handler(m, { sock }) {
       m.chat,
       {
         image: resultBuffer,
-        caption: raraBerhasil(),
+        caption: raraBerhasil() + "\nEngine: " + (usedApi ? "ClipDrop AI" : "Local"),
       },
       { quoted: m },
     );

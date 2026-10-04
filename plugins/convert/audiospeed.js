@@ -5,7 +5,6 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "audiospeed",
@@ -71,12 +70,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "Filter: " + filter,
       ].join("\n")),
     });
-    await m.reply(mediaInfoCaption({ header: "Audio Speed", fields: [
-      { label: "Kecepatan", value: descSpeed },
-      { label: "Filter", value: filter },
-      { label: "Hasil", value: "Audio OGG Opus" },
-      { label: "Ukuran", value: (buf.length / 1024).toFixed(1) + " KB" },
-    ] }));
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);

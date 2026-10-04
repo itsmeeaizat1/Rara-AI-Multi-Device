@@ -7,7 +7,6 @@
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
 import { isChoiceAllowed } from "../../src/lib/rara-aio2-session.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "aio2dl",
@@ -47,11 +46,6 @@ async function handler(m, { sock }) {
       mimetype: mime,
       fileName: `AIO2-${Date.now()}.${ext}`,
     }, { quoted: m });
-    await m.reply(mediaInfoCaption({ header: "AIO Downloader", fields: [
-      { label: "Format", value: ext.toUpperCase() },
-      { label: "Hasil", value: "Dokumen" },
-      { label: "Ukuran", value: (buf.length / 1024 / 1024).toFixed(2) + " MB" },
-    ] }));
     await m.react("🐣");
     return { handled: true };
   } catch (e) {

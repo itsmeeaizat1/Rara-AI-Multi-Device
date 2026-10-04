@@ -4,7 +4,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
-import { imageInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -83,10 +82,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     await sock.sendMessage(m.chat, {
       image: fs.readFileSync(filePath),
+      caption: "Status: *berhasil*",
     }, { quoted: m });
 
     const text =
-      (await imageInfoCaption({ header: "Loli", buffer })) +
+      raraWrap("Foto", ["Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}loli untuk hasil lain`) +
       "\n" +

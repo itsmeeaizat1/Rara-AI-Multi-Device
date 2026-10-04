@@ -5,7 +5,6 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "audiovol",
@@ -75,12 +74,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         percent > 200 ? "Limiter: aktif (anti clipping)" : "Limiter: tidak aktif",
       ].join("\n")),
     });
-    await m.reply(mediaInfoCaption({ header: "Audio Volume", fields: [
-      { label: "Volume", value: descVol },
-      { label: "Limiter", value: percent > 200 ? "Aktif" : "Tidak aktif" },
-      { label: "Hasil", value: "Audio OGG Opus" },
-      { label: "Ukuran", value: (buf.length / 1024).toFixed(1) + " KB" },
-    ] }));
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
