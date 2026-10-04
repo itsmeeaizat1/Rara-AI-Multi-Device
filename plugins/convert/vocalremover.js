@@ -2,7 +2,7 @@
 import { separateStems } from "../../src/lib/rara-stemsplit.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "vocalremover",
@@ -40,20 +40,28 @@ async function handler(m, { sock, command }) {
 
     const fileName = isVocalRemover ? "instrumental.mp3" : "vocal.mp3";
 
-    // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-    const caption = mediaInfoCaption({ header: "Rara Vocal Remover", fields: [
-      { icon: "📥", label: "Input", value: "Audio" },
-      { icon: "🎛️", label: "Mode", value: isVocalRemover ? "Instrumental (tanpa vocal)" : "Vocal saja (tanpa instrumental)" },
-      { icon: "⚙️", label: "Engine", value: "StemSplit REST API" },
-      { icon: "⬇️", label: "Hasil", value: "Audio MP3" },
-    ] });
-
     await sock.sendMessage(m.chat, {
       audio: { url: resultUrl },
       mimetype: "audio/mpeg",
       fileName: fileName,
-      caption: caption,
     }, { quoted: m });
+
+    try {
+      const info = await probeMedia(resultUrl);
+      const card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "audio",
+        request: [
+          ["Input", "Audio"],
+          ["Mode", isVocalRemover ? "Instrumental" : "Vocal"],
+          ["Engine", "StemSplit REST API"],
+        ],
+        size: info.size,
+        mime: info.mime || "audio/mpeg",
+        duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
   } catch (e) {
     console.error("vocalremover error:", e.message);
     await m.react("❌");

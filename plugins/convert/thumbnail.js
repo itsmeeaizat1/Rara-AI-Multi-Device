@@ -13,6 +13,7 @@ import os from "os";
 import { exec } from "child_process";
 import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
 import { raraError, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "thumbnail",
@@ -127,7 +128,26 @@ async function handler(m, { sock, args }) {
         `📐 resolusi : 480px`,
       ].join("\n");
 
-      await sock.sendMessage(m.chat, { video: clipBuf, caption: cap }, { quoted: m });
+      let card = "";
+      try {
+        const info = await probeBuffer(clipBuf, { mime: "video/mp4" });
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "video",
+          request: [
+            ["Mode", "Animated Clip"],
+            ["Mulai", `${clipStart.toFixed(1)}s`],
+            ["Durasi Clip", `${clipLen.toFixed(1)}s`],
+          ],
+          size: info.size,
+          mime: info.mime || "video/mp4",
+          width: info.width,
+          height: info.height,
+          duration: info.duration || clipLen,
+        });
+      } catch { /* best-effort */ }
+
+      await sock.sendMessage(m.chat, { video: clipBuf, caption: card || cap }, { quoted: m });
       await m.react("🐣");
       return;
     }
@@ -163,7 +183,24 @@ async function handler(m, { sock, args }) {
       `📐 resolusi : 320px`,
     ].join("\n");
 
-    await sock.sendMessage(m.chat, { image: thumbBuf, caption: cap }, { quoted: m });
+    let card = "";
+    try {
+      const info = await probeBuffer(thumbBuf, { mime: "image/jpeg" });
+      card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "foto",
+        request: [
+          ["Mode", "Frame Statis"],
+          ["Detik", `${time.toFixed(1)}s`],
+        ],
+        size: info.size,
+        mime: info.mime || "image/jpeg",
+        width: info.width,
+        height: info.height,
+      });
+    } catch { /* best-effort */ }
+
+    await sock.sendMessage(m.chat, { image: thumbBuf, caption: card || cap }, { quoted: m });
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");

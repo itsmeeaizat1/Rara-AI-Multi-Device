@@ -6,6 +6,7 @@ import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "bratvideo",
@@ -36,7 +37,7 @@ async function handler(m, { sock, text }) {
 
     const urlOrBuffer = await bratVid(text, { outputFormat: "mp4" });
     
-    // bratVid returns URL — download actual buffer
+    // bratVid returns URL - download actual buffer
     let buffer
     if (Buffer.isBuffer(urlOrBuffer)) {
       buffer = urlOrBuffer
@@ -52,6 +53,17 @@ async function handler(m, { sock, text }) {
     fs.writeFileSync(outputPath, buffer);
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeMedia("file://" + outputPath);
+      card = mediaResultCard({
+        header: "bratvideo",
+        type: "video",
+        request: [["Teks", text]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height, duration: info.duration,
+      });
+    } catch { /* best-effort */ }
+
     await sock.sendVideoAsSticker(m.chat, outputPath, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
@@ -60,7 +72,11 @@ async function handler(m, { sock, text }) {
     setTimeout(() => {
       try { if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath); } catch {}
     }, 5000);
-    await m.reply(raraBerhasil("bratvideo"));
+    if (card) {
+      await m.reply(card);
+    } else {
+      await m.reply(raraBerhasil("bratvideo"));
+    }
   } catch (e) {
     console.error("[bratvideo] error:", e.message);
     await m.react("❌");

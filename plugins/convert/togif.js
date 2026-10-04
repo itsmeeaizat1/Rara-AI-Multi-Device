@@ -4,7 +4,7 @@ import path from "path";
 import os from "os";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
-import { mediaInfoCaption, fmtBytes } from "../../src/lib/rara-media-info.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "togif",
@@ -35,17 +35,24 @@ async function handler(m, { sock }) {
     try {
       await m.react("🐣");
       const inputKind = (quoted.type || quoted.mtype || "").includes("sticker") ? "Sticker" : "Video";
-      // format info hasil (request owner 19-20 Sep — field sesuai fitur)
+      let card = "";
+      try {
+        const info = await probeBuffer(mediaBuffer);
+        card = mediaResultCard({
+          header: "togif",
+          type: "gif",
+          request: [
+            ["Input", inputKind],
+            ["Output", "GIF"],
+          ],
+          size: info.size, mime: info.mime, width: info.width, height: info.height, duration: info.duration,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(m.chat, {
         video: mediaBuffer,
         mimetype: "video/mp4",
         gifPlayback: true,
-        caption: mediaInfoCaption({ header: "Rara To GIF", fields: [
-          { icon: "📥", label: "Input", value: inputKind },
-          { icon: "📤", label: "Output", value: "GIF" },
-          { icon: "📦", label: "Ukuran", value: fmtBytes(mediaBuffer.length) },
-          { icon: "⚙️", label: "Engine", value: "WA gifPlayback" },
-        ] }),
+        caption: card,
       }, { quoted: m });
     } catch (err) {
       // Jalur utama WA gifPlayback sudah tidak bergantung provider eksternal.

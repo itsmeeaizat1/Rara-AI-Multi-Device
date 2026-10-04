@@ -4,21 +4,22 @@ import { promisify } from "util";
 import fs from "fs";
 import path from "path";
 import os from "os";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const execAsync = promisify(exec);
 
 /**
  * plugins/convert/vid2gif.js
- * Command .vid2gif — Video to GIF Converter
+ * Command .vid2gif - Video to GIF Converter
  * Reply video, convert ke GIF dengan ukuran custom
  * Uses FFmpeg for conversion
  *
  * Options:
- * .vid2gif — default 10s, 480p, 15fps
- * .vid2gif 5 — 5 detik pertama
- * .vid2gif 720 — 720p resolution
- * .vid2gif 5 720 — 5 detik, 720p
- * .vid2gif 0 480 30 — full video, 480p, 30fps
+ * .vid2gif - default 10s, 480p, 15fps
+ * .vid2gif 5 - 5 detik pertama
+ * .vid2gif 720 - 720p resolution
+ * .vid2gif 5 720 - 5 detik, 720p
+ * .vid2gif 0 480 30 - full video, 480p, 30fps
  */
 
 const pluginConfig = {
@@ -71,11 +72,11 @@ async function handler(m, { sock, config: botConfig }) {
           "Convert video ke GIF dengan FFmpeg",
           "",
           "*opsi:*",
-          `${prefix}vid2gif — Default (10s, 480p, 15fps)`,
-          `${prefix}vid2gif 5 — 5 detik pertama`,
-          `${prefix}vid2gif 720 — Resolusi 720p`,
-          `${prefix}vid2gif 5 720 — 5 detik, 720p`,
-          `${prefix}vid2gif 0 480 30 — Full video, 480p, 30fps`,
+          `${prefix}vid2gif - Default (10s, 480p, 15fps)`,
+          `${prefix}vid2gif 5 - 5 detik pertama`,
+          `${prefix}vid2gif 720 - Resolusi 720p`,
+          `${prefix}vid2gif 5 720 - 5 detik, 720p`,
+          `${prefix}vid2gif 0 480 30 - Full video, 480p, 30fps`,
           "",
           "*parameter:*",
           "Detik: 0 = full video (max 30s)",
@@ -185,31 +186,61 @@ async function handler(m, { sock, config: botConfig }) {
     // Kirim sebagai dokumen (GIF lebih efisien sebagai file)
     if (gifSize > 5 * 1024 * 1024) {
       // Document mode untuk GIF besar
+      let card1 = "";
+      try {
+        const info = await probeBuffer(gifBuffer);
+        card1 = mediaResultCard({
+          header: "vid2gif",
+          type: "gif",
+          request: [
+            ["Durasi", durLabel],
+            ["Resolusi", `${resolution}p`],
+            ["FPS", String(fps)],
+          ],
+          size: info.size || gifSize, mime: "image/gif", width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(m.chat, {
         document: gifBuffer,
         fileName: "converted_" + Date.now() + ".gif",
         mimetype: "image/gif",
-        caption:
+        caption: card1 || (
           raraWrap("Video to GIF", [`Status: *berhasil*`,
             `Mode: *Dokumen (file besar)*`,
             `Durasi: *${durLabel}*`,
             `Resolusi: *${resolution}p*`,
             `FPS: *${fps}*`,
             `Ukuran: *${formatSize(gifSize)}*`].join("\n")) + "\n" +
-          tipText("GIF dikirim sebagai dokumen karena ukuran besar"),
+          tipText("GIF dikirim sebagai dokumen karena ukuran besar")
+        ),
       }, { quoted: m });
     } else {
       // Kirim sebagai video/GIF (WhatsApp render sebagai animated)
       await m.react("🐣");
+      let card2 = "";
+      try {
+        const info = await probeBuffer(gifBuffer);
+        card2 = mediaResultCard({
+          header: "vid2gif",
+          type: "gif",
+          request: [
+            ["Durasi", durLabel],
+            ["Resolusi", `${resolution}p`],
+            ["FPS", String(fps)],
+          ],
+          size: info.size || gifSize, mime: "video/mp4", width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
       await sock.sendMessage(m.chat, {
         video: gifBuffer,
-        caption:
+        caption: card2 || (
           raraWrap("Video to GIF", [`Status: *berhasil*`,
             `Durasi: *${durLabel}*`,
             `Resolusi: *${resolution}p*`,
             `FPS: *${fps}*`,
             `Ukuran: *${formatSize(gifSize)}*`].join("\n")) + "\n" +
-          tipText(`${prefix}vid2gif 5 720 — 5 detik 720p`),
+          tipText(`${prefix}vid2gif 5 720 - 5 detik 720p`)
+        ),
       }, { quoted: m, gifPlayback: true });
     }
 

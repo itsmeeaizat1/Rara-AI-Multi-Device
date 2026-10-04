@@ -6,6 +6,7 @@ import { getDatabase } from '../../src/lib/rara-database.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "audiomerge",
@@ -87,6 +88,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         ptt: false,
         caption: raraWrap("Audio Merge", `Berhasil merge ${data.queue.length} audio! Gap: ${data.gap} detik`),
       });
+      try {
+        const info = await probeBuffer(buffer, { mime: "audio/ogg" });
+        const card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "audio",
+          request: [["Total Audio", `${data.queue.length} file`], ["Jeda", `${data.gap} detik`]],
+          size: info.size, mime: info.mime, duration: info.duration,
+        });
+        if (card) await m.reply(card);
+      } catch { /* best-effort */ }
 
       fs.unlinkSync(outputPath);
       fs.unlinkSync(listPath);
@@ -136,7 +147,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       `5. ${usedPrefix}audiomerge remove <nomor> - Hapus dari queue`,
       `6. ${usedPrefix}audiomerge clear - Bersihkan queue`,
     ].join("\n")));
-      await m.reply(raraBerhasil("audiomerge"));
+      // Selesai
   } catch (e) {
     console.error("audiomerge error:", e);
     return m.reply(raraGangguan("audiomerge"));

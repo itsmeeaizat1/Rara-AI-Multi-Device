@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "tocase",
@@ -48,10 +49,26 @@ async function handler(m, { sock }) {
       const filepath = path.join(tmpDir, filename);
       fs.writeFileSync(filepath, result);
 
+      let card = "";
+      try {
+        const info = await probeBuffer(Buffer.from(result, "utf8"));
+        card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "dokumen",
+          request: [
+            ["Command", commands.join(", ")],
+            ["Panjang Teks", `${result.length} karakter`],
+          ],
+          size: info.size,
+          mime: "application/javascript",
+        });
+      } catch { /* best-effort */ }
+
       await sock.sendMessage(m.chat, {
         document: fs.readFileSync(filepath),
         mimetype: "application/javascript",
         fileName: filename,
+        caption: card || undefined,
       }, { quoted: m });
 
       try { fs.unlinkSync(filepath); } catch {}

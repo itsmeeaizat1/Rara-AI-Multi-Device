@@ -5,6 +5,7 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "audiosplit",
@@ -56,6 +57,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         audio: buf, mimetype: "audio/ogg; codecs=opus", ptt: false,
         caption: raraWrap("Audio Split", `Trimmed: ${start} - ${end} (${duration} detik)`),
       });
+      try {
+        const info = await probeBuffer(buf, { mime: "audio/ogg" });
+        const card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "audio",
+          request: [["Mode", "Trim"], ["Rentang", `${start} - ${end}`], ["Durasi", `${duration} detik`]],
+          size: info.size, mime: info.mime, duration: info.duration,
+        });
+        if (card) await m.reply(card);
+      } catch { /* best-effort */ }
       fs.unlinkSync(inputPath);
       fs.unlinkSync(outputPath);
     }
@@ -84,6 +95,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           audio: fs.readFileSync(out2), mimetype: "audio/ogg; codecs=opus", ptt: false,
           caption: raraWrap("Audio Split", `Bagian 2 (${halfSec} - ${totalSec} detik)`),
         });
+        try {
+          const info = await probeBuffer(buffer, { mime: "audio/ogg" });
+          const card = mediaResultCard({
+            header: pluginConfig.name,
+            type: "audio",
+            request: [["Mode", "Half (2 bagian)"], ["Total Durasi", `${totalSec} detik`]],
+            size: info.size, mime: info.mime, duration: info.duration,
+          });
+          if (card) await m.reply(card);
+        } catch { /* best-effort */ }
         fs.unlinkSync(out1);
         fs.unlinkSync(out2);
       } else {
@@ -119,6 +140,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           fs.unlinkSync(outPath);
         }
       }
+      try {
+        const info = await probeBuffer(buffer, { mime: "audio/ogg" });
+        const card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "audio",
+          request: [["Mode", `Parts (${parts} bagian)`], ["Total Durasi", `${totalSec} detik`]],
+          size: info.size, mime: info.mime, duration: info.duration,
+        });
+        if (card) await m.reply(card);
+      } catch { /* best-effort */ }
       fs.unlinkSync(inputPath);
       try { fs.unlinkSync(probePath); } catch (e) { console.error('[audiosplit.js]:', e.message); }
     }
@@ -137,7 +168,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         `Contoh: ${usedPrefix}audiosplit trim 00:05 00:15`,
       ].join("\n")));
     }
-      await m.reply(raraBerhasil("audiosplit"));
+      // Selesai
   } catch (e) {
     console.error("audiosplit error:", e);
     return m.reply(raraGangguan("audiosplit"));

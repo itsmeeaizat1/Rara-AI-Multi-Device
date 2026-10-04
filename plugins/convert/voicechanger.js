@@ -6,6 +6,7 @@ import fs from 'fs'
 import path from 'path'
 import os from 'os'
 import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "voicechanger",
@@ -400,6 +401,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           "AI Voice Conversion - Genshin Impact",
         ].join("\n")),
       });
+      try {
+        const info = await probeBuffer(outputBuf, { mime: "audio/ogg" });
+        const card = mediaResultCard({
+          header: pluginConfig.name,
+          type: "audio",
+          request: [["Karakter", char.name], ["Wilayah", char.region]],
+          size: info.size, mime: info.mime, duration: info.duration,
+        });
+        if (card) await m.reply(card);
+      } catch { /* best-effort */ }
 
       // Cleanup
       try {
@@ -493,7 +504,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await conn.sendMessage(m.key.remoteJid, { delete: { remoteJid: m.key.remoteJid, id: statusMsg.key.id, fromMe: true } });
     } catch (e) { console.error('[voicechanger.js]:', e.message); }
 
-      await m.reply(raraBerhasil("voicechanger"));
+    try {
+      const info = await probeBuffer(outputBuf, { mime: "audio/ogg" });
+      const card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "audio",
+        request: [["Model", input], ["Deskripsi", vm.desc]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
   } catch (e) {
     console.error("voicechanger error:", e.message);
     return m.reply(raraWrap("Voice Changer", "Error: " + e.message));

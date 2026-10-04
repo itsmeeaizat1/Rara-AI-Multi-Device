@@ -5,6 +5,7 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "audionormalize",
@@ -70,7 +71,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
-      await m.reply(raraBerhasil("audionormalize"));
+    try {
+      const info = await probeBuffer(buf, { mime: "audio/ogg" });
+      const card = mediaResultCard({
+        header: pluginConfig.name,
+        type: "audio",
+        request: [["Mode", mode], ["Deskripsi", MODES[mode].desc]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch { /* best-effort */ }
   } catch (e) {
     console.error("audionormalize error:", e);
     return m.reply(raraGangguan("audionormalize"));

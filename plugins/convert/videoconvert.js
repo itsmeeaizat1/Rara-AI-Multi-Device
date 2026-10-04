@@ -5,6 +5,7 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "videoconvert",
@@ -77,26 +78,44 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const buf = fs.readFileSync(outputPath);
     const isGif = format === "gif";
 
+    let card = "";
+    try {
+      const info = await probeBuffer(buf, { mime: fmt.mime });
+      card = mediaResultCard({
+        header: pluginConfig.name,
+        type: isGif ? "gif" : "video",
+        request: [
+          ["Format Target", format.toUpperCase()],
+          ["Codec", fmt.codec],
+        ],
+        size: info.size,
+        mime: info.mime || fmt.mime,
+        width: info.width,
+        height: info.height,
+        duration: info.duration,
+      });
+    } catch { /* best-effort */ }
+
     if (isGif) {
       await conn.sendMessage(m.key.remoteJid, {
         video: buf,
         gifPlayback: true,
-        caption: raraWrap("Video Convert", [
+        caption: (card || raraWrap("Video Convert", [
           "Berhasil convert!",
           "Format: GIF (480px, 15fps)",
           "Size: " + (buf.length / 1024).toFixed(0) + " KB",
-        ].join("\n")),
+        ].join("\n"))),
       });
     } else {
       await conn.sendMessage(m.key.remoteJid, {
         video: buf,
         mimetype: fmt.mime,
-        caption: raraWrap("Video Convert", [
+        caption: (card || raraWrap("Video Convert", [
           "Berhasil convert!",
           "Format: " + format.toUpperCase() + " (" + fmt.desc + ")",
           "Codec: " + fmt.codec,
           "Size: " + (buf.length / 1024).toFixed(0) + " KB",
-        ].join("\n")),
+        ].join("\n"))),
       });
     }
 

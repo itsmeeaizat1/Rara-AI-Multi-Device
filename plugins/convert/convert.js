@@ -14,6 +14,7 @@ import {
   getConvertSession,
   setConvertSession,
 } from "../../src/lib/rara-convert.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const IMAGE_MIME = { jpg: "image/jpeg", png: "image/png", webp: "image/webp" };
 
@@ -210,7 +211,7 @@ async function handler(m, { sock }) {
 
     // ── Kirim hasil ──
     const title = session.title || session.platform || "Media";
-    const card = mediaPreviewCard({
+    const previewCard = mediaPreviewCard({
       title: `${title} → ${format.toUpperCase()}`,
       body: `Rara Convert • ${fmt.desc}`,
       sourceUrl: session.sourceUrl || "",
@@ -218,11 +219,30 @@ async function handler(m, { sock }) {
     });
     const sizeMB = (buf.length / 1024 / 1024).toFixed(2);
 
+    let mcard = "";
+    try {
+      const info = await probeBuffer(buf, { mime: isImage ? (IMAGE_MIME[format] || "image/jpeg") : fmt.mime });
+      mcard = mediaResultCard({
+        header: pluginConfig.name,
+        type: isImage ? "foto" : isAudio ? "audio" : (format === "mp4" ? "video" : "dokumen"),
+        request: [
+          ["Format Target", format.toUpperCase()],
+          ["Deskripsi", fmt.desc || ""],
+        ],
+        size: info.size,
+        mime: info.mime || fmt.mime,
+        width: info.width,
+        height: info.height,
+        duration: info.duration,
+      });
+    } catch { /* best-effort */ }
+
     if (isImage) {
       await sock.sendMessage(m.chat, {
         image: buf,
         mimetype: IMAGE_MIME[format] || "image/jpeg",
-        contextInfo: card,
+        caption: mcard || undefined,
+        contextInfo: previewCard,
       }, { quoted: m });
     } else if (isAudio) {
       const isPtt = format === "ogg" || format === "opus";
@@ -231,20 +251,23 @@ async function handler(m, { sock }) {
         mimetype: fmt.mime,
         ptt: isPtt,
         fileName: `${(title || "rara").replace(/[^\w\s-]/g, "").trim().slice(0, 40) || "rara"}.${fmt.ext}`,
-        contextInfo: card,
+        contextInfo: previewCard,
       }, { quoted: m });
+      if (mcard) await m.reply(mcard);
     } else if (format === "mp4") {
       await sock.sendMessage(m.chat, {
         video: buf,
         mimetype: fmt.mime,
-        contextInfo: card,
+        caption: mcard || undefined,
+        contextInfo: previewCard,
       }, { quoted: m });
     } else {
       await sock.sendMessage(m.chat, {
         document: buf,
         fileName: `${(title || "rara").replace(/[^\w\s-]/g, "").trim().slice(0, 40) || "rara"}.${fmt.ext}`,
         mimetype: fmt.mime,
-        contextInfo: card,
+        caption: mcard || undefined,
+        contextInfo: previewCard,
       }, { quoted: m });
     }
 
