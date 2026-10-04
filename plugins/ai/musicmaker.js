@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 
@@ -54,6 +55,17 @@ async function handler(m, { sock }) {
       mimetype: "audio/mpeg",
       ptt: false,
     }, { quoted: m });
+    // Kartu info lagu AI (audio gak bisa caption) — teks setelah audio
+    try {
+      const info = await probeMedia(r.url);
+      const card = mediaResultCard({
+        header: "musicmaker",
+        title: r.title,
+        request: [["Model", "AI Music Maker"], ["Tags", String(r.tags || "").slice(0, 60)]],
+        size: info.size, mime: info.mime || "audio/mpeg", duration: Number(r.duration) || "",
+      });
+      if (card) await m.reply(card);
+    } catch {}
 
     await m.react("🐣");
     await sock.sendMessage(m.chat, {

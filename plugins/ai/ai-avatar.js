@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import fs from "fs";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
@@ -85,9 +86,20 @@ async function handler(m, { sock, config: botConfig }) {
     const filePath = tempPath(".png");
     fs.writeFileSync(filePath, buffer);
 
+    const avatarBuf = fs.readFileSync(filePath);
+    let caption = `AI Avatar: ${prompt.slice(0, 200)}`;
+    try {
+      const info = await probeBuffer(avatarBuf);
+      const card = mediaResultCard({
+        header: "aiavatar",
+        request: [["Model", "AI Avatar"], ["Prompt", String(prompt).slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+      if (card) caption = card;
+    } catch {}
     await sock.sendMessage(m.chat, {
-      image: fs.readFileSync(filePath),
-      caption: `AI Avatar: ${prompt.slice(0, 200)}`,
+      image: avatarBuf,
+      caption,
     }, { quoted: m });
 
     const text =

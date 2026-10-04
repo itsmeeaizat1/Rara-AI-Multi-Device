@@ -2,6 +2,7 @@
 // aivideo — TEXT → VIDEO AI (KuroNeko text2vid, engine sora) — GENERATOR
 // VIDEO AI PERTAMA di bot! Key: apikeys.json kuroneko.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 import te from "../../src/lib/rara-error.js";
 import { haidarTxt2vid } from "../../src/scraper/haidar-ai.js";
 
@@ -43,7 +44,16 @@ async function handler(m, { sock }) {
     if (!buf || buf.length < 20000) throw new Error("file video kosong");
 
     await m.react("🐣");
-    const caption = raraWrap("aivideo", `🎬 Video AI berhasil dibuat!\n\n📝 Prompt: *${prompt}*\n⚙️ Engine: Haidar txt2vid (sora)\n📦 Ukuran: ${(buf.length / 1024 / 1024).toFixed(1)} MB`);
+    let caption = raraWrap("aivideo", "🎬 Video AI berhasil dibuat!");
+    try {
+      const info = await probeBuffer(buf);
+      const card = mediaResultCard({
+        header: "aivideo",
+        request: [["Engine", "Haidar txt2vid"], ["Prompt", String(prompt).slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height, duration: info.duration,
+      });
+      if (card) caption = card;
+    } catch {}
     await sock.sendMessage(m.chat, {
       video: buf,
       caption,

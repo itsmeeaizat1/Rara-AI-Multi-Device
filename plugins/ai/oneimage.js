@@ -4,6 +4,7 @@
 // Sumber: onepunya.qzz.io (key .setkey onepunya) — beda engine dari .img2/.flux
 // yang udah ada; upstream-nya kadang lambat (504) → pesan gagal jujur.
 import axios from "axios";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import { getApiKey } from "../../src/lib/rara-api-keys.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { imageGeneration } from "../../src/lib/rara-onepunya.js";
@@ -41,9 +42,20 @@ async function handler(m, { sock }) {
         buf = Buffer.from(dl.data);
       } catch { buf = null; }
     }
+    // Kartu info media (kategori AI, 4 Okt 2026): field hanya kalau datanya nyata.
+    let caption = `🎨 ${prompt.slice(0, 100)}`;
+    try {
+      const info = buf ? await probeBuffer(buf) : await probeMedia(imgUrl);
+      const card = mediaResultCard({
+        header: "oneimage",
+        request: [["Model", "Onepunya Image"], ["Prompt", String(prompt).slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+      if (card) caption = card;
+    } catch { /* best-effort, caption lama dipakai */ }
     const payload = buf
-      ? { image: buf, caption: `🎨 ${prompt.slice(0, 100)}` }
-      : { image: { url: imgUrl }, caption: `🎨 ${prompt.slice(0, 100)}` };
+      ? { image: buf, caption }
+      : { image: { url: imgUrl }, caption };
     await sock.sendMessage(m.chat, payload, { quoted: m });
   } catch (e) {
     const msg = String(e.message || e);

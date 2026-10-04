@@ -4,6 +4,7 @@
 // Korea: BongJin/JiMin dll — Inggris: Mia/Olivia dll.
 // Fallback seleb voice (Taylor Swift, Goku, dll): .aivoiceceleb (KuroNeko).
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import te from "../../src/lib/rara-error.js";
 import { haidarTTS, HAIDAR_VOICES } from "../../src/scraper/haidar-ai.js";
 
@@ -69,6 +70,16 @@ async function handler(m, { sock }) {
       mimetype: "audio/mpeg",
       ptt: true,
     }, { quoted: m });
+    // Kartu info (audio gak bisa caption) — kirim sebagai teks setelah voice note
+    try {
+      const info = await probeBuffer(buf, { mime: "audio/mpeg" });
+      const card = mediaResultCard({
+        header: "voiceai",
+        request: [["Fitur", "AI Voice natural"], ["Voice", (m.args || [])[0] || "-"]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch {}
   } catch (err) {
     console.error("suaraai error:", err);
     await m.react("❌");

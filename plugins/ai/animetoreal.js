@@ -2,6 +2,7 @@
 // animetoreal — gambar ANIME → versi REALISTIS (kebalikan .jadianime)
 // Engine: KuroNeko animetoreal (live3d.io). Key: apikeys.json kuroneko.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import te from "../../src/lib/rara-error.js";
 import { animeToReal, uploadToUguu } from "../../src/scraper/kuroneko.js";
 
@@ -43,9 +44,19 @@ async function handler(m, { sock }) {
     if (!buf || buf.length < 5000) throw new Error("hasil kosong");
 
     await m.react("🐣");
+    let caption = raraWrap("animetoreal", `✨ Anime → versi realistis!\n\n⚙️ Engine: KuroNeko animetoreal (live3d)`);
+    try {
+      const info = await probeBuffer(buf);
+      const card = mediaResultCard({
+        header: "animetoreal",
+        request: [["Engine", "KuroNeko live3d"]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+      if (card) caption = card;
+    } catch {}
     await sock.sendMessage(m.chat, {
       image: buf,
-      caption: raraWrap("animetoreal", `✨ Anime → versi realistis!\n\n⚙️ Engine: KuroNeko animetoreal (live3d)`),
+      caption,
     }, { quoted: m });
   } catch (err) {
     console.error("animetoreal error:", err);

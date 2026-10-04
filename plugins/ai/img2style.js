@@ -3,6 +3,7 @@
 // Pixar, Demon Slayer, Genshin-Like, Minecraft, Lego, Van Gogh, Manga, dll.
 // Fallback: KuroNeko toonmix (free prompt). Key: apikeys.json haidar.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import te from "../../src/lib/rara-error.js";
 import { haidarImg2style, HAIDAR_STYLES } from "../../src/scraper/haidar-ai.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
@@ -92,9 +93,19 @@ async function handler(m, { sock }) {
     if (!buf || buf.length < 5000) throw new Error("hasil kosong");
 
     await m.react("🐣");
+    let caption = raraWrap("img2style", `🎨 Foto diubah gaya!\n\n✨ Gaya: *${resolved || style}*\n${engineNote}`);
+    try {
+      const info = await probeBuffer(buf);
+      const card = mediaResultCard({
+        header: "img2style",
+        request: [["Gaya", resolved || style]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+      if (card) caption = card;
+    } catch {}
     await sock.sendMessage(m.chat, {
       image: buf,
-      caption: raraWrap("img2style", `🎨 Foto diubah gaya!\n\n✨ Gaya: *${resolved || style}*\n${engineNote}`),
+      caption,
     }, { quoted: m });
   } catch (err) {
     console.error("img2style error:", err);

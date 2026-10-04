@@ -4,6 +4,7 @@
 // .ai21 .reka .cerebras .huggingface .voyage .cloudflare .stability .jina
 // .mistral .together .github + IkyyXD & Tio providers
 import { callAI, callImageGen, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/rara-ai-service.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import { toMessages as sessionToMessages, appendTurn as sessionAppend } from "../../src/lib/rara-ai-session.js";
 
 // brand fallback per provider (API key kosong / provider mati → rantai multi-API)
@@ -271,8 +272,20 @@ async function handler(m, { sock, config, db, args, text }) {
           .trim() || userMessage;
         const img = await callImageGen(providerKey, cleanPrompt, { apiKey });
         try { await m.react("🐣"); } catch {}
+        const provBuf = Buffer.from(img.base64, "base64");
+        let provCap = "🎨 " + cleanPrompt.slice(0, 150) + (img.via && img.via !== providerKey ? "\n_(engine fallback: " + img.via + ")_" : "");
+        try {
+          const info = await probeBuffer(provBuf);
+          const card = mediaResultCard({
+            header: "aiproviders",
+            request: [["Model", img.via || providerKey], ["Prompt", String(cleanPrompt).slice(0, 80)]],
+            size: info.size, mime: info.mime, width: info.width, height: info.height,
+          });
+          if (card) provCap = card;
+        } catch {}
         await sock.sendMessage(m.chat, {
-          image: Buffer.from(img.base64, "base64"),
+          image: provBuf,
+          caption: provCap,
           caption: "🎨 " + cleanPrompt.slice(0, 150) + (img.via && img.via !== providerKey ? "\n_(engine: " + img.via + ")_" : ""),
         }, { quoted: m });
         return { handled: true };

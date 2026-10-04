@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .pollenai — free AI chat via pollinations.ai (port engine lama pollination.js)
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "pollination",
@@ -47,7 +48,17 @@ async function handler(m, { sock, config: botConfig }) {
       if (!res.ok) throw new Error("HTTP " + res.status);
       const buf = Buffer.from(await res.arrayBuffer());
       await m.react("⚡");
-      await sock.sendMessage(m.chat, { image: buf, caption: raraWrap("PollenImg", cleanPrompt.slice(0, 100)) }, { quoted: m });
+      let polCaption = raraWrap("PollenImg", cleanPrompt.slice(0, 100));
+      try {
+        const info = await probeBuffer(buf);
+        const card = mediaResultCard({
+          header: "pollination",
+          request: [["Model", "Pollination"], ["Prompt", String(cleanPrompt).slice(0, 80)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+        if (card) polCaption = card;
+      } catch {}
+      await sock.sendMessage(m.chat, { image: buf, caption: polCaption }, { quoted: m });
       return { handled: true };
     }
     const text = (m.text || "").replace(new RegExp("^" + prefix + "pollination\\s*", "i"), "").trim();

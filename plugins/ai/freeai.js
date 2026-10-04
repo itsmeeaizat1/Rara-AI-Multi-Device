@@ -5,6 +5,7 @@
 // .freeaiimage <ratio> <prompt> — rasio 1:1 | 9:16 | 16:9 | 4:3 | 3:4 | 3:2 | 2:3 | 21:9
 
 import { freeAIChat, freeAIImage, FREEAI_RATIOS } from "../../src/scraper/freeai.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
 
@@ -84,9 +85,19 @@ async function handler(m, { sock }) {
     // ── IMAGE ──
     const img = await freeAIImage({ prompt, aspectRatio: ratio });
     await m.react("🐣");
+    let caption = `🆓 ${prompt.slice(0, 200)}\n📐 ${img.ratio} | sdxl`;
+    try {
+      const info = await probeMedia(img.url);
+      const card = mediaResultCard({
+        header: "freeai",
+        request: [["Model", "SDXL"], ["Rasio", img.ratio], ["Prompt", String(prompt).slice(0, 80)]],
+        size: info.size, mime: info.mime,
+      });
+      if (card) caption = card;
+    } catch {}
     await sock.sendMessage(m.chat, {
       image: { url: img.url },
-      caption: `🆓 ${prompt.slice(0, 200)}\n📐 ${img.ratio} | sdxl`,
+      caption,
     }, { quoted: m });
     return;
   } catch (err) {

@@ -4,6 +4,7 @@
 // (rara-ai-fallback.js: Haidar → Ikyy → Xemoz), image gen via callIkyyImage,
 // link TikTok diarahkan ke downloader .tiktok yang udah hidup.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import te from "../../src/lib/rara-error.js";
 import { callIkyyImage } from "../../src/lib/rara-ai-service.js";
 import { aiFallbackChat } from "../../src/lib/rara-ai-fallback.js";
@@ -30,7 +31,17 @@ async function handler(m, { sock }) {
     if (isImageReq) {
       const imgUrl = await callIkyyImage(text, "1:1");
       if (!imgUrl) throw new Error("gagal generate gambar");
-      await sock.sendMessage(m.chat, { image: { url: imgUrl }, caption: `Gambar: ${text}` });
+      let caption = `Gambar: ${text}`;
+      try {
+        const info = await probeMedia(imgUrl);
+        const card = mediaResultCard({
+          header: "aliceai",
+          request: [["Model", "Alice AI"], ["Teks", String(text).slice(0, 80)]],
+          size: info.size, mime: info.mime,
+        });
+        if (card) caption = card;
+      } catch {}
+      await sock.sendMessage(m.chat, { image: { url: imgUrl }, caption });
     } else {
       const reply = await aiFallbackChat(text, { persona: "Alice AI — asisten WhatsApp yang ramah dan ceria" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
       if (!reply) throw new Error("balasan AI kosong");

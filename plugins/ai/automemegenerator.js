@@ -4,6 +4,7 @@
 //   One-shot (all users): .automeme — reply ke foto, generate meme sekali
 //   Persistent (owner): .toggleautomeme on/off — auto generate tiap foto masuk (default ON)
 import { getDatabase } from "../../src/lib/rara-database.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";
 import { callAI, callIkyy } from "../../src/lib/rara-ai-service.js";
 
@@ -162,9 +163,19 @@ async function doMemeAnalysis(m, sock, style) {
 
       const memeBuffer = await sharp(buffer).composite([{ input: svgOverlay, top: 0, left: 0 }]).jpeg({ quality: 85 }).toBuffer();
 
+      let memeCap = raraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 200)].join("\n"));
+      try {
+        const info = await probeBuffer(memeBuffer);
+        const card = mediaResultCard({
+          header: "automeme",
+          request: [["Gaya", style], ["Teks", String(memeText).slice(0, 80)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+        if (card) memeCap = card;
+      } catch {}
       await sock.sendMessage(m.key.remoteJid, {
         image: memeBuffer,
-        caption: raraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 200)].join("\n")),
+        caption: memeCap,
       }, { quoted: m });
       memeSent = true;
     } catch (e) {
@@ -409,9 +420,19 @@ export async function handleAutoMemeGen(m, sock) {
 
       const memeBuffer = await sharp(buffer).composite([{ input: svgOverlay, top: 0, left: 0 }]).jpeg({ quality: 85 }).toBuffer();
 
+      let memeCap = raraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 200)].join("\n"));
+      try {
+        const info = await probeBuffer(memeBuffer);
+        const card = mediaResultCard({
+          header: "automeme",
+          request: [["Gaya", style], ["Teks", String(memeText).slice(0, 80)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+        if (card) memeCap = card;
+      } catch {}
       await sock.sendMessage(m.key.remoteJid, {
         image: memeBuffer,
-        caption: raraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 200)].join("\n")),
+        caption: memeCap,
       }, { quoted: m });
       memeSent = true;
     } catch (e) {

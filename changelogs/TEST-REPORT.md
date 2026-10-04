@@ -1,3 +1,7 @@
+## 4 Okt 2026 — feat/media-field-ai: kartu info media kategori AI
+
+ai-media-info BARU 36/36 (probeBuffer live: gambar sharp, audio+video ffprobe, format kartu, 14 plugin, anti-throw). Regresi: plugins-import 11/11 · formatguard 22/22 · media-info 67/67 · react-loading 32/32 · menu-layout 4/4 · agent 116/116 · raraguide-v2 28/28.
+
 ## 4 Okt 2026 — revert/media-field-full: revert sistem kartu info media ke state pra-field
 
 Baterai penuh (semua hijau): plugins-import 11/11 · formatguard 22/22 · menu-layout 4/4 · react-loading 32/32 · media-info 67/67 · agent 116/116 · remini-ffmpeg 58/58 · remini-download 48/48 · usage-unified 36/36 · dl-usage 18/18 · raraguide-v2 28/28 · ai-usage 21/21 · ai-set 25/25 · speedtest 29/29 · index-panel 73/73 · rara-dashboard 55/55 · router9 11/11.

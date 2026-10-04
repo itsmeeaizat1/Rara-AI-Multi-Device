@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import fs from "fs";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
@@ -108,9 +109,19 @@ async function handler(m, { sock, config: botConfig }) {
       ptt: false,
     }, { quoted: m });
 
+    let voiceCard = raraWrap("AI Voice", [`Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
+      "Status: *Berhasil*"].join("\n"));
+    try {
+      const info = await probeBuffer(fs.readFileSync(filePath), { mime: "audio/mpeg" });
+      const card = mediaResultCard({
+        header: "aivoice",
+        request: [["Model", "AI Voice"], ["Teks", String(text).slice(0, 80)]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) voiceCard = card;
+    } catch {}
     const out =
-      raraWrap("AI Voice", [`Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
-        "Status: *Berhasil*"].join("\n")) +
+      voiceCard +
       "\n" +
       tipText(`Ketik ${prefix}aivoice <teks> untuk suara lain`) +
       "\n" +

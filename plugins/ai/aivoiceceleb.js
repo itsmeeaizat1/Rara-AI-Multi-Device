@@ -4,6 +4,7 @@
 // eminem, miku, optimus_prime, goku, mickey_mouse, kendrick_lamar
 // Key: apikeys.json kuroneko.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import te from "../../src/lib/rara-error.js";
 import { celebTTS, celebVoiceList } from "../../src/scraper/kuroneko.js";
 
@@ -62,6 +63,16 @@ async function handler(m, { sock }) {
       mimetype: "audio/wav",
       ptt: true,
     }, { quoted: m });
+    // Kartu info (audio gak bisa caption) — kirim sebagai teks setelah voice note
+    try {
+      const info = await probeBuffer(buf, { mime: "audio/wav" });
+      const card = mediaResultCard({
+        header: "voiceceleb",
+        request: [["Engine", "KuroNeko seleb TTS"], ["Voice", (m.args || [])[0] || "-"]],
+        size: info.size, mime: info.mime, duration: info.duration,
+      });
+      if (card) await m.reply(card);
+    } catch {}
   } catch (err) {
     console.error("aivoiceceleb error:", err);
     await m.react("❌");

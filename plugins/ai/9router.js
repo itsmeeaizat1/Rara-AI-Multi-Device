@@ -20,6 +20,7 @@
 //   dsb) via multimodal chat 9router — bukan Gemini external.
 // + Model yang dipakai nongol di footer tiap jawaban (transparansi routing).
 import { raraBox, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import {
   ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys, killStalePort9Router,
@@ -435,7 +436,17 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       }
       if (!buf?.length) throw new Error("9router gak balas gambar");
       await m.react("🐣");
-      await sock.sendMessage(m.chat, { image: buf, caption: prompt + `\n\n— via 9Router Lokal • ${r.model}` }, { quoted: m });
+      let rrCap = prompt + `\n\n— via 9Router Lokal • ${r.model}`;
+      try {
+        const info = await probeBuffer(buf);
+        const card = mediaResultCard({
+          header: "9router",
+          request: [["Model", r.model], ["Prompt", String(prompt).slice(0, 80)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+        if (card) rrCap = card;
+      } catch {}
+      await sock.sendMessage(m.chat, { image: buf, caption: rrCap }, { quoted: m });
       return;
     } catch (e) {
       console.error("[9router-gambar]:", e.message);
