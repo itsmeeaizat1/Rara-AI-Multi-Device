@@ -481,10 +481,6 @@ async function serialize(sock, msg, store = {}) {
 
   const m = {};
 
-  // KEY ASLI dari WhatsApp, disalin SEBELUM dimutasi di bawah (remoteJid -> m.chat, participant -> m.sender).
-  // m.key === msg.key (referensi sama) dan dimutasi; reaksi/aksi yang mencocokkan pesan di server WhatsApp harus
-  // memakai (remoteJid, id, participant) PERSIS seperti yang diterima (akun LID: participant @lid, bukan nomor).
-  const rawKey = { ...msg.key };
   m.key = msg.key;
   m.id = msg.key?.id || "";
   m.chat = decodeJid(msg.key?.remoteJid || "");
@@ -1293,8 +1289,10 @@ END:VCARD`;
       return await sock.sendMessage(m.chat, {
         react: {
           text: emoji,
-          // key ASLI (bukan msg.key yang sudah dimutasi jadi nomor) -> reaksi menempel di pesan yang benar
-          key: rawKey,
+          // ROLLBACK 4 Okt 2026: rawKey (key mentah @lid) justru membuat server membuang SEMUA reaksi
+          // di akun LID (owner: react jalan aman di fork hiura SEBELUM perubahan ini). Kembali ke
+          // msg.key ternormalisasi + tujuan m.chat — perilaku yang terbukti jalan di produksi.
+          key: msg.key,
         },
       });
     } catch (e) {

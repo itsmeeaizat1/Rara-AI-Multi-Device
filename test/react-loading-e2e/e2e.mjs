@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // E2E REAKSI LOADING/SUKSES (3 Okt 2026, owner: "knp react emoji loading pas fitur dimuat dan suksesnya ga muncul").
 // Dua akar yang DIBUKTIKAN:
-//  (1) m.react memakai msg.key yang DIMUTASI serialize (participant @lid -> nomor telepon; remoteJid -> m.chat) -> key
+//  ROLLBACK 4 Okt 2026: m.react kembali memakai msg.key ternormalisasi + tujuan m.chat (perilaku pra-rawKey
 //      tidak sama dgn yang diterima dari WhatsApp, reaksi bisa tak menempel (akun LID, tanpa error).
 //  (2) handler membaca procNotif/autoRead/autoTyping dari `sock.db || m.db` yang TIDAK PERNAH diisi -> selalu default;
 //      `.procnotif off` tak pernah berpengaruh.
@@ -36,7 +36,7 @@ async function main() {
   });
   const ser = async (rec, key, text = ".ping") => { const r = quiet(); try { return await serialize(mkSock(rec), { key, message: { conversation: text }, pushName: "A" }, {}); } finally { r(); } };
 
-  w("\n— [1] m.react memakai KEY ASLI dari WhatsApp (bukan key yang dimutasi serialize) —");
+  w("\n— [1] ROLLBACK 4 Okt 2026: m.react memakai msg.key ternormalisasi (perilaku lama, terbukti jalan di produksi dgn fork hiura) —");
   {
     const rec = [];
     const original = { remoteJid: GRUP, fromMe: false, id: "ZZ1", participant: LID };
@@ -44,15 +44,15 @@ async function main() {
     check("precondition: serialize MEMANG memutasi msg.key.participant (lid -> nomor)", m.key.participant === PN && m.sender === PN, `${m.key.participant}|${m.sender}`);
     await m.react("🕒");
     const k = rec[0].c.react.key;
-    check("reaksi grup akun LID: key.participant = @lid ASLI", k.participant === LID, k.participant);
-    check("reaksi: key identik 100% dgn yang diterima dari WA (remoteJid,id,participant,fromMe)", JSON.stringify(k) === JSON.stringify(original), JSON.stringify(k));
+    check("reaksi grup akun LID: key.participant = nomor ternormalisasi (rollback 4 Okt)", rec[0].c.react.key.participant === PN, rec[0].c.react.key.participant);
+    check("reaksi: key = key ternormalisasi msg.key (rollback 4 Okt: key reaksi = m.key)", rec[0].c.react.key === m.key);
     check("reaksi dikirim ke chat yang benar (m.chat)", rec[0].jid === GRUP);
     check("emoji terkirim apa adanya", rec[0].c.react.text === "🕒");
     check("fitur LAIN tak berubah: m.sender tetap nomor telepon", m.sender === PN);
     check("fitur LAIN tak berubah: m.key.participant tetap nomor (295 pemakai m.key)", m.key.participant === PN);
-    check("key reaksi BUKAN referensi yang sama dgn m.key (tidak ikut termutasi kelak)", k !== m.key);
+    check("key reaksi = referensi msg.key/m.key (perilaku lama terbukti jalan di produksi)", k === m.key);
     m.key.participant = "mutasi-lanjutan@s.whatsapp.net"; await m.react("🐣");
-    check("mutasi m.key SESUDAH serialize tak memengaruhi reaksi berikutnya", rec[1].c.react.key.participant === LID, rec[1].c.react.key.participant);
+    check("rollback 4 Okt: m.key adalah objek bersama — mutasi lanjutan ikut terlihat (diterima apa adanya, perilaku lama)", rec[1].c.react.key.participant === "mutasi-lanjutan@s.whatsapp.net");
   }
   {
     const rec = []; const original = { remoteJid: "628555000111@s.whatsapp.net", fromMe: false, id: "DM1" };
@@ -122,8 +122,8 @@ async function main() {
     const h = fs.readFileSync(R + "/src/handler.js", "utf8");
     check("handler: dbInstance fallback ke getDatabase()", /const dbInstance = sock\.db \|\| m\.db \|\| getDatabase\(\);/.test(h));
     const s = fs.readFileSync(R + "/src/lib/rara-serialize.js", "utf8");
-    check("serialize: rawKey disalin SEBELUM mutasi (m.key = msg.key)", s.indexOf("const rawKey = { ...msg.key };") > 0 && s.indexOf("const rawKey = { ...msg.key };") < s.indexOf("m.key = msg.key;"));
-    check("serialize: m.react memakai rawKey, bukan msg.key", /react: \{\s*text: emoji,[\s\S]{0,200}?key: rawKey,/.test(s));
+    check("serialize: rawKey SUDAH TIDAK ADA (rollback 4 Okt)", s.indexOf("const rawKey") === -1);
+    check("serialize: m.react memakai msg.key ternormalisasi (rollback 4 Okt)", /react: \{\s*text: emoji,[\s\S]{0,400}?key: msg\.key,/.test(s) && s.indexOf("key: rawKey") === -1);
     check("serialize: m.key tetap referensi msg.key (kompatibel 295 pemakai)", /m\.key = msg\.key;/.test(s));
   }
 
