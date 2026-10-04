@@ -4,6 +4,19 @@ import config from "../../config.js";
 import { f } from "../../src/lib/rara-http.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import { raraWrap, raraLine, toSC } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch asupan) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -129,7 +142,8 @@ async function handler(m, { sock }) {
     const video = data;
     const videoUrl = video.video.url;
 
-    await sock.sendMedia(m.chat, videoUrl, `${video.caption}`, m, {
+    const card = await dlCard("video", { url: videoUrl }, [["Engine", "API neoxr.eu"], ["Username", String(query).slice(0, 40)], ["Judul", String(video.caption || "-").slice(0, 60)]]);
+    await sock.sendMedia(m.chat, videoUrl, card ? `${video.caption}\n\n${card}` : `${video.caption}`, m, {
       type: "video",
       contextInfo: saluranCtx(),
     });

@@ -4,6 +4,19 @@ import fs from 'fs'
 import path from 'path'
 import { f } from '../../src/lib/rara-http.js'
 import { raraWrap, raraLine, toSC } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch asupan) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -72,7 +85,8 @@ async function handler(m, { sock }) {
         
         const item = data[Math.floor(Math.random() * data.length)]
         
-        await sock.sendMedia(m.chat, item.url, null, m, {
+        const card = await dlCard("video", { url: item.url }, [["Engine", "Koleksi lokal"], ["Playlist", "bocil.json"], ["Total video", String(data.length)]]);
+        await sock.sendMedia(m.chat, item.url, card || null, m, {
             type: 'video'
         })
         
