@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: buf,
-      caption: raraWrap("animetoreal", `✨ Anime → versi realistis!\n\n⚙️ Engine: KuroNeko animetoreal (live3d)`),
+      caption: raraWrap("animetoreal", `✨ Anime → versi realistis!`),
     }, { quoted: m });
   } catch (err) {
     console.error("animetoreal error:", err);

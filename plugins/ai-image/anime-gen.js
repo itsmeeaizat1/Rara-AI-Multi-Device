@@ -3,6 +3,7 @@ import { f } from '../../src/lib/rara-http.js'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 import { raraError, raraEmpty, raraGuide, raraNoInput,  raraWrap, raraLine, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
     name: 'anime-gen',
     alias: ["anime-gen", "anime"],
@@ -46,6 +47,12 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, result.url, null, m, {
             type: 'image'
         })
+        await m.reply(mediaInfoCaption({ header: "Rara Anime Gen", fields: [
+            { label: "Input", value: "Teks" },
+            { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
+
+            { label: "Hasil", value: "Gambar" },
+        ] }))
     } catch (error) {
         if (error.code === 'ECONNABORTED') {
             await m.react("🐣");

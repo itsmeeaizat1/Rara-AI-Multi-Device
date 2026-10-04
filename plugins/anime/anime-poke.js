@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoLine } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "animepoke",
@@ -69,12 +70,12 @@ async function handler(m, { sock }) {
       const buffer = Buffer.from(imgRes.data);
       const isGif = url.endsWith(".gif");
       if (isGif) {
-        await sock.sendMessage(from, { video: buffer, gifPlayback: true, caption, mentions }, { quoted: m });
+        await sock.sendMessage(from, { video: buffer, gifPlayback: true, caption: caption + "\n" + mediaInfoLine({ kind: "GIF", bytes: buffer.length }), mentions }, { quoted: m });
       } else {
-        await sock.sendMessage(from, { image: buffer, caption, mentions }, { quoted: m });
+        await sock.sendMessage(from, { image: buffer, caption: caption + "\n" + mediaInfoLine({ kind: "Gambar", bytes: buffer.length }), mentions }, { quoted: m });
       }
     } catch {
-      await sock.sendMessage(from, { image: { url }, caption, mentions }, { quoted: m });
+      await sock.sendMessage(from, { image: { url }, caption: caption + "\n" + mediaInfoLine({ kind: url.endsWith(".gif") ? "GIF" : "Gambar" }), mentions }, { quoted: m });
     }
 
     await sock.sendMessage(from, { react: { text: "🐣", key: m.key } });

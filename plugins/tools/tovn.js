@@ -3,6 +3,7 @@ import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../sr
 import { queueFFmpeg } from '../../src/lib/rara-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 const pluginConfig = {
     name: 'tovn',
     alias: ["tovn"],
@@ -114,6 +115,11 @@ async function handler(m, { sock }) {
             type: 'audio', mimetype: 'audio/ogg; codecs=opus',
             ptt: true
         })
+        await m.reply(mediaInfoCaption({ header: "Ke Voice Note", fields: [
+            { label: "Input", value: isVideo ? "Video" : "Audio" },
+            { label: "Hasil", value: "Voice note (OGG Opus)" },
+            { label: "Ukuran", value: (vnBuffer.length / 1024).toFixed(1) + " KB" },
+        ] }))
     } catch (error) {
     await m.react("❌");
         await m.reply(raraWrap("ERROR", 

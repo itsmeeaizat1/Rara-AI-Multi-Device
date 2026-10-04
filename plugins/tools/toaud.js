@@ -4,6 +4,7 @@ import path from "path";
 import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "toaud",
@@ -66,7 +67,7 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
 
-      return await sock.sendMessage(
+      const sentAud = await sock.sendMessage(
         m.chat,
         {
           audio: audioBuffer,
@@ -75,6 +76,12 @@ async function handler(m, { sock }) {
         },
         { quoted: m }
       );
+      await m.reply(mediaInfoCaption({ header: "Video ke Audio", fields: [
+          { label: "Input", value: "Video/audio (" + (mediaBuffer.length / 1024).toFixed(1) + " KB)" },
+          { label: "Hasil", value: "Audio MP3 (192 kbps)" },
+          { label: "Ukuran", value: (audioBuffer.length / 1024).toFixed(1) + " KB" },
+      ] }))
+      return sentAud;
     } finally {
       try {
         if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);

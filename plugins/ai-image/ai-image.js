@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput,  tipText,  raraWrap, raraCaption } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -75,6 +76,12 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
     await m.reply(text);
+    await m.reply(mediaInfoCaption({ header: "Rara AI Image", fields: [
+      { label: "Input", value: "Teks" },
+      { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
+
+      { label: "Hasil", value: "Gambar" },
+    ] }));
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

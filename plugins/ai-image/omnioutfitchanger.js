@@ -305,7 +305,7 @@ async function handler(m, { sock }) {
           image: outBuf,
           caption: boxLeft(
             toSC("omni outfit changer"),
-            `✨ ${toSC("try-on selesai")} — ${itemCount} ${toSC(itemCount === 1 ? "item" : "item")}\n⚙️ ${toSC("engine: " + usedEngine)}`
+            `✨ ${toSC("try-on selesai")} — ${itemCount} ${toSC(itemCount === 1 ? "item" : "item")}`
           ),
         },
         { quoted: m }

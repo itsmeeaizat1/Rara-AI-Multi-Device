@@ -4,6 +4,7 @@
 // TANPA API eksternal — direct protokol MEGA. STRICT satuan: error asli keluar.
 
 import { File as MegaFile } from "megajs";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 import {
   raraError, raraCaption, raraWrap, tipText,
 } from "../../src/lib/rara-menu-style.js";
@@ -111,6 +112,11 @@ async function handler(m, { sock, config: botConfig, prefix: cmdPrefix }) {
       { document: buffer, fileName: safeName, mimetype: "application/octet-stream" },
       { quoted: m },
     );
+    await m.reply(mediaInfoCaption({ header: "MEGA", fields: [
+      { label: "Nama", value: String(safeName).slice(0, 60) },
+      { label: "Hasil", value: "Dokumen" },
+      { label: "Ukuran", value: fmtSize(buffer.length) },
+    ] }));
 
     await m.react("🐣");
   } catch (error) {

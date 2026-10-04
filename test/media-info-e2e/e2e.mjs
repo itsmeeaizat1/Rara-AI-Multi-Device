@@ -60,7 +60,7 @@ t("caption: label kosong diabaikan", mediaInfoCaption({ header: "X", fields: [{ 
   for (const name of makers) {
     const src = rd(`plugins/ai-image/${name}.js`);
     t(`${name}.js → m.reply(mediaInfoCaption(...))`, src.includes("mediaInfoCaption("));
-    t(`${name}.js → field Input/Style/Engine/Hasil`, ['"Input"', '"Style"', '"Engine"', '"Hasil"'].every((l) => src.includes(`label: ${l}`)));
+    t(`${name}.js → field Input/Style/Hasil (tanpa Engine)`, ['"Input"', '"Style"', '"Hasil"'].every((l) => src.includes(`label: ${l}`)) && !/label: *["']Engine["']/.test(src));
   }
 }
 
@@ -76,6 +76,78 @@ t("caption: label kosong diabaikan", mediaInfoCaption({ header: "X", fields: [{ 
   t("convert: kartu lama raraBox 'Size:' dibuang", !cv.includes("`Size: ${sizeMB} MB`"));
   const aio = rd("plugins/download/aio.js");
   t("aio: pakai probeMedia + mediaResultCard, fallback raraBerhasil", aio.includes("probeMedia(") && aio.includes("mediaResultCard(") && aio.includes("|| raraBerhasil"));
+}
+
+// ── baris info ringkas GIF reaksi anime (request owner 3 Okt: "jenis gambar/gif, ukuran") ──
+{
+  const { mediaInfoLine } = await import(pathToFileURL(path.join(REPO, "src/lib/rara-media-info.js")).href);
+  t("mediaInfoLine: GIF + ukuran", mediaInfoLine({ kind: "GIF", bytes: 246272 }) === "GIF · 240.5 KB");
+  t("mediaInfoLine: tanpa ukuran = hanya jenis (jujur, tak ngarang)", mediaInfoLine({ kind: "Gambar" }) === "Gambar");
+  t("mediaInfoLine: kosong total = string kosong", mediaInfoLine({}) === "" && mediaInfoLine() === "");
+  t("mediaInfoLine: extra ikut digabung", mediaInfoLine({ kind: "GIF", bytes: 3 * 1024 * 1024, extra: "x" }) === "GIF · 3.0 MB · x");
+  const semua = fs.readdirSync(path.join(REPO, "plugins/anime")).filter((f) => /^anime-.+\.js$/.test(f));
+  // anime-baka sudah punya kartu penuh (mediaInfoCaption) dari tahap sebelumnya → dikecualikan supaya TIDAK dobel.
+  const SUDAH_KARTU_PENUH = ["anime-baka.js"];
+  const animeFiles = semua.filter((f) => !SUDAH_KARTU_PENUH.includes(f));
+  const tanpaInfo = animeFiles.filter((f) => !rd("plugins/anime/" + f).includes("mediaInfoLine("));
+  t(`anime-*: ${animeFiles.length} plugin GIF reaksi pakai mediaInfoLine (tak ada yang ketinggalan)`, tanpaInfo.length === 0, tanpaInfo.join(","));
+  const tanpaImpor = animeFiles.filter((f) => !/import \{ mediaInfoLine \}/.test(rd("plugins/anime/" + f)));
+  t("anime-*: semua yang memanggil mediaInfoLine juga mengimpornya (anti ReferenceError senyap)", tanpaImpor.length === 0, tanpaImpor.join(","));
+  const duaPesan = semua.filter((f) => rd("plugins/anime/" + f).includes("mediaInfoCaption(") && rd("plugins/anime/" + f).includes("mediaInfoLine("));
+  t("anime-*: TIDAK ada plugin dengan kartu penuh DAN baris info sekaligus (anti dobel)", duaPesan.length === 0, duaPesan.join(","));
+  t("anime-baka: tetap kartu penuh, tanpa baris info", rd("plugins/anime/anime-baka.js").includes("mediaInfoCaption(") && !rd("plugins/anime/anime-baka.js").includes("mediaInfoLine("));
+}
+
+// ── TANPA Engine/API di field info (request owner 3 Okt: "yang menyebutkan api maupun lokal atau api external dihapus aja") ──
+{
+  const walk = (d) => fs.readdirSync(path.join(REPO, d), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(d + "/" + e.name) : e.name.endsWith(".js") ? [d + "/" + e.name] : []);
+  const semua = [...walk("plugins"), "src/lib/rara-kyio.js"];
+  const engine = semua.filter((f) => /label: *["']Engine["']/.test(rd(f)));
+  t("field info: TIDAK ada label Engine sama sekali (API maupun lokal)", engine.length === 0, engine.slice(0, 4).join(","));
+  // nama API/penyedia tidak boleh nongol di judul kartu (header) maupun field Sumber/Provider/Via/API
+  const API = /ikyy|neoxr|api-faa|faa ai|seaart|stemsplit|pollinations|prodia|replicate|removebackground|pixa\b|microlink|onepunya|qwa api|unlimitedai|waifu\.pics|nekos\.best|kyio api|zelapi|termai|inworld/i;
+  const bocor = [];
+  for (const f of semua) for (const line of rd(f).split("\n")) {
+    if (!/mediaInfoCaption\(\{ *header:/.test(line) && !/label: *["'](Sumber|Source|Provider|Server|Via|API)["']/.test(line)) continue;
+    if (f.endsWith("ai-set.js")) continue; // pengaturan AI: provider memang isi perintahnya, bukan info media
+    if (API.test(line)) bocor.push(f + ": " + line.trim().slice(0, 80));
+  }
+  t("judul kartu & field Sumber/Provider: TIDAK menyebut nama API/penyedia", bocor.length === 0, bocor.slice(0, 3).join(" | "));
+  t("anime-baka: tanpa field Sumber (nama API)", !/label: *["']Sumber["']/.test(rd("plugins/anime/anime-baka.js")));
+  t("kyio: judul kartu info bukan 'Kyio API'", !/mediaInfoCaption\(\{ *header: *["']Kyio API/.test(rd("src/lib/rara-kyio.js")));
+}
+
+// ── TANPA nama API/mesin di SEMUA teks hasil (request owner 3 Okt: "info field hanya info tentang fitur ... tidak menyebutkan api di semua fitur") ──
+{
+  const walk = (d) => fs.readdirSync(path.join(REPO, d), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(d + "/" + e.name) : e.name.endsWith(".js") ? [d + "/" + e.name] : []);
+  const semua = walk("plugins");
+  const nonKomentar = (src) => src.split("\n").filter((l) => !/^\s*(\/\/|\*|\/\*)/.test(l));
+  const cari = (re) => semua.flatMap((f) => nonKomentar(rd(f)).filter((l) => re.test(l)).map((l) => f.split("/").pop() + ": " + l.trim().slice(0, 70)));
+  const a = cari(/lines\.push\(`Source: \$\{method\}`\)/);
+  t("downloader: tidak ada baris 'Source: ${method}' (nama API/scraper)", a.length === 0, a.slice(0, 3).join(" | "));
+  const b = cari(/\((zelapi)\)|via zelapi|Powered by (sharp|Onepunya)/).filter((l) => !/API_KEY|apikeys|description/.test(l));
+  t("tidak ada akhiran '(zelapi)' / 'via zelapi' / 'Powered by sharp|Onepunya' di teks hasil", b.length === 0, b.slice(0, 3).join(" | "));
+  const c = cari(/(Engine|Mesin): *\*?(\$\{|["'`]?[A-Za-z])/).filter((l) => !/search\.js|console\.|label:|ENGINE|engine ===|\.engine\b|return \{|engine *[:=] *[\w"']|Engine AI lagi|Pilihan engine|TTS Engine|hiaiagent|aicall2/.test(l));
+  t("teks hasil: tidak ada baris 'Engine: <nama mesin>' di caption", c.length === 0, c.slice(0, 4).join(" | "));
+}
+
+// ── kategori search: kartu info hasil (3 Okt 2026) ──
+{
+  const { imageInfoCaption } = await import("../../src/lib/rara-media-info.js");
+  const sharp = (await import("sharp")).default;
+  const png = await sharp({ create: { width: 300, height: 200, channels: 4, background: "#fff" } }).png().toBuffer();
+  const c = await imageInfoCaption({ header: "Cecan", buffer: png });
+  t("imageInfoCaption: Jenis+Format+Ukuran+Dimensi dari gambar nyata", /Jenis\s+: Gambar/.test(c) && /Format\s+: PNG/.test(c) && /Dimensi\s+: 300 x 200/.test(c) && /Ukuran/.test(c), c);
+  const rusak = await imageInfoCaption({ header: "Cecan", buffer: Buffer.from("bukan gambar") });
+  t("imageInfoCaption: buffer rusak TIDAK melempar, tetap ada Jenis", /Jenis\s+: Gambar/.test(rusak) && !/Dimensi/.test(rusak), rusak);
+  const kosong = await imageInfoCaption({ header: "Cecan", buffer: null });
+  t("imageInfoCaption: buffer null TIDAK melempar", /CECAN/.test(kosong), kosong);
+  for (const f of ["loli", "prettygirl", "pins"]) t(`search/${f}: memakai kartu info (bukan 'Status: berhasil' / 'Sumber: api')`,
+    /imageInfoCaption|mediaInfoCaption/.test(rd(`plugins/search/${f}.js`)) && !/Sumber: \*api\*/.test(rd(`plugins/search/${f}.js`)));
+  for (const f of ["android1-get", "apkmod-get", "nerdfont-ambil", "ptvsearch", "playaudio"]) t(`search/${f}: memakai mediaResultCard`, /mediaResultCard\(/.test(rd(`plugins/search/${f}.js`)));
+  t("pins: tidak ada 'config.' tanpa impor (bug fallback album crash)", !/\bconfig\.saluran/.test(rd("plugins/search/pins.js")));
 }
 
 // ── smoke import ──

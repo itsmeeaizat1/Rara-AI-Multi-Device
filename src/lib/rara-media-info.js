@@ -24,6 +24,19 @@ export function fmtBytes(bytes) {
 }
 
 /**
+ * Satu baris info ringkas untuk DITEMPEL ke caption yang sudah ada (mis. GIF reaksi anime), tanpa pesan kedua.
+ * Request owner 3 Okt 2026: GIF reaksi cukup "jenis gambar/gif + ukuran". Field kosong dilewati.
+ * @param {object} p — { kind: "GIF"|"Gambar"|..., bytes?: number, extra?: string }
+ * @returns {string} contoh "GIF · 240.5 KB" (kosong bila tak ada data)
+ */
+export function mediaInfoLine({ kind = "", bytes = 0, extra = "" } = {}) {
+  return [kind, fmtBytes(bytes), extra]
+    .map((v) => String(v || "").trim())
+    .filter(Boolean)
+    .join(" · ");
+}
+
+/**
  * Bangun caption info hasil pemrosesan media.
  * REVISI OWNER 3 Okt 2026: balik desain lama + field lengkap per fitur — judul 「 ✦ HEADER ✦ 」,
  * baris "• Label : nilai" rata (teks biasa, TANPA *bold* / emoji ikon). Parameter `icon` tetap
@@ -50,4 +63,29 @@ export function mediaInfoCaption({ header = "Rara", fields = [], groups = null }
     : [block("", clean(fields))]; // satu kelompok -> tanpa judul tambahan, langsung di bawah header
   const body = blocks.filter(Boolean);
   return body.length ? `${head}\n\n${body.join("\n\n")}` : head;
+}
+
+/**
+ * Kartu info gambar hasil fitur pencarian/acak: Jenis, Format, Ukuran, Dimensi (+ field tambahan).
+ * Request owner 3 Okt 2026: info field = info tentang hasil fitur, TANPA nama API/mesin.
+ * TAHAN GAGAL: buffer bukan gambar / sharp error -> tetap balik kartu dengan Jenis + Ukuran
+ * (fitur utama tidak boleh gagal cuma karena info gagal dibaca).
+ * @param {object} p — { header, buffer, extra?: [{label, value}] }
+ * @returns {Promise<string>}
+ */
+export async function imageInfoCaption({ header = "Gambar", buffer = null, extra = [] } = {}) {
+  let format = "", dim = "";
+  try {
+    const { default: sharp } = await import("sharp");
+    const meta = await sharp(buffer, { failOn: "none" }).metadata();
+    format = meta.format ? String(meta.format).toUpperCase() : "";
+    dim = meta.width && meta.height ? `${meta.width} x ${meta.height}` : "";
+  } catch { /* info opsional */ }
+  return mediaInfoCaption({ header, fields: [
+    { label: "Jenis", value: "Gambar" },
+    { label: "Format", value: format },
+    { label: "Ukuran", value: buffer?.length ? fmtBytes(buffer.length) : "" },
+    { label: "Dimensi", value: dim },
+    ...extra,
+  ] });
 }

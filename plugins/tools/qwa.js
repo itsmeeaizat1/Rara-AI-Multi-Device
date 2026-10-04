@@ -5,6 +5,7 @@ import { uploadImage } from '../../src/lib/rara-uploader.js'
 import te from '../../src/lib/rara-error.js'
 import { serialize } from '../../src/lib/rara-serialize.js'
 import { parsePhoneNumber } from 'awesome-phonenumber'
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
     name: 'qwa',
@@ -124,6 +125,13 @@ async function handler(m, { sock }) {
             image: Buffer.from(res.data),
             caption: `✅ Berhasil membuat quote WhatsApp!`
         }, { quoted: m })
+        await m.reply(mediaInfoCaption({ header: "Quote WhatsApp", fields: [
+            { label: "Input", value: (textToQuote || "Media").slice(0, 60) + (textToQuote && textToQuote.length > 60 ? "..." : "") },
+            { label: "Pengirim", value: String(mainMsg.pushName || "User") },
+
+            { label: "Hasil", value: "Gambar" },
+            { label: "Ukuran", value: (Buffer.from(res.data).length / 1024).toFixed(1) + " KB" },
+        ] }))
     } catch (error) {
     await m.react("❌");
         console.error("Error QWA:", error)

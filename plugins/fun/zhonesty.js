@@ -20,7 +20,7 @@ const pluginConfig = {
 
 function usageCard() {
   return raraWrap("zhonesty", [
-    "🔍 HONESTY SCORE (zelapi):",
+    "🔍 HONESTY SCORE:",
     "",
     "▸ .zhonesty <pertanyaan> | <jujur / tidak jujur / ragu>",
     "",
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     const score = Number(d.honesty_score);
     const bar = "▰".repeat(Math.max(0, Math.min(10, Math.round(score)))) + "▱".repeat(Math.max(0, 10 - Math.round(score)));
     const lines = [
-      "🔍 HONESTY SCORE (zelapi)",
+      "🔍 HONESTY SCORE",
       "",
       `❓ ${d.question || q}`,
       `💬 Jawabanmu: ${String(d.user_answer || a).toUpperCase()}`,

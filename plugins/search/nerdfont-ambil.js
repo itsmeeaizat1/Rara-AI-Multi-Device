@@ -8,6 +8,7 @@ function getSharp() {
 }
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
 async function nerdfonts() {
   try {
     const { data } = await axios.get(
@@ -80,7 +81,7 @@ async function handler(m, { sock }) {
     const data = res.find(
       (d, i) => d?.name.toLowerCase() === query.toLowerCase(),
     );
-    sock.sendMessage(m.chat, {
+    await sock.sendMessage(m.chat, {
       document: { url: data.download_url },
       fileName: data.name,
       mimetype: "application/zip",
@@ -93,9 +94,11 @@ async function handler(m, { sock }) {
       )
         .resize(50, 50)
         .toBuffer(),
-      caption: `*done*
-Jika kamu ingin mendownload lagi, ketik ${m.prefix}nerdfont lagi`,
     });
+    const info = mediaResultCard({ header: "Nerd Font", title: data.name, type: "arsip", ext: "zip", ...(await probeMedia(data.download_url)) });
+    if (info) await m.reply(info + `
+
+Ketik ${m.prefix}nerdfont untuk download lagi.`);
   } catch (err) {
     return m.reply(raraWrap("nerdfont-ambil", te(m.prefix, m.command, m.pushName), "error"));
   }

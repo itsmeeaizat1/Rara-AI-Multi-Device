@@ -2,6 +2,7 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const SPPD_PROMPT = `Kamu adalah asisten pembuat Surat Perintah Perjalanan Dinas (SPPD) resmi Indonesia. Buatkan SPPD berdasarkan informasi user.
 
@@ -126,7 +127,8 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   await m.react("🕒");
 
   try {
-    const result = await UnlimitedAI(SPPD_PROMPT.replace("__INPUT__", args), "rara-ai");
+    const aiRes = await UnlimitedAI(SPPD_PROMPT.replace("__INPUT__", args), "rara-ai");
+    const result = aiRes && aiRes.status ? String(aiRes.answer || "") : "";
 
     if (!result || result.trim().length < 20) {
       return m.reply(raraWrap("SPPD", "❌ Gagal generate SPPD. Coba dengan detail yang lebih lengkap."));
@@ -147,6 +149,12 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       mimetype: "application/pdf",
       fileName: `sppd_${Date.now()}.pdf`,
     }, { quoted: m });
+    await m.reply(mediaInfoCaption({ header: "SPPD", fields: [
+      { label: "Input", value: args.trim().slice(0, 60) + (args.trim().length > 60 ? "..." : "") },
+
+      { label: "Hasil", value: "Dokumen PDF" },
+      { label: "Ukuran", value: (pdfBuffer.length / 1024).toFixed(1) + " KB" },
+    ] }));
   } catch (error) {
     console.error("sppd error:", error);
     m.reply(raraWrap("SPPD", `❌ Gagal: ${error.message || "error tidak diketahui"}`));

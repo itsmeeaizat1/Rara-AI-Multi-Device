@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 function wrapText(text, font, size, maxWidth) {
   const words = text.split(" ");
@@ -167,6 +168,12 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       mimetype: "application/pdf",
       fileName: `kop_${Date.now()}.pdf`,
     }, { quoted: m });
+    await m.reply(mediaInfoCaption({ header: "Kop Surat", fields: [
+      { label: "Instansi", value: kopData.instansi },
+      { label: "Kontak", value: [kopData.telepon, kopData.email, kopData.website].filter(Boolean).join(" | ").slice(0, 60) },
+      { label: "Hasil", value: "Dokumen PDF" },
+      { label: "Ukuran", value: (resultBuffer.length / 1024).toFixed(1) + " KB" },
+    ] }));
   } catch (error) {
     await m.react("❌");
     console.error("kop error:", error);

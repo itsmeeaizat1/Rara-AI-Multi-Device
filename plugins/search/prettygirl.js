@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, tipText,  raraWrap } from "../../src/lib/rara-menu-style.js";
+import { imageInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -94,8 +95,7 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      raraWrap("Cecan", ["Sumber: *api*",
-        "Status: *berhasil*"].join("\n")) +
+      (await imageInfoCaption({ header: "Cecan", buffer })) +
       "\n" +
       tipText(`Ketik ${prefix}cecan untuk hasil lain`) +
       "\n" +

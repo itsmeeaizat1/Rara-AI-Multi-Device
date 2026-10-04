@@ -33,7 +33,6 @@ function mediaCaption({
     lines.push(`Desc: ${String(description).trim().slice(0, 120)}`);
   }
   if (format) lines.push(`Format: ${format}`);
-  if (method) lines.push(`Source: ${method}`);
   return lines.join("\n");
 }
 
@@ -95,7 +94,6 @@ async function handler(m, { sock }) {
         await m.reply(mediaInfoCaption({ header: "Rara To Japanese", fields: [
             { icon: "📥", label: "Input", value: "Foto" },
             { icon: "🎨", label: "Style", value: "Japanese" },
-            { icon: "⚙️", label: "Engine", value: "FAA AI API" },
             { icon: "⬇️", label: "Hasil", value: "Gambar" },
         ] }))
         

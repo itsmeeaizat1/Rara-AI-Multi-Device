@@ -5,6 +5,7 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "audioeq",
@@ -116,6 +117,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "Treble: " + (trebleGain >= 0 ? "+" : "") + trebleGain + " dB (5kHz)",
       ].join("\n")),
     });
+    await m.reply(mediaInfoCaption({ header: "Audio EQ", fields: [
+      { label: "Bass", value: (bassGain >= 0 ? "+" : "") + bassGain + " dB (100Hz)" },
+      { label: "Mid", value: (midGain >= 0 ? "+" : "") + midGain + " dB (1kHz)" },
+      { label: "Treble", value: (trebleGain >= 0 ? "+" : "") + trebleGain + " dB (5kHz)" },
+      { label: "Ukuran", value: (buf.length / 1024).toFixed(1) + " KB" },
+    ] }));
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);

@@ -5,6 +5,7 @@ import { raraWrap } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "audio8d",
@@ -77,6 +78,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "Depth: " + depth,
       ].join("\n")),
     });
+    await m.reply(mediaInfoCaption({ header: "Audio 8D", fields: [
+      { label: "Efek", value: "8D (rotasi stereo)" },
+      { label: "Rotasi", value: String(rotationSpeed) },
+      { label: "Kedalaman", value: String(depth) },
+      { label: "Hasil", value: "Audio OGG Opus" },
+      { label: "Ukuran", value: (buf.length / 1024).toFixed(1) + " KB" },
+    ] }));
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);

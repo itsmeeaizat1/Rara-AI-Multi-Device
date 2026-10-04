@@ -225,14 +225,7 @@ async function ensureMenuAudioLoaded() {
  * @param {Object} db - Database instance
  * @param {boolean} isAllMenu - Jika true, gunakan allmenuAudioStyle (varian 1-4)
  */
-export async function sendMenuAudio(sock0, m, db, isAllMenu = false) {
-  // Audio pengiring menu BUKAN hasil media fitur: tandai lewat options supaya pembungkus kartu media
-  // (rara-media-info-sock) tidak menambah kartu 'Detail Media' di bawah menu (3 Okt 2026).
-  const sock = (sock0 && typeof sock0.sendMessage === 'function')
-    ? Object.assign(Object.create(sock0), {
-        sendMessage: (jid, content, opts) => sock0.sendMessage(jid, content, { ...(opts || {}), _raraMenuAudio: true }),
-      })
-    : sock0;
+export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
   // ── SALURAN (newsletter): VN PTT WAJIB polos — quoted/fake-quote (poll/troli)
   // bikin follower lihat "Pesan WhatsApp tidak didukung" (report owner 14 Sep).
   // Kirim PTT polos; kalau salurannya nolak VN → skip senyap (menu tetap jalan).

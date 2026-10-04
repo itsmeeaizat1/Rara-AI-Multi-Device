@@ -3,6 +3,7 @@ import axios from "axios";
 import { uploadToCatbox } from "../../src/lib/rara-uploader.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "totato",
@@ -46,6 +47,10 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "🧿 Tato berhasil ditambahkan!" }, { quoted: m });
+    await m.reply(mediaInfoCaption({ header: "Tato", fields: [
+      { label: "Efek", value: "Tato pada foto" },
+      { label: "Hasil", value: "Gambar" }, { label: "Ukuran", value: (imgBuffer.length / 1024).toFixed(1) + " KB" },
+    ] }));
     await m.reply(raraBerhasil("totato"));
   } catch (e) {
     console.error("totato error:", e.message);

@@ -34,7 +34,6 @@ function mediaCaption({
     lines.push(`Desc: ${String(description).trim().slice(0, 120)}`);
   }
   if (format) lines.push(`Format: ${format}`);
-  if (method) lines.push(`Source: ${method}`);
   return lines.join("\n");
 }
 
@@ -89,7 +88,6 @@ async function handler(m, { sock }) {
     await m.reply(mediaInfoCaption({ header: "Rara To Black", fields: [
       { icon: "📥", label: "Input", value: "Foto" },
       { icon: "🎨", label: "Style", value: "Skin Tone Gelap" },
-      { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
       { icon: "⬇️", label: "Hasil", value: "Gambar" },
     ] }))
   } catch (error) {

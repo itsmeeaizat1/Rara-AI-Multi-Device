@@ -2,6 +2,7 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoLine } from "../../src/lib/rara-media-info.js";
 
 // Reactions yang BELUM ada di anime-react.js (V1)
 const RX_MAP = {
@@ -78,7 +79,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(from, {
       image: { url },
-      caption: caption,
+      caption: caption + "\n" + mediaInfoLine({ kind: /\.gif(\?|$)/i.test(String(url)) ? "GIF" : "Gambar" }),
       mentions: mentioned ? [mentioned, m.sender] : []
     }, { quoted: m });
 

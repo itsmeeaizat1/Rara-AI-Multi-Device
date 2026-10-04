@@ -3,6 +3,7 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "jadihitam",
@@ -61,6 +62,11 @@ async function handler(m, { sock }) {
         image: { url: resultUrl },
         caption: raraWrap("JadiHitam", "Berhasil mengubah skin tone"),
       }, { quoted: m });
+      await m.reply(mediaInfoCaption({ header: "Rara Jadi Hitam", fields: [
+        { label: "Input", value: "Foto" },
+
+        { label: "Hasil", value: "Gambar" },
+      ] }));
     } else {
       await m.react("❌");
       await m.reply(raraWrap("JadiHitam", data?.error || data?.message || "Gagal memproses. Coba foto lain."));

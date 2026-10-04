@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/rara-error.js'
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, bracketBox, raraCaption, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const EFFECTS = {
     bass:      { emoji: '🔊', filter: 'bass=g=20:f=110:w=0.6', desc: 'Bass boost' },
@@ -156,6 +157,12 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, audioBuffer, null, m, {
             type: 'audio'
         })
+        await m.reply(mediaInfoCaption({ header: "Audio Efek", fields: [
+            { label: "Efek", value: effectName },
+            { label: "Filter", value: String(fx.filter).slice(0, 60) },
+            { label: "Hasil", value: "Audio OGG" },
+            { label: "Ukuran", value: (audioBuffer.length / 1024).toFixed(1) + " KB" },
+        ] }));
         await m.reply(raraBerhasil("audiofun"));
     } catch (error) {
         m.reply(te(m.prefix, m.command, m.pushName))

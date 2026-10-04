@@ -3,6 +3,7 @@
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "anime2real",
@@ -71,6 +72,11 @@ async function handler(m, { sock }) {
         image: { url: resultUrl },
         caption: raraWrap("Anime2Real", "Berhasil mengubah anime menjadi realistik"),
       }, { quoted: m });
+      await m.reply(mediaInfoCaption({ header: "Rara Anime2Real", fields: [
+        { label: "Input", value: "Foto Anime" },
+
+        { label: "Hasil", value: "Gambar Realistik" },
+      ] }));
     } else {
       await m.react("❌");
       await m.reply(raraWrap("Anime2Real", data?.error || data?.message || "Gagal memproses gambar. Coba gambar lain."));

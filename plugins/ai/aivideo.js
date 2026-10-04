@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     if (!buf || buf.length < 20000) throw new Error("file video kosong");
 
     await m.react("🐣");
-    const caption = raraWrap("aivideo", `🎬 Video AI berhasil dibuat!\n\n📝 Prompt: *${prompt}*\n⚙️ Engine: Haidar txt2vid (sora)\n📦 Ukuran: ${(buf.length / 1024 / 1024).toFixed(1)} MB`);
+    const caption = raraWrap("aivideo", `🎬 Video AI berhasil dibuat!\n\n📝 Prompt: *${prompt}*\n📦 Ukuran: ${(buf.length / 1024 / 1024).toFixed(1)} MB`);
     await sock.sendMessage(m.chat, {
       video: buf,
       caption,

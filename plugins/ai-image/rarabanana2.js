@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { fluxImage } from "../../src/scraper/seaart.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "rarabanana2",
@@ -36,6 +37,12 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, imageUrl, null, m, {
       type: "image",
     });
+    await m.reply(mediaInfoCaption({ header: "Rara Banana V2", fields: [
+      { label: "Input", value: "Teks" },
+      { label: "Prompt", value: prompt.length > 60 ? prompt.slice(0, 57) + "..." : prompt },
+
+      { label: "Hasil", value: "Gambar" },
+    ] }));
   } catch (error) {
     console.log(error);
     const msg =

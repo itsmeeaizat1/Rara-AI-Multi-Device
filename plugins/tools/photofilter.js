@@ -216,7 +216,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         caption: raraWrap("Photo Filter", [
           "Filter: " + FILTERS[input].label,
           "Efek: " + input,
-          "Powered by sharp (local)",
         ], "info"),
       },
       { quoted: m }

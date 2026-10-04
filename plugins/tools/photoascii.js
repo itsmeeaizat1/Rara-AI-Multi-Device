@@ -104,7 +104,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     m.reply(raraWrap("Photo ASCII", [
       "Width: " + width + " chars",
       detail ? "Mode: Detail" : "Mode: Standard",
-      "Powered by sharp (local)",
       "",
       result,
     ], "info"));

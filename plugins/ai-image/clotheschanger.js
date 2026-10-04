@@ -13,6 +13,7 @@ import { visionScan } from "../../src/lib/rara-vision-chain.js";
 import { polishImage, upscaleImage } from "../../src/lib/rara-remini-ffmpeg.js";
 import { raraWrap, toSC } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "aiclotheschanger",
@@ -386,6 +387,12 @@ async function runFeature(m, sock, personBuf, editPrompt, meta, hdMode, cmd) {
   caption += `⚙️ ${toSC("engine")}: *${usedApi}*`;
   if (hdNote) caption += ` | ✨ *${toSC(hdNote)}*`;
   await sendResult(sock, m, finalResult, caption);
+  await m.reply(mediaInfoCaption({ header: "Rara Clothes Changer", fields: [
+    { label: "Input", value: "Foto" },
+    { label: "Instruksi", value: editPrompt ? (editPrompt.length > 60 ? editPrompt.slice(0, 57) + "..." : editPrompt) : null },
+
+    { label: "Hasil", value: "Gambar" },
+  ] }));
 }
 
 // ══════════════════════ HANDLER + DISPATCHER ══════════════════════

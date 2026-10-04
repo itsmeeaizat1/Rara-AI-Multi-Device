@@ -1,7 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Multi-language: bungkus sock biar sock.sendMessage langsung pun ke-translate
 import { makeLangAwareSock } from "./lib/rara-i18n-sock.js";
-import { makeMediaInfoSock, watchReplyCards } from "./lib/rara-media-info-sock.js";
 import { enrichAiSatuan } from "./lib/rara-ai-satuan-rich.js";
 import fs from "fs";
 import path from "path";
@@ -1340,17 +1339,12 @@ try {
     // Multi-language (fix 18 Sep 2026): sock dibungkus translate-aware supaya
     // jalur sock.sendMessage LANGSUNG (menu tombol, caption media, hasil
     // fitur yang gak lewat m.reply) ikut ke-translate ke bahasa user.
-    // Field media otomatis (3 Okt 2026, owner: "semua fitur memiliki field lengkapnya"): media yang dikirim
-    // COMMAND PLUGIN ini dapat kartu jenis/format/ukuran/durasi/dimensi — field NYATA dari media, bukan tebakan.
-    // Pembungkus ini DI DALAM bahasa-aware (kartu ikut ke-translate); env RARA_MEDIA_INFO=off mematikan.
-    const mediaCtx = { command, category: plugin.config?.category, header: plugin.config?.name || command, chat: m.chat, input: (m.args && m.args.length ? m.args.join(' ') : m.text) || '', quotedKind: m.quoted ? (m.quoted.mtype || m.quoted.type || 'pesan').toString().replace(/Message$/, '') : '' };
-    const restoreReply = watchReplyCards(m, mediaCtx); // plugin yang sudah balas kartu field via m.reply -> tak dobel
-    const dispatchSock = makeLangAwareSock(makeMediaInfoSock(sock, mediaCtx), m.sender);
+    // Info field media DITANAM DI MASING-MASING PLUGIN (owner 3 Okt 2026: bukan gate pusat) — plugin yang tahu persis
+    // hasilnya menyusun kartunya sendiri lewat mediaInfoCaption; handler tidak menebak / menambah kartu apa pun.
+    const dispatchSock = makeLangAwareSock(sock, m.sender);
     try {
       await plugin.handler(m, { sock: dispatchSock, conn: dispatchSock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000, isJadibot: !!jadibotCtx.isJadibot, jadibotId: jadibotCtx.jadibotId || null });
-    } finally { try { restoreReply(); } catch {} }
-    // Kartu field otomatis: SESUDAH command selesai (plugin yang sudah balas kartu field sendiri tidak dobel). Gagal = senyap.
-    try { await mediaCtx.flush?.(); } catch {}
+    } finally { /* tidak ada pembungkus kartu pusat */ }
     recordPluginExecution(command, true, null);
 
     // 🎯 PROGRES LEVEL AKTIVITAS (13 Sep 2026, request owner: "setiap user

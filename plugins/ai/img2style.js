@@ -70,17 +70,14 @@ async function handler(m, { sock }) {
     const imageUrl = await uploadToUguu(buffer, "img.jpg");
 
     let resultUrl = null;
-    let engineNote = "";
     if (resolved) {
       // Engine utama: Haidar img2style (80+ gaya fixed)
       resultUrl = await haidarImg2style(imageUrl, resolved);
-      engineNote = `⚙️ Engine: Haidar img2style`;
     } else {
       // Gaya bebas → KuroNeko toonmix (prompt custom)
       try {
         const { toonMix } = await import("../../src/scraper/kuroneko.js");
         resultUrl = await toonMix(imageUrl, `ubah foto jadi gaya ${style}, kualitas tinggi`);
-        engineNote = `⚙️ Engine: KuroNeko toonmix`;
       } catch {
         throw new Error(`gaya '${style}' gak ada — ketik ${m.prefix}img2style list buat daftar gaya`);
       }
@@ -94,7 +91,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: buf,
-      caption: raraWrap("img2style", `🎨 Foto diubah gaya!\n\n✨ Gaya: *${resolved || style}*\n${engineNote}`),
+      caption: raraWrap("img2style", `🎨 Foto diubah gaya!\n\n✨ Gaya: *${resolved || style}*`),
     }, { quoted: m });
   } catch (err) {
     console.error("img2style error:", err);

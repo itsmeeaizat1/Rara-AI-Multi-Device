@@ -12,6 +12,7 @@ import axios from "axios";
 import { getApiKey } from "../../src/lib/rara-api-keys.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { ttsGeneration, ttsVoiceList, vitsLanguages, vitsModels, vitsTtsGenerate, animeSpeech, animeSpeakerIds } from "../../src/lib/rara-onepunya.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "onettts",
@@ -31,12 +32,25 @@ const pluginConfig = {
 
 const DEFAULT_VITS_MODEL = "csukuangfj/vits-piper-id_ID-news_tts-medium";
 
-async function sendAudio(m, sock, url, fileName, mimetype = "audio/mpeg") {
+async function sendAudio(m, sock, url, fileName, mimetype = "audio/mpeg", info = null) {
+  let size = 0, asDoc = false;
   try {
     const dl = await axios.get(url, { responseType: "arraybuffer", timeout: 120_000 });
-    await sock.sendMessage(m.chat, { audio: Buffer.from(dl.data), mimetype, ptt: true, fileName }, { quoted: m });
+    const buf = Buffer.from(dl.data); size = buf.length;
+    await sock.sendMessage(m.chat, { audio: buf, mimetype, ptt: true, fileName }, { quoted: m });
   } catch {
+    asDoc = true;
     await sock.sendMessage(m.chat, { document: { url }, fileName, mimetype }, { quoted: m });
+  }
+  if (info) {
+    await m.reply(mediaInfoCaption({ header: "Text to Speech", fields: [
+      { label: "Input", value: "Teks (" + info.chars + " karakter)" },
+      { label: "Mode", value: info.mode },
+      { label: info.voiceLabel, value: info.voice },
+
+      { label: "Hasil", value: (asDoc ? "Dokumen audio " : "Voice note ") + (mimetype === "audio/wav" ? "(WAV)" : "(MP3)") },
+      { label: "Ukuran", value: size ? (size / 1024).toFixed(1) + " KB" : "" },
+    ] }));
   }
 }
 
@@ -105,7 +119,7 @@ async function handler(m, { sock }) {
       const res = await ttsGeneration(apiKey, teks, voice);
       const url = res?.url || "";
       if (!url) throw new Error("Server gak balikin audio.");
-      return sendAudio(m, sock, url, `onepunya-tts.mp3`, "audio/mpeg");
+      return sendAudio(m, sock, url, `onepunya-tts.mp3`, "audio/mpeg", { chars: teks.length, mode: "TTS suara", voiceLabel: "Suara", voice });
     }
 
     // ── VITS TTS ──
@@ -114,7 +128,7 @@ async function handler(m, { sock }) {
       const res = await vitsTtsGenerate(apiKey, { language: "Indonesian", model: DEFAULT_VITS_MODEL, text, sid: 10, speed: 1 });
       const url = res?.url || res?.audio_url || "";
       if (!url) throw new Error("Server gak balikin audio (engine VITS upstream-nya kadang sibuk — coba lagi).");
-      return sendAudio(m, sock, url, `onepunya-vits.wav`, "audio/wav");
+      return sendAudio(m, sock, url, `onepunya-vits.wav`, "audio/wav", { chars: text.length, mode: "VITS Indonesia", voiceLabel: "Model", voice: DEFAULT_VITS_MODEL.split("/").pop() });
     }
 
     // ── anime speech ──
@@ -129,7 +143,7 @@ async function handler(m, { sock }) {
       const res = await animeSpeech(apiKey, teks, sid);
       const url = res?.url || "";
       if (!url) throw new Error("Server gak balikin audio.");
-      return sendAudio(m, sock, url, `onepunya-anime.wav`, "audio/wav");
+      return sendAudio(m, sock, url, `onepunya-anime.wav`, "audio/wav", { chars: teks.length, mode: "Suara anime", voiceLabel: "Speaker ID", voice: String(sid) });
     }
   } catch (e) {
     return m.reply(raraWrap("Onepunya TTS", `Gagal: ${String(e.message || e).slice(0, 200)}`));

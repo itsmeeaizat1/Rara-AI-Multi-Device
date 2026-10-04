@@ -44,7 +44,6 @@ async function handler(m, { sock, command }) {
     const caption = mediaInfoCaption({ header: "Rara Vocal Remover", fields: [
       { icon: "📥", label: "Input", value: "Audio" },
       { icon: "🎛️", label: "Mode", value: isVocalRemover ? "Instrumental (tanpa vocal)" : "Vocal saja (tanpa instrumental)" },
-      { icon: "⚙️", label: "Engine", value: "StemSplit REST API" },
       { icon: "⬇️", label: "Hasil", value: "Audio MP3" },
     ] });
 

@@ -116,7 +116,6 @@ async function handler(m, { sock }) {
     await m.reply(mediaInfoCaption({ header: "Rara Converter", fields: [
       { icon: "📥", label: "Input", value: `${String(ext).toUpperCase()} (${fmtBytes(buffer.length)})` },
       { icon: "📤", label: "Output", value: String(targetFormat).toUpperCase() },
-      { icon: "⚙️", label: "Engine", value: "Rara Converter" },
       { icon: "⬇️", label: "Hasil", value: "Dokumen" },
     ] }));
   } catch (err) {

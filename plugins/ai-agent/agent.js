@@ -325,7 +325,7 @@ function buildLegacyExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = nu
       const img = await callImageGenChain(prompt, {});
       await sock.sendMessage(m.chat, {
         image: Buffer.from(img.base64, "base64"),
-        caption: "🎨 " + prompt.slice(0, 150) + (img.via ? "\n_(engine: " + img.via + ")_" : "") + (img.ratio && img.ratio !== "1:1" ? " _(rasio: " + img.ratio + ")_" : ""),
+        caption: "🎨 " + prompt.slice(0, 150) + (img.ratio && img.ratio !== "1:1" ? " _(rasio: " + img.ratio + ")_" : ""),
       }, { quoted: m });
       return { ok: true, msg: "Gambar dikirim (engine: " + (img.via || "-") + "): " + prompt.slice(0, 80) };
     } catch (e) {
@@ -374,7 +374,7 @@ function buildLegacyExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = nu
       const finalBuf = hdMode ? await applyHd(baseBuf, hdMode) : baseBuf;
       await sock.sendMessage(m.chat, {
         image: Buffer.from(finalBuf),
-        caption: "🖼️ " + userPrompt.slice(0, 150) + "\n_(engine: " + usedApi + (hdMode ? " + " + hdMode : "") + ")_",
+        caption: "🖼️ " + userPrompt.slice(0, 150) + (hdMode ? "\n_(" + hdMode + ")_" : ""),
       }, { quoted: m });
       return { ok: true, msg: "Gambar diedit (engine: " + usedApi + "): " + userPrompt.slice(0, 80) };
     } catch (e) {

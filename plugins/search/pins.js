@@ -10,6 +10,7 @@ import te from "../../src/lib/rara-error.js";
 import { f } from "../../src/lib/rara-http.js";
 import { AIRich } from "../../src/lib/rara-builder.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption, fmtBytes } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "pins",
@@ -110,10 +111,6 @@ async function handler(m, { sock }) {
     } catch (albumErr) {
       console.log("[Pins] Album gagal, kirim satu-satu:", albumErr.message);
 
-      const saluranId = config.saluran?.id || "@newsletter";
-      const saluranName =
-        config.saluran?.name || config.bot?.name || "Rara-AI";
-
       for (const content of mediaList) {
         await sock.sendMessage(
           m.chat,
@@ -128,6 +125,14 @@ async function handler(m, { sock }) {
         );
       }
     }
+
+    // Kartu info hasil (jumlah + ukuran total) — request owner: field info tiap fitur, tanpa nama API/mesin
+    const totalBytes = mediaList.reduce((a, c) => a + (c.image?.length || 0), 0);
+    await m.reply(mediaInfoCaption({ header: "Pinterest", fields: [
+      { label: "Jenis", value: "Gambar" },
+      { label: "Jumlah", value: `${mediaList.length} gambar` },
+      { label: "Ukuran", value: fmtBytes(totalBytes) },
+    ] }));
   } catch (err) {
     console.error("[Pins] Error:", err.message);
     m.reply(raraWrap("pins", te(m.prefix, m.command, m.pushName), "error"));

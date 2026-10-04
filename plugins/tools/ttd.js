@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 async function saveTemp(buffer, ext) {
   const tmpdir = os.tmpdir();
@@ -197,6 +198,13 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       mimetype: "application/pdf",
       fileName: `ttd_${Date.now()}.pdf`,
     }, { quoted: m });
+    await m.reply(mediaInfoCaption({ header: "Tanda Tangan PDF", fields: [
+      { label: "Jenis", value: isImageMode ? "Tanda tangan gambar" : "Tanda tangan teks" },
+      { label: "Nama", value: isImageMode ? "" : cleanArgs.slice(0, 40) },
+      { label: "Halaman", value: opts.page ? String(opts.page) : "Terakhir" },
+      { label: "Hasil", value: "Dokumen PDF" },
+      { label: "Ukuran", value: (resultBuffer.length / 1024).toFixed(1) + " KB" },
+    ] }));
   } catch (error) {
     await m.react("❌");
     console.error("ttd error:", error);

@@ -170,10 +170,23 @@ function mimeToKind(mime) {
 
 async function sendBuffer(sock, m, buffer, mime, caption) {
   const kind = mimeToKind(mime);
-  if (kind === "image") return sock.sendMessage(m.chat, { image: buffer, caption }, { quoted: m });
-  if (kind === "audio") return sock.sendMessage(m.chat, { audio: buffer, mimetype: mime, ptt: false }, { quoted: m });
-  if (kind === "video") return sock.sendMessage(m.chat, { video: buffer, caption }, { quoted: m });
-  return sock.sendMessage(m.chat, { document: buffer, mimetype: mime || "application/octet-stream", fileName: "kyio-file" }, { quoted: m });
+  let sent;
+  if (kind === "image") sent = await sock.sendMessage(m.chat, { image: buffer, caption }, { quoted: m });
+  else if (kind === "audio") sent = await sock.sendMessage(m.chat, { audio: buffer, mimetype: mime, ptt: false }, { quoted: m });
+  else if (kind === "video") sent = await sock.sendMessage(m.chat, { video: buffer, caption }, { quoted: m });
+  else sent = await sock.sendMessage(m.chat, { document: buffer, mimetype: mime || "application/octet-stream", fileName: "kyio-file" }, { quoted: m });
+  // Kartu info (audio/dokumen tak punya caption yang tampil di WA). Gagal kartu TIDAK boleh menggagalkan kiriman.
+  try {
+    const { mediaInfoCaption } = await import("./rara-media-info.js");
+    const jenis = { image: "Gambar", audio: "Audio", video: "Video" }[kind] || "Dokumen";
+    await m.reply(mediaInfoCaption({ header: "Hasil", fields: [
+      { label: "Perintah", value: String(m.command || "-") },
+      { label: "Jenis", value: jenis },
+      { label: "Format", value: String(mime || "-").split(";")[0] },
+      { label: "Ukuran", value: (buffer.length / 1024).toFixed(1) + " KB" },
+    ] }));
+  } catch (e) { console.error("[rara-kyio] kartu info gagal:", e.message); }
+  return sent;
 }
 
 async function trySendMediaUrl(sock, m, url, caption, raraWrap) {

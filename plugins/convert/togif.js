@@ -44,7 +44,6 @@ async function handler(m, { sock }) {
           { icon: "📥", label: "Input", value: inputKind },
           { icon: "📤", label: "Output", value: "GIF" },
           { icon: "📦", label: "Ukuran", value: fmtBytes(mediaBuffer.length) },
-          { icon: "⚙️", label: "Engine", value: "WA gifPlayback" },
         ] }),
       }, { quoted: m });
     } catch (err) {

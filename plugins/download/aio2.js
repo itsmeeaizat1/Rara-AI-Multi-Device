@@ -11,6 +11,7 @@ import { registerChoice } from "../../src/lib/rara-aio2-session.js";
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
 import { toSC, raraWrap, raraGuide, raraSalahV2 } from "../../src/lib/rara-menu-style.js";
 import config from "../../config.js";
+import { mediaInfoCaption } from "../../src/lib/rara-media-info.js";
 
 const pluginConfig = {
   name: "aio2",
@@ -155,6 +156,14 @@ async function sendSingle(m, sock, media, meta) {
       mimetype: mime,
       fileName: `${slug(meta.title)}.${ext}`,
     }, { quoted: m });
+    await m.reply(mediaInfoCaption({ header: "AIO Downloader", fields: [
+      { label: "Judul", value: String(meta.title || "").slice(0, 60) },
+      { label: "Sumber", value: meta.source || "" },
+      { label: "Kualitas", value: media?.quality || media?.label || "" },
+      { label: "Format", value: ext.toUpperCase() },
+      { label: "Hasil", value: "Dokumen" },
+      { label: "Ukuran", value: (buf.length / 1024 / 1024).toFixed(2) + " MB" },
+    ] }));
   } catch (e) {
     await m.react("❌");
     await m.reply(raraWrap("AIO v2", `Gagal unduh file: ${e?.message || e}`, "error"));
