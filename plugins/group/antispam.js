@@ -14,19 +14,6 @@ function raraWrap(title, text) {
   }).join("\n");
   return `${toSC(title)}\n\n${scBody}`;
 }
-async function formatAndReply( text, cmdName) {
-  const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
-  const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
-  // Convert all text to small caps, skip command lines
-  text = text.split("\n").map(line => {
-    if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("°˖") || line.includes("⋆｡˚")) return line;
-    return toSC(line);
-  }).join("\n");
-  if (!text.includes("")) {
-    text = text + "\n";
-  }
-  return await m.reply(text);
-}
 
 
 

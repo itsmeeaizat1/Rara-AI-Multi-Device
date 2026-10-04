@@ -285,6 +285,7 @@ async function handler(m, { sock, config: botConfig }) {
       // Mode Fish Audio: upload ke Fish Audio buat create voice model
       if (useFishAudio) {
         try {
+          const result = await fishCreateVoice(samplePath, profileName, apiKey);
           const voiceId = result._id || result.id;
           const voiceState = result.state || "trained";
 

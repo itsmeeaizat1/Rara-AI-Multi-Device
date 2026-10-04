@@ -5,7 +5,7 @@
  * Default jeda 6 jam: 00:00, 06:00, 12:00, 18:00 WIB.
  */
 
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox, raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
   getBmkgStatus,
   updateBmkgSettings,

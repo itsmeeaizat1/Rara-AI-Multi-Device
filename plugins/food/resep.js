@@ -410,7 +410,7 @@ async function handler(m, { sock, args }) {
       meals.forEach((meal, i) => txt += `${i + 1}. ${meal.strMeal} (ID: ${meal.idMeal})\n`);
       txt += `\nTotal: ${res.data.meals.length} resep\nLihat detail: \`${m.prefix}resep <id>\``;
       return await m.reply( txt, { commandName: "resep" });
-    } catch { return m.reply("Error: " + e.message); }
+    } catch (e) { return m.reply("Error: " + e.message); }
   }
 
   // === INGREDIENTS ===

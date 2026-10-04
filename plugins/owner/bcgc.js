@@ -4,7 +4,7 @@ import { fetchGroupsSafe } from "../../src/lib/rara-jpm-helper.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
-import { raraError, raraEmpty, raraGuide, raraNoInput, broadcastFormat, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, broadcastFormat, raraWrap, raraBox } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "bcgc",

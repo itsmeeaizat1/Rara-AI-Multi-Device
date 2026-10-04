@@ -5,6 +5,7 @@ import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { raraGuide, raraSalahV2, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
+import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({

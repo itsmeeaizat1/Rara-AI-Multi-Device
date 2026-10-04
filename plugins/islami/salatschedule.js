@@ -12,7 +12,7 @@ import {
 import { runLiveTicker } from "../../src/lib/rara-countdown.js";
 import te from "../../src/lib/rara-error.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
-import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "jadwalsholat2",
   alias: ["jadwalsholat", "jadwalsolat", "solat", "prayerschedule"],

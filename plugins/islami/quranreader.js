@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
 
       const db = getDatabase();
       const user = db.getUser(m.sender);
-      const qariKey = user.settings?.qari || "alafasy";
+      const qariKey = user?.settings?.qari || "alafasy";
       const qari = QARIS[qariKey] || QARIS.alafasy;
       const edition = qari.edition;
 
@@ -117,25 +117,37 @@ async function handler(m, { sock }) {
         const audioUrl = audioRes.data.audio;
         const indoText = indoRes.data.text;
 
-        let txt = "*" + surah.englishName + "*\n\n";
-        
-        txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
-        txt += "Total Ayat: " + surah.numberOfAyahs + "\n";
-        txt += "Qari: " + qari.name + "\n\n";
-        txt += "Mengirim " + limit + " ayat pertama...";
+        let txt = "*" + surah.englishName + "* " + suratNum + ":" + ayatNum + "\n\n";
+        txt += "Qari: " + qari.name + "\n";
+        txt += indoText;
         await m.react("🐣");
         await m.reply(txt);
-
-        for (let i = 0; i < limit; i++) {
-          await sendAudio(audioRes.data.ayahs[i].audio);
-          await new Promise((r) => setTimeout(r, 500));
-        }
-
-        if (surah.numberOfAyahs > 5) {
-          await m.reply(raraWrap("Info", "ℹ️ Hanya 5 ayat pertama dikirim.\nAyat spesifik: .alquran audio " + suratNum + " <ayat>"));
-        }
+        await sendAudio(audioUrl);
         return;
       }
+
+      // Tanpa nomor ayat: kirim 5 ayat pertama (audio per surat, edisi qari terpilih)
+      const limit = Math.min(5, surah.numberOfAyahs);
+      const audioSurah = await fetchJson(API_BASE + "/surah/" + suratNum + "/" + edition);
+      const ayahs = audioSurah.data.ayahs;
+
+      let txt = "*" + surah.englishName + "*\n\n";
+      txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
+      txt += "Total Ayat: " + surah.numberOfAyahs + "\n";
+      txt += "Qari: " + qari.name + "\n\n";
+      txt += "Mengirim " + limit + " ayat pertama...";
+      await m.react("🐣");
+      await m.reply(txt);
+
+      for (let i = 0; i < limit; i++) {
+        await sendAudio(ayahs[i].audio);
+        await new Promise((r) => setTimeout(r, 500));
+      }
+
+      if (surah.numberOfAyahs > limit) {
+        await m.reply(raraWrap("Info", "Hanya " + limit + " ayat pertama dikirim.\nAyat spesifik: .alquran audio " + suratNum + " <ayat>"));
+      }
+      return;
     }
 
     // MODE BACA (teks)
@@ -171,22 +183,46 @@ async function handler(m, { sock }) {
       txt += "Ayat: " + surah.numberOfAyahs + "\n";
       txt += "Turun: " + (surah.revelationType === "Meccan" ? "Mekkah" : "Madinah") + "\n\n";
 
-      for (let i = 0; i < limit; i++) {
-        txt += "*" + surah.englishName + ":" + arabAyahs[i].numberInSurah + "*\n";
-        txt += arabAyahs[i].text + "\n";
-        txt += indoAyahs[i].text + "\n\n";
-      }
+      txt += "*" + surah.englishName + ":" + arabAyah.numberInSurah + "*\n";
+      txt += arabAyah.text + "\n";
+      txt += indoAyah.text + "\n";
 
-      if (surah.numberOfAyahs > 10) {
-        txt += "Menampilkan 10 ayat pertama dari " + surah.numberOfAyahs + " ayat.\n";
-        txt += "Baca ayat spesifik: .alquran " + suratNum + " <ayat>";
-      }
-
-      txt += "\nAudio: .alquran audio " + suratNum + " <ayat>\n";
+      txt += "\nAudio: .alquran audio " + suratNum + " " + ayatNum + "\n";
       txt += "Sumber: alquran.cloud API";
       await m.react("🐣");
       return await m.reply(txt);
     }
+
+    // Tanpa nomor ayat: tampilkan 10 ayat pertama (teks arab + arti per surat)
+    const limit = Math.min(10, surah.numberOfAyahs);
+    const [arabSurah, indoSurah] = await Promise.all([
+      fetchJson(API_BASE + "/surah/" + suratNum + "/quran-uthmani"),
+      fetchJson(API_BASE + "/surah/" + suratNum + "/id.indonesian"),
+    ]);
+    const arabAyahs = arabSurah.data.ayahs;
+    const indoAyahs = indoSurah.data.ayahs;
+
+    let txt = "*" + surah.englishName + "*\n\n";
+    txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
+    txt += "Arti: " + surah.englishNameTranslation + "\n";
+    txt += "Ayat: " + surah.numberOfAyahs + "\n";
+    txt += "Turun: " + (surah.revelationType === "Meccan" ? "Mekkah" : "Madinah") + "\n\n";
+
+    for (let i = 0; i < limit; i++) {
+      txt += "*" + surah.englishName + ":" + arabAyahs[i].numberInSurah + "*\n";
+      txt += arabAyahs[i].text + "\n";
+      txt += indoAyahs[i].text + "\n\n";
+    }
+
+    if (surah.numberOfAyahs > limit) {
+      txt += "Menampilkan " + limit + " ayat pertama dari " + surah.numberOfAyahs + " ayat.\n";
+      txt += "Baca ayat spesifik: .alquran " + suratNum + " <ayat>\n";
+    }
+
+    txt += "\nAudio: .alquran audio " + suratNum + "\n";
+    txt += "Sumber: alquran.cloud API";
+    await m.react("🐣");
+    return await m.reply(txt);
   } catch (error) {
     await m.react("❌");
     return m.reply(raraWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));

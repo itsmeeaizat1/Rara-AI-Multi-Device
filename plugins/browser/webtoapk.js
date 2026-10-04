@@ -208,6 +208,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ], "info"));
 
     // Wait for build to complete with progress updates
+    const buildStartedAt = Date.now();
     const result = await waitUntilDone(requestId, (statusData) => {
       // Send progress update on status change
       try {
@@ -258,7 +259,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     lines.push("Source: webtonative.com (gratis, no token)");
-    lines.push("Build time: ~" + (attempts * 5) + " detik");
+    lines.push("Build time: ~" + Math.round((Date.now() - buildStartedAt) / 1000) + " detik");
 
     await m.react("🐣");
     return m.reply(raraWrap("WebToNative", lines, "success"));

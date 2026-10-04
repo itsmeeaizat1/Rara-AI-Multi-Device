@@ -27,6 +27,7 @@ const pluginConfig = {
 async function doMemeAnalysis(m, sock, style) {
   try {
     const botConfig = (await import("../../config.js")).default;
+    const prefix = botConfig.command?.prefix || ".";
     const aiConfig = botConfig.aiHelp || {};
     const apiKey = String(aiConfig.apiKey || "");
     const apiEndpoint = String(aiConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions");

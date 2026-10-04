@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
       return m.reply(
         bracketBox("✅", toSC("Auto Report Diaktifkan"), [
           `${toSC("Jadwal")}: ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")} WIB`,
-          `${toSC("Dikirim ke")}: ${ownerNum || "Owner"}`,
+          `${toSC("Dikirim ke")}: ${config.owner?.number?.[0] || "Owner"}`,
           `${toSC("Isi")}: ${toSC("User baru, command terpopuler, error, uptime, memory")}`,
         ])
       );

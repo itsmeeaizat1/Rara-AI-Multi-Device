@@ -5,6 +5,7 @@ import {
   jidNormalizedUser,
 } from "rara";
 import axios from "axios";
+import config from "../../config.js";
 import crypto from "crypto";
 import te from "../../src/lib/rara-error.js";
 import { f } from "../../src/lib/rara-http.js";

@@ -2,7 +2,7 @@
 // autoforward.js — Auto-forward pesan berdasarkan keyword ke PM owner
 // Integrated with automation hub (checkAutoForward hook)
 import { getDatabase } from '../../src/lib/rara-database.js'
-import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraBox, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
   name: "autoforward",
