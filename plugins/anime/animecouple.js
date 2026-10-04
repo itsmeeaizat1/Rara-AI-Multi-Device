@@ -60,6 +60,18 @@ async function fetchCouplePP() {
   return { male: maleBuf, female: femaleBuf, maleUrl: male, femaleUrl: female };
 }
 
+
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     await m.react("🕒");
@@ -70,7 +82,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     try {
       await conn.sendMessage(m.key.remoteJid, {
         image: result.male,
-        caption: raraWrap("Anime Couple PP", [
+        caption: (await dlCard("gambar", { buffer: result.male }, [["Jenis", "PP Cowok"], ["Pasangan", "Couple Anime"], ["Sumber", "Andaraz API"]])) || raraWrap("Anime Couple PP", [
           "COUPLE ANIME (COWOK)",
           "",
           "Source: Andaraz API",
@@ -88,7 +100,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     try {
       await conn.sendMessage(m.key.remoteJid, {
         image: result.female,
-        caption: raraWrap("Anime Couple PP", [
+        caption: (await dlCard("gambar", { buffer: result.female }, [["Jenis", "PP Cewek"], ["Pasangan", "Couple Anime"], ["Sumber", "Andaraz API"]])) || raraWrap("Anime Couple PP", [
           "COUPLE ANIME (CEWEK)",
           "",
           "Source: Andaraz API",

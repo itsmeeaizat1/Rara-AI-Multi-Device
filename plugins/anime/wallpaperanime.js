@@ -116,6 +116,18 @@ async function downloadImage(url) {
   return Buffer.from(await res.arrayBuffer());
 }
 
+
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 async function handler(m, { sock, config: botConfig }) {
   const text = m.args.join(" ").trim();
 
@@ -192,9 +204,10 @@ async function handler(m, { sock, config: botConfig }) {
     const caption = `Wallpaper Anime: ${query || "Random"}\nResolusi: ${wp.resolution}\nUkuran: ${sizeKB} KB\nSource: ${wp.source}`;
 
     await m.react("🐣");
+    const card = await dlCard("gambar", { buffer: imageBuffer }, [["Judul", String(query || "Random").slice(0, 40)], ["Resolusi", String(wp.resolution || "-")], ["Sumber", String(wp.source || "Wallhaven")]]);
     await sock.sendMessage(m.chat, {
       image: imageBuffer,
-      caption: raraWrap("Wallpaper Anime", caption),
+      caption: card ? `${raraWrap("Wallpaper Anime", caption)}\n\n${card}` : raraWrap("Wallpaper Anime", caption),
     }, { quoted: m });
   } catch (error) {
     let errMsg = error.message || "Gagal mencari wallpaper anime.";

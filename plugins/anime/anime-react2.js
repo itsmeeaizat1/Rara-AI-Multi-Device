@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
 
@@ -46,6 +47,18 @@ const pluginConfig = {
   cooldown: 5, energi: 1, isEnabled: true,
 };
 
+
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 async function handler(m, { sock }) {
   try {
     const cmd = m.command || "animeawoo";
@@ -76,9 +89,11 @@ async function handler(m, { sock }) {
       caption = `@${m.sender.split("@")[0]} ${rx.label} @${targetName}`;
     }
 
+    const eng = url.includes("waifu.pics") ? "waifu.pics" : "nekos.best";
+    const card = await dlCard("gambar", { url }, [["Aksi", String(rx.label || "Reaction")], ["Target", mentioned && mentioned !== m.sender ? "@" + mentioned.split("@")[0] : m.pushName || m.sender], ["Engine", eng]]);
     await sock.sendMessage(from, {
       image: { url },
-      caption: caption,
+      caption: card ? `${caption}\n\n${card}` : caption,
       mentions: mentioned ? [mentioned, m.sender] : []
     }, { quoted: m });
 
