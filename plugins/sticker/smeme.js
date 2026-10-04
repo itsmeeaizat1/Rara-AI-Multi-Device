@@ -18,7 +18,7 @@ const pluginConfig = {
   alias: ["smeme"],
   category: "sticker",
   description: "Membuat sticker meme dari gambar",
-  usage: ".smeme <top>|<bottom>",
+  usage: ".smeme <teks> atau .smeme <top>|<bottom>",
   example: ".smeme Ketika|Kamu Lupa",
   isOwner: false,
   isPremium: false,
@@ -37,18 +37,21 @@ async function handler(m, { sock }) {
     return m.reply(raraWrap("smeme", [
       "Reply atau kirim gambar/sticker dengan caption",
       "",
-      "💡 Contoh: " + m.prefix + "smeme Top|Bottom",
-    ]));
-  }
-  const input = m.args.join(" ");
-  if (!input || !input.includes("|")) {
-    return m.reply(raraWrap("smeme", [
-      "📌 Format: top|bottom",
-      "",
       "💡 Contoh: " + m.prefix + "smeme Ketika|Kamu Lupa",
     ]));
   }
-  const [top, bottom] = input.split("|").map((s) => s.trim());
+  const input = m.args.join(" ").trim();
+  if (!input) {
+    return m.reply(raraWrap("smeme", [
+      "📌 Format: teks (posisi bawah) atau top|bottom",
+      "",
+      "💡 Contoh: " + m.prefix + "smeme Kamu Lupa",
+    ]));
+  }
+  // tanpa "|" → teks tunggal dipakai posisi BAWAH (default owner 4 Okt 2026)
+  const [top, bottom] = input.includes("|")
+    ? input.split("|").map((s) => s.trim())
+    : ["", input];
   try {
   await m.react("🕒");
     let mediaBuffer;
