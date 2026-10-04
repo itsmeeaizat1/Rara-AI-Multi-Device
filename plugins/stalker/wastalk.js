@@ -3,6 +3,20 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import moment from 'moment-timezone'
 import PhoneNum from 'awesome-phonenumber'
 import config from '../../config.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch stalker) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 const pluginConfig = {
     name: 'wastalk',
     alias: ["wastalk"],
@@ -94,9 +108,10 @@ async function handler(m, { sock }) {
             res += '*standard whatsapp account*';
         }
 
+        const card = await dlCard("gambar", { url: img }, [["Engine", "WhatsApp (native)"], ["Target", "+" + num.split('@')[0]], ["Judul", String(name).slice(0, 40)]]);
         await sock.sendMessage(m.chat, {
             image: { url: img },
-            caption: res,
+            caption: card ? `${res}\n\n${card}` : res,
             mentions: [num]
         }, { quoted: m });
 

@@ -2,6 +2,20 @@
 // tiktokstalk2.js — TikTok Stalker v2 (nexray API)
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch stalker) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "tiktokstalk2",
@@ -49,7 +63,9 @@ async function handler(m, { sock }) {
     if (avatarUrl && avatarUrl.startsWith("http")) {
       try {
         const imgRes = await axios.get(avatarUrl, { responseType: "arraybuffer", timeout: 15000, headers: { "User-Agent": "Mozilla/5.0" } });
-        return await sock.sendMessage(m.chat, { image: Buffer.from(imgRes.data), caption: msg });
+        const imgBuf = Buffer.from(imgRes.data);
+        const card = await dlCard("gambar", { buffer: imgBuf }, [["Engine", "API nexray.web.id"], ["Target", "@" + username], ["Judul", String(r.username || r.nickname || "-").slice(0, 40)]]);
+        return await sock.sendMessage(m.chat, { image: imgBuf, caption: card ? `${msg}\n\n${card}` : msg });
       } catch {}
     }
     return m.reply(msg);

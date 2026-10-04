@@ -4,6 +4,20 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import te from '../../src/lib/rara-error.js'
 import config from '../../config.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// kartu info media (batch stalker) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
     name: 'igstalk',
@@ -63,9 +77,10 @@ async function handler(m, { sock }) {
             `🔗 https://instagram.com/${d.username}`
         const profilePic = d.profile_pic
         if (profilePic) {
+            const card = await dlCard("gambar", { url: profilePic }, [["Engine", "API firefly.maiku"], ["Target", "@" + (d.username || username)], ["Judul", String(d.full_name || d.username || "-").slice(0, 40)]]);
             await sock.sendMessage(m.chat, {
                 image: { url: profilePic },
-                caption
+                caption: card ? `${caption}\n\n${card}` : caption
             }, { quoted: m })
         } else {
             await m.reply(caption)
