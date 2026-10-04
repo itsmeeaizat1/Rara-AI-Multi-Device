@@ -23,6 +23,19 @@ import {
   mapsScreenshotSearch, mapsPlaceDetail, parseMapCoords,
   registerMapsChoice, takeMapsChoice, getMapsSession, clearMapsChoice,
 } from "../../src/scraper/rara-maps-browser.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch browser) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "mapss",
@@ -69,9 +82,10 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const { image, places } = await mapsScreenshotSearch(query, { limit: 8 });
 
-    // [1] screenshot duluan — caption ringkas
+    // [1] screenshot duluan — caption kartu info media (batch browser)
+    const shotCard = await dlCard("gambar", { buffer: image }, [["Query", String(query).slice(0, 40)], ["Jumlah tempat", String(places.length)]]);
     const shotCap = `📸 Hasil Maps: "${query}" — list lengkap di pesan berikutnya.`;
-    await sock.sendMedia(m.chat, image, shotCap, m, { type: "image" });
+    await sock.sendMedia(m.chat, image, (shotCard || shotCap), m, { type: "image" });
 
     // [2] plain text list bernomor
     const pickable = places.filter((p) => p.url);
@@ -155,11 +169,12 @@ export async function answerHandler(m, sock) {
     await m.react("🕒");
     const { image, detail } = await mapsPlaceDetail(item.url);
 
-    // [1] screenshot isi halaman duluan
+    // [1] screenshot isi halaman duluan — caption kartu info media (batch browser)
+    const detCard = await dlCard("gambar", { buffer: image }, [["Tempat", String((detail?.name || item.name || "lokasi").slice(0, 40))]]);
     const cap = detail?.name
       ? `📸 ${detail.name} — isi halaman lengkap di pesan berikutnya.`
       : `📸 Isi halaman: ${item.name} — detail di pesan berikutnya.`;
-    await sock.sendMedia(m.chat, image, cap, m, { type: "image" });
+    await sock.sendMedia(m.chat, image, (detCard || cap), m, { type: "image" });
 
     // [2] plain text isi — ringkasan + readmore + ulasan,
     //     pesan panjang dipecah (chat lanjutan, pola splitChatChunks ai agent)

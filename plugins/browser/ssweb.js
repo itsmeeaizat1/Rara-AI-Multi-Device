@@ -3,6 +3,19 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+// kartu info media (batch browser) — helper ringkas, best-effort tak pernah ganggu kirim
+async function dlCard(type, probe, request) {
+  try {
+    const info = probe.buffer != null ? await probeBuffer(probe.buffer, { mime: probe.mime }) : await probeMedia(probe.url);
+    return mediaResultCard({
+      header: Array.isArray(pluginConfig.name) ? pluginConfig.name[0] : pluginConfig.name,
+      type, request,
+      size: info?.size, mime: info?.mime, width: info?.width, height: info?.height, duration: info?.duration,
+    });
+  } catch { return null; }
+}
+
 
 const pluginConfig = {
   name: "ssweb",
@@ -60,7 +73,9 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Rara-AI";
 
-    await sock.sendMedia(m.chat, imageBuffer, null, m, {
+    // kartu info media (batch browser)
+    const shotCard = await dlCard("gambar", { buffer: imageBuffer, mime: "image/png" }, [["URL", String(text).slice(0, 40)], ["Mode", mode || "full"]]);
+    await sock.sendMedia(m.chat, imageBuffer, shotCard || null, m, {
       type: "image",
     });
   } catch (error) {
