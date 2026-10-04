@@ -4,6 +4,8 @@ import config from "../../config.js";
 import { uploadTo0x0 } from "../../src/lib/rara-tmpfiles.js";
 import te from "../../src/lib/rara-error.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
 const pluginConfig = {
   name: "fakeff",
   alias: ["fakeff"],
@@ -27,10 +29,25 @@ async function handler(m, { sock }) {
   }
   try {
     await m.react("🕒");
+    const imgUrl = `https://api.nexray.web.id/maker/fakelobyff?nickname=${encodeURIComponent(nama)}`;
+    let card = "";
+    try {
+      const info = await probeMedia(imgUrl);
+      card = mediaResultCard({
+        header: "fakeff",
+        type: "gambar",
+        request: [["Nama", nama]],
+        size: info.size,
+        mime: info.mime,
+        width: info.width,
+        height: info.height,
+      });
+    } catch {}
+
     await sock.sendMedia(
       m.chat,
-      `https://api.nexray.web.id/maker/fakelobyff?nickname=${encodeURIComponent(nama)}`,
-      null,
+      imgUrl,
+      card || null,
       m,
       {
         type: "image",

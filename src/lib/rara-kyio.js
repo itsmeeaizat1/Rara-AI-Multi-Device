@@ -9,6 +9,7 @@
 import axios from "axios";
 import { getApiKey } from "./rara-api-keys.js";
 import { uploadImage } from "./rara-uploader.js";
+import { mediaResultCard, probeBuffer } from "./rara-media-result.js";
 
 const KYIO_BASE = "https://api.kyio.web.id";
 const KYIO_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
@@ -170,9 +171,24 @@ function mimeToKind(mime) {
 
 async function sendBuffer(sock, m, buffer, mime, caption) {
   const kind = mimeToKind(mime);
-  if (kind === "image") return sock.sendMessage(m.chat, { image: buffer, caption }, { quoted: m });
+  // Kartu info media terpusat — 1 titik tutup semua cmd kyio (kyioimage/kyiomaker).
+  // Kartu cuma nyertain ke jenis yang punya caption (gambar/video);
+  // audio/dokumen dikirim apa adanya biar gak spam teks menyusul.
+  let cap = caption || "";
+  if (kind === "image" || kind === "video") {
+    try {
+      const info = await probeBuffer(buffer);
+      const card = mediaResultCard({
+        header: String(m.command || "kyio").toLowerCase(),
+        type: kind === "image" ? "gambar" : "video",
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+      if (card) cap = card;
+    } catch { /* best-effort, caption lama dipakai */ }
+  }
+  if (kind === "image") return sock.sendMessage(m.chat, { image: buffer, caption: cap }, { quoted: m });
   if (kind === "audio") return sock.sendMessage(m.chat, { audio: buffer, mimetype: mime, ptt: false }, { quoted: m });
-  if (kind === "video") return sock.sendMessage(m.chat, { video: buffer, caption }, { quoted: m });
+  if (kind === "video") return sock.sendMessage(m.chat, { video: buffer, caption: cap }, { quoted: m });
   return sock.sendMessage(m.chat, { document: buffer, mimetype: mime || "application/octet-stream", fileName: "kyio-file" }, { quoted: m });
 }
 

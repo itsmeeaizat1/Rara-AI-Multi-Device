@@ -3,6 +3,7 @@ import { downloadMediaMessage, getContentType } from "rara";
 import { ImageUploadService } from "node-upload-images";
 import axios from "axios";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "musiccard",
@@ -100,9 +101,19 @@ async function handler(m, { sock }) {
     const cardBuffer = Buffer.from(res.data);
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeBuffer(cardBuffer);
+      card = mediaResultCard({
+        header: "musiccard",
+        type: "gambar",
+        request: [["Judul", judul], ["Artis", nama]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       image: cardBuffer,
-      caption: `*MUSIC CARD BERHASIL DIBUAT!* \n\n🎧 *judul*: ${judul}\n🎤 *artis*: ${nama}\n\nKeren banget kan hasilnya? Pamerin ke teman-temanmu yuk! 🚀`
+      caption: (card || `*MUSIC CARD BERHASIL DIBUAT!* \n\n🎧 *judul*: ${judul}\n🎤 *artis*: ${nama}\n\nKeren banget kan hasilnya? Pamerin ke teman-temanmu yuk! 🚀`)
     }, { quoted: m });
   } catch (err) {
     console.error("[Music Card]", err.message);

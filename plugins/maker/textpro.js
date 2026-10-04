@@ -5,6 +5,7 @@ import { haidarTextpro } from "../../src/lib/rara-haidar.js";
 import * as cheerio from "cheerio";
 import FormData from "form-data";
 import { raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "textpro",
@@ -129,9 +130,19 @@ async function handler(m, { sock }) {
     if (buffer.length < 100) throw new Error("Gambar kosong");
 
     await m.react("🐣");
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: "textpro",
+        type: "gambar",
+        request: [["Style", style], ["Teks", String(content).slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
     await sock.sendMessage(m.chat, {
       image: buffer,
-      caption: raraBerhasil() + `\nStyle: ${style}\nTeks: ${content}`,
+      caption: (card || raraBerhasil() + `\nStyle: ${style}\nTeks: ${content}`),
     }, { quoted: m });
   } catch (err) {
     console.error("[textpro] ephoto360 gagal:", err.message);
@@ -142,9 +153,19 @@ async function handler(m, { sock }) {
         const buffer = fbBuffer;
         if (buffer.length < 100) throw new Error("Gambar kosong");
         await m.react("🐣");
+        let card = "";
+        try {
+          const info = await probeBuffer(buffer);
+          card = mediaResultCard({
+            header: "textpro",
+            type: "gambar",
+            request: [["Style", style], ["Teks", String(content).slice(0, 80)], ["Engine", "Haidar"]],
+            size: info.size, mime: info.mime, width: info.width, height: info.height,
+          });
+        } catch { /* best-effort */ }
         await sock.sendMessage(m.chat, {
           image: buffer,
-          caption: raraBerhasil() + `\nStyle: ${style}\nTeks: ${content}`,
+          caption: (card || raraBerhasil() + `\nStyle: ${style}\nTeks: ${content}`),
         }, { quoted: m });
         return;
       }

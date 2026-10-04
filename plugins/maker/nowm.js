@@ -3,6 +3,7 @@ import sharp from "sharp";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "nowm",
@@ -290,11 +291,21 @@ async function handler(m, { sock }) {
       return m.reply(raraWrap("nowm", "Gagal memproses gambar. Coba gambar lain."));
     }
     await m.react("🐣");
-    await sock.sendMessage(
+      let card = "";
+      try {
+        const info = await probeBuffer(resultBuffer);
+        card = mediaResultCard({
+          header: "nowm",
+          type: "gambar",
+          request: [["Engine", usedApi ? "ClipDrop AI" : "Local"]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMessage(
       m.chat,
       {
         image: resultBuffer,
-        caption: raraBerhasil() + "\nEngine: " + (usedApi ? "ClipDrop AI" : "Local"),
+        caption: (card || raraBerhasil() + "\nEngine: " + (usedApi ? "ClipDrop AI" : "Local")),
       },
       { quoted: m },
     );

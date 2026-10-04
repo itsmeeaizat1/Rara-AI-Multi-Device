@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { nexrayFakeThreads } from "../../src/scraper/nexray-maker.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "fakethreads",
@@ -38,7 +39,17 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const caption = `User: @${usernameClean}\nLikes: ${likes}\nReplies: ${replies}`;
-    return await sock.sendMessage(m.chat, { image: result.buffer, caption });
+    let card = "";
+    try {
+      const info = await probeBuffer(result.buffer);
+      card = mediaResultCard({
+        header: "fakethreads",
+        type: "gambar",
+        request: [["Username", usernameClean], ["Likes", likes], ["Replies", replies]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    return await sock.sendMessage(m.chat, { image: result.buffer, caption: (card || caption) });
   } catch (err) {
     console.error("fakethreads error:", err);
     await m.react("❌");

@@ -9,6 +9,8 @@ import fs from "fs";
 import path from "path";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
 const pluginConfig = {
   name: "fakestory",
   alias: ["fakestory"],
@@ -246,8 +248,23 @@ async function handler(m, { sock }) {
       imageTopBuffer,
       imageBottomBuffer,
     );
+
+    let card = "";
+    try {
+      const info = await probeBuffer(resultBuffer);
+      card = mediaResultCard({
+        header: "fakestory",
+        type: "gambar",
+        request: [["Nama", username]],
+        size: info.size,
+        mime: info.mime,
+        width: info.width,
+        height: info.height,
+      });
+    } catch {}
+
     await m.react("🐣");
-    await sock.sendMedia(m.chat, resultBuffer, null, m, {
+    await sock.sendMedia(m.chat, resultBuffer, card || null, m, {
       type: "image",
     });
   } catch (error) {

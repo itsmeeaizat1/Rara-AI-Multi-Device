@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraWrap } from '../../src/lib/rara-menu-style.js'
+import { mediaResultCard, probeBuffer } from '../../src/lib/rara-media-result.js'
 import { getDatabase } from '../../src/lib/rara-database.js'
 import fs from 'fs'
 import path from 'path'
@@ -167,16 +168,36 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ctx.fillText('Rara AI', W - 25, H - 25);
 
     const outBuf = cv.toBuffer('image/png');
+
+    let card = "";
+    try {
+      const info = await probeBuffer(outBuf);
+      card = mediaResultCard({
+        header: "profilecard",
+        type: "gambar",
+        request: [
+          ["Target", text?.trim() || ("@" + target.split('@')[0])],
+          ["Nama", name],
+        ],
+        size: info.size,
+        mime: info.mime,
+        width: info.width,
+        height: info.height,
+      });
+    } catch { /* best-effort */ }
+
+    const oldCaption = [
+      name + " (@" + target.split('@')[0] + ")",
+      "Level: " + level + " | Rank: " + rank,
+      "XP: " + expProgress + "/" + expNeeded + " (" + Math.floor(progressPercent) + "%)",
+      "Limit: " + limit + " | Money: " + money,
+      "Role: " + role + " | Energi: " + energi,
+    ].join("\n");
+
     await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: outBuf,
-      caption: [
-        name + " (@" + target.split('@')[0] + ")",
-        "Level: " + level + " | Rank: " + rank,
-        "XP: " + expProgress + "/" + expNeeded + " (" + Math.floor(progressPercent) + "%)",
-        "Limit: " + limit + " | Money: " + money,
-        "Role: " + role + " | Energi: " + energi,
-      ].join("\n"),
+      caption: card || oldCaption,
     });
   } catch (e) {
     console.error("profilecard error:", e);

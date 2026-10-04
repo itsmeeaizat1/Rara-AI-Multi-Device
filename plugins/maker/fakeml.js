@@ -9,6 +9,8 @@ import fs from "fs";
 import { uploadTo0x0 } from "../../src/lib/rara-tmpfiles.js";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
 const pluginConfig = {
   name: "fakeml",
   alias: ["fakeml"],
@@ -71,10 +73,25 @@ async function handler(m, { sock }) {
       filename: "image.jpg",
       contentType: "image/jpeg",
     });
+    const imgUrl = `https://api.nexray.web.id/maker/fakelobyml?avatar=${encodeURIComponent(gmbr.directUrl)}&nickname=${encodeURIComponent(name)}`;
+    let card = "";
+    try {
+      const info = await probeMedia(imgUrl);
+      card = mediaResultCard({
+        header: "fakeml",
+        type: "gambar",
+        request: [["Nama", name]],
+        size: info.size,
+        mime: info.mime,
+        width: info.width,
+        height: info.height,
+      });
+    } catch {}
+
     await sock.sendMedia(
       m.chat,
-      `https://api.nexray.web.id/maker/fakelobyml?avatar=${encodeURIComponent(gmbr.directUrl)}&nickname=${encodeURIComponent(name)}`,
-      null,
+      imgUrl,
+      card || null,
       m,
       {
         type: "image",

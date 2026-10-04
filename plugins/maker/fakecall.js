@@ -3,6 +3,7 @@
 import { raraReply } from "../../src/lib/rara-menu-style.js";
 import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
 import path from "path";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "fakecall",
@@ -151,7 +152,22 @@ async function handler(m, { sock }) {
     }
 
     const pngBuffer = await generateFakeCall(nama, durasi, avatar);
-    await sock.sendMedia(m.chat, pngBuffer, null, m, { type: "image" });
+
+    let card = "";
+    try {
+      const info = await probeBuffer(pngBuffer);
+      card = mediaResultCard({
+        header: "fakecall",
+        type: "gambar",
+        request: [["Nama", nama], ["Durasi", durasi]],
+        size: info.size,
+        mime: info.mime,
+        width: info.width,
+        height: info.height,
+      });
+    } catch {}
+
+    await sock.sendMedia(m.chat, pngBuffer, card || null, m, { type: "image" });
     await m.react("\u{1F423}");
   } catch (err) {
     console.error("[fakecall] Error:", err.message);

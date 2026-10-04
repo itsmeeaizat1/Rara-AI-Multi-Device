@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraWrap, raraBerhasil } from '../../src/lib/rara-menu-style.js'
+import { mediaResultCard, probeBuffer } from '../../src/lib/rara-media-result.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -122,10 +123,28 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const buf = cv.toBuffer('image/png');
     fs.writeFileSync(outPath, buf);
 
+    let card = "";
+    try {
+      const info = await probeBuffer(buf);
+      card = mediaResultCard({
+        header: "quotemaker",
+        type: "gambar",
+        request: [
+          ["Teks", parts[0]],
+          ["Penulis", parts[1]],
+          ["Background", parts[2]],
+        ],
+        size: info.size,
+        mime: info.mime,
+        width: info.width,
+        height: info.height,
+      });
+    } catch { /* best-effort */ }
+
     await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: buf,
-      caption: raraBerhasil(),
+      caption: card || raraBerhasil(),
     });
 
     fs.unlinkSync(outPath);

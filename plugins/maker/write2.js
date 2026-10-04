@@ -3,6 +3,7 @@
 import axios from "axios";
 import { nexrayNulis } from "../../src/scraper/nexray-maker.js";
 import { raraWrap, raraBerhasil } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "nulis2",
@@ -35,7 +36,17 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const caption = raraBerhasil() + `\nTeks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}`;
-    return await sock.sendMessage(m.chat, { image: result.buffer, caption });
+    let card = "";
+    try {
+      const info = await probeBuffer(result.buffer);
+      card = mediaResultCard({
+        header: "nulis2",
+        type: "gambar",
+        request: [["Teks", text.slice(0, 80)]],
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    return await sock.sendMessage(m.chat, { image: result.buffer, caption: (card || caption) });
   } catch (err) {
     console.error("nulis2 error:", err);
     await m.react("❌");

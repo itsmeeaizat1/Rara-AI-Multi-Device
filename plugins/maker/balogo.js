@@ -2,6 +2,8 @@
 import axios from 'axios'
 import te from '../../src/lib/rara-error.js'
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
 const pluginConfig = {
     name: "balogo",
     alias: ["balogo"],
@@ -42,8 +44,22 @@ async function handler(m, { sock }) {
             throw new Error('Response gambar kosong')
         }
 
+        let card = "";
+        try {
+            const info = await probeBuffer(response);
+            card = mediaResultCard({
+                header: "balogo",
+                type: "gambar",
+                request: [["Teks Kiri", textL], ["Teks Kanan", textR]],
+                size: info.size,
+                mime: info.mime,
+                width: info.width,
+                height: info.height,
+            });
+        } catch {}
+
         await m.react("🐣")
-        await sock.sendMedia(m.chat, response, null, m, {
+        await sock.sendMedia(m.chat, response, card || null, m, {
             type: 'image',
         })
     } catch (error) {

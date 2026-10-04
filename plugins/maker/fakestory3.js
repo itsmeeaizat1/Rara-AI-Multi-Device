@@ -8,6 +8,7 @@ import * as _canvas from '@napi-rs/canvas'
 import axios from "axios";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 const pluginConfig = {
   name: "fakestory3",
   alias: ["fakestory3"],
@@ -287,11 +288,21 @@ async function handler(m, { sock }) {
       text2,
     );
     await m.react("🐣");
-    await sock.sendMessage(
+      let card = "";
+      try {
+        const info = await probeBuffer(resultBuffer);
+        card = mediaResultCard({
+          header: "fakestory3",
+          type: "gambar",
+          request: [["Username", username]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMessage(
       m.chat,
       {
         image: resultBuffer,
-        caption: `📷 *fake story*\n\nUsername: \`${username}\``,
+        caption: (card || `📷 *fake story*\n\nUsername: \`${username}\``),
       },
       { quoted: m },
     );

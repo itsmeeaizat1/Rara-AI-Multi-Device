@@ -5,6 +5,7 @@ import mime from "mime-types";
 import { downloadMediaMessage, getContentType } from "rara";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "gura",
@@ -73,7 +74,16 @@ async function handler(m, { sock }) {
     const buffer = Buffer.from(await res.arrayBuffer());
 
     await m.react("🐣");
-    await sock.sendMessage(m.chat, { image: buffer, caption: "🦈 *RAWWRR! Gura is here!*" }, { quoted: m });
+    let card = "";
+    try {
+      const info = await probeBuffer(buffer);
+      card = mediaResultCard({
+        header: "gura",
+        type: "gambar",
+        size: info.size, mime: info.mime, width: info.width, height: info.height,
+      });
+    } catch { /* best-effort */ }
+    await sock.sendMessage(m.chat, { image: buffer, caption: (card || "🦈 *RAWWRR! Gura is here!*") }, { quoted: m });
   } catch (err) {
     await m.react("❌");
     m.reply(raraWrap("gura", te(m.prefix, m.command, m.pushName), "error"));

@@ -201,7 +201,7 @@ export async function probeBuffer(buf, { mime = "" } = {}) {
 
 
 // ── render kartu ──────────────────────────────────────────────────────────
-const JENIS_LABEL = { video: "video", audio: "audio", foto: "foto", gif: "gif", dokumen: "dokumen", arsip: "arsip", aplikasi: "aplikasi", stiker: "stiker" };
+const JENIS_LABEL = { video: "video", audio: "audio", foto: "foto", gambar: "gambar", gif: "gif", dokumen: "dokumen", arsip: "arsip", aplikasi: "aplikasi", stiker: "stiker" };
 
 function group(title, rows) {
   const r = rows.filter(([, v]) => v !== null && v !== undefined && String(v).trim() !== "");

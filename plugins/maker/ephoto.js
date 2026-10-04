@@ -5,6 +5,8 @@ import FormData from 'form-data'
 import * as cheerio from 'cheerio'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
 const EFFECT_URLS = {
     glitchtext: 'https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html',
     writetext: 'https://en.ephoto360.com/write-text-on-wet-glass-online-589.html',
@@ -139,8 +141,22 @@ async function handler(m, { sock }) {
         await m.react("🕒");
         const imageUrl = await ephoto(effectUrl, text)
     
+        let card = "";
+        try {
+            const info = await probeMedia(imageUrl);
+            card = mediaResultCard({
+                header: command,  // dinamis: nama efek yang dipakai user (glitchtext, blackpinkstyle, dst)
+                type: "gambar",
+                request: [["Efek", command], ["Teks", text]],
+                size: info.size,
+                mime: info.mime,
+                width: info.width,
+                height: info.height,
+            });
+        } catch {}
+
         await m.react("🐣");
-        await sock.sendMedia(m.chat, imageUrl, null, m, {
+        await sock.sendMedia(m.chat, imageUrl, card || null, m, {
             type: 'image'
         })
     } catch (error) {

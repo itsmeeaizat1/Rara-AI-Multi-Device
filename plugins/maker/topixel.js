@@ -3,6 +3,7 @@ import sharp from "sharp";
 import { downloadMediaMessage, getContentType } from "rara";
 import te from "../../src/lib/rara-error.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, raraLine } from "../../src/lib/rara-menu-style.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "topixel",
@@ -104,11 +105,21 @@ async function handler(m, { sock }) {
   try {
     const pixelatedBuffer = await pixelArt(media, level);
     
-    await sock.sendMessage(
+      let card = "";
+      try {
+        const info = await probeBuffer(pixelatedBuffer);
+        card = mediaResultCard({
+          header: "topixel",
+          type: "gambar",
+          request: [["Level", level]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMessage(
       m.chat, 
       { 
         image: pixelatedBuffer, 
-        caption: `👾 *PIXEL ART BERHASIL!*\n\nIni dia fotomu dalam gaya pixel art retro 8-bit. Keren kan?` 
+        caption: (card || `👾 *PIXEL ART BERHASIL!*\n\nIni dia fotomu dalam gaya pixel art retro 8-bit. Keren kan?`)
       }, 
       { quoted: m }
     );

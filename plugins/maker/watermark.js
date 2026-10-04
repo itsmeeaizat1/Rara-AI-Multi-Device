@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraWrap, raraBerhasil } from '../../src/lib/rara-menu-style.js'
+import { mediaResultCard, probeBuffer } from '../../src/lib/rara-media-result.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -110,10 +111,31 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ctx.globalAlpha = 1.0;
 
     const outBuf = cv.toBuffer('image/png');
+
+    let card = "";
+    try {
+      const info = await probeBuffer(outBuf);
+      card = mediaResultCard({
+        header: "watermark",
+        type: "gambar",
+        request: [
+          ["Teks", parts[0]],
+          ["Posisi", parts[1]],
+          ["Opacity", parts[2]],
+        ],
+        size: info.size,
+        mime: info.mime,
+        width: info.width,
+        height: info.height,
+      });
+    } catch { /* best-effort */ }
+
+    const oldCaption = raraBerhasil() + "\nPosisi: " + posName + " | Opacity: " + opacity;
+
     await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: outBuf,
-      caption: raraBerhasil() + "\nPosisi: " + posName + " | Opacity: " + opacity,
+      caption: card || oldCaption,
     });
   } catch (e) {
     console.error("watermark error:", e);

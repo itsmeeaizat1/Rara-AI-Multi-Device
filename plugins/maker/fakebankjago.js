@@ -11,6 +11,7 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { Canvas, loadImage, FontLibrary } from 'skia-canvas'
 import te from '../../src/lib/rara-error.js'
 import { fileURLToPath } from "url";
+import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 
 const _font1Path = fileURLToPath(new URL("../../assets/fonts/Fontspring-DEMO-ceraroundpro-medium.otf", import.meta.url));
 const _font2Path = fileURLToPath(new URL("../../assets/fonts/Roboto_Medium.ttf", import.meta.url));
@@ -91,8 +92,23 @@ async function handler(m, { sock }) {
         else if (h >= 11 && h < 15) waktu = 'Siang'
         else if (h >= 15 && h < 18) waktu = 'Sore'
         const fake = await generateImage(saldo, `Selamat ${waktu}, ${nama}`)
+
+        let card = "";
+        try {
+            const info = await probeBuffer(fake);
+            card = mediaResultCard({
+                header: "fakebankjago",
+                type: "gambar",
+                request: [["Nama", nama], ["Nominal", nominal]],
+                size: info.size,
+                mime: info.mime,
+                width: info.width,
+                height: info.height,
+            });
+        } catch {}
+
         await m.react("🐣");
-        await sock.sendMedia(m.chat, fake, null, m, {
+        await sock.sendMedia(m.chat, fake, card || null, m, {
             type: 'image',
         })
     } catch (error) {
