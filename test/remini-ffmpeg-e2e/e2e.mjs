@@ -158,7 +158,7 @@ w("\n— plugin .remini: engine utama FFmpeg lewat handler —");
   await rHandler(m, { sock, args: ["2"] });
   check("hasil dikirim via sendMessage", sent.some((s) => s.type === "msg" && s.msg.image), JSON.stringify(sent.map((s) => s.type)));
   const cap = sent.find((s) => s.msg?.image)?.msg.caption || "";
-  check("caption Engine: FFmpeg 2x HD", cap.includes("Engine: FFmpeg 2x HD"), cap.slice(0, 120));
+  check("caption TIDAK membocorkan nama engine/API", !cap.includes("Engine:"), cap.slice(0, 120));
   check("caption label 2x (2x)", cap.includes("2x HD (2x)"), cap.slice(0, 160));
   const img = sent.find((s) => s.msg?.image)?.msg.image;
   const sz = img ? probeSize(img) : { width: 0, height: 0 };
@@ -252,7 +252,7 @@ w("\n— plugin .remini: engine CADANGAN IHANCER lewat handler (seam) —");
   await rHandler(m, { sock, args: [] });
   check("hasil dikirim via sendMessage", sent.some((s) => s.type === "msg" && s.msg.image), JSON.stringify(sent.map((s) => s.type)));
   const cap = sent.find((s) => s.msg?.image)?.msg.caption || "";
-  check("caption Engine: Ihancer AI Pro 4x + FFmpeg Polish", cap.includes("Engine: Ihancer AI Pro 4x HD + FFmpeg Polish"), cap.slice(0, 140));
+  check("caption Ihancer TIDAK membocorkan nama engine/API", !cap.includes("Engine:"), cap.slice(0, 120));
   // UPGRADE 19 Sep: param pro + enhancing more wajib kekirim (output 4x)
   // (form-data package gak punya .get() — baca raw multipart buffer)
   const fdRaw = String(lastFormData?.getBuffer?.() || "");
