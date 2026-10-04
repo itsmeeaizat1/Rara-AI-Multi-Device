@@ -17,6 +17,7 @@ import { raraWrap, raraCaption, tipText, toSC } from "../../src/lib/rara-menu-st
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { renderChart } from "../tools/chart.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "dompet",
@@ -318,7 +319,17 @@ async function handler(m, { sock, config: botConfig }) {
         items,
         money: true,
       });
-      await sock.sendMedia(m.chat, png, null, m, { type: "image" });
+      let chartCard = "";
+      try {
+        const info = await probeBuffer(png);
+        chartCard = mediaResultCard({
+          header: "dompet",
+          type: "gambar",
+          request: [["Judul", `Pengeluaran ${range} Hari Terakhir`], ["Total", rp(totOut)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMedia(m.chat, png, null, m, { type: "image", ...(chartCard ? { caption: chartCard } : {}) });
 
       let txt = `📊 *Rekap ${range} hari*\n\n📥 Masuk: ${rp(totIn)}\n📤 Keluar: ${rp(totOut)}\n⚖ Selisih: ${rp(totIn - totOut)}\n📅 Hari aktif: ${activeDays}/${range} (avg ${rp(avg)}/hari)\n\n🏷 *Kategori terbesar:*\n${catLines}`;
       if (insight) txt += `\n\n💡 _${insight}_`;

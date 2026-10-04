@@ -15,6 +15,7 @@ import { raraWrap, raraCaption, tipText, toSC } from "../../src/lib/rara-menu-st
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { renderChart } from "../tools/chart.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "kalori",
@@ -157,7 +158,17 @@ async function handler(m, { sock, config: botConfig }) {
         subtitle: `Target ${store.target} kkal/hari — rata-rata ${avg} kkal`,
         items,
       });
-      await sock.sendMedia(m.chat, png, null, m, { type: "image" });
+      let chartCard = "";
+      try {
+        const info = await probeBuffer(png);
+        chartCard = mediaResultCard({
+          header: "kalori",
+          type: "gambar",
+          request: [["Judul", "Kalori 7 Hari Terakhir"], ["Target", `${store.target} kkal/hari`]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
+      await sock.sendMedia(m.chat, png, null, m, { type: "image", ...(chartCard ? { caption: chartCard } : {}) });
 
       const pct = Math.round((total7 / (store.target * 7)) * 100);
       const verdict = pct > 105 ? "⚠ Rata-rata di atas target — kurangi porsi atau tambah olahraga"

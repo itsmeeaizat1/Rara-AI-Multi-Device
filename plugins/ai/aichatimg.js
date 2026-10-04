@@ -7,6 +7,7 @@ import { raraWrap, raraGuide } from "../../src/lib/rara-menu-style.js";
 import { callIkyy } from "../../src/lib/rara-ai-service.js";
 import { startAiStatus } from "../../src/lib/rara-ai-status.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "aichatimg",
@@ -49,7 +50,17 @@ async function handler(m, { sock }) {
         genStatus.stop();
         await m.react("🐣");
         let caption = `Prompt: *${prompt}*\nEngine: *pollinations*`;
-        return await sock.sendMedia(m.chat, buffer, null, m, { type: "image", caption });
+      let card = "";
+      try {
+        const info = await probeBuffer(buffer);
+        card = mediaResultCard({
+          header: "aichatimg",
+          type: "gambar",
+          request: [["Engine", "pollinations"], ["Prompt", String(prompt).slice(0, 80)]],
+          size: info.size, mime: info.mime, width: info.width, height: info.height,
+        });
+      } catch { /* best-effort */ }
+        return await sock.sendMedia(m.chat, buffer, null, m, { type: "image", caption: (card || caption) });
       } catch (e) {
         await genStatus.fail("Gagal generate gambar — coba lagi ya");
         return;

@@ -16,6 +16,7 @@ import { raraWrap, raraCaption, tipText, toSC } from "../../src/lib/rara-menu-st
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { renderChart } from "../tools/chart.js";
 import te from "../../src/lib/rara-error.js";
+import { mediaResultCard, probeBuffer } from "../../src/lib/rara-media-result.js";
 
 const pluginConfig = {
   name: "coach",
@@ -336,7 +337,17 @@ async function handler(m, { sock, config: botConfig }) {
           subtitle: `${store.goal} — streak ${streak} hari, konsistensi ${week}%`,
           items,
         });
-        await sock.sendMedia(m.chat, png, null, m, { type: "image" });
+        let chartCard = "";
+        try {
+          const info = await probeBuffer(png);
+          chartCard = mediaResultCard({
+            header: "coach",
+            type: "gambar",
+            request: [["Judul", "Konsistensi Latihan 7 Hari"], ["Target", store.goal]],
+            size: info.size, mime: info.mime, width: info.width, height: info.height,
+          });
+        } catch { /* best-effort */ }
+        await sock.sendMedia(m.chat, png, null, m, { type: "image", ...(chartCard ? { caption: chartCard } : {}) });
         chartNote = "📊 Chart terkirim di atas";
       } catch {}
       return m.reply(raraWrap("coach", `📈 *PROGRESS — ${store.goal}*\n\n🔥 Streak: ${streak} hari (rekor: ${best})\n📅 7 hari terakhir: ${week}%\n🗓 30 hari terakhir: ${month}%\n\n${week >= 70 ? "Sustain mode! Badanmu mulai terbiasa." : week >= 40 ? "Udah jalan — tinggal rapikan jadwal biar gak bolong." : "Masih bolong-bolong — mulai dari 3x seminggu aja dulu."}${chartNote ? `\n\n${chartNote}` : ""}`));

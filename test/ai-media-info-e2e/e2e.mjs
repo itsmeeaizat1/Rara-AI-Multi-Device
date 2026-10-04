@@ -1,6 +1,6 @@
 // ── AI MEDIA INFO E2E (4 Okt 2026) ──────────────────────────────────────────
 // Kartu info media kategori AI: probeBuffer (gambar via sharp, audio/video via
-// ffprobe) + mediaResultCard di 14 plugin AI. Skenario nyata: buat gambar dummy
+// ffprobe) + mediaResultCard di 18 plugin AI. Skenario nyata: buat gambar dummy
 // via sharp, audio dummy via ffmpeg, lalu cek field kartu. Audio gak bisa
 // caption → kartu dikirim sebagai teks (voiceai/aivoiceceleb/musicmaker).
 // readFileSync WAJIB new URL(rel, import.meta.url) — ENOENT top-level ESM = exit 0 SENYAP.
@@ -80,7 +80,7 @@ console.log("── 4. mediaResultCard gaya AI ──");
   check("tanpa data apa pun → string kosong (caption lama dipakai)", empty === "");
 }
 
-console.log("── 5. 14 plugin AI memakai kartu ──");
+console.log("── 5. 18 plugin AI memakai kartu ──");
 {
   const files = [
     ["plugins/ai/9router.js", "9router"], ["plugins/ai/ai-avatar.js", "aiavatar"],
@@ -90,6 +90,8 @@ console.log("── 5. 14 plugin AI memakai kartu ──");
     ["plugins/ai/aivoiceceleb.js", "voiceceleb"], ["plugins/ai/freeai.js", "freeai"],
     ["plugins/ai/img2style.js", "img2style"], ["plugins/ai/musicmaker.js", "musicmaker"],
     ["plugins/ai/oneimage.js", "oneimage"], ["plugins/ai/pollination.js", "pollination"],
+    ["plugins/ai/aichatimg.js", "aichatimg"], ["plugins/ai/calories.js", "kalori"],
+    ["plugins/ai/coach.js", "coach"], ["plugins/ai/wallet.js", "dompet"],
   ];
   for (const [f, header] of files) {
     const src = await readFile(new URL("../../" + f, import.meta.url), "utf-8");
