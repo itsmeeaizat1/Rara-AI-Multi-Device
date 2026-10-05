@@ -158,10 +158,10 @@ async function notifySewaRegister(sock, data) {
     `📱 Nomor: ${data.phoneNumber}`,
     `💬 Grup: ${data.groupName}`,
     `⏳ Durasi: ${data.duration}`,
-    `💰 Harga: ${data.price || "N/A"}`,
+    `💰 Harga: ${data.price || "-"}`,
     `🕒 Waktu: ${formatTime()}`,
     "",
-    `⏸ Status: Menunggu approve owner`,
+    `⏸ Status: Menunggu persetujuan owner`,
   ]);
   return broadcastToSaluran(sock, msg, {}, "Pendaftaran Sewa Baru");
 }
@@ -174,7 +174,7 @@ async function notifySewaApproved(sock, data) {
     `💬 Grup: ${data.groupName}`,
     `📱 Nomor: ${data.phoneNumber}`,
     `⏳ Durasi: ${data.duration}`,
-    `⌛ Expired: ${data.expiredStr}`,
+    `⌛ Berakhir: ${data.expiredStr}`,
     `🕒 Waktu: ${formatTime()}`,
     "",
     `💠 Total grup sewa: ${data.totalGroups}`,
@@ -217,8 +217,8 @@ async function notifySewaBot(sock, data) {
     `💬 Grup: ${data.groupName || "-"}`,
     `⏳ Durasi: ${data.duration || "-"}`,
     `💰 Harga: ${data.price || "-"}`,
-    `⌛ Expired: ${data.expiredStr || "-"}`,
-    `🏷 Tipe: ${data.isLifetime ? "Lifetime" : "Sewa"}`,
+    `⌛ Berakhir: ${data.expiredStr || "-"}`,
+    `🏷 Tipe: ${data.isLifetime ? "Selamanya" : "Sewa"}`,
     `🕒 Waktu: ${formatTime()}`,
     "",
     `💠 Total grup sewa: ${data.totalGroups || 1}`,
@@ -232,7 +232,7 @@ async function notifyJadibotConnect(sock, data) {
   const msg = saluranCard("Pengguna Baru Jadibot", [
     `📱 Nomor: ${data.phoneNumber}`,
     `🕒 Waktu: ${formatTime()}`,
-    `🟢 Status: Online`,
+    `🟢 Status: Aktif`,
     "",
     `💠 Total jadibot aktif: ${data.totalActive}`,
   ]);
@@ -245,7 +245,7 @@ async function notifyUserBanned(sock, data) {
   const nama = resolveUserName(data.phoneNumber);
   const lines = [];
   if (nama) lines.push(`👤 Nama: ${nama}`);
-  lines.push(`📱 Nomor: ${data.phoneNumber}`, `❓ Alasan: ${data.reason || "Tidak disebutkan"}`, `🕒 Waktu: ${formatTime()}`, "", `🚫 Total banned: ${data.totalBanned}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber}`, `❓ Alasan: ${data.reason || "Tidak disebutkan"}`, `🕒 Waktu: ${formatTime()}`, "", `🚫 Total diblokir: ${data.totalBanned}`);
   const msg = saluranCard("Pengguna Diblokir", lines);
   return broadcastToSaluran(sock, msg, {}, "Pengguna Diblokir");
 }
@@ -256,7 +256,7 @@ async function notifyUserBlocked(sock, data) {
   const nama = resolveUserName(data.phoneNumber);
   const lines = [];
   if (nama) lines.push(`👤 Nama: ${nama}`);
-  lines.push(`📱 Nomor: ${data.phoneNumber}`, `🕒 Waktu: ${formatTime()}`, "", `🚫 Total blocked: ${data.totalBlocked || "-"}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber}`, `🕒 Waktu: ${formatTime()}`, "", `🚫 Total nomor diblokir: ${data.totalBlocked || "-"}`);
   const msg = saluranCard("Nomor Diblokir", lines);
   return broadcastToSaluran(sock, msg, {}, "Nomor Diblokir");
 }
@@ -279,12 +279,12 @@ async function notifyPremiumAdd(sock, data) {
     `👤 Nama: ${data.name || "-"}`,
     `📱 Nomor: ${data.phoneNumber}`,
     `⏳ Durasi: ${data.days || 30} hari`,
-    `💰 Harga: ${data.price || "N/A"}`,
-    `⌛ Expired: ${data.expiredStr || "-"}`,
+    `💰 Harga: ${data.price || "-"}`,
+    `⌛ Berakhir: ${data.expiredStr || "-"}`,
     `🏷 Tipe: ${data.isExtend ? "Perpanjang" : "Premium Baru"}`,
     `🕒 Waktu: ${formatTime()}`,
     "",
-    `💎 Total premium: ${data.totalPremium || "-"}`,
+    `💎 Total pengguna premium: ${data.totalPremium || "-"}`,
   ]);
   return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Premium");
 }
@@ -298,13 +298,13 @@ async function notifyUserRegister(sock, data) {
   const msg = saluranCard("Pengguna Baru Terdaftar", [
     `👤 Nama: ${data.name || "-"}`,
     `🎂 Umur: ${data.age || "-"} tahun`,
-    `🚻 Gender: ${data.gender || "Tidak disebutkan"}`,
+    `🚻 Jenis Kelamin: ${data.gender || "Tidak disebutkan"}`,
     `📱 Nomor: ${data.phoneNumber || "-"}`,
     `📅 Tanggal: ${dateStr}`,
     `🕒 Waktu: ${timeStr} WIB`,
     `🔑 Serial: ${data.serial || "-"}`,
     "",
-    `💠 Total user: ${data.totalUsers || "-"}`,
+    `💠 Total pengguna: ${data.totalUsers || "-"}`,
   ]);
   return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Terdaftar");
 }
@@ -315,7 +315,7 @@ async function notifySpamDetected(sock, data) {
   const namaSpam = resolveUserName(data.phoneNumber);
   const lines = [];
   if (namaSpam) lines.push(`👤 Nama: ${namaSpam}`);
-  lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName || "Private"}`, `🏷 Tipe: ${data.type || "Spam"}`, `📝 Detail: ${data.detail || "-"}`, `🕒 Waktu: ${formatTime()}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName || "Pribadi"}`, `🏷 Tipe: ${data.type || "Spam"}`, `📝 Detail: ${data.detail || "-"}`, `🕒 Waktu: ${formatTime()}`);
   if (data.action) lines.push("", `⚔ Aksi: ${data.action}`);
   const msg = saluranCard("Spam Terdeteksi", lines);
   return broadcastToSaluran(sock, msg, {}, "Spam Terdeteksi");
@@ -327,7 +327,7 @@ async function notifyWarningGiven(sock, data) {
   const nama = resolveUserName(data.phoneNumber);
   const lines = [];
   if (nama) lines.push(`👤 Nama: ${nama}`);
-  lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName || "Private"}`, `❗ Pelanggaran: ${data.violation}`, `⚠ Warning: ${data.warnCount}/${data.maxWarn}`, `🕒 Waktu: ${formatTime()}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName || "Pribadi"}`, `❗ Pelanggaran: ${data.violation}`, `⚠ Peringatan: ${data.warnCount}/${data.maxWarn}`, `🕒 Waktu: ${formatTime()}`);
   const msg = saluranCard("Peringatan Pengguna", lines);
   return broadcastToSaluran(sock, msg, {}, "Peringatan Pengguna");
 }
@@ -338,9 +338,9 @@ async function notifyDailyLimitReset(sock, data) {
   const msg = saluranCard("Reset Limit Harian", [
     `♻️ Limit semua user telah direset!`,
     "",
-    `🆓 User gratis: ${data.defaultLimit} limit`,
-    `💎 User premium: ${data.premiumLimit} limit`,
-    `👥 Total user: ${data.resetCount} user`,
+    `🆓 Pengguna gratis: ${data.defaultLimit} limit`,
+    `💎 Pengguna premium: ${data.premiumLimit} limit`,
+    `👥 Total pengguna: ${data.resetCount}`,
     "",
     `⏰ Reset otomatis setiap hari jam 00:00 WIB`,
   ]);
