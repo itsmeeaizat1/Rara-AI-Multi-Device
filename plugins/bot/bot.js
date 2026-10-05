@@ -119,8 +119,15 @@ async function broadcastStatusChange(sock, db, state, opts = {}) {
     // gak kirim `body` custom lagi — biar statusBanner() pakai default-nya
     // sendiri (waktu+tanggal Asia/Jakarta), sourceUrl juga udah dibuang di
     // statusBanner jadi baris "🔗 whatsapp.com" gak nongol lagi.
-    const { statusBanner } = await import("../../src/lib/rara-notif-card.js")
+    const { statusBanner, sendNotifCard, generateStatusCard } = await import("../../src/lib/rara-notif-card.js")
     const banner = await statusBanner(state)
+    // FIX 6 Okt 2026 (owner: thumbnail jenis ini kebesaran, maunya kayak
+    // .menu + custom asset) — target GRUP/DM sekarang kartu HEADER IMAGE
+    // asli via sendNotifCard; gambar per-status: asset custom
+    // assets/image/notif/status-<state>.jpg MENANG, kalau gak ada pakai
+    // canvas dinamis ON/OFF/MUTE (generateStatusCard), terakhir placeholder.
+    let statusImage = null
+    try { statusImage = await generateStatusCard(state) } catch {}
     let saluranOutcome = { status: 'skipped', reason: channelSkippedReason || 'unknown', jid: channelTarget || null }
     // SALURAN DIKIRIM DULU (sebelum grup yang lama) biar owner cepet liat
     // hasilnya — laporan onSaluran nyampe ke reply owner dalam 1-2 dtk.
@@ -146,7 +153,7 @@ async function broadcastStatusChange(sock, db, state, opts = {}) {
     }
     for (const jid of targets) {
         try {
-            await sock.sendMessage(jid, { text, contextInfo: banner })
+            await sendNotifCard(sock, jid, text, { name: 'status-' + state, image: statusImage })
             ok++
         } catch {
             fail++

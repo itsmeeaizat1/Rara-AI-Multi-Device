@@ -85,27 +85,31 @@ _setDoctorHttpForTest(async (url) => ({ ok: true, status: 200 }));
 const tmpState = fs.mkdtempSync(path.join(os.tmpdir(), "notifcard-bd-"));
 _setBootDoctorStateFileForTest(path.join(tmpState, "state.json"));
 const bdSent = [];
+// FIX 6 Okt 2026: boot doctor DM kini kartu HEADER IMAGE ala .menu
+// (sendNotifCard) — mock sock wajib relayMessage + waUploadToServer.
 _setBootDoctorSockForTest({
+  user: { jid: "628174887770@s.whatsapp.net" },
+  waUploadToServer: async () => ({ url: "https://mmg.whatsapp.net/fake.jpg" }),
+  relayMessage: async (jid, stanza) => { bdSent.push({ jid, stanza }); return {}; },
   sendMessage: async (jid, payload) => { bdSent.push({ jid, payload }); return { key: { id: "z" } } },
 });
 await runAndReport({ send: true });
 t("3a. DM owner kekirim", bdSent.length === 1 && bdSent[0].jid === "628174887770@s.whatsapp.net", JSON.stringify(bdSent.map((d) => d.jid)));
-const bdPayload = bdSent[0]?.payload || {};
-t("3b. laporan beneran pakai banner (contextInfo.externalAdReply)", !!bdPayload.contextInfo?.externalAdReply, JSON.stringify(Object.keys(bdPayload)));
-t("3c. judul banner Boot Doctor", /boot doctor/i.test(bdPayload.contextInfo?.externalAdReply?.title || ""), bdPayload.contextInfo?.externalAdReply?.title);
-// REVISI 20 Sep: body banner boot doctor SEKARANG waktu+tanggal (bukan ringkasan
-// hasil) — ringkasan tetap ada di ISI TEKS laporan (3e), sama gaya statusBanner.
-t("3d. body banner = waktu/tanggal, GAK ADA sourceUrl link", /\d{4}/.test(bdPayload.contextInfo?.externalAdReply?.body || "") && !("sourceUrl" in (bdPayload.contextInfo?.externalAdReply || { sourceUrl: 1 })), bdPayload.contextInfo?.externalAdReply?.body);
+const bdIm = bdSent[0]?.stanza?.viewOnceMessage?.message?.interactiveMessage;
+t("3b. laporan pakai KARTU HEADER IMAGE ala .menu (bukan banner lama)", !!bdIm?.header?.imageMessage && bdIm?.header?.hasMediaAttachment === true, JSON.stringify(Object.keys(bdSent[0]?.stanza || {})));
 const { fromSC } = await import(R + "/src/lib/styler.js");
-t("3e. isi laporan teks tetap utuh (plain)", typeof bdPayload.text === "string" && /total diperiksa/.test(fromSC(bdPayload.text)), (bdPayload.text || "").slice(0, 80));
+// teks laporan sekarang plain standar (aturan 1 Okt) — "Total diperiksa" kapital,
+// bukan smallcaps ᴛᴏᴛᴀʟ yang dulu dariSC-balikin lowercase.
+t("3c. isi laporan teks tetap utuh di body kartu (plain)", typeof bdIm?.body?.text === "string" && /total diperiksa/i.test(fromSC(bdIm.body.text)), (bdIm?.body?.text || "").slice(0, 80));
+t("3d. desain lama externalAdReply GAK terpakai lagi di chat biasa", !bdIm?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(bdIm?.contextInfo || {})));
 
-// probe bermasalah → body banner nunjukin jumlah
+// probe bermasalah → jumlah masalah tetap kebaca di body kartu
 _setDoctorHttpForTest(async (url) => (url.includes("cuki") ? { ok: false, status: 401 } : { ok: true, status: 200 }));
 _setBootDoctorStateFileForTest(path.join(tmpState, "state2.json"));
 bdSent.length = 0;
 await runAndReport({ send: true });
-t("3f. ada masalah → jumlah masalah tetap kebaca di TEKS laporan (bukan body banner)", /masalah/i.test(fromSC(bdSent[0]?.payload?.text || "")), (bdSent[0]?.payload?.text || "").slice(0, 200));
-function bdPayload2(arr) { return arr[0]?.payload?.contextInfo?.externalAdReply?.body || "" }
+const bdIm2 = bdSent[0]?.stanza?.viewOnceMessage?.message?.interactiveMessage;
+t("3f. ada masalah → jumlah masalah tetap kebaca di TEKS laporan", /masalah/i.test(fromSC(bdIm2?.body?.text || "")), (bdIm2?.body?.text || "").slice(0, 200));
 
 // cleanup section 3
 _setDoctorHttpForTest(undefined);
@@ -139,12 +143,17 @@ _setStatusCardCanvasForTest({
 });
 const botPlugin = await import(R + "/plugins/bot/bot.js");
 const bcSent = [];
+// FIX 6 Okt 2026: grup/DM kini kartu header image (relayMessage capture),
+// saluran tetap payload banner lewat sendMessage.
 const bSock = {
+  user: { jid: "628owner@s.whatsapp.net" },
   newsletterMetadata: async (type, key) => {
     if (type === "invite" && key === INVITE_CODE) return { id: NUM_JID, name: "Rara AI Official" };
     if (type === "jid" && key === NUM_JID) return { id: NUM_JID, viewer_role: "ADMIN" };
     return null;
   },
+  waUploadToServer: async () => ({ url: "https://mmg.whatsapp.net/fake.jpg" }),
+  relayMessage: async (jid, stanza) => { bcSent.push({ jid, stanza }); return {}; },
   sendMessage: async (jid, payload) => { bcSent.push({ jid, payload }); return { key: { id: "x" } } },
 };
 
@@ -157,36 +166,34 @@ await botPlugin.handler(mOff, { sock: bSock, isOwner: true });
 await new Promise((r) => setTimeout(r, 2600));
 
 const toGroup = bcSent.find((d) => d.jid === "999888777-1@g.us");
-const toChannel = bcSent.find((d) => d.jid === NUM_JID);
-t("4a. notif ke GRUP pakai banner", !!toGroup?.payload?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(toGroup?.payload || {})));
-t("4b. notif ke SALURAN pakai banner (externalAdReply di-keep sanitizer)", !!toChannel?.payload?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(toChannel?.payload || {})));
-t("4c. isi teks notif tetap utuh", /dimatikan/i.test(toGroup?.payload?.text || ""), (toGroup?.payload?.text || "").slice(0, 60));
-t("4d. judul banner nyebut BOT DIMATIKAN (revisi owner 20 Sep: canvas dinamis per state)", (toGroup?.payload?.contextInfo?.externalAdReply?.title || "").includes("BOT DIMATIKAN"), toGroup?.payload?.contextInfo?.externalAdReply?.title);
-// revisi owner 20 Sep: "jgn link whatsapp tp waktu aja sama tanggal" — sourceUrl
-// dibuang total dari kartu status (baris "🔗 whatsapp.com" gak boleh nongol lagi)
-// + body ganti nunjukin waktu/tanggal, bukan sourceUrl/link/nama bot.
-t("4d2. kartu status GAK ADA sourceUrl (baris link whatsapp.com dihilangkan)", !("sourceUrl" in (toGroup?.payload?.contextInfo?.externalAdReply || { sourceUrl: 1 })));
-t("4d3. body kartu status nunjukin tanggal (bukan link/nama bot)", /\d{4}/.test(toGroup?.payload?.contextInfo?.externalAdReply?.body || ""), toGroup?.payload?.contextInfo?.externalAdReply?.body);
-// revisi owner 20 Sep: "bagian ini ubah jadi teks status misal klo bot
-// dihidupkan jadi teks statusnya: BOT DIHIDUPKAN" — title PERSIS label status,
-// gak ada lagi embel-embel "Rara AI —" di depannya.
-t("4d4. judul kartu status PERSIS teks status (tanpa embel Rara AI —)", toGroup?.payload?.contextInfo?.externalAdReply?.title === "BOT DIMATIKAN", toGroup?.payload?.contextInfo?.externalAdReply?.title);
-t("4e. thumbnail banner .bot off = canvas JPEG valid (bukan asset branding statis)", (() => {
-  const th = toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
+const toChannel = bcSent.find((d) => d.jid === NUM_JID && d.payload);
+const gIm = toGroup?.stanza?.viewOnceMessage?.message?.interactiveMessage;
+const chExt = toChannel?.payload?.contextInfo?.externalAdReply || {};
+t("4a. notif ke GRUP pakai KARTU HEADER IMAGE ala .menu (fix 6 Okt)", !!gIm?.header?.imageMessage && gIm?.header?.hasMediaAttachment === true, JSON.stringify(Object.keys(toGroup || {})));
+t("4b. notif ke SALURAN tetap banner externalAdReply (channel gak support kartu)", !!toChannel?.payload?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(toChannel?.payload || {})));
+t("4c. isi teks notif tetap utuh di body kartu grup", /dimatikan/i.test(gIm?.body?.text || ""), (gIm?.body?.text || "").slice(0, 60));
+t("4d. saluran: judul banner nyebut BOT DIMATIKAN (canvas dinamis per state)", (chExt.title || "").includes("BOT DIMATIKAN"), chExt.title);
+// revisi owner 20 Sep (SALURAN): "jgn link whatsapp tp waktu aja sama tanggal" —
+// sourceUrl dibuang total + body waktu/tanggal.
+t("4d2. saluran: kartu status GAK ADA sourceUrl (baris link whatsapp.com dihilangkan)", !("sourceUrl" in (chExt || { sourceUrl: 1 })));
+t("4d3. saluran: body kartu status nunjukin tanggal (bukan link/nama bot)", /\d{4}/.test(chExt.body || ""), chExt.body);
+t("4d4. saluran: judul kartu status PERSIS teks status (tanpa embel Rara AI —)", chExt.title === "BOT DIMATIKAN", chExt.title);
+t("4e. saluran: thumbnail banner .bot off = canvas JPEG valid (bukan asset branding statis)", (() => {
+  const th = chExt.thumbnail;
   return Buffer.isBuffer(th) && th.length > 100 && th[0] === 0xff && th[1] === 0xd8;
 })(), "thumbnail bytes");
 {
   // revisi owner 20 Sep: kartu status gaya kartu level — letterbox 640x360 JPEG
   const sharpMod = (await import("sharp")).default;
   let dim = { width: 0, height: 0 };
-  try { dim = await sharpMod(toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail).metadata(); } catch {}
-  t("4i. thumbnail 640x360 letterbox — persis ukuran kartu level", dim.width === 640 && dim.height === 360, JSON.stringify(dim));
+  try { dim = await sharpMod(chExt.thumbnail).metadata(); } catch {}
+  t("4i. saluran: thumbnail 640x360 letterbox — persis ukuran kartu level", dim.width === 640 && dim.height === 360, JSON.stringify(dim));
 
   // REVISI OWNER 20 Sep: "backgroundnya hitam aja trus teksnya putih jgn ada
   // nama botnya didalam thumbnail" — validasi piksel: dominan HITAM, ada teks PUTIH
   let pix = { dark: 0, white: 0, total: 0 };
   try {
-    const { data, info } = await sharpMod(toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail)
+    const { data, info } = await sharpMod(chExt.thumbnail)
       .raw().toBuffer({ resolveWithObject: true });
     pix.total = info.width * info.height;
     for (let i = 0; i < data.length; i += info.channels * 37) { // sampling tiap ~37px
@@ -196,8 +203,8 @@ t("4e. thumbnail banner .bot off = canvas JPEG valid (bukan asset branding stati
     }
   } catch {}
   const samp = pix.dark + pix.white > 0 ? pix.dark / (pix.dark + pix.white) : 0;
-  t("4j. background HITAM POLOS (dominan piksel gelap > 85%)", pix.total > 0 && samp > 0.85, JSON.stringify(pix));
-  t("4k. teks status PUTIH keliatan (ada piksel terang > 0)", pix.white > 5, JSON.stringify(pix));
+  t("4j. saluran: background HITAM POLOS (dominan piksel gelap > 85%)", pix.total > 0 && samp > 0.85, JSON.stringify(pix));
+  t("4k. saluran: teks status PUTIH keliatan (ada piksel terang > 0)", pix.white > 5, JSON.stringify(pix));
 }
 
 // nyala lagi
@@ -210,11 +217,13 @@ const mOn = {
 await botPlugin.handler(mOn, { sock: bSock, isOwner: true });
 await new Promise((r) => setTimeout(r, 2600));
 const onGroup = bcSent.find((d) => d.jid === "999888777-1@g.us");
-t("4f. notif .bot on juga pakai banner", !!onGroup?.payload?.contextInfo?.externalAdReply);
-t("4g. judul banner .bot on nyebut BOT DIHIDUPKAN", (onGroup?.payload?.contextInfo?.externalAdReply?.title || "").includes("BOT DIHIDUPKAN"), onGroup?.payload?.contextInfo?.externalAdReply?.title);
-t("4h. thumbnail .bot on BEDA dari thumbnail .bot off (canvas regenerate per state, bukan asset statis)", (() => {
-  const offThumb = toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
-  const onThumb = onGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
+const onChannel = bcSent.find((d) => d.jid === NUM_JID && d.payload);
+const onGIm = onGroup?.stanza?.viewOnceMessage?.message?.interactiveMessage;
+t("4f. notif .bot on ke grup juga pakai KARTU HEADER IMAGE", !!onGIm?.header?.imageMessage && onGIm?.header?.hasMediaAttachment === true);
+t("4g. saluran .bot on: judul banner nyebut BOT DIHIDUPKAN", (onChannel?.payload?.contextInfo?.externalAdReply?.title || "").includes("BOT DIHIDUPKAN"), onChannel?.payload?.contextInfo?.externalAdReply?.title);
+t("4h. saluran: thumbnail .bot on BEDA dari thumbnail .bot off (canvas regenerate per state, bukan asset statis)", (() => {
+  const offThumb = chExt.thumbnail;
+  const onThumb = onChannel?.payload?.contextInfo?.externalAdReply?.thumbnail;
   return Buffer.isBuffer(offThumb) && Buffer.isBuffer(onThumb) && !offThumb.equals(onThumb);
 })());
 
@@ -228,8 +237,10 @@ bcSent.length = 0;
 await notifyPremiumAdd(bSock, { name: "Budi", phoneNumber: "628123", days: 30 });
 const saluranPayload = bcSent.find((d) => d.jid === NUM_JID)?.payload;
 t("5a. payload notif saluran bawa banner", !!saluranPayload?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(saluranPayload || {})));
-t("5b. banner judul Rara AI Official", (saluranPayload?.contextInfo?.externalAdReply?.title || "") === "Rara AI Official", saluranPayload?.contextInfo?.externalAdReply?.title);
-t("5c. isi notif tetap plain text (aturan 5 Sep — tanpa box/smallcaps)", /USER BARU PREMIUM/.test(saluranPayload?.text || "") && !/[│╭╰]/.test(saluranPayload?.text || ""), (saluranPayload?.text || "").slice(0, 60));
+// REDESIGN 5 Okt: judul banner per-event (bannerTitle) + kartu 「 ✦ 」 modern,
+// kartu pengguna wajib 「👤 Nama」 di atas 「📱 Nomor」.
+t("5b. banner judul per-event: Pengguna Baru Premium", (saluranPayload?.contextInfo?.externalAdReply?.title || "") === "Pengguna Baru Premium", saluranPayload?.contextInfo?.externalAdReply?.title);
+t("5c. isi notif kartu 「 ✦ 」 + Nama sebelum Nomor", /Pengguna Baru Premium/i.test(saluranPayload?.text || "") && saluranPayload?.text.indexOf("👤 Nama") > -1 && saluranPayload?.text.indexOf("📱 Nomor") > saluranPayload.text.indexOf("👤 Nama"), (saluranPayload?.text || "").slice(0, 60));
 setNotifyEnabled("premiumAdd", false);
 
 // ── cleanup ──
