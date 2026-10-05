@@ -30,7 +30,7 @@ import { getApiKey } from "./rara-api-keys.js";
 import { getApiKeys } from "./config/env-loader.js";
 import { getDatabase } from "./rara-database.js";
 import { raraWrap } from "./rara-menu-style.js";
-import { sendNotif } from "./rara-notif-card.js";
+import { sendNotifCard } from "./rara-notif-card.js";
 import { getTioBase } from "./config/env-loader.js";
 
 const STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "bootdoctor.json");
@@ -478,9 +478,10 @@ export async function runAndReport({ send = true } = {}) {
         // DESAIN 19 Sep 2026 (owner: "notif bot doctor g pakai desain skrg kyk
         // desain .play") — DM laporan kini pakai banner preview card branding
         // Rara (thumbnail channel-banner renderLarger), isi teks tetap utuh.
-        await sendNotif(sockInstance, jid, report, {
-          title: "Boot Doctor — Rara AI",
-        });
+        // FIX 6 Okt 2026 (owner: thumbnail Boot Doctor kebesaran, maunya
+        // kayak .menu + bisa dicustom dari asset) — kartu header image asli
+        // via sendNotifCard; custom gambar: assets/image/notif/bootdoctor.jpg
+        await sendNotifCard(sockInstance, jid, report, { name: "bootdoctor" });
       } catch (e) {
         console.error("[bootdoctor] kirim DM gagal:", e.message);
       }

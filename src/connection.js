@@ -960,14 +960,14 @@ connectionState.sock = sock;
               : []),
           ].join("\n");
 
-          // DESAIN 19 Sep 2026 — notif sistem (Bot Online / boot doctor / broadcast
-          // status) sekarang pakai banner preview card branding Rara (rara-notif-card),
-          // sama kayak desain .play / anime notifier. Isi teks gak berubah.
-          const { sendNotif } = await import("./lib/rara-notif-card.js");
+          // FIX 6 Okt 2026 — notif Bot Online kini kartu HEADER IMAGE ala .menu
+          // (thumbnail lama externalAdReply kebesaran di client); custom gambar:
+          // assets/image/notif/online.jpg (fallback placeholder).
+          const { sendNotifCard } = await import("./lib/rara-notif-card.js");
           for (const num of ownerNums) {
             try {
-              await sendNotif(sock, num + "@s.whatsapp.net", notifText, {
-                title: "「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
+              await sendNotifCard(sock, num + "@s.whatsapp.net", notifText, {
+                name: isFirstPair ? "online-first" : "online",
               });
               colors.logger.info("notif", "bot online terkirim ke owner: " + num);
             } catch (e) {

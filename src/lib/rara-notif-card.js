@@ -7,9 +7,12 @@
 // judul + sub-label + link. Body teks NOTIFIKASI TETAP PLAIN (aturan owner
 // 5 Sep: box/smallcaps cuma buat menu & reply command) — banner cuma nambah
 // identitas visual, gak ngerubah isi.
+import fs from "fs";
+import path from "path";
 import config from "../../config.js";
 import sharp from "sharp";
 import { getStaticThumbnail } from "./rara-asset-manager.js";
+import { generateWAMessageFromContent, prepareWAMessageMedia } from "rara";
 
 // cache thumbnail branding (640x360 jpeg) — asset "channel-banner" = banner
 // Rara official; gagal load (panel fresh tanpa asset) → banner tanpa gambar,
@@ -190,4 +193,123 @@ export async function sendNotif(sock, jid, text, opts = {}) {
   if (typeof _sendForTest === "function") return _sendForTest(jid, payload);
   if (_sendForTest === null) return { skipped: true }; // disabled (e2e)
   return sock.sendMessage(jid, payload);
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// KARTU NOTIF HEADER IMAGE ALA .MENU (fix 6 Okt 2026, owner: "ubah fitur yg
+// pakai thumbnail jenis ini ke jenis thumbnail yg di .menu biar bisa
+// dicustom gambar dari asset dan thumbnailnya gak kebesaran kayak gini" —
+// nunjuk screenshot Boot Doctor kotak hitam gede). Desain lama
+// (externalAdReply renderLarger di text message) bikin WA render preview
+// card GEDE; kartu .menu tampil rapi karena pakai HEADER IMAGE ASLI
+// (hasMediaAttachment:true + upload prepareWAMessageMedia — gambar nempel
+// di header interactiveMessage, ukuran wajar kayak .menu).
+//
+// Urutan thumbnail: asset assets/image/notif/<name>.jpg (custom owner)
+// → opts.image (canvas dinamis, mis. status ON/OFF) → placeholder.jpg
+// → fallback teks polos (aturan owner 6 Okt: fallback polos tanpa thumbnail).
+//
+// CATATAN SALURAN: WhatsApp Channel TIDAK support interactiveMessage —
+// notif ke saluran TETAP pakai notifBanner (externalAdReply) via
+// sendSaluranSafe di caller. sendNotifCard cuma buat chat/grup biasa.
+// ══════════════════════════════════════════════════════════════════════════
+
+// seam e2e — function = mock, null = DISABLED (gak kirim apa-apa), undefined = asli
+let _notifCardSendForTest = undefined;
+export function _setNotifCardSendForTest(fn) {
+  _notifCardSendForTest = fn;
+}
+
+function _notifAssetPath(name) {
+  try {
+    const dir = path.join(process.cwd(), "assets", "image", "notif");
+    const n = String(name || "").replace(/[^a-zA-Z0-9-]/g, "");
+    const cand = n ? path.join(dir, n + ".jpg") : null;
+    if (cand && fs.existsSync(cand)) return cand;
+  } catch {}
+  return null;
+}
+
+function _notifPlaceholderPath() {
+  try {
+    const p = path.join(process.cwd(), "assets", "image", "notif", "placeholder.jpg");
+    if (fs.existsSync(p)) return p;
+  } catch {}
+  return null;
+}
+
+/**
+ * Kirim notifikasi sistem dengan kartu HEADER IMAGE ala .menu (satu pintu
+ * untuk chat/grup biasa). Teks utuh di body kartu; gambar nempel di header
+ * (ukuran wajar, bisa dicustom owner per-fitur lewat asset).
+ * @param {object} sock - koneksi WhatsApp
+ * @param {string} jid - tujuan (DM / grup — BUKAN saluran)
+ * @param {string} text - isi notif (plain text)
+ * @param {object} [opts]
+ * @param {string} [opts.name] - nama asset custom: assets/image/notif/<name>.jpg
+ * @param {Buffer} [opts.image] - buffer gambar dinamis (canvas status dsb) —
+ *   kalah lawan asset <name>.jpg, menang lawan placeholder
+ */
+export async function sendNotifCard(sock, jid, text, opts = {}) {
+  const txt = text === null || text === undefined ? "" : String(text);
+  if (!txt.trim() || !sock || !jid) return null;
+  if (typeof _notifCardSendForTest === "function") return _notifCardSendForTest(jid, { text: txt, ...opts });
+  if (_notifCardSendForTest === null) return { skipped: true };
+
+  // saluran / bridge / socket gak mampu → fallback polos (aturan owner 6 Okt)
+  const _plain = async () => {
+    try { return await sock.sendMessage(jid, { text: txt }); } catch { return null; }
+  };
+  if (
+    String(jid).endsWith("@newsletter") ||
+    sock._bridgePlatform ||
+    typeof sock.relayMessage !== "function" ||
+    typeof sock.waUploadToServer !== "function"
+  ) {
+    return _plain();
+  }
+
+  // resolve gambar header: asset custom → buffer dinamis → placeholder
+  let buf = null;
+  try {
+    const p = _notifAssetPath(opts.name);
+    if (p) buf = fs.readFileSync(p);
+  } catch {}
+  if (!buf && opts.image && Buffer.isBuffer(opts.image)) buf = opts.image;
+  if (!buf) {
+    try {
+      const ph = _notifPlaceholderPath();
+      if (ph) buf = fs.readFileSync(ph);
+    } catch {}
+  }
+  if (!buf) return _plain();
+
+  try {
+    const prep = await prepareWAMessageMedia({ image: buf }, { upload: sock.waUploadToServer });
+    if (prep && prep.imageMessage) {
+      const built = generateWAMessageFromContent(jid, {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: {},
+            interactiveMessage: {
+              header: { hasMediaAttachment: true, imageMessage: prep.imageMessage },
+              body: { text: txt },
+              contextInfo: { mentionedJid: [], isForwarded: false },
+              nativeFlowMessage: { buttons: [] },
+            },
+          },
+        },
+      }, { userJid: sock.user && sock.user.jid });
+      await sock.relayMessage(jid, built.message, { messageId: built.key.id });
+      return { key: built.key };
+    }
+  } catch (e) {
+    try {
+      console.error(
+        "[rara-notif-card] upload header gagal, fallback polos:",
+        String(e && e.message ? e.message : e).split("\n")[0]
+      );
+    } catch {}
+  }
+  return _plain();
 }
