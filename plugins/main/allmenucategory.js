@@ -34,7 +34,7 @@ const pluginConfig = {
 };
 
 const CATEGORY_NAMES = {
-  ai: "AI", airich: "AI Rich", sticker: "Sticker", download: "Download", fun: "Fun", jkt48: "JKT48",
+  ai: "AI", airich: "AI Rich", sticker: "Sticker", download: "Download", fun: "Fun", jkt48: "JKT48", anonim: "Chat Anonim & Anonymous",
   tools: "Tools", game: "Game", html: "HTML", rpg: "RPG",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info",
@@ -101,7 +101,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
       const categoryOrder = [
         // Core Bot
-        "ai", "sticker", "group", "sewa premium", "download", "tools", "browser",
+        "ai", "sticker", "group", "anonim", "sewa premium", "download", "tools", "browser",
         // Media & Kreatif
         "convert", "maker", "ephoto", "fun", "game",
         // Game & RPG

@@ -16,7 +16,7 @@ import { getCasesByCategory } from "../../case/rara.js";
 
 const CATEGORY_NAMES = {
   ai: "AI",
-  "ai image": "AI Image", sticker: "Sticker", group: "Group", download: "Download",
+  "ai image": "AI Image", sticker: "Sticker", group: "Group", anonim: "Chat Anonim & Anonymous", download: "Download",
   tools: "Tools", browser: "Browser", fun: "Fun",
   couple: "Couple", "confess menfess": "Confess & Menfess", game: "Game",
   rpg: "RPG", "rpg couple": "RPG Couple", clan: "Clan",
@@ -43,7 +43,7 @@ const CATEGORY_ORDER = [
   // → PALING AKHIR: panel, vps, main, info, owner
   // URUTAN BARU (owner 10 Sep 2026): user dulu → ai → ai image → stiker →
   // maker → download → group → tools → sisanya → PALING AKHIR admin section.
-  "user", "ai", "ai agent", "ai image", "sticker", "maker", "download", "group", "sewa premium", "tools",
+  "user", "ai", "ai agent", "ai image", "sticker", "maker", "download", "group", "anonim", "sewa premium", "tools",
   "browser", "convert", "fun", "couple", "confess menfess", "game",
   "rpg", "rpg couple", "clan",
   "search", "stalker", "anime", "jkt48", "airich", "asupan", "cecan", "nsfw",
@@ -59,7 +59,7 @@ const CATEGORY_EMOJI = {
   ai: "🧠",
   "ai agent": "🤖", "smart": "✨",
   "ai image": "🎨", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️", browser: "🌐",
-  convert: "🔄", maker: "🖌️", ephoto: "📸",
+  convert: "🔄", maker: "🖌️", ephoto: "📸", anonim: "🕵️",
   fun: "🎉", couple: "💕", "confess menfess": "💌", game: "🎮", rpg: "⚔️", "rpg couple": "❤️", clan: "🛡️", turnamen: "🏆",
   search: "🔍", stalker: "🕵️", anime: "🎌", jkt48: "🌸", airich: "✨", asupan: "😍", cecan: "💃", nsfw: "🔞",
   media: "🎬", tts: "🔊", quotes: "💬", primbon: "🔮",

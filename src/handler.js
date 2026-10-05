@@ -569,6 +569,19 @@ try {
       if (config.dev?.debugLog) logger.error("chatiblobby", e.message);
     }
 
+    // Chat Anonim & Anonymous — kategori BARU (plugins/anonim/anonim.js), TERPISAH
+    // dari vibychatanonymouschat/rara-anonchat di atas (owner 6 Okt 2026: jangan disatuin).
+    // Nanganin: lanjutan sesi daftar (step-by-step) + relay pesan sesi chat aktif.
+    try {
+      const { answerHandler: anonimHandler } = await import("../plugins/anonim/anonim.js");
+      if (typeof anonimHandler === "function") {
+        const anonimHandled = await anonimHandler(m, sock);
+        if (anonimHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("anonim", e.message);
+    }
+
     // Family 100 (separate plugin, own session system)
     try {
       const { answerHandler: fam100Handler } = await import("../plugins/game/family100.js");

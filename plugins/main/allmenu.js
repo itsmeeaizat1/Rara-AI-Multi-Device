@@ -60,7 +60,7 @@ function formatBytes(b) {
 const CATEGORY_ORDER = [
   // URUTAN BARU (owner 10 Sep 2026): user dulu → ai → ai image → stiker →
   // maker → download → group → tools → sisanya → PALING AKHIR admin section.
-  "user", "ai", "ai agent", "ai image", "sticker", "maker", "download", "group", "sewa premium", "tools",
+  "user", "ai", "ai agent", "ai image", "sticker", "maker", "download", "group", "anonim", "sewa premium", "tools",
   "browser", "html", "convert", "fun", "couple", "confess menfess", "game",
   "rpg", "rpg couple", "clan",
   "search", "stalker", "anime", "jkt48", "airich", "asupan", "cecan", "nsfw",
@@ -78,7 +78,7 @@ const CATEGORY_NAMES = {
   berita: "Berita", cuaca: "Cuaca & Bencana", loker: "Lowongan Kerja",
   anime: "Anime", nsfw: "NSFW", convert: "Convert", search: "Search",
   stalker: "Stalker", jkt48: "JKT48", airich: "AI Rich", education: "Education", islami: "Islami", browser: "Browser", html: "HTML",
-  download: "Download", fun: "Fun", couple: "Couple", "confess menfess": "Confess & Menfess",
+  download: "Download", fun: "Fun", couple: "Couple", "confess menfess": "Confess & Menfess", anonim: "Chat Anonim & Anonymous",
   tools: "Tools", game: "Game", rpg: "RPG",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info",

@@ -421,6 +421,7 @@ async function main() {
           { name: "Optimizer", fn: () => import("./src/lib/rara-optimizer.js").then(m => m.initOptimizerMonitor?.(sock)) },
           { name: "AutoJoin", fn: () => import("./src/lib/rara-autojoin.js").then(m => m.initAutoJoinScheduler?.(sock)) },
           { name: "AnonChat", fn: () => import("./src/lib/rara-anonchat.js").then(m => m.initAnonChatSweeper?.(sock)) },
+          { name: "AnonimChat", fn: () => import("./src/lib/rara-anonim-engine.js").then(m => m.initAnonimSweeper?.(sock)) },
           { name: "ChatibLobby", fn: () => import("./src/lib/rara-chatib-lobby.js").then(m => m.initChatibLobbySweeper?.(sock)) },
           { name: "AutoJPM", fn: () => import("./src/lib/rara-auto-jpm.js").then(m => m.initAutoJpmScheduler?.(sock)) },
           { name: "Sholat", fn: () => import("./src/lib/rara-sholat-scheduler.js").then(m => m.initSholatScheduler?.(sock)) },
