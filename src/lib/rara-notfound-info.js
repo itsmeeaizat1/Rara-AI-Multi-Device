@@ -54,5 +54,5 @@ export async function buildNotFoundReply(m, ctx, command, closest, level, totalH
     lines.push(toSC("Atau cek daftar") + ": *" + prefix + "menu*");
   }
 
-  return raraWrap("Not Found", lines);
+  return raraWrap("Tidak Ditemukan", lines);
 }

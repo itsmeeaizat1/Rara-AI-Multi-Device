@@ -3193,7 +3193,7 @@ export async function handleError(conn, m, err, pluginName = 'unknown') {
             }
             catch (_) { }
             try {
-                await conn.sendMessage(chat, { text: `Fixed! Try again.` }, { quoted: m });
+                await conn.sendMessage(chat, { text: `Sudah dibenerin! Coba lagi ya.` }, { quoted: m });
             }
             catch (_) { }
             await appendAutoHealStatus(`✅ Auto-heal done: ${fileKey}`);
@@ -3251,7 +3251,7 @@ export async function runAgent(conn, m, text, opts = {}) {
         }
         catch (err) {
             console.error('[runAgent] Turn timeout/gagal total, lock tetap dilepas:', err.message);
-            return { type: 'error', text: `Request timed out (WA/API connection stalled). Try again.\n\n(${err.message})` };
+            return { type: 'error', text: `Waktu habis (koneksi WA/API nyendat). Coba lagi ya.\n\n(${err.message})` };
         }
     });
 }

@@ -201,7 +201,7 @@ async function handler(m, { sock }) {
   try {
     new URL(url);
   } catch {
-    return m.reply(raraWrap("get", "❌ Invalid URL"));
+    return m.reply(raraWrap("get", "❌ Link tidak valid"));
   }
 
   await m.reply(raraWrap("Get", `🕕 ${method} ${url} ...`));

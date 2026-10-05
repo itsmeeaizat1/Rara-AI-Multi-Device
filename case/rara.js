@@ -260,7 +260,7 @@ async function handleCommand(m, sock) {
   } catch (error) {
     console.error("[CaseHandler] Error:", error);
     try {
-      await m.reply(raraWrap("Error", error.message, "error"));
+      await m.reply(raraWrap("Gagal", error.message, "error"));
     } catch {}
     return { handled: true, error: error.message };
   }

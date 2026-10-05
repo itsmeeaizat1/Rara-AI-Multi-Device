@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!response || !response.trim()) {
-      return await m.reply(raraWrap("Error", ["Parallel AI tidak memberikan respons. Coba lagi nanti."].join("\n")), "parallelai");
+      return await m.reply(raraWrap("Gagal", ["Parallel AI tidak memberikan respons. Coba lagi nanti."].join("\n")), "parallelai");
     }
 
     // Clean markdown for WhatsApp
@@ -82,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
       : err?.message?.includes("401") || err?.message?.includes("403")
         ? "API key tidak valid atau expired."
         : `Error: ${err?.message || "Terjadi kesalasan"}`;
-    return await m.reply(raraWrap("Error", errMsg));
+    return await m.reply(raraWrap("Gagal", errMsg));
   }
 }
 

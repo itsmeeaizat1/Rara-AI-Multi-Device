@@ -354,7 +354,7 @@ async function handler(m, { sock, args }) {
       if (ID_RECIPES.length > 0) {
         return await m.reply( formatIDRecipe(ID_RECIPES[Math.floor(Math.random() * ID_RECIPES.length)]), { commandName: "resep" });
       }
-            return m.reply(raraWrap("Error", "\u274c Gagal mengambil resep acak."));
+            return m.reply(raraWrap("Gagal", "\u274c Gagal mengambil resep acak."));
     }
   }
 
@@ -398,7 +398,7 @@ async function handler(m, { sock, args }) {
       for (let i = 0; i < areas.length; i += 3) txt += `${areas.slice(i, i + 3).join(" | ")}\n`;
       txt += `\nTotal: ${areas.length} negara\n\nGunakan: \`${m.prefix}resep negara <nama>\``;
       return await m.reply( txt, { commandName: "resep" });
-    } catch { return m.reply(raraWrap("Error", "\u274c Error mengambil daftar negara.")); }
+    } catch { return m.reply(raraWrap("Gagal", "\u274c Error mengambil daftar negara.")); }
   }
 
   if (sub === "negara" && query) {
@@ -417,7 +417,7 @@ async function handler(m, { sock, args }) {
   if (sub === "listbahan" || sub === "bahanlist") {
     try {
       const { ingredients } = await getCachedLists();
-      if (!ingredients.length) { return m.reply(raraWrap("Error", "\u274c Gagal mengambil daftar bahan.")); }
+      if (!ingredients.length) { return m.reply(raraWrap("Gagal", "\u274c Gagal mengambil daftar bahan.")); }
       const page = parseInt(query) || 1, perPage = 50;
       const start = (page - 1) * perPage, items = ingredients.slice(start, start + perPage);
       const total = Math.ceil(ingredients.length / perPage);
@@ -425,7 +425,7 @@ async function handler(m, { sock, args }) {
       items.forEach((ing, i) => txt += `${start + i + 1}. ${ing}\n`);
       if (page < total) txt += `\nHalaman selanjutnya: \`${m.prefix}resep listbahan ${page + 1}\``;
       return await m.reply( txt, { commandName: "resep" });
-    } catch { return m.reply(raraWrap("Error", "\u274c Error.")); }
+    } catch { return m.reply(raraWrap("Gagal", "\u274c Error.")); }
   }
 
   if (sub === "bahan" && query) {
@@ -437,7 +437,7 @@ async function handler(m, { sock, args }) {
       meals.forEach((meal, i) => txt += `${i + 1}. ${meal.strMeal} (ID: ${meal.idMeal})\n`);
       txt += `\nLihat detail: \`${m.prefix}resep <id>\``;
       return await m.reply( txt, { commandName: "resep" });
-    } catch { return m.reply(raraWrap("Error", "\u274c Error.")); }
+    } catch { return m.reply(raraWrap("Gagal", "\u274c Error.")); }
   }
 
   // === POPULER ===

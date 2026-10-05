@@ -239,7 +239,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply( raraWrap("Daftar Surat", formatSurahList(surahs)));
     } catch (e) {
       await m.react("❌");
-      return m.reply(raraWrap("Error", e.message));
+      return m.reply(raraWrap("Gagal", e.message));
     }
   }
 
@@ -257,7 +257,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply( raraWrap(`${surah.namaLatin}`, formatSurahContent(surah)));
     } catch (e) {
       await m.react("❌");
-      return m.reply(raraWrap("Error", e.message));
+      return m.reply(raraWrap("Gagal", e.message));
     }
   }
 
@@ -280,7 +280,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply( raraWrap(`${surah.namaLatin}:${ayahNum}`, formatted));
     } catch (e) {
       await m.react("❌");
-      return m.reply(raraWrap("Error", e.message));
+      return m.reply(raraWrap("Gagal", e.message));
     }
   }
 
@@ -305,7 +305,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply( raraWrap(`Tafsir ${tafsirData.namaLatin}:${ayahNum}`, formatted));
     } catch (e) {
       await m.react("❌");
-      return m.reply(raraWrap("Error", e.message));
+      return m.reply(raraWrap("Gagal", e.message));
     }
   }
 
@@ -344,7 +344,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(raraWrap(`AI Tafsir ${surah.namaLatin}:${ayahNum}`, reply));
     } catch (e) {
       await m.react("❌");
-      return m.reply(raraWrap("Error", e.message));
+      return m.reply(raraWrap("Gagal", e.message));
     }
   }
 
@@ -378,7 +378,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       return m.reply(raraWrap("AI Islam", `Audio: ${audioFull}\nQari: ${qariName}`));
     } catch (e) {
-      return m.reply(raraWrap("Error", e.message));
+      return m.reply(raraWrap("Gagal", e.message));
     }
   }
 

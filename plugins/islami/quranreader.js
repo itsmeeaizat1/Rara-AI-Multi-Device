@@ -225,7 +225,7 @@ async function handler(m, { sock }) {
     return await m.reply(txt);
   } catch (error) {
     await m.react("❌");
-    return m.reply(raraWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));
+    return m.reply(raraWrap("Gagal", "❌ " + error.message + "\n\nCoba lagi nanti."));
   }
 }
 

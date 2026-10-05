@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     try {
         const onWa = await sock.onWhatsApp(num);
         if (!onWa || !onWa[0]?.exists) {
-            { const __navText = '❌ User not exists on WhatsApp'; return await m.reply( __navText, "wastalk"); };
+            { const __navText = '❌ Nomor tidak terdaftar di WhatsApp'; return await m.reply( __navText, "wastalk"); };
         }
 
         let img = 'https://telegra.ph/file/70e8de9b1879568954f09.jpg';
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
 
     } catch (e) {
         console.error('WaStalk Error:', e);
-        m.reply(raraWrap('Error', '❌ Failed to stalk user.'));
+        m.reply(raraWrap('Gagal', '❌ Gagal mencari data nomor ini'));
     }
 }
 

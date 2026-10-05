@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
         }, { quoted: m })
         
     } catch (error) {
-        m.reply(raraWrap("Error", `Video asupan tidak ditemukan`))
+        m.reply(raraWrap("Gagal", `Video asupan tidak ditemukan`))
     }
 }
 

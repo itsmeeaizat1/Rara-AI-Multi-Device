@@ -228,7 +228,7 @@ async function handler(m, { sock }) {
 
     return m.reply(ownerText);
   } catch (error) {
-    return m.reply(raraWrap("Error", "\u274c Gagal approve sewa: " + (error.message || "Unknown error")));
+    return m.reply(raraWrap("Gagal", "\u274c Gagal approve sewa: " + (error.message || "Unknown error")));
   }
 }
 

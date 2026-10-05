@@ -305,7 +305,7 @@ async function handler(m, { sock }) {
     await m.react("❌");
     cleanup(inputPath);
     cleanup(outputPath);
-    return m.reply(raraWrap("Error", "\u274c Gagal kompres video: " + e.message + "\n\nPastikan video valid dan tidak terlalu panjang (max 5 menit)."));
+    return m.reply(raraWrap("Gagal", "\u274c Gagal kompres video: " + e.message + "\n\nPastikan video valid dan tidak terlalu panjang (max 5 menit)."));
   }
 }
 

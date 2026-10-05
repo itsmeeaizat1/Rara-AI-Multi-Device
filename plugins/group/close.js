@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
         await m.reply(successMsg, { mentions: [m.sender] });
         
     } catch (error) {
-        await m.reply(raraWrap("Error", ["Gagal menutup grup.", `_${error.message}_`].join("\n")));
+        await m.reply(raraWrap("Gagal", ["Gagal menutup grup.", `_${error.message}_`].join("\n")));
     }
 }
 

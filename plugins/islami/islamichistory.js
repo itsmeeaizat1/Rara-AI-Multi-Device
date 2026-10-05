@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     return m.reply(raraWrap("Sejarahislam", "Perintah tidak valid!\n\nKetik .sejarahislam buat lihat semua perintah."));
   } catch (error) {
     await m.react("❌");
-    return m.reply(raraWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));
+    return m.reply(raraWrap("Gagal", "❌ " + error.message + "\n\nCoba lagi nanti."));
   }
 }
 
