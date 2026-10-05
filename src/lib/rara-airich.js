@@ -157,7 +157,12 @@ export function buildRichResponse(htmlPayload, opts = {}) {
       botMetadata: {
         messageDisclaimerText: "",
         botResponseId: opts.botResponseId || crypto.randomUUID(),
-        verificationMetadata: generateVerificationMetadata(),
+        // HIROBOT-EXACT (5 Okt 2026): default TANPA verificationMetadata —
+        // HIROBOT (acuan AI rich yang work) tidak pernah mengirimnya.
+        // Opt-in RARA_AIRICH_VERIFY=1 untuk A/B perilaku lama (30 Sep).
+        ...(process.env.RARA_AIRICH_VERIFY === "1"
+          ? { verificationMetadata: generateVerificationMetadata() }
+          : {}),
       },
     },
     botForwardedMessage: {
@@ -204,7 +209,7 @@ export async function sendRichResponse(sock, chat, html, opts = {}) {
   // gagal jaringan sebelum relay.
 
   const payload = polishPayload(html);
-  console.log(`[airich] kirim rich response: payload ${Buffer.byteLength(payload)} B, verifikasi lokal, ke ${chat}`);
+  console.log(`[airich] kirim rich response: payload ${Buffer.byteLength(payload)} B, ${process.env.RARA_AIRICH_VERIFY === "1" ? "verifikasi lokal" : "HIROBOT-exact (tanpa verify)"}, ke ${chat}`);
   const msg = applyAirichVariant(buildRichResponse(payload, opts));
   try {
     await sock.relayMessage(chat, msg, {});

@@ -34,7 +34,17 @@ console.log("─── 1b. REGRESI BUG (30 Sep 2026): .aicard nunjuk 'Diteruskan
   rich3.addText("halo semua");
   await rich3.send("c1@s.whatsapp.net", {});
   const botMeta = relayed3?.messageContextInfo?.botMetadata;
-  ok("build() SELALU nyertain verificationMetadata (akar bug: dulu gak ada sama sekali)", !!botMeta?.verificationMetadata?.proofs?.length, JSON.stringify(botMeta));
+  ok("build() default TANPA verificationMetadata — HIROBOT-EXACT (5 Okt: HIROBOT gak pernah ngirim & AI rich-nya work)", !botMeta?.verificationMetadata);
+  { // opt-in RARA_AIRICH_VERIFY=1 → balik perilaku 30 Sep (A/B)
+    process.env.RARA_AIRICH_VERIFY = "1";
+    let relayed4 = null;
+    const rich4 = new AIRich({ relayMessage: async (jid, msg) => { relayed4 = msg; return "sent"; } });
+    rich4.addText("halo opt-in");
+    await rich4.send("c1@s.whatsapp.net", {});
+    delete process.env.RARA_AIRICH_VERIFY;
+    ok("opt-in RARA_AIRICH_VERIFY=1 → verificationMetadata hadir kembali (A/B)", !!relayed4?.messageContextInfo?.botMetadata?.verificationMetadata?.proofs?.length);
+  }
+  // legacy (dipertahankan dari suite lama, untuk kelengkapan):SON.stringify(botMeta));
 }
 
 console.log("─── 2. .hiaiagent renderRichResult ───");
