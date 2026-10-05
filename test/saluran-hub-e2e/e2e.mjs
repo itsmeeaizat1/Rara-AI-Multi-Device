@@ -142,6 +142,9 @@ w("\n— 3. autopost tick (dedupe + urutan aman) —");
   const t4 = await engine.processAutopostTick(sock);
   const posted = sends.find((x) => x.jid === MAIN_JID && /Konten autopost uji/.test(x.payload.text || ""));
   check("3d. kirim ke saluran utama", t4.sent === 1 && !!posted);
+  check("3d2. konten dibungkus kartu modern 「 ✦ RARA AI OFFICIAL ✦ 」", !!(posted && /「 ✦ RARA AI OFFICIAL ✦ 」/.test(posted.payload.text || "")));
+  check("3d3. footer credit watermark + konten AI utuh", !!(posted && /Powered by Rara AI - Multi Device/.test(posted.payload.text || "") && /Konten autopost uji/.test(posted.payload.text || "")));
+  check("3d4. banner preview branding nempel", !!(posted && posted.payload.contextInfo && posted.payload.contextInfo.externalAdReply));
   check("3e. claim lastDate tercatat", s.autopost.lastDate === "2026-09-25" && s.autopost.lastError === "");
 
   const t5 = await engine.processAutopostTick(sock);
@@ -307,6 +310,7 @@ w("\n— 9. plugin .channelhub —");
   ({ m, replies } = await mkM(["autopost", "tes"]));
   await plugin.handler(m, { sock });
   check("9f. autopost tes → preview tanpa kirim", /Preview konten/.test(replies[0]) && !sends.some((x) => /Preview konten/.test(x.payload?.text || "")));
+  check("9f2. preview pakai kartu modern", /「 ✦ RARA AI OFFICIAL ✦ 」/.test(replies[0]) && /Powered by Rara AI - Multi Device/.test(replies[0]));
 
   ({ m, replies } = await mkM(["autopost", "off"]));
   await plugin.handler(m, { sock });

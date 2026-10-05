@@ -18,6 +18,8 @@ import {
 import { sendSaluranSafe, isSaluranJid } from "./rara-saluran-safe.js";
 import { callAI } from "./rara-ai-service.js";
 import { boxLeft } from "./styler.js";
+import { raraBox } from "./rara-menu-style.js";
+import { notifBanner } from "./rara-notif-card.js";
 import { logger } from "./rara-logger.js";
 import config from "../../config.js";
 
@@ -205,6 +207,18 @@ export async function notifyMilestone(sock, followers) {
 // (1) AUTOPOST — konten harian AI-generated
 // ═══════════════════════════════════════════════
 
+// ── kartu postingan autopost desain modern 3 Okt (ala menu) ──
+// REDESIGN 5 Okt 2026 (owner: tampilan konten auto broadcast ke saluran
+// biar bagus & modern seperti desain sekarang) — konten AI dibungkus
+// header 「 ✦ RARA AI OFFICIAL ✦ 」 + footer credit watermark, persis
+// jenis kartu menu/reply bot. Konten AI utuh di dalam (gak dipotong).
+const POST_CREDIT = "Powered by Rara AI - Multi Device";
+export function buildChannelPostCard(content) {
+  const body = String(content || "").trim();
+  if (!body) return body;
+  return raraBox("RARA AI OFFICIAL", [body]) + "\n\n" + POST_CREDIT;
+}
+
 /**
  * Generate konten postingan harian via AI. THROW kalau AI jawab kosong —
  * jawaban kosong ≠ sukses (pelajaran ConciseAI: HTTP 200 body []).
@@ -253,7 +267,10 @@ export async function processAutopostTick(sock, opts = {}) {
   try {
     const ch = await getSaluranChannel(sock);
     if (!ch.ok) throw new Error(ch.reason);
-    await sendSaluranSafe(sock, ch.jid, { text: content });
+    // desain modern: kartu + banner preview branding (gagal banner → kartu tetap kirim)
+    const payload = { text: buildChannelPostCard(content) };
+    try { payload.contextInfo = await notifBanner({ title: "Rara AI Official" }); } catch {}
+    await sendSaluranSafe(sock, ch.jid, payload);
     a.lastSent = nowMs();
     a.lastError = "";
     db.save?.();

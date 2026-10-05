@@ -9,7 +9,7 @@
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import {
-  ensureHubState, parseJamSaluran, buildDailyContent, buildStatCard,
+  ensureHubState, parseJamSaluran, buildDailyContent, buildStatCard, buildChannelPostCard,
 } from "../../src/lib/rara-saluran-hub.js";
 import { getSaluranChannel } from "../../src/lib/rara-saluran.js";
 import { sendSaluranSafe } from "../../src/lib/rara-saluran-safe.js";
@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
       try {
         const content = await buildDailyContent(a.topic);
         await m.react("🐣");
-        return m.reply("📜 Preview konten AI (belum dikirim):\n\n" + content + "\n\n_aktifin pengiriman: .channelhub autopost on 08:00_");
+        return m.reply("📜 Preview konten AI (belum dikirim):\n\n" + buildChannelPostCard(content) + "\n\n_aktifin pengiriman: .channelhub autopost on 08:00_");
       } catch (e) {
         await m.react("❌");
         return m.reply("❌ AI gagal bikin konten: " + String(e?.message || e).slice(0, 120));

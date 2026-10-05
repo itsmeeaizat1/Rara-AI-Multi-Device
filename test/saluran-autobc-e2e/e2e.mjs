@@ -21,7 +21,7 @@ const section = (x) => console.log("\n— " + x + " —");
 const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(os.tmpdir(), "saluran-autobc-e2e-db-" + Date.now()));
 
-const { NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled } = await import(R + "/src/lib/rara-saluran-broadcast.js");
+const { NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled, notifyUserBanned, _setBroadcastSendForTest, _resetBroadcastSendForTest } = await import(R + "/src/lib/rara-saluran-broadcast.js");
 const db = getDatabase();
 
 // ═══ SECTION 1: plugin .autobroadcastchannel ═══
@@ -75,6 +75,29 @@ section("2. lib rara-saluran-broadcast");
 t("2a. default semua event OFF (gak spam tanpa izin owner)", Object.values(getAllNotifyStatus()).every((x) => x.enabled === false));
 t("2b. setNotifyEnabled balikin nilai baru", setNotifyEnabled("userRegister", true) === true && setNotifyEnabled("userRegister", false) === false);
 t("2c. label event manusiawi (bukan key mentah)", getAllNotifyStatus().userRegister.label && getAllNotifyStatus().userRegister.label !== "userRegister", getAllNotifyStatus().userRegister);
+
+// ═══ SECTION 3: redesign kartu modern 3 Okt (5 Okt 2026) — format pesan ═══
+section("3. kartu notif desain modern (via seam)");
+const captured = [];
+_setBroadcastSendForTest((message, options, bannerTitle) => { captured.push({ message, options, bannerTitle }); });
+
+// toggle off → jujur gak kirim
+setNotifyEnabled("userBanned", false);
+const rOff = await notifyUserBanned(null, { phoneNumber: "628111", reason: "spam", totalBanned: 2 });
+t("3a. toggle off → gak kirim, jujur", rOff.sent === false && /Toggle off/.test(rOff.reason || "") && captured.length === 0);
+
+// toggle on → kartu modern ke kirim
+setNotifyEnabled("userBanned", true);
+const rOn = await notifyUserBanned(null, { phoneNumber: "628111222333", reason: "spam", totalBanned: 3 });
+const msg = captured[0]?.message || "";
+t("3b. header kartu 「 ✦ USER DIBANNED ✦ 」", rOn.sent === true && msg.includes("「 ✦ USER DIBANNED ✦ 」"), msg.slice(0, 80));
+t("3c. field modern: Nomor + Alasan + Total", /📱 Nomor: 628111222333/.test(msg) && /❓ Alasan: spam/.test(msg) && /🚫 Total banned: 3/.test(msg), msg.slice(0, 160));
+t("3d. footer credit watermark Rara AI", /Powered by Rara AI - Multi Device/.test(msg), msg.slice(-80));
+t("3e. judul banner per-event", captured[0]?.bannerTitle === "User Dibanned", captured[0]?.bannerTitle);
+t("3f. gak ada sisa desain lama (bold caps)", !/\*USER DIBANNED\*/.test(msg), "ok");
+
+setNotifyEnabled("userBanned", false);
+_resetBroadcastSendForTest();
 
 console.log("\n===== " + pass + " PASS, " + fail + " FAIL =====");
 process.exitCode = fail > 0 ? 1 : 0;
