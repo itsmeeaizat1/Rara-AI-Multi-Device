@@ -97,7 +97,7 @@ await sleep(900);
 t("4b timer join grup jalan → groupAcceptInvite(code)", calls.joinGroup.length === 1 && calls.joinGroup[0] === "AbCdEf12345", JSON.stringify(calls.joinGroup));
 t("4c timer out channel jalan → newsletterUnfollow(jid)", calls.unfollowChannel.length === 1 && calls.unfollowChannel[0] === "0029VaXyz123@newsletter", JSON.stringify(calls.unfollowChannel));
 t("4d DM hasil dikirim ke owner", calls.dm.length >= 3 && calls.dm.every((d) => d.jid === OWNER), JSON.stringify(calls.dm.map((d) => d.jid)));
-t("4e DM join grup bilang BERHASIL (smallcaps)", calls.dm.some((d) => d.text.includes("ʙᴇʀʜᴀꜱɪʟ") && d.text.includes("ᴊᴏɪɴ")), (calls.dm[0] || {}).text?.slice(0, 120));
+t("4e DM join grup bilang BERHASIL (desain modern)", calls.dm.some((d) => d.text.includes("Berhasil") && d.text.includes("Hasil:")), (calls.dm[0] || {}).text?.slice(0, 120));
 t("4f status fired setelah eksekusi", global.raraAutojoinTasks.find((x) => x.id === "AJ-TEST1")?.status === "fired");
 
 // ─── 5. eksekusi GAGAL jujur ───
@@ -107,7 +107,7 @@ const badSock = {
 };
 const okBad = await fireAutojoinTask(badSock, { id: "AJ-BAD", action: "join", target: "group", link: GLINK, code: "AbCdEf12345", at: Date.now(), owner: OWNER });
 t("5a join gagal → ok=false jujur", okBad === false);
-t("5b DM gagal bilang GAGAL (smallcaps) + alasan", calls.dm.some((d) => d.text.includes("ɢᴀɢᴀʟ") && d.text.includes("ᴋɪᴄᴋᴇᴅ")), calls.dm.map((d) => d.text.includes("ɢᴀɢᴀʟ")).join(","));
+t("5b DM gagal bilang GAGAL (desain modern) + alasan", calls.dm.some((d) => d.text.includes("Gagal") && d.text.includes("kicked from group")), calls.dm.map((d) => d.text.includes("Gagal")).join(","));
 
 // ─── 6. cancel & list ───
 const rc = addAutojoinTask(fakeSock, { action: "join", target: "group", link: GLINK, at: Date.now() + 3600000, owner: OWNER });
@@ -132,7 +132,7 @@ t("7b tugas terlewat status fired", saved[1].status === "fired");
 t("7c tugas future masih pending", saved[0].status === "pending");
 await sleep(3500); // missed dieksekusi setelah 3 dtk
 t("7d terlewat dieksekusi → unfollow dipanggil lagi", calls.unfollowChannel.length >= 2, JSON.stringify(calls.unfollowChannel));
-t("7e DM terlewat ada penanda (smallcaps)", calls.dm.some((d) => d.text.includes("ᴛᴇʀʟᴇᴡᴀᴛ")), calls.dm.map((d) => d.text.includes("ᴛᴇʀʟᴇᴡᴀᴛ")).join(","));
+t("7e DM terlewat ada penanda (desain modern)", calls.dm.some((d) => d.text.includes("terlewat") && d.text.includes("sempat mati")), calls.dm.map((d) => d.text.includes("terlewat")).join(","));
 
 // ─── 8. dispatch plugin ───
 const plugin = await import(R + "/plugins/bot/autojoin.js");
@@ -157,22 +157,22 @@ async function run(args, cmdName) {
 const usage = await run([]);
 t("8a usage card tanpa arg", usage.includes("ᴄᴀʀᴀ ᴘᴀᴋᴀɪ") || /12:00|18:30/.test(usage), usage.slice(0, 100));
 const badTarget = await run(["ngasal"]);
-t("8b target asal → kartu salah", badTarget.includes("ʏᴀʜ ᴋᴀᴋ") || badTarget.includes("ɢᴀᴋ ᴅɪᴋᴇɴᴀʟ"), badTarget.slice(0, 100));
+t("8b target asal → kartu salah", badTarget.includes("Cara pemakaian salah") && badTarget.includes("target gak dikenal"), badTarget.slice(0, 100));
 const badLink = await run(["group", "https://youtube.com/x", "18:30"]);
-t("8c link grup gak valid → kartu tolak", badLink.includes("ɢᴀᴋ ᴠᴀʟɪᴅ"), badLink.slice(0, 100));
+t("8c link grup gak valid → kartu tolak", badLink.includes("Link grup gak valid."), badLink.slice(0, 100));
 const noWaktu = await run(["group", GLINK]);
-t("8d waktu kosong → minta waktu", noWaktu.includes("ᴡᴀᴋᴛᴜ"), noWaktu.slice(0, 100));
+t("8d waktu kosong → minta waktu", noWaktu.includes("Waktu belum ditentukan."), noWaktu.slice(0, 100));
 const badWaktu = await run(["group", GLINK, "kapan"]);
-t("8e waktu sampah → kartu tolak", badWaktu.includes("ɢᴀᴋ ᴠᴀʟɪᴅ") || badWaktu.includes("ᴡᴀᴋᴛᴜ"), badWaktu.slice(0, 100));
+t("8e waktu sampah → kartu tolak", badWaktu.includes("Waktu gak valid"), badWaktu.slice(0, 100));
 seam.resetNow();
 const okNew = await run(["group", GLINK, "2h"]);
-t("8f pasang join grup 2h sukses", okNew.includes("ᴛᴇʀᴘᴀꜱᴀɴɢ") && okNew.includes("2"), okNew.slice(0, 120));
+t("8f pasang join grup 2h sukses", okNew.includes("Tugas terpasang") && okNew.includes("AJ-"), okNew.slice(0, 120));
 const listCard = await run(["list"]);
-t("8g list nunjukin tugas baru", listCard.includes("ᴘᴇɴᴅɪɴɢ") || listCard.includes("ᴛᴜɢᴀꜱ"), listCard.slice(0, 120));
+t("8g list nunjukin tugas baru", listCard.includes("tugas pending") && listCard.includes("AJ-"), listCard.slice(0, 120));
 const cancelCard = await run(["cancel", "ngasal"]);
-t("8h cancel id ngasal → gak ketemu", cancelCard.includes("ɢᴀᴋ ᴋᴇᴛᴇᴍᴜ"), cancelCard.slice(0, 100));
+t("8h cancel id ngasal → gak ketemu", cancelCard.includes("Tugas gak ketemu / udah dieksekusi."), cancelCard.slice(0, 100));
 const outCmd = await run(["channel", CLINK, "besok 08:00"], "autooutchannel");
-t("8i cmd .autoout channel → aksi OUT terpasang", outCmd.includes("ᴛᴇʀᴘᴀꜱᴀɴɢ"), outCmd.slice(0, 120));
+t("8i cmd .autoout channel → aksi OUT terpasang", outCmd.includes("Tugas terpasang") && outCmd.includes("keluar"), outCmd.slice(0, 120));
 t("8j tugas out channel pending", listAutojoinTasks(OWNER).some((x) => x.action === "out" && x.target === "channel" && x.status === "pending"));
 
 // ─── 9. alias gc/ch + aturan countdown (tanpa ':') vs jam pasti (pakai ':') ───
@@ -180,10 +180,10 @@ seam.reset();
 const before9 = listAutojoinTasks(OWNER).length;
 const gcTxt = await run(["gc", GLINK, "7d"]);
 const gcTask = listAutojoinTasks(OWNER).find((x) => !["AJ-R1"].includes(x.id) && x.link === GLINK && x.target === "group" && x.action === "join" && x.id.startsWith("AJ-"));
-t("9a alias gc → terpasang sebagai GROUP join", gcTxt.includes("ᴛᴇʀᴘᴀꜱᴀɴɢ") && gcTask && gcTask.at - Date.now() > 6 * 86400000, gcTxt.slice(0, 120));
+t("9a alias gc → terpasang sebagai GROUP join", gcTxt.includes("Tugas terpasang") && gcTask && gcTask.at - Date.now() > 6 * 86400000, gcTxt.slice(0, 120));
 t("9b countdown 7d → +7 hari (bukan jam pasti)", gcTask && gcTask.at - Date.now() <= 7 * 86400000 + 60000);
 const chTxt = await run(["ch", CLINK, "30m"]);
-t("9c alias ch → terpasang sebagai CHANNEL join", chTxt.includes("ᴛᴇʀᴘᴀꜱᴀɴɢ") && listAutojoinTasks(OWNER).some((x) => x.target === "channel" && x.at - Date.now() < 31 * 60000), chTxt.slice(0, 120));
+t("9c alias ch → terpasang sebagai CHANNEL join", chTxt.includes("Tugas terpasang") && listAutojoinTasks(OWNER).some((x) => x.target === "channel" && x.at - Date.now() < 31 * 60000), chTxt.slice(0, 120));
 const jamPasti = parseWaktuAutojoin("12:00");
 t("9d pakai ':' → jam pasti 12:00 WIB (bukan countdown)", jamPasti && formatWaktuAutojoin(jamPasti).includes("12:00"), jamPasti && formatWaktuAutojoin(jamPasti));
 t("9e tanpa ':' → relatif countdown", parseWaktuAutojoin("45m") === Date.now() + 2700000);
