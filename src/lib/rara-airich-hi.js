@@ -13,7 +13,13 @@ import { resolveBaileysModule } from './hivoip/shim/baileys-resolve.js';
 
 const execFileAsync = util.promisify(execFile);
 
-// ── VERIFICATION METADATA (BUGFIX 30 Sep 2026) ──────────────────────────────
+// ── VERIFICATION METADATA (opsional, NONAKTIF default sejak 5 Okt 2026) ────
+// PERUBAHAN 5 Okt 2026 (owner: "aku mau ai rich yg work, ganti ke punya
+// HIROBOT"): diff penuh engine ini vs HIROBOT asli = field verificationMetadata
+// SATU-SATUNYA tambahan fungsional (selain adaptasi import/sharp shim).
+// HIROBOT tidak pernah mengirimnya dan AI rich-nya jalan — jadi default kini
+// HIROBOT-EXACT (tanpa field ini). Aktifkan RARA_AIRICH_VERIFY=1 untuk A/B
+// balik ke perilaku fix 30 Sep 2026.
 // AKAR ".aicard gak render — WA nunjukin 'Diteruskan' + 'tidak bisa
 // memverifikasi keamanan media ini'": port UTUH engine asal INI GAK PERNAH
 // nyertain messageContextInfo.botMetadata.verificationMetadata sama sekali.
@@ -1041,7 +1047,14 @@ class AIRich extends BaseBuilder {
 				botMetadata: {
 					messageDisclaimerText: this._title,
 					richResponseSourcesMetadata: { sources: this._richResponseSources },
-					verificationMetadata: generateVerificationMetadata(),
+					// HIROBOT-EXACT (5 Okt 2026): verificationMetadata DIKELUARKAN
+					// dari default — HIROBOT (sumber engine ini) TIDAK PERNAH
+					// ngirim field ini dan AI rich-nya WORK. Diff penuh engine vs
+					// HIROBOT: field ini SATU-SATUNYA tambahan fungsional. Opt-in
+					// RARA_AIRICH_VERIFY=1 untuk balik ke perilaku 30 Sep (A/B).
+					...(process.env.RARA_AIRICH_VERIFY === "1"
+						? { verificationMetadata: generateVerificationMetadata() }
+						: {}),
 					...notif,
 				},
 			},

@@ -29,16 +29,22 @@ const HTML = "<!DOCTYPE html><html><body><div class=\"card\"><canvas id=\"c\"></
 // ═══ 1. buildRichResponse — v2 NIXCODE-align (17 Sep 2026 fix "g mncul") ═══
 w("\n— buildRichResponse —");
 const r = buildRichResponse(HTML);
-t("  struktur: proofs v1 + useCase enum 1 + cert LOKAL + messageType 1 + botJid",
-  (() => { const p = r.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
-    return p.version === 1 && p.useCase === 1 && Array.isArray(p.certificateChain) && p.certificateChain.length === 2
-      && typeof p.signature === "string"
+t("  HIROBOT-EXACT 5 Okt: default TANPA verificationMetadata + struktur inti tetap utuh",
+  (() => { const ci = r.botForwardedMessage.message.richResponseMessage.contextInfo;
+    return !r.messageContextInfo.botMetadata.verificationMetadata
       && r.botForwardedMessage.message.richResponseMessage.messageType === 1
-      && r.botForwardedMessage.message.richResponseMessage.contextInfo.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"
-      && r.botForwardedMessage.message.richResponseMessage.contextInfo.participant === "262955698532521@lid"
-      && r.botForwardedMessage.message.richResponseMessage.contextInfo.forwardOrigin === 4; })());
-t("  cert lokal: signature 64 byte + chain 684/892 byte (material NIXCODE)",
-  (() => { const p = r.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
+      && ci.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"
+      && ci.participant === "262955698532521@lid"
+      && ci.forwardOrigin === 4; })());
+process.env.RARA_AIRICH_VERIFY = "1";
+const rv = buildRichResponse(HTML);
+delete process.env.RARA_AIRICH_VERIFY;
+t("  opt-in RARA_AIRICH_VERIFY=1 → proofs v1 + useCase enum 1 + cert LOKAL (A/B perilaku 30 Sep)",
+  (() => { const p = rv.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
+    return p.version === 1 && p.useCase === 1 && Array.isArray(p.certificateChain) && p.certificateChain.length === 2
+      && typeof p.signature === "string"; })());
+t("  cert lokal (opt-in): signature 64 byte + chain 684/892 byte (material NIXCODE)",
+  (() => { const p = rv.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
     const sig = Buffer.from(p.signature, "base64");
     const c1 = Buffer.from(p.certificateChain[0], "base64");
     const c2 = Buffer.from(p.certificateChain[1], "base64");
@@ -98,7 +104,7 @@ const baseMsg = () => buildRichResponse(HTML);
   const ci = m.botForwardedMessage.message.richResponseMessage.contextInfo;
   t("  nofwd: tanda forward kehapus (forwardingScore/isForwarded/botInfo/origin)",
     !("forwardingScore" in ci) && !("isForwarded" in ci) && !("forwardedAiBotMessageInfo" in ci) && !("forwardOrigin" in ci));
-  t("  nofwd: verificationMetadata TETAP ADA", !!m.messageContextInfo.botMetadata.verificationMetadata);
+  t("  nofwd: verificationMetadata mengikuti default (absen — HIROBOT-EXACT 5 Okt)", !m.messageContextInfo.botMetadata.verificationMetadata);
   t("  nofwd: stanzaId/participant tetap utuh", ci.stanzaId === "A5FBA758891A16FD260767C2569F87E4" && ci.participant === "262955698532521@lid");
 }
 {
@@ -116,8 +122,8 @@ const baseMsg = () => buildRichResponse(HTML);
 {
   const m = applyAirichVariant(baseMsg(), "full");
   const ci = m.botForwardedMessage.message.richResponseMessage.contextInfo;
-  t("  full/unknown: struktur verbatim gak tersentuh",
-    ci.forwardingScore === 1 && ci.isForwarded === true && !!m.messageContextInfo.botMetadata.verificationMetadata);
+  t("  full/unknown: struktur forward verbatim gak tersentuh",
+    ci.forwardingScore === 1 && ci.isForwarded === true && ci.forwardOrigin === 4);
 }
 {
   process.env.AIRICH_MODE = "clean";
@@ -133,7 +139,7 @@ const baseMsg = () => buildRichResponse(HTML);
   await sendRichResponse(sock2, "g@test", HTML, { title: "tes" });
   delete process.env.AIRICH_MODE;
   const ci = relays2[0].msg.botForwardedMessage.message.richResponseMessage.contextInfo;
-  t("  sendRichResponse mengikuti AIRICH_MODE env (nofwd)", !("forwardOrigin" in ci) && !!relays2[0].msg.messageContextInfo.botMetadata.verificationMetadata);
+  t("  sendRichResponse mengikuti AIRICH_MODE env (nofwd) + verify default absen", !("forwardOrigin" in ci) && !relays2[0].msg.messageContextInfo.botMetadata.verificationMetadata);
 }
 
 // ═══ 5. TANPA cert fetch — sendRichResponse murni offline (akar "g mncul": titik gagal jaringan ke GitHub dibuang) ═══
