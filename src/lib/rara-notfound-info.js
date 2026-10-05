@@ -2,8 +2,9 @@
 // Simple not-found reply — suggestion only, NO info section
 // Info section hanya untuk menu/allmenu/allmenucategory
 // REWORK 17 Sep 2026 (owner: "pesan di handler yg pakai drawing box, hapus
-// garisnya") — header 「 ✦ Not Found ✦ 」, body polos TANPA prefix │,
-// tanpa footer ╰──── (pola buildBox line-free 7 Sep).
+// garisnya") — header 「 ✦ 」, body polos tanpa drawing box.
+// RINGKAS 5 Okt 2026 (owner: "biar enak dilihat, diringkas/sesuaikan
+// kalimatnya") — maks 3 baris inti per level, kalimat natural.
 
 import config from "../../config.js";
 import { raraWrap, toSC } from "./rara-menu-style.js";
@@ -17,41 +18,34 @@ export async function buildNotFoundReply(m, ctx, command, closest, level, totalH
   const smartEnabled = botConfig?.features?.commandSuggestionSmart !== false;
   if (!smartEnabled) level = 0;
 
+  // REVISI OWNER 5 Okt 2026: diringkas biar enak dibaca — maks 3 baris inti
+  // per level, kalimat natural, teks biasa (bukan smallcaps), "Perintah" biar konsisten Indonesia.
   const lines = [];
 
+  const saran = closest ? `\uD83E\uDD14 Mungkin maksudmu: *${prefix}${closest}*?` : null;
+  const tipAI = `\uD83D\uDCA1 Bingung? Tanya AI: *${prefix}tanyaai <apa yang kamu cari>*`;
+  const tipMenu = `\uD83D\uDCA1 Cek daftar lengkap: *${prefix}menu*`;
+
   if (level === 0) {
-    lines.push(toSC("Command") + " *" + prefix + command + "* " + toSC("tidak ditemukan"));
-    if (closest) {
-      lines.push("");
-      lines.push("🤔 " + toSC("Mungkin maksudmu") + ": *" + prefix + closest + "* ?");
-    }
+    lines.push(`Perintah *${prefix}${command}* tidak ditemukan`);
     lines.push("");
-    lines.push("💡 " + toSC("Ketik") + " *" + prefix + "tanyaai* " + toSC("untuk tanya AI"));
+    if (saran) { lines.push(saran); lines.push(""); }
+    lines.push(tipAI);
   } else if (level === 1) {
-    lines.push("⚠ " + toSC("Kamu sudah salah ketik") + " " + totalHits + "x " + toSC("dalam 1 menit"));
+    lines.push(`*${prefix}${command}* tidak ditemukan — sudah ${totalHits}x salah ketik dalam 1 menit \uD83D\uDE05`);
     lines.push("");
-    lines.push(toSC("Command") + " *" + prefix + command + "* " + toSC("tidak ditemukan"));
-    if (closest) {
-      lines.push("");
-      lines.push("🤔 " + toSC("Mungkin") + ": *" + prefix + closest + "*");
-    }
-    lines.push("");
-    lines.push("💡 " + toSC("Cek") + " *" + prefix + "menu* " + toSC("untuk daftar lengkap"));
+    if (saran) { lines.push(saran); lines.push(""); }
+    lines.push(tipMenu);
   } else if (level === 2) {
-    lines.push("⚠ " + toSC("Sudah") + " " + totalHits + "x " + toSC("command tidak ditemukan") + "!");
+    lines.push(`Sudah ${totalHits}x perintah gak ketemu — cek daftar fitur dulu ya: *${prefix}menu*`);
     lines.push("");
-    lines.push(toSC("Tolong cek") + " *" + prefix + "menu* " + toSC("dulu ya"));
-    lines.push("");
-    lines.push("💡 " + toSC("Atau tanya") + " *" + prefix + "tanyaai* — " + toSC("AI bantu cari"));
+    lines.push(`\uD83D\uDCA1 Gak ada di menu? Tanya AI: *${prefix}tanyaai*`);
   } else if (level === 4) {
-    lines.push("😵 " + toSC("Kamu mengirim") + " " + totalHits + " " + toSC("command salah") + "!");
+    lines.push(`\uD83D\uDE35 Udah ${totalHits}x salah terus — daripada nebak, langsung tanya AI:`);
     lines.push("");
-    lines.push(toSC("Bot tidak mengenal command tersebut"));
+    lines.push(`*${prefix}tanyaai <apa yang kamu cari>*`);
     lines.push("");
-    lines.push("💡 " + toSC("Daripada tebak-tebakan, langsung tanya AI") + ":");
-    lines.push("*" + prefix + "tanyaai* <" + toSC("apa yang kamu cari") + ">");
-    lines.push("");
-    lines.push(toSC("Atau cek daftar") + ": *" + prefix + "menu*");
+    lines.push(tipMenu);
   }
 
   return raraWrap("Tidak Ditemukan", lines);
