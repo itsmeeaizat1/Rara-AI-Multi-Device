@@ -10,6 +10,7 @@ import { aioDl, teraboxDl } from "../../src/scraper/nexray-dl.js";
 import { registerChoice } from "../../src/lib/rara-aio2-session.js";
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
 import { toSC, raraWrap, raraGuide, raraSalah } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import config from "../../config.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 // kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
@@ -193,11 +194,11 @@ async function handler(m, { sock, config: botConfig }) {
     }));
   }
   if (!/^https?:\/\//i.test(url)) {
-    return m.reply(raraSalah("aio2", {
+    return await sendUsageCard(sock, m, raraSalah("aio2", {
  kaomoji: "(;∀;)",
       pesan: "linknya gak valid kak, harus diawali http atau https~ ulangi ya",
       contoh: `${prefix}aio2 link`,
-    }));
+    }), { name: "aio2" });
   }
 
   try {

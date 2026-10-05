@@ -2,6 +2,7 @@
 // .ftooluuid — generator UUID v4 (port altftool.com/tools/all/uuid-generator) pakai crypto.randomUUID().
 import { randomUUID } from "node:crypto";
 import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 
 const pluginConfig = {
   name: "ftooluuid", alias: ["uuid", "uuidgen", "guid"], category: "tools",
@@ -22,11 +23,11 @@ async function handler(m, { sock, config: botConfig }) {
       n = parseInt(raw, 10);
       if (!Number.isFinite(n) || n < 1) {
         await m.react("❌");
-        return m.reply(raraSalah("ftooluuid", {
+        return await sendUsageCard(sock, m, raraSalah("ftooluuid", {
           kaomoji: "(・_・;)",
           pesan: "jumlahnya harus angka lebih dari 0",
           contoh: `${prefix}ftooluuid 5`,
-        }), "ftooluuid");
+        }), { name: "ftooluuid" });
       }
       n = Math.min(n, MAX);
     }

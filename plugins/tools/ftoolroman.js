@@ -2,6 +2,7 @@
 // .ftoolroman — konversi angka Arab ↔ angka Romawi (port altftool.com/tools/all/roman-numeral-converter)
 // Auto-detect: angka → Romawi, huruf romawi → angka. Range standar 1-3999.
 import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 
 const pluginConfig = {
   name: "ftoolroman", alias: ["roman", "romannumeral", "romawi"], category: "tools",
@@ -45,31 +46,31 @@ async function handler(m, { sock, config: botConfig }) {
       const n = parseInt(raw, 10);
       if (n < 1 || n > 3999) {
         await m.react("❌");
-        return m.reply(raraSalah("ftoolroman", {
+        return await sendUsageCard(sock, m, raraSalah("ftoolroman", {
           kaomoji: "(・_・;)",
           pesan: "angkanya di luar rentang 1-3999",
           contoh: `${prefix}ftoolroman 2026`,
-        }), "ftoolroman");
+        }), { name: "ftoolroman" });
       }
       result = toRoman(n); label = `${n} (Arab) → ${result} (Romawi)`;
     } else if (ROMAN_RE.test(raw)) {
       const n = fromRoman(raw);
       if (n === null || n < 1 || n > 3999) {
         await m.react("❌");
-        return m.reply(raraSalah("ftoolroman", {
+        return await sendUsageCard(sock, m, raraSalah("ftoolroman", {
           kaomoji: "(・_・;)",
           pesan: "kombinasi huruf romawinya gak valid",
           contoh: `${prefix}ftoolroman MMXXVI`,
-        }), "ftoolroman");
+        }), { name: "ftoolroman" });
       }
       result = String(n); label = `${raw} (Romawi) → ${n} (Arab)`;
     } else {
       await m.react("❌");
-      return m.reply(raraSalah("ftoolroman", {
+      return await sendUsageCard(sock, m, raraSalah("ftoolroman", {
         kaomoji: "(・_・;)",
         pesan: "input harus angka biasa atau huruf romawi (I V X L C D M)",
         contoh: `${prefix}ftoolroman 2026`,
-      }), "ftoolroman");
+      }), { name: "ftoolroman" });
     }
     await m.react("🐣");
     await m.reply(raraWrap("Roman Numeral", ["KONVERSI BERHASIL",

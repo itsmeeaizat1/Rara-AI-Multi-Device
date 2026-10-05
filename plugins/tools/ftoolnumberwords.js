@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolnumberwords — angka → terbilang Bahasa Indonesia (port altftool.com/tools/all/number-to-words)
 import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 
 const pluginConfig = {
   name: "ftoolnumberwords", alias: ["numberwords", "terbilang", "kataangka"], category: "tools",
@@ -50,20 +51,20 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (!/^\d{1,15}$/.test(raw)) {
       await m.react("❌");
-      return m.reply(raraSalah("ftoolnumberwords", {
+      return await sendUsageCard(sock, m, raraSalah("ftoolnumberwords", {
         kaomoji: "(・_・;)",
         pesan: "input harus angka bulat positif maksimal 15 digit",
         contoh: `${prefix}ftoolnumberwords 1500000`,
-      }), "ftoolnumberwords");
+      }), { name: "ftoolnumberwords" });
     }
     const n = Number(raw);
     if (n > 999999999999999) {
       await m.react("❌");
-      return m.reply(raraSalah("ftoolnumberwords", {
+      return await sendUsageCard(sock, m, raraSalah("ftoolnumberwords", {
         kaomoji: "(・_・;)",
         pesan: "angkanya kegedean, maksimal 999 triliun",
         contoh: `${prefix}ftoolnumberwords 1500000`,
-      }), "ftoolnumberwords");
+      }), { name: "ftoolnumberwords" });
     }
     const words = terbilang(n);
     await m.react("🐣");

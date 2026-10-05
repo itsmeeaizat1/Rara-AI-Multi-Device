@@ -6,6 +6,7 @@ import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/rara-ytdlp.js";
 import { toWhatsAppVideo } from "../../src/lib/rara-ffmpeg.js";
 import { raraGuide, raraSalah, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
@@ -256,11 +257,11 @@ async function handler(m, { sock }) {
   // SALAH CMD CUTE (owner 25 Sep): link padahal .playvideo mau judul lagu
   if (/^(https?:\/\/|www\.)|\b(?:facebook|fb\.watch|tiktok|instagram|youtu\.?be)\.com/i.test(query)) {
     await m.react("🐣");
-    return m.reply(raraSalah("playvideo", {
+    return await sendUsageCard(sock, m, raraSalah("playvideo", {
  kaomoji: "(¬_¬;)",
       pesan: "kok yang diketik linknya kak? ini mah mau judul lagunya~",
       contoh: `${m.prefix}playvideo nama lagu`,
-    }));
+    }), { name: "playvideo" });
   }
 
   try {

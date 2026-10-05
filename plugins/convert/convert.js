@@ -6,6 +6,7 @@ import os from "os";
 import axios from "axios";
 import { queueFFmpeg } from "../../src/lib/rara-ffmpeg.js";
 import { raraBox, raraError, raraGuide, raraSalah, raraWrap, raraBerhasil, raraGagal, raraGangguan, toSC, scLine } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import {
   AUDIO_FORMATS,
@@ -111,11 +112,11 @@ async function handler(m, { sock }) {
     // Validasi format vs jenis media
     if (type === "audio" && (isVideo || isImage)) {
       await m.react("❗");
-      return m.reply(raraSalah("Convert", "media ini audio, cuma bisa convert ke format audio"));
+      return await sendUsageCard(sock, m, raraSalah("Convert", "media ini audio, cuma bisa convert ke format audio"), { name: "Convert" });
     }
     if (type === "image" && !isImage && format !== "gif") {
       await m.react("❗");
-      return m.reply(raraSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"));
+      return await sendUsageCard(sock, m, raraSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"), { name: "Convert" });
     }
 
     // Masukin ke session biar chaining .convert <format> laennya tetap bisa
@@ -139,13 +140,13 @@ async function handler(m, { sock }) {
   // Session audio cuma bisa convert ke format audio
   if (session.type === "audio" && (isVideo || isImage)) {
     await m.react("❗");
-    return m.reply(raraSalah("Convert", "media ini audio, cuma bisa convert ke format audio"));
+    return await sendUsageCard(sock, m, raraSalah("Convert", "media ini audio, cuma bisa convert ke format audio"), { name: "Convert" });
   }
 
   // Session gambar cuma bisa convert ke format gambar / gif
   if (session.type === "image" && !isImage && format !== "gif") {
     await m.react("❗");
-    return m.reply(raraSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"));
+    return await sendUsageCard(sock, m, raraSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"), { name: "Convert" });
   }
 
   const fmt = isAudio ? AUDIO_FORMATS[format] : isImage ? IMAGE_FORMATS[format] : VIDEO_FORMATS[format];

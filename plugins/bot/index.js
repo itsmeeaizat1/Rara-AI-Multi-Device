@@ -7,6 +7,7 @@
 // · ram · ramalert (DM owner pas RAM sistem lewat ambang, default off) ·
 // status.
 import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getConnectionState, forceReconnect } from "../../src/connection.js";
 import {
@@ -99,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
           `Bebas terakhir: ${st.lastFreedMB || 0} MB`,
         ]));
       }
-      return mm.reply(raraSalah("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
+      await m.react("🐣"); return sendUsageCard(sock, m, raraSalah("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }), { name: "index" });
     }
 
     // ─── optimize manual ───
@@ -136,7 +137,7 @@ async function handler(m, { sock, config: botConfig }) {
           `🕒 Jam: ${itl.isClockRunning() ? "🟢 jalan" : "🔴 mati"}`,
         ]));
       }
-      return mm.reply(raraSalah("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
+      await m.react("🐣"); return sendUsageCard(sock, m, raraSalah("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }), { name: "index" });
     }
 
     // ─── jam ───
@@ -151,7 +152,7 @@ async function handler(m, { sock, config: botConfig }) {
         stopPingClock();
         return mm.reply(raraWrap("index", "❌ Log jam dimatikan."));
       }
-      return mm.reply(raraSalah("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
+      await m.react("🐣"); return sendUsageCard(sock, m, raraSalah("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }), { name: "index" });
     }
 
     // ─── ram ───
@@ -174,7 +175,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (act === "on") {
         const persen = Number(m.args[2]);
         if (Number.isFinite(persen) && (persen < 50 || persen > 99)) {
-          return mm.reply(raraSalah("index", { pesan: "ambang persen harus 50-99 (persen pemakaian RAM sistem)", contoh: prefix + "index ramalert on 85" }));
+          await m.react("🐣"); return sendUsageCard(sock, m, raraSalah("index", { pesan: "ambang persen harus 50-99 (persen pemakaian RAM sistem)", contoh: prefix + "index ramalert on 85" }), { name: "index" });
         }
         const st = setRamAlert(true, Number.isFinite(persen) ? persen : undefined);
         // alert numpang tick pinglog — kalau pinglog mati, nyalain sekalian
@@ -211,7 +212,7 @@ async function handler(m, { sock, config: botConfig }) {
           `Alert terakhir: ${last}`,
         ]));
       }
-      return mm.reply(raraSalah("index", { pesan: "aksi gak dikenal — on [persen] / off / status", contoh: prefix + "index ramalert on 85" }));
+      await m.react("🐣"); return sendUsageCard(sock, m, raraSalah("index", { pesan: "aksi gak dikenal — on [persen] / off / status", contoh: prefix + "index ramalert on 85" }), { name: "index" });
     }
 
     // ─── status ───
@@ -278,7 +279,7 @@ async function handler(m, { sock, config: botConfig }) {
         }
         return mm.reply(raraWrap("index", `✅ Batas watchdog diubah ke ${res.intervalMin} menit — langsung aktif tanpa restart.`));
       }
-      return mm.reply(raraSalah("index", { pesan: "sub watchdog gak dikenal — status / on / off / interval", contoh: prefix + "index watchdog interval 10" }));
+      await m.react("🐣"); return sendUsageCard(sock, m, raraSalah("index", { pesan: "sub watchdog gak dikenal — status / on / off / interval", contoh: prefix + "index watchdog interval 10" }), { name: "index" });
     }
 
     // ─── reconnect (no.4 — bot beku? putus & nyambung lagi TANPA restart proses) ───
@@ -324,7 +325,7 @@ async function handler(m, { sock, config: botConfig }) {
       ]));
     }
 
-    return mm.reply(raraSalah("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }));
+    await m.react("🐣"); return sendUsageCard(sock, m, raraSalah("index", { pesan: "subcommand gak dikenal — ketik .index buat lihat daftar kontrol", contoh: prefix + "index optimizer on" }), { name: "index" });
   } catch (e) {
     await m.react("❌");
     return m.reply(raraWrap("index", `❌ Gagal: ${e?.message || e}`), "index");

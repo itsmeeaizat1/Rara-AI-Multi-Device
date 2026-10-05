@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolbase32 — teks ↔ Base32 RFC 4648 (port altftool.com/tools/all/base32)
 import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 
 const pluginConfig = {
   name: "ftoolbase32", alias: ["base32"], category: "tools",
@@ -55,19 +56,19 @@ async function handler(m, { sock, config: botConfig }) {
       result = b32dec(text);
       if (result === null) {
         await m.react("❌");
-        return m.reply(raraSalah("ftoolbase32", {
+        return await sendUsageCard(sock, m, raraSalah("ftoolbase32", {
           kaomoji: "(・_・;)",
           pesan: "string base32nya gak valid — cuma huruf A-Z dan angka 2-7",
           contoh: `${prefix}ftoolbase32 dec MZXW6YTB`,
-        }), "ftoolbase32");
+        }), { name: "ftoolbase32" });
       }
     } else {
       await m.react("❌");
-      return m.reply(raraSalah("ftoolbase32", {
+      return await sendUsageCard(sock, m, raraSalah("ftoolbase32", {
         kaomoji: "(・_・;)",
         pesan: "pilih enc atau dec ya",
         contoh: `${prefix}ftoolbase32 enc halo`,
-      }), "ftoolbase32");
+      }), { name: "ftoolbase32" });
     }
     await m.react("🐣");
     await m.reply(raraWrap("Base32", [`Hasil (${action.startsWith("e") ? "encode" : "decode"}):`,

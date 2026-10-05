@@ -4,6 +4,7 @@
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { raraGuide, raraSalah, raraError, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
@@ -114,11 +115,11 @@ async function handler(m, { sock }) {
     }));
   }
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
-    return m.reply(raraSalah("ytmp3", {
+    return await sendUsageCard(sock, m, raraSalah("ytmp3", {
  kaomoji: "(・_・;)",
       pesan: "linknya kok bukan dari youtube kak? ulangi yang bener ya~",
       contoh: `${m.prefix}${m.command || "ytmp3"} link youtube`,
-    }));
+    }), { name: "ytmp3" });
   }
 
   try {

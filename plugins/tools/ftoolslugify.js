@@ -1,6 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolslugify — teks jadi URL slug (port altftool.com/tools/all/slug-generator)
 import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 
 const pluginConfig = {
   name: "ftoolslugify", alias: ["slugify", "slug", "slugteks"], category: "tools",
@@ -35,11 +36,11 @@ async function handler(m, { sock, config: botConfig }) {
     const slug = slugify(text);
     if (!slug) {
       await m.react("❌");
-      return m.reply(raraSalah("ftoolslugify", {
+      return await sendUsageCard(sock, m, raraSalah("ftoolslugify", {
         kaomoji: "(・_・;)",
         pesan: "teksnya gak ada huruf/angka yang bisa dipakai buat slug",
         contoh: `${prefix}ftoolslugify Halo Dunia`,
-      }), "ftoolslugify");
+      }), { name: "ftoolslugify" });
     }
     await m.react("🐣");
     await m.reply(raraWrap("Slugify", ["SLUGIFY BERHASIL",

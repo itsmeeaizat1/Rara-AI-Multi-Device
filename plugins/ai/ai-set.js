@@ -9,6 +9,7 @@ import {
   raraError, raraSalah, raraBerhasil,
   raraInfoSections, raraBox, toSC,
 } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/rara-ai-service.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 
@@ -97,7 +98,7 @@ async function handler(m, { sock, config: botConfig }) {
       const providerArg = String(value || "").toLowerCase();
       const provider = resolveProvider(providerArg, {});
       if (!provider) {
-        await m.reply(raraSalah("ai-set", "provider gak dikenal — ketik .ai-set list buat lihat daftarnya"));
+        await await sendUsageCard(sock, m, raraSalah("ai-set", "provider gak dikenal — ketik .ai-set list buat lihat daftarnya"), { name: "ai-set" });
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -114,7 +115,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "model") {
       const modelArg = String(value || "").trim();
       if (!modelArg) {
-        await m.reply(raraSalah("ai-set", "modelnya belum ditulis"));
+        await await sendUsageCard(sock, m, raraSalah("ai-set", "modelnya belum ditulis"), { name: "ai-set" });
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -136,7 +137,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       if (!apiKey) {
-        await m.reply(raraSalah("ai-set", "api key-nya belum ditulis"));
+        await await sendUsageCard(sock, m, raraSalah("ai-set", "api key-nya belum ditulis"), { name: "ai-set" });
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -154,7 +155,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "endpoint") {
       const endpoint = String(value || "").trim();
       if (!endpoint) {
-        await m.reply(raraSalah("ai-set", "endpoint-nya belum ditulis"));
+        await await sendUsageCard(sock, m, raraSalah("ai-set", "endpoint-nya belum ditulis"), { name: "ai-set" });
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -167,7 +168,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "prompt") {
       const prompt = String(value || "").trim();
       if (!prompt) {
-        await m.reply(raraSalah("ai-set", "prompt-nya belum ditulis"));
+        await await sendUsageCard(sock, m, raraSalah("ai-set", "prompt-nya belum ditulis"), { name: "ai-set" });
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -186,7 +187,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       const v = String(value || "").toLowerCase();
       if (v !== "on" && v !== "off") {
-        await m.reply(raraSalah("ai-set", "nilai-nya cuma on atau off — contoh: " + prefix + "ai-set browsing off"));
+        await await sendUsageCard(sock, m, raraSalah("ai-set", "nilai-nya cuma on atau off — contoh: " + prefix + "ai-set browsing off"), { name: "ai-set" });
         return { handled: true };
       }
       const db = getDatabase();
@@ -223,7 +224,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       const newMode = String(value || "").toLowerCase();
       if (!["offline", "online"].includes(newMode)) {
-        await m.reply(raraSalah("ai-set", "mode-nya cuma offline atau online"));
+        await await sendUsageCard(sock, m, raraSalah("ai-set", "mode-nya cuma offline atau online"), { name: "ai-set" });
         return { handled: true };
       }
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
@@ -233,7 +234,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.reply(raraSalah("ai-set", `aksi ${action} gak dikenal`));
+    await await sendUsageCard(sock, m, raraSalah("ai-set", `aksi ${action} gak dikenal`), { name: "ai-set" });
   } catch (error) {
     await m.reply(raraError("ai-set", error.message));
   }

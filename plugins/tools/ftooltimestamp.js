@@ -2,6 +2,7 @@
 // .ftooltimestamp — konversi Unix timestamp ↔ tanggal WIB (port altftool.com/tools/all/unix-timestamp-converter)
 // Tanpa arg = waktu sekarang. Angka = timestamp → tanggal. Tanggal (yyyy-mm-dd / dd-mm-yyyy [+HH:mm]) → timestamp.
 import { raraGuide, raraSalah, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 
 const pluginConfig = {
   name: "ftooltimestamp", alias: ["timestamp", "unixtime", "epoch"], category: "tools",
@@ -56,11 +57,11 @@ async function handler(m, { sock, config: botConfig }) {
       const sec = parseDateToSec(raw);
       if (sec === null) {
         await m.react("❌");
-        return m.reply(raraSalah("ftooltimestamp", {
+        return await sendUsageCard(sock, m, raraSalah("ftooltimestamp", {
           kaomoji: "(・_・;)",
           pesan: "formatnya gak dikenali — angka timestamp atau tanggal 2026-09-26 / 26-09-2026 14:30",
           contoh: `${prefix}ftooltimestamp 1727300000`,
-        }), "ftooltimestamp");
+        }), { name: "ftooltimestamp" });
       }
       lines = ["TANGGAL → TIMESTAMP", "", "```" + sec + "```", "", fmtWib(sec), "", rel(sec)];
     }

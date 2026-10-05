@@ -2,6 +2,7 @@
 // Kill-switch global: .bot off → bot TOTAL silent (gak ada reply/react/fitur), cuma .bot yang diproses.
 // Intercept-nya ada di paling awal src/handler.js — sebelum semua fitur, anti, auto, dan statistik.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getSaluranChannel } from "../../src/lib/rara-saluran.js";
 import { sendSaluranSafe } from "../../src/lib/rara-saluran-safe.js";
@@ -277,14 +278,14 @@ async function handler(m, { sock }) {
 
         const saluran = await waitSaluran(sock, db, 'on')
 
-        return m.reply(raraWrap('Bot Dinyalakan', [
+        return sendUsageCard(sock, m, raraWrap('Bot Dinyalakan', [
             'Bot kembali *on* — semua fitur aktif lagi.',
             '',
             `Notifikasi dikirim ke *${grupCount}* grup`,
             saluranStatusLine(saluran, channelName) + '.',
             '',
             'Terima kasih udah nunggu 🥳',
-        ].join('\n')))
+        ].join('\n')), { name: "bot" })
     }
 
     // ── .bot mode <gc|pc|all> — pindahan dari .onlygc / .onlypc ──

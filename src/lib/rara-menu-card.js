@@ -639,4 +639,56 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
   }
 }
 
+// ── sendUsageCard ── kartu teks bertumbnail ALA MENU (request owner 5 Okt
+// 2026: "semua pesan usage pakai thumbnail seperti menu allmenu, tapi dari
+// ASSET — bikinkan placeholder kosongan dulu, nanti owner pasang sendiri
+// thumbnail masing-masing"). Jalurnya TETAP m.reply — V1 nyatuin
+// ...options.contextInfo (spread di akhir) → externalAdReply kita override
+// default serialize-thumb dengan THUMBNAIL ASSET + renderLarger (jenis
+// kartu menu). Konvensi ASSET per-fitur:
+//   assets/image/usage/<name>.jpg  → thumbnail khusus fitur itu
+//   assets/image/usage/placeholder.jpg → fallback kosongan (owner ganti sendiri)
+// <name> dikirim call-site via opts.name (nama command dari raraSalah).
+// Sock gak dibutuhin; m.reply sendiri udah punya semua fallback
+// (bridge/newsletter/relay gagal → plain text) — asersi suite tetap jalan.
+export async function sendUsageCard(sock, m, text, opts = {}) {
+  const _txt = text === null || text === undefined ? "" : String(text);
+  if (!_txt.trim()) return null;
+  if (!m || typeof m.reply !== "function") return null;
+  const ctx = {};
+  try {
+    const _usageDir = path.join(process.cwd(), "assets", "image", "usage");
+    const _name = String(opts.name || "").replace(/[^a-zA-Z0-9-]/g, "");
+    const _cand = _name ? path.join(_usageDir, _name + ".jpg") : null;
+    const _ph = path.join(_usageDir, "placeholder.jpg");
+    let _thumbPath = null;
+    if (_cand && fs.existsSync(_cand)) _thumbPath = _cand;
+    else if (fs.existsSync(_ph)) _thumbPath = _ph;
+    if (_thumbPath) {
+      const _buf = getThumbnailBuffer(_thumbPath);
+      if (_buf) ctx.thumbnail = _buf;
+    }
+  } catch {}
+  const _saluranLink = config.saluran?.link || "";
+  const _website = config.info?.website || "";
+  const _okUrl = (u) => { try { const x = new URL(u); return x.protocol.startsWith("http"); } catch { return false; } };
+  const _sourceUrl = (_okUrl(_saluranLink) && _saluranLink) || (_okUrl(_website) && _website) || "https://www.whatsapp.com/";
+  const contextInfo = {
+    externalAdReply: {
+      title: opts.title || config.bot?.name || "Rara AI - Multi Device",
+      body: "Rara AI - Multi Device",
+      mediaType: 1,
+      showAdAttribution: false,
+      renderLargerThumbnail: true,
+      sourceUrl: _sourceUrl,
+      ...(ctx.thumbnail ? { thumbnail: ctx.thumbnail } : {}),
+    },
+  };
+  try {
+    return await m.reply(_txt, { contextInfo });
+  } catch {
+    try { return await m.reply(_txt); } catch { return null; }
+  }
+}
+
 export { sendMenuCard, buildNavButtons, resolveNewsletterJid };

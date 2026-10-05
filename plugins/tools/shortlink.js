@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraSalah, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -250,11 +251,11 @@ async function handler(m, { sock }) {
   const provider = PROVIDERS[providerName];
   if (!provider) {
     await m.react("🐣");
-    return m.reply(raraSalah("shortlink", {
+    return await sendUsageCard(sock, m, raraSalah("shortlink", {
  kaomoji: "(・_・;)",
       pesan: "providerinya gak ada nih kak, cek daftar provider dulu ya~",
       contoh: `${m.prefix}shortlink list`,
-    }), "shortlink");
+    }), { name: "shortlink" });
   }
 
   // Validasi URL

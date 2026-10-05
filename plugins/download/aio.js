@@ -5,6 +5,7 @@ import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { saluranCtx } from "../../src/lib/rara-context.js";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 // kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
 async function dlCard(type, probe, request) {
@@ -77,11 +78,11 @@ async function handler(m, { sock }) {
   }
 
   if (!url.startsWith("http")) {
-    return m.reply(raraSalah("aio", {
+    return await sendUsageCard(sock, m, raraSalah("aio", {
  kaomoji: "(;ω;)",
       pesan: "linknya gak valid nih kak, harus diawali http atau https~",
       contoh: `${m.prefix}aio link`,
-    }));
+    }), { name: "aio" });
   }
 
   try {

@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraWrap, raraGuide, raraSalah } from "../../src/lib/rara-menu-style.js";
+import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 
 const pluginConfig = {
   name: "aihelp",
@@ -47,7 +48,7 @@ async function handler(m, { sock }) {
 
   const match = AI_COMMANDS[keyword];
   if (!match) {
-    return m.reply(raraSalah("aihelp", { kaomoji: "(・_・;) 😅", pesan: `kategori "${keyword}" gak ada nih kak, coba: download, sticker, group, game, rpg, ai, search, tools~`, contoh: `${prefix}aihelp download` }));
+    return await sendUsageCard(sock, m, raraSalah("aihelp", { kaomoji: "(・_・;) 😅", pesan: `kategori "${keyword}" gak ada nih kak, coba: download, sticker, group, game, rpg, ai, search, tools~`, contoh: `${prefix}aihelp download` }), { name: "aihelp" });
   }
 
   const cmds = match.cmds.map(c => `${prefix}${c}`).join(" · ");
