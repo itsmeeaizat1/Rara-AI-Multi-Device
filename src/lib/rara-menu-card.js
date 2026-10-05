@@ -27,7 +27,7 @@ import path from "path";
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "rara";
 import { buildCategoryButton, buildCategoryRows } from "./rara-category-list.js";
 import { toSC } from "./rara-menu-style.js";
-import { smallcapsText } from "./styler.js";
+import { smallcapsText, formatGuard } from "./styler.js";
 import { logger } from "./rara-logger.js";
 import config from "../../config.js";
 // Multi-language (fix 18 Sep 2026): menu card ikut ke-translate ke bahasa
@@ -639,23 +639,24 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
   }
 }
 
-// ── sendUsageCard ── kartu teks bertumbnail ALA MENU (request owner 5 Okt
-// 2026: "semua pesan usage pakai thumbnail seperti menu allmenu, tapi dari
-// ASSET — bikinkan placeholder kosongan dulu, nanti owner pasang sendiri
-// thumbnail masing-masing"). Jalurnya TETAP m.reply — V1 nyatuin
-// ...options.contextInfo (spread di akhir) → externalAdReply kita override
-// default serialize-thumb dengan THUMBNAIL ASSET + renderLarger (jenis
-// kartu menu). Konvensi ASSET per-fitur:
+// ── sendUsageCard ── kartu usage bertumbnail HEADER IMAGE ASLI ala .menu
+// (request owner 5 Okt: thumbnail semua pesan usage seperti menu; revisi
+// 6 Okt: "gak muncul meski ada gambarnya" — externalAdReply.thumbnail bytes
+// gak ke-render di client WA, jadi jalur utama kini upload header image
+// persis sendMenuCard). Fallback m.reply V1 (bridge/newsletter/upload gagal)
+// tetap jalan dengan externalAdReply contextInfo. Konvensi ASSET per-fitur:
 //   assets/image/usage/<name>.jpg  → thumbnail khusus fitur itu
 //   assets/image/usage/placeholder.jpg → fallback kosongan (owner ganti sendiri)
 // <name> dikirim call-site via opts.name (nama command dari raraSalah).
 // Sock gak dibutuhin; m.reply sendiri udah punya semua fallback
 // (bridge/newsletter/relay gagal → plain text) — asersi suite tetap jalan.
 export async function sendUsageCard(sock, m, text, opts = {}) {
-  const _txt = text === null || text === undefined ? "" : String(text);
-  if (!_txt.trim()) return null;
+  const _txt0 = text === null || text === undefined ? "" : String(text);
+  if (!_txt0.trim()) return null;
   if (!m || typeof m.reply !== "function") return null;
-  const ctx = {};
+
+  // ── resolve thumbnail ASSET (per-fitur → placeholder) ──
+  let _thumbBuf = null;
   try {
     const _usageDir = path.join(process.cwd(), "assets", "image", "usage");
     const _name = String(opts.name || "").replace(/[^a-zA-Z0-9-]/g, "");
@@ -664,30 +665,76 @@ export async function sendUsageCard(sock, m, text, opts = {}) {
     let _thumbPath = null;
     if (_cand && fs.existsSync(_cand)) _thumbPath = _cand;
     else if (fs.existsSync(_ph)) _thumbPath = _ph;
-    if (_thumbPath) {
-      const _buf = getThumbnailBuffer(_thumbPath);
-      if (_buf) ctx.thumbnail = _buf;
-    }
+    if (_thumbPath) _thumbBuf = getThumbnailBuffer(_thumbPath);
   } catch {}
-  const _saluranLink = config.saluran?.link || "";
-  const _website = config.info?.website || "";
-  const _okUrl = (u) => { try { const x = new URL(u); return x.protocol.startsWith("http"); } catch { return false; } };
-  const _sourceUrl = (_okUrl(_saluranLink) && _saluranLink) || (_okUrl(_website) && _website) || "https://www.whatsapp.com/";
-  const contextInfo = {
-    externalAdReply: {
-      title: opts.title || config.bot?.name || "Rara AI - Multi Device",
-      body: "Rara AI - Multi Device",
-      mediaType: 1,
-      showAdAttribution: false,
-      renderLargerThumbnail: true,
-      sourceUrl: _sourceUrl,
-      ...(ctx.thumbnail ? { thumbnail: ctx.thumbnail } : {}),
-    },
-  };
+
+  // ── pipeline teks IDENTIK m.reply: formatGuard → translate → smallcaps
+  // (jalur header gak lewat m.reply, jadi pipenya digandain di sini)
+  let _txt = _txt0;
+  try { _txt = formatGuard(_txt); } catch {}
+  try { if (needsTranslation(m.sender)) _txt = await translateUI(_txt, m.sender); } catch {}
+  try { _txt = smallcapsText(_txt); } catch {}
+
+  // ── JALUR UTAMA (fix 6 Okt 2026, owner: "thumbnail gak muncul meski ada
+  // gambarnya"): externalAdReply.thumbnail bytes TERBUKTI gak ke-render di
+  // client WA — kartu .menu bisa muncul karena pakai HEADER IMAGE ASLI
+  // (hasMediaAttachment:true + upload prepareWAMessageMedia ke server WA).
+  // Kartu usage kini pakai jalur yang sama persis: gambar nempel di header,
+  // teks usage di body — tampilan identik .menu.
+  if (
+    _thumbBuf &&
+    sock &&
+    typeof sock.relayMessage === "function" &&
+    typeof sock.waUploadToServer === "function" &&
+    !(m.chat && m.chat.endsWith("@newsletter")) &&
+    !sock._bridgePlatform
+  ) {
+    try {
+      const _prep = await prepareWAMessageMedia(
+        { image: _thumbBuf },
+        { upload: sock.waUploadToServer }
+      );
+      if (_prep && _prep.imageMessage) {
+        const _built = generateWAMessageFromContent(m.chat, {
+          viewOnceMessage: {
+            message: {
+              messageContextInfo: {},
+              interactiveMessage: {
+                header: { hasMediaAttachment: true, imageMessage: _prep.imageMessage },
+                body: { text: _txt },
+                contextInfo: {
+                  mentionedJid: m.sender ? [m.sender] : [],
+                  isForwarded: false,
+                },
+                nativeFlowMessage: { buttons: [] },
+              },
+            },
+          },
+        }, { quoted: m, userJid: sock.user && sock.user.jid });
+        await sock.relayMessage(m.chat, _built.message, { messageId: _built.key.id });
+        return { key: _built.key };
+      }
+    } catch (e) {
+      try {
+        console.error(
+          "[sendUsageCard] upload header gagal, fallback jalur m.reply:",
+          (e && e.message ? e.message : String(e)).split("\n")[0]
+        );
+      } catch {}
+    }
+  }
+
+  // ── FALLBACK (revisi owner 6 Okt 2026: "fallbacknya ke polos aja tanpa
+  // thumbnail"): bridge/newsletter/upload header gagal → teks polos via
+  // m.reply. Gak ada lagi externalAdReply thumbnail bytes — jalur itu
+  // terbukti gak ke-render di client WA.
   try {
-    return await m.reply(_txt, { contextInfo });
+    return await m.reply(_txt0);
   } catch {
-    try { return await m.reply(_txt); } catch { return null; }
+    // pesan keluar bot gak boleh mati senyap — last ditch plain text
+    try {
+      return await sock.sendMessage(m.chat, { text: _txt0 });
+    } catch { return null; }
   }
 }
 
