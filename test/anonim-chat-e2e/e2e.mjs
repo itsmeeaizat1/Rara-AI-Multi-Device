@@ -243,29 +243,47 @@ console.log("— section 8: report + auto-ban —");
   t("8f. user yang banned ditolak nyari partner", lastReplyOf(C).includes("blokir") || lastReplyOf(C).includes("diblokir"), lastReplyOf(C));
 }
 
-console.log("— section 9: settings (PREMIUM ONLY, pakai user non-premium baru) —");
+console.log("— section 9: settings versi lengkap (gender sendiri + minat FREE, filter pencarian PREMIUM) —");
 {
   const G = "628995551234@s.whatsapp.net"; // WAJIB nomor murni digit — isPremium() strip non-digit (bukan jid palsu beralpha)
   await register(G, { name: "Gilang" });
   sent.length = 0;
   await run(G, ["settings"]);
-  t("9a. non-premium liat settings tapi locked", lastReplyOf(G).includes("premium"), lastReplyOf(G));
+  const disp0 = lastReplyOf(G);
+  t("9a. tampilan settings lengkap: gender/mencari/umur/lokasi/minat/bahasa", ["gender", "mencari", "umur partner", "lokasi partner", "minat", "bahasa"].every((k) => disp0.includes(k)), disp0);
+  t("9b. non-premium: baris mencari/umur/lokasi dikunci (premium)", disp0.includes("premium"), disp0);
+
+  // FREE: ganti gender sendiri (bukan filter) — gak butuh premium
   sent.length = 0;
   await run(G, ["settings", "gender", "P"]);
-  t("9b. non-premium gak bisa apply filter gender", lastReplyOf(G).includes("premium"), lastReplyOf(G));
+  t("9c. ganti gender sendiri FREE (bukan filter, gak kena lock)", lastReplyOf(G).includes("diubah") && !lastReplyOf(G).includes("premium"), lastReplyOf(G));
+  t("9d. gender profil (bukan settings.filterGender) yang berubah", lib.getProfile(db, G)?.gender === "P");
+
+  // FREE: minat
+  sent.length = 0;
+  await run(G, ["settings", "minat", "musik,", "game,", "film"]);
+  t("9e. minat tersimpan FREE", lastReplyOf(G).includes("disimpan") && lib.getProfile(db, G)?.interests?.includes("musik"), lib.getProfile(db, G)?.interests);
+
+  // PREMIUM ONLY: filter pencarian "cari" (dulu namanya "gender", sekarang beda dari gender sendiri)
+  sent.length = 0;
+  await run(G, ["settings", "cari", "L"]);
+  t("9f. non-premium gak bisa apply filter cari (pencarian partner)", lastReplyOf(G).includes("premium"), lastReplyOf(G));
 
   // jadikan G premium LEWAT PATH ASLI isPremium (bukan bonus referral)
   premiumDb.addPremium(G, 30, "TestUser");
   sent.length = 0;
-  await run(G, ["settings", "gender", "P"]);
-  t("9c. user premium (isPremium asli) bisa apply filter gender", lastReplyOf(G).includes("disimpan"), lastReplyOf(G));
-  t("9d. filter tersimpan di profil", lib.getProfile(db, G)?.settings?.filterGender === "P");
+  await run(G, ["settings", "cari", "L"]);
+  t("9g. user premium (isPremium asli) bisa apply filter cari", lastReplyOf(G).includes("disimpan"), lastReplyOf(G));
+  t("9h. filter tersimpan di profil (settings.filterGender, BUKAN gender sendiri)", lib.getProfile(db, G)?.settings?.filterGender === "L" && lib.getProfile(db, G)?.gender === "P");
   sent.length = 0;
   await run(G, ["settings", "umur", "20", "30"]);
-  t("9e. filter umur tersimpan", lib.getProfile(db, G)?.settings?.filterAgeMin === 20 && lib.getProfile(db, G)?.settings?.filterAgeMax === 30, lastReplyOf(G));
+  t("9i. filter umur tersimpan", lib.getProfile(db, G)?.settings?.filterAgeMin === 20 && lib.getProfile(db, G)?.settings?.filterAgeMax === 30, lastReplyOf(G));
   sent.length = 0;
   await run(G, ["settings", "reset"]);
-  t("9f. reset filter balik null", lib.getProfile(db, G)?.settings?.filterGender === null, JSON.stringify(lib.getProfile(db, G)?.settings));
+  t("9j. reset filter balik null (minat & gender sendiri TETAP, gak kehapus)", lib.getProfile(db, G)?.settings?.filterGender === null && lib.getProfile(db, G)?.interests?.includes("musik") && lib.getProfile(db, G)?.gender === "P", JSON.stringify(lib.getProfile(db, G)));
+  sent.length = 0;
+  await run(G, ["settings"]);
+  t("9k. tampilan settings nunjukin gender P & minat tersimpan setelah reset filter", lastReplyOf(G).includes("perempuan") && lastReplyOf(G).includes("musik"), lastReplyOf(G));
 }
 
 console.log("— section 10: language, premium info & statistik —");

@@ -123,6 +123,7 @@ export function registerProfile(db, jid, { name, gender, age, location }) {
     gender,
     age,
     location: String(location).slice(0, 40),
+    interests: [],
     lang: a.profiles[jid]?.lang || "id",
     registeredAt: Date.now(),
     refCode: makeRefCode(jid),
@@ -508,7 +509,11 @@ export async function reportPartner(m, sock, db, reason) {
   return m.reply(raraWrap("Chat Anonim", "✅ Laporan diterima, makasih udah bantu jaga Chat Anonim tetap aman."));
 }
 
-// ── settings (gender/umur/lokasi filter — PREMIUM ONLY) ──
+// ── settings (ala referensi Telegram owner: Gender sendiri + Mencari/Umur/Lokasi
+// partner [PREMIUM] + Minat + Bahasa — versi "lengkap" tambahan dari permintaan owner) ──
+const GENDER_LABEL = (g) => (g === "L" ? "Laki-laki" : g === "P" ? "Perempuan" : "Belum diatur");
+const SEARCH_LABEL = (g) => (g === "L" ? "Laki-laki 👦" : g === "P" ? "Perempuan 👧" : "Siapa saja 👥");
+
 export async function showSettings(m, sock, db) {
   const jid = m.sender;
   const a = getAnonim(db);
@@ -516,15 +521,23 @@ export async function showSettings(m, sock, db) {
   if (!profile) return m.reply(raraWrap("Chat Anonim", "📝 Kamu belum daftar. *.anonim daftar* dulu ya."));
   const premium = isPremiumEffective(a, jid);
   const s = profile.settings || {};
-  const lock = premium ? "🔓" : "🔒";
-  return m.reply(raraWrap("Settings Chat Anonim", [
-    `🌐 Bahasa: ${profile.lang === "en" ? "English" : "Indonesia"} — ganti: *.anonim language id/en*`,
+  const lock = premium ? "" : " 🔒 (Premium)";
+  const interests = (profile.interests || []).length ? profile.interests.join(", ") : "—";
+  return m.reply(raraWrap("Pengaturan Chat Anonim", [
+    "⚙️ *Pengaturan Kamu*",
     "",
-    `${lock} Filter gender: ${s.filterGender || "semua"}${premium ? " — .anonim settings gender L/P/semua" : " (Premium)"}`,
-    `${lock} Filter umur: ${s.filterAgeMin || s.filterAgeMax ? `${s.filterAgeMin || MIN_AGE}-${s.filterAgeMax || MAX_AGE}` : "semua"}${premium ? " — .anonim settings umur <min> <max>" : " (Premium)"}`,
-    `${lock} Filter lokasi: ${s.filterLocation || "semua"}${premium ? " — .anonim settings lokasi <kota>" : " (Premium)"}`,
+    `• Gender: ${GENDER_LABEL(profile.gender)} — ganti: *.anonim settings gender L/P*`,
+    `• Mencari: ${SEARCH_LABEL(s.filterGender)}${lock}`,
+    `• Umur partner: ${s.filterAgeMin || s.filterAgeMax ? `${s.filterAgeMin || MIN_AGE}-${s.filterAgeMax || MAX_AGE} th` : "semua"}${lock}`,
+    `• Lokasi partner: ${s.filterLocation || "semua"}${lock}`,
+    `• Minat: ${interests}`,
+    `• Bahasa: ${profile.lang === "en" ? "English" : "Indonesia"}`,
     "",
-    !premium ? "💎 Buka semua filter: *.anonim premium*" : "✅ Reset semua filter: *.anonim settings reset*",
+    "Kirim *.anonim settings minat <tag1, tag2, ...>* buat atur minat (mis: musik, game, film).",
+    "Kirim *.anonim language id/en* buat ganti bahasa.",
+    premium
+      ? "\nAtur filter pencarian: *.anonim settings cari L/P/semua* · *umur <min> <max>* · *lokasi <kota>* · reset: *.anonim settings reset*"
+      : "\n💎 Buka filter pencarian (gender/umur/lokasi partner): *.anonim premium*",
   ].join("\n")));
 }
 
@@ -533,34 +546,53 @@ export async function applySettings(m, sock, db, args) {
   const a = getAnonim(db);
   const profile = a.profiles[jid];
   if (!profile) return m.reply(raraWrap("Chat Anonim", "📝 Kamu belum daftar. *.anonim daftar* dulu ya."));
-  if (!isPremiumEffective(a, jid)) {
-    return m.reply(raraWrap("Chat Anonim", "🔒 Filter settings cuma buat Premium.\n\n💎 Upgrade: *.anonim premium*"));
-  }
   const sub = (args[0] || "").toLowerCase();
+
+  // ── FREE: gender sendiri & minat (bukan filter pencarian, jadi gak dikunci premium) ──
   if (sub === "gender") {
+    const g = (args[1] || "").toUpperCase();
+    if (g !== "L" && g !== "P") return m.reply(raraWrap("Chat Anonim", "⚠️ *.anonim settings gender L/P*"));
+    profile.gender = g;
+    db.save();
+    return m.reply(raraWrap("Chat Anonim", `✅ Gender kamu diubah ke *${GENDER_LABEL(g)}*.`));
+  }
+  if (sub === "minat") {
+    const raw = args.slice(1).join(" ");
+    if (!raw.trim()) return m.reply(raraWrap("Chat Anonim", "⚠️ *.anonim settings minat <tag1, tag2, ...>* (mis: musik, game, film)"));
+    const tags = raw.split(",").map((x) => x.trim()).filter(Boolean).slice(0, 10).map((x) => x.slice(0, 20));
+    profile.interests = tags;
+    db.save();
+    return m.reply(raraWrap("Chat Anonim", `✅ Minat disimpan: ${tags.join(", ")}.`));
+  }
+
+  // ── PREMIUM ONLY: filter pencarian partner (cari/umur/lokasi) ──
+  if (sub === "cari" || sub === "mencari") {
+    if (!isPremiumEffective(a, jid)) return m.reply(raraWrap("Chat Anonim", "🔒 Filter pencarian cuma buat Premium.\n\n💎 Upgrade: *.anonim premium*"));
     const g = (args[1] || "").toUpperCase();
     if (g === "SEMUA" || g === "ALL") updateSettings(db, jid, { filterGender: null });
     else if (g === "L" || g === "P") updateSettings(db, jid, { filterGender: g });
-    else return m.reply(raraWrap("Chat Anonim", "⚠️ *.anonim settings gender L/P/semua*"));
-    return m.reply(raraWrap("Chat Anonim", "✅ Filter gender disimpan."));
+    else return m.reply(raraWrap("Chat Anonim", "⚠️ *.anonim settings cari L/P/semua*"));
+    return m.reply(raraWrap("Chat Anonim", "✅ Filter pencarian (gender partner) disimpan."));
   }
   if (sub === "umur") {
+    if (!isPremiumEffective(a, jid)) return m.reply(raraWrap("Chat Anonim", "🔒 Filter umur cuma buat Premium.\n\n💎 Upgrade: *.anonim premium*"));
     const min = parseInt(args[1], 10), max = parseInt(args[2], 10);
     if (!min || !max || min < MIN_AGE || max > MAX_AGE || min > max) {
       return m.reply(raraWrap("Chat Anonim", `⚠️ *.anonim settings umur <min> <max>* (${MIN_AGE}-${MAX_AGE})`));
     }
     updateSettings(db, jid, { filterAgeMin: min, filterAgeMax: max });
-    return m.reply(raraWrap("Chat Anonim", `✅ Filter umur disimpan: ${min}-${max} th.`));
+    return m.reply(raraWrap("Chat Anonim", `✅ Filter umur partner disimpan: ${min}-${max} th.`));
   }
   if (sub === "lokasi") {
+    if (!isPremiumEffective(a, jid)) return m.reply(raraWrap("Chat Anonim", "🔒 Filter lokasi cuma buat Premium.\n\n💎 Upgrade: *.anonim premium*"));
     const loc = args.slice(1).join(" ").trim();
     if (!loc) return m.reply(raraWrap("Chat Anonim", "⚠️ *.anonim settings lokasi <kota>*"));
     updateSettings(db, jid, { filterLocation: loc.slice(0, 40) });
-    return m.reply(raraWrap("Chat Anonim", `✅ Filter lokasi disimpan: ${loc}.`));
+    return m.reply(raraWrap("Chat Anonim", `✅ Filter lokasi partner disimpan: ${loc}.`));
   }
   if (sub === "reset") {
     updateSettings(db, jid, { filterGender: null, filterAgeMin: null, filterAgeMax: null, filterLocation: null });
-    return m.reply(raraWrap("Chat Anonim", "✅ Semua filter direset ke semua/default."));
+    return m.reply(raraWrap("Chat Anonim", "✅ Semua filter pencarian direset ke semua/default."));
   }
   return showSettings(m, sock, db);
 }
