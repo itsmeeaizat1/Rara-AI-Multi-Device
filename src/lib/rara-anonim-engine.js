@@ -40,8 +40,18 @@ const PREMIUM_DAILY_FIND = 200;             // limit buat premium (bukan unlimit
 const MIN_AGE = 13, MAX_AGE = 100;
 const TEXT_TYPES = new Set(["conversation", "extendedTextMessage"]);
 const REG_SESSION_TIMEOUT = 5 * 60 * 1000;  // 5 menit per step daftar
-const INVITES_PER_BONUS = 3;                // tiap 3 teman diundang → bonus premium
-const BONUS_PREMIUM_MS = 7 * 24 * 60 * 60 * 1000; // bonus 7 hari
+
+// ── gacha referral (owner 6 Okt, screenshot: "ajak teman & dapat premium gratis")
+// TIAP referral valid (bukan tiap kelipatan) nge-roll 1x gacha buat PENGUNDANG —
+// hadiah RANDOM: tambahan limit cari hari ini (umum) atau akses Premium 1-3 hari
+// (langka), biar kerasa kayak gacha beneran — bukan hadiah pasti.
+const REFERRAL_GACHA_POOL = [
+  { type: "limit", amount: 3, chance: 40, label: "🎁 +3 limit cari hari ini" },
+  { type: "limit", amount: 5, chance: 30, label: "🎁 +5 limit cari hari ini" },
+  { type: "limit", amount: 10, chance: 15, label: "🎉 +10 limit cari hari ini" },
+  { type: "premium", hours: 24, chance: 10, label: "💎 Premium 1 hari" },
+  { type: "premium", hours: 72, chance: 5, label: "💎✨ JACKPOT! Premium 3 hari" },
+];
 
 // ── seams buat e2e ──
 let _idleMs = IDLE_TIMEOUT_MS, _floodMs = FLOOD_MS, _queueTimeoutMs = QUEUE_TIMEOUT_MS;
@@ -55,6 +65,38 @@ export function _resetAnonimTimingsForTest() {
 }
 let _sweeperInterval = null;
 export function _stopAnonimSweeperForTest() { if (_sweeperInterval) { clearInterval(_sweeperInterval); _sweeperInterval = null; } }
+
+let _rng = Math.random;
+export function _setAnonimRngForTest(fn) { _rng = fn; }
+export function _resetAnonimRngForTest() { _rng = Math.random; }
+
+// pilih 1 hadiah dari REFERRAL_GACHA_POOL berdasar bobot "chance" (total 100)
+function rollReferralGacha() {
+  const roll = _rng() * 100;
+  let cum = 0;
+  for (const item of REFERRAL_GACHA_POOL) {
+    cum += item.chance;
+    if (roll < cum) return item;
+  }
+  return REFERRAL_GACHA_POOL[REFERRAL_GACHA_POOL.length - 1];
+}
+
+// terapkan hadiah gacha ke profil PENGUNDANG (referrer)
+function applyReferralReward(db, profile, reward) {
+  if (reward.type === "limit") {
+    const today = todayStr();
+    if (!profile.bonusFind || profile.bonusFind.date !== today) profile.bonusFind = { date: today, amount: 0 };
+    profile.bonusFind.amount += reward.amount;
+  } else if (reward.type === "premium") {
+    const base = profile.premiumBonusUntil > Date.now() ? profile.premiumBonusUntil : Date.now();
+    profile.premiumBonusUntil = base + reward.hours * 60 * 60 * 1000;
+  }
+  db.save();
+}
+
+function bonusFindToday(profile) {
+  return (profile?.bonusFind && profile.bonusFind.date === todayStr()) ? (profile.bonusFind.amount || 0) : 0;
+}
 
 if (!global.anonimRegSessions) global.anonimRegSessions = {};
 if (!global.anonimRatingPrompts) global.anonimRatingPrompts = {};
@@ -128,6 +170,7 @@ export function registerProfile(db, jid, { name, gender, age, location }) {
     registeredAt: Date.now(),
     refCode: makeRefCode(jid),
     settings: { filterGender: null, filterAgeMin: null, filterAgeMax: null, filterLocation: null },
+    bonusFind: { date: null, amount: 0 },
     stats: {
       chatCount: 0, messagesSent: 0, reportsMade: 0, reportsReceived: 0,
       ratingUp: 0, ratingDown: 0, ratedCount: 0, invitedCount: 0,
@@ -260,11 +303,16 @@ export async function registrationAnswerHandler(m, sock, db) {
       const found = findProfileByRefCode(a, text, jid);
       if (found) {
         found.profile.stats.invitedCount = (found.profile.stats.invitedCount || 0) + 1;
-        if (found.profile.stats.invitedCount % INVITES_PER_BONUS === 0) {
-          const base = found.profile.premiumBonusUntil > Date.now() ? found.profile.premiumBonusUntil : Date.now();
-          found.profile.premiumBonusUntil = base + BONUS_PREMIUM_MS;
-          dm(sock, found.jid, raraWrap("Chat Anonim", `🎁 Yeay! ${found.profile.stats.invitedCount} teman udah diundang pakai kode kamu — bonus Premium 7 hari ditambahkan!`));
-        }
+        const reward = rollReferralGacha(); // gacha: TIAP referral valid nge-roll, hadiah random
+        applyReferralReward(db, found.profile, reward);
+        dm(sock, found.jid, raraWrap("Chat Anonim", [
+          "🎰 *Gacha Referral!*",
+          "",
+          `Temanmu daftar pakai kode kamu — kamu dapat:`,
+          reward.label,
+          "",
+          `Total teman diundang: ${found.profile.stats.invitedCount}`,
+        ].join("\n")));
         refResult = "ok";
       } else {
         refResult = "invalid";
@@ -291,10 +339,11 @@ export function isAnonimPremium(jid) {
 
 function dailyFindLeft(a, jid) {
   const limit = isPremiumEffective(a, jid) ? PREMIUM_DAILY_FIND : FREE_DAILY_FIND;
+  const bonus = bonusFindToday(a.profiles[jid]); // bonus hasil gacha referral, berlaku HARI INI aja
   const rec = a.dailyFind[jid];
   const today = todayStr();
-  if (!rec || rec.date !== today) return limit;
-  return Math.max(0, limit - rec.count);
+  if (!rec || rec.date !== today) return limit + bonus;
+  return Math.max(0, limit + bonus - rec.count);
 }
 
 function bumpDailyFind(a, jid) {
@@ -605,6 +654,7 @@ export async function showStatistik(m, sock, db) {
   if (!profile) return m.reply(raraWrap("Chat Anonim", "📝 Kamu belum daftar. *.anonim daftar* dulu ya."));
   const premium = isPremiumEffective(a, jid);
   const s = profile.stats || {};
+  const bonus = bonusFindToday(profile);
   return m.reply(raraWrap("Statistik Chat Anonim", [
     "📊 *Statistik Kamu*",
     "",
@@ -614,7 +664,8 @@ export async function showStatistik(m, sock, db) {
     `• Teman diundang: ${s.invitedCount || 0}`,
     `• Status: ${premium ? "💎 Premium" : "🆓 Gratis"}`,
     `• Orang yang kamu nilai: ${s.ratedCount || 0}`,
-  ].join("\n")));
+    bonus > 0 ? `• 🎰 Bonus limit cari hari ini: +${bonus}` : "",
+  ].filter(Boolean).join("\n")));
 }
 
 export async function showPremiumInfo(m, sock, db) {
@@ -634,10 +685,12 @@ export async function showPremiumInfo(m, sock, db) {
   if (profile) {
     lines.push(
       "",
-      "🎁 *Ajak teman & dapat Premium gratis!*",
+      "🎰 *Ajak teman & gacha referral!*",
       `Kode referral kamu: *${profile.refCode}*`,
-      `Suruh teman ketik kode ini pas *.anonim daftar* (step kode referral).`,
-      `Progres: ${profile.stats?.invitedCount || 0} teman diundang (tiap ${INVITES_PER_BONUS} teman = bonus 7 hari Premium).`,
+      "Suruh teman ketik kode ini pas *.anonim daftar* (step kode referral).",
+      "Tiap 1 teman daftar pakai kodemu = 1x roll gacha, hadiah RANDOM:",
+      "🎁 +3/+5 limit cari hari ini (umum) · 🎉 +10 limit (jarang) · 💎 Premium 1 hari · 💎✨ JACKPOT Premium 3 hari",
+      `Teman diundang: ${profile.stats?.invitedCount || 0}`,
     );
   }
   lines.push("", premium ? "Atur filter: *.anonim settings*" : "Upgrade premium bot: *.buyprem*");

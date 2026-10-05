@@ -123,24 +123,43 @@ console.log("— section 3: daftar BISA dari grup, chat relay/find TIDAK —");
   t("3c. find ditolak di grup (DM only)", lastReplyOf(B).includes("dm"), lastReplyOf(B));
 }
 
-console.log("— section 4: referral ajak teman —");
+console.log("— section 4: referral GACHA (hadiah random: limit atau premium) —");
 {
   const refOfA = lib.getProfile(db, A).refCode;
   const D1 = "62899ref1@s.whatsapp.net", D2 = "62899ref2@s.whatsapp.net", D3 = "62899ref3@s.whatsapp.net";
+
+  // D1 daftar pakai kode A, RNG dipaksa roll=0 → tier pertama (+3 limit, chance 0-40)
+  lib._setAnonimRngForTest(() => 0.0);
   sent.length = 0;
   await register(D1, { name: "Ref1", refCode: refOfA });
+  lib._resetAnonimRngForTest();
   t("4a. referral valid tercatat (bukan invalid)", lastReplyOf(D1).includes("diterima") && lastReplyOf(D1).includes("referral"), lastReplyOf(D1));
   t("4b. invitedCount A bertambah", lib.getProfile(db, A).stats.invitedCount === 1, lib.getProfile(db, A).stats);
+  t("4c. gacha tier +3 limit diterapkan ke A (bonusFind hari ini)", lib.getProfile(db, A).bonusFind.amount === 3, lib.getProfile(db, A).bonusFind);
+  t("4d. A dapat notif gacha referral", msgsTo(A).some((x) => x.includes("gacha") && x.includes("referral")), msgsTo(A));
+
+  // D2 daftar pakai kode A, RNG dipaksa roll=75 → tier +10 limit (chance 70-85)
+  lib._setAnonimRngForTest(() => 0.75);
   await register(D2, { name: "Ref2", refCode: refOfA });
+  lib._resetAnonimRngForTest();
+  t("4e. gacha ke-2 nambahin bonus limit (3+10=13), BUKAN diganti", lib.getProfile(db, A).bonusFind.amount === 13, lib.getProfile(db, A).bonusFind);
+  t("4f. belum ada bonus premium (kedua roll kena tier limit)", lib.getProfile(db, A).premiumBonusUntil === 0, lib.getProfile(db, A).premiumBonusUntil);
+
+  // kode referral invalid → gak ngaruh ke gacha A, tetap lanjut daftar
   await register(D3, { name: "Ref3", refCode: "KODESALAH999" });
-  t("4c. kode referral invalid tetap lanjut daftar (bukan diblokir)", !!lib.getProfile(db, D3), lastReplyOf(D3));
-  t("4d. referral invalid ngasih notice tapi tetap selesai", lastReplyOf(D3).includes("gak ketemu") || lastReplyOf(D3).includes("tanpa referral"), lastReplyOf(D3));
-  t("4e. 3 referral valid (D1,D2 doang yg valid=2) belum capai threshold 3 → belum bonus", lib.getProfile(db, A).premiumBonusUntil === 0, lib.getProfile(db, A).premiumBonusUntil);
+  t("4g. kode referral invalid tetap lanjut daftar (bukan diblokir)", !!lib.getProfile(db, D3), lastReplyOf(D3));
+  t("4h. referral invalid ngasih notice tapi tetap selesai", lastReplyOf(D3).includes("gak ketemu") || lastReplyOf(D3).includes("tanpa referral"), lastReplyOf(D3));
+  t("4i. referral invalid gak nambahin invitedCount A", lib.getProfile(db, A).stats.invitedCount === 2, lib.getProfile(db, A).stats.invitedCount);
+
+  // D4 daftar pakai kode A, RNG dipaksa roll=97 → tier JACKPOT premium 72 jam (chance 95-100)
   const D4 = "62899ref4@s.whatsapp.net";
+  lib._setAnonimRngForTest(() => 0.97);
   sent.length = 0;
   await register(D4, { name: "Ref4", refCode: refOfA });
-  t("4f. referral ke-3 valid → bonus premium 7 hari diberikan", lib.getProfile(db, A).premiumBonusUntil > Date.now(), lib.getProfile(db, A).premiumBonusUntil);
-  t("4g. A dapat notif bonus premium", msgsTo(A).some((x) => x.includes("bonus") && x.includes("premium")), msgsTo(A));
+  lib._resetAnonimRngForTest();
+  t("4j. gacha JACKPOT → bonus premium 72 jam diberikan ke A", lib.getProfile(db, A).premiumBonusUntil > Date.now(), lib.getProfile(db, A).premiumBonusUntil);
+  t("4k. A dapat notif gacha nyebut jackpot/premium", msgsTo(A).some((x) => x.includes("jackpot") || (x.includes("premium") && x.includes("hari"))), msgsTo(A));
+  t("4l. statistik A nunjukin bonus limit hari ini", (await (async () => { sent.length = 0; await run(A, ["statistik"]); return lastReplyOf(A); })()).includes("bonus limit"));
 }
 
 console.log("— section 5: find & pairing —");
