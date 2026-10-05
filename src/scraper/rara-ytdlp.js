@@ -9,6 +9,7 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import { fileURLToPath } from "url";
 import axios from "axios";
+import { acquireAutoProxy, reportProxyResult, isAutoProxyOn } from "../lib/rara-proxy-pool.js";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
@@ -116,6 +117,26 @@ function getYtCookiesArgs() {
   return "";
 }
 
+// 🔹 PROXY POOL OTOMATIS (6 Okt 2026, request owner) — tiap mau run,
+// kalau gak ada proxy manual, pool nyariin proxy hidup acak (http/socks4/
+// socks5) dari daftar gratis ala Proxy-Hunter → IP ganti-ganti → YouTube
+// gak sempet blokir 1 IP datacenter terus-terusan, tanpa cookies.
+// Manual (env/file .ytproxy) TETAP nomor satu; pool cuma fallback otomatis.
+let _autoProxy = null; // proxy terpilih buat run ini (di-set primeYtAutoProxy)
+
+async function primeYtAutoProxy() {
+  _autoProxy = null;
+  try {
+    if (!isAutoProxyOn()) return null;
+    // proxy manual kepasang → pool gak perlu nyala
+    if (process.env.NOVA_YTDLP_PROXY && /^(https?|socks[45]):\/\//i.test(process.env.NOVA_YTDLP_PROXY)) return null;
+    const f = path.join(process.cwd(), "data", "yt-proxy.txt");
+    if (fs.existsSync(f) && fs.statSync(f).size > 5) return null;
+    _autoProxy = await acquireAutoProxy();
+  } catch {}
+  return _autoProxy;
+}
+
 // 🔹 YT-DLP PROXY — fallback kedua (1 Okt 2026, request owner "fallback
 // kedua klo yt dlp ke limit"): kalau YouTube blokir IP datacenter VPS dan
 // cookies belum ada/expire, yt-dlp bisa lewat PROXY (IP lain gak kena blokir
@@ -137,14 +158,26 @@ function getYtProxyArgs() {
       return null;
     })(),
   ].filter(Boolean);
-  for (const proxyUrl of candidates) {
-    if (/^(https?|socks[45]):\/\//i.test(proxyUrl)) {
-      console.log(`[rara-ytdlp] 🌐 yt-dlp via proxy: ${proxyUrl.replace(/:[^:@/]+@/, ':***@')}`);
-      return `--proxy "${proxyUrl}"`;
-    }
-    console.warn(`[rara-ytdlp] ⚠️ proxy diabaikan (bukan URL http/https/socks): ${proxyUrl.slice(0, 40)}`);
+  // proxy manual invalid → jangan langsung menyerah: pool otomatis jalan
+  const manualValid = candidates.find((c) => /^(https?|socks[45]):\/\//i.test(c));
+  if (manualValid) {
+    console.log(`[rara-ytdlp] 🌐 yt-dlp via proxy (manual): ${manualValid.replace(/:[^:@/]+@/, ':***@')}`);
+    return `--proxy "${manualValid}"`;
+  }
+  if (_autoProxy && /^(https?|socks[45]):\/\//i.test(_autoProxy)) {
+    console.log(`[rara-ytdlp] 🌐 yt-dlp via proxy (pool otomatis): ${_autoProxy.replace(/:[^:@/]+@/, ':***@')}`);
+    return `--proxy "${_autoProxy}"`;
   }
   return "";
+}
+
+// lapor hasil proxy pool (sukses → segarkan; gagal → blacklist, run berikut
+// otomatis pindah ke proxy lain — inti "ganti IP terus biar gak kena limit")
+function reportAutoProxyResult(ok) {
+  if (_autoProxy) {
+    reportProxyResult(_autoProxy, ok);
+    if (!ok) _autoProxy = null;
+  }
 }
 
 /**
@@ -164,6 +197,7 @@ async function downloadAudioYtDlp(url, kbps = "128") {
   const outputPath = path.join(tempDir, `ytdlp_${id}.mp3`);
 
   try {
+    await primeYtAutoProxy(); // pasang proxy pool otomatis buat run ini
     // yt-dlp audio extraction with specific bitrate
     // --audio-quality 0 = best (256-320k), 5 = medium (~128k), 9 = worst
     // For explicit kbps control, use --postprocessor-args
@@ -211,6 +245,7 @@ async function downloadAudioYtDlp(url, kbps = "128") {
       if (fs.existsSync(altPath)) {
         const buffer = fs.readFileSync(altPath);
         if (buffer.length < 10000) throw new Error("Audio terlalu kecil");
+        reportAutoProxyResult(true);
         return { buffer, title, kbps: String(kbps) };
       }
       throw new Error("File audio tidak ditemukan setelah download");
@@ -219,7 +254,11 @@ async function downloadAudioYtDlp(url, kbps = "128") {
     const buffer = fs.readFileSync(finalPath);
     if (buffer.length < 10000) throw new Error("Audio terlalu kecil");
 
+    reportAutoProxyResult(true);
     return { buffer, title, kbps: String(kbps) };
+  } catch (e) {
+    reportAutoProxyResult(false); // proxy gagal → blacklist, run berikut ganti IP
+    throw e;
   } finally {
     // Cleanup
     try {
@@ -246,6 +285,7 @@ async function downloadVideoYtDlp(url, quality = "720") {
   const outputPath = path.join(tempDir, `ytdlp_vid_${id}.mp4`);
 
   try {
+    await primeYtAutoProxy(); // pasang proxy pool otomatis buat run ini
     // Get title first
     const { stdout: titleOut } = await run(
       `${getYtDlpCmd()} ${getYtCookiesArgs()} ${getYtProxyArgs()} --get-title --no-warnings "${url}"`,
@@ -278,7 +318,11 @@ async function downloadVideoYtDlp(url, quality = "720") {
     const buffer = fs.readFileSync(outputPath);
     if (buffer.length < 10000) throw new Error("Video terlalu kecil");
 
+    reportAutoProxyResult(true);
     return { buffer, title, quality: `${quality}p` };
+  } catch (e) {
+    reportAutoProxyResult(false); // proxy gagal → blacklist, run berikut ganti IP
+    throw e;
   } finally {
     try {
       const files = fs.readdirSync(tempDir).filter(f => f.startsWith(`ytdlp_vid_${id}`));
@@ -366,7 +410,7 @@ async function downloadAudio(url, kbps = "128") {
 
   // 3. Fallback to ytdl.js (ytmp3.mobi) — no kbps control, default 128
   if (_lastYtdlpBotCheck && Date.now() - _lastYtdlpBotCheck < 60000) {
-    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). FIX (pilih satu): (1) ekspor cookies YouTube ke data/yt-cookies.txt (.ytcookies), (2) pasang proxy ke env NOVA_YTDLP_PROXY / data/yt-proxy.txt — panduan: changelogs/FIXES.md");
+    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). Proxy pool otomatis udah nyoba. Kalau masih sering: (1) pasang proxy manual .ytproxy <url> (http/socks4/socks5), (2) ekspor cookies ke data/yt-cookies.txt (.ytcookies)");
   }
   throw new Error("Semua API audio gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
@@ -400,7 +444,7 @@ async function downloadVideo(url, quality = "720") {
   }
 
   if (_lastYtdlpBotCheck && Date.now() - _lastYtdlpBotCheck < 60000) {
-    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). FIX (pilih satu): (1) ekspor cookies YouTube ke data/yt-cookies.txt (.ytcookies), (2) pasang proxy ke env NOVA_YTDLP_PROXY / data/yt-proxy.txt — panduan: changelogs/FIXES.md");
+    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). Proxy pool otomatis udah nyoba. Kalau masih sering: (1) pasang proxy manual .ytproxy <url> (http/socks4/socks5), (2) ekspor cookies ke data/yt-cookies.txt (.ytcookies)");
   }
   throw new Error("Semua API video gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
@@ -414,4 +458,5 @@ export {
   isFfmpegAvailable,
   getYtProxyArgs,
   getYtCookiesArgs,
+  primeYtAutoProxy,
 };

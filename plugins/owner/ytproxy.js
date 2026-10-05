@@ -20,6 +20,7 @@ import fs from "fs";
 import path from "path";
 import { raraError, raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getYtProxyArgs } from "../../src/scraper/rara-ytdlp.js";
+import { getAutoProxyStats, setAutoProxyOn, resetAutoProxyPool, isAutoProxyOn } from "../../src/lib/rara-proxy-pool.js";
 
 const PROXY_PATH = path.join(process.cwd(), "data", "yt-proxy.txt");
 const PROXY_RE = /^(https?|socks5):\/\/\S+$/i;
@@ -57,9 +58,9 @@ const pluginConfig = {
   name: "ytproxy",
   alias: ["proxyyt", "setproxyyt", "ytdlproxy"],
   category: "owner",
-  description: "Proxy YouTube via WhatsApp — setel proxy yt-dlp dari chat, fallback kedua .play pas bot-check (selain cookies)",
-  usage: ".ytproxy <url> — simpan proxy yt-dlp (http/https/socks5)\n.ytproxy status — cek proxy aktif\n.ytproxy clear — hapus proxy",
-  example: ".ytproxy http://user:pass@host:8080\n.ytproxy socks5://host:1080\n.ytproxy status\n.ytproxy clear",
+  description: "Proxy YouTube — manual via chat + pool proxy acak OTOMATIS (http/socks4/socks5) tiap run .play biar IP gak kena blokir YouTube",
+  usage: ".ytproxy <url> — simpan proxy yt-dlp (http/https/socks4/socks5)\n.ytproxy status — cek proxy aktif + pool otomatis\n.ytproxy auto on/off/reset — pool proxy acak otomatis\n.ytproxy clear — hapus proxy manual",
+  example: ".ytproxy http://user:pass@host:8080\n.ytproxy auto on\n.ytproxy status\n.ytproxy clear",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -76,27 +77,64 @@ async function handler(m, { sock }) {
   // ── Sub: status ─────────────────────────────────────────────
   if (sub === "status") {
     const st = proxyStatus();
+    const pool = getAutoProxyStats();
+    const poolLines = [
+      "",
+      "── 🎲 PROXY POOL OTOMATIS ──",
+      `• status : ${pool.on ? "🟢 aktif — tiap .play nyari proxy hidup acak (http/socks4/socks5)" : "🔴 mati (.ytproxy auto on buat nyalain)"}`,
+      `• proxy siap : ${pool.okCount} | blacklist : ${pool.deadCount}`,
+    ];
+    if (pool.okCount > 0) {
+      const proto = Object.entries(pool.byProto).map(([k, v]) => k + ":" + v).join(", ");
+      poolLines.push(`• protokol : ${proto}`);
+      poolLines.push(`• dipakai : ${maskProxy(pool.ok[0])}`);
+    }
     if (!st) {
       return m.reply(
         raraWrap("Yt Proxy", [
-          "🔴 *tidak ada proxy terpasang*",
+          "🟡 *tidak ada proxy manual terpasang*",
+          ...(pool.on ? [] : ["", "⚠️ pool otomatis juga mati — yt-dlp nyambung langsung dari IP server."]),
+          ...poolLines,
           "",
-          "yt-dlp nyambung langsung dari IP server.",
-          "",
-          "📍 cara setel:",
-          "ketik .ytproxy <url-proxy>",
-          "contoh: .ytproxy http://user:pass@host:8080",
+          "📍 proxy manual: ketik .ytproxy <url-proxy>",
+          "📍 pool: .ytproxy auto on | .ytproxy auto off | .ytproxy auto reset",
         ].join("\n")),
       );
     }
     return m.reply(
       raraWrap("Yt Proxy", [
-        "🟢 *proxy aktif*",
+        "🟢 *proxy manual aktif* (prioritas #1 — pool otomatis gak dipakai selama manual ada)",
         `• adres : ${maskProxy(st.url)}`,
         `• sumber : ${st.source}`,
-        "• yt-dlp : otomatis pakai --proxy di download berikutnya",
+        ...poolLines,
         "",
         "📌 Ganti: ketik .ytproxy <url-baru>. Hapus: .ytproxy clear.",
+      ].join("\n")),
+    );
+  }
+
+  // ── Sub: auto (pool otomatis on/off/reset) ──────────────────
+  if (sub === "auto") {
+    const act = (args[1] || "").toLowerCase();
+    if (act === "on") {
+      setAutoProxyOn(true);
+      return m.reply(raraWrap("Yt Proxy", ["🟢 *proxy pool otomatis AKTIF*", "", "Tiap .play/.video tanpa proxy manual, bot nyari proxy hidup acak (http/socks4/socks5) dari daftar gratis ala Proxy-Hunter, diTes dulu, dipakai sekali, ganti yang lain tiap run — IP ganti terus biar YouTube gak blokir.", "", "Hapus proxy manual (.ytproxy clear) biar pool kepakai."].join("\n")));
+    }
+    if (act === "off") {
+      setAutoProxyOn(false);
+      return m.reply(raraWrap("Yt Proxy", ["🔴 *proxy pool otomatis MATI* — yt-dlp nyambung langsung dari IP server.", "", "Nyalain lagi: .ytproxy auto on"].join("\n")));
+    }
+    if (act === "reset") {
+      resetAutoProxyPool();
+      return m.reply(raraWrap("Yt Proxy", ["♻️ *pool direset* — daftar proxy & blacklist dikosongkan, run berikut mulai cari dari awal."].join("\n")));
+    }
+    return m.reply(
+      raraWrap("Yt Proxy", [
+        `🎲 Pool otomatis sekarang: ${isAutoProxyOn() ? "🟢 AKTIF" : "🔴 MATI"}`,
+        "",
+        ".ytproxy auto on — nyalain (default)",
+        ".ytproxy auto off — matiin",
+        ".ytproxy auto reset — kosongin pool + blacklist",
       ].join("\n")),
     );
   }
