@@ -86,12 +86,19 @@ setNotifyEnabled("userBanned", false);
 const rOff = await notifyUserBanned(null, { phoneNumber: "628111", reason: "spam", totalBanned: 2 });
 t("3a. toggle off → gak kirim, jujur", rOff.sent === false && /Toggle off/.test(rOff.reason || "") && captured.length === 0);
 
-// toggle on → kartu modern ke kirim
+// toggle on → kartu modern ke kirim (user terdaftar → ada baris Nama)
 setNotifyEnabled("userBanned", true);
+db.data.users = db.data.users || {};
+db.data.users["628111222333@s.whatsapp.net"] = { regName: "Dita" };
 const rOn = await notifyUserBanned(null, { phoneNumber: "628111222333", reason: "spam", totalBanned: 3 });
 const msg = captured[0]?.message || "";
 t("3b. header kartu Indonesia 「 ✦ Pengguna Diblokir ✦ 」", rOn.sent === true && msg.includes("「 ✦ Pengguna Diblokir ✦ 」"), msg.slice(0, 80));
 t("3c. field modern: Nomor + Alasan + Total", /📱 Nomor: 628111222333/.test(msg) && /❓ Alasan: spam/.test(msg) && /🚫 Total banned: 3/.test(msg), msg.slice(0, 160));
+t("3g. Nama di-resolve dari db & DIATAS nomor", /👤 Nama: Dita/.test(msg) && msg.indexOf("👤 Nama: Dita") < msg.indexOf("📱 Nomor:"), msg.split("\n").slice(0, 3).join(" | "));
+// nomor asing (gak terdaftar) → baris nama dilewati, kartu tetap rapi
+const rAsing = await notifyUserBanned(null, { phoneNumber: "628999000111", reason: "tes", totalBanned: 4 });
+const msgAsing = captured[captured.length - 1]?.message || "";
+t("3h. nomor asing → tanpa baris Nama, kartu tetap kirim", rAsing.sent === true && !/👤 Nama:/.test(msgAsing) && /📱 Nomor: 628999000111/.test(msgAsing), msgAsing.split("\n").slice(0, 2).join(" | "));
 t("3d. footer credit watermark Rara AI", /Powered by Rara AI - Multi Device/.test(msg), msg.slice(-80));
 t("3e. judul banner per-event (Indonesia)", captured[0]?.bannerTitle === "Pengguna Diblokir", captured[0]?.bannerTitle);
 t("3f. gak ada sisa desain lama (bold caps/Inggris)", !/\*USER DIBANNED\*/.test(msg) && !/「 ✦ USER DIBANNED ✦ 」/.test(msg), "ok");

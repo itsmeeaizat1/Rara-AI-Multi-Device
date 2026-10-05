@@ -127,6 +127,27 @@ function formatTime() {
   return new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
 }
 
+// REVISI OWNER 5 Okt 2026: kartu pengguna wajib ada "👤 Nama" SEBELUM nomor.
+// Nama di-resolve best-effort dari db user (regName) → contacts store;
+// kalau bener-bener gak ketemu, baris nama dilewati (kartu tetap rapi).
+function resolveUserName(phoneNumber) {
+  const num = String(phoneNumber || "").replace(/\D/g, "");
+  if (!num) return "";
+  const jid = num + "@s.whatsapp.net";
+  let db = null;
+  try { db = getDatabase(); } catch { return ""; }
+  try {
+    const u = db.data?.users?.[jid];
+    const nm = u?.regName || u?.name;
+    if (nm) return String(nm);
+  } catch {}
+  try {
+    const c = db.setting?.("contacts")?.[jid];
+    if (c?.name) return String(c.name);
+  } catch {}
+  return "";
+}
+
 // User daftar sewa - dengan data diri
 async function notifySewaRegister(sock, data) {
   if (!isNotifyEnabled("sewaRegister")) return { sent: false, reason: "Toggle off" };
@@ -221,37 +242,33 @@ async function notifyJadibotConnect(sock, data) {
 // User dibanned
 async function notifyUserBanned(sock, data) {
   if (!isNotifyEnabled("userBanned")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("Pengguna Diblokir", [
-    `📱 Nomor: ${data.phoneNumber}`,
-    `❓ Alasan: ${data.reason || "Tidak disebutkan"}`,
-    `🕒 Waktu: ${formatTime()}`,
-    "",
-    `🚫 Total banned: ${data.totalBanned}`,
-  ]);
+  const nama = resolveUserName(data.phoneNumber);
+  const lines = [];
+  if (nama) lines.push(`👤 Nama: ${nama}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber}`, `❓ Alasan: ${data.reason || "Tidak disebutkan"}`, `🕒 Waktu: ${formatTime()}`, "", `🚫 Total banned: ${data.totalBanned}`);
+  const msg = saluranCard("Pengguna Diblokir", lines);
   return broadcastToSaluran(sock, msg, {}, "Pengguna Diblokir");
 }
 
 // User diblokir
 async function notifyUserBlocked(sock, data) {
   if (!isNotifyEnabled("userBlocked")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("Nomor Diblokir", [
-    `📱 Nomor: ${data.phoneNumber}`,
-    `🕒 Waktu: ${formatTime()}`,
-    "",
-    `🚫 Total blocked: ${data.totalBlocked || "-"}`,
-  ]);
+  const nama = resolveUserName(data.phoneNumber);
+  const lines = [];
+  if (nama) lines.push(`👤 Nama: ${nama}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber}`, `🕒 Waktu: ${formatTime()}`, "", `🚫 Total blocked: ${data.totalBlocked || "-"}`);
+  const msg = saluranCard("Nomor Diblokir", lines);
   return broadcastToSaluran(sock, msg, {}, "Nomor Diblokir");
 }
 
 // User dikick dari grup
 async function notifyUserKicked(sock, data) {
   if (!isNotifyEnabled("userKicked")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("Pengguna Dikeluarkan", [
-    `📱 Nomor: ${data.phoneNumber}`,
-    `💬 Grup: ${data.groupName}`,
-    `❓ Alasan: ${data.reason || "Melanggar aturan"}`,
-    `🕒 Waktu: ${formatTime()}`,
-  ]);
+  const nama = resolveUserName(data.phoneNumber);
+  const lines = [];
+  if (nama) lines.push(`👤 Nama: ${nama}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName}`, `❓ Alasan: ${data.reason || "Melanggar aturan"}`, `🕒 Waktu: ${formatTime()}`);
+  const msg = saluranCard("Pengguna Dikeluarkan", lines);
   return broadcastToSaluran(sock, msg, {}, "Pengguna Dikeluarkan");
 }
 
@@ -295,13 +312,10 @@ async function notifyUserRegister(sock, data) {
 // Anti-spam detect
 async function notifySpamDetected(sock, data) {
   if (!isNotifyEnabled("spamDetected")) return { sent: false, reason: "Toggle off" };
-  const lines = [
-    `📱 Nomor: ${data.phoneNumber}`,
-    `💬 Grup: ${data.groupName || "Private"}`,
-    `🏷 Tipe: ${data.type || "Spam"}`,
-    `📝 Detail: ${data.detail || "-"}`,
-    `🕒 Waktu: ${formatTime()}`,
-  ];
+  const namaSpam = resolveUserName(data.phoneNumber);
+  const lines = [];
+  if (namaSpam) lines.push(`👤 Nama: ${namaSpam}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName || "Private"}`, `🏷 Tipe: ${data.type || "Spam"}`, `📝 Detail: ${data.detail || "-"}`, `🕒 Waktu: ${formatTime()}`);
   if (data.action) lines.push("", `⚔ Aksi: ${data.action}`);
   const msg = saluranCard("Spam Terdeteksi", lines);
   return broadcastToSaluran(sock, msg, {}, "Spam Terdeteksi");
@@ -310,13 +324,11 @@ async function notifySpamDetected(sock, data) {
 // Warning diberikan
 async function notifyWarningGiven(sock, data) {
   if (!isNotifyEnabled("warningGiven")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("Peringatan Pengguna", [
-    `📱 Nomor: ${data.phoneNumber}`,
-    `💬 Grup: ${data.groupName || "Private"}`,
-    `❗ Pelanggaran: ${data.violation}`,
-    `⚠ Warning: ${data.warnCount}/${data.maxWarn}`,
-    `🕒 Waktu: ${formatTime()}`,
-  ]);
+  const nama = resolveUserName(data.phoneNumber);
+  const lines = [];
+  if (nama) lines.push(`👤 Nama: ${nama}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName || "Private"}`, `❗ Pelanggaran: ${data.violation}`, `⚠ Warning: ${data.warnCount}/${data.maxWarn}`, `🕒 Waktu: ${formatTime()}`);
+  const msg = saluranCard("Peringatan Pengguna", lines);
   return broadcastToSaluran(sock, msg, {}, "Peringatan Pengguna");
 }
 
