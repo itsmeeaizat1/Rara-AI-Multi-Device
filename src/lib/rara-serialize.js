@@ -1286,7 +1286,7 @@ END:VCARD`;
       m.__customReact = true;
     }
     try {
-      return await sock.sendMessage(m.chat, {
+      const _reactResult = await sock.sendMessage(m.chat, {
         react: {
           text: emoji,
           // ROLLBACK 4 Okt 2026: rawKey (key mentah @lid) justru membuat server membuang SEMUA reaksi
@@ -1295,7 +1295,14 @@ END:VCARD`;
           key: msg.key,
         },
       });
+      // DEBUG 5 Okt 2026 (investigasi "loading react gak bekerja" owner): sebelumnya
+      // gagal react SENYAP TOTAL (catch kosong, zero log). Sekarang gagal = ketahuan.
+      if (process.env.RARA_DEBUG_REACT) {
+        console.log("[m.react] DEBUG emoji=" + emoji + " chat=" + m.chat + " keyId=" + (msg.key?.id || "?") + " keyRemoteJid=" + (msg.key?.remoteJid || "?") + " result=" + JSON.stringify(_reactResult));
+      }
+      return _reactResult;
     } catch (e) {
+      console.error("[m.react] GAGAL emoji=" + emoji + " chat=" + m.chat + " keyId=" + (msg.key?.id || "?") + " error=" + e.message);
       return null;
     }
   };
