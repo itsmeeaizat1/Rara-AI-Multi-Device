@@ -20,19 +20,19 @@ import { raraBox } from "./rara-menu-style.js";
 // Event types yang bisa di-toggle
 const NOTIFY_EVENTS = {
   sewaRegister: "Pendaftaran Sewa",
-  sewaApproved: "Sewa Approved",
+  sewaApproved: "Sewa Disetujui",
   sewaRejected: "Sewa Ditolak",
-  sewaExpired: "Sewa Expired",
-  sewaBot: "User Baru Sewa Bot",
-  jadibotConnect: "User Baru Jadibot",
-  userBanned: "User Dibanned",
-  userBlocked: "User Diblokir",
-  userKicked: "User Dikick Grup",
-  premiumAdd: "User Baru Premium",
+  sewaExpired: "Sewa Berakhir",
+  sewaBot: "Pengguna Baru Sewa Bot",
+  jadibotConnect: "Pengguna Baru Jadibot",
+  userBanned: "Pengguna Diblokir",
+  userBlocked: "Nomor Diblokir",
+  userKicked: "Pengguna Dikeluarkan",
+  premiumAdd: "Pengguna Baru Premium",
   dailyLimitReset: "Reset Limit Harian",
-  userRegister: "User Baru Daftar",
+  userRegister: "Pengguna Baru Terdaftar",
   spamDetected: "Spam Terdeteksi",
-  warningGiven: "Peringatan User",
+  warningGiven: "Peringatan Pengguna",
 };
 
 // Cek apakah event ini enabled (default: OFF)
@@ -130,7 +130,7 @@ function formatTime() {
 // User daftar sewa - dengan data diri
 async function notifySewaRegister(sock, data) {
   if (!isNotifyEnabled("sewaRegister")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("PENDAFTARAN SEWA BARU", [
+  const msg = saluranCard("Pendaftaran Sewa Baru", [
     `👤 Nama: ${data.name || "-"}`,
     `🎂 Umur: ${data.age || "-"} tahun`,
     `📍 Asal: ${data.origin || "-"}`,
@@ -142,13 +142,13 @@ async function notifySewaRegister(sock, data) {
     "",
     `⏸ Status: Menunggu approve owner`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Pendaftaran Sewa");
+  return broadcastToSaluran(sock, msg, {}, "Pendaftaran Sewa Baru");
 }
 
 // Sewa approved
 async function notifySewaApproved(sock, data) {
   if (!isNotifyEnabled("sewaApproved")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("SEWA DIAPPROVE", [
+  const msg = saluranCard("Sewa Disetujui", [
     `👤 Nama: ${data.name || "-"}`,
     `💬 Grup: ${data.groupName}`,
     `📱 Nomor: ${data.phoneNumber}`,
@@ -158,13 +158,13 @@ async function notifySewaApproved(sock, data) {
     "",
     `💠 Total grup sewa: ${data.totalGroups}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Sewa Approved");
+  return broadcastToSaluran(sock, msg, {}, "Sewa Disetujui");
 }
 
 // Sewa rejected
 async function notifySewaRejected(sock, data) {
   if (!isNotifyEnabled("sewaRejected")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("SEWA DITOLAK", [
+  const msg = saluranCard("Sewa Ditolak", [
     `👤 Nama: ${data.name || "-"}`,
     `💬 Grup: ${data.groupName}`,
     `📱 Nomor: ${data.phoneNumber}`,
@@ -177,20 +177,20 @@ async function notifySewaRejected(sock, data) {
 // Sewa expired
 async function notifySewaExpired(sock, data) {
   if (!isNotifyEnabled("sewaExpired")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("SEWA EXPIRED", [
+  const msg = saluranCard("Sewa Berakhir", [
     `💬 Grup: ${data.groupName}`,
     `📱 Nomor: ${data.phone || "-"}`,
     `🕒 Waktu: ${formatTime()}`,
     "",
     `🚪 Bot telah keluar dari grup.`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Sewa Expired");
+  return broadcastToSaluran(sock, msg, {}, "Sewa Berakhir");
 }
 
 // User baru sewa bot - rincian durasi + harga
 async function notifySewaBot(sock, data) {
   if (!isNotifyEnabled("sewaBot")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("USER BARU SEWA BOT", [
+  const msg = saluranCard("Pengguna Baru Sewa Bot", [
     `👤 Nama: ${data.name || "-"}`,
     `📱 Nomor: ${data.phoneNumber || "-"}`,
     `💬 Grup: ${data.groupName || "-"}`,
@@ -202,63 +202,63 @@ async function notifySewaBot(sock, data) {
     "",
     `💠 Total grup sewa: ${data.totalGroups || 1}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "User Baru Sewa Bot");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Sewa Bot");
 }
 
 // User baru jadibot
 async function notifyJadibotConnect(sock, data) {
   if (!isNotifyEnabled("jadibotConnect")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("USER BARU JADIBOT", [
+  const msg = saluranCard("Pengguna Baru Jadibot", [
     `📱 Nomor: ${data.phoneNumber}`,
     `🕒 Waktu: ${formatTime()}`,
     `🟢 Status: Online`,
     "",
     `💠 Total jadibot aktif: ${data.totalActive}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "User Baru Jadibot");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Jadibot");
 }
 
 // User dibanned
 async function notifyUserBanned(sock, data) {
   if (!isNotifyEnabled("userBanned")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("USER DIBANNED", [
+  const msg = saluranCard("Pengguna Diblokir", [
     `📱 Nomor: ${data.phoneNumber}`,
     `❓ Alasan: ${data.reason || "Tidak disebutkan"}`,
     `🕒 Waktu: ${formatTime()}`,
     "",
     `🚫 Total banned: ${data.totalBanned}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "User Dibanned");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Diblokir");
 }
 
 // User diblokir
 async function notifyUserBlocked(sock, data) {
   if (!isNotifyEnabled("userBlocked")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("USER DIBLOKIR", [
+  const msg = saluranCard("Nomor Diblokir", [
     `📱 Nomor: ${data.phoneNumber}`,
     `🕒 Waktu: ${formatTime()}`,
     "",
     `🚫 Total blocked: ${data.totalBlocked || "-"}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "User Diblokir");
+  return broadcastToSaluran(sock, msg, {}, "Nomor Diblokir");
 }
 
 // User dikick dari grup
 async function notifyUserKicked(sock, data) {
   if (!isNotifyEnabled("userKicked")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("USER DIKICK", [
+  const msg = saluranCard("Pengguna Dikeluarkan", [
     `📱 Nomor: ${data.phoneNumber}`,
     `💬 Grup: ${data.groupName}`,
     `❓ Alasan: ${data.reason || "Melanggar aturan"}`,
     `🕒 Waktu: ${formatTime()}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "User Dikick Grup");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Dikeluarkan");
 }
 
 // User baru premium
 async function notifyPremiumAdd(sock, data) {
   if (!isNotifyEnabled("premiumAdd")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("USER BARU PREMIUM", [
+  const msg = saluranCard("Pengguna Baru Premium", [
     `👤 Nama: ${data.name || "-"}`,
     `📱 Nomor: ${data.phoneNumber}`,
     `⏳ Durasi: ${data.days || 30} hari`,
@@ -269,7 +269,7 @@ async function notifyPremiumAdd(sock, data) {
     "",
     `💎 Total premium: ${data.totalPremium || "-"}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "User Baru Premium");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Premium");
 }
 
 // User baru daftar
@@ -278,7 +278,7 @@ async function notifyUserRegister(sock, data) {
   const now = new Date();
   const dateStr = now.toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" });
   const timeStr = now.toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit" });
-  const msg = saluranCard("USER BARU DAFTAR", [
+  const msg = saluranCard("Pengguna Baru Terdaftar", [
     `👤 Nama: ${data.name || "-"}`,
     `🎂 Umur: ${data.age || "-"} tahun`,
     `🚻 Gender: ${data.gender || "Tidak disebutkan"}`,
@@ -289,7 +289,7 @@ async function notifyUserRegister(sock, data) {
     "",
     `💠 Total user: ${data.totalUsers || "-"}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "User Baru Daftar");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Terdaftar");
 }
 
 // Anti-spam detect
@@ -303,27 +303,27 @@ async function notifySpamDetected(sock, data) {
     `🕒 Waktu: ${formatTime()}`,
   ];
   if (data.action) lines.push("", `⚔ Aksi: ${data.action}`);
-  const msg = saluranCard("SPAM TERDETEKSI", lines);
+  const msg = saluranCard("Spam Terdeteksi", lines);
   return broadcastToSaluran(sock, msg, {}, "Spam Terdeteksi");
 }
 
 // Warning diberikan
 async function notifyWarningGiven(sock, data) {
   if (!isNotifyEnabled("warningGiven")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("PERINGATAN USER", [
+  const msg = saluranCard("Peringatan Pengguna", [
     `📱 Nomor: ${data.phoneNumber}`,
     `💬 Grup: ${data.groupName || "Private"}`,
     `❗ Pelanggaran: ${data.violation}`,
     `⚠ Warning: ${data.warnCount}/${data.maxWarn}`,
     `🕒 Waktu: ${formatTime()}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Peringatan User");
+  return broadcastToSaluran(sock, msg, {}, "Peringatan Pengguna");
 }
 
 // Daily limit reset notification
 async function notifyDailyLimitReset(sock, data) {
   if (!isNotifyEnabled("dailyLimitReset")) return { sent: false, reason: "Toggle off" };
-  const msg = saluranCard("RESET LIMIT HARIAN", [
+  const msg = saluranCard("Reset Limit Harian", [
     `♻️ Limit semua user telah direset!`,
     "",
     `🆓 User gratis: ${data.defaultLimit} limit`,

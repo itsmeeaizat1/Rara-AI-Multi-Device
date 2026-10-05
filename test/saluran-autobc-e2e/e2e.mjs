@@ -90,11 +90,11 @@ t("3a. toggle off → gak kirim, jujur", rOff.sent === false && /Toggle off/.tes
 setNotifyEnabled("userBanned", true);
 const rOn = await notifyUserBanned(null, { phoneNumber: "628111222333", reason: "spam", totalBanned: 3 });
 const msg = captured[0]?.message || "";
-t("3b. header kartu 「 ✦ USER DIBANNED ✦ 」", rOn.sent === true && msg.includes("「 ✦ USER DIBANNED ✦ 」"), msg.slice(0, 80));
+t("3b. header kartu Indonesia 「 ✦ Pengguna Diblokir ✦ 」", rOn.sent === true && msg.includes("「 ✦ Pengguna Diblokir ✦ 」"), msg.slice(0, 80));
 t("3c. field modern: Nomor + Alasan + Total", /📱 Nomor: 628111222333/.test(msg) && /❓ Alasan: spam/.test(msg) && /🚫 Total banned: 3/.test(msg), msg.slice(0, 160));
 t("3d. footer credit watermark Rara AI", /Powered by Rara AI - Multi Device/.test(msg), msg.slice(-80));
-t("3e. judul banner per-event", captured[0]?.bannerTitle === "User Dibanned", captured[0]?.bannerTitle);
-t("3f. gak ada sisa desain lama (bold caps)", !/\*USER DIBANNED\*/.test(msg), "ok");
+t("3e. judul banner per-event (Indonesia)", captured[0]?.bannerTitle === "Pengguna Diblokir", captured[0]?.bannerTitle);
+t("3f. gak ada sisa desain lama (bold caps/Inggris)", !/\*USER DIBANNED\*/.test(msg) && !/「 ✦ USER DIBANNED ✦ 」/.test(msg), "ok");
 
 setNotifyEnabled("userBanned", false);
 _resetBroadcastSendForTest();
