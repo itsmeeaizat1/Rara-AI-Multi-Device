@@ -158,6 +158,19 @@ t("19b. toggle auto → baris 🌍 Global", (replies.at(-1) || "").includes("�
 await switchHandler(mockM([evKey, "on"]), { sock: mockSock, config })
 t("19c. toggle saluran → baris 📢", (replies.at(-1) || "").includes("📢"))
 
+// ═══ 19b. BROADCAST CPANEL via .switch auto (request owner 6 Okt) ═══
+const cbc = (await import(R + "/src/lib/rara-saluran-broadcast.js"))
+await switchHandler(mockM(["auto", "broadcastcpanel", "on"]), { sock: mockSock, config })
+t("19b-a. .switch auto broadcastcpanel on → serverCreated ON",
+  (await cbc.getAllNotifyStatus()).serverCreated?.enabled === true,
+  JSON.stringify((await cbc.getAllNotifyStatus()).serverCreated))
+t("19b-b. balasan menyebut label fitur", /Broadcast Cpanel/i.test(replies.at(-1) || ""), String(replies.at(-1)).slice(0, 80))
+await switchHandler(mockM(["auto", "cpanel", "off"]), { sock: mockSock, config })
+t("19b-c. alias .switch auto cpanel off → serverCreated OFF",
+  (await cbc.getAllNotifyStatus()).serverCreated?.enabled === false)
+await switchHandler(mockM(["auto", "broadcastcpanel"]), { sock: mockSock, config })
+t("19b-d. tanpa verb → info status fitur (gak error)", replies.at(-1) != null && replies.length > 0)
+
 // ═══ 20. .switch status all → legenda scope ═══
 await switchHandler(mockM(["status", "all"]), { sock: mockSock, config })
 const stReply = replies.at(-1) || ""

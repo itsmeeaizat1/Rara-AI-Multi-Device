@@ -43,9 +43,11 @@ export const botIdentity = {
   },
 
   saluran: {
-    // id numerik (120363xxx@newsletter) di-resolve OTOMATIS dari link invite
-    // saat runtime (sock.newsletterMetadata) — lihat rara-menu-card.js.
-    id: "@newsletter",
+    // FIX 6 Okt 2026: id placeholder "@newsletter" bikin resolve selalu jatuh ke
+    // fallback lama (120363404849776664) yang udah MATI — newsletterMetadata
+    // ('jid'|'invite') di baileys2 fork ini balikin {} → notif "terkirim" tapi
+    // nyasar. Id channel resmi bot = hasil newsletterFetchAllSubscribe().
+    id: "120363411845816839@newsletter",
     name: "Rara AI Official",
     link: "https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29",
   },

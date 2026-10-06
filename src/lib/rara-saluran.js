@@ -44,7 +44,29 @@ export async function resolveNewsletterJid(sock) {
   } catch (e) {
     logger.error?.("[rara-saluran] Auto-resolve saluran gagal: " + (e?.message || e));
   }
-  // fallback sama dengan .ptvch (saluran Rara official default)
+  // FIX 6 Okt 2026: newsletterMetadata ('jid'|'invite') di baileys2 fork ini sering
+  // balikin {} (GraphQL kosong) → resolve link GAGAL SENYAP. Fallback #2: tanya daftar
+  // channel yang diikuti/dimiliki akun via newsletterFetchAllSubscribe() — ambil
+  // channel pertama (channel official bot). Fallback lama (120363404849776664) udah
+  // MATI — sendMessage "sukses" tapi post gak pernah muncul.
+  try {
+    if (typeof sock?.newsletterFetchAllSubscribe === "function") {
+      const all = await sock.newsletterFetchAllSubscribe();
+      const arr = Array.isArray(all) ? all : (all?.edges || all?.data || []);
+      for (const x of arr) {
+        const n = x?.node || x || {};
+        const id = n?.id || n?.newsletterMetadata?.id || "";
+        if (NEWSLETTER_JID_RE.test(id)) {
+          _cachedNewsletterJid = id;
+          logger.info?.("[rara-saluran] Saluran via fetchAllSubscribe:", id);
+          return id;
+        }
+      }
+    }
+  } catch (e2) {
+    logger.error?.("[rara-saluran] fetchAllSubscribe gagal: " + (e2?.message || e2));
+  }
+  // fallback terakhir sama dengan .ptvch (saluran Rara official default)
   return "120363404849776664@newsletter";
 }
 

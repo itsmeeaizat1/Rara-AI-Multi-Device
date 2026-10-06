@@ -9,7 +9,7 @@ import {
 import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
 import { pluginStore } from '../../src/lib/rara-plugins.js'
 import {
-  NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled
+  NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled, isNotifyEnabled
 } from '../../src/lib/rara-saluran-broadcast.js'
 import { toSC, raraWrap, bracketBox, tipText, separator, raraCaption } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
@@ -412,6 +412,13 @@ const AUTO_REGISTRY = {
     getStatus: () => { try { return getDatabase().setting("autoBroadcastChannel") ?? false } catch { return false } },
     toggle: (on) => { getDatabase().setting("autoBroadcastChannel", on) },
   },
+  // REQUEST OWNER 6 Okt 2026: broadcast cpanel (notif saluran serverCreated) bisa
+  // diakses dari .switch auto — sinkron dengan toggle .autobroadcastchannel serverCreated.
+  autocpanelbroadcast: {
+    label: "Broadcast Cpanel ke Saluran",
+    getStatus: () => { try { return isNotifyEnabled("serverCreated") ?? false } catch { return false } },
+    toggle: (on) => { try { setNotifyEnabled("serverCreated", on) } catch {} },
+  },
   autobackupdrive: {
     label: "Auto Backup Google Drive",
     getStatus: () => { try { return getDatabase().setting("autoBackupDrive") ?? false } catch { return false } },
@@ -431,6 +438,8 @@ const AUTO_ALIASES = {
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
   statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
   sambut: "autosambut", mod: "automod", broadcastchannel: "autobroadcastchannel",
+  broadcastcpanel: "autocpanelbroadcast", cpanelbroadcast: "autocpanelbroadcast", cpanel: "autocpanelbroadcast",
+  panelbroadcast: "autocpanelbroadcast",
   backupdrive: "autobackupdrive", loker: "autoloker", job: "autoloker", lowongan: "autoloker",
   hujannotif: "autorainnotify", rainnotify: "autorainnotify", nowcasthujan: "autorainnotify"
 }
@@ -448,7 +457,7 @@ const AUTO_CATEGORIES = {
   ],
   "Info & Utilitas": [
     "bencanawatch", "autoanime", "autoanimenotifier", "automovienotifier", "autobolanotify", "autolinkedin", "autobmkg", "autoweatherrealtime", "autorainnotify", "autosholat", "autoforward",
-    "autosambut", "automod", "autobroadcastchannel", "autoloker", "webwatch", "cryptoalert"
+    "autosambut", "automod", "autobroadcastchannel", "autocpanelbroadcast", "autoloker", "webwatch", "cryptoalert"
   ]
 }
 
