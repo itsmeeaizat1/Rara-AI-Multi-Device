@@ -47,6 +47,7 @@ const MODELS = [
 ];
 let conns = [];
 let failMode = null; // "401" | "404-nocred" | "429" | "503" | "down"
+let fail503Left = 0; // >0: N panggilan chat pertama dibales 503 kuota (uji retry key rotasi)
 let failKeys401Once = false; // POST /api/keys balik 401 SEKALI lalu normal (uji self-heal)
 
 const srv = http.createServer((req, res) => {
@@ -87,6 +88,8 @@ const srv = http.createServer((req, res) => {
       if (failMode === "401") return send(401, { error: { message: "bad key" } });
       // realistis: gateway key BASI (gak dikenal server) → 401 — buat uji self-heal
       if (!auth.startsWith("Bearer ") || !gwKeys.includes(auth.slice(7))) return send(401, { error: { message: "unauthorized" } });
+      if (fail503Left > 0) { fail503Left--; return send(503, { error: { message: "[gemini/gemini-3.6-flash] [429]: {\"error\": {\"code\": 429, \"message\": \"You exceeded your current quota, please check your plan and billing details\"}}" } }); }
+      if (failMode === "slow") { setTimeout(() => send(200, { model: j?.model, choices: [{ message: { content: "telat" } }] }), 400); return; }
       if (failMode === "404-nocred") return send(404, { error: { message: "No active credentials for provider: glm", code: "model_not_found" } });
       if (failMode === "429") return send(429, { error: { message: "rate limited" } });
       if (failMode === "503") return send(503, { error: { message: "upstream down" } });
@@ -201,6 +204,22 @@ catch (e) { t("3f. 429 → rate limit jujur", /rate limit/i.test(e.message), e.m
 failMode = null;
 const st1 = router9Stats();
 t("3g. stats dicatat (requests/ok/fail — 401 kini 2 request karena self-heal retry)", st1.requests >= 6 && st1.fail === 4 && st1.ok >= 2, JSON.stringify(st1));
+
+// ═══ 5. ENGINE — retry key rotasi (fix 6 Okt 2026: key upstream kuota habis → 503/429) ═══
+section("5. retry key rotasi 503/429");
+const chatBefore = calls.chat.length;
+fail503Left = 2; // 2 panggilan pertama 503, ke-3 dapet key hidup
+const rr = await router9Chat({ model: "alicode-intl/glm-4.7", user: "x" });
+t("5a. 503x2 → retry dapet key hidup, hasil sukses", rr.text === "jawaban-mock", JSON.stringify(rr));
+t("5b. total 3 percobaan (2 gagal + 1 sukses)", calls.chat.length - chatBefore === 3, `delta=${calls.chat.length - chatBefore}`);
+fail503Left = 99; // semua attempt 503 → jujur gagal setelah retry
+try { await router9Chat({ model: "alicode-intl/glm-4.7", user: "x" }); t("5c. 503 terus → GAGAL (harus)", false); }
+catch (e) { t("5c. 503 terus → pesan kuota habis jujur", /kuotanya habis \(429\)/i.test(e.message), e.message); }
+fail503Left = 0;
+failMode = "slow";
+try { await router9Chat({ model: "alicode-intl/glm-4.7", user: "x", timeoutMs: 120 }); t("5d. timeout → GAGAL (harus)", false); }
+catch (e) { t("5d. timeout → retry 1x lalu jujur gagal", /timed out|timeout|gak kejangkau/i.test(e.message), e.message); }
+failMode = null;
 
 // ═══ 4. ENGINE — image gen ═══
 section("4. image generation");

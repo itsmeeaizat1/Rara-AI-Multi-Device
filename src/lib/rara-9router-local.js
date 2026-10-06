@@ -549,7 +549,7 @@ export async function router9ImageGen({ model, prompt, n = 1, size = "1024x1024"
 // ── CHAT — jantung 9router lokal. TANPA FALLBACK ke API AI lain. ──
 export async function router9Chat({
   model, system, user, history = [], maxTokens = 1024, temperature = 0.7,
-  timeoutMs = 120000, apiKey = null, _retried = false,
+  timeoutMs = 120000, apiKey = null, _retried = false, _keyTries = 0,
 } = {}) {
   const t0 = Date.now();
   _state.stats.requests++;
@@ -598,6 +598,24 @@ export async function router9Chat({
     _state.stats.lastError = null;
     return { text: text.trim(), model: res?.model || model, latencyMs };
   } catch (e) {
+    // ── RETRY KEY ROTASI (fix 6 Okt 2026 sore): upstream gemini sering cuma
+    // kena SATU key yang kuotanya habis (429→503) ATAU ngehang; attempt
+    // berikutnya biasanya dapet key lain yang masih hidup (bukti: curl
+    // sukses beneran di menit yang sama). Ulang max 2x (timeout cuma 1x)
+    // + backoff kecil — jangan nyerah di percobaan pertama.
+    const rawErr = String(e?.error?.message || e?.message || "");
+    const isTimeout = /timed ?out|timeout/i.test(rawErr);
+    const retryable = e?.status === 503 || e?.status === 429 || isTimeout;
+    const maxTries = isTimeout ? 1 : 2;
+    if (retryable && _keyTries < maxTries) {
+      const wait = 1200 * (_keyTries + 1) + Math.floor(Math.random() * 600);
+      await new Promise((r) => setTimeout(r, wait));
+      return await router9Chat({
+        model, system, user, history, maxTokens, temperature, timeoutMs,
+        apiKey, _retried, _keyTries: _keyTries + 1,
+      });
+    }
+
     // ── SELF-HEAL CHAT (fix 1 Okt 2026 malam): gateway key basi ditolak
     // server → buang key lama, provisi ulang, ULANG CHAT SEKALI. Tanpa ini
     // user dipaksa bersihin key manual + restart — dan .9router
@@ -639,7 +657,10 @@ function mapRouter9Error(e, model) {
   if (status === 404) return `model "${model}" gak ditemukan di 9Router — lihat .9router model`;
   if (status === 429) return "9router kena rate limit — tunggu sebentar";
   if (status === 402) return `provider untuk model "${model}" berbayar dan kuotanya gak cukup — cek dashboard 9router`;
-  if (status >= 500) return `9router error internal (HTTP ${status}) — cek logs/9router-local.log`;
+  if (status >= 500 && /quota|exceeded|429/i.test(raw)) {
+    return `key provider upstream kuotanya habis (429) — ganti/tambah key di src/lib/apikey/9routerapikey.json lalu .9router sync, atau ganti model (.9routeragent model <id>)`;
+  }
+  if (status >= 500) return `9router error internal (HTTP ${status}) — udah dicoba ulang, masih gagal; cek logs/9router-local.log`;
   if (e?.code === "ECONNREFUSED" || /fetch failed|networkerror/i.test(raw)) {
     return "9router lokal gak kejangkau — pastikan jalan (.9router status)";
   }
