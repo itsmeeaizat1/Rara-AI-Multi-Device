@@ -39,5 +39,46 @@
       0,
       0
     ]
+  },
+  "120363000000000001@g.us": {
+    "groupId": "120363000000000001@g.us",
+    "weekStart": "2026-10-04T17:00:00.000Z",
+    "trackingEnabled": true,
+    "members": {
+      "628174887770@s.whatsapp.net": {
+        "name": "Aizat",
+        "messageCount": 5,
+        "commandCount": 5,
+        "mediaCount": 0,
+        "lastActive": 1791292185070,
+        "points": 10
+      }
+    },
+    "hourly": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4,
+      1,
+      0,
+      0,
+      0
+    ]
   }
 }

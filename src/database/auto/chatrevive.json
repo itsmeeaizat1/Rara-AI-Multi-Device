@@ -7,6 +7,14 @@
       "lastReviveAt": 0,
       "today": "",
       "todayCount": 0
+    },
+    "120363000000000001@g.us": {
+      "on": false,
+      "thresholdHours": 6,
+      "lastHumanAt": 1791292185066,
+      "lastReviveAt": 0,
+      "today": "",
+      "todayCount": 0
     }
   }
 }

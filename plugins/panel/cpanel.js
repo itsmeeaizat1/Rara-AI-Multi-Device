@@ -15,6 +15,7 @@ import config from "../../config.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { isLid, lidToJid } from "../../src/lib/rara-lid.js";
 import { hasAccessToServer, getUserRole } from "../../src/lib/rara-roles-cpanel.js";
+import { isCreateAllowed, cleanNumber as allowCleanNumber } from "../../src/lib/rara-cpanel-allow.js";
 import { isGcSeller } from "./gcseller.js";
 import { checkPanelJeda, setPanelLastUsed } from "../../src/lib/rara-panel-jeda.js";
 import * as timeHelper from "../../src/lib/rara-time.js";
@@ -63,6 +64,35 @@ function cleanJid(jid) {
 
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+// ── GATE KONFIRMASI OWNER (6 Okt 2026): create cpanel butuh izin .addcpanel ──
+// user gak bisa langsung create; owner harus .addcpanel <nomor> <durasi> dulu.
+// Throttle 10 menit per nomor biar gak spam DM owner.
+const _createReqNotify = new Map();
+async function notifyOwnerCreateRequest(sock, sender) {
+  const num = allowCleanNumber(sender);
+  if (!num) return;
+  const now = Date.now();
+  const last = _createReqNotify.get(num) || 0;
+  if (now - last < 10 * 60 * 1000) return;
+  _createReqNotify.set(num, now);
+  const owners = config.owner?.number || [];
+  const txt = `「 ✦ Permintaan Akses Panel ✦ 」
+
+📱 Nomor: ${num}
+
+Dia mencoba membuat akun panel tapi belum punya izin create.
+
+Izinkan dengan:
+.addcpanel ${num} 7d
+.addcpanel ${num} 30d
+.addcpanel ${num} unli
+
+Tolak: cukup diabaikan.`;
+  for (const o of owners) {
+    try { await sock.sendMessage(o.includes("@") ? o : o + "@s.whatsapp.net", { text: txt }); } catch {}
+  }
 }
 
 // parse id panel: "1" / "v1" → 1-100
@@ -143,10 +173,14 @@ async function createWithRole(m, { sock }, spec) {
     return m.reply(raraWrap("cpanel", `Mode *admin* (akses panel admin) hanya bisa dibuat oleh owner bot.`));
   }
 
-  const gcSellerAccess = isGcSeller(m.chat, ver);
-  if (!gcSellerAccess && !hasAccessToServer(m.sender, ver, m.isOwner)) {
-    const role = getUserRole(m.sender, ver) || "Tidak ada";
-    return m.reply(raraWrap("cpanel", `Akses ditolak.\n\nKamu tidak punya akses ke panel ${ver.toUpperCase()}.\nRole kamu: ${role}`));
+  // GATE (owner 6 Okt 2026): create butuh izin .addcpanel dari owner.
+  // Owner bot selalu lolos; role panel/gc-seller TIDAK lagi otomatis bisa create.
+  if (!m.isOwner) {
+    const allow = isCreateAllowed(m.sender);
+    if (!allow.allowed) {
+      try { await notifyOwnerCreateRequest(sock, m.sender); } catch {}
+      return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addcpanel <nomor kamu> <durasi>\n\nContoh: ${(m.prefix || ".")}addcpanel ${allowCleanNumber(m.sender)} 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+    }
   }
   const jedaCheck = checkPanelJeda(m);
   if (!jedaCheck.allowed) return m.reply(jedaCheck.message);
@@ -329,7 +363,7 @@ function buildGuide(m) {
   txt += `${p}cpanel <username> <password>,<idpanel>\n`;
   txt += `Contoh: ${p}panel aizat aizat123, 1\n\n`;
   txt += `Logout: ${p}cpanel logout <idpanel>\n\n`;
-  txt += `Buat Akun Panel:\n`;
+  txt += `Buat Akun Panel (butuh izin owner — .addcpanel <nomor> <durasi>):\n`;
   txt += `${p}cpanel <ram> <username>,<nomor>,<idpanel>\n`;
   txt += `Contoh: ${p}cpanel unli aizat,628174887770,1\n`;
   txt += `RAM: 1gb - 10gb, unli\n\n`;  txt += `Buat Akun Client/Admin + Spesifikasi:\n`;
@@ -667,10 +701,13 @@ async function handler(m, { sock }) {
       return m.reply(raraWrap("cpanel", `Username hanya boleh huruf kecil, angka, underscore (3-16 karakter).`));
     }
 
-    const gcSellerAccess = isGcSeller(m.chat, ver);
-    if (!gcSellerAccess && !hasAccessToServer(m.sender, ver, m.isOwner)) {
-      const role = getUserRole(m.sender, ver) || "Tidak ada";
-      return m.reply(raraWrap("cpanel", `Akses ditolak.\n\nKamu tidak punya akses ke panel ${ver.toUpperCase()}.\nRole kamu: ${role}`));
+    // GATE (owner 6 Okt 2026): create butuh izin .addcpanel dari owner.
+    if (!m.isOwner) {
+      const allow = isCreateAllowed(m.sender);
+      if (!allow.allowed) {
+        try { await notifyOwnerCreateRequest(sock, m.sender); } catch {}
+        return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addcpanel <nomor kamu> <durasi>\n\nContoh: ${(m.prefix || ".")}addcpanel ${allowCleanNumber(m.sender)} 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+      }
     }
     const jedaCheck = checkPanelJeda(m);
     if (!jedaCheck.allowed) return m.reply(jedaCheck.message);

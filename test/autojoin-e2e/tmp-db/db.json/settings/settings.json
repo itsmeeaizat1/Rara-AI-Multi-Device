@@ -8,24 +8,24 @@
   "_lastEnergiPremium": 1000,
   "autojoinTasks": [
     {
-      "id": "AJ-EHYP4",
+      "id": "AJ-4GB34",
       "action": "join",
       "target": "group",
       "link": "https://chat.whatsapp.com/AbCdEf12345",
       "code": "AbCdEf12345",
-      "at": 1791464123761,
-      "createdAt": 1790859323761,
+      "at": 1791896995983,
+      "createdAt": 1791292195983,
       "owner": "6281111111111@s.whatsapp.net",
       "status": "pending"
     },
     {
-      "id": "AJ-EHYP5",
+      "id": "AJ-4GB35",
       "action": "join",
       "target": "channel",
       "link": "https://whatsapp.com/channel/0029VaXyz123",
       "code": null,
-      "at": 1790861123761,
-      "createdAt": 1790859323761,
+      "at": 1791293995983,
+      "createdAt": 1791292195983,
       "owner": "6281111111111@s.whatsapp.net",
       "status": "pending"
     }
