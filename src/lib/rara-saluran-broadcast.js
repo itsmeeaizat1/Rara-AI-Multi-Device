@@ -33,6 +33,7 @@ const NOTIFY_EVENTS = {
   userRegister: "Pengguna Baru Terdaftar",
   spamDetected: "Spam Terdeteksi",
   warningGiven: "Peringatan Pengguna",
+  serverCreated: "Server Baru Dibuat",
 };
 
 // Cek apakah event ini enabled (default: OFF)
@@ -347,6 +348,31 @@ async function notifyDailyLimitReset(sock, data) {
   return broadcastToSaluran(sock, msg, {}, "Reset Limit Harian");
 }
 
+// Server panel baru dibuat (request owner 6 Okt 2026: info "user ini telah
+// membuat server" dikirim ke saluran yang udah diset). Data dari createserver.js.
+async function notifyServerCreated(sock, data) {
+  if (!isNotifyEnabled("serverCreated")) return { sent: false, reason: "Toggle off" };
+  const nama = resolveUserName(data.phoneNumber);
+  const lines = [];
+  if (nama) lines.push(`👤 Nama: ${nama}`);
+  lines.push(
+    `📱 Nomor: ${data.phoneNumber || "-"}`,
+    `🏷 Username: ${data.username || "-"}`,
+    `🖥 Server: ${data.server || "-"}`,
+    `💾 RAM: ${data.ram || "-"}`,
+    `⚙️ CPU: ${data.cpu || "-"}`,
+    `📁 Storage: ${data.disk || "-"}`,
+    `🆔 Server ID: ${data.serverId || "-"}`,
+    `🕒 Waktu: ${formatTime()}`,
+  );
+  const total = data.totalServers;
+  if (total !== undefined && total !== null && total !== "") {
+    lines.push("", `🧩 Total server terbuat: ${total}`);
+  }
+  const msg = saluranCard("Server Baru Dibuat", lines);
+  return broadcastToSaluran(sock, msg, {}, "Server Baru Dibuat");
+}
+
 export {
   NOTIFY_EVENTS,
   broadcastToSaluran,
@@ -367,4 +393,5 @@ export {
   notifyPremiumAdd,
   notifyDailyLimitReset,
   notifyUserRegister,
+  notifyServerCreated,
 };

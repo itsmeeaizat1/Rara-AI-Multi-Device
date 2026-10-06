@@ -106,5 +106,53 @@ t("3f. gak ada sisa desain lama (bold caps/Inggris)", !/\*USER DIBANNED\*/.test(
 setNotifyEnabled("userBanned", false);
 _resetBroadcastSendForTest();
 
+// ═══ SECTION 4: event BARU serverCreated (owner 6 Okt 2026 — info server
+// baru dibuat ke saluran) ═══
+section("4. event serverCreated (notif server panel baru)");
+const { notifyServerCreated } = await import(R + "/src/lib/rara-saluran-broadcast.js");
+
+// 4a: event terdaftar + label Indonesia Title Case
+t("4a. event serverCreated terdaftar + label Title Case", getAllNotifyStatus().serverCreated?.label === "Server Baru Dibuat", getAllNotifyStatus().serverCreated);
+
+// 4b: default OFF → jujur gak kirim
+const rOff2 = await notifyServerCreated(null, { phoneNumber: "628111222333", username: "aizat", server: "test-1gb", ram: "1 GB" });
+t("4b. default OFF → gak kirim, jujur", rOff2.sent === false && /Toggle off/.test(rOff2.reason || ""));
+
+// 4c: toggle ON → kartu modern terkirim via seam
+const cap2 = [];
+_setBroadcastSendForTest((message, options, bannerTitle) => { cap2.push({ message, options, bannerTitle }); });
+setNotifyEnabled("serverCreated", true);
+db.data.users["628111222333@s.whatsapp.net"] = { regName: "Dita" };
+const rOn2 = await notifyServerCreated(null, {
+  phoneNumber: "628111222333", username: "aizat", server: "dita-bot",
+  ram: "2 GB", cpu: "80%", disk: "2 GB", serverId: 42, totalServers: 7,
+});
+const msg2 = cap2[0]?.message || "";
+t("4c. ON → kartu terkirim + header 「 ✦ Server Baru Dibuat ✦ 」", rOn2.sent === true && msg2.includes("「 ✦ Server Baru Dibuat ✦ 」"), msg2.slice(0, 80));
+t("4d. field unik panel: Username + Server + RAM/CPU/Storage + Server ID",
+  /🏷 Username: aizat/.test(msg2) && /🖥 Server: dita-bot/.test(msg2) &&
+  /💾 RAM: 2 GB/.test(msg2) && /⚙️ CPU: 80%/.test(msg2) && /📁 Storage: 2 GB/.test(msg2) &&
+  /🆔 Server ID: 42/.test(msg2), msg2.slice(0, 200));
+t("4e. Nama di-resolve & DIATAS nomor (aturan kartu pengguna)",
+  /👤 Nama: Dita/.test(msg2) && msg2.indexOf("👤 Nama: Dita") < msg2.indexOf("📱 Nomor:"), msg2.split("\n").slice(0, 3).join(" | "));
+t("4f. Total server terbuat tercantum", /🧩 Total server terbuat: 7/.test(msg2), msg2.slice(-120));
+t("4g. footer credit + banner judul per-event",
+  /Powered by Rara AI - Multi Device/.test(msg2) && cap2[0]?.bannerTitle === "Server Baru Dibuat", cap2[0]?.bannerTitle);
+
+// 4h: nomor asing → tanpa baris Nama
+const rAsing2 = await notifyServerCreated(null, { phoneNumber: "628777000111", username: "budi", server: "budi-1gb" });
+const msgAsing2 = cap2[cap2.length - 1]?.message || "";
+t("4h. nomor asing → tanpa baris Nama, kartu tetap kirim", rAsing2.sent === true && !/👤 Nama:/.test(msgAsing2) && /📱 Nomor: 628777000111/.test(msgAsing2), msgAsing2.split("\n").slice(0, 2).join(" | "));
+
+// 4i: createserver.js nyambungin (anchor statis — panggil setelah delivery, anti-throw)
+const csSrc = String((await import("node:fs")).readFileSync(R + "/plugins/panel/createserver.js", "utf8"));
+t("4i. createserver.js manggil notifyServerCreated (anti-throw, setelah delivery)",
+  /notifyServerCreated/.test(csSrc) && /gak fatal/.test(csSrc) &&
+  csSrc.indexOf("notifyServerCreated") > csSrc.indexOf("deliveryMode === 1") &&
+  csSrc.indexOf("notifyServerCreated") < csSrc.indexOf('m.react("🐣")'), "anchor order");
+
+setNotifyEnabled("serverCreated", false);
+_resetBroadcastSendForTest();
+
 console.log("\n===== " + pass + " PASS, " + fail + " FAIL =====");
 process.exitCode = fail > 0 ? 1 : 0;
