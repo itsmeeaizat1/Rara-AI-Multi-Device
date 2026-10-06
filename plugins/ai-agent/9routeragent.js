@@ -1,38 +1,41 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
-// ocode.js — OPENCODE 9ROUTER: AI CODING AGENT VIA WHATSAPP (OWNER ONLY)
-// ".ocode perbaiki bug di fitur cuaca" → agent 9router baca file repo,
-// edit kode, lapor balik ke chat. Versi 9router dari guide OpenCode
-// (TANPA install OpenCode CLI, TANPA key Groq/GLM baru — pake key
-// router9v2 yang udah ada; endpoint ikut satu pintu .ai9v2 endpoint).
+// 9routeragent.js — 9ROUTER LOKAL CODING AGENT VIA WHATSAPP (OWNER ONLY)
+// (request owner 6 Okt 2026: "buat lg cmd baru. 9routeragent buat
+// nyambung ke 9router lokal" — .ocode TETAP di router9v2, command ini
+// nyambung ke 9ROUTER LOKAL rara-9router-local.js)
+// ".9routeragent perbaiki bug di fitur cuaca" → agent baca file repo,
+// edit kode, lapor balik ke chat. Otak = engine lokal (gateway key
+// auto-provision + spawn bareng bot), model ngikut otak agent
+// (.9router otak model / env AGENT_BRAIN_MODEL).
 //
-// ⚠ SANKSI KEAMANAN (padan guide): agent ini BISA mengedit file server.
+// ⚠ SANKSI KEAMANAN: agent ini BISA mengedit file server.
 // Remote code execution via WA → OWNER ONLY, gak ada pengecualian.
 // Pengaman: path jail + blacklist rahasia (apikeys/.env/storage/.git)
-// + shell MATI + backup otomatis (.ocode undo) + 1 tugas sekali jalan.
-// + GATE IZIN PER FILE (revisi owner 21 Sep 2026 "ada allow deny tiap dia
-//   eksekusi 1 file kyk ai agent pd umumnya"): tiap file yang mau ditulis/
-//   diedit → popup ✅ Ijinkan / ❌ Tolak ke owner; keputusan berlaku per file
-//   per tugas (gak ditanya ulang); 3 menit tanpa jawaban → otomatis DITOLAK.
+// + shell MATI + backup otomatis (.9routeragent undo) + 1 tugas sekali
+// jalan (lock SATU untuk semua coding agent: ocode + 9routeragent).
+// + GATE IZIN PER FILE: tiap file yang mau ditulis/diedit → popup
+// ✅ Ijinkan / ❌ Tolak ke owner; keputusan berlaku per file per tugas;
+// 3 menit tanpa jawaban → otomatis DITOLAK.
 // ============================================================
 import { raraBox } from "../../src/lib/rara-menu-style.js";
 import { mediaResultCard } from "../../src/lib/rara-media-result.js";
 import { toSC } from "../../src/lib/styler.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
-import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
 import {
   runOcodeAgent, stopOcode, undoLast, listBackups, _ocodeState,
+  localChat9Router,
 } from "../../src/lib/rara-ocode-agent.js";
-import { router9v2Key } from "../../src/scraper/router9v2.js";
-import { ROUTER9V2_DEFAULT_MODEL } from "../../src/scraper/router9v2.js";
+import { router9IsUp, getRouter9Base } from "../../src/lib/rara-9router-local.js";
+import { getBrainModel } from "../../src/lib/rara-agent-brain.js";
 
 const pluginConfig = {
-    name: "ocode",
-    alias: ["ocode", "9code", "ocode9", "code9", "ocodeizin"],
+    name: "9routeragent",
+    alias: ["9routeragent", "9ragent", "router9agent", "9routeragentizin"],
     category: "ai agent",
-    description: 'OpenCode 9Router — AI coding agent: edit/fix/bikin fitur bot langsung dari chat (owner only)',
-    usage: '.ocode <tugas> | .ocode stop | .ocode status | .ocode undo | .ocode model <id9router>',
-    example: '.ocode perbaiki bug di fitur cuaca\n.ocode buat fitur .halo di plugins\n.ocode status',
+    description: '9Router LOKAL Agent — AI coding agent lewat 9router lokal: edit/fix/bikin fitur bot langsung dari chat (owner only)',
+    usage: '.9routeragent <tugas> | .9routeragent stop | .9routeragent status | .9routeragent undo | .9routeragent model <id>',
+    example: '.9routeragent perbaiki bug di fitur cuaca\n.9routeragent buat fitur .halo di plugins\n.9routeragent status',
     isOwner: true,
     isPremium: false,
     isGroup: false,
@@ -48,6 +51,10 @@ const APPROVAL_TIMEOUT_MS = 3 * 60 * 1000; // 3 menit tanpa jawaban → auto-tol
 // izin yang nunggu jawaban owner (cuma 1 tugas jalan = maks 1 pending)
 let pendingApproval = null;
 
+// seam e2e: override gate router-up (hindarin health-check beneran di test)
+const __r9a = {};
+export function _setRouter9AgentGateForTest(fn) { __r9a.gate = fn; }
+
 function resolveApproval(allowed, reason) {
   if (!pendingApproval) return false;
   const p = pendingApproval;
@@ -57,7 +64,7 @@ function resolveApproval(allowed, reason) {
   return true;
 }
 
-// popup izin edit ala AI agent: ✅ Ijinkan / ❌ Tolak (pola menu card penilaian)
+// popup izin edit ala AI agent: ✅ Ijinkan / ❌ Tolak (pola ocode)
 async function sendApprovalPopup(sock, chatJid, prefix, { path: rel, action, task, detail }) {
   const isEdit = action === "edit";
   const lines = [
@@ -70,7 +77,7 @@ async function sendApprovalPopup(sock, chatJid, prefix, { path: rel, action, tas
       "\U0001F501 Ganti : " + String(detail?.replace || "").slice(0, 150));
   } else if (detail?.content) {
     const n = String(detail.content).split("\n").length;
-    lines.push("---", "\U0001F4C4 Tulis penuh " + n + " baris" + (detail.content.length > 150 ? " (awal): " + String(detail.content).slice(0, 150).replace(/\n/g, " ") + "…" : ": " + String(detail.content).slice(0, 150)));
+    lines.push("---", "\u{1F4C4} Tulis penuh " + n + " baris" + (detail.content.length > 150 ? " (awal): " + String(detail.content).slice(0, 150).replace(/\n/g, " ") + "…" : ": " + String(detail.content).slice(0, 150)));
   }
   lines.push("---",
     "Tugas: " + String(task || "").slice(0, 100),
@@ -78,10 +85,10 @@ async function sendApprovalPopup(sock, chatJid, prefix, { path: rel, action, tas
     "\u23F0 3 menit tanpa jawaban \u2192 otomatis DITOLAK.",
     "Keputusan berlaku untuk file ini sampai tugas selesai.",
   );
-  const body = raraBox("OpenCode — Minta Izin", lines);
+  const body = raraBox("9RouterAgent — Minta Izin", lines);
   const rows = [
-    { title: "\u2705 Ijinkan", description: "Boleh ubah file ini", id: prefix + "ocodeizin ya" },
-    { title: "\u274C Tolak", description: "File ini tidak boleh disentuh", id: prefix + "ocodeizin tidak" },
+    { title: "\u2705 Ijinkan", description: "Boleh ubah file ini", id: prefix + "9routeragentizin ya" },
+    { title: "\u274C Tolak", description: "File ini tidak boleh disentuh", id: prefix + "9routeragentizin tidak" },
   ];
   const buttons = [
     { name: "single_select", buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }) },
@@ -97,7 +104,7 @@ async function sendApprovalPopup(sock, chatJid, prefix, { path: rel, action, tas
   await sock.sendMessage(chatJid, {
     interactiveMessage: {
       body: { text: body },
-      footer: { text: toSC("Rara AI — OCode") },
+      footer: { text: toSC("Rara AI — 9RouterAgent") },
       header: { title: "", hasMediaAttachment: false },
       nativeFlowMessage: { buttons },
     },
@@ -112,7 +119,7 @@ function makeApprovalCallback(sock, chatJid, prefix) {
       const timer = setTimeout(() => {
         if (pendingApproval && pendingApproval.path === info.path) {
           pendingApproval = null;
-          sock.sendMessage(chatJid, { text: raraBox("OpenCode — Izin", ["\u23F0 Waktu habis (3 mnt) — otomatis DITOLAK: " + info.path]) }).catch(() => {});
+          sock.sendMessage(chatJid, { text: raraBox("9RouterAgent — Izin", ["\u23F0 Waktu habis (3 mnt) — otomatis DITOLAK: " + info.path]) }).catch(() => {});
           resolve({ allowed: false, reason: "timeout" });
         }
       }, APPROVAL_TIMEOUT_MS);
@@ -121,130 +128,139 @@ function makeApprovalCallback(sock, chatJid, prefix) {
   };
 }
 
-function ocodeModel(db) {
-    const saved = db?.data?.ocode?.model;
-    return saved || ROUTER9V2_DEFAULT_MODEL;
+function router9AgentModel(db) {
+    // default ngikut otak agent (.9router otak model / env AGENT_BRAIN_MODEL)
+    // — override manual masih bisa via .9routeragent model <id>
+    const saved = db?.data?.router9agent?.model;
+    return saved || getBrainModel();
 }
 
 async function handler(m, { sock, args, config: botConfig }) {
     const prefix = botConfig?.command?.prefix || ".";
-    // ⚠ GATE OWNER DI DALAM HANDLER (jangan cuma andalkat gate framework) —
-    // agent bisa mengedit file server, non-owner TIDAK BOLEH sekali pun.
+    // ⚠ GATE OWNER DI DALAM HANDLER — agent bisa mengedit file server.
     if (!m.isOwner) {
-        return m.reply(raraBox("OpenCode", ["Fitur ini khusus owner — agent bisa mengedit file server."]));
+        return m.reply(raraBox("9RouterAgent", ["Fitur ini khusus owner — agent bisa mengedit file server."]));
     }
     const argList = (args || []).map(String);
     const sub = argList[0]?.toLowerCase();
     const db = getDatabase();
 
-    // ── .ocodeizin <ya|tidak> — jawaban izin edit file (klik tombol popup / ketik manual) ──
+    // ── .9routeragentizin <ya|tidak> — jawaban izin edit file ──
     // wajib SEBELUM lock-check biar bisa dijawab pas tugas lagi jalan
     if (sub === "izin") {
         if (!pendingApproval) {
-            return m.reply(raraBox("OpenCode — Izin", ["Gak ada permintaan izin yang nunggu jawaban."]));
+            return m.reply(raraBox("9RouterAgent — Izin", ["Gak ada permintaan izin yang nunggu jawaban."]));
         }
         const v = String(argList[1] || "").toLowerCase();
         const ya = /^(ya|yes|y|ok|oke|ijinkan|boleh|allow|b)$/.test(v);
         const p = pendingApproval;
         resolveApproval(ya);
         await m.react(ya ? "\u2705" : "\u274c");
-        return m.reply(raraBox("OpenCode — Izin", ya
+        return m.reply(raraBox("9RouterAgent — Izin", ya
             ? ["DIIJINKAN — agent lanjut nulis " + p.path]
             : ["DITOLAK — agent lanjut TANPA ngubah " + p.path]));
     }
 
-    // ── .ocode stop — batalkan tugas jalan (+ pending izin ikut ditolak) ──
+    // ── .9routeragent stop — batalkan tugas jalan (+ pending izin ikut ditolak) ──
     if (sub === "stop") {
         const hadPending = !!pendingApproval;
         resolveApproval(false, "stopped");
         const r = stopOcode();
         await m.react(r.ok || hadPending ? "\u26a1" : "\u274c");
-        return m.reply(raraBox("OpenCode", [
+        return m.reply(raraBox("9RouterAgent", [
             r.ok ? "Tugas dibatalkan — laporan menyusul." : (hadPending ? "Permintaan izin dibatalkan." : "Gak ada tugas yang jalan."),
         ]));
     }
 
-    // ── .ocode status — info agent ──
+    // ── .9routeragent status — info agent ──
     if (sub === "status") {
         const st = _ocodeState();
         const backups = listBackups(process.cwd());
-        return m.reply(raraBox("OpenCode — Status", [
+        return m.reply(raraBox("9RouterAgent — Status", [
             "Tugas   : " + (st.running ? "SEDANG JALAN — " + String(st.task || "").slice(0, 60) : "idle"),
-            "Izin    : " + (pendingApproval ? "NUNGGU JAWABAN — " + pendingApproval.path + " (jawab: .ocodeizin ya|tidak)" : "-"),
-            "Model   : " + ocodeModel(db),
-            "Endpoint: " + getTioEndpoint().replace("/chat/completions", ""),
+            "Izin    : " + (pendingApproval ? "NUNGGU JAWABAN — " + pendingApproval.path + " (jawab: .9routeragentizin ya|tidak)" : "-"),
+            "Model   : " + router9AgentModel(db),
+            "Otak    : 9ROUTER LOKAL (ngikut .9router otak model)",
+            "Endpoint: " + getRouter9Base() + " (lokal)",
+            "Key     : gateway otomatis (rara-bot)",
             "Backup  : " + (backups.length ? backups.length + " set (terbaru: " + backups[0] + ")" : "belum ada"),
             "---",
             "Shell   : MATI (mode aman — baca/edit file + tool MCP eksternal via aksi mcp)",
-            "Undo    : .ocode undo (balikin perubahan terakhir)",
+            "Undo    : .9routeragent undo (balikin perubahan terakhir)",
         ]));
     }
 
-    // ── .ocode undo — restore backup terakhir ──
+    // ── .9routeragent undo — restore backup terakhir ──
     if (sub === "undo") {
         const r = undoLast(process.cwd());
         await m.react(r.ok ? "\u26a1" : "\u274c");
-        return m.reply(raraBox("OpenCode — Undo", r.ok
-            ? ["Backup " + r.from + " di-restore:", ...r.restored.map((f) => "- " + f), "---", "Restart bot biar kode lama kebaca ulang: pm2 restart"]
+        return m.reply(raraBox("9RouterAgent — Undo", r.ok
+            ? ["Backup " + r.from + " di-restore:", ...r.restored.map((f) => "- " + f), "---", "Restart bot biar kode lama kebaca ulang."]
             : ["GAGAL: " + r.error]));
     }
 
-    // ── .ocode model <id> — ganti model 9router ──
+    // ── .9routeragent model <id> — ganti model 9router lokal ──
     if (sub === "model") {
         const val = argList[1];
         if (!val) {
-            return m.reply(raraBox("OpenCode — Model", [
-                "Aktif: " + ocodeModel(db),
+            return m.reply(raraBox("9RouterAgent — Model", [
+                "Aktif: " + router9AgentModel(db),
+                "Default: ngikut otak agent (env AGENT_BRAIN_MODEL / .9router otak model)",
                 "---",
-                "Ganti: .ocode model <id-9router>",
-                "Daftar: .ai9v2 list",
+                "Ganti: .9routeragent model <id-9router-lokal>",
+                "Daftar: .9router model <kata>",
             ]));
         }
-        if (!db.data.ocode) db.data.ocode = {};
-        db.data.ocode.model = val;
+        if (!db.data.router9agent) db.data.router9agent = {};
+        db.data.router9agent.model = val;
         await db.save();
         await m.react("\u26a1");
-        return m.reply(raraBox("OpenCode — Model", ["Model coding agent diganti: " + val]));
+        return m.reply(raraBox("9RouterAgent — Model", ["Model coding agent lokal diganti: " + val]));
     }
 
     // ── tugas baru ──
     const task = argList.join(" ").trim();
     if (!task) {
-        return m.reply(raraBox("OpenCode — AI Coding Agent", [
-            "Suruh aku ngoding langsung dari chat.",
+        return m.reply(raraBox("9RouterAgent — AI Coding Agent Lokal", [
+            "Suruh aku ngoding langsung dari chat — lewat 9ROUTER LOKAL.",
             "---",
             "Contoh:",
-            ".ocode perbaiki bug di fitur cuaca",
-            ".ocode buat fitur .halo di plugins/fun",
-            ".ocode jelaskan isi src/lib/rara-boot-doctor.js",
+            ".9routeragent perbaiki bug di fitur cuaca",
+            ".9routeragent buat fitur .halo di plugins/fun",
+            ".9routeragent jelaskan isi src/lib/rara-boot-doctor.js",
             "---",
             "Perintah:",
-            ".ocode stop — batalkan tugas jalan",
-            ".ocode status — info agent",
-            ".ocodeizin ya|tidak — jawab izin edit file",
-            ".ocode undo — balikin perubahan terakhir",
-            ".ocode model <id> — ganti model 9router",
+            ".9routeragent stop — batalkan tugas jalan",
+            ".9routeragent status — info agent",
+            ".9routeragentizin ya|tidak — jawab izin edit file",
+            ".9routeragent undo — balikin perubahan terakhir",
+            ".9routeragent model <id> — ganti model 9router lokal",
             "---",
             "Agent cuma bisa baca/edit file (shell mati).",
-            "Tiap perubahan otomatis di-backup → .ocode undo.",
-            "1 tugas sekaligus, maks 8 menit.",
+            "Tiap perubahan otomatis di-backup → .9routeragent undo.",
+            "1 tugas sekaligus, maks 8 menit. Otak: 9router lokal.",
         ]));
     }
 
-    if (!router9v2Key()) {
-        return m.reply(raraBox("OpenCode", ["Key 9router belum di-set — isi di apikeys.json (providers.router9v2) atau env ROUTER_API_KEY."]));
+    // GATE 9ROUTER LOKAL (bukan v2/cloudku): router wajib hidup dulu —
+    // router9IsUp health-check cepat + cache 3 dtk, gak pernah trigger
+    // spawn 30 dtk di jalur pesan (komentar rara-agent-brain).
+    const routerUp = await (__r9a.gate ? __r9a.gate() : router9IsUp());
+    if (!routerUp) {
+        return m.reply(raraBox("9RouterAgent", ["9Router LOKAL belum jalan — ketik .9router status / .9router restart (owner)."]));
     }
 
     if (_ocodeState().running) {
-        return m.reply(raraBox("OpenCode", ["Masih ada tugas yang jalan — tunggu selesai atau .ocode stop."]));
+        return m.reply(raraBox("9RouterAgent", ["Masih ada tugas yang jalan (ocode / 9routeragent share lock) — tunggu selesai atau .9routeragent stop."]));
     }
 
-    const model = ocodeModel(db);
+    const model = router9AgentModel(db);
     await m.react("\U0001f9e0");
     const t0 = Date.now();
     const result = await runOcodeAgent({
         task,
         model,
+        chat: localChat9Router, // ← 9ROUTER LOKAL (kode/eksekusi tetap di lib yang sama)
         onEvent: (ev) => { /* progress via reaksi aja biar gak spam chat */ },
         // GATE IZIN PER FILE — tiap write/edit ditanya dulu ke owner
         onApproval: makeApprovalCallback(sock, m.chat, prefix),
@@ -253,10 +269,10 @@ async function handler(m, { sock, args, config: botConfig }) {
 
     if (result.error && !result.changed.length) {
         await m.react("\u274c");
-        return m.reply(raraBox("OpenCode — Gagal", [
+        return m.reply(raraBox("9RouterAgent — Gagal", [
             "Error: " + result.error,
             "---",
-            "Coba lagi / tugas lebih spesifik / ganti model (.ocode model <id>).",
+            "Coba lagi / tugas lebih spesifik / ganti model (.9routeragent model <id>).",
         ]));
     }
 
@@ -265,10 +281,10 @@ async function handler(m, { sock, args, config: botConfig }) {
     const changed = result.changed || [];
     const lines = [
         result.aborted ? "Tugas dibatalkan sebelum tuntas." : "Selesai dalam " + detik + " dtk (" + result.iterations + " langkah).",
-        "Model: " + model,
+        "Model: " + model + " (9router lokal)",
     ];
     if (changed.length) {
-        lines.push("---", "File berubah:", ...changed.map((f) => "- " + f), "---", "Balikin: .ocode undo", "Deploy: cek git diff → git add -A → commit → pm2 restart");
+        lines.push("---", "File berubah:", ...changed.map((f) => "- " + f), "---", "Balikin: .9routeragent undo", "Deploy: cek git diff → git add -A → commit → restart bot");
     } else if (result.denied?.length) {
         lines.push("Semua edit DITOLAK owner — gak ada file yang berubah.");
     } else {
@@ -278,26 +294,26 @@ async function handler(m, { sock, args, config: botConfig }) {
     if ((result.summary || "").length > MAX_OUTPUT_CHARS) {
         lines.push("---", "Ringkasan panjang dikirim sebagai file.");
     }
-    await m.reply(raraBox("OpenCode — Laporan", lines));
+    await m.reply(raraBox("9RouterAgent — Laporan", lines));
 
     // ringkasan agent — panjang → document, pendek → text biasa
     if (summary) {
         if ((result.summary || "").length > MAX_OUTPUT_CHARS) {
             const laporanBuf = Buffer.from(result.summary, "utf8");
-            let ocodeCap = raraBox("OpenCode", ["Ringkasan lengkap agent."]);
+            let cap = raraBox("9RouterAgent", ["Ringkasan lengkap agent."]);
             try {
                 const card = mediaResultCard({
-                    header: "ocode",
-                    request: [["Fitur", "Laporan agent OpenCode"], ["Berkas", "ocode-laporan.txt"], ["Karakter", String(result.summary.length)]],
+                    header: "9routeragent",
+                    request: [["Fitur", "Laporan agent 9RouterAgent"], ["Berkas", "9routeragent-laporan.txt"], ["Karakter", String(result.summary.length)]],
                     size: laporanBuf.length,
                 });
-                if (card) ocodeCap = card;
+                if (card) cap = card;
             } catch {}
             await sock.sendMessage(m.chat, {
                 document: laporanBuf,
-                fileName: "ocode-laporan.txt",
+                fileName: "9routeragent-laporan.txt",
                 mimetype: "text/plain",
-                caption: ocodeCap,
+                caption: cap,
             });
         } else {
             await m.reply(summary);
@@ -305,4 +321,4 @@ async function handler(m, { sock, args, config: botConfig }) {
     }
 }
 
-export { handler, pluginConfig, ocodeModel, pluginConfig as config };
+export { handler, pluginConfig, router9AgentModel, pluginConfig as config };

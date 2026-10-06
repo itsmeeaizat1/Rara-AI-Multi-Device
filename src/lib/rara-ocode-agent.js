@@ -7,11 +7,11 @@
 //
 // Konsep sama kayak guide OpenCode (agent baca file → analisa → edit →
 // lapor) TAPI TANPA install OpenCode CLI + key Groq/GLM terpisah:
-// otak = 9ROUTER LOKAL (revisi owner 6 Okt 2026: "9routerv2 itu bukan
-// lokal dan web udah down" — router9v2/cloudku DIBUANG dari jalur ini,
-// otak nyedot LANGSUNG dari engine lokal rara-9router-local.js:
-// gateway key auto-provision + spawn bareng bot, model ngikut otak agent),
-// loop agent-nya native di sini. Jadi gak ada dependency baru sama sekali.
+// otak v2 = router9v2/cloudku (TETAP — owner 6 Okt: ocode jgn dipindah);
+// otak LOKAL = .9routeragent (plugin baru) nyedot engine rara-9router-local
+// via adapter localChat9Router: gateway key auto-provision + spawn bareng
+// bot, model ngikut otak agent. Loop agent-nya native di sini.
+// Jadi gak ada dependency baru sama sekali.
 //
 // Protokol: model balas dengan blok ```ocode {json}``` (SATU aksi per
 // blok) — lebih tahan banting ketimbang tool-calling OpenAI (model
@@ -28,6 +28,7 @@
 // ============================================================
 import fs from "node:fs";
 import path from "node:path";
+import { router9v2Chat } from "../scraper/router9v2.js"; // ocode tetap v2 (owner 6 Okt: JGN dipindah)
 import { router9Chat } from "./rara-9router-local.js";
 import { getBrainModel } from "./rara-agent-brain.js";
 
@@ -323,28 +324,32 @@ function buildSystemPrompt(mcpTools) {
  *          tiap write/edit; keputusan di-cache per file per tugas (tanya 1x).
  * @returns {Promise<{summary:string,files:string[],changed:string[],denied:string[],iterations:number,aborted:boolean,error?:string}>}
  */
-// ── ADAPTER 9ROUTER LOKAL (revisi 6 Okt 2026) ─────────────────────────
-// Interface lama ocode ({ messages, model, maxTokens, temperature } → { text })
-// dipetakan ke router9Chat lokal (system / history / user). Model default
+// ── ADAPTER 9ROUTER LOKAL (revisi owner 6 Okt 2026: "buat lg cmd baru,
+// .9routeragent buat nyambung ke 9router lokal" — ocode TETAP v2) ────────
+// Interface chat ocode ({ messages, model, maxTokens, temperature } → { text })
+// dipetakan ke router9Chat LOKAL (system / history / user). Model default
 // ngikut otak agent (getBrainModel — env AGENT_BRAIN_MODEL / .9router otak
-// model), JADI .ocode gak pernah balik ke model v2 cloudku yang udah down.
-function localChat9Router({ messages, model, maxTokens, temperature }) {
+// model). Dipakai plugin .9routeragent; seam _setOcodeLocalChatForTest buat e2e.
+export function localChat9Router({ messages, model, maxTokens, temperature }) {
+  const fn = __oc.localChat || router9Chat;
   const sys = messages.filter((x) => x?.role === "system").map((x) => x.content).join("\n\n") || null;
   const rest = messages.filter((x) => x?.role !== "system");
   const history = rest.slice(0, -1);
   const user = rest.length ? rest[rest.length - 1].content : null;
-  return router9Chat({
+  return fn({
     model: model || getBrainModel(),
     system: sys, history, user,
     maxTokens, temperature,
   });
 }
+export function _setOcodeLocalChatForTest(fn) { __oc.localChat = fn; }
 
-export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval }) {
+export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval, chat: chatOverride }) {
   if (state.running) return { error: "masih ada tugas berjalan" };
   state.running = true; state.abort = false; state.task = task; state.startedAt = Date.now();
   const root = __oc.root || path.resolve(repoRoot || process.cwd());
-  const chat = __oc.chat || localChat9Router;
+  // urutan: chatOverride (dari .9routeragent = LOKAL) > seam e2e > default v2 (ocode)
+  const chat = chatOverride || __oc.chat || ((o) => router9v2Chat(o));
   const mcpToolList = __oc.mcpTools !== null ? __oc.mcpTools : await defaultMcpTools();
   const messages = [
     { role: "system", content: buildSystemPrompt(mcpToolList) },
