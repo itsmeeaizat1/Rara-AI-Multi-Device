@@ -26,7 +26,8 @@ const NF = "「 ✦ Tidak Ditemukan ✦ 」\nPerintah *.tes* tidak ditemukan\n\n
 t("1j. pesan not-found terdeteksi helper (thumbnail request owner)", ta.detectHelper(NF, "tes")?.name === "tes", JSON.stringify(ta.detectHelper(NF, "tes")));
 t("1k. teks biasa judul lain BUKAN helper", ta.detectHelper("「 ✦ Menu ✦ 」\nhalo", "x") === null);
 t("1h. teks biasa BUKAN helper", ta.detectHelper("halo kak apa kabar", "x") === null && ta.detectHelper("「 ✦ MENU ✦ 」\nisi biasa", "x") === null);
-t("1i. teks panjang (>1500) bukan helper", ta.detectHelper("❗ Cara pemakaian salah " + "x".repeat(2000), "x") === null);
+t("1i. panduan panjang (2500 kar) tetap kena kartu", ta.detectHelper("「 ✦ CONVERT ✦ 」\n📝 ᴄᴀʀᴀ ᴘᴀᴋᴀɪ\n" + "x".repeat(2500), "convert")?.name === "convert");
+t("1i2. teks super panjang (>4000) bukan helper", ta.detectHelper("❗ Cara pemakaian salah " + "x".repeat(4500), "x") === null);
 
 // 2. m.reply asli
 const dir = path.join(R, "assets/image/usage/zzcat"); fs.mkdirSync(dir, { recursive: true });

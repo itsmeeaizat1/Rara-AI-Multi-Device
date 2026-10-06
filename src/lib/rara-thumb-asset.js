@@ -150,7 +150,11 @@ const NOTFOUND_RE = /^「 ✦ \s*tidak ditemukan\s* ✦ 」/iu;
 
 // → { name } kalau teks = pesan helper, null kalau bukan
 export function detectHelper(text, fallbackName = "") {
-  if (typeof text !== "string" || text.length > 1500) return null;
+  // Batas panjang longgar (panduan raraGuide + blok info registry bisa
+  // 2000-an karakter — kartu .menu aja bawa ribuan karakter, aman).
+  // Pola tetap strict: HANYA teks berheader 「 ✦ ✦ 」 + baris status emoji,
+  // "Tidak Ditemukan", atau "❗" — pesan chat user biasa gak mungkin kena.
+  if (typeof text !== "string" || text.length > 4000) return null;
   const head = HEAD_RE.exec(text);
   if (head) {
     const name = fromSC(head[1]).toLowerCase().replace(/[^a-z0-9-]/g, "");
