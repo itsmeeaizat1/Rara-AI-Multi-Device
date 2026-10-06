@@ -129,3 +129,31 @@ export async function buildThumbHeader(sock, asset) {
   }
   return null;
 }
+
+// ── DETEKSI PESAN HELPER (request owner 6 Okt 2026: pesan helper juga
+// pakai kartu thumbnail ala .menu + chip tag di bawah, thumbnail custom per
+// kategori/nama fitur). Helper (raraError/raraEmpty/raraNoInput/raraNoQuoted/
+// raraSuccess/raraGuide/raraSalah) TIDAK diubah outputnya (banyak kode lain
+// pakai string-nya langsung) — m.reply mengenali POLA teks helper-nya:
+//   「 ✦ NAMA ✦ 」 + baris status (❌ ⚠ ✅ 📝 💡), atau ❗ Cara pemakaian salah.
+// Teks smallcaps/bukan, header diambil dari baris pertama.
+const SC_MAP = { "ᴀ": "a", "ʙ": "b", "ᴄ": "c", "ᴅ": "d", "ᴇ": "e", "ꜰ": "f", "ɢ": "g", "ʜ": "h", "ɪ": "i", "ᴊ": "j", "ᴋ": "k", "ʟ": "l", "ᴍ": "m", "ɴ": "n", "ᴏ": "o", "ᴘ": "p", "ǫ": "q", "ʀ": "r", "ꜱ": "s", "ᴛ": "t", "ᴜ": "u", "ᴠ": "v", "ᴡ": "w", "ʏ": "y", "ᴢ": "z" };
+function fromSC(str) {
+  return String(str || "").replace(/[ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡʏᴢ]/g, (c) => SC_MAP[c] || c);
+}
+const HEAD_RE = /^「 ✦ (.+?) ✦ 」\n([❌⚠✅📝💡])/u;
+const SALAH_RE = /^❗ /u;
+
+// → { name } kalau teks = pesan helper, null kalau bukan
+export function detectHelper(text, fallbackName = "") {
+  if (typeof text !== "string" || text.length > 1500) return null;
+  const head = HEAD_RE.exec(text);
+  if (head) {
+    const name = fromSC(head[1]).toLowerCase().replace(/[^a-z0-9-]/g, "");
+    return { name: name || String(fallbackName || "").toLowerCase() };
+  }
+  if (SALAH_RE.test(text) && /cara pemakaian salah|ᴄᴀʀᴀ ᴘᴇᴍᴀᴋᴀɪᴀɴ ꜱᴀʟᴀʜ/i.test(text.split("\n")[0])) {
+    return { name: String(fallbackName || "").toLowerCase().replace(/[^a-z0-9-]/g, "") };
+  }
+  return null;
+}

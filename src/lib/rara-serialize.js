@@ -38,6 +38,7 @@ import { translateUI, needsTranslation } from "./rara-i18n.js";
 import { getWeatherAddress } from "./rara-weather-footer.js";
 
 import { saluranCtx } from "./rara-context.js";
+import { detectHelper } from "./rara-thumb-asset.js";
 import { getAssetBuffer } from "./rara-asset-manager.js";
 import sharp from "sharp";
 let _prefixCache = null;
@@ -785,6 +786,22 @@ async function serialize(sock, msg, store = {}) {
    */
   m.reply = async (text, options = {}) => {
     if (!text && text !== 0) return null;
+
+    // PESAN HELPER → KARTU THUMBNAIL ALA .MENU (request owner 6 Okt 2026):
+    // teks berpola helper (raraError/raraEmpty/raraNoInput/raraNoQuoted/
+    // raraSuccess/raraGuide/raraSalah) dikirim lewat sendUsageCard: header
+    // thumbnail kategori/nama + chip tag di bawah. Gagal / saluran / bridge /
+    // raw → jalur reply biasa (teks tetap utuh, gak ada yang diubah).
+    try {
+      if (typeof text === "string" && !(options && (options.__noCard || options.raw))) {
+        const _h = detectHelper(text, m.command);
+        if (_h) {
+          const { sendUsageCard } = await import("./rara-menu-card.js");
+          const _r = await sendUsageCard(sock, m, text, { name: _h.name || m.command });
+          if (_r) return _r;
+        }
+      }
+    } catch {}
 
     // Statistik realtime: pesan keluar bot dihitung
     try { getDatabase().incrementStat("messagesSent"); } catch {}

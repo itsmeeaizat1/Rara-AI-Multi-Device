@@ -741,7 +741,7 @@ export async function sendUsageCard(sock, m, text, opts = {}) {
   // m.reply. Gak ada lagi externalAdReply thumbnail bytes — jalur itu
   // terbukti gak ke-render di client WA.
   try {
-    return await m.reply(_txt0);
+    return await m.reply(_txt0, { __noCard: true });
   } catch {
     // pesan keluar bot gak boleh mati senyap — last ditch plain text
     try {
