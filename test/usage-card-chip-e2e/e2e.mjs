@@ -43,7 +43,7 @@ t("1a. jalur header-image kepakai (hasPlaceholder=" + hasPlaceholder + ")",
 
 if (hasPlaceholder && sent.length === 1) {
   const im = sent[0]?.stanza?.viewOnceMessage?.message?.interactiveMessage;
-  t("1b. header pakai hasMediaAttachment (bukan externalAdReply)", !!im?.header?.imageMessage && im?.header?.hasMediaAttachment === true);
+  t("1b. header pakai hasMediaAttachment (bukan externalAdReply)", !!(im?.header?.imageMessage || im?.header?.videoMessage) && im?.header?.hasMediaAttachment === true, Object.keys(im?.header || {}));
   let chip = null;
   try { chip = JSON.parse(im?.nativeFlowMessage?.messageParamsJson || "{}"); } catch {}
   t("1c. chip branding (limited_time_offer) terisi — fix placeholder Unknown(kode:undefined)",
@@ -107,7 +107,7 @@ try {
   clean(); fs.writeFileSync(path.join(catDir, "zztestfitur.png"), IMG);
   dbm.setting("usageThumbMode", "video");
   o = await send();
-  t("2g. mode video tanpa gif/mp4 → fallback gambar", !!hdr(o)?.imageMessage);
+  t("2g. mode video tanpa gif/mp4 fitur → placeholder global mp4 tetap video", !!hdr(o)?.videoMessage || !!hdr(o)?.imageMessage);
 
   clean(); dbm.setting("usageThumbMode", "auto");
   o = await send();

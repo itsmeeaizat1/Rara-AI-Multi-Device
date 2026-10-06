@@ -710,7 +710,13 @@ export async function sendUsageCard(sock, m, text, opts = {}) {
         const _built = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: {
             message: {
-              messageContextInfo: {},
+              messageContextInfo: {
+                  // LEBAR PENUH ala .menu (request owner 6 Okt 2026: "biar
+                  // lebar mirip seperti menu") — deviceListMetadata bikin
+                  // kartu interactive render selebar pesan biasa.
+                  deviceListMetadata: {},
+                  deviceListMetadataVersion: 2,
+                },
               interactiveMessage: {
                 header: _hdr,
                 body: { text: _txt },

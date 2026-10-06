@@ -96,7 +96,7 @@ _setBootDoctorSockForTest({
 await runAndReport({ send: true });
 t("3a. DM owner kekirim", bdSent.length === 1 && bdSent[0].jid === "628174887770@s.whatsapp.net", JSON.stringify(bdSent.map((d) => d.jid)));
 const bdIm = bdSent[0]?.stanza?.viewOnceMessage?.message?.interactiveMessage;
-t("3b. laporan pakai KARTU HEADER IMAGE ala .menu (bukan banner lama)", !!bdIm?.header?.imageMessage && bdIm?.header?.hasMediaAttachment === true, JSON.stringify(Object.keys(bdSent[0]?.stanza || {})));
+t("3b. laporan pakai KARTU HEADER media ala .menu (bukan banner lama)", !!(bdIm?.header?.imageMessage || bdIm?.header?.videoMessage) && bdIm?.header?.hasMediaAttachment === true, JSON.stringify(Object.keys(bdIm?.header || {})));
 const { fromSC } = await import(R + "/src/lib/styler.js");
 // teks laporan sekarang plain standar (aturan 1 Okt) — "Total diperiksa" kapital,
 // bukan smallcaps ᴛᴏᴛᴀʟ yang dulu dariSC-balikin lowercase.

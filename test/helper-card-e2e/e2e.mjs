@@ -22,6 +22,9 @@ for (const [n, v] of Object.entries(H)) {
   t("1. " + n + " output bersih (tanpa penanda)", !/[\u2063\u2064\u200b]/.test(v));
 }
 t("1g. raraGuide terdeteksi", !!ta.detectHelper(ms.raraGuide("zzhelp", "intro", ".zzhelp a"), "zzhelp"));
+const NF = "「 ✦ Tidak Ditemukan ✦ 」\nPerintah *.tes* tidak ditemukan\n\n🤔 Mungkin maksudmu: *.tts*?\n\n💡 Bingung? Tanya AI: *.tanyaai <apa yang kamu cari>*";
+t("1j. pesan not-found terdeteksi helper (thumbnail request owner)", ta.detectHelper(NF, "tes")?.name === "tes", JSON.stringify(ta.detectHelper(NF, "tes")));
+t("1k. teks biasa judul lain BUKAN helper", ta.detectHelper("「 ✦ Menu ✦ 」\nhalo", "x") === null);
 t("1h. teks biasa BUKAN helper", ta.detectHelper("halo kak apa kabar", "x") === null && ta.detectHelper("「 ✦ MENU ✦ 」\nisi biasa", "x") === null);
 t("1i. teks panjang (>1500) bukan helper", ta.detectHelper("❗ Cara pemakaian salah " + "x".repeat(2000), "x") === null);
 

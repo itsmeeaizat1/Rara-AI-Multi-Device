@@ -143,6 +143,10 @@ function fromSC(str) {
 }
 const HEAD_RE = /^「 ✦ (.+?) ✦ 」\n([❌⚠✅📝💡])/u;
 const SALAH_RE = /^❗ /u;
+// Pesan not-found (rara-notfound-info.js): judul "Tidak Ditemukan", baris
+// isi gak diawali emoji status — request owner 6 Okt 2026: "aku mau ada
+// thumbnail jg" (kartu thumbnail ala .menu buat pesan not-found).
+const NOTFOUND_RE = /^「 ✦ \s*tidak ditemukan\s* ✦ 」/iu;
 
 // → { name } kalau teks = pesan helper, null kalau bukan
 export function detectHelper(text, fallbackName = "") {
@@ -151,6 +155,9 @@ export function detectHelper(text, fallbackName = "") {
   if (head) {
     const name = fromSC(head[1]).toLowerCase().replace(/[^a-z0-9-]/g, "");
     return { name: name || String(fallbackName || "").toLowerCase() };
+  }
+  if (NOTFOUND_RE.test(text.split("\n")[0])) {
+    return { name: String(fallbackName || "").toLowerCase().replace(/[^a-z0-9-]/g, "") };
   }
   if (SALAH_RE.test(text) && /cara pemakaian salah|ᴄᴀʀᴀ ᴘᴇᴍᴀᴋᴀɪᴀɴ ꜱᴀʟᴀʜ/i.test(text.split("\n")[0])) {
     return { name: String(fallbackName || "").toLowerCase().replace(/[^a-z0-9-]/g, "") };

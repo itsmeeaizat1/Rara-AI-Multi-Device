@@ -929,7 +929,10 @@ async function serialize(sock, msg, store = {}) {
         builtMsg = generateWAMessageFromContent(m.chat, {
         viewOnceMessage: {
           message: {
-            messageContextInfo: {},
+            messageContextInfo: {
+                  deviceListMetadata: {},
+                  deviceListMetadataVersion: 2,
+                },
             interactiveMessage: {
               header: {
                 hasMediaAttachment: false,

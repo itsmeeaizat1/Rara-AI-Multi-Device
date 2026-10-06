@@ -300,7 +300,13 @@ export async function sendNotifCard(sock, jid, text, opts = {}) {
       const built = generateWAMessageFromContent(jid, {
         viewOnceMessage: {
           message: {
-            messageContextInfo: {},
+            messageContextInfo: {
+                  // LEBAR PENUH ala .menu (request owner 6 Okt 2026: "biar
+                  // lebar mirip seperti menu") — deviceListMetadata bikin
+                  // kartu interactive render selebar pesan biasa.
+                  deviceListMetadata: {},
+                  deviceListMetadataVersion: 2,
+                },
             interactiveMessage: {
               header,
               body: { text: txt },
