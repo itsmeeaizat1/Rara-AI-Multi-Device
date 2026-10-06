@@ -23,6 +23,9 @@ const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.j
 await initDatabase(path.join(os.tmpdir(), "cpanel-role-e2e-db-" + Date.now()));
 
 const { handler, parseRoleSpec, config } = await import(R + "/plugins/panel/cpanel.js");
+// seam izin create (owner 6 Okt): .cpanel create butuh .addcpanel dulu
+const { _setAllowFileForTest, allowCreate: allowCreateFor } = await import(R + "/src/lib/rara-cpanel-allow.js");
+_setAllowFileForTest(path.join(os.tmpdir(), "cpanel-role-e2e-allow-" + Date.now() + ".json"));
 const { setNotifyEnabled, _setBroadcastSendForTest, _resetBroadcastSendForTest } =
   await import(R + "/src/lib/rara-saluran-broadcast.js");
 
@@ -122,15 +125,20 @@ const userCountBefore = users.length;
 await handler(mkM("admin, 1gb 1gb, 100, hacker, 628999, 1", { isOwner: false }), { sock });
 t("2j. admin oleh non-owner ditolak", users.length === userCountBefore && /owner/.test(replyTxt()), replyTxt().slice(-160));
 
-// 2d. client oleh non-owner tanpa role akses → ditolak
+// 2d. client oleh non-owner tanpa izin → ditolak (gate .addcpanel, owner 6 Okt)
 await handler(mkM("client, 1gb 1gb, 100, freeload, 628999, 1", { isOwner: false }), { sock });
-t("2k. non-owner tanpa role akses → ditolak", users.length === userCountBefore && /Akses ditolak/i.test(replyTxt()), replyTxt().slice(-160));
+t("2k. non-owner tanpa izin create → ditolak (gate .addcpanel)", users.length === userCountBefore && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
 
-// 2e. client oleh non-owner DENGAN role → lanjut (set role dulu)
+// 2e. role panel SAJA gak cukup lagi (owner 6 Okt) — butuh .addcpanel
 const { addRole } = await import(R + "/src/lib/rara-roles-cpanel.js");
 addRole("628555000111@s.whatsapp.net", "v1", "reseller");
 await handler(mkM("client, 1gb 2gb, 100, sellerserver, 628555000111, 1", { isOwner: false, sender: "628555000111@s.whatsapp.net" }), { sock });
-t("2l. non-owner DENGAN role akses → create jalan",
+t("2l. role panel TANPA .addcpanel → ditolak",
+  users.length === userCountBefore && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
+// baru setelah .addcpanel (izin owner) → create jalan
+allowCreateFor("628555000111", 7 * 864e5);
+await handler(mkM("client, 1gb 2gb, 100, sellerserver, 628555000111, 1", { isOwner: false, sender: "628555000111@s.whatsapp.net" }), { sock });
+t("2l2. role panel + izin .addcpanel → create jalan",
   users.at(-1)?.username === "sellerserver" && servers.at(-1)?.limits?.memory === 2048, users.at(-1));
 
 // 2f. idpanel default v1 (nomor tanpa idpanel)
