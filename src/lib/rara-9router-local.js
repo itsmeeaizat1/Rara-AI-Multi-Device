@@ -56,7 +56,12 @@ function getRouter9ConfigPath() {
 function getRouter9DataDir() {
   return process.env.ROUTER9_DATA_DIR || path.join(os.homedir(), ".9router");
 }
-export const ROUTER9_DEFAULT_MODEL = process.env.ROUTER9_DEFAULT_MODEL || "alicode-intl/glm-4.7";
+// REVISI 6 Okt 2026: default diganti alicode-intl/glm-4.7 (MATI — provider
+// tanpa kredensial, error "No active credentials" tiap request) →
+// gemini/gemini-3.8-flash (provider gemini kecolok dari apikeys.json
+// raraai.google, TERVERIFIKASI live 6 Okt). Override tetap bisa via env
+// ROUTER9_DEFAULT_MODEL / AGENT_BRAIN_MODEL / .9router otak model.
+export const ROUTER9_DEFAULT_MODEL = process.env.ROUTER9_DEFAULT_MODEL || "gemini/gemini-3.8-flash";
 
 // ── state runtime ──
 const _state = {

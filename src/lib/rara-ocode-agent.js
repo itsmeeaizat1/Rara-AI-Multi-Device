@@ -7,7 +7,10 @@
 //
 // Konsep sama kayak guide OpenCode (agent baca file → analisa → edit →
 // lapor) TAPI TANPA install OpenCode CLI + key Groq/GLM terpisah:
-// otak = 9router (satu pintu router9v2 — cloudku ATAU lokal :20128),
+// otak = 9ROUTER LOKAL (revisi owner 6 Okt 2026: "9routerv2 itu bukan
+// lokal dan web udah down" — router9v2/cloudku DIBUANG dari jalur ini,
+// otak nyedot LANGSUNG dari engine lokal rara-9router-local.js:
+// gateway key auto-provision + spawn bareng bot, model ngikut otak agent),
 // loop agent-nya native di sini. Jadi gak ada dependency baru sama sekali.
 //
 // Protokol: model balas dengan blok ```ocode {json}``` (SATU aksi per
@@ -25,7 +28,8 @@
 // ============================================================
 import fs from "node:fs";
 import path from "node:path";
-import { router9v2Chat, ROUTER9V2_DEFAULT_MODEL } from "../scraper/router9v2.js";
+import { router9Chat } from "./rara-9router-local.js";
+import { getBrainModel } from "./rara-agent-brain.js";
 
 // ── state global (lock 1 tugas + abort) ──
 const state = { running: false, abort: false, task: "", startedAt: 0 };
@@ -319,11 +323,28 @@ function buildSystemPrompt(mcpTools) {
  *          tiap write/edit; keputusan di-cache per file per tugas (tanya 1x).
  * @returns {Promise<{summary:string,files:string[],changed:string[],denied:string[],iterations:number,aborted:boolean,error?:string}>}
  */
+// ── ADAPTER 9ROUTER LOKAL (revisi 6 Okt 2026) ─────────────────────────
+// Interface lama ocode ({ messages, model, maxTokens, temperature } → { text })
+// dipetakan ke router9Chat lokal (system / history / user). Model default
+// ngikut otak agent (getBrainModel — env AGENT_BRAIN_MODEL / .9router otak
+// model), JADI .ocode gak pernah balik ke model v2 cloudku yang udah down.
+function localChat9Router({ messages, model, maxTokens, temperature }) {
+  const sys = messages.filter((x) => x?.role === "system").map((x) => x.content).join("\n\n") || null;
+  const rest = messages.filter((x) => x?.role !== "system");
+  const history = rest.slice(0, -1);
+  const user = rest.length ? rest[rest.length - 1].content : null;
+  return router9Chat({
+    model: model || getBrainModel(),
+    system: sys, history, user,
+    maxTokens, temperature,
+  });
+}
+
 export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval }) {
   if (state.running) return { error: "masih ada tugas berjalan" };
   state.running = true; state.abort = false; state.task = task; state.startedAt = Date.now();
   const root = __oc.root || path.resolve(repoRoot || process.cwd());
-  const chat = __oc.chat || ((o) => router9v2Chat(o));
+  const chat = __oc.chat || localChat9Router;
   const mcpToolList = __oc.mcpTools !== null ? __oc.mcpTools : await defaultMcpTools();
   const messages = [
     { role: "system", content: buildSystemPrompt(mcpToolList) },
@@ -340,7 +361,7 @@ export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval
       iterations++;
       let resp;
       try {
-        resp = await chat({ messages, model: model || ROUTER9V2_DEFAULT_MODEL, maxTokens: 4096, temperature: 0.2 });
+        resp = await chat({ messages, model, maxTokens: 4096, temperature: 0.2 });
       } catch (e) {
         error = "gagal panggil 9router: " + (e?.message || e);
         break;

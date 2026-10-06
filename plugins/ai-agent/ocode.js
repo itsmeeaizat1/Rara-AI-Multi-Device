@@ -3,8 +3,10 @@
 // ocode.js — OPENCODE 9ROUTER: AI CODING AGENT VIA WHATSAPP (OWNER ONLY)
 // ".ocode perbaiki bug di fitur cuaca" → agent 9router baca file repo,
 // edit kode, lapor balik ke chat. Versi 9router dari guide OpenCode
-// (TANPA install OpenCode CLI, TANPA key Groq/GLM baru — pake key
-// router9v2 yang udah ada; endpoint ikut satu pintu .ai9v2 endpoint).
+// (TANPA install OpenCode CLI, TANPA key baru — REVISI OWNER 6 Okt 2026:
+// "9routerv2 itu bukan lokal dan web udah down" → otak sekarang 9ROUTER
+// LOKAL via rara-9router-local.js: gateway key auto-provision, spawn
+// bareng bot, model ngikut otak agent (.9router otak model).
 //
 // ⚠ SANKSI KEAMANAN (padan guide): agent ini BISA mengedit file server.
 // Remote code execution via WA → OWNER ONLY, gak ada pengecualian.
@@ -19,12 +21,12 @@ import { raraBox } from "../../src/lib/rara-menu-style.js";
 import { mediaResultCard } from "../../src/lib/rara-media-result.js";
 import { toSC } from "../../src/lib/styler.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
-import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
+import { router9IsUp, getRouter9Base } from "../../src/lib/rara-9router-local.js";
+import { getBrainModel } from "../../src/lib/rara-agent-brain.js";
 import {
   runOcodeAgent, stopOcode, undoLast, listBackups, _ocodeState,
 } from "../../src/lib/rara-ocode-agent.js";
-import { router9v2Key } from "../../src/scraper/router9v2.js";
-import { ROUTER9V2_DEFAULT_MODEL } from "../../src/scraper/router9v2.js";
+
 
 const pluginConfig = {
     name: "ocode",
@@ -121,9 +123,15 @@ function makeApprovalCallback(sock, chatJid, prefix) {
   };
 }
 
+// seam e2e: override gate router-up (hindarin health-check beneran di test)
+const __ocode = {};
+export function _setOcodeGateForTest(fn) { __ocode.gate = fn; }
+
 function ocodeModel(db) {
+    // default ngikut otak agent (.9router otak model / env AGENT_BRAIN_MODEL)
+    // — override manual masih bisa via .ocode model <id>
     const saved = db?.data?.ocode?.model;
-    return saved || ROUTER9V2_DEFAULT_MODEL;
+    return saved || getBrainModel();
 }
 
 async function handler(m, { sock, args, config: botConfig }) {
@@ -172,7 +180,8 @@ async function handler(m, { sock, args, config: botConfig }) {
             "Tugas   : " + (st.running ? "SEDANG JALAN — " + String(st.task || "").slice(0, 60) : "idle"),
             "Izin    : " + (pendingApproval ? "NUNGGU JAWABAN — " + pendingApproval.path + " (jawab: .ocodeizin ya|tidak)" : "-"),
             "Model   : " + ocodeModel(db),
-            "Endpoint: " + getTioEndpoint().replace("/chat/completions", ""),
+            "Endpoint: " + getRouter9Base() + " (9router LOKAL)",
+            "Key     : gateway otomatis (rara-bot)",
             "Backup  : " + (backups.length ? backups.length + " set (terbaru: " + backups[0] + ")" : "belum ada"),
             "---",
             "Shell   : MATI (mode aman — baca/edit file + tool MCP eksternal via aksi mcp)",
@@ -197,7 +206,7 @@ async function handler(m, { sock, args, config: botConfig }) {
                 "Aktif: " + ocodeModel(db),
                 "---",
                 "Ganti: .ocode model <id-9router>",
-                "Daftar: .ai9v2 list",
+                "Daftar: .9router model <kata>",
             ]));
         }
         if (!db.data.ocode) db.data.ocode = {};
@@ -231,8 +240,12 @@ async function handler(m, { sock, args, config: botConfig }) {
         ]));
     }
 
-    if (!router9v2Key()) {
-        return m.reply(raraBox("OpenCode", ["Key 9router belum di-set — isi di apikeys.json (providers.router9v2) atau env ROUTER_API_KEY."]));
+    // gate 9ROUTER LOKAL (bukan v2/cloudku): router wajib hidup dulu —
+    // router9IsUp health-check cepat + cache 3 dtk, gak pernah trigger spawn
+    // 30 dtk di jalur pesan (komentar rara-agent-brain).
+    const routerUp = await (__ocode.gate ? __ocode.gate() : router9IsUp());
+    if (!routerUp) {
+        return m.reply(raraBox("OpenCode", ["9Router LOKAL belum jalan — ketik .9router status / .9router restart (owner)."]));
     }
 
     if (_ocodeState().running) {

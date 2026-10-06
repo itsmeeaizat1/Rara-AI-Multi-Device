@@ -109,14 +109,15 @@ console.log("\n— section 5: plugin —");
   const { getDatabase, initDatabase } = await import(R + "/src/lib/rara-database.js");
   const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "ocode-e2e-db-"));
   await initDatabase(path.join(dbDir, "db"));
-  const { _setRouter9v2KeyForTest } = await import(R + "/src/scraper/router9v2.js");
-  _setRouter9v2KeyForTest("sk-test");
+  // REVISI 6 Okt 2026: gate v2-key diganti gate 9router-LOKAL-up —
+  // seam _setOcodeGateForTest biar gak health-check beneran di test env
   agent._setOcodePathsForTest({ root: ws, backupDir: bk });
   agent._setOcodeChatForTest(mkChat([
     wrap('{"action":"edit","path":"fitur.js","find":"return \'halo\';","replace":"return \'hai\';"}'),
     wrap('{"action":"done","summary":"ubah ke hai","files":["fitur.js"]}'),
   ]));
   const plugin = await import(R + "/plugins/ai-agent/ocode.js");
+  plugin._setOcodeGateForTest(async () => true);
   const replies = [];
   const reactions = [];
   const mkM = (args, isOwner) => ({
@@ -182,7 +183,6 @@ console.log("\n— section 5: plugin —");
   await plugin.handler(m, { sock: null, args: ["stop"] });
   t("5i. .ocode stop saat idle → info gak ada tugas", /gak ada tugas/i.test(replies[0] || ""), replies[0]?.slice(0, 50));
 
-  _setRouter9v2KeyForTest(undefined);
 }
 
 // ═══ SECTION 6: gate izin per file (lib) ═══
