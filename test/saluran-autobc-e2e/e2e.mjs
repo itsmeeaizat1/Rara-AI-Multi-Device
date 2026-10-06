@@ -79,7 +79,7 @@ t("2c. label event manusiawi (bukan key mentah)", getAllNotifyStatus().userRegis
 // ═══ SECTION 3: redesign kartu modern 3 Okt (5 Okt 2026) — format pesan ═══
 section("3. kartu notif desain modern (via seam)");
 const captured = [];
-_setBroadcastSendForTest((message, options, bannerTitle) => { captured.push({ message, options, bannerTitle }); });
+_setBroadcastSendForTest((message, options, bannerTitle, thumbName) => { captured.push({ message, options, bannerTitle, thumbName }); });
 
 // toggle off → jujur gak kirim
 setNotifyEnabled("userBanned", false);
@@ -101,6 +101,7 @@ const msgAsing = captured[captured.length - 1]?.message || "";
 t("3h. nomor asing → tanpa baris Nama, kartu tetap kirim", rAsing.sent === true && !/👤 Nama:/.test(msgAsing) && /📱 Nomor: 628999000111/.test(msgAsing), msgAsing.split("\n").slice(0, 2).join(" | "));
 t("3d. footer credit watermark Rara AI", /Powered by Rara AI - Multi Device/.test(msg), msg.slice(-80));
 t("3e. judul banner per-event (Indonesia)", captured[0]?.bannerTitle === "Pengguna Diblokir", captured[0]?.bannerTitle);
+t("3e2. thumbName per-event utk asset custom saluran (assets/image/saluran/)", captured[0]?.thumbName === "userBanned", captured[0]?.thumbName);
 t("3f. gak ada sisa desain lama (bold caps/Inggris)", !/\*USER DIBANNED\*/.test(msg) && !/「 ✦ USER DIBANNED ✦ 」/.test(msg), "ok");
 
 setNotifyEnabled("userBanned", false);
@@ -120,7 +121,7 @@ t("4b. default OFF → gak kirim, jujur", rOff2.sent === false && /Toggle off/.t
 
 // 4c: toggle ON → kartu modern terkirim via seam
 const cap2 = [];
-_setBroadcastSendForTest((message, options, bannerTitle) => { cap2.push({ message, options, bannerTitle }); });
+_setBroadcastSendForTest((message, options, bannerTitle, thumbName) => { cap2.push({ message, options, bannerTitle, thumbName }); });
 setNotifyEnabled("serverCreated", true);
 db.data.users["628111222333@s.whatsapp.net"] = { regName: "Dita" };
 const rOn2 = await notifyServerCreated(null, {
@@ -138,6 +139,7 @@ t("4e. Nama di-resolve & DIATAS nomor (aturan kartu pengguna)",
 t("4f. Total server terbuat tercantum", /🧩 Total server terbuat: 7/.test(msg2), msg2.slice(-120));
 t("4g. footer credit + banner judul per-event",
   /Powered by Rara AI - Multi Device/.test(msg2) && cap2[0]?.bannerTitle === "Server Baru Dibuat", cap2[0]?.bannerTitle);
+t("4g2. serverCreated thumbName utk asset custom saluran", cap2[0]?.thumbName === "serverCreated", cap2[0]?.thumbName);
 
 // 4h: nomor asing → tanpa baris Nama
 const rAsing2 = await notifyServerCreated(null, { phoneNumber: "628777000111", username: "budi", server: "budi-1gb" });

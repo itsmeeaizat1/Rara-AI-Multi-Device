@@ -119,8 +119,30 @@ async function broadcastStatusChange(sock, db, state, opts = {}) {
     // gak kirim `body` custom lagi — biar statusBanner() pakai default-nya
     // sendiri (waktu+tanggal Asia/Jakarta), sourceUrl juga udah dibuang di
     // statusBanner jadi baris "🔗 whatsapp.com" gak nongol lagi.
-    const { statusBanner, sendNotifCard, generateStatusCard } = await import("../../src/lib/rara-notif-card.js")
-    const banner = await statusBanner(state)
+    const { statusBanner, sendNotifCard, generateStatusCard, getSaluranThumb, getBrandThumb } = await import("../../src/lib/rara-notif-card.js")
+    // SALURAN (6 Okt, owner: "thumbnailnya custom juga, jangan generate
+    // canvas, di assets/image/saluran/ masing-masing") — bukan canvas live:
+    // assets/image/saluran/status-<state>.jpg custom → placeholder folder →
+    // banner branding statis. Tanpa generate canvas sama sekali.
+    const _salThumb = (async () => {
+      try {
+        const t = await getSaluranThumb('status-' + state)
+        return t || await getBrandThumb()
+      } catch { return await getBrandThumb() }
+    })()
+    const banner = await (async () => {
+      const thumb = await _salThumb
+      const nowStr = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'medium', timeStyle: 'short' })
+      const ext = {
+        title: (state === 'on' ? 'Bot Dihidupkan' : state === 'mute' ? 'Bot Di-mute' : 'Bot Dimatikan'),
+        body: nowStr.substring(0, 45),
+        mediaType: 1,
+        renderLargerThumbnail: true,
+        showAdAttribution: false,
+      }
+      if (thumb) ext.thumbnail = thumb
+      return { externalAdReply: ext }
+    })()
     // FIX 6 Okt 2026 (owner: thumbnail jenis ini kebesaran, maunya kayak
     // .menu + custom asset) — target GRUP/DM sekarang kartu HEADER IMAGE
     // asli via sendNotifCard; gambar per-status: asset custom

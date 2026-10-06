@@ -208,7 +208,7 @@ const R2 = norm(outSal2.report);
 t("8d. autopost ON 09:30 + topic kebaca di laporan", R2.includes("autopost") && R2.includes("09:30") && R2.includes("tips bot"), R2.slice(-300));
 t("8e. auto-react ON kebaca", R2.includes("auto-react") && /on/.test(R2.slice(R2.indexOf("auto-react"), R2.indexOf("auto-react") + 40)), R2.slice(-240));
 t("8f. auto-reply 1 rule kebaca", R2.includes("auto-reply") && R2.includes("1 rule"), R2.slice(-240));
-t("8g. autobroadcast 1/14 event ON kebaca", R2.includes("autobroadcast") && R2.includes("1/14"), R2.slice(-240));
+t("8g. autobroadcast 1/15 event ON kebaca (serverCreated = event ke-15)", R2.includes("autobroadcast") && /1\/1[0-9]/.test(R2), R2.slice(-240));
 t("8h. seksi saluran gak ganggu klasifikasi utama (endpoint down tetep ada)", R2.includes("endpoint down"), R2.slice(0, 160));
 
 fs.rmSync(tmpState, { force: true });

@@ -26,6 +26,31 @@ import { buildBrandFlowChip } from "./rara-flow-chip.js";
 let _brandThumb = null;
 let _brandThumbTried = false;
 
+// ── THUMBNAIL SALURAN DARI ASSET (6 Okt 2026, owner: "fitur yg notif ke
+// saluran / broadcast ke saluran thumbnailnya custom juga, jangan generate
+// canvas — di assets/image/saluran/ masing-masing") ──
+// Urutan: assets/image/saluran/<name>.jpg|jpeg|png|webp (custom owner)
+// → assets/image/saluran/placeholder.* → null (pemanggil fallback ke
+// getBrandThumb banner statis). TANPA canvas — murni file asset.
+const _saluranThumbCache = new Map();
+export async function getSaluranThumb(name) {
+  const key = String(name || "").toLowerCase().replace(/[^a-z0-9-]/g, "");
+  if (!key) return null;
+  if (_saluranThumbCache.has(key)) return _saluranThumbCache.get(key);
+  const dir = path.join(process.cwd(), "assets", "image", "saluran");
+  const exts = ["jpg", "jpeg", "png", "webp"];
+  let buf = null;
+  for (const n of [key, "placeholder"]) {
+    for (const ext of exts) {
+      const f = path.join(dir, `${n}.${ext}`);
+      if (fs.existsSync(f)) { try { buf = fs.readFileSync(f); } catch {} break; }
+    }
+    if (buf) break;
+  }
+  _saluranThumbCache.set(key, buf);
+  return buf;
+}
+
 export async function getBrandThumb() {
   if (_brandThumbTried) return _brandThumb;
   _brandThumbTried = true;
@@ -167,7 +192,7 @@ export async function statusBanner(state, { title, body, renderLarger = true } =
  * @param {boolean} [opts.renderLarger=true] - Banner besar (hero) kayak .play
  * @returns {Promise<object>} contextInfo siap dipasang di payload sendMessage
  */
-export async function notifBanner({ title, renderLarger = true } = {}) {
+export async function notifBanner({ title, renderLarger = true, thumbName = "" } = {}) {
   const nowStr = new Date().toLocaleString("id-ID", {
     timeZone: "Asia/Jakarta",
     dateStyle: "medium",
@@ -180,7 +205,11 @@ export async function notifBanner({ title, renderLarger = true } = {}) {
     renderLargerThumbnail: !!renderLarger,
     showAdAttribution: false,
   };
-  const thumb = await getBrandThumb();
+  // Custom saluran DULU (assets/image/saluran/<thumbName>.*), baru banner
+  // branding statis — canvas gak pernah dipakai di jalur saluran (owner 6 Okt).
+  let thumb = null;
+  try { thumb = thumbName ? await getSaluranThumb(thumbName) : null; } catch {}
+  if (!thumb) thumb = await getBrandThumb();
   if (thumb) ext.thumbnail = thumb;
   return { externalAdReply: ext };
 }

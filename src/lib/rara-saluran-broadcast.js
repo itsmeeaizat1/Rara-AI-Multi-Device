@@ -81,11 +81,11 @@ function saluranCard(title, lines) {
   return raraBox(title, lines) + "\n\n" + CARD_CREDIT;
 }
 
-async function broadcastToSaluran(sock, message, options = {}, bannerTitle) {
+async function broadcastToSaluran(sock, message, options = {}, bannerTitle, thumbName = "") {
   // seam e2e — balikin sukses tanpa resolve/kirim apa pun
   if (_sendForTest === null) return { sent: false, reason: "Disabled (test)" };
   if (typeof _sendForTest === "function") {
-    await _sendForTest(message, options, bannerTitle);
+    await _sendForTest(message, options, bannerTitle, thumbName);
     return { sent: true, saluranId: "test@newsletter" };
   }
   // FIX 19 Sep 2026 (owner: "notif ke saluran rara official sama sekali gak terkirim"):
@@ -115,6 +115,11 @@ async function broadcastToSaluran(sock, message, options = {}, bannerTitle) {
     const { notifBanner } = await import("./rara-notif-card.js");
     const banner = await notifBanner({
       title: bannerTitle || "Rara AI Official",
+      // thumbnail custom per-event dari assets/image/saluran/<thumbName>.*
+      // (owner 6 Okt: "thumbnailnya custom juga, jangan generate canvas,
+      // di assets/image/saluran/ masing-masing"); gak ada file → placeholder
+      // folder itu → banner branding statis. Tanpa canvas.
+      thumbName,
     });
     const msgPayload = { text: message, contextInfo: banner, ...options };
     await sendSaluranSafe(sock, saluranId, msgPayload);
@@ -164,7 +169,7 @@ async function notifySewaRegister(sock, data) {
     "",
     `⏸ Status: Menunggu persetujuan owner`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Pendaftaran Sewa Baru");
+  return broadcastToSaluran(sock, msg, {}, "Pendaftaran Sewa Baru", "sewaRegister");
 }
 
 // Sewa approved
@@ -180,7 +185,7 @@ async function notifySewaApproved(sock, data) {
     "",
     `💠 Total grup sewa: ${data.totalGroups}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Sewa Disetujui");
+  return broadcastToSaluran(sock, msg, {}, "Sewa Disetujui", "sewaApproved");
 }
 
 // Sewa rejected
@@ -193,7 +198,7 @@ async function notifySewaRejected(sock, data) {
     `❓ Alasan: ${data.reason}`,
     `🕒 Waktu: ${formatTime()}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Sewa Ditolak");
+  return broadcastToSaluran(sock, msg, {}, "Sewa Ditolak", "sewaRejected");
 }
 
 // Sewa expired
@@ -206,7 +211,7 @@ async function notifySewaExpired(sock, data) {
     "",
     `🚪 Bot telah keluar dari grup.`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Sewa Berakhir");
+  return broadcastToSaluran(sock, msg, {}, "Sewa Berakhir", "sewaExpired");
 }
 
 // User baru sewa bot - rincian durasi + harga
@@ -224,7 +229,7 @@ async function notifySewaBot(sock, data) {
     "",
     `💠 Total grup sewa: ${data.totalGroups || 1}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Sewa Bot");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Sewa Bot", "sewaBot");
 }
 
 // User baru jadibot
@@ -237,7 +242,7 @@ async function notifyJadibotConnect(sock, data) {
     "",
     `💠 Total jadibot aktif: ${data.totalActive}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Jadibot");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Jadibot", "jadibotConnect");
 }
 
 // User dibanned
@@ -248,7 +253,7 @@ async function notifyUserBanned(sock, data) {
   if (nama) lines.push(`👤 Nama: ${nama}`);
   lines.push(`📱 Nomor: ${data.phoneNumber}`, `❓ Alasan: ${data.reason || "Tidak disebutkan"}`, `🕒 Waktu: ${formatTime()}`, "", `🚫 Total diblokir: ${data.totalBanned}`);
   const msg = saluranCard("Pengguna Diblokir", lines);
-  return broadcastToSaluran(sock, msg, {}, "Pengguna Diblokir");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Diblokir", "userBanned");
 }
 
 // User diblokir
@@ -259,7 +264,7 @@ async function notifyUserBlocked(sock, data) {
   if (nama) lines.push(`👤 Nama: ${nama}`);
   lines.push(`📱 Nomor: ${data.phoneNumber}`, `🕒 Waktu: ${formatTime()}`, "", `🚫 Total nomor diblokir: ${data.totalBlocked || "-"}`);
   const msg = saluranCard("Nomor Diblokir", lines);
-  return broadcastToSaluran(sock, msg, {}, "Nomor Diblokir");
+  return broadcastToSaluran(sock, msg, {}, "Nomor Diblokir", "userBlocked");
 }
 
 // User dikick dari grup
@@ -270,7 +275,7 @@ async function notifyUserKicked(sock, data) {
   if (nama) lines.push(`👤 Nama: ${nama}`);
   lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName}`, `❓ Alasan: ${data.reason || "Melanggar aturan"}`, `🕒 Waktu: ${formatTime()}`);
   const msg = saluranCard("Pengguna Dikeluarkan", lines);
-  return broadcastToSaluran(sock, msg, {}, "Pengguna Dikeluarkan");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Dikeluarkan", "userKicked");
 }
 
 // User baru premium
@@ -287,7 +292,7 @@ async function notifyPremiumAdd(sock, data) {
     "",
     `💎 Total pengguna premium: ${data.totalPremium || "-"}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Premium");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Premium", "premiumAdd");
 }
 
 // User baru daftar
@@ -307,7 +312,7 @@ async function notifyUserRegister(sock, data) {
     "",
     `💠 Total pengguna: ${data.totalUsers || "-"}`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Terdaftar");
+  return broadcastToSaluran(sock, msg, {}, "Pengguna Baru Terdaftar", "userRegister");
 }
 
 // Anti-spam detect
@@ -319,7 +324,7 @@ async function notifySpamDetected(sock, data) {
   lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName || "Pribadi"}`, `🏷 Tipe: ${data.type || "Spam"}`, `📝 Detail: ${data.detail || "-"}`, `🕒 Waktu: ${formatTime()}`);
   if (data.action) lines.push("", `⚔ Aksi: ${data.action}`);
   const msg = saluranCard("Spam Terdeteksi", lines);
-  return broadcastToSaluran(sock, msg, {}, "Spam Terdeteksi");
+  return broadcastToSaluran(sock, msg, {}, "Spam Terdeteksi", "spamDetected");
 }
 
 // Warning diberikan
@@ -330,7 +335,7 @@ async function notifyWarningGiven(sock, data) {
   if (nama) lines.push(`👤 Nama: ${nama}`);
   lines.push(`📱 Nomor: ${data.phoneNumber}`, `💬 Grup: ${data.groupName || "Pribadi"}`, `❗ Pelanggaran: ${data.violation}`, `⚠ Peringatan: ${data.warnCount}/${data.maxWarn}`, `🕒 Waktu: ${formatTime()}`);
   const msg = saluranCard("Peringatan Pengguna", lines);
-  return broadcastToSaluran(sock, msg, {}, "Peringatan Pengguna");
+  return broadcastToSaluran(sock, msg, {}, "Peringatan Pengguna", "warningGiven");
 }
 
 // Daily limit reset notification
@@ -345,7 +350,7 @@ async function notifyDailyLimitReset(sock, data) {
     "",
     `⏰ Reset otomatis setiap hari jam 00:00 WIB`,
   ]);
-  return broadcastToSaluran(sock, msg, {}, "Reset Limit Harian");
+  return broadcastToSaluran(sock, msg, {}, "Reset Limit Harian", "dailyLimitReset");
 }
 
 // Server panel baru dibuat (request owner 6 Okt 2026: info "user ini telah
@@ -371,7 +376,7 @@ async function notifyServerCreated(sock, data) {
     lines.push("", `🧩 Total server terbuat: ${total}`);
   }
   const msg = saluranCard("Server Baru Dibuat", lines);
-  return broadcastToSaluran(sock, msg, {}, "Server Baru Dibuat");
+  return broadcastToSaluran(sock, msg, {}, "Server Baru Dibuat", "serverCreated");
 }
 
 export {

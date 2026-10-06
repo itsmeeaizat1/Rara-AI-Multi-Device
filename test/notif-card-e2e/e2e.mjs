@@ -181,39 +181,25 @@ const chExt = toChannel?.payload?.contextInfo?.externalAdReply || {};
 t("4a. notif ke GRUP pakai KARTU HEADER IMAGE ala .menu (fix 6 Okt)", !!gIm?.header?.imageMessage && gIm?.header?.hasMediaAttachment === true, JSON.stringify(Object.keys(toGroup || {})));
 t("4b. notif ke SALURAN tetap banner externalAdReply (channel gak support kartu)", !!toChannel?.payload?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(toChannel?.payload || {})));
 t("4c. isi teks notif tetap utuh di body kartu grup", /dimatikan/i.test(gIm?.body?.text || ""), (gIm?.body?.text || "").slice(0, 60));
-t("4d. saluran: judul banner nyebut BOT DIMATIKAN (canvas dinamis per state)", (chExt.title || "").includes("BOT DIMATIKAN"), chExt.title);
+t("4d. saluran: judul banner Title Case Indonesia (Bot Dimatikan, revisi asset 6 Okt)", /bot dimatikan/i.test(chExt.title || ""), chExt.title);
 // revisi owner 20 Sep (SALURAN): "jgn link whatsapp tp waktu aja sama tanggal" —
 // sourceUrl dibuang total + body waktu/tanggal.
 t("4d2. saluran: kartu status GAK ADA sourceUrl (baris link whatsapp.com dihilangkan)", !("sourceUrl" in (chExt || { sourceUrl: 1 })));
 t("4d3. saluran: body kartu status nunjukin tanggal (bukan link/nama bot)", /\d{4}/.test(chExt.body || ""), chExt.body);
-t("4d4. saluran: judul kartu status PERSIS teks status (tanpa embel Rara AI —)", chExt.title === "BOT DIMATIKAN", chExt.title);
-t("4e. saluran: thumbnail banner .bot off = canvas JPEG valid (bukan asset branding statis)", (() => {
+t("4d4. saluran: judul kartu status Title Case (Bot Dimatikan)", chExt.title === "Bot Dimatikan", chExt.title);
+t("4e. saluran: thumbnail dari ASSET assets/image/saluran/ (BUKAN canvas, revisi owner 6 Okt)", (() => {
   const th = chExt.thumbnail;
   return Buffer.isBuffer(th) && th.length > 100 && th[0] === 0xff && th[1] === 0xd8;
 })(), "thumbnail bytes");
 {
-  // revisi owner 20 Sep: kartu status gaya kartu level — letterbox 640x360 JPEG
-  const sharpMod = (await import("sharp")).default;
-  let dim = { width: 0, height: 0 };
-  try { dim = await sharpMod(chExt.thumbnail).metadata(); } catch {}
-  t("4i. saluran: thumbnail 640x360 letterbox — persis ukuran kartu level", dim.width === 640 && dim.height === 360, JSON.stringify(dim));
-
-  // REVISI OWNER 20 Sep: "backgroundnya hitam aja trus teksnya putih jgn ada
-  // nama botnya didalam thumbnail" — validasi piksel: dominan HITAM, ada teks PUTIH
-  let pix = { dark: 0, white: 0, total: 0 };
-  try {
-    const { data, info } = await sharpMod(chExt.thumbnail)
-      .raw().toBuffer({ resolveWithObject: true });
-    pix.total = info.width * info.height;
-    for (let i = 0; i < data.length; i += info.channels * 37) { // sampling tiap ~37px
-      const r = data[i], g = data[i + 1], b = data[i + 2];
-      if (r < 25 && g < 25 && b < 25) pix.dark++;
-      if (r > 200 && g > 200 && b > 200) pix.white++;
-    }
-  } catch {}
-  const samp = pix.dark + pix.white > 0 ? pix.dark / (pix.dark + pix.white) : 0;
-  t("4j. saluran: background HITAM POLOS (dominan piksel gelap > 85%)", pix.total > 0 && samp > 0.85, JSON.stringify(pix));
-  t("4k. saluran: teks status PUTIH keliatan (ada piksel terang > 0)", pix.white > 5, JSON.stringify(pix));
+  // revisi owner 6 Okt: thumbnail saluran murni dari FILE asset (canvas
+  // dihapus dari jalur saluran) — placeholder folder saluran persis bytes.
+  const fsMod = (await import("fs")).default;
+  const pathMod = (await import("path")).default;
+  const phPath = pathMod.join(process.cwd(), "assets", "image", "saluran", "placeholder.jpg");
+  let sameBytes = false;
+  try { sameBytes = fsMod.readFileSync(phPath).equals(chExt.thumbnail); } catch {}
+  t("4i. saluran: thumbnail = placeholder folder saluran (persis bytes file asset)", sameBytes, phPath);
 }
 
 // nyala lagi
@@ -229,12 +215,11 @@ const onGroup = bcSent.find((d) => d.jid === "999888777-1@g.us");
 const onChannel = bcSent.find((d) => d.jid === NUM_JID && d.payload);
 const onGIm = onGroup?.stanza?.viewOnceMessage?.message?.interactiveMessage;
 t("4f. notif .bot on ke grup juga pakai KARTU HEADER IMAGE", !!onGIm?.header?.imageMessage && onGIm?.header?.hasMediaAttachment === true);
-t("4g. saluran .bot on: judul banner nyebut BOT DIHIDUPKAN", (onChannel?.payload?.contextInfo?.externalAdReply?.title || "").includes("BOT DIHIDUPKAN"), onChannel?.payload?.contextInfo?.externalAdReply?.title);
-t("4h. saluran: thumbnail .bot on BEDA dari thumbnail .bot off (canvas regenerate per state, bukan asset statis)", (() => {
-  const offThumb = chExt.thumbnail;
+t("4g. saluran .bot on: judul banner Title Case (Bot Dihidupkan)", /bot dihidupkan/i.test(onChannel?.payload?.contextInfo?.externalAdReply?.title || ""), onChannel?.payload?.contextInfo?.externalAdReply?.title);
+t("4h. saluran: thumbnail .bot on juga dari asset (status-on → placeholder folder saluran)", (() => {
   const onThumb = onChannel?.payload?.contextInfo?.externalAdReply?.thumbnail;
-  return Buffer.isBuffer(offThumb) && Buffer.isBuffer(onThumb) && !offThumb.equals(onThumb);
-})());
+  return Buffer.isBuffer(onThumb) && onThumb.length > 100 && onThumb[0] === 0xff && onThumb[1] === 0xd8;
+})(), "thumbnail bytes");
 
 // ═══ SECTION 5: notif saluran (broadcastToSaluran 16+ fitur) ═══
 w("\n— section 5: notif saluran sewa/premium/ban —");

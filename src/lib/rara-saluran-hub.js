@@ -269,7 +269,7 @@ export async function processAutopostTick(sock, opts = {}) {
     if (!ch.ok) throw new Error(ch.reason);
     // desain modern: kartu + banner preview branding (gagal banner → kartu tetap kirim)
     const payload = { text: buildChannelPostCard(content) };
-    try { payload.contextInfo = await notifBanner({ title: "Rara AI Official" }); } catch {}
+    try { payload.contextInfo = await notifBanner({ title: "Rara AI Official", thumbName: "autopost" }); } catch {}
     await sendSaluranSafe(sock, ch.jid, payload);
     a.lastSent = nowMs();
     a.lastError = "";
