@@ -24,8 +24,12 @@ for (const [n, v] of Object.entries(H)) {
 t("1g. raraGuide terdeteksi", !!ta.detectHelper(ms.raraGuide("zzhelp", "intro", ".zzhelp a"), "zzhelp"));
 const NF = "「 ✦ Tidak Ditemukan ✦ 」\nPerintah *.tes* tidak ditemukan\n\n🤔 Mungkin maksudmu: *.tts*?\n\n💡 Bingung? Tanya AI: *.tanyaai <apa yang kamu cari>*";
 t("1j. pesan not-found terdeteksi helper (thumbnail request owner)", ta.detectHelper(NF, "tes")?.name === "tes", JSON.stringify(ta.detectHelper(NF, "tes")));
-t("1k. teks biasa judul lain BUKAN helper", ta.detectHelper("「 ✦ Menu ✦ 」\nhalo", "x") === null);
-t("1h. teks biasa BUKAN helper", ta.detectHelper("halo kak apa kabar", "x") === null && ta.detectHelper("「 ✦ MENU ✦ 」\nisi biasa", "x") === null);
+t("1k. SEMUA header 「 ✦ 」 kena kartu (aturan 6 Okt: semuanya)", ta.detectHelper("「 ✦ Menu ✦ 」\nhalo", "x")?.name === "x");
+const CAP = "「 ✦ convert ✦ 」\n\nKonversi satuan apa pun — panjang, berat, suhu\n\n Cara Pakai:\n\n.convert <nilai> <dari> ke <ke>\n\n\n\n Contoh:\n\n.convert 5 km ke mil\n\n Tip: Ketik .menu untuk kembali ke menu utama";
+t("1l. panduan raraCaption (header doang + nama=command) kena kartu", ta.detectHelper(CAP, "convert")?.name === "convert", JSON.stringify(ta.detectHelper(CAP, "convert")));
+t("1m. raraWrap title bebas (nama beda) tetap kena kartu, nama asset dr command", ta.detectHelper("「 ✦ hasil pencarian ✦ 」\nIsi hasil lain", "gsmarena2")?.name === "gsmarena2");
+t("1m2. header smallcaps terdeteksi", ta.detectHelper("「 ✦ ᴄᴏɴᴠᴇʀᴛ ✦ 」\n\nisi", "convert")?.name === "convert");
+t("1h. teks TANPA header bukan helper; SEMUA berheader kena kartu (6 Okt)", ta.detectHelper("halo kak apa kabar", "x") === null && ta.detectHelper("「 ✦ MENU ✦ 」\nisi biasa", "x")?.name === "x");
 t("1i. panduan panjang (2500 kar) tetap kena kartu", ta.detectHelper("「 ✦ CONVERT ✦ 」\n📝 ᴄᴀʀᴀ ᴘᴀᴋᴀɪ\n" + "x".repeat(2500), "convert")?.name === "convert");
 t("1i2. teks super panjang (>4000) bukan helper", ta.detectHelper("❗ Cara pemakaian salah " + "x".repeat(4500), "x") === null);
 

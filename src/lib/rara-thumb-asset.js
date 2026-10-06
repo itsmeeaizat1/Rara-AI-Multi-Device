@@ -147,6 +147,11 @@ const SALAH_RE = /^❗ /u;
 // isi gak diawali emoji status — request owner 6 Okt 2026: "aku mau ada
 // thumbnail jg" (kartu thumbnail ala .menu buat pesan not-found).
 const NOTFOUND_RE = /^「 ✦ \s*tidak ditemukan\s* ✦ 」/iu;
+// Panduan raraCaption (plugins banyakan: convert dkk): header
+// 「 ✦ nama-fitur ✦ 」 + baris kosong + deskripsi + Cara Pakai — baris
+// keduanya BLANK jadi HEAD_RE gak kena. Aturan tambahan: nama di header
+// SAMA dengan command yang dijalanin → pasti panduan/usage fitur itu.
+const HEAD_ONLY_RE = /^「 ✦ (.+?) ✦ 」\s*$/u;
 
 // → { name } kalau teks = pesan helper, null kalau bukan
 export function detectHelper(text, fallbackName = "") {
@@ -162,6 +167,16 @@ export function detectHelper(text, fallbackName = "") {
   }
   if (NOTFOUND_RE.test(text.split("\n")[0])) {
     return { name: String(fallbackName || "").toLowerCase().replace(/[^a-z0-9-]/g, "") };
+  }
+  // Panduan raraCaption / raraWrap title bebas: header doang di baris
+  // pertama. Owner 6 Okt "ada yg g kena pasang thumbnail" — SEMUA reply
+  // berheader 「 ✦ 」 (panduan caption, hasil raraWrap, status) sekalian
+  // jadi kartu thumbnail (aturan lama: reroute semua pesan ke kartu media).
+  // Header ini glyph khas bot — chat user biasa gak mungkin persis kena.
+  const ho = HEAD_ONLY_RE.exec(text.split("\n")[0]);
+  if (ho) {
+    const fn = String(fallbackName || "").toLowerCase().replace(/[^a-z0-9-]/g, "");
+    return { name: fn };
   }
   if (SALAH_RE.test(text) && /cara pemakaian salah|ᴄᴀʀᴀ ᴘᴇᴍᴀᴋᴀɪᴀɴ ꜱᴀʟᴀʜ/i.test(text.split("\n")[0])) {
     return { name: String(fallbackName || "").toLowerCase().replace(/[^a-z0-9-]/g, "") };
