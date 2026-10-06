@@ -555,6 +555,37 @@ async function handler(m, { sock }) {
       }
     }
 
+    // NOTIF SALURAN WA (owner 6 Okt 2026): info "server baru dibuat" dikirim
+    // ke saluran resmi yang udah diset (.autobroadcastchannel serverCreated on).
+    // Anti-throw: gagal kirim saluran GAK boleh ganggu pengiriman akun ke user.
+    try {
+      const { notifyServerCreated } = await import("../../src/lib/rara-saluran-broadcast.js");
+      const buyerJid = cleanJid(m.sender) || "";
+      let totalServers = null;
+      try {
+        const resCount = await axios.get(`${serverConfig.domain}/api/application/servers?per_page=1`, {
+          headers: {
+            Authorization: `Bearer ${serverConfig.apikey}`,
+            Accept: "Application/vnd.pterodactyl.v1+json",
+          },
+        });
+        totalServers = resCount.data?.meta?.pagination?.total ?? null;
+      } catch {}
+      await notifyServerCreated(sock, {
+        phoneNumber: buyerJid ? buyerJid.split("@")[0] : "",
+        tipe: "Client",
+        username: user.username,
+        server: serverLabel,
+        ram: ramLabel,
+        cpu: cpuLabel,
+        disk: diskLabel,
+        serverId: server.id,
+        totalServers,
+      });
+    } catch (e) {
+      console.log("[Rara Panel] Notif saluran gagal (gak fatal):", e?.message || e);
+    }
+
     await m.react("🐣");
     await setPanelLastUsed();
   } catch (err) {

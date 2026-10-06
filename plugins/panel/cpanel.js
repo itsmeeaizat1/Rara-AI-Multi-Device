@@ -44,7 +44,7 @@ const pluginConfig = {
   alias: ["panel"],
   category: "panel",
   description: "Pusat kontrol panel Pterodactyl: power/status/upload (admin atau login user), buat akun, session login 7 hari (v1-v100)",
-  usage: ".cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .panel aizat aizat123, 1 (login user) | .cpanel unli aizat,628xxx,1",
+  usage: ".cpanel client, 1gb 5gb, 200, aizat,628xxx,1 | .cpanel admin, 1gb 5gb, unli, aizat,628xxx,1 | .cpanel <ram> <username>,<nomor>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel>",
   example: ".panel aizat aizat123, 1",
   isOwner: false,
   isPremium: false,
@@ -85,6 +85,215 @@ function getAvailableSlots() {
   return listPanels();
 }
 
+// ── FORMAT BARU (owner 6 Okt 2026): .cpanel <tipe>, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel> ──
+// tipe client = akun biasa TANPA akses admin (level PTLC — cuma ngatur server sendiri).
+// tipe admin  = akun root_admin panel (level PTLA — bisa masuk area admin panel).
+// disk & ram dipisah spasi: "1gb 5gb" (1gb-100gb) | unli/0 = unlimited.
+// cpu: angka persen (200 = 2 core) | unli = unlimited (kosong dianggap unli).
+function parseRoleSpec(text) {
+  if (!text) return null;
+  const parts = String(text).split(",").map((s) => s.trim()).filter(Boolean);
+  if (parts.length < 4) return null;
+  const role = parts[0].toLowerCase().replace(/[^a-z]/g, "");
+  if (role !== "client" && role !== "admin") return null;
+  const specM = parts[1].match(/^(\d{1,3}gb|unli(?:mited)?|0)\s+(\d{1,3}gb|unli(?:mited)?|0)$/i);
+  if (!specM) return null;
+  const toMB = (tok) => {
+    const t = String(tok).toLowerCase();
+    if (/^(unli(mited)?|0)$/.test(t)) return 0;
+    return parseInt(t, 10) * 1024;
+  };
+  const diskMB = toMB(specM[1]);
+  const ramMB = toMB(specM[2]);
+  if (!Number.isInteger(diskMB) || !Number.isInteger(ramMB) || ramMB > 102400 || diskMB > 102400) return null; // max 100 GB
+  const cpuTok = parts[2] || "unli";
+  let cpuPct = 0;
+  if (!/^(unli(mited)?|0)$/i.test(cpuTok)) {
+    cpuPct = parseInt(String(cpuTok).replace(/[^0-9]/g, ""), 10);
+    if (!Number.isInteger(cpuPct) || cpuPct < 0 || cpuPct > 1000) return null; // max 10 core
+  }
+  const username = parts[3]?.toLowerCase();
+  if (!username || !/^[a-z0-9_]{3,16}$/.test(username)) return null;
+  let nomor = null;
+  let panelId = null;
+  if (parts[4]) {
+    nomor = parts[4].replace(/[^0-9]/g, "");
+    if (!nomor) return null;
+    if (parts[5]) {
+      panelId = parsePanelId(parts[5]);
+      if (!panelId) return null; // idpanel ditulis tapi invalid → jangan tebak
+    }
+  }
+  return { role, diskMB, ramMB, cpuPct, username, nomor, panelId };
+}
+
+// Buat akun via format tipe client/admin (root_admin) + disk/ram/cpu custom.
+async function createWithRole(m, { sock }, spec) {
+  const panelId = spec.panelId || 1;
+  const slot = getSlot(panelId);
+  if (!slot?.domain || !slot?.apikey) {
+    return m.reply(raraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}\nSet via: ${(m.prefix || ".")}setpanel v${panelId} <domain>`));
+  }
+  const ver = "v" + panelId;
+
+  // Mode admin (root_admin) = akun bisa masuk area admin panel —
+  // cuma owner bot yang boleh bikin akun sel level ini.
+  const isAdmin = spec.role === "admin";
+  if (isAdmin && !m.isOwner) {
+    return m.reply(raraWrap("cpanel", `Mode *admin* (akses panel admin) hanya bisa dibuat oleh owner bot.`));
+  }
+
+  const gcSellerAccess = isGcSeller(m.chat, ver);
+  if (!gcSellerAccess && !hasAccessToServer(m.sender, ver, m.isOwner)) {
+    const role = getUserRole(m.sender, ver) || "Tidak ada";
+    return m.reply(raraWrap("cpanel", `Akses ditolak.\n\nKamu tidak punya akses ke panel ${ver.toUpperCase()}.\nRole kamu: ${role}`));
+  }
+  const jedaCheck = checkPanelJeda(m);
+  if (!jedaCheck.allowed) return m.reply(jedaCheck.message);
+
+  const targetUser = cleanJid(spec.nomor || (m.sender || "").split("@")[0]);
+  try {
+    const [onWa] = await sock.onWhatsApp(targetUser.split("@")[0]);
+    if (!onWa?.exists) {
+      return m.reply(raraWrap("cpanel", `Nomor ${targetUser.split("@")[0]} tidak terdaftar di WhatsApp.`));
+    }
+  } catch (e) {
+    return m.reply(raraWrap("cpanel", `Gagal validasi nomor WhatsApp.`));
+  }
+
+  await m.react("🕒");
+  const email = `${spec.username}@rara.md`;
+  const name = capitalize(spec.username) + " Server";
+  const password = spec.username + crypto.randomBytes(3).toString("hex");
+  const gbLabel = (mb) => (mb === 0 ? "Unlimited" : `${mb / 1024} GB`);
+  const ramLabel = gbLabel(spec.ramMB);
+  const diskLabel = gbLabel(spec.diskMB);
+  const cpuLabel = spec.cpuPct === 0 ? "Unlimited" : `${spec.cpuPct}%`;
+  const tipeLabel = isAdmin ? "Admin (akses panel admin)" : "Client (tanpa akses admin)";
+
+  try {
+    // 1. buat user — root_admin cuma true kalau tipe admin (Application API
+    //    Pterodactyl validasi field root_admin: "Root Administrator Status")
+    let userRes;
+    try {
+      userRes = await axios.post(
+        `${slot.domain}/api/application/users`,
+        { email, username: spec.username, first_name: name, last_name: "Panel", language: "en", password, root_admin: isAdmin },
+        {
+          headers: {
+            Authorization: `Bearer ${slot.apikey}`,
+            "Content-Type": "application/json",
+            Accept: "Application/vnd.pterodactyl.v1+json",
+          },
+        }
+      );
+    } catch (e) {
+      const raw = e?.response?.data?.errors?.[0]?.detail || e.message;
+      if (String(raw).includes("already been taken")) {
+        return m.reply(raraWrap("cpanel", `Username/email ${spec.username} sudah dipakai, coba username lain.`));
+      }
+      throw e;
+    }
+    const user = userRes.data.attributes;
+
+    // 2. ambil startup dari egg
+    const eggRes = await axios.get(
+      `${slot.domain}/api/application/nests/${slot.nestid}/eggs/${slot.egg}`,
+      {
+        headers: {
+          Authorization: `Bearer ${slot.apikey}`,
+          "Content-Type": "application/json",
+          Accept: "Application/vnd.pterodactyl.v1+json",
+        },
+      }
+    );
+    const startupCmd = eggRes.data.attributes.startup;
+
+    // 3. buat server — limits disk/ram/cpu custom dari spec
+    const serverRes = await axios.post(
+      `${slot.domain}/api/application/servers`,
+      {
+        name,
+        description: `Created at ${timeHelper.formatDateTime("D MMMM YYYY HH:mm")} [${ver.toUpperCase()}] [${isAdmin ? "ADMIN" : "CLIENT"}]`,
+        user: user.id,
+        egg: parseInt(slot.egg),
+        docker_image: "ghcr.io/parkervcp/yolks:nodejs_20",
+        startup: startupCmd,
+        environment: { INST: "npm", USER_UPLOAD: "0", AUTO_UPDATE: "0", CMD_RUN: "npm start", JS_FILE: "index.js" },
+        limits: { memory: spec.ramMB, swap: 0, disk: spec.diskMB, io: 500, cpu: spec.cpuPct },
+        feature_limits: { databases: 5, backups: 5, allocations: 5 },
+        deploy: { locations: [parseInt(slot.location)], dedicated_ip: false, port_range: [] },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${slot.apikey}`,
+          "Content-Type": "application/json",
+          Accept: "Application/vnd.pterodactyl.v1+json",
+        },
+      }
+    );
+    const server = serverRes.data.attributes;
+
+    // 4. kirim kredensial ke nomor target
+    let credTxt = `PANEL PTERODACTYL\n\n`;
+    credTxt += `Domain: ${slot.domain}\n`;
+    credTxt += `Username: ${user.username}\n`;
+    credTxt += `Password: ${password}\n`;
+    credTxt += `Tipe Akun: ${tipeLabel}\n`;
+    credTxt += `RAM: ${ramLabel} | Disk: ${diskLabel} | CPU: ${cpuLabel}\n`;
+    credTxt += `Nama Server: ${server.name}\n`;
+    credTxt += `Server ID: ${server.id}\n\n`;
+    credTxt += `Login di domain di atas untuk mengelola server.\n`;
+    credTxt += `Kontrol via bot (login sekali, aktif 7 hari):\n`;
+    credTxt += `.cpanel ${user.username} ${password},${panelId}\n`;
+    credTxt += `.cpanel status <namaserver> ${panelId}\n`;
+    credTxt += `.cpanel start <namaserver> ${panelId}\n`;
+    credTxt += `\nSimpan data ini, jangan bagikan ke siapapun!`;
+    await sock.sendMessage(targetUser, { text: credTxt });
+
+    // 5. notif saluran (anti-throw — gagal gak ganggu akun ke user)
+    try {
+      const { notifyServerCreated } = await import("../../src/lib/rara-saluran-broadcast.js");
+      let totalServers = null;
+      try {
+        const resCount = await axios.get(`${slot.domain}/api/application/servers?per_page=1`, {
+          headers: { Authorization: `Bearer ${slot.apikey}`, Accept: "Application/vnd.pterodactyl.v1+json" },
+        });
+        totalServers = resCount.data?.meta?.pagination?.total ?? null;
+      } catch {}
+      await notifyServerCreated(sock, {
+        phoneNumber: targetUser.split("@")[0],
+        tipe: isAdmin ? "Admin" : "Client",
+        username: user.username,
+        server: server.name,
+        ram: ramLabel,
+        cpu: cpuLabel,
+        disk: diskLabel,
+        serverId: server.id,
+        totalServers,
+      });
+    } catch (e) {
+      console.log("[Rara Panel] Notif saluran gagal (gak fatal):", e?.message || e);
+    }
+
+    await m.react("🐣");
+    await setPanelLastUsed();
+    return m.reply(`Akun panel untuk ${user.username} berhasil dibuat di panel ${ver.toUpperCase()} kak 🥳\n\nTipe: ${tipeLabel}\nRAM: ${ramLabel} | Disk: ${diskLabel} | CPU: ${cpuLabel}\nData akun sudah dikirim ke ${targetUser.split("@")[0]}\n\nKontrol server sendiri (user):\n${m.prefix || "."}panel ${user.username} <password>,${panelId}`);
+  } catch (err) {
+    console.error("[cpanel create role]", err?.response?.data || err.message);
+    await m.react("❌");
+    const rawMsg = err?.response?.data?.errors?.[0]?.detail || err?.response?.data?.message || err.message;
+    const errorMap = {
+      'has already been taken': `Username/email ${spec.username} sudah dipakai, coba username lain`,
+      'could not find': 'Egg atau nest tidak ditemukan, cek config egg/nestid',
+      'No suitable allocation': 'Tidak ada port tersedia di server, hubungi admin panel',
+      unauthorized: 'API key tidak punya permission atau salah (Unauthenticated)',
+    };
+    const friendly = Object.entries(errorMap).find(([k]) => String(rawMsg).toLowerCase().includes(k));
+    return m.reply(raraWrap("cpanel", `Gagal membuat panel.\n\n${friendly ? friendly[1] : rawMsg}`));
+  }
+}
+
 // ══ Session login user (kontrol server sendiri tanpa role) ══
 const SESSION_MS = 7 * 24 * 60 * 60 * 1000; // 7 hari
 
@@ -123,7 +332,11 @@ function buildGuide(m) {
   txt += `Buat Akun Panel:\n`;
   txt += `${p}cpanel <ram> <username>,<nomor>,<idpanel>\n`;
   txt += `Contoh: ${p}cpanel unli aizat,628174887770,1\n`;
-  txt += `RAM: 1gb - 10gb, unli\n\n`;
+  txt += `RAM: 1gb - 10gb, unli\n\n`;  txt += `Buat Akun Client/Admin + Spesifikasi:\n`;
+  txt += `${p}cpanel <tipe>, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>\n`;
+  txt += `Contoh: ${p}cpanel client, 1gb 5gb, 200, aizat,628174887770,1\n`;
+  txt += `Tipe: client (tanpa akses admin) | admin (akses admin, owner only)\n`;
+  txt += `Disk/RAM: 1gb - 100gb, unli | CPU: angka persen, unli\n\n`;
   txt += `Panel aktif: ${available.join(", ") || "belum ada"}`;
   return raraWrap("cpanel", txt);
 }
@@ -258,6 +471,10 @@ async function handler(m, { sock }) {
   if (!args.length) return m.reply(buildGuide(m));
 
   const sub = String(args[0] || "").toLowerCase();
+
+  // FORMAT TIPE (owner 6 Okt 2026): .cpanel client, 1gb 5gb, 200, aizat, 628xxx, 1
+  const roleSpec = parseRoleSpec(m.text);
+  if (roleSpec) return createWithRole(m, { sock }, roleSpec);
 
   // ══════════ POWER / STATUS / UPLOAD ══════════
   if (POWER_SIGNALS.includes(sub) || sub === "status" || sub === "upload") {
@@ -552,6 +769,31 @@ async function handler(m, { sock }) {
       credTxt += `\nSimpan data ini, jangan bagikan ke siapapun!`;
       await sock.sendMessage(targetUser, { text: credTxt });
 
+      // notif saluran (anti-throw) — .cpanel <ram> path lama = akun client biasa
+      try {
+        const { notifyServerCreated } = await import("../../src/lib/rara-saluran-broadcast.js");
+        let totalServers = null;
+        try {
+          const resCount = await axios.get(`${slot.domain}/api/application/servers?per_page=1`, {
+            headers: { Authorization: `Bearer ${slot.apikey}`, Accept: "Application/vnd.pterodactyl.v1+json" },
+          });
+          totalServers = resCount.data?.meta?.pagination?.total ?? null;
+        } catch {}
+        await notifyServerCreated(sock, {
+          phoneNumber: targetUser.split("@")[0],
+          tipe: "Client",
+          username: user.username,
+          server: server.name,
+          ram: ramLabel,
+          cpu: specs.cpu === 0 ? "Unlimited" : `${specs.cpu}%`,
+          disk: specs.disk === 0 ? "Unlimited" : `${specs.disk / 1024} GB`,
+          serverId: server.id,
+          totalServers,
+        });
+      } catch (e) {
+        console.log("[Rara Panel] Notif saluran gagal (gak fatal):", e?.message || e);
+      }
+
       await m.react("🐣");
       await setPanelLastUsed();
       return m.reply(`Akun panel untuk ${user.username} berhasil dibuat di panel ${ver.toUpperCase()} kak 🥳\n\nRAM: ${ramLabel}\nData akun sudah dikirim ke ${targetUser.split("@")[0]}\n\nKontrol server sendiri (user):\n${m.prefix || "."}panel ${user.username} <password>,${panelId}`);
@@ -584,4 +826,4 @@ async function handler(m, { sock }) {
   }
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler, parseRoleSpec };
