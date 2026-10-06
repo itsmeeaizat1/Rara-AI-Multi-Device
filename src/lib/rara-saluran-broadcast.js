@@ -355,8 +355,9 @@ async function notifyServerCreated(sock, data) {
   const nama = resolveUserName(data.phoneNumber);
   const lines = [];
   if (nama) lines.push(`👤 Nama: ${nama}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber || "-"}`);
+  if (data.tipe) lines.push(`🛡 Tipe Akun: ${data.tipe}`);
   lines.push(
-    `📱 Nomor: ${data.phoneNumber || "-"}`,
     `🏷 Username: ${data.username || "-"}`,
     `🖥 Server: ${data.server || "-"}`,
     `💾 RAM: ${data.ram || "-"}`,

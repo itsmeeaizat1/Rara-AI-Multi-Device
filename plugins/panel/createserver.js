@@ -573,6 +573,7 @@ async function handler(m, { sock }) {
       } catch {}
       await notifyServerCreated(sock, {
         phoneNumber: buyerJid ? buyerJid.split("@")[0] : "",
+        tipe: "Client",
         username: user.username,
         server: serverLabel,
         ram: ramLabel,
