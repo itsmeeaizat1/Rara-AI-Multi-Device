@@ -1601,6 +1601,14 @@ connectionState.sock = sock;
               const { inspect } = await import("util");
               result = inspect(result, { depth: 2 });
             }
+
+            await currentSock.sendMessage(
+              jid,
+              {
+                text: `✅ *Eval*\n\n\`=> ${code}\`\n\n\`\`\`\n${String(result).slice(0, 3500)}\n\`\`\``,
+              },
+              { quoted: msg },
+            );
           } catch (err) {
             await currentSock.sendMessage(
               jid,

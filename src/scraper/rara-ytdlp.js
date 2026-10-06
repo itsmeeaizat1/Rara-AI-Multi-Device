@@ -180,6 +180,106 @@ function reportAutoProxyResult(ok) {
   }
 }
 
+// ═══ LADDER DIRECT-FIRST (6 Okt 2026, fix .play VPS Pterodactyl) ═══
+// Pelajaran dari VPS UpCloud SG: koneksi LANGSUNG justru paling lancar;
+// proxy gratisan pool & cookies anonim justru sering kena bot-check
+// ("Sign in to confirm you're not a bot"). Urutan BARU kalau gak ada
+// proxy manual: (1) direct polos → (2) +cookies (kalau file ada) →
+// (3) +proxy pool (kalau auto-proxy nyala). Proxy manual TETAP
+// prioritas #1 — kalau kepasang dipakai langsung dari awal (perilaku lama).
+const BOT_CHECK_RE = /Sign in to confirm|not a bot|cookies/i;
+function isBotCheckError(e) {
+  return BOT_CHECK_RE.test(String(e?.message || e));
+}
+
+// cek diam-diam: cookies file ada? (tanpa log — buat milih anak tangga)
+function ytCookiesFileExists() {
+  const candidates = [
+    process.env.NOVA_YTDLP_COOKIES,
+    path.join(process.cwd(), "data", "yt-cookies.txt"),
+  ].filter(Boolean);
+  return candidates.some((c) => {
+    try { return fs.existsSync(c) && fs.statSync(c).size > 100; } catch { return false; }
+  });
+}
+
+// cek diam-diam: proxy manual kepasang? (env / data/yt-proxy.txt)
+function manualProxySet() {
+  if (process.env.NOVA_YTDLP_PROXY && /^(https?|socks[45]):\/\//i.test(process.env.NOVA_YTDLP_PROXY)) return true;
+  try {
+    const f = path.join(process.cwd(), "data", "yt-proxy.txt");
+    if (fs.existsSync(f) && fs.statSync(f).size > 5) return true;
+  } catch {}
+  return false;
+}
+
+// cuma proxy pool (tanpa cookies, tanpa manual) — anak tangga ke-3
+function getYtPoolProxyArgs() {
+  if (_autoProxy && /^(https?|socks[45]):\/\//i.test(_autoProxy)) {
+    console.log(`[rara-ytdlp] 🌐 yt-dlp via proxy (pool otomatis): ${_autoProxy.replace(/:[^:@/]+@/, ':***@')}`);
+    return `--proxy "${_autoProxy}"`;
+  }
+  return "";
+}
+
+// flags per mode anak tangga: "direct" polos | "cookies" +cookies |
+// "pool" +proxy pool | "manual" proxy manual + cookies (perilaku lama)
+function getYtDlpFlags(mode) {
+  if (mode === "manual") return `${getYtCookiesArgs()} ${getYtProxyArgs()}`.trim();
+  if (mode === "cookies") return getYtCookiesArgs();
+  if (mode === "pool") return getYtPoolProxyArgs();
+  return "";
+}
+
+// seam e2e: mock exec biar ladder bisa dites tanpa yt-dlp asli
+let _runForTest = null; // function(cmd, opts) → Promise<{stdout}>
+function _setYtdlpRunForTest(fn) { _runForTest = fn; }
+function execAttempt(cmd, opts) {
+  return _runForTest ? _runForTest(cmd, opts) : run(cmd, opts);
+}
+
+/**
+ * Anak tangga yt-dlp (direct-first). attemptFn(mode) → Promise<hasil>.
+ * Eror non-bot-check dilanjutkan langsung (retry gak nyambung); eror
+ * bot-check naik ke anak tangga berikutnya.
+ */
+async function runYtDlpLadder(attemptFn) {
+  if (manualProxySet()) {
+    // proxy manual prioritas #1 (aturan lama) — langsung dipakai
+    return attemptFn("manual");
+  }
+  // 1) DIRECT polos — tercepat, terbukti paling lancar di IP bersih
+  try {
+    return await attemptFn("direct");
+  } catch (e1) {
+    if (!isBotCheckError(e1)) throw e1;
+    // 2) +cookies — kalau owner ngasih cookies ekspor (data/yt-cookies.txt)
+    let lastErr = e1;
+    if (ytCookiesFileExists()) {
+      try {
+        return await attemptFn("cookies");
+      } catch (e2) {
+        if (!isBotCheckError(e2)) throw e2;
+        lastErr = e2;
+      }
+    }
+    // 3) +proxy pool — kalau auto-proxy nyala & ada proxy hidup
+    await primeYtAutoProxy();
+    if (_autoProxy) {
+      try {
+        const r = await attemptFn("pool");
+        reportAutoProxyResult(true);
+        return r;
+      } catch (e3) {
+        reportAutoProxyResult(false); // proxy gugur → blacklist, run berikut ganti IP
+        if (!isBotCheckError(e3)) throw e3;
+        lastErr = e3;
+      }
+    }
+    throw lastErr; // semua anak tangga gugur → eror bot-check terakhir
+  }
+}
+
 /**
  * Download audio via yt-dlp dengan pilihan kbps
  * @param {string} url - YouTube URL
@@ -197,68 +297,52 @@ async function downloadAudioYtDlp(url, kbps = "128") {
   const outputPath = path.join(tempDir, `ytdlp_${id}.mp3`);
 
   try {
-    await primeYtAutoProxy(); // pasang proxy pool otomatis buat run ini
-    // yt-dlp audio extraction with specific bitrate
-    // --audio-quality 0 = best (256-320k), 5 = medium (~128k), 9 = worst
-    // For explicit kbps control, use --postprocessor-args
-    const qualityMap = {
-      "320": "320k",
-      "256": "256k",
-      "192": "192k",
-      "128": "128k",
-      "96": "96k",
-      "64": "64k",
-    };
-    const bitrate = qualityMap[String(kbps)] || "128k";
+    // 🪜 direct-first: direct → +cookies → +proxy pool (manual = prioritas #1)
+    return await runYtDlpLadder(async (mode) => {
+      const flags = getYtDlpFlags(mode);
+      const qualityMap = {
+        "320": "320k",
+        "256": "256k",
+        "192": "192k",
+        "128": "128k",
+        "96": "96k",
+        "64": "64k",
+      };
+      const bitrate = qualityMap[String(kbps)] || "128k";
 
-    // Get title first
-    const { stdout: titleOut } = await run(
-      `${getYtDlpCmd()} ${getYtCookiesArgs()} ${getYtProxyArgs()} --get-title --no-warnings "${url}"`,
-      { timeout: 15000 },
-    );
-    const title = titleOut.trim() || "Audio";
+      // Get title first
+      const { stdout: titleOut } = await execAttempt(
+        `${getYtDlpCmd()} ${flags} --get-title --no-warnings "${url}"`,
+        { timeout: 15000 },
+      );
+      const title = titleOut.trim() || "Audio";
 
-    // Download + convert to mp3 with specified bitrate
-    const cmd = [
-      getYtDlpCmd(),
-      getYtCookiesArgs(),
-      getYtProxyArgs(),
-      ...getYtDlpFfmpegArgs(),
-      "-x",                              // extract audio
-      "--audio-format", "mp3",
-      "--audio-quality", "0",            // best source quality
-      "--postprocessor-args", `"ffmpeg:-b:a ${bitrate}"`,
-      "-o", `"${outputPath.replace(/\.mp3$/, "")}.%(ext)s"`,
-      "--no-playlist",
-      "--no-warnings",
-      "--newline",
-      `"${url}"`,
-    ].join(" ");
+      // Download + convert to mp3 with specified bitrate
+      const cmd = [
+        getYtDlpCmd(),
+        flags,
+        ...getYtDlpFfmpegArgs(),
+        "-x",                              // extract audio
+        "--audio-format", "mp3",
+        "--audio-quality", "0",            // best source quality
+        "--postprocessor-args", `"ffmpeg:-b:a ${bitrate}"`,
+        "-o", `"${outputPath.replace(/\.mp3$/, "")}.%(ext)s"`,
+        "--no-playlist",
+        "--no-warnings",
+        "--newline",
+        `"${url}"`,
+      ].join(" ");
 
-    await run(cmd, { timeout: 180000 }); // 3 min max
+      await execAttempt(cmd, { timeout: 180000 }); // 3 min max
 
-    // yt-dlp outputs .mp3 directly
-    const finalPath = outputPath.replace(/\.mp3$/, ".mp3");
-    if (!fs.existsSync(finalPath)) {
-      // Try alternative naming
-      const altPath = path.join(tempDir, `ytdlp_${id}.mp3`);
-      if (fs.existsSync(altPath)) {
-        const buffer = fs.readFileSync(altPath);
-        if (buffer.length < 10000) throw new Error("Audio terlalu kecil");
-        reportAutoProxyResult(true);
-        return { buffer, title, kbps: String(kbps) };
+      // yt-dlp outputs .mp3 directly
+      if (!fs.existsSync(outputPath)) {
+        throw new Error("File audio tidak ditemukan setelah download");
       }
-      throw new Error("File audio tidak ditemukan setelah download");
-    }
-
-    const buffer = fs.readFileSync(finalPath);
-    if (buffer.length < 10000) throw new Error("Audio terlalu kecil");
-
-    reportAutoProxyResult(true);
-    return { buffer, title, kbps: String(kbps) };
-  } catch (e) {
-    reportAutoProxyResult(false); // proxy gagal → blacklist, run berikut ganti IP
-    throw e;
+      const buffer = fs.readFileSync(outputPath);
+      if (buffer.length < 10000) throw new Error("Audio terlalu kecil");
+      return { buffer, title, kbps: String(kbps) };
+    });
   } finally {
     // Cleanup
     try {
@@ -285,44 +369,40 @@ async function downloadVideoYtDlp(url, quality = "720") {
   const outputPath = path.join(tempDir, `ytdlp_vid_${id}.mp4`);
 
   try {
-    await primeYtAutoProxy(); // pasang proxy pool otomatis buat run ini
-    // Get title first
-    const { stdout: titleOut } = await run(
-      `${getYtDlpCmd()} ${getYtCookiesArgs()} ${getYtProxyArgs()} --get-title --no-warnings "${url}"`,
-      { timeout: 15000 },
-    );
-    const title = titleOut.trim() || "Video";
+    // 🪜 direct-first: direct → +cookies → +proxy pool (manual = prioritas #1)
+    return await runYtDlpLadder(async (mode) => {
+      const flags = getYtDlpFlags(mode);
+      // Get title first
+      const { stdout: titleOut } = await execAttempt(
+        `${getYtDlpCmd()} ${flags} --get-title --no-warnings "${url}"`,
+        { timeout: 15000 },
+      );
+      const title = titleOut.trim() || "Video";
 
-    // Download video with max quality constraint
-    const cmd = [
-      getYtDlpCmd(),
-      getYtCookiesArgs(),
-      getYtProxyArgs(),
-      ...getYtDlpFfmpegArgs(),
-      // WA-safe: prefer H.264 (avc1) + AAC (m4a) — AV1/Opus di mp4
-      // sering gak bisa diputar di WhatsApp
-      "-f", `"bestvideo[vcodec^=avc1][height<=${quality}]+bestaudio[acodec^=mp4a]/bestvideo[vcodec^=avc1]+bestaudio[ext=m4a]/bestvideo[height<=${quality}]+bestaudio/best[height<=${quality}]/best"`,
-      "--merge-output-format", "mp4",
-      "-o", `"${outputPath.replace(/\.mp4$/, "")}.%(ext)s"`,
-      "--no-playlist",
-      "--no-warnings",
-      `"${url}"`,
-    ].join(" ");
+      // Download video with max quality constraint
+      const cmd = [
+        getYtDlpCmd(),
+        flags,
+        ...getYtDlpFfmpegArgs(),
+        // WA-safe: prefer H.264 (avc1) + AAC (m4a) — AV1/Opus di mp4
+        // sering gak bisa diputar di WhatsApp
+        "-f", `"bestvideo[vcodec^=avc1][height<=${quality}]+bestaudio[acodec^=mp4a]/bestvideo[vcodec^=avc1]+bestaudio[ext=m4a]/bestvideo[height<=${quality}]+bestaudio/best[height<=${quality}]/best"`,
+        "--merge-output-format", "mp4",
+        "-o", `"${outputPath.replace(/\.mp4$/, "")}.%(ext)s"`,
+        "--no-playlist",
+        "--no-warnings",
+        `"${url}"`,
+      ].join(" ");
 
-    await run(cmd, { timeout: 300000 }); // 5 min max
+      await execAttempt(cmd, { timeout: 300000 }); // 5 min max
 
-    if (!fs.existsSync(outputPath)) {
-      throw new Error("File video tidak ditemukan setelah download");
-    }
-
-    const buffer = fs.readFileSync(outputPath);
-    if (buffer.length < 10000) throw new Error("Video terlalu kecil");
-
-    reportAutoProxyResult(true);
-    return { buffer, title, quality: `${quality}p` };
-  } catch (e) {
-    reportAutoProxyResult(false); // proxy gagal → blacklist, run berikut ganti IP
-    throw e;
+      if (!fs.existsSync(outputPath)) {
+        throw new Error("File video tidak ditemukan setelah download");
+      }
+      const buffer = fs.readFileSync(outputPath);
+      if (buffer.length < 10000) throw new Error("Video terlalu kecil");
+      return { buffer, title, quality: `${quality}p` };
+    });
   } finally {
     try {
       const files = fs.readdirSync(tempDir).filter(f => f.startsWith(`ytdlp_vid_${id}`));
@@ -410,7 +490,7 @@ async function downloadAudio(url, kbps = "128") {
 
   // 3. Fallback to ytdl.js (ytmp3.mobi) — no kbps control, default 128
   if (_lastYtdlpBotCheck && Date.now() - _lastYtdlpBotCheck < 60000) {
-    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). Proxy pool otomatis udah nyoba. Kalau masih sering: (1) pasang proxy manual .ytproxy <url> (http/socks4/socks5), (2) ekspor cookies ke data/yt-cookies.txt (.ytcookies)");
+    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). Udah dicoba berurutan: direct → cookies → proxy pool. Kalau masih sering: (1) pasang proxy manual .ytproxy <url> (http/socks4/socks5), (2) ekspor cookies ke data/yt-cookies.txt (.ytcookies)");
   }
   throw new Error("Semua API audio gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
@@ -444,7 +524,7 @@ async function downloadVideo(url, quality = "720") {
   }
 
   if (_lastYtdlpBotCheck && Date.now() - _lastYtdlpBotCheck < 60000) {
-    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). Proxy pool otomatis udah nyoba. Kalau masih sering: (1) pasang proxy manual .ytproxy <url> (http/socks4/socks5), (2) ekspor cookies ke data/yt-cookies.txt (.ytcookies)");
+    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). Udah dicoba berurutan: direct → cookies → proxy pool. Kalau masih sering: (1) pasang proxy manual .ytproxy <url> (http/socks4/socks5), (2) ekspor cookies ke data/yt-cookies.txt (.ytcookies)");
   }
   throw new Error("Semua API video gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
@@ -459,4 +539,5 @@ export {
   getYtProxyArgs,
   getYtCookiesArgs,
   primeYtAutoProxy,
+  _setYtdlpRunForTest,
 };
