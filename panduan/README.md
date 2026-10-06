@@ -13,4 +13,6 @@ Satu fitur satu file biar gampang dicari.
 
 | **Instalasi bot dari nol** | [INSTALASI-BOT.md](INSTALASI-BOT.md) | Prasyarat, clone, npm install, pairing, pm2 |
 
+| **VPS + Pterodactyl Panel** | [VPS-PANEL.md](VPS-PANEL.md) | Login VPS, ganti pw/port SSH, SSH key, install panel+wings, UFW/Fail2Ban, admin web, API key bot |
+
 Fitur lain cukup lihat `.menu` / `changelogs/FEATURES.md` — gak butuh setup tambahan.
