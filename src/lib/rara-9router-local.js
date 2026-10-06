@@ -263,8 +263,49 @@ async function mgmtApi(method, apiPath, body = null) {
 // FIX: cari PID pemilik port 20128 (BUKAN pattern "9router" — gagal karena
 // nama proses udah ganti), bunuh paksa, baru spawn proses segar yang auth-nya
 // pasti nyambung sama file ~/.9router terbaru.
-async function findPidOnPort(port) {
-  // Coba 3 cara berurutan — VPS beda-beda tool yang terpasang.
+// ── FALLBACK PORTABLE /proc (6 Okt 2026, report owner VPS Pterodactyl:
+// "gagal pidnya" — image yolks nodejs_20 SUPER MINIMAL: lsof/fuser/ss gak
+// ada → 3 cara di bawah semua miss → "gak ketemu proses di port" → proses
+// basi gak pernah kebunuh → respawn gagal terus). /proc itu filesystem
+// kernel, ADA di semua container Linux walau nol tool terpasang — baca
+// /proc/net/tcp (port hex + state 0A = LISTEN) → socket inode → scan
+// /proc/*/fd buat nemuin PID pemiliknya.
+// Format baris: sl local_address rem_address st ... inode (kolom 10).
+export function parseProcNetPort(content, port) {
+  const lines = String(content || "").split("\n");
+  for (const line of lines.slice(1)) { // baris pertama = header
+    const cols = line.trim().split(/\s+/);
+    if (cols.length < 10 || !cols[1]) continue;
+    const pHex = cols[1].split(":")[1];
+    if (!pHex) continue;
+    // WAJIB state 0A (LISTEN) — koneksi ESTABLISHED ke port yang sama
+    // (state 01) juga muncul dengan local_address:port → jangan bunuh
+    // proses yang cuma PUNYA KONEKSI, cuma PEMILIK LISTENER yang dibunuh.
+    if (parseInt(pHex, 16) === port && cols[3] === "0A") return cols[9] || null;
+  }
+  return null;
+}
+
+export function findPidBySocketInode(procDir, inode) {
+  if (!inode) return null;
+  try {
+    for (const ent of fs.readdirSync(procDir)) {
+      if (!/^\d+$/.test(ent)) continue;
+      const fdDir = path.join(procDir, ent, "fd");
+      let fds;
+      try { fds = fs.readdirSync(fdDir); } catch { continue; } // bukan milik kita / udah mati
+      for (const fd of fds) {
+        try {
+          if (fs.readlinkSync(path.join(fdDir, fd)) === `socket:[${inode}]`) return Number(ent);
+        } catch {}
+      }
+    }
+  } catch {}
+  return null;
+}
+
+export async function findPidOnPort(port, { procDir = "/proc" } = {}) {
+  // 1-3: tool klasik (kalau ada) — tetap paling cepet & akurat
   const attempts = [
     { cmd: "lsof", args: ["-ti", `:${port}`] },
     { cmd: "fuser", args: [`${port}/tcp`] },
@@ -286,6 +327,15 @@ async function findPidOnPort(port) {
       // tool gak ada / gak nemu apa-apa — coba cara berikutnya
     }
   }
+  // 4: /proc langsung — container minimal (Pterodactyl yolks DSB) gak punya
+  // 3 tool di atas sama sekali; /proc selalu ada. Cek tcp (IPv4) + tcp6.
+  try {
+    for (const f of ["tcp", "tcp6"]) {
+      const content = fs.readFileSync(path.join(procDir, "net", f), "utf8");
+      const pid = findPidBySocketInode(procDir, parseProcNetPort(content, port));
+      if (pid) return pid;
+    }
+  } catch { /* /proc gak terbaca (bukan linux?) — nyerah */ }
   return null;
 }
 

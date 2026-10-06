@@ -125,6 +125,7 @@ const {
   router9Models, router9FindModel, router9Chat, router9ImageGen, router9ImageModels,
   router9VisionModels, router9Stats, ROUTER9_DEFAULT_MODEL, getRouter9Base,
   killStalePort9Router, invalidateRouter9GatewayKey, router9ValidateGatewayKey,
+  findPidOnPort, parseProcNetPort, findPidBySocketInode,
 } = engine;
 const plug = await import(pathToFileURL(path.join(R, "plugins/ai/9router.js")).href);
 const { handler } = plug;
@@ -438,6 +439,61 @@ section("8. self-heal proses basi + .9router restart");
   // 9i: source guard — pesan error gak nyuruh manual hapus JSON lagi
   const engSrc9 = fs.readFileSync(path.join(R, "src/lib/rara-9router-local.js"), "utf8");
   t("9i. engine: pesan 401 gak suruh hapus manual + invalidate/validate ada", !engSrc9.includes("hapus gateway.apikey") && engSrc9.includes("invalidateRouter9GatewayKey") && engSrc9.includes("router9ValidateGatewayKey"));
+}
+
+// ═══ 10. FALLBACK /proc BUAT findPidOnPort (6 Okt 2026, report owner VPS
+// Pterodactyl "gagal pidnya" — container yolks gak punya lsof/fuser/ss) ═══
+section("10. findPidOnPort fallback /proc (container minimal)");
+{
+  // 10a: parser /proc/net/tcp — fixture: LISTEN di 20128 (0x4EB0) harus ketemu
+  const FIX = [
+    "  sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrn   uid  inode",
+    "   0: 0100007F:4EA0 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 12345 1 0000000000000000 100 0 0 10 0",
+    "   1: 0100007F:8443 0100007F:4EB0 01 00000000:00000000 00:00000000 00000000  1000 98765 1 0000000000000000 20 4 30 10 -1",
+  ].join("\n");
+  t("10a. parser: socket LISTEN port 20128 → inode 12345", parseProcNetPort(FIX, 20128) === "12345", String(parseProcNetPort(FIX, 20128)));
+  t("10b. parser: koneksi ESTABLISHED ke port yang sama (state 01) DILARANG dihitung", parseProcNetPort(FIX.replace("0A", "01"), 20128) === null);
+  t("10c. parser: port lain → null", parseProcNetPort(FIX, 20190) === null);
+  t("10d. parser: content kosong/null → null", parseProcNetPort("", 20128) === null && parseProcNetPort(null, 20128) === null);
+
+  // 10e: inode → PID lewat /proc/*/fd fixture (fake proc dir)
+  const fakeProc = fs.mkdtempSync(path.join(os.tmpdir(), "fakeproc-"));
+  fs.mkdirSync(path.join(fakeProc, "net"), { recursive: true });
+  fs.writeFileSync(path.join(fakeProc, "net", "tcp"), FIX);
+  const fd1 = path.join(fakeProc, "111", "fd"); fs.mkdirSync(fd1, { recursive: true });
+  fs.symlinkSync("socket:[99999]", path.join(fd1, "5"));
+  const fd2 = path.join(fakeProc, "222", "fd"); fs.mkdirSync(fd2, { recursive: true });
+  fs.symlinkSync("socket:[12345]", path.join(fd2, "7")); // pemilik listener
+  fs.symlinkSync("pipe:[3]", path.join(fd2, "8"));
+  t("10e. inode 12345 → PID 222 (bukan 111)", findPidBySocketInode(fakeProc, "12345") === 222, String(findPidBySocketInode(fakeProc, "12345")));
+  t("10f. inode gak ada → null", findPidBySocketInode(fakeProc, "55555") === null);
+  t("10g. inode kosong → null (gak scan sia-sia)", findPidBySocketInode(fakeProc, "") === null);
+
+  // 10h: end-to-end di /proc ASLI — dummy listener, cari PID-nya lewat
+  // jalur /proc (parser + scan) dan bandingin dengan child.pid asli.
+  const dummyPort = 20400 + Math.floor(Math.random() * 500);
+  const dummy = spawn(process.execPath, ["-e", `require("http").createServer((q,s)=>s.end("ok")).listen(${dummyPort},"127.0.0.1")`], { stdio: "ignore" });
+  let dummyUp = false;
+  for (let i = 0; i < 25 && !dummyUp; i++) {
+    await new Promise((r) => setTimeout(r, 200));
+    try { const p = await fetch(`http://127.0.0.1:${dummyPort}`); dummyUp = p.ok; } catch {}
+  }
+  t("10h. dummy listener hidup", dummyUp === true);
+  const realTcp = fs.readFileSync("/proc/net/tcp", "utf8");
+  const inode = parseProcNetPort(realTcp, dummyPort);
+  t("10i. /proc asli: inode listener ketemu", inode !== null, String(inode));
+  t("10j. /proc asli: PID = child.pid beneran", findPidBySocketInode("/proc", inode) === dummy.pid, `cari=${findPidBySocketInode("/proc", inode)} vs asli=${dummy.pid}`);
+  // 10k: findPidOnPort utuh (tool + fallback) nemu PID yang sama
+  const pidUtuh = await findPidOnPort(dummyPort);
+  t("10k. findPidOnPort(penuh) → PID dummy", pidUtuh === dummy.pid, `cari=${pidUtuh} vs asli=${dummy.pid}`);
+  try { dummy.kill("SIGKILL"); } catch {}
+  try { fs.rmSync(fakeProc, { recursive: true, force: true }); } catch {}
+
+  // 10l: engine source — urutan tool dulu baru /proc (lsof tetap #1 biar cepet)
+  const engSrc10 = fs.readFileSync(path.join(R, "src/lib/rara-9router-local.js"), "utf8");
+  const posLsof = engSrc10.indexOf('"lsof"');
+  const posProc = engSrc10.indexOf('findPidBySocketInode(procDir, parseProcNetPort(content, port))');
+  t("10l. engine: /proc jadi fallback TERAKHIR (lsof/fuser/ss duluan)", posLsof > 0 && posProc > posLsof);
 }
 
 srv.close();
