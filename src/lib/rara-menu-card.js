@@ -34,6 +34,17 @@ import config from "../../config.js";
 // user — teks body, footer, title/description tombol, sebelum di-smallcaps.
 import { translateUI, needsTranslation } from "./rara-i18n.js";
 import { getDatabase } from "./rara-database.js";
+// FIX 6 Okt 2026: chip branding WAJIB diisi begitu nativeFlowMessage dipasang
+// (lihat rara-flow-chip.js) — tanpa ini WA render placeholder "Unknown
+// (kode: undefined)" di atas header image usage card.
+import { buildBrandFlowChip } from "./rara-flow-chip.js";
+// REQUEST OWNER 6 Okt 2026: tiap thumbnail usage custom sendiri DI ASSET
+// sesuai KATEGORI + NAMA fitur (bukan satu placeholder polos buat semua) —
+// kategori di-resolve otomatis dari command name via getPlugin() (registry
+// pluginConfig.category), gak perlu ubah 51+ titik call-site.
+import { getPlugin } from "./rara-plugins.js";
+// thumbnail usage bisa GAMBAR atau GIF/MP4 + ganti mode (.setusagethumb)
+import { resolveThumbAsset, buildThumbHeader, getThumbMode } from "./rara-thumb-asset.js";
 
 const _thumbnailCache = new Map();
 
@@ -655,17 +666,21 @@ export async function sendUsageCard(sock, m, text, opts = {}) {
   if (!_txt0.trim()) return null;
   if (!m || typeof m.reply !== "function") return null;
 
-  // ── resolve thumbnail ASSET (per-fitur → placeholder) ──
-  let _thumbBuf = null;
+  // ── resolve thumbnail ASSET: kategori/nama → nama flat → placeholder
+  // kategori → placeholder global; tipe gambar ATAU gif/mp4 sesuai mode
+  // (auto|image|video, setting usageThumbMode). Kategori dari registry plugin.
+  let _asset = null;
   try {
     const _usageDir = path.join(process.cwd(), "assets", "image", "usage");
     const _name = String(opts.name || "").replace(/[^a-zA-Z0-9-]/g, "");
-    const _cand = _name ? path.join(_usageDir, _name + ".jpg") : null;
-    const _ph = path.join(_usageDir, "placeholder.jpg");
-    let _thumbPath = null;
-    if (_cand && fs.existsSync(_cand)) _thumbPath = _cand;
-    else if (fs.existsSync(_ph)) _thumbPath = _ph;
-    if (_thumbPath) _thumbBuf = getThumbnailBuffer(_thumbPath);
+    const _pl = _name ? getPlugin(_name) : null;
+    const _cat = opts.category || _pl?.config?.category || _pl?.category || "uncategorized";
+    _asset = resolveThumbAsset({
+      dir: _usageDir,
+      name: _name,
+      category: _cat,
+      mode: getThumbMode("usage", getDatabase),
+    });
   } catch {}
 
   // ── pipeline teks IDENTIK m.reply: formatGuard → translate → smallcaps
@@ -682,7 +697,7 @@ export async function sendUsageCard(sock, m, text, opts = {}) {
   // Kartu usage kini pakai jalur yang sama persis: gambar nempel di header,
   // teks usage di body — tampilan identik .menu.
   if (
-    _thumbBuf &&
+    _asset &&
     sock &&
     typeof sock.relayMessage === "function" &&
     typeof sock.waUploadToServer === "function" &&
@@ -690,23 +705,20 @@ export async function sendUsageCard(sock, m, text, opts = {}) {
     !sock._bridgePlatform
   ) {
     try {
-      const _prep = await prepareWAMessageMedia(
-        { image: _thumbBuf },
-        { upload: sock.waUploadToServer }
-      );
-      if (_prep && _prep.imageMessage) {
+      const _hdr = await buildThumbHeader(sock, _asset);
+      if (_hdr) {
         const _built = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: {
             message: {
               messageContextInfo: {},
               interactiveMessage: {
-                header: { hasMediaAttachment: true, imageMessage: _prep.imageMessage },
+                header: _hdr,
                 body: { text: _txt },
                 contextInfo: {
                   mentionedJid: m.sender ? [m.sender] : [],
                   isForwarded: false,
                 },
-                nativeFlowMessage: { buttons: [] },
+                nativeFlowMessage: { messageParamsJson: buildBrandFlowChip(), buttons: [] },
               },
             },
           },

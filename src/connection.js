@@ -650,7 +650,11 @@ connectionState.sock = sock;
         import("./lib/rara-conn-journal.js").then((j) =>
           j.recordDisconnect({
             code: sc,
-            msg: statusMsg.replace(/[\u{1F300}-\u{1FAff}\u{2600}-\u{27bf}✦❌⚠️ ]/gu, "").trim(),
+            // FIX 6 Okt 2026: regex lama ikut strip SEMUA spasi (literal " " di
+            // character class) → "Unknown (kode: undefined)" jadi kepencet
+            // "Unknown(kode:undefined)" di pesan "Terakhir putus". Sekarang
+            // emoji/simbol dibuang dulu, spasi ganda hasil hapus di-collapse.
+            msg: statusMsg.replace(/[\u{1F300}-\u{1FAff}\u{2600}-\u{27bf}✦❌⚠️]/gu, "").replace(/\s+/g, " ").trim(),
             source: d?.error?.message || "",
           })
         );

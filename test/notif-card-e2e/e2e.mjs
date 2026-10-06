@@ -103,6 +103,15 @@ const { fromSC } = await import(R + "/src/lib/styler.js");
 t("3c. isi laporan teks tetap utuh di body kartu (plain)", typeof bdIm?.body?.text === "string" && /total diperiksa/i.test(fromSC(bdIm.body.text)), (bdIm?.body?.text || "").slice(0, 80));
 t("3d. desain lama externalAdReply GAK terpakai lagi di chat biasa", !bdIm?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(bdIm?.contextInfo || {})));
 
+// FIX 6 Okt 2026 (owner screenshot: "Unknown(kode:undefined)" nongol di atas
+// header image) — nativeFlowMessage WAJIB isi messageParamsJson chip, bukan
+// cuma buttons:[] kosong (akar bug placeholder WA client).
+let bdChip = null;
+try { bdChip = JSON.parse(bdIm?.nativeFlowMessage?.messageParamsJson || "{}"); } catch {}
+t("3e. chip branding (limited_time_offer) terisi — fix placeholder Unknown(kode:undefined)",
+  typeof bdIm?.nativeFlowMessage?.messageParamsJson === "string" && !!bdChip?.limited_time_offer?.text,
+  bdIm?.nativeFlowMessage?.messageParamsJson || "");
+
 // probe bermasalah → jumlah masalah tetap kebaca di body kartu
 _setDoctorHttpForTest(async (url) => (url.includes("cuki") ? { ok: false, status: 401 } : { ok: true, status: 200 }));
 _setBootDoctorStateFileForTest(path.join(tmpState, "state2.json"));

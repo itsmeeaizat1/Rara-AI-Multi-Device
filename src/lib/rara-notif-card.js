@@ -13,6 +13,12 @@ import config from "../../config.js";
 import sharp from "sharp";
 import { getStaticThumbnail } from "./rara-asset-manager.js";
 import { generateWAMessageFromContent, prepareWAMessageMedia } from "rara";
+import { resolveThumbAsset, buildThumbHeader, getThumbMode } from "./rara-thumb-asset.js";
+import { getDatabase } from "./rara-database.js";
+// FIX 6 Okt 2026: chip branding WAJIB diisi begitu nativeFlowMessage dipasang
+// (lihat rara-flow-chip.js) — tanpa ini WA render placeholder "Unknown
+// (kode: undefined)" di atas header image.
+import { buildBrandFlowChip } from "./rara-flow-chip.js";
 
 // cache thumbnail branding (640x360 jpeg) — asset "channel-banner" = banner
 // Rara official; gagal load (panel fresh tanpa asset) → banner tanpa gambar,
@@ -220,22 +226,26 @@ export function _setNotifCardSendForTest(fn) {
   _notifCardSendForTest = fn;
 }
 
-function _notifAssetPath(name) {
-  try {
-    const dir = path.join(process.cwd(), "assets", "image", "notif");
-    const n = String(name || "").replace(/[^a-zA-Z0-9-]/g, "");
-    const cand = n ? path.join(dir, n + ".jpg") : null;
-    if (cand && fs.existsSync(cand)) return cand;
-  } catch {}
-  return null;
-}
+// REQUEST OWNER 6 Okt 2026: tiap thumbnail notif custom sendiri DI ASSET
+// sesuai KATEGORI + NAMA fitur. Notif sistem (Boot Doctor, Bot Online,
+// status .bot) bukan command terdaftar di registry plugin — kategori fixed
+// "system", folder assets/image/notif/system/<name>.jpg. Fallback: nama
+// flat (back-compat) → placeholder kategori → placeholder global.
+const NOTIF_ASSET_CATEGORY = "system";
 
-function _notifPlaceholderPath() {
+// asset custom (kategori system) bisa gambar ATAU gif/mp4, sesuai mode
+// notifThumbMode (auto|image|video). Placeholder ikut di-resolve.
+function _notifAsset(name) {
   try {
-    const p = path.join(process.cwd(), "assets", "image", "notif", "placeholder.jpg");
-    if (fs.existsSync(p)) return p;
-  } catch {}
-  return null;
+    return resolveThumbAsset({
+      dir: path.join(process.cwd(), "assets", "image", "notif"),
+      name,
+      category: NOTIF_ASSET_CATEGORY,
+      mode: getThumbMode("notif", getDatabase),
+    });
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -269,33 +279,33 @@ export async function sendNotifCard(sock, jid, text, opts = {}) {
     return _plain();
   }
 
-  // resolve gambar header: asset custom → buffer dinamis → placeholder
-  let buf = null;
+  // resolve header: asset custom (gambar/gif/mp4) → gambar dinamis (opts.image,
+  // mis. canvas) → placeholder. Asset NAMA FITUR menang atas canvas dinamis.
+  let asset = null;
   try {
-    const p = _notifAssetPath(opts.name);
-    if (p) buf = fs.readFileSync(p);
+    const named = _notifAsset(opts.name);
+    const isPlaceholder = named && /placeholder\.[a-z0-9]+$/i.test(named.path);
+    if (named && !isPlaceholder) asset = named;
+    else if (!(opts.image && Buffer.isBuffer(opts.image))) asset = named; // placeholder cuma kalau gak ada canvas
   } catch {}
-  if (!buf && opts.image && Buffer.isBuffer(opts.image)) buf = opts.image;
-  if (!buf) {
-    try {
-      const ph = _notifPlaceholderPath();
-      if (ph) buf = fs.readFileSync(ph);
-    } catch {}
-  }
-  if (!buf) return _plain();
 
   try {
-    const prep = await prepareWAMessageMedia({ image: buf }, { upload: sock.waUploadToServer });
-    if (prep && prep.imageMessage) {
+    let header = null;
+    if (asset) header = await buildThumbHeader(sock, asset);
+    else if (opts.image && Buffer.isBuffer(opts.image)) {
+      const prep = await prepareWAMessageMedia({ image: opts.image }, { upload: sock.waUploadToServer });
+      if (prep && prep.imageMessage) header = { hasMediaAttachment: true, imageMessage: prep.imageMessage };
+    }
+    if (header) {
       const built = generateWAMessageFromContent(jid, {
         viewOnceMessage: {
           message: {
             messageContextInfo: {},
             interactiveMessage: {
-              header: { hasMediaAttachment: true, imageMessage: prep.imageMessage },
+              header,
               body: { text: txt },
               contextInfo: { mentionedJid: [], isForwarded: false },
-              nativeFlowMessage: { buttons: [] },
+              nativeFlowMessage: { messageParamsJson: buildBrandFlowChip(), buttons: [] },
             },
           },
         },
