@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
       status = "Aktif (broadcast akan jalan)";
     }
 
-    return m.reply( "*pengaturan saluran*\n\n" +
+    return m.reply( raraWrap("setchannel", "*pengaturan saluran*\n\n" +
       "ID: " + currentId + "\n" +
       "Nama: " + currentName + "\n" +
       "Link: " + currentLink + "\n" +
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
       "2. Atau set manual di config.js bagian saluran.id\n" +
       "   Format ID: 120363xxx@newsletter\n\n" +
       "3. Bikin saluran baru: .createchannel <nama>\n\n" +
-      "Cuma mau convert link → ID? Ketik: .channelid <link>", "setchannel");
+      "Cuma mau convert link → ID? Ketik: .channelid <link>", "guide"), "setchannel");
   }
 
   // Parse input - could be a link or an ID
@@ -97,11 +97,11 @@ async function handler(m, { sock }) {
     } catch (e) {
       // If metadata fails, try to use the code as-is
       return m.reply(
-        "Gagal dapat info saluran dari link.\n\n" +
+        raraWrap("setchannel", "Gagal dapat info saluran dari link.\n\n" +
         "Set manual:\n" +
         "1. Buka saluran di HP\n" +
         "2. Salin ID (format: 120363xxx@newsletter)\n" +
-        "3. Ketik: .setchannel <ID>"
+        "3. Ketik: .setchannel <ID>", "guide")
       );
     }
   } else if (input.includes("@newsletter")) {

@@ -56,12 +56,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "subdomain <domain>\n\n" +
+        raraWrap("subdomain", prefix + "subdomain <domain>\n\n" +
         "Enumerasi subdomain via Certificate Transparency (crt.sh)\n" +
         "No active scanning, 100% passive lookup\n\n" +
         "Contoh:\n" +
         prefix + "subdomain google.com\n" +
-        prefix + "subdomain github.com",
+        prefix + "subdomain github.com", "guide"),
         { title: "Subdomain Enumerator" }
       );
     }

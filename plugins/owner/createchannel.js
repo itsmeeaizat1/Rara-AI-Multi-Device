@@ -27,12 +27,12 @@ async function handler(m, { sock }) {
   }
 
   if (!name || name.length < 2) {
-    return m.reply( "📢 *Buat sAluran*\n\n" +
+    return m.reply( raraWrap("createchannel", "📢 *Buat sAluran*\n\n" +
         "`.createchannel Nama Saluran`\n" +
         "`.createchannel Nama|Deskripsi`\n\n" +
         "📝 Contoh:\n" +
         "`.createchannel Info Bot`\n" +
-        "`.createchannel Info Bot|Update terbaru bot kami`", "createchannel");
+        "`.createchannel Info Bot|Update terbaru bot kami`", "guide"), "createchannel");
   }
 
   try {

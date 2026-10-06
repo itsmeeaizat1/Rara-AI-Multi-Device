@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
   const hasConfig = code.includes("pluginConfig") || code.includes("config");
   if (!hasExport || !hasConfig) {
     return m.reply(
-      `❌ *GAGAL*\n\nCode bukan format plugin yang valid\nHarus ada export dan config`,
+      raraWrap("ganticode", `❌ *GAGAL*\n\nCode bukan format plugin yang valid\nHarus ada export dan config`, "guide"),
     );
   }
 

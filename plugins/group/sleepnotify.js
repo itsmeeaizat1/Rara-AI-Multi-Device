@@ -69,7 +69,7 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply( `❌ *Masukkan jadwal tidur!*\n\n💡 *Contoh:* \`${m.prefix}notiftidur on 22.00\``, "notiftidur")
+            return m.reply( raraWrap("notiftidur", `❌ *Masukkan jadwal tidur!*\n\n💡 *Contoh:* \`${m.prefix}notiftidur on 22.00\``, "guide"), "notiftidur")
         }
 
         const jadwal = parseJadwal(timeInput)

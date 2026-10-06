@@ -85,13 +85,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "domaincheck <domain>\n\n" +
+        raraWrap("domaincheck", prefix + "domaincheck <domain>\n\n" +
         "Cek ketersediaan domain via RDAP\n" +
         "Support: com, net, org, io, id, dev, app, xyz, dll\n\n" +
         "Contoh:\n" +
         prefix + "domaincheck google.com\n" +
         prefix + "domaincheck mynewproject.id\n" +
-        prefix + "domaincheck test123456.xyz",
+        prefix + "domaincheck test123456.xyz", "guide"),
         { title: "Domain Availability Checker" }
       );
     }

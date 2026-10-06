@@ -69,14 +69,14 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "webarchive <url> (latest snapshot)\n" +
+        raraWrap("webarchive", prefix + "webarchive <url> (latest snapshot)\n" +
         prefix + "webarchive list <url> (20 recent snapshots)\n\n" +
         "Cek snapshot Wayback Machine dari website\n" +
         "Info: timestamp, status code, direct archive link\n\n" +
         "Contoh:\n" +
         prefix + "webarchive google.com\n" +
         prefix + "webarchive list example.com\n" +
-        prefix + "webarchive https://github.com",
+        prefix + "webarchive https://github.com", "guide"),
         { title: "Wayback Machine Snapshot" }
       );
     }

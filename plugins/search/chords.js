@@ -27,11 +27,11 @@ async function handler(m, { sock }) {
     
     if (!text) {
         return m.reply(
-            `🎸 *chords search*\n\n` +
+            raraWrap("chords", `🎸 *chords search*\n\n` +
             `Cari chord/kunci gitar lagu\n\n` +
             `Contoh:\n` +
             `\`${m.prefix}chords komang\`\n` +
-            `\`${m.prefix}chord perjalanan terindah\``
+            `\`${m.prefix}chord perjalanan terindah\``, "guide")
         )
     }
     try {

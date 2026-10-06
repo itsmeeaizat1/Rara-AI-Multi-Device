@@ -66,7 +66,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "doh <domain>\n" +
+        raraWrap("doh", prefix + "doh <domain>\n" +
         prefix + "doh <type> <domain>\n" +
         prefix + "doh <provider> <domain>\n\n" +
         "Type: A, AAAA, CNAME, MX, NS, TXT, SOA, PTR, SRV, CAA\n" +
@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
         prefix + "doh google.com\n" +
         prefix + "doh MX github.com\n" +
         prefix + "doh google example.com\n" +
-        prefix + "doh cloudflare NS cloudflare.com",
+        prefix + "doh cloudflare NS cloudflare.com", "guide"),
         { title: "DNS over HTTPS" }
       );
     }

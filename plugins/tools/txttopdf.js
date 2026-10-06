@@ -1407,7 +1407,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!inputText) {
       return m.reply(
-        prefix + "txttopdf <teks>\n" +
+        raraWrap("txttopdf", prefix + "txttopdf <teks>\n" +
         prefix + "txttopdf cv <teks>\n" +
         prefix + "txttopdf surat <teks>\n" +
         prefix + "txttopdf word <teks>\n\n" +
@@ -1453,7 +1453,7 @@ async function handler(m, { sock, config: botConfig }) {
         prefix + "txttopdf tpl=2 aicv buatkan cv lamaran ke kantor. Nama Budi, admin, bisa excel\n\n" +
         "Contoh AI Portofolio:\n" +
         prefix + "txttopdf aiporto buatkan portofolio web developer. Nama Sari, proyek: website company, app laundry\n\n" +
-        "Bisa juga reply pesan yg berisi teks",
+        "Bisa juga reply pesan yg berisi teks", "guide"),
         { title: "Text to PDF/Word Converter" }
       );
     }

@@ -102,13 +102,13 @@ async function handler(m, { sock, config: botConfig }) {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 3) {
         return m.reply(
-          prefix + "langganan add <nama> | <harga> | <cycle> | <tgl_jatuh_tempo>\n\n" +
+          raraWrap("langganan", prefix + "langganan add <nama> | <harga> | <cycle> | <tgl_jatuh_tempo>\n\n" +
           "Cycle: weekly / monthly / yearly\n" +
           "tgl_jatuh_tempo: tanggal 1-31 (untuk monthly) atau DD-MM (untuk yearly)\n\n" +
           "Contoh:\n" +
           prefix + "langganan add Netflix | 186000 | monthly | 15\n" +
           prefix + "langganan add Spotify | 27000 | monthly | 5\n" +
-          prefix + "langganan add Domain | 350000 | yearly | 01-03",
+          prefix + "langganan add Domain | 350000 | yearly | 01-03", "guide"),
           { title: "Langganan - Add" }
         );
       }

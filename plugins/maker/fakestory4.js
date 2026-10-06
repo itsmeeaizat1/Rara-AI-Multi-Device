@@ -219,11 +219,11 @@ async function handler(m, { sock }) {
       imageBottomBuffer = imageTopBuffer;
     }
     if (!imageTopBuffer) {
-      return m.reply( `📷 *Fake sTory 4*\n\n` +
+      return m.reply( raraWrap("fakestory4", `📷 *Fake sTory 4*\n\n` +
           `Kirim/reply 1-2 gambar!\n\n` +
           `Format: \`${m.prefix}fakestory4 <nama>\`\n` +
           `Contoh: \`${m.prefix}fakestory4 Misaki\`\n\n` +
-          `Tips: Kirim gambar + reply gambar lain untuk 2 gambar berbeda`, "fakestory4");
+          `Tips: Kirim gambar + reply gambar lain untuk 2 gambar berbeda`, "guide"), "fakestory4");
     }
     await m.react("🕒");
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);

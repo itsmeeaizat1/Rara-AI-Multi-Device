@@ -305,7 +305,7 @@ async function handleSetDelay(m, db, input) {
 
   if (!input) {
     return m.reply(
-      "*Jeda Broadcast Grup*\n\n" +
+      raraWrap("bcgc", "*Jeda Broadcast Grup*\n\n" +
       "📋 Atur jeda antar pengiriman ke setiap grup\n" +
       "🔒 Semakin lama jeda = semakin aman dari spam\n\n" +
       "⏱️ Jeda saat ini: " + formatDelay(current) + " (" + current + "ms)\n\n" +
@@ -316,7 +316,7 @@ async function handleSetDelay(m, db, input) {
       "💡 *Contoh:*\n" +
       "`" + m.prefix + "jedabcgc 5s` → 5 detik\n" +
       "`" + m.prefix + "jedabcgc 2m` → 2 menit\n" +
-      "`" + m.prefix + "jedabcgc 1h` → 1 jam"
+      "`" + m.prefix + "jedabcgc 1h` → 1 jam", "guide")
     );
   }
 

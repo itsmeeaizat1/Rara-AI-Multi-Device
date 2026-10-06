@@ -46,11 +46,11 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid || amount <= 0) {
-        return m.reply( `💰 *Add Koin*\n\n` +
+        return m.reply( raraWrap("addkoin", `💰 *Add Koin*\n\n` +
             `\`.addkoin <jumlah>\` - ke diri sendiri\n` +
             `\`.addkoin <jumlah> @user\` - ke orang lain\n` +
             `Max: 9.000.000.000.000 (9T)\n\n` +
-            `\`Contoh: ${m.prefix}addkoin 100000\``, "addkoin")
+            `\`Contoh: ${m.prefix}addkoin 100000\``, "guide"), "addkoin")
     }
 
     if (amount > MAX_KOIN) amount = MAX_KOIN

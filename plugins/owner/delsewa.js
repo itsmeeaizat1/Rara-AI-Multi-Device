@@ -44,13 +44,13 @@ async function handler(m, { sock }) {
 
   if (!input) {
     if (!m.isGroup) {
-      return m.reply( `📝 *hapus sewa*\n\n` +
+      return m.reply( raraWrap("delsewa", `📝 *hapus sewa*\n\n` +
           `Dari private: *${m.prefix}delsewa <link/id>*\n` +
           `Dari grup: ketik *${m.prefix}delsewa* langsung di grup\n\n` +
           `Contoh:\n` +
           `${m.prefix}delsewa https://chat.whatsapp.com/xxx\n` +
           `${m.prefix}delsewa 120363xxx\n\n` +
-          `⚠️ Jika sewabot aktif, bot akan otomatis keluar dari grup yang dihapus`, "delsewa");
+          `⚠️ Jika sewabot aktif, bot akan otomatis keluar dari grup yang dihapus`, "guide"), "delsewa");
     }
     groupId = m.chat;
   } else {

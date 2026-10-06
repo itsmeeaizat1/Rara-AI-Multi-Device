@@ -466,12 +466,12 @@ async function handler(m, { sock }) {
     if (sub === 'on') {
         db.setGroup(m.chat, { anti18plus: 'on' })
         return m.reply(
-                        'Deteksi konten 18+ diaktifkan\n' +
+                        raraWrap("anti18plus", 'Deteksi konten 18+ diaktifkan\n' +
             'Sistem: Warn 3x lalu kick\n' +
             'Auto-delete: ON\n' +
             'Auto-kick: ON\n' +
             '\n' +
-            '_Ketik `' + m.prefix + 'anti18plus` untuk lihat pengaturan_'
+            '_Ketik `' + m.prefix + 'anti18plus` untuk lihat pengaturan_', "guide")
         )
     }
 
@@ -488,12 +488,12 @@ async function handler(m, { sock }) {
         if (judiOpt === 'on') {
             db.setGroup(m.chat, { antijudolWarn: 'on' })
             return m.reply(
-                                'Deteksi konten judi diaktifkan\n' +
+                                raraWrap("anti18plus", 'Deteksi konten judi diaktifkan\n' +
                 'Sistem: Warn 3x lalu kick\n' +
                 'Auto-delete: ON\n' +
                 'Auto-kick: ON\n' +
                 '\n' +
-                '_Ketik `' + m.prefix + 'anti18plus` untuk lihat pengaturan_'
+                '_Ketik `' + m.prefix + 'anti18plus` untuk lihat pengaturan_', "guide")
             )
         }
         if (judiOpt === 'off') {
@@ -509,7 +509,7 @@ async function handler(m, { sock }) {
     if (sub === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) {
-            return m.reply('❌ Masukkan angka 1-10\n💡 *Contoh:* `' + m.prefix + 'anti18plus warn 5`')
+            return m.reply(raraWrap("anti18plus", '❌ Masukkan angka 1-10\n💡 *Contoh:* `' + m.prefix + 'anti18plus warn 5`', "guide"))
         }
         db.setGroup(m.chat, { nsfwMaxWarn: count, judiMaxWarn: count })
         return m.reply(
@@ -564,7 +564,7 @@ async function handler(m, { sock }) {
     if (sub === 'reset') {
         const target = m.mentionedJid?.[0] || (args[1]?.replace(/[^0-9]/g, '') + '@s.whatsapp.net')
         if (!target || target === 'undefined@s.whatsapp.net') {
-            return m.reply('❌ Tag user atau masukkan nomor\n💡 *Contoh:* `' + m.prefix + 'anti18plus reset @user`')
+            return m.reply(raraWrap("anti18plus", '❌ Tag user atau masukkan nomor\n💡 *Contoh:* `' + m.prefix + 'anti18plus reset @user`', "guide"))
         }
 
         const updated = groupData
@@ -593,7 +593,7 @@ async function handler(m, { sock }) {
         )
     }
 
-    return m.reply('❌ Sub-command tidak dikenal.\nKetik `' + m.prefix + 'anti18plus` untuk melihat daftar command.')
+    return m.reply(raraWrap("anti18plus", '❌ Sub-command tidak dikenal.\nKetik `' + m.prefix + 'anti18plus` untuk melihat daftar command.', "guide"))
 }
 
 export { pluginConfig as config, handler, handleAntiNSFW, detectNSFW, detectJudi }

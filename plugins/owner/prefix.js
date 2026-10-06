@@ -61,22 +61,22 @@ function handler(m, { sock }) {
     switch (cmd) {
         case 'addprefix': {
             if (args.length === 0) {
-                return m.reply(`✏️ *Add PreғIx*\n\n` +
+                return m.reply(raraWrap("prefix", `✏️ *Add PreғIx*\n\n` +
                     `Tambah prefix baru untuk bot\n\n` +
                     `*Format:*\n` +
                     `\`${m.prefix}addprefix <prefix1> <prefix2> ...\`\n\n` +
                     `*Contoh:*\n` +
                     `\`${m.prefix}addprefix ! # $ 😚\`\n\n` +
                     `*Special:*\n` +
-                    `\`${m.prefix}addprefix <noprefix>\` - Tanpa prefix`)
+                    `\`${m.prefix}addprefix <noprefix>\` - Tanpa prefix`, "guide"))
             }
             
             if (args.includes('<noprefix>') || args.includes('noprefix')) {
                 data.noprefix = true
                 savePrefixes(data)
-                return m.reply(`✅ *NopreғIx DiaktiғKan*\n\n` +
+                return m.reply(raraWrap("prefix", `✅ *NopreғIx DiaktiғKan*\n\n` +
                     `Bot sekarang bisa dijalankan tanpa prefix\n` +
-                    `Ketik langsung nama command (misal: \`menu\`)`)
+                    `Ketik langsung nama command (misal: \`menu\`)`, "guide"))
             }
             
             const newPrefixes = args.filter(p => {
@@ -102,7 +102,7 @@ function handler(m, { sock }) {
         case 'setprefix':
         case 'gantiprefix': {
             if (args.length === 0) {
-                return m.reply(`*Ganti/sEt PreғIx*\n\n` +
+                return m.reply(raraWrap("prefix", `*Ganti/sEt PreғIx*\n\n` +
                     `Ganti semua prefix dengan yang baru\n\n` +
                     `*Format:*\n` +
                     `\`${m.prefix}${cmd} <prefix1> <prefix2> ...\`\n\n` +
@@ -111,7 +111,7 @@ function handler(m, { sock }) {
                     `*Special:*\n` +
                     `\`${m.prefix}${cmd} <noprefix>\` - Tanpa prefix saja\n` +
                     `\`${m.prefix}${cmd} . <noprefix>\` - Prefix . + noprefix\n\n` +
-                    `⚠️ Ini akan menghapus semua prefix lama di database!`)
+                    `⚠️ Ini akan menghapus semua prefix lama di database!`, "guide"))
             }
             
             const hasNoprefix = args.includes('<noprefix>') || args.includes('noprefix')
@@ -145,13 +145,13 @@ function handler(m, { sock }) {
         
         case 'delprefix': {
             if (args.length === 0) {
-                return m.reply(`🗑️ *Delete PreғIx*\n\n` +
+                return m.reply(raraWrap("prefix", `🗑️ *Delete PreғIx*\n\n` +
                     `Hapus prefix dari database\n\n` +
                     `*Format:*\n` +
                     `\`${m.prefix}delprefix <prefix1> <prefix2> ...\`\n\n` +
                     `*Contoh:*\n` +
                     `\`${m.prefix}delprefix ! $\`\n` +
-                    `\`${m.prefix}delprefix <noprefix>\` - Nonaktifkan noprefix`)
+                    `\`${m.prefix}delprefix <noprefix>\` - Nonaktifkan noprefix`, "guide"))
             }
             
             if (args.includes('<noprefix>') || args.includes('noprefix')) {

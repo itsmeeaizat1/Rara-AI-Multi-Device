@@ -137,12 +137,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "whoishistory <domain>\n\n" +
+        raraWrap("whoishistory", prefix + "whoishistory <domain>\n\n" +
         "Riwayat WHOIS domain (via RDAP)\n" +
         "Info: registrar, NS, created/updated/expiry date, status\n\n" +
         "Contoh:\n" +
         prefix + "whoishistory google.com\n" +
-        prefix + "whoishistory github.com",
+        prefix + "whoishistory github.com", "guide"),
         { title: "WHOIS History" }
       );
     }

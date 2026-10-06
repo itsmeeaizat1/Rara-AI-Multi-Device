@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
 
     if (parts.length < 2) {
         return m.reply(
-            `➕ *tambah produk baru*\n\n` +
+            raraWrap("addproduk", `➕ *tambah produk baru*\n\n` +
             `📋 Format:\n` +
             `\`${m.prefix}addproduk <nama>|<harga>|<tipe>|<stok>|<deskripsi>\`\n\n` +
             `📌 *parameter:*\n` +
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
             `Kirim gambar/video terlebih dahulu, lalu reply media tersebut dengan command di atas untuk menambahkan thumbnail 📸\n` +
             `Untuk produk *digital*, gunakan \`${m.prefix}addstok\` setelah produk dibuat untuk menambahkan data akun/key 🔑\n` +
             `Untuk produk *fisik*, stok otomatis diatur dari angka yang dimasukkan 📦\n` +
-            `Harga diskon bisa diatur nanti dengan \`${m.prefix}editproduk\` 🏷️`
+            `Harga diskon bisa diatur nanti dengan \`${m.prefix}editproduk\` 🏷️`, "guide")
         )
     }
 

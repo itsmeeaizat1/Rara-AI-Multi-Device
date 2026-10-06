@@ -36,13 +36,13 @@ async function handler(m, { sock }) {
     const firstPipe = text.indexOf('|')
 
     if (firstPipe === -1) {
-        return m.reply(`✏️ *Edit Stok*\n\n` +
+        return m.reply(raraWrap("editstok", `✏️ *Edit Stok*\n\n` +
             `📋 Format: \`${m.prefix}editstok <nomor_produk> <nomor_item>|<detail_baru>\`\n\n` +
             `📝 *contoh:*\n` +
             `\`${m.prefix}editstok 1 3|Email: baru@mail.com;;Password: newpass\`\n\n` +
             `Gunakan \`;;\` untuk baris baru dalam detail 🔑\n` +
             `📋 Lihat nomor item: \`${m.prefix}liststok <nomor_produk>\`\n\n` +
-            `⚠️ _Stok yang sudah terkirim ke pembeli tidak akan berubah_ 🔒`)
+            `⚠️ _Stok yang sudah terkirim ke pembeli tidak akan berubah_ 🔒`, "guide"))
     }
 
     const before = text.substring(0, firstPipe).trim()

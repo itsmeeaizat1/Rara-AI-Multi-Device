@@ -12,7 +12,7 @@
 //   .botdoctor jam/status      — Lihat jadwal sekarang
 //   .botdoctor riwayat         — Ringkasan diagnosa terakhir (maks 14)
 
-import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { runBotDoctorNow, ensureBotDoctorState } from "../../src/lib/rara-botdoctor.js";
 
@@ -67,7 +67,7 @@ async function handler(m, { config: botConfig }) {
     // ── on [HH:mm] ──
     if (sub === "on") {
       const jam = (args[1] || st.sched.jam || "23:00");
-      if (!JAM_RE.test(jam)) return m.reply("Format jam gak valid. Contoh yang bener: .botdoctor on 23:00");
+      if (!JAM_RE.test(jam)) return m.reply(raraWrap("botdoctor", "Format jam gak valid. Contoh yang bener: .botdoctor on 23:00", "guide"));
       st.sched.on = true;
       st.sched.jam = jam.padStart(5, "0");
       return m.reply(`Oke, dokter bot siap lapor tiap hari jam ${st.sched.jam} WIB ke DM kamu.`);

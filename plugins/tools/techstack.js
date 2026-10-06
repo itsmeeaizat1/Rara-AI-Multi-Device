@@ -95,12 +95,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "techstack <url>\n\n" +
+        raraWrap("techstack", prefix + "techstack <url>\n\n" +
         "Detect teknologi website (40+ signatures)\n" +
         "Deteksi: CMS, Framework, JS lib, CDN, Analytics, Web Server\n\n" +
         "Contoh:\n" +
         prefix + "techstack https://github.com\n" +
-        prefix + "techstack https://wordpress.org",
+        prefix + "techstack https://wordpress.org", "guide"),
         { title: "Tech Stack Detector" }
       );
     }

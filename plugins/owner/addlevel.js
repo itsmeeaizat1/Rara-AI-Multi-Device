@@ -38,12 +38,12 @@ async function handler(m, { sock }) {
     }
     
     if (!targetJid || levels <= 0) {
-        return m.reply( `📊 *Add Level*\n\n` +
+        return m.reply( raraWrap("addlevel", `📊 *Add Level*\n\n` +
             "" +
             `> \`.addlevel <jumlah>\` - ke diri sendiri\n` +
             `> \`.addlevel <jumlah> @user\` - ke orang lain\n` +
             `---\n\n` +
-            `Contoh: \`${m.prefix}addlevel 5\``, "addlevel")
+            `Contoh: \`${m.prefix}addlevel 5\``, "guide"), "addlevel")
     }
     
     if (levels <= 0) {

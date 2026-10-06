@@ -848,7 +848,7 @@ ${truncateText(parsed.customText, 180)}`);
 
       if (tasks.length === 0) {
         await m.reply(
-          "📅 Belum ada jadwal aktif. Gunakan `.schedule` untuk lihat format planner.",
+          raraWrap("schedule", "📅 Belum ada jadwal aktif. Gunakan `.schedule` untuk lihat format planner.", "guide"),
         );
         return;
       }
@@ -863,7 +863,7 @@ ${truncateText(parsed.customText, 180)}`);
 
       if (tasks.length === 0) {
         await m.reply(
-          "📅 Belum ada jadwal aktif. Gunakan `.schedule` untuk lihat format planner.",
+          raraWrap("schedule", "📅 Belum ada jadwal aktif. Gunakan `.schedule` untuk lihat format planner.", "guide"),
         );
         return;
       }

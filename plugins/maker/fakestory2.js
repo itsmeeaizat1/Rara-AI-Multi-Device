@@ -184,10 +184,10 @@ async function handler(m, { sock }) {
   const username = m.args.join(" ").trim() || m.pushName || "User";
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
   if (!isImage) {
-    return m.reply( `📷 *Fake sTory 2*\n\n` +
+    return m.reply( raraWrap("fakestory2", `📷 *Fake sTory 2*\n\n` +
         `Reply gambar!\n\n` +
         `Format: \`${m.prefix}fakestory2 <nama>\`\n` +
-        `Contoh: \`${m.prefix}fakestory2 Misaki\``, "fakestory2");
+        `Contoh: \`${m.prefix}fakestory2 Misaki\``, "guide"), "fakestory2");
   }
   try {
     await m.react("🕒");

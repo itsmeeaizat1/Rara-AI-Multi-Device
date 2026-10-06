@@ -105,7 +105,7 @@ async function handler(m, { sock, args, prefix }) {
       `Khusus owner — hapus hari custom mengubah kalender global.`,
     ].join("\n")));
     const dateStr = String(args?.[1] || "");
-    if (!dateStr) return m.reply(`Format : ${pf}haribesar hapus <DD-MM[-YYYY]>`);
+    if (!dateStr) return m.reply(raraWrap("haribesar", `Format : ${pf}haribesar hapus <DD-MM[-YYYY]>`, "guide"));
     const r = removeCustomDay(dateStr);
     return m.reply(raraWrap("hari besar", [
       r.removed > 0 ? `Hari custom "${dateStr}" dihapus (${r.removed})` : `Hari custom "${dateStr}" tidak ditemukan`,
@@ -172,7 +172,7 @@ async function handler(m, { sock, args, prefix }) {
     let entry = getHariBesar(ymd);
     if (!entry) entry = { nama: "Contoh Hari Ibu", emoji: "🌷", merah: false, custom: false };
     const text = await buildHariBesarText(entry, ymd);
-    return m.reply(text + `\n\n_(tes — contoh tampilan notif)_`);
+    return m.reply(raraWrap("haribesar", text + `\n\n_(tes — contoh tampilan notif)_`, "guide"));
   }
 
   // ─── status / panduan ───

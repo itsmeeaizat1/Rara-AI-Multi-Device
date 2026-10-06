@@ -70,7 +70,7 @@ async function handler(m, { sock, db }) {
     const delayMs = groupData.autoSambut.delayMs || 7200000;
     const totalPesan = groupData.autoSambut.pesanList.length;
 
-    return m.reply( `⚠️ *sistem auto sambut*\n\n` +
+    return m.reply( raraWrap("autosambut", `⚠️ *sistem auto sambut*\n\n` +
       `Sistem otomatis menyambut owner di grup secara acak ketika owner muncul setelah lama idle.\n` +
       `Status: *${status}*\n` +
       `Batas Waktu Idle: *${formatTime(delayMs)}*\n` +
@@ -85,7 +85,7 @@ async function handler(m, { sock, db }) {
       `*penjelasan khusus:*\n` +
       `1. Gunakan format waktu: *s* (detik), *m* (menit), *h* (jam), *d* (hari). Contoh: *${m.prefix}autosambut delay 30m*\n` +
       `2. Gunakan *{name}* untuk menyebut pushname owner, dan *{user}* untuk me-mention owner.\n` +
-      `3. Jika kamu menambahkan atribut *--global* di akhir setiap perintah, maka pengaturan di grup *ini* akan langsung dicopy ke SEMUA grup yang bot singgahi!`, "autosambut");
+      `3. Jika kamu menambahkan atribut *--global* di akhir setiap perintah, maka pengaturan di grup *ini* akan langsung dicopy ke SEMUA grup yang bot singgahi!`, "guide"), "autosambut");
   }
 
   if (action === "on" || action === "off") {
@@ -114,11 +114,11 @@ async function handler(m, { sock, db }) {
 
   if (action === "delay") {
     const timeInput = args[1];
-    if (!timeInput) return m.reply( `Tolong berikan waktu! Contoh: \`${m.prefix}autosambut delay 2h\``, "autosambut");
+    if (!timeInput) return m.reply( raraWrap("autosambut", `Tolong berikan waktu! Contoh: \`${m.prefix}autosambut delay 2h\``, "guide"), "autosambut");
 
     const parsedMs = parseTime(timeInput);
     if (!parsedMs) {
-      return m.reply( `Format waktu tidak dikenali. Gunakan angka dan akhiran s, m, h, d, w, y. Contoh: \`2h\` (2 jam), \`30m\` (30 menit).`, "autosambut");
+      return m.reply( raraWrap("autosambut", `Format waktu tidak dikenali. Gunakan angka dan akhiran s, m, h, d, w, y. Contoh: \`2h\` (2 jam), \`30m\` (30 menit).`, "guide"), "autosambut");
     }
 
     if (isGlobal) {
@@ -155,7 +155,7 @@ async function handler(m, { sock, db }) {
   if (action === "add") {
     const newMsg = args.slice(1).filter(v => v !== '--global').join(" ").trim();
     if (!newMsg) {
-      return m.reply( `Tolong masukkan teks sambutannya.\n💡 *Contoh:* \`${m.prefix}autosambut add Halo bosku {user}!\``, "autosambut");
+      return m.reply( raraWrap("autosambut", `Tolong masukkan teks sambutannya.\n💡 *Contoh:* \`${m.prefix}autosambut add Halo bosku {user}!\``, "guide"), "autosambut");
     }
 
     groupData.autoSambut.pesanList.push(newMsg);

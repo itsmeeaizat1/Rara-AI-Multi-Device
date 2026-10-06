@@ -79,7 +79,7 @@ function handler(m, { sock }) {
 
     const parts = text.split('|')
     if (parts.length < 2) {
-        return m.reply(`❌ Format salah! Gunakan: \`ip|password\``)
+        return m.reply(raraWrap("installtemanebula", `❌ Format salah! Gunakan: \`ip|password\``, "guide"))
     }
 
     const ipvps = parts[0].trim()

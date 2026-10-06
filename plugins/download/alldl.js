@@ -564,7 +564,7 @@ async function handlerCore(m, { sock }) {
     ...optionLines,
   ]);
   await m.react("🐣");
-  return m.reply(`${infoText}\n\n${tipText(`Sesi 3 menit — atau langsung sekalian: ${prefix}alldl <url> <format>`)}`);
+  return m.reply(raraWrap("alldl", `${infoText}\n\n${tipText(`Sesi 3 menit — atau langsung sekalian: ${prefix}alldl <url> <format>`)}`, "guide"));
 }
 
 async function handler(m, ctx = {}) {

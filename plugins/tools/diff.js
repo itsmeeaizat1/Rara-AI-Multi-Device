@@ -156,14 +156,14 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "diff <teks1> | <teks2>\n" +
+        raraWrap("diff", prefix + "diff <teks1> | <teks2>\n" +
         prefix + "diff word <teks1> | <teks2>\n\n" +
         "Pemisah: tanda | di antara 2 teks\n" +
         "Mode default: line-by-line\n" +
         "Mode word: per kata\n\n" +
         "Contoh:\n" +
         prefix + "diff Halo dunia | Hai dunia\n" +
-        prefix + "diff word Saya suka makan | Aku suka minum",
+        prefix + "diff word Saya suka makan | Aku suka minum", "guide"),
         { title: "Diff - Text Compare" }
       );
     }

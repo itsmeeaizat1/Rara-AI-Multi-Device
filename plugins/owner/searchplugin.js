@@ -86,11 +86,11 @@ async function handler(m, { sock }) {
   const name = m.text?.trim();
 
   if (!name) {
-    return m.reply( `🔍 *sEarch Plugin*\n\n` +
+    return m.reply( raraWrap("searchplugin", `🔍 *sEarch Plugin*\n\n` +
         `Cari dan tampilkan info plugin\n\n` +
         `*Contoh:*\n` +
         `\`${m.prefix}splugin sticker\`\n` +
-        `\`${m.prefix}splugin menu\``, "searchplugin");
+        `\`${m.prefix}splugin menu\``, "guide"), "searchplugin");
   }
   try {
     let info = findPluginInfo(name);

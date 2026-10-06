@@ -80,9 +80,9 @@ async function handler(m, { sock }) {
     
     if (!feature) {
         return m.reply(
-            `❌ *gagal*\n\n` +
+            raraWrap("buyfitur", `❌ *gagal*\n\n` +
             `Fitur \`${featureName}\` tidak ditemukan\n` +
-            `Ketik \`.buyfitur\` untuk lihat daftar`
+            `Ketik \`.buyfitur\` untuk lihat daftar`, "guide")
         )
     }
     

@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "json <mode> <json>\n" +
+        raraWrap("json", prefix + "json <mode> <json>\n" +
         prefix + "json <json> (auto beautify)\n\n" +
         "Mode:\n" +
         "beautify = format rapi (indent 2)\n" +
@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Contoh:\n" +
         prefix + 'json beautify {"name":"Rara","age":20}\n' +
         prefix + 'json check {"a":1}\n' +
-        prefix + 'json keys {"a":1,"b":2}',
+        prefix + 'json keys {"a":1,"b":2}', "guide"),
         { title: "JSON Formatter & Validator" }
       );
     }

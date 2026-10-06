@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const current = db.setting('customPaymentText') || ''
 
   if (!input) {
-    return m.reply( `📝 *custom payment teXt*\n\n` +
+    return m.reply( raraWrap("custompayment", `📝 *custom payment teXt*\n\n` +
       `Teks saat ini:\n${current || '_(belum diatur, pakai default)_'}\n\n` +
       `*placeholder yang tersedia:*\n` +
       `\`{botname}\` — Nama bot\n` +
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
       `\`{qris}\` — Status QRIS\n\n` +
       `*contoh:*\n` +
       `\`${m.prefix}custompayment Halo! Bayar ke {methods}\`\n\n` +
-      `\`${m.prefix}custompayment reset\` — Kembalikan ke default`, "custompayment")
+      `\`${m.prefix}custompayment reset\` — Kembalikan ke default`, "guide"), "custompayment")
   }
 
   if (input.toLowerCase() === 'reset') {

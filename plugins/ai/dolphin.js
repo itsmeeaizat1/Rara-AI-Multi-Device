@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     
     if (!text) {
         return m.reply(
-            `🐬 *Dolphin Ai*\n\n` +
+            raraWrap("dolphin", `🐬 *Dolphin Ai*\n\n` +
             `Chat dengan Dolphin AI 24B Model\n\n` +
             "" +
             `• \`logical\` - Jawaban logis\n` +
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
             `---\n\n` +
             `*Contoh:*\n` +
             `${m.prefix}dolphin apa itu AI?\n` +
-            `${m.prefix}dolphin --creative buat puisi`
+            `${m.prefix}dolphin --creative buat puisi`, "guide")
         )
     }
     

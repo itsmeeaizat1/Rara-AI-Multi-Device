@@ -209,10 +209,10 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     : "";
 
   if (!targetNumber) {
-    return m.reply( `👑 *${isAdd ? "ADD" : "DEL"} OWNER*\n\n` +
+    return m.reply( raraWrap("addowner", `👑 *${isAdd ? "ADD" : "DEL"} OWNER*\n\n` +
         `Reply/tag/ketik nomor user\n` +
         `\`Contoh: ${m.prefix}${cmd} 6281234567890\`\n` +
-        `\`Dengan nama: ${m.prefix}${cmd} 6281234567890 NamaOwner\``, "addowner");
+        `\`Dengan nama: ${m.prefix}${cmd} 6281234567890 NamaOwner\``, "guide"), "addowner");
   }
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {

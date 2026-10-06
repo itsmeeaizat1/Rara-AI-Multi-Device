@@ -21,7 +21,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.args.length < 8) {
-        return m.reply(`*Ramalan Jodoh*\n\nFormat:\nrama1 tgl1 bln1 thn1 nama2 tgl2 bln2 thn2\n\n\`Contoh:\n${m.prefix}ramalanjodoh putu 16 11 2007 keyla 1 1 2008\``)
+        return m.reply(raraWrap("ramalanjodoh", `*Ramalan Jodoh*\n\nFormat:\nrama1 tgl1 bln1 thn1 nama2 tgl2 bln2 thn2\n\n\`Contoh:\n${m.prefix}ramalanjodoh putu 16 11 2007 keyla 1 1 2008\``, "guide"))
     }
     
     const [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = m.args

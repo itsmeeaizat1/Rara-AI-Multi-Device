@@ -58,12 +58,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "sitedown <url>\n\n" +
+        raraWrap("sitedown", prefix + "sitedown <url>\n\n" +
         "Cek apakah website online atau down\n" +
         "Info: status code, response time, server, redirect\n\n" +
         "Contoh:\n" +
         prefix + "sitedown google.com\n" +
-        prefix + "sitedown https://github.com",
+        prefix + "sitedown https://github.com", "guide"),
         { title: "Site Down Checker" }
       );
     }

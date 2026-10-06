@@ -6,6 +6,7 @@ import fs from "fs";
 import { runLiveTicker } from "../../src/lib/rara-countdown.js";
 import { buildAbsenMeter } from "../../src/lib/rara-absen-meter.js";
 import path from "path";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 // ── Module state (restart-safe: data di JSON, bukan RAM) ──
 let _sock = null;
@@ -287,13 +288,13 @@ async function handler(m, { sock, config: botConfig }) {
   if (!sub) {
     try { await m.react("🐣"); } catch {}
     return m.reply(
-      `🕒 ABSEN GRUP\n\n` +
+      raraWrap("absenjam", `🕒 ABSEN GRUP\n\n` +
       `Cara pakai:\n` +
       `.absen buka <durasi> [judul]\n` +
       `.absen tutup\n` +
       `.absen status\n\n` +
       `Durasi: 30 detik / 10 menit / 2 jam\n\n` +
-      `Saat sesi aktif, member ketik "hadir" untuk absen.`,
+      `Saat sesi aktif, member ketik "hadir" untuk absen.`, "guide"),
     );
   }
 
@@ -318,7 +319,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!durMs) {
       try { await m.react("❌"); } catch {}
       return m.reply(
-        `❌ Format durasi tidak valid: "${durText}"\n\nContoh: 30 detik / 10 menit / 2 jam / 5 (menit)`,
+        raraWrap("absenjam", `❌ Format durasi tidak valid: "${durText}"\n\nContoh: 30 detik / 10 menit / 2 jam / 5 (menit)`, "guide"),
       );
     }
 

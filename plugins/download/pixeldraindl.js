@@ -59,12 +59,12 @@ async function handler(m, { sock }) {
   const url = args[0]?.trim();
 
   if (!url || !url.includes("pixeldrain.com")) {
-    return m.reply( `📥 *pixeldrain download*\n\n` +
+    return m.reply( raraWrap("pixeldraindl", `📥 *pixeldrain download*\n\n` +
         `Download file dari Pixeldrain\n\n` +
         `*format:*\n` +
         `\`${m.prefix}pixeldraindl <url>\`\n\n` +
         `*contoh:*\n` +
-        `\`${m.prefix}pixeldraindl https://pixeldrain.com/u/xxxxx\``, "pixeldraindl");
+        `\`${m.prefix}pixeldraindl https://pixeldrain.com/u/xxxxx\``, "guide"), "pixeldraindl");
   }
   try {
         await m.react("🕒");

@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "regex <pattern> | <teks>\n" +
+        raraWrap("regextest", prefix + "regex <pattern> | <teks>\n" +
         prefix + "regex flags <flags> <pattern> | <teks>\n\n" +
         "Pemisah: tanda |\n" +
         "Flags: g (global), i (case-insensitive), m (multiline), s (dotall), u (unicode)\n" +
@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Contoh:\n" +
         prefix + "regex \\d+ | Halo 123 dunia 456\n" +
         prefix + "regex flags gi \\b[a-z]+\\b | Hello World 42\n" +
-        prefix + "regex (\\w+)@(\\w+\\.\\w+) | email ke test@gmail.com",
+        prefix + "regex (\\w+)@(\\w+\\.\\w+) | email ke test@gmail.com", "guide"),
         { title: "Regex Tester" }
       );
     }

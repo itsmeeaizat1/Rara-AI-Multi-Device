@@ -200,7 +200,7 @@ async function handler(m, { sock, args }) {
 
     const parts = query.toLowerCase().split(/\s+/);
     if (parts.length < 3) {
-      return m.reply(`Format salah!\n\nGunakan: \`${m.prefix}dapur konversi <angka> <dari> <ke>\`\n💡 *Contoh:* \`${m.prefix}dapur konversi 1 cup ml\``);
+      return m.reply(raraWrap("dibalikdapur", `Format salah!\n\nGunakan: \`${m.prefix}dapur konversi <angka> <dari> <ke>\`\n💡 *Contoh:* \`${m.prefix}dapur konversi 1 cup ml\``, "guide"));
     }
 
     const amount = parseFloat(parts[0]);
@@ -210,10 +210,10 @@ async function handler(m, { sock, args }) {
     if (isNaN(amount)) return m.reply(raraWrap("Dibalikdapur", `Angka tidak valid: "${parts[0]}"`));
 
     const conv = CONVERSIONS[from];
-    if (!conv) return m.reply(`Satuan "${from}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur konversi\` untuk lihat daftar satuan.`);
+    if (!conv) return m.reply(raraWrap("dibalikdapur", `Satuan "${from}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur konversi\` untuk lihat daftar satuan.`, "guide"));
 
     const factor = conv[to];
-    if (factor === undefined) return m.reply(`Tidak bisa konversi dari "${from}" ke "${to}".\n\nKetik \`${m.prefix}dapur konversi\` untuk lihat daftar.`);
+    if (factor === undefined) return m.reply(raraWrap("dibalikdapur", `Tidak bisa konversi dari "${from}" ke "${to}".\n\nKetik \`${m.prefix}dapur konversi\` untuk lihat daftar.`, "guide"));
 
     const result = (amount * factor).toFixed(2);
     const unitLabel = to.replace(/_/g, " ");
@@ -248,7 +248,7 @@ async function handler(m, { sock, args }) {
     const subs = SUBSTITUTIONS[query.toLowerCase()] || SUBSTITUTIONS[key];
 
     if (!subs) {
-      return m.reply(`Substitusi untuk "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur sub\` untuk lihat daftar bahan.`);
+      return m.reply(raraWrap("dibalikdapur", `Substitusi untuk "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur sub\` untuk lihat daftar bahan.`, "guide"));
     }
 
     let txt = `Substitusi: ${query}\n\n`;
@@ -275,7 +275,7 @@ async function handler(m, { sock, args }) {
     const temp = COOKING_TEMPS[query.toLowerCase()] || COOKING_TEMPS[key];
 
     if (!temp) {
-      return m.reply(`Suhu untuk "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur suhu\` untuk lihat daftar.`);
+      return m.reply(raraWrap("dibalikdapur", `Suhu untuk "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur suhu\` untuk lihat daftar.`, "guide"));
     }
 
     let txt = `Suhu Masak: ${query}\n\n`;
@@ -301,7 +301,7 @@ async function handler(m, { sock, args }) {
     const guide = STORAGE_GUIDE[query.toLowerCase()] || STORAGE_GUIDE[key];
 
     if (!guide) {
-      return m.reply(`Panduan penyimpanan untuk "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur simpan\` untuk lihat daftar.`);
+      return m.reply(raraWrap("dibalikdapur", `Panduan penyimpanan untuk "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur simpan\` untuk lihat daftar.`, "guide"));
     }
 
     let txt = `Penyimpanan: ${query}\n\n`;
@@ -328,7 +328,7 @@ async function handler(m, { sock, args }) {
     const pair = PAIRING_TIPS[query.toLowerCase()] || PAIRING_TIPS[key];
 
     if (!pair) {
-      return m.reply(`Pasangan untuk "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur pasangan\` untuk lihat daftar.`);
+      return m.reply(raraWrap("dibalikdapur", `Pasangan untuk "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur pasangan\` untuk lihat daftar.`, "guide"));
     }
 
     let txt = `Pasangan Bahan: ${query}\n\n`;
@@ -341,13 +341,13 @@ async function handler(m, { sock, args }) {
   // === SCAN BARCODE ===
   if (sub === "scan" || sub === "barcode" || sub === "cekproduk") {
     if (!query) {
-      return m.reply(`Format: \`${m.prefix}dapur scan <barcode>\`\n\n💡 *Contoh:* \`${m.prefix}dapur scan 3017620422003\`\n\nSumber: Open Food Facts (gratis, jutaan produk)`);
+      return m.reply(raraWrap("dibalikdapur", `Format: \`${m.prefix}dapur scan <barcode>\`\n\n💡 *Contoh:* \`${m.prefix}dapur scan 3017620422003\`\n\nSumber: Open Food Facts (gratis, jutaan produk)`, "guide"));
     }
     try {
       const res = await axios.get(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(query)}?fields=product_name,brands,nutriscore_grade,nutriments,ingredients_text,quantity,allergens,image_url,quantity,countries`);
 
       if (!res.data || res.data.status !== 1 || !res.data.product) {
-        return m.reply(`Produk dengan barcode "${query}" tidak ditemukan di database Open Food Facts.\n\nCoba barcode lain atau ketik \`${m.prefix}dapur scan\` untuk info.`);
+        return m.reply(raraWrap("dibalikdapur", `Produk dengan barcode "${query}" tidak ditemukan di database Open Food Facts.\n\nCoba barcode lain atau ketik \`${m.prefix}dapur scan\` untuk info.`, "guide"));
       }
 
       const p = res.data.product;
@@ -420,7 +420,7 @@ async function handler(m, { sock, args }) {
   }
 
   // Unknown subcommand
-  return m.reply(`Subkomandan tidak dikenal: "${sub}"\n\nKetik \`${m.prefix}dapur\` untuk lihat daftar perintah.`);
+  return m.reply(raraWrap("dibalikdapur", `Subkomandan tidak dikenal: "${sub}"\n\nKetik \`${m.prefix}dapur\` untuk lihat daftar perintah.`, "guide"));
 }
 
 export { pluginConfig as config, handler };

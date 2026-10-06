@@ -24,11 +24,11 @@ async function handler(m, { sock }) {
   const url = args[0]?.trim();
 
   if (!url || !url.includes("neoxr.eu")) {
-    return m.reply( `🎬 *film detail*\n\n` +
+    return m.reply( raraWrap("filmget", `🎬 *film detail*\n\n` +
         `Ambil detail film dari URL\n\n` +
         `*format:*\n` +
         `\`${m.prefix}filmget <url>\`\n\n` +
-        `Gunakan \`${m.prefix}film <judul>\` untuk cari film dulu`, "filmget");
+        `Gunakan \`${m.prefix}film <judul>\` untuk cari film dulu`, "guide"), "filmget");
   }
 
 

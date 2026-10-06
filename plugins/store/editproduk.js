@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
 
     if (!match) {
         return m.reply(
-            `✏️ *edit produk*\n\n` +
+            raraWrap("editproduk", `✏️ *edit produk*\n\n` +
             `📋 Format: \`${m.prefix}editproduk <nomor> <field> <nilai>\`\n\n` +
             `📌 *field yang bisa diedit:*\n` +
             `*nama* 🏷️ — Nama produk\n` +
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
             `\`${m.prefix}editproduk 1 nama Netflix Premium\`\n` +
             `\`${m.prefix}editproduk 1 deskripsi Akun sharing 1 bulan\`\n` +
             `\`${m.prefix}editproduk 1 gambar\` (reply gambar 🖼️)\n\n` +
-            `🏷️ _Harga diskon akan ditampilkan sebagai ~~harga asli~~ di katalog_`
+            `🏷️ _Harga diskon akan ditampilkan sebagai ~~harga asli~~ di katalog_`, "guide")
         )
     }
 

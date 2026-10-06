@@ -53,7 +53,7 @@ function handler(m, { sock }) {
             return m.reply(raraWrap("Notiftidur", `❌ *belum ada pengingat tidur* yang aktif di chat ini`))
         }
         toggleNotif('tidur', sender, chatJid, false)
-        return m.reply(`✅ *Pengingat Tidur Dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`)
+        return m.reply(raraWrap("notiftidurutil", `✅ *Pengingat Tidur Dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`, "guide"))
     }
 
     if (sub === 'on') {
@@ -68,12 +68,12 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply( `❌ *Masukkan jadwal tidur!*\n\n💡 *Contoh:* \`${m.prefix}notiftidur on 22.00\``, "notiftidur")
+            return m.reply( raraWrap("notiftidurutil", `❌ *Masukkan jadwal tidur!*\n\n💡 *Contoh:* \`${m.prefix}notiftidur on 22.00\``, "guide"), "notiftidur")
         }
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`22.00\` atau \`23.30\``)
+            return m.reply(raraWrap("notiftidurutil", `❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`22.00\` atau \`23.30\``, "guide"))
         }
 
         setNotifTidur(sender, chatJid, jadwal)
@@ -95,12 +95,12 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply(`❌ *Masukkan jadwal baru!*\n\n💡 *Contoh:* \`${m.prefix}notiftidur edit 23.00\``)
+            return m.reply(raraWrap("notiftidurutil", `❌ *Masukkan jadwal baru!*\n\n💡 *Contoh:* \`${m.prefix}notiftidur edit 23.00\``, "guide"))
         }
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`23.00\` atau \`22.30\``)
+            return m.reply(raraWrap("notiftidurutil", `❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`23.00\` atau \`22.30\``, "guide"))
         }
 
         setNotifTidur(sender, chatJid, jadwal)

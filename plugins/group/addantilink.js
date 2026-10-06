@@ -23,12 +23,12 @@ function handler(m, { sock }) {
     const link = m.text?.toLowerCase()
     
     if (!link) {
-        return m.reply( `🔗 *add antilink*\n\n` +
+        return m.reply( raraWrap("addantilink", `🔗 *add antilink*\n\n` +
             `Masukkan domain/pattern link yang ingin diblokir\n\n` +
             `\`Contoh:\`\n` +
             `\`${m.prefix}addantilink tiktok.com\`\n` +
             `\`${m.prefix}addantilink chat.whatsapp.com\`\n` +
-            `\`${m.prefix}addantilink instagram.com\``, "addantilink")
+            `\`${m.prefix}addantilink instagram.com\``, "guide"), "addantilink")
     }
     
     const groupData = db.getGroup(m.chat) || {}

@@ -6,7 +6,7 @@
 // diumuminin lalu bot keluar sendiri setelah grace period, digest harian
 // ke DM owner. Engine: src/lib/rara-rent-auto.js (jangan duplikasi logika).
 
-import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import {
   ensureRentAutoState,
@@ -100,11 +100,11 @@ async function handler(m, { sock }) {
   if (sub === "jam") {
     const jam = (m.args?.[1] || "").trim();
     if (!/^\d{2}:\d{2}$/.test(jam)) {
-      return m.reply("Format jam kurang tepat. Contoh yang benar: .rentauto jam 20:30");
+      return m.reply(raraWrap("rentauto", "Format jam kurang tepat. Contoh yang benar: .rentauto jam 20:30", "guide"));
     }
     const [hh, mm] = jam.split(":").map(Number);
     if (hh > 23 || mm > 59) {
-      return m.reply("Jam melewati batas wajar. Format: HH:mm, contoh .rentauto jam 20:30");
+      return m.reply(raraWrap("rentauto", "Jam melewati batas wajar. Format: HH:mm, contoh .rentauto jam 20:30", "guide"));
     }
     st.digestJam = jam;
     st.lastDigestDate = ""; // biar hari yang sama bisa kirim ulang pakai jam baru
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
   if (sub === "grace") {
     const hari = Number((m.args?.[1] || "").trim());
     if (!Number.isFinite(hari) || hari < 0 || hari > 30 || !Number.isInteger(hari)) {
-      return m.reply("Jumlah hari kurang tepat. Contoh: .rentauto grace 7 (0-30 hari)");
+      return m.reply(raraWrap("rentauto", "Jumlah hari kurang tepat. Contoh: .rentauto grace 7 (0-30 hari)", "guide"));
     }
     st.graceDays = hari;
     db.db.write();

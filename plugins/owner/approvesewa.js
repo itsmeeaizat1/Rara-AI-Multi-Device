@@ -120,8 +120,8 @@ async function handler(m, { sock }) {
 
   if (!regData) {
     return m.reply(
-      "Tidak ada pendaftaran pending dari nomor " + phoneNum + "\n\n" +
-      "Ketik *.approvesewa* untuk lihat semua pendaftaran pending."
+      raraWrap("approvesewa", "Tidak ada pendaftaran pending dari nomor " + phoneNum + "\n\n" +
+      "Ketik *.approvesewa* untuk lihat semua pendaftaran pending.", "guide")
     );
   }
 

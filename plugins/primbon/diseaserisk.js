@@ -21,7 +21,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.args.length < 3) {
-        return m.reply(`*Potensi Penyakit*\n\nFormat: tgl bln thn\n\n\`Contoh: ${m.prefix}potensipenyakit 12 05 1998\``)
+        return m.reply(raraWrap("potensipenyakit", `*Potensi Penyakit*\n\nFormat: tgl bln thn\n\n\`Contoh: ${m.prefix}potensipenyakit 12 05 1998\``, "guide"))
     }
     
     const [tgl, bln, thn] = m.args

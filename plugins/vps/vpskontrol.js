@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     
     const dropletId = m.text?.trim()
     if (!dropletId) {
-        return m.reply( `Cara pakai:\n${m.prefix}${m.command} <droplet_id>`, "turnon")
+        return m.reply( raraWrap("vpskontrol", `Cara pakai:\n${m.prefix}${m.command} <droplet_id>`, "guide"), "turnon")
     }
     
     const actions = {

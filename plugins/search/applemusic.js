@@ -22,10 +22,10 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
     
     if (!query) {
-        return m.reply( `⚠️ *cara pakai*\n\n` +
+        return m.reply( raraWrap("applemusic", `⚠️ *cara pakai*\n\n` +
             `\`${m.prefix}applemusic <query>\`\n\n` +
             `Contoh:\n` +
-            `\`${m.prefix}applemusic Best Friend\``, "applemusic")
+            `\`${m.prefix}applemusic Best Friend\``, "guide"), "applemusic")
     }
     
     try {

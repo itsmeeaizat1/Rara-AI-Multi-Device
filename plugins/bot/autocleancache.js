@@ -56,9 +56,9 @@ async function handler(m, { sock }) {
         stopCleaner();
         updateSettings({ enabled: false });
         return m.reply(
-          "Auto Clean Cache: *OFF*\n\n" +
+          raraWrap("autocleancache", "Auto Clean Cache: *OFF*\n\n" +
           "Cache tidak akan dibersihkan otomatis.\n" +
-          "Ketik `.autocleancache on` untuk menyalakan kembali."
+          "Ketik `.autocleancache on` untuk menyalakan kembali.", "guide")
         );
       } else {
         const newSettings = updateSettings({ enabled: true });
@@ -103,13 +103,13 @@ async function handler(m, { sock }) {
     // Status
     if (action === "status") {
       return m.reply(
-        "Auto Clean Cache - Status\n\n" +
+        raraWrap("autocleancache", "Auto Clean Cache - Status\n\n" +
         "Status: " + (settings.enabled ? "*ON*" : "*OFF*") + "\n" +
         "Interval: " + (settings.intervalStr || "1 hour") + "\n" +
         "Terakhir dibersihkan: " + formatLastClean(settings.lastClean) + "\n" +
         "Total file dibersihkan: " + (settings.totalCleaned || 0) + "\n" +
         "Total space dibebaskan: " + formatSize((settings.totalFreedKB || 0) * 1024) + "\n\n" +
-        "Ketik `.autocleancache now` untuk bersihkan sekarang"
+        "Ketik `.autocleancache now` untuk bersihkan sekarang", "guide")
       );
     }
 
@@ -136,10 +136,10 @@ async function handler(m, { sock }) {
         startCleaner(newSettings);
       }
       return m.reply(
-        "Auto Clean Cache - Interval diatur\n\n" +
+        raraWrap("autocleancache", "Auto Clean Cache - Interval diatur\n\n" +
         "Interval baru: " + parsed.str + "\n" +
         "Status: " + (newSettings.enabled ? "*ON*" : "*OFF*") + "\n\n" +
-        (newSettings.enabled ? "Perubahan langsung aktif." : "Ketik `.autocleancache on` untuk menyalakan.")
+        (newSettings.enabled ? "Perubahan langsung aktif." : "Ketik `.autocleancache on` untuk menyalakan."), "guide")
       );
     }
 

@@ -47,9 +47,9 @@ async function handler(m, { sock }) {
 
   if (!name) {
     return m.reply(
-      `Hapus plugin berdasarkan nama\n\n` +
+      raraWrap("delplugin", `Hapus plugin berdasarkan nama\n\n` +
         `Contoh:\n` +
-        `\`${m.prefix}delplugin bliblidl\``, "delplugin");
+        `\`${m.prefix}delplugin bliblidl\``, "guide"), "delplugin");
   }
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");

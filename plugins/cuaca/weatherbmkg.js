@@ -46,8 +46,8 @@ async function handler(m, { sock }) {
     return await m.reply(raraWrap("cuacav2", txt));
   } catch (error) {
     return m.reply(
-      "Gagal ambil data cuaca nih\n" + error.message + "\n\n" +
-      "Contoh: .cuacav2 Jakarta"
+      raraWrap("cuacav2", "Gagal ambil data cuaca nih\n" + error.message + "\n\n" +
+      "Contoh: .cuacav2 Jakarta", "guide")
     );
   }
 }

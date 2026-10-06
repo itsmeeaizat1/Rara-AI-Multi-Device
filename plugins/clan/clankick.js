@@ -30,9 +30,9 @@ async function handler(m, { sock }) {
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender
     if (!target) {
-        return m.reply( `👢 *clan kick*\n\n` +
+        return m.reply( raraWrap("clankick", `👢 *clan kick*\n\n` +
             `Tag atau reply member yang mau dikeluarkan\n\n` +
-            `Contoh: *.clankick @user*`, "clankick")
+            `Contoh: *.clankick @user*`, "guide"), "clankick")
     }
 
     if (target === m.sender) return m.reply(raraWrap("clankick", `❌ Tidak bisa kick diri sendiri`))

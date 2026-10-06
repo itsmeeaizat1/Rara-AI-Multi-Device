@@ -143,7 +143,7 @@ async function pddikti(input) {
 async function handler(m, { sock,  args }) {
   if (args.length === 0) {
     return m.reply(
-      `🎓 *pddikti search*\n\n` +
+      raraWrap("pddikti", `🎓 *pddikti search*\n\n` +
       `Mode pencarian:\n` +
       `- \`.pddikti all <query>\`\n` +
       `- \`.pddikti mhs <nama/NIM>\`\n` +
@@ -151,7 +151,7 @@ async function handler(m, { sock,  args }) {
       `- \`.pddikti pt <nama_kampus>\`\n` +
       `- \`.pddikti prodi <nama_prodi>\`\n` +
       `- \`.pddikti detail <id_mahasiswa>\`\n\n` +
-      `*contoh:* \`.pddikti mhs Gibran Rakabuming\``
+      `*contoh:* \`.pddikti mhs Gibran Rakabuming\``, "guide")
     );
   }
   try {

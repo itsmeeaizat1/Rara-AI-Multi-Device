@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
   const args = m.args;
   if (args.length < 2) {
     return m.reply(
-      `📝 *tambah sewa*\n\n` +
+      raraWrap("addsewa", `📝 *tambah sewa*\n\n` +
         `Format: *${m.prefix}addsewa <link/id> <durasi> [harga]*\n\n` +
         `*format durasi:*\n` +
         `30i = 30 menit\n` +
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
         `${m.prefix}addsewa https://chat.whatsapp.com/xxx 30d
   ${m.prefix}addsewa https://chat.whatsapp.com/xxx 7d "Rp 20.000"\n` +
         `${m.prefix}addsewa 120363xxx 1m\n\n` +
-        `💡 Jika pakai link, bot akan otomatis join ke grup tersebut!`,
+        `💡 Jika pakai link, bot akan otomatis join ke grup tersebut!`, "guide"),
     );
   }
 
@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
 
   if (!expiredAt)
     return m.reply(
-      `❌ Format durasi tidak valid\n\n💡 *Contoh:* 7d, 1m, 1y, lifetime`,
+      raraWrap("addsewa", `❌ Format durasi tidak valid\n\n💡 *Contoh:* 7d, 1m, 1y, lifetime`, "guide"),
     );
   try {
     const result = await resolveGroupId(sock, input);

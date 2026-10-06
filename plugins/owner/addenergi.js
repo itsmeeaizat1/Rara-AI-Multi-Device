@@ -54,11 +54,11 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid || (!isUnlimited && amount <= 0)) {
-        return m.reply( `⚡ *Add Energi*\n\n` +
+        return m.reply( raraWrap("addenergi", `⚡ *Add Energi*\n\n` +
             `\`.addenergi <jumlah>\` - ke diri sendiri\n` +
             `\`.addenergi <jumlah> @user\` - ke user\n` +
             `\`.addenergi --unlimited\` - unlimited\n\n` +
-            `\`Contoh: ${m.prefix}addenergi 100\``, "addenergi")
+            `\`Contoh: ${m.prefix}addenergi 100\``, "guide"), "addenergi")
     }
 
     const user = db.getUser(targetJid) || db.setUser(targetJid)

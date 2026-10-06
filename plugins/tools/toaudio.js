@@ -69,9 +69,9 @@ async function handler(m, { sock }) {
         return
     }
     if (!isVideo && !isPtt) {
-        await m.reply( `⚠️ *sudah audio*\n\n` +
+        await m.reply( raraWrap("toaudio", `⚠️ *sudah audio*\n\n` +
             `Media ini sudah dalam format audio.\n` +
-            `Gunakan \`${m.prefix}tovn\` jika ingin mengubah ke voice note.`, "toaudio")
+            `Gunakan \`${m.prefix}tovn\` jika ingin mengubah ke voice note.`, "guide"), "toaudio")
         return
     }
 

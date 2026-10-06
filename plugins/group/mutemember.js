@@ -44,13 +44,13 @@ async function handler(m, { sock }) {
     const targetJid = resolveTarget(m)
 
     if (!targetJid) {
-        return m.reply( `🔇 *mute member*\n\n` +
+        return m.reply( raraWrap("mutemember", `🔇 *mute member*\n\n` +
             `Bisukan member tertentu di grup ini\n` +
             `Pesan member yang dimute akan dihapus oleh bot\n\n` +
             `\`Contoh:\`\n` +
             `${m.prefix}mutemember @user\n` +
             `${m.prefix}mutemember 6281234567890\n` +
-            `Reply pesan member + ${m.prefix}mutemember`, "mutemember")
+            `Reply pesan member + ${m.prefix}mutemember`, "guide"), "mutemember")
     }
 
     const targetNumber = targetJid.replace(/@.+/g, '')

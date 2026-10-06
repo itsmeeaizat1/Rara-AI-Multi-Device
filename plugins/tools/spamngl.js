@@ -22,9 +22,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.text?.split('|')
     const [ link, kata, jumlah ] = text
-    if(!link) return m.reply( `*LINK NGL NYA MANA ??*\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
-    if(!kata) return m.reply( `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
-    if(!jumlah) return m.reply( `*JUMLAH NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
+    if(!link) return m.reply( raraWrap("spamngl", `*LINK NGL NYA MANA ??*\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "guide"), "spamngl")
+    if(!kata) return m.reply( raraWrap("spamngl", `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "guide"), "spamngl")
+    if(!jumlah) return m.reply( raraWrap("spamngl", `*JUMLAH NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "guide"), "spamngl")
     if(isNaN(jumlah)) { const __navText = `*jumlah nya harus angka*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`; return await m.reply(__navText); }
     try {
     await m.react("🕒");

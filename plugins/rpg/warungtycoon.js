@@ -23,6 +23,7 @@ import { addCash, spendCash, getCash } from "../../src/lib/rara-rpg-service.js";
 import { editFramesAnim, editSceneAnim, sceneTotalMs } from "../../src/lib/rara-anim-runner.js";
 import { bukaCinematic, masakCinematic } from "../../src/lib/libanimationrpg/libwarungtycoonrpg.js";
 import { getLocalDateObject } from "../../src/lib/rara-time.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 // ── knob (pattern: !== undefined biar 0 tetap valid) ──
 const STAMINA_MAX = process.env.WARUNG_STAMINA_MAX !== undefined ? Number(process.env.WARUNG_STAMINA_MAX) : 10;
@@ -141,7 +142,7 @@ async function handler(m, { sock }) {
   // ── mulai / status ──
   let u = loadUser(m);
   if (!u && sub && !["", "mulai", "start", "status", "buka"].includes(sub)) {
-    return m.reply(box("❓", "❓ *BELUM BUKA USAHA!*", "Ketik .warungtycoon dulu untuk memulai usaha kuliner pertamamu."));
+    return m.reply(raraWrap("warungtycoon", box("❓", "❓ *BELUM BUKA USAHA!*", "Ketik .warungtycoon dulu untuk memulai usaha kuliner pertamamu."), "guide"));
   }
   if (!u) {
     u = newUser(m);
@@ -162,7 +163,7 @@ async function handler(m, { sock }) {
   if (sub === "status") {
     const t = tierOf(u.level);
     regenStamina(u);
-    return m.reply(box(t.tile, t.tile + " *" + t.nama.toUpperCase() + "*",
+    return m.reply(raraWrap("warungtycoon", box(t.tile, t.tile + " *" + t.nama.toUpperCase() + "*",
       "📊 Level warung: " + u.level + " (" + u.exp + "/" + expNext(u.level) + " EXP)\n" +
       "⚡ Stamina: " + u.stamina + "/" + u.maxStamina + " (+1/5 mnt)\n" +
       "⭐ Rating: " + "★".repeat(u.rating) + "☆".repeat(5 - u.rating) + " (" + u.rating + "/5)\n" +
@@ -172,7 +173,7 @@ async function handler(m, { sock }) {
       "📜 Resep rahasia: " + Object.keys(u.resep || {}).length + "/" + RESEP_RAHASIA.length + " · 🎰 Pity: " + u.pity + "/" + PITY_AT + "\n" +
       "💰 Uang: " + getCash(m) + " · 📈 Total omzet: " + u.totalOmzet + "\n" +
       "♻️ Franchise: " + u.franchise + " (profit +" + u.franchise * 10 + "%) · 🎖️ Rank: " + rankOf(u.franchise) + "\n\n" +
-      "Ketik .warungtycoon buka untuk jualan!"));
+      "Ketik .warungtycoon buka untuk jualan!"), "guide"));
   }
 
   // ── daftar menu ──
@@ -190,8 +191,8 @@ async function handler(m, { sock }) {
   if (sub === "belanja") {
     const bahan = (m.args?.[1] || "").toLowerCase();
     const jumlah = Number(m.args?.[2]);
-    if (!HARGA_BAHAN[bahan]) return m.reply(box("🛒", "🛒 *BAHAN TAK ADA*", "Pilihan: beras / ayam / cabe. Contoh: .warungtycoon belanja beras 20"));
-    if (!Number.isInteger(jumlah) || jumlah < 1 || jumlah > 100) return m.reply(box("🛒", "🛒 *JUMLAH ANEH*", "Masukkan jumlah 1-100. Contoh: .warungtycoon belanja " + bahan + " 20"));
+    if (!HARGA_BAHAN[bahan]) return m.reply(raraWrap("warungtycoon", box("🛒", "🛒 *BAHAN TAK ADA*", "Pilihan: beras / ayam / cabe. Contoh: .warungtycoon belanja beras 20"), "guide"));
+    if (!Number.isInteger(jumlah) || jumlah < 1 || jumlah > 100) return m.reply(raraWrap("warungtycoon", box("🛒", "🛒 *JUMLAH ANEH*", "Masukkan jumlah 1-100. Contoh: .warungtycoon belanja " + bahan + " 20"), "guide"));
     if (u.stamina < 1) return m.reply(box("⚡", "⚡ *KECAPEKAN!*", "Stamina habis (" + u.stamina + "/" + u.maxStamina + "). Istirahat dulu, regen +1 tiap 5 menit."));
     if ((u.bahan[bahan] || 0) + jumlah > BAHAN_CAP) return m.reply(box("📦", "📦 *GUDANG PENUH!*", "Kapasitas " + bahan + " maksimal " + BAHAN_CAP + " (punya " + (u.bahan[bahan] || 0) + ")."));
     const harga = HARGA_BAHAN[bahan] * jumlah;

@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
         .map(([k, v]) => k + " (" + v.desc + ")")
         .join("\n");
       return m.reply(
-        prefix + "barcode <data>\n" +
+        raraWrap("barcode", prefix + "barcode <data>\n" +
         prefix + "barcode <type> <data>\n\n" +
         "Type tersedia:\n" + typeList + "\n\n" +
         "Default type: code128\n\n" +
@@ -50,7 +50,7 @@ async function handler(m, { sock, config: botConfig }) {
         prefix + "barcode 1234567890128\n" +
         prefix + "barcode code128 Hello World\n" +
         prefix + "barcode ean13 123456789012\n" +
-        prefix + "barcode upc 12345678901",
+        prefix + "barcode upc 12345678901", "guide"),
         { title: "Barcode Generator" }
       );
     }

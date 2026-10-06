@@ -49,9 +49,9 @@ async function handler(m, { sock }) {
     
     if (!username) {
         return m.reply(
-            `📸 *instagram stalk*\n\n` +
+            raraWrap("igstalk", `📸 *instagram stalk*\n\n` +
             `Masukkan username Instagram\n\n` +
-            `\`Contoh: ${m.prefix}igstalk cristiano\``
+            `\`Contoh: ${m.prefix}igstalk cristiano\``, "guide")
         )
     }
     try {

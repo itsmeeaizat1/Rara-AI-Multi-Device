@@ -64,11 +64,11 @@ async function handler(m, { sock, config: botConfig }) {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 2) {
         return m.reply(
-          prefix + "blacklistscammer add <nomor> | <alasan> | <bukti>\n\n" +
+          raraWrap("blacklistscammer", prefix + "blacklistscammer add <nomor> | <alasan> | <bukti>\n\n" +
           "Contoh:\n" +
           prefix + "blacklistscammer add 08123456789 | judi online | link grup judi\n" +
           prefix + "blacklistscammer add 08123456789 | pinjol ilegal\n\n" +
-          "Bukti opsional. Nomor bisa 08xxx, 628xxx, atau @nomor",
+          "Bukti opsional. Nomor bisa 08xxx, 628xxx, atau @nomor", "guide"),
           { title: "Blacklist - Add" }
         );
       }

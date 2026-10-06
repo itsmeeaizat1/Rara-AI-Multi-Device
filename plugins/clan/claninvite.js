@@ -29,9 +29,9 @@ async function handler(m, { sock }) {
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender
     if (!target) {
-        return m.reply( `📨 *clan invite*\n\n` +
+        return m.reply( raraWrap("claninvite", `📨 *clan invite*\n\n` +
             `Tag atau reply user yang mau diundang\n\n` +
-            `Contoh: *.claninvite @user*`, "claninvite")
+            `Contoh: *.claninvite @user*`, "guide"), "claninvite")
     }
 
     if (target === m.sender) return m.reply(raraWrap("claninvite", `❌ Tidak bisa invite diri sendiri`))

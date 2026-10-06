@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
 
   if (!text) {
     return m.reply(
-      `CARA PAKAI CUSTOM PANEL\n\n` +
+      raraWrap("Panel", `CARA PAKAI CUSTOM PANEL\n\n` +
       `Format:\n` +
       `${prefix}cp <ram> <disk> <cpu> <nomor>\n\n` +
       `Contoh:\n` +
@@ -139,7 +139,7 @@ async function handler(m, { sock }) {
       `  disk = Penyimpanan (1gb, 5gb, unli)\n` +
       `  cpu = CPU limit (1-400) atau unli\n` +
       `  nomor = Nomor WhatsApp target\n\n` +
-      `Server tersedia: ${getAvailableServers(pteroConfig).join(', ') || 'none'}`,
+      `Server tersedia: ${getAvailableServers(pteroConfig).join(', ') || 'none'}`, "guide"),
       "Panel"
     )
   }

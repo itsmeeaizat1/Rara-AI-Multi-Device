@@ -63,9 +63,9 @@ async function handler(m, { sock }) {
       if (!info) {
         const data = getPaymentData();
         return m.reply(
-          "Info cash saat ini: " + (data.cash?.info || "(belum diatur)") + "\n\n" +
+          raraWrap("setpayment", "Info cash saat ini: " + (data.cash?.info || "(belum diatur)") + "\n\n" +
           "Format: .setpayment cash info <teks>\n" +
-          "Contoh: .setpayment cash info COD area Jakarta, hubungi 08xxx"
+          "Contoh: .setpayment cash info COD area Jakarta, hubungi 08xxx", "guide")
         );
       }
       const data = getPaymentData();
@@ -77,11 +77,11 @@ async function handler(m, { sock }) {
     }
 
     return m.reply(
-      "Format cash:\n\n" +
+      raraWrap("setpayment", "Format cash:\n\n" +
       "1. .setpayment cash on — Aktifkan cash\n" +
       "2. .setpayment cash off — Matikan cash\n" +
       "3. .setpayment cash info <teks> — Atur info cash (auto ON)\n\n" +
-      "Contoh: .setpayment cash info COD area Jakarta saja"
+      "Contoh: .setpayment cash info COD area Jakarta saja", "guide")
     );
   }
 
@@ -135,12 +135,12 @@ async function handler(m, { sock }) {
 
     if (parts.length < 2) {
       return m.reply(
-        "Format tambah e-wallet:\n\n" +
+        raraWrap("setpayment", "Format tambah e-wallet:\n\n" +
         ".setpayment add <nama>|<nomor>|<atas nama>\n\n" +
         "Contoh:\n" +
         ".setpayment add Dana|081234567890|Aizat\n" +
         ".setpayment add GoPay|081234567890|Aizat\n" +
-        ".setpayment add OVO|081234567890|Aizat"
+        ".setpayment add OVO|081234567890|Aizat", "guide")
       );
     }
 
@@ -189,11 +189,11 @@ async function handler(m, { sock }) {
 
       if (parts.length < 2) {
         return m.reply(
-          "Format tambah rekening bank:\n\n" +
+          raraWrap("setpayment", "Format tambah rekening bank:\n\n" +
           ".setpayment bank add <nama bank>|<nomor rekening>|<atas nama>\n\n" +
           "Contoh:\n" +
           ".setpayment bank add BCA|1234567890|Aizat\n" +
-          ".setpayment bank add Mandiri|9876543210|Aizat"
+          ".setpayment bank add Mandiri|9876543210|Aizat", "guide")
         );
       }
 

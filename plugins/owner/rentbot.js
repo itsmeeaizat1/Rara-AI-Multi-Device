@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     ? Object.values(db.db.data.sewa.registrations).filter((r) => r.status === "pending").length
     : 0;
   if (!args || args === "status") {
-    return m.reply( `🔧 *sistem sewa bot*\n\n` +
+    return m.reply( raraWrap("sewabot", `🔧 *sistem sewa bot*\n\n` +
         `Status: *${currentStatus ? "✅ AKTIF" : "❌ NONAKTIF"}*\n` +
         `Grup terdaftar: *${sewaGroups.length}*\n` + `Pendaftaran pending: *${pendingRegs}*\n\n` +
         `*perintah tersedia:*\n` +
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
         `2. Bot otomatis join jika pakai link\n` +
         `3. Aktifkan dengan *${m.prefix}sewabot on*\n` +
         `4. Bot akan keluar dari semua grup yang tidak terdaftar\n` +
-        `5. Sewa expired → bot otomatis keluar dari grup`, "sewabot");
+        `5. Sewa expired → bot otomatis keluar dari grup`, "guide"), "sewabot");
   }
   if (args === "off") {
     db.db.data.sewa.enabled = false;
@@ -187,7 +187,7 @@ async function handler(m, { sock }) {
     );
   }
   return m.reply(
-    `❌ Perintah tidak valid\n\nKetik *${m.prefix}sewabot* untuk melihat panduan lengkap`,
+    raraWrap("sewabot", `❌ Perintah tidak valid\n\nKetik *${m.prefix}sewabot* untuk melihat panduan lengkap`, "guide"),
   );
 }
 export { pluginConfig as config, handler, pendingConfirmations };

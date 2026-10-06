@@ -222,7 +222,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         
         if (pipeIdx === -1) {
             return m.reply(
-                `❌ *format salah*\n\n` +
+                raraWrap("autoreply", `❌ *format salah*\n\n` +
                 `Gunakan format: *trigger|reply*\n\n` +
                 `*text only:*\n` +
                 `${m.prefix}ar add halo|Hai {name}! 👋\n\n` +
@@ -235,7 +235,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
                 `{sender} - Nomor user\n` +
                 `{botname} - Nama bot\n` +
                 `{time} - Waktu sekarang\n` +
-                `{date} - Tanggal sekarang`
+                `{date} - Tanggal sekarang`, "guide")
             )
         }
         

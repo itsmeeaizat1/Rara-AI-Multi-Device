@@ -63,12 +63,12 @@ async function handler(m, { sock }) {
 
       if (!interval) {
         return m.reply(
-          `⚠️ *Interval Dibutuhkan*\n\n` +
+          raraWrap("autobackup", `⚠️ *Interval Dibutuhkan*\n\n` +
             `\`${m.prefix}autobackup on <interval>\`\n\n` +
             `*Contoh:*\n` +
             `\`${m.prefix}autobackup on 30m\` - tiap 30 menit\n` +
             `\`${m.prefix}autobackup on 6h\` - tiap 6 jam\n` +
-            `\`${m.prefix}autobackup on 1d\` - tiap 1 hari`,
+            `\`${m.prefix}autobackup on 1d\` - tiap 1 hari`, "guide"),
         );
       }
 
@@ -133,9 +133,9 @@ async function handler(m, { sock }) {
 
     default:
       return m.reply(
-        `⚠️ *Action Tidak Valid*\n\n` +
+        raraWrap("autobackup", `⚠️ *Action Tidak Valid*\n\n` +
           `Pilih: \`on\`, \`off\`, \`status\`, atau \`now\`\n` +
-          `Contoh: \`${m.prefix}autobackup on 6h\``,
+          `Contoh: \`${m.prefix}autobackup on 6h\``, "guide"),
       );
   }
 }

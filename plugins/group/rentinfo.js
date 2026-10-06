@@ -54,7 +54,7 @@ function handler(m, { sock }) {
   }
 
   // Grup tidak terdaftar - tampilkan info cara sewa
-  return m.reply( "📝 *cara sewa bot*\n\n" +
+  return m.reply( raraWrap("sewainfo", "📝 *cara sewa bot*\n\n" +
     "Mau pakai bot ini di grup kamu?\n\n" +
     "*cara sewa:*\n" +
     "1. Hubungi owner bot\n" +
@@ -68,7 +68,7 @@ function handler(m, { sock }) {
     "1m = 1 bulan\n" +
     "1y = 1 tahun\n" +
     "lifetime = permanen\n\n" +
-    "Hubungi owner untuk info lebih lanjut.", "sewainfo");
+    "Hubungi owner untuk info lebih lanjut.", "guide"), "sewainfo");
 }
 
 export { pluginConfig as config, handler };

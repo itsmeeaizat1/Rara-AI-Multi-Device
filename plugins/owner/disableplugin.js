@@ -57,11 +57,11 @@ async function handler(m, { sock }) {
   const pluginName = args[0]?.toLowerCase();
 
   if (!pluginName) {
-    return m.reply( `🔌 *Disable Plugin*\n\n` +
+    return m.reply( raraWrap("disableplugin", `🔌 *Disable Plugin*\n\n` +
         `Masukkan nama plugin yang ingin dinonaktifkan\n\n` +
         `*Contoh:*\n` +
         `\`${m.prefix}disableplugin sticker\`\n` +
-        `\`${m.prefix}disableplugin tiktok\``, "disableplugin");
+        `\`${m.prefix}disableplugin tiktok\``, "guide"), "disableplugin");
   }
 
   const found = await findPluginFile(pluginName);

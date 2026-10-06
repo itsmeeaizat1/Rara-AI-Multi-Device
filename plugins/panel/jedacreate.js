@@ -54,7 +54,7 @@ function handler(m, { sock }) {
     
     if (!input) {
         const currentJeda = db.setting('panelCreateJeda') ?? DEFAULT_JEDA
-        return m.reply( `⏱️ *jeda panel create*\n\n` +
+        return m.reply( raraWrap("jedacreate", `⏱️ *jeda panel create*\n\n` +
             `Jeda saat ini: *${formatTime(currentJeda)}*\n` +
             `Default: *5 menit*\n` +
             `\n` +
@@ -64,7 +64,7 @@ function handler(m, { sock }) {
             `*format waktu:*\n` +
             `\`30s\` = 30 detik\n` +
             `\`5m\` = 5 menit\n` +
-            `\`1h\` = 1 jam`, "jedacreate")
+            `\`1h\` = 1 jam`, "guide"), "jedacreate")
     }
     
     const jedaMs = parseTime(input)

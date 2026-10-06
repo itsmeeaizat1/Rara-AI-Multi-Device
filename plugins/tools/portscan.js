@@ -78,7 +78,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "portscan <host>\n" +
+        raraWrap("portscan", prefix + "portscan <host>\n" +
         prefix + "portscan <host> <port1,port2,...>\n\n" +
         "Default: scan 19 common ports\n" +
         "Custom: scan port spesifik (max 20 ports)\n\n" +
@@ -88,7 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Contoh:\n" +
         prefix + "portscan google.com\n" +
         prefix + "portscan 8.8.8.8 53,80,443\n" +
-        prefix + "portscan example.com 1-100",
+        prefix + "portscan example.com 1-100", "guide"),
         { title: "Port Scanner" }
       );
     }

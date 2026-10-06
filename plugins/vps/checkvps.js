@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
 
   const dropletId = m.text?.trim();
   if (!dropletId) {
-    return m.reply( `Cara pakai:\n${m.prefix}cekvps <droplet_id>\n\nGunakan ${m.prefix}listvps untuk melihat ID`, "cekvps");
+    return m.reply( raraWrap("checkvps", `Cara pakai:\n${m.prefix}cekvps <droplet_id>\n\nGunakan ${m.prefix}listvps untuk melihat ID`, "guide"), "cekvps");
   }
   try {
     const response = await axios.get(

@@ -30,11 +30,11 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text) {
-    return m.reply( `📱 *Android1 sEarch*\n\n` +
+    return m.reply( raraWrap("android1", `📱 *Android1 sEarch*\n\n` +
         `🔍 \`${m.prefix}android1 <query>\` - Cari APK\n` +
         `\n` +
         `Contoh:\n` +
-        `\`${m.prefix}android1 Subway Surfer\``, "android1");
+        `\`${m.prefix}android1 Subway Surfer\``, "guide"), "android1");
   }
   try {
     const { data } = await axios.get(

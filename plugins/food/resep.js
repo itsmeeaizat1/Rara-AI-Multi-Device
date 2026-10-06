@@ -381,7 +381,7 @@ async function handler(m, { sock, args }) {
     const cat = query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
     idResults = ID_RECIPES.filter(r => r.c.toLowerCase() === cat.toLowerCase()).sort((a, b) => b.l - a.l).slice(0, 8);
     if (intMeals.length === 0 && idResults.length === 0) {
-            return m.reply(`Kategori "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}resep kategori\` untuk lihat daftar.`);
+            return m.reply(raraWrap("resep", `Kategori "${query}" tidak ditemukan.\n\nKetik \`${m.prefix}resep kategori\` untuk lihat daftar.`, "guide"));
     }
     let txt = `Resep Kategori: ${query}\n\n`;
     if (intMeals.length > 0) { txt += `Internasional:\n`; intMeals.forEach((meal, i) => txt += `${i + 1}. ${meal.strMeal} (ID: ${meal.idMeal})\n`); txt += `\n`; }
@@ -454,7 +454,7 @@ async function handler(m, { sock, args }) {
     const lbQuery = args.slice(1).join(" ").trim() || args.slice(0).join(" ").trim();
     const lbCleaned = cleanQuery(lbQuery);
     if (!lbCleaned) {
-            return m.reply(`Masukkan nama resep.\n💡 *Contoh:* \`${m.prefix}reseplb nasi goreng\``);
+            return m.reply(raraWrap("resep", `Masukkan nama resep.\n💡 *Contoh:* \`${m.prefix}reseplb nasi goreng\``, "guide"));
     }
     const [cpRes, tmRes] = await Promise.all([
       searchCookpad(lbCleaned),
@@ -521,7 +521,7 @@ async function handler(m, { sock, args }) {
   const rawQuery = args.join(" ").trim();
   const cleaned = cleanQuery(rawQuery);
   if (!cleaned) {
-        return m.reply(`Masukkan nama resep yang dicari.\n\n💡 *Contoh:* \`${m.prefix}resep nasi goreng\` atau \`${m.prefix}resep masakan ayam\``);
+        return m.reply(raraWrap("resep", `Masukkan nama resep yang dicari.\n\n💡 *Contoh:* \`${m.prefix}resep nasi goreng\` atau \`${m.prefix}resep masakan ayam\``, "guide"));
   }
 
   // Search Cookpad (live) and TheMealDB simultaneously

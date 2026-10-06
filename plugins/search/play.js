@@ -321,9 +321,9 @@ async function handler(m, { sock }) {
     const msg = String(err?.message || "");
     if (/verifikasi bot|cookies YouTube|Sign in to confirm|not a bot/i.test(msg)) {
       return m.reply(
-        `⚠️ YouTube lagi ngeblokir IP server (nagih verifikasi bot).\n` +
+        raraWrap("play", `⚠️ YouTube lagi ngeblokir IP server (nagih verifikasi bot).\n` +
         `Semua jalur konversi (yt-dlp, cobalt, API mp3) lagi kena blokir barengan.\n\n` +
-        `🔧 *FIX:* ekspor cookies YouTube dari browser yang login (akun sekunder aja biar aman) pakai extension "Get cookies.txt LOCALLY" → simpan ke *data/yt-cookies.txt* → restart bot. Panduan lengkap: changelogs/FIXES.md`
+        `🔧 *FIX:* ekspor cookies YouTube dari browser yang login (akun sekunder aja biar aman) pakai extension "Get cookies.txt LOCALLY" → simpan ke *data/yt-cookies.txt* → restart bot. Panduan lengkap: changelogs/FIXES.md`, "guide")
       );
     }
     return m.reply(raraGangguan("Play"));

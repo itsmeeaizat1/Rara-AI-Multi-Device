@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "lorem <jumlah> <unit>\n\n" +
+        raraWrap("lorem", prefix + "lorem <jumlah> <unit>\n\n" +
         "Unit:\n" +
         "paragraf = blok paragraf\n" +
         "kata = jumlah kata\n" +
@@ -134,7 +134,7 @@ async function handler(m, { sock, config: botConfig }) {
         prefix + "lorem 3 paragraf\n" +
         prefix + "lorem 50 kata\n" +
         prefix + "lorem 5 kalimat\n" +
-        prefix + "lorem 4 list",
+        prefix + "lorem 4 list", "guide"),
         { title: "Lorem Ipsum Generator" }
       );
     }

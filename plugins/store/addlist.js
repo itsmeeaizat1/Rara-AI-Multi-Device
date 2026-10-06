@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
 
     if (pipeIdx === -1) {
         return m.reply(
-            `➕ *tambah informasi toko*\n\n` +
+            raraWrap("addlist", `➕ *tambah informasi toko*\n\n` +
             `📋 Format:\n` +
             `\`${m.prefix}addlist <nama>|<isi>\`\n\n` +
             `📌 *parameter:*\n` +
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
             `🖼️ *tips:*\n` +
             `Kirim gambar/video terlebih dahulu, lalu reply media tersebut dengan command di atas untuk menambahkan media 📸\n` +
             `Gunakan \`;;\` untuk membuat baris baru dalam isi informasi ✍️\n` +
-            `Informasi ini bisa dilihat semua orang melalui \`${m.prefix}list\` 👥`
+            `Informasi ini bisa dilihat semua orang melalui \`${m.prefix}list\` 👥`, "guide")
         )
     }
 

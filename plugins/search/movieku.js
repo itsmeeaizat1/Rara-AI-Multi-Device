@@ -109,14 +109,14 @@ async function handler(m, { sock }) {
 
     if (!query) {
         return m.reply(
-            `🎬 *movieku*\n\n` +
+            raraWrap("movieku", `🎬 *movieku*\n\n` +
             `Fitur ini membantu kamu mencari informasi lengkap tentang film dari database Movieku, termasuk sinopsis, detail film, dan link download dalam berbagai kualitas resolusi\n\n` +
             `*cara pakai:*\n` +
             `\`${m.prefix}movieku <judul film>\`\n\n` +
             `*contoh:*\n` +
             `\`${m.prefix}movieku avengers\`\n` +
             `\`${m.prefix}movieku one piece\`\n\n` +
-            `_Hasil pencarian akan menampilkan film yang paling relevan dengan judul yang kamu cari_`
+            `_Hasil pencarian akan menampilkan film yang paling relevan dengan judul yang kamu cari_`, "guide")
         )
     }
     try {

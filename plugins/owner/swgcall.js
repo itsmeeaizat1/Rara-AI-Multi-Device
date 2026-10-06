@@ -158,11 +158,11 @@ async function handler(m, { sock, db }) {
     rawContent.backgroundColor = "#128C7E";
   } else {
     return m.reply(
-      `⚠️ *Cara Pakai*\n\n` +
+      raraWrap("swgcall", `⚠️ *Cara Pakai*\n\n` +
         `\`${m.prefix}swgcall teks\` - Story teks ke semua grup\n` +
         `Reply gambar/video/audio + \`${m.prefix}swgcall\`\n` +
         `Kirim gambar/video + caption \`${m.prefix}swgcall\`\n\n` +
-        `⚠️ _Fitur ini akan mengirim story ke SEMUA grup!_`,
+        `⚠️ _Fitur ini akan mengirim story ke SEMUA grup!_`, "guide"),
     );
   }
 

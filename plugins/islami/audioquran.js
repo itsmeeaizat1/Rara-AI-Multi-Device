@@ -294,14 +294,14 @@ async function mp3quran(input) {
 async function handler(m, { sock, args }) {
   if (args.length === 0) {
     return m.reply(
-      `🕌 *audio quran*\n\n` +
+      raraWrap("audioquran", `🕌 *audio quran*\n\n` +
       `Mode yang tersedia:\n` +
       `- \`.audio-quran reciters\` (List qari)\n` +
       `- \`.audio-quran suwar\` (List surah 1-114)\n` +
       `- \`.audio-quran radios\` (List radio live)\n` +
       `- \`.audio-quran riwayat\` (List bacaan)\n` +
       `- \`.audio-quran audio <nama_qari> <nomor_surah>\`\n\n` +
-      `*contoh:* \`.audio-quran audio sudais 1\``
+      `*contoh:* \`.audio-quran audio sudais 1\``, "guide")
     );
   }
   try {

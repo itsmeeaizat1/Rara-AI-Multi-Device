@@ -22,9 +22,9 @@ async function handler(m, { sock }) {
   const text = m.text?.split("|");
   const [link, kata] = text;
   if (!link)
-    return m.reply( `*LINK NGL NYA MANA ??*\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
+    return m.reply( raraWrap("sendngl", `*LINK NGL NYA MANA ??*\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "guide"), "sendngl");
   if (!kata)
-    return m.reply( `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
+    return m.reply( raraWrap("sendngl", `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "guide"), "sendngl");
   try {
     await m.react("🕒");
     await raraApi.cuki.sendNgl(

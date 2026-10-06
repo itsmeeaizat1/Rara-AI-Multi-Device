@@ -240,10 +240,10 @@ async function handler(m, { sock, db }) {
     rawContent.backgroundColor = "#128C7E";
   } else {
     await m.reply(
-      `⚠️ *Cara Pakai*\n\n` +
+      raraWrap("swgcv2", `⚠️ *Cara Pakai*\n\n` +
       `\`${m.prefix}swgcv2 teks\` - Story teks\n` +
       `Reply gambar/video/audio + \`${m.prefix}swgcv2\`\n` +
-      `Kirim gambar/video + caption \`${m.prefix}swgcv2\``,
+      `Kirim gambar/video + caption \`${m.prefix}swgcv2\``, "guide"),
     );
     return;
   }

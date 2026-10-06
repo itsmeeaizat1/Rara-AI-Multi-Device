@@ -187,7 +187,7 @@ async function handler(m, { sock, args }) {
       }
 
       if (images.length > 10) {
-        await m.reply(`Tersisa ${images.length - 10} halaman lagi. Ketik \`${m.prefix}comicsanka chapter ${slug} 11\` untuk lanjut (soon).`);
+        await m.reply(raraWrap("comicsanka", `Tersisa ${images.length - 10} halaman lagi. Ketik \`${m.prefix}comicsanka chapter ${slug} 11\` untuk lanjut (soon).`, "guide"));
       }
     }
 
@@ -389,7 +389,7 @@ async function handler(m, { sock, args }) {
       const type = (cmdArgs[0] || "").toLowerCase();
       const validTypes = ["manga", "manhwa", "manhua"];
       if (!validTypes.includes(type)) {
-        return m.reply(`Tipe tidak valid!\n\nPilihan: manga, manhwa, manhua\n\n💡 *Contoh:* \`${m.prefix}comicsanka type manhwa\``);
+        return m.reply(raraWrap("comicsanka", `Tipe tidak valid!\n\nPilihan: manga, manhwa, manhua\n\n💡 *Contoh:* \`${m.prefix}comicsanka type manhwa\``, "guide"));
       }
 
       const res = await apiGet(`/comic/type/${type}`);
@@ -455,7 +455,7 @@ async function handler(m, { sock, args }) {
 
     else {
       await m.react("🐣");
-      await m.reply(`Perintah tidak ditemukan!\n\nKetik \`${m.prefix}comicsanka help\` untuk melihat semua perintah.`);
+      await m.reply(raraWrap("comicsanka", `Perintah tidak ditemukan!\n\nKetik \`${m.prefix}comicsanka help\` untuk melihat semua perintah.`, "guide"));
     }
   } catch (e) {
     await m.react("❌");

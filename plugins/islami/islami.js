@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
 
             case 'surah': {
                 if (!text) {
-                    m.reply( `⚠️ Ketik nomor surahnya!\n💡 *Contoh:* \`${m.prefix}surah 1\` buat ambil ayat-ayat dari Al-Fatihah`, "islami")
+                    m.reply( raraWrap("islami", `⚠️ Ketik nomor surahnya!\n💡 *Contoh:* \`${m.prefix}surah 1\` buat ambil ayat-ayat dari Al-Fatihah`, "guide"), "islami")
                     return
                 }
 
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
             break
 
             case 'gislam': {
-                if (!text) return m.reply( `❓ Mau cari artikel tentang apa?\n💡 *Contoh:* \`${m.prefix}gislam puasa\``, "islami")
+                if (!text) return m.reply( raraWrap("islami", `❓ Mau cari artikel tentang apa?\n💡 *Contoh:* \`${m.prefix}gislam puasa\``, "guide"), "islami")
                 
                 try {
                     const response = await fetchJson(`https://artikel-islam.netlify.app/.netlify/functions/api/ms?page=1&s=${text}`)

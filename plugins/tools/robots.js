@@ -108,13 +108,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "robots <url>\n\n" +
+        raraWrap("robots", prefix + "robots <url>\n\n" +
         "Parse robots.txt website\n" +
         "Info: user-agent rules, disallow paths, allow paths, sitemaps, crawl-delay\n\n" +
         "Contoh:\n" +
         prefix + "robots https://github.com\n" +
         prefix + "robots google.com\n" +
-        prefix + "robots https://wordpress.org",
+        prefix + "robots https://wordpress.org", "guide"),
         { title: "Robots.txt Parser" }
       );
     }

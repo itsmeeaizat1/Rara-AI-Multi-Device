@@ -69,13 +69,13 @@ async function handler(m, { sock }) {
 
     if (parts.length < 2) {
       return m.reply(
-        "Format tambah produk:\n\n" +
+        raraWrap("tokobase3", "Format tambah produk:\n\n" +
         ".toko add <nama>|<harga>|<deskripsi>|<kategori>|<stok>\n\n" +
         "Contoh:\n" +
         ".toko add Voucher Game 50K|50000|Voucher game 50 ribu|Digital|unlimited\n" +
         ".toko add Kaos Rara|85000|Kaos premium|Fashion|50\n\n" +
         "Stok: angka atau 'unlimited'\n" +
-        "Kategori: opsional, default 'Umum'"
+        "Kategori: opsional, default 'Umum'", "guide")
       );
     }
 

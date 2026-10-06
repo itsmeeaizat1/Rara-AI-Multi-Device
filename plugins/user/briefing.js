@@ -5,7 +5,7 @@
 // Engine: src/lib/rara-briefing.js (jangan duplikasi logika di sini).
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import {
   getBriefingUser, parseJam, buildBriefingCard,
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
   if (sub === "on" || sub === "nyala" || sub === "aktif") {
     const jamArg = (m.args?.[1] || "").trim();
     const jam = jamArg ? parseJam(jamArg) : u.jam;
-    if (jamArg && !jam) return m.reply("Format jam gak valid. Contoh yang bener: .briefing on 06:30");
+    if (jamArg && !jam) return m.reply(raraWrap("briefing", "Format jam gak valid. Contoh yang bener: .briefing on 06:30", "guide"));
     u.on = true;
     u.jam = jam;
     return m.reply(raraGuide(
@@ -81,18 +81,18 @@ async function handler(m, { sock }) {
   // ── JAM ──
   if (sub === "jam" || sub === "waktu") {
     const jam = parseJam(m.args?.[1] || "");
-    if (!jam) return m.reply("Format jam gak valid. Contoh: .briefing jam 06:30");
+    if (!jam) return m.reply(raraWrap("briefing", "Format jam gak valid. Contoh: .briefing jam 06:30", "guide"));
     u.jam = jam;
-    return m.reply("Oke, jadwal briefing kamu jadi jam " + jam + " WIB" + (u.on ? " (aktif)." : " (saat ini masih mati — ketik .briefing on)."));
+    return m.reply(raraWrap("briefing", "Oke, jadwal briefing kamu jadi jam " + jam + " WIB" + (u.on ? " (aktif)." : " (saat ini masih mati — ketik .briefing on)."), "guide"));
   }
 
   // ── LOKASI ──
   if (sub === "lokasi" || sub === "kota") {
     const kota = (m.args || []).slice(1).join(" ").trim();
-    if (!kota) return m.reply("Sebutin nama kotanya. Contoh: .briefing lokasi bandung");
+    if (!kota) return m.reply(raraWrap("briefing", "Sebutin nama kotanya. Contoh: .briefing lokasi bandung", "guide"));
     if (kota.length > 40) return m.reply("Nama kota kepanjangan.");
     u.lokasi = kota;
-    return m.reply("Siap, cuaca briefing kamu sekarang buat " + kota + (u.on ? "." : " (briefing masih mati — ketik .briefing on)."));
+    return m.reply(raraWrap("briefing", "Siap, cuaca briefing kamu sekarang buat " + kota + (u.on ? "." : " (briefing masih mati — ketik .briefing on)."), "guide"));
   }
 
   // ── TIM ──
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
       return m.reply("Daftar tim favorit dikosongin.");
     }
     if (a0 === "list" || a0 === "daftar" || args.length === 0) {
-      return m.reply(u.tim.length ? "Tim favorit kamu: " + u.tim.join(", ") : "Belum ada tim favorit. Contoh: .briefing tim arsenal");
+      return m.reply(raraWrap("briefing", u.tim.length ? "Tim favorit kamu: " + u.tim.join(", ") : "Belum ada tim favorit. Contoh: .briefing tim arsenal", "guide"));
     }
     const nama = args.join(" ").trim();
     if (nama.length > 30) return m.reply("Nama tim kepanjangan.");

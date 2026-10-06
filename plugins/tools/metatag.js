@@ -79,12 +79,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "metatag <url>\n\n" +
+        raraWrap("metatag", prefix + "metatag <url>\n\n" +
         "Extract meta tags dari website\n" +
         "Info: title, description, OG tags, Twitter cards, favicon, canonical\n\n" +
         "Contoh:\n" +
         prefix + "metatag https://github.com\n" +
-        prefix + "metatag https://blog.example.com",
+        prefix + "metatag https://blog.example.com", "guide"),
         { title: "Meta Tag Extractor" }
       );
     }

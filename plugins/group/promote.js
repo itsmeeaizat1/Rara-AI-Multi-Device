@@ -30,9 +30,9 @@ async function handler(m, { sock }) {
     }
 
     if (!target) {
-        await m.reply( `❌ *target tidak ditemukan*\n\n` +
+        await m.reply( raraWrap("promote", `❌ *target tidak ditemukan*\n\n` +
             `Reply pesan user atau mention!\n` +
-            `Contoh: \`${m.prefix}promote @user\``, "promote")
+            `Contoh: \`${m.prefix}promote @user\``, "guide"), "promote")
         return
     }
 

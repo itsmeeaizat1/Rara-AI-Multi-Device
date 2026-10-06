@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
   const text = args.join(" ");
 
   if (!text || !text.includes("|")) {
-    return m.reply( `🧾 *invoice maker*\n\n` +
+    return m.reply( raraWrap("invoicemaker", `🧾 *invoice maker*\n\n` +
         `\`${m.prefix}invoicemaker <toko>|<invoice>|<tanggal>|<status>|<items>|<total>\`\n` +
         `\n` +
         `• toko: Nama toko\n` +
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
         `• total: Total harga\n` +
         `\n` +
         `Contoh:\n` +
-        `\`${m.prefix}invoicemaker TokoKu|INV001|15/01/2026|paid|Nasi Goreng:1x:15000,Es Teh:2x:6000|21000\``, "invoicemaker");
+        `\`${m.prefix}invoicemaker TokoKu|INV001|15/01/2026|paid|Nasi Goreng:1x:15000,Es Teh:2x:6000|21000\``, "guide"), "invoicemaker");
   }
 
   const parts = text.split("|").map((p) => p.trim());

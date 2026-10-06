@@ -117,7 +117,7 @@ async function handler(m, { sock, args }) {
       if (!topic) return m.reply(raraWrap("Ummah", "Masukkan topik!\n\nKetik `.ummah topics` untuk daftar topik."));
 
       const keywords = TOPICS[topic];
-      if (!keywords) return m.reply(`Topik "${topic}" tidak ditemukan.\n\nKetik \`${m.prefix}ummah topics\` untuk daftar topik.`);
+      if (!keywords) return m.reply(raraWrap("ummah", `Topik "${topic}" tidak ditemukan.\n\nKetik \`${m.prefix}ummah topics\` untuk daftar topik.`, "guide"));
 
       let allResults = [];
       for (const kw of keywords) {
@@ -201,7 +201,7 @@ async function handler(m, { sock, args }) {
       const collection = cmdArgs[0]?.toLowerCase();
       const number = parseInt(cmdArgs[1]) || 1;
       if (!collection || !UMMAH_KEYS.includes(collection)) {
-        return m.reply(`Format salah!\n\n💡 *Contoh:* \`.ummah grade bukhari 1\`\n\nKoleksi: ${UMMAH_KEYS.join(", ")}`);
+        return m.reply(raraWrap("ummah", `Format salah!\n\n💡 *Contoh:* \`.ummah grade bukhari 1\`\n\nKoleksi: ${UMMAH_KEYS.join(", ")}`, "guide"));
       }
 
       const res = await apiGet(`/${collection}/${number}`);
@@ -267,7 +267,7 @@ async function handler(m, { sock, args }) {
     }
 
     else {
-      await m.reply(`Perintah tidak ditemukan!\n\nKetik \`${m.prefix}ummah help\` untuk melihat semua perintah.`);
+      await m.reply(raraWrap("ummah", `Perintah tidak ditemukan!\n\nKetik \`${m.prefix}ummah help\` untuk melihat semua perintah.`, "guide"));
     }
   } catch (e) {
     console.error("[UMMAH] Error:", e.message);

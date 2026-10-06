@@ -158,13 +158,13 @@ async function handler(m, { sock, config: botConfig }) {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 1) {
         return m.reply(
-          prefix + "absenv2 create <judul> | <tanggal jam> | <durasi>\n\n" +
+          raraWrap("absenv2", prefix + "absenv2 create <judul> | <tanggal jam> | <durasi>\n\n" +
           "Tanggal format: DD-MM-YYYY HH:MM\n" +
           "Durasi: 30s / 15m / 2h / 1d (waktu respon)\n\n" +
           "Contoh:\n" +
           prefix + "absenv2 create Rapat Mingguan | 15-08-2026 20:00 | 2h\n" +
           prefix + "absenv2 create Absen Pagi | 16-08-2026 08:00 | 12h\n" +
-          prefix + "absenv2 create Rapat Koordinasi (tanpa deadline)",
+          prefix + "absenv2 create Rapat Koordinasi (tanpa deadline)", "guide"),
           { title: "Absen v2 - Create" }
         );
       }

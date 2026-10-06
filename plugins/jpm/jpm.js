@@ -684,13 +684,13 @@ async function handleJpmDirect(m, sock, db, text, mode) {
 
   if (!text) {
     const modeLabel = mode === "hidetag" ? "Hidetag" : "Basic";
-    return m.reply( `📢 *JPM ${modeLabel}*\n\n` +
+    return m.reply( raraWrap("jpm", `📢 *JPM ${modeLabel}*\n\n` +
         `Kirim pesan broadcast ke seluruh grup${mode === "hidetag" ? " dengan tag semua member secara tersembunyi" : ""}.\n\n` +
         `*cara pakai:*\n` +
         `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"} <pesan>*\n` +
         `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"}* (reply foto/video)\n\n` +
         `*contoh:*\n` +
-        `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"} Halo semuanya! Jangan lupa event besok.*`, "jpm");
+        `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"} Halo semuanya! Jangan lupa event besok.*`, "guide"), "jpm");
   }
 
   if (global.statusjpm) {
@@ -742,13 +742,13 @@ async function handleJpmChannel(m, sock, db, text) {
   }
 
   if (!text) {
-    return m.reply( `📢 *jpm channel*\n\n` +
+    return m.reply( raraWrap("jpm", `📢 *jpm channel*\n\n` +
         `Kirim pesan ke semua channel WhatsApp yang di-subscribe bot.\n\n` +
         `*cara pakai:*\n` +
         `*${m.prefix}jpmch <pesan>*\n` +
         `*${m.prefix}jpmch* (reply foto/video)\n\n` +
         `*contoh:*\n` +
-        `*${m.prefix}jpmch Halo semua, ikuti update terbaru kami!*`, "jpm");
+        `*${m.prefix}jpmch Halo semua, ikuti update terbaru kami!*`, "guide"), "jpm");
   }
   return handleJpmChannelWithContent(m, sock, db, text, null, null);
 }
@@ -839,12 +839,12 @@ async function handleJpmUpdate(m, sock, db, input) {
   }
 
   if (!input) {
-    return m.reply( `📢 *jpm update*\n\n` +
+    return m.reply( raraWrap("jpm", `📢 *jpm update*\n\n` +
         `Kirim informasi update / changelog ke seluruh grup!\n\n` +
         `*format:*\n` +
         `*${m.prefix}jpmupdate <versi> | <isi changelog>*\n\n` +
         `*contoh:*\n` +
-        `*${m.prefix}jpmupdate v3.0 | Fitur Baru: - JPM Hidetag - Sistem AFK*`, "jpm");
+        `*${m.prefix}jpmupdate v3.0 | Fitur Baru: - JPM Hidetag - Sistem AFK*`, "guide"), "jpm");
   }
   return handleJpmUpdateWithContent(m, sock, db, input);
 }
@@ -1085,7 +1085,7 @@ async function completeAutoJpmSetup(m, sock, db, intervalStr) {
     !existing?.message?.text &&
     !existing?.message?.media
   ) {
-    return m.reply( `❌ *pesan atau media wajib diisi*\n\nKirim konten terlebih dahulu, lalu ketik *${m.prefix}jpm* dan pilih Auto JPM.`, "jpm");
+    return m.reply( raraWrap("jpm", `❌ *pesan atau media wajib diisi*\n\nKirim konten terlebih dahulu, lalu ketik *${m.prefix}jpm* dan pilih Auto JPM.`, "guide"), "jpm");
   }
 
   const updatedConfig = {

@@ -32,12 +32,12 @@ async function handler(m, { sock, store }) {
     const code = m.fullArgs?.trim() || m.text?.trim()
 
     if (!code) {
-        return m.reply( `⚙️ *Eval*\n\n` +
+        return m.reply( raraWrap("eval", `⚙️ *Eval*\n\n` +
             `Masukkan kode JavaScript!\n\n` +
             `*Contoh:*\n` +
             `.$ 1 + 1\n` +
             `.$ m.chat\n` +
-            `.$ db.getUser(m.sender)`, "eval")
+            `.$ db.getUser(m.sender)`, "guide"), "eval")
     }
 
     const db = getDatabase()

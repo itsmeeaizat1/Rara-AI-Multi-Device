@@ -112,7 +112,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
   let targetNumber = await extractTarget(m);
 
   if (!targetNumber) {
-    return m.reply( `💎 *${isAdd ? "ADD" : "DEL"} PREMIUM*\n\nMasukkan nomor atau tag user\n\`Contoh: ${m.prefix}${cmd} 6281234567890\``, "addprem");
+    return m.reply( raraWrap("addprem", `💎 *${isAdd ? "ADD" : "DEL"} PREMIUM*\n\nMasukkan nomor atau tag user\n\`Contoh: ${m.prefix}${cmd} 6281234567890\``, "guide"), "addprem");
   }
 
   if (targetNumber.startsWith("0")) {

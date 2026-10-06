@@ -45,10 +45,10 @@ async function handler(m, { sock }) {
     }
     
     if (!targetJid || amount <= 0) {
-        return m.reply( `💰 *Del Koin*\n\n` +
+        return m.reply( raraWrap("delkoin", `💰 *Del Koin*\n\n` +
             `\`.delkoin <jumlah>\` - dari diri sendiri\n` +
             `\`.delkoin <jumlah> @user\` - dari user\n\n` +
-            `\`Contoh: ${m.prefix}delkoin 50000\``, "delkoin")
+            `\`Contoh: ${m.prefix}delkoin 50000\``, "guide"), "delkoin")
     }
     
     if (amount <= 0) {

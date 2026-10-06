@@ -88,12 +88,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "speedurl <url>\n\n" +
+        raraWrap("speedurl", prefix + "speedurl <url>\n\n" +
         "Ukur performa load halaman web\n" +
         "Info: TTFB, download time, total time, ukuran, kompresi\n\n" +
         "Contoh:\n" +
         prefix + "speedurl https://github.com\n" +
-        prefix + "speedurl google.com",
+        prefix + "speedurl google.com", "guide"),
         { title: "URL Speed Test" }
       );
     }

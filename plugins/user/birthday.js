@@ -28,9 +28,9 @@ async function handler(m, { sock }) {
     if (!user?.birthday) {
         if (target === m.sender) {
             return m.reply(
-                `❌ Kamu belum set birthday!\n\n` +
+                raraWrap("birthday", `❌ Kamu belum set birthday!\n\n` +
                 `Gunakan: ${m.prefix}setbirthday DD-MM\n` +
-                `Contoh: ${m.prefix}setbirthday 25-12`
+                `Contoh: ${m.prefix}setbirthday 25-12`, "guide")
             )
         }
         { const __navText = raraWrap("birthday", `❌ User belum set birthday!`); return await m.reply(__navText); }

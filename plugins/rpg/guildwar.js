@@ -16,7 +16,7 @@
 //   .guild top                      — Peringkat guild SEMUA grup
 //   .guild leave / .guild bubar     — Keluar / bubarkan (ketua)
 
-import { raraGuide } from "../../src/lib/rara-menu-style.js";
+import { raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { ensureRpg, useEnergy, addGold, addExp, removeGold } from "../../src/lib/rara-rpg-service.js";
 import {
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
     // ── donate ──
     if (sub === "donate" || sub === "sumbang") {
       const amount = Math.floor(Number(args[1]) || 0);
-      if (amount < 1) return m.reply("Sebut jumlah goldnya. Contoh: .guild donate 500");
+      if (amount < 1) return m.reply(raraWrap("guildwar", "Sebut jumlah goldnya. Contoh: .guild donate 500", "guide"));
       const rpg = ensureRpg(m);
       if ((Number(rpg?.gold) || 0) < amount) return m.reply("Gold kamu kurang \u2014 punya " + (rpg?.gold || 0) + ", butuh " + amount + ".");
       removeGold(m, amount);
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
       if (!mine) return m.reply("Grup ini belum punya guild. Bikin dulu: .guild create <nama>");
       if (!mine.members.includes(m.sender)) return m.reply("Kamu bukan anggota " + mine.name + ". Gabung dulu: .guild join");
       const targetName = args.slice(1).join(" ");
-      if (!targetName) return m.reply("Siapa musuhnya? Contoh: .guild war Elang Biru\nLihat daftar guild semua grup: .guild top");
+      if (!targetName) return m.reply(raraWrap("guildwar", "Siapa musuhnya? Contoh: .guild war Elang Biru\nLihat daftar guild semua grup: .guild top", "guide"));
       const target = findGuildByName(st, targetName);
       if (!target) return m.reply("Guild \"" + targetName + "\" gak ketemu. Cek nama di: .guild top");
       if (target.group === group) return m.reply("Itu guild grup sendiri! Cari musuh dari grup lain.");

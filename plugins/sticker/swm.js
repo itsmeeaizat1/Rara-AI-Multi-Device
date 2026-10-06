@@ -42,11 +42,11 @@ async function handler(m, { sock, config: botConfig }) {
     
     const input = m.text?.trim()
     if (!input) {
-        return m.reply( `❌ *gagal*\n\n` +
+        return m.reply( raraWrap("swm", `❌ *gagal*\n\n` +
             `Masukkan packname\n\n` +
             `*contoh:*\n` +
             `\`${m.prefix}swm Rara-AI\`\n` +
-            `\`${m.prefix}swm Rara-AI|LuckyArchz\` _(+ author)_`, "swm")
+            `\`${m.prefix}swm Rara-AI|LuckyArchz\` _(+ author)_`, "guide"), "swm")
     }
     
     let packname, author

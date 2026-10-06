@@ -54,12 +54,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply( `📕 *rednote downloader*\n\n` +
+    return m.reply( raraWrap("rednotedl", `📕 *rednote downloader*\n\n` +
         `Download video atau foto dari XiaoHongShu (RedNote).\n\n` +
         `*cara pakai:*\n` +
         `*${m.prefix}rednotedl <link>*\n\n` +
         `*contoh:*\n` +
-        `*${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "rednotedl");
+        `*${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "guide"), "rednotedl");
   }
   try {
         await m.react("🕒");

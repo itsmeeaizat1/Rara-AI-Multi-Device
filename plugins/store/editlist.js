@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
 
     if (!match) {
         return m.reply(
-            `✏️ *edit informasi toko*\n\n` +
+            raraWrap("editlist", `✏️ *edit informasi toko*\n\n` +
             `📋 Format: \`${m.prefix}editlist <nomor> <field> <nilai>\`\n\n` +
             `📌 *field yang bisa diedit:*\n` +
             `*nama* 🏷️ — Judul informasi\n` +
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
             `\`${m.prefix}editlist 1 isi Syarat baru: blablabla;;Ketentuan: blablabla\`\n` +
             `\`${m.prefix}editlist 1 nama FAQ Pembayaran\`\n` +
             `\`${m.prefix}editlist 1 gambar\` (reply gambar 🖼️)\n\n` +
-            `_Gunakan \`;;\` untuk baris baru dalam isi_ ✍️`
+            `_Gunakan \`;;\` untuk baris baru dalam isi_ ✍️`, "guide")
         )
     }
 

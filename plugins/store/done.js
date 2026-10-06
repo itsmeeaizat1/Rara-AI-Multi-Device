@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
 
   if (!trxId) {
     return m.reply(
-      `✅ *konfirmasi transaksi*\n\n` +
+      raraWrap("done", `✅ *konfirmasi transaksi*\n\n` +
         `📋 Format: \`${m.prefix}done <nomor_trx>\`\n\n` +
         `📌 *cara penggunaan:*\n` +
         `1️⃣ Reply pesan dari pembeli (yang sudah membayar 💰)\n` +
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
         `Menandai transaksi sebagai selesai ✅\n` +
         `Mengirim notifikasi ke pembeli 🔔\n\n` +
         `🧾 *nomor transaksi* didapat ketika pembeli melakukan \`${m.prefix}beli <nomor_produk>\`\n\n` +
-        `⚠️ _Pastikan Anda sudah menerima bukti pembayaran sebelum konfirmasi_ 📸`,
+        `⚠️ _Pastikan Anda sudah menerima bukti pembayaran sebelum konfirmasi_ 📸`, "guide"),
     );
   }
 

@@ -252,11 +252,11 @@ async function getAvatarBuffer(sock, jid) {
 async function handler(m, { sock }) {
   const input = m.args.join(" ");
   if (!input || !input.includes("|")) {
-    return m.reply( `📷 *Fake sTory 3*\n\n` +
+    return m.reply( raraWrap("fakestory3", `📷 *Fake sTory 3*\n\n` +
         `Reply gambar dengan format:\n` +
         `\`${m.prefix}fakestory3 nama|text1|text2\`\n\n` +
         `Contoh:\n` +
-        `\`${m.prefix}fakestory3 Misaki|Tersenyumlah|untuk menutupi kesedihan\``, "fakestory3");
+        `\`${m.prefix}fakestory3 Misaki|Tersenyumlah|untuk menutupi kesedihan\``, "guide"), "fakestory3");
   }
   const parts = input.split("|").map((s) => s.trim());
   const username = parts[0] || m.pushName || "User";

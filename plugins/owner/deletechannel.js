@@ -18,11 +18,11 @@ async function handler(m, { sock }) {
     let targetJid = text
 
     if (!targetJid) {
-        return m.reply( '🗑️ *Hapus sAluran*\n\n' +
+        return m.reply( raraWrap("deletechannel", '🗑️ *Hapus sAluran*\n\n' +
             '> `.deletechannel <id_saluran>` — Hapus saluran\n\n' +
             '📝 Contoh:\n' +
             '> `.deletechannel 120363xxx@newsletter`\n\n' +
-            '⚠️ Saluran akan dihapus secara permanen', "deletechannel")
+            '⚠️ Saluran akan dihapus secara permanen', "guide"), "deletechannel")
     }
 
     if (!targetJid.endsWith('@newsletter')) {

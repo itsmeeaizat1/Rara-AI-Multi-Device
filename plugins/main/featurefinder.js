@@ -141,13 +141,13 @@ async function loadAllPlugins() {
 async function handler(m, { sock }) {
   const keyword = m.text;
   if (!keyword) {
-    return m.reply( `🔍 *cari fitur*\n\n` +
+    return m.reply( raraWrap("carifitur", `🔍 *cari fitur*\n\n` +
       `\`${m.prefix}carifitur <keyword>\`\n` +
       `\n` +
       `Contoh:\n` +
       `\`${m.prefix}carifitur sticker\`\n` +
       `\`${m.prefix}carifitur download\`\n` +
-      `\`${m.prefix}carifitur game\``, "carifitur");
+      `\`${m.prefix}carifitur game\``, "guide"), "carifitur");
   }
   try {
     const allPlugins = await loadAllPlugins();

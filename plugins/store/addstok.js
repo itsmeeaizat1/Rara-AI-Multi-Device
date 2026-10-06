@@ -54,12 +54,12 @@ async function handler(m, { sock }) {
               `_Tambah lagi: \`${m.prefix}addstok ${productNo + 1} <jumlah>\`_`);
         }
 
-        return m.reply(`*Tambah Stok Fisik*\n\n` +
+        return m.reply(raraWrap("addstok", `*Tambah Stok Fisik*\n\n` +
             `Produk *${product.name}* bertipe **fisik** 📦\n\n` +
             `Format: \`${m.prefix}addstok ${productNo + 1} <jumlah>\`\n\n` +
             `📝 *contoh:*\n` +
             `\`${m.prefix}addstok ${productNo + 1} 8\` — Tambah 8 pcs\n\n` +
-            `Stok saat ini: *${product.stock === -1 ? "♾️ Unlimited" : product.stock + " pcs"}*`);
+            `Stok saat ini: *${product.stock === -1 ? "♾️ Unlimited" : product.stock + " pcs"}*`, "guide"));
       }
 
       if (m.quoted) {
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    return m.reply(`*Tambah Stok*\n\n` +
+    return m.reply(raraWrap("addstok", `*Tambah Stok*\n\n` +
         `🔑 *produk digital* — Tambah data akun/key:\n` +
         `\`${m.prefix}addstok <nomor_produk>|<detail>\`\n\n` +
         `📄 *Import dari file .txt:*\n` +
@@ -162,7 +162,7 @@ async function handler(m, { sock }) {
         `Gunakan \`;;\` untuk baris baru dalam detail 🔑\n` +
         `Setiap baris di file .txt = 1 stok item 📄\n` +
         `Maksimal 1.000 item per import 📊\n\n` +
-        `_Data stok digital bersifat rahasia 🔒 dan hanya dikirim ke pembeli setelah pembayaran dikonfirmasi_`);
+        `_Data stok digital bersifat rahasia 🔒 dan hanya dikirim ke pembeli setelah pembayaran dikonfirmasi_`, "guide"));
   }
 
   const productNo = parseInt(text.substring(0, pipeIdx).trim()) - 1;
@@ -180,9 +180,9 @@ async function handler(m, { sock }) {
   if (product.type === "fisik") {
     const addCount = parseInt(detail);
     if (isNaN(addCount) || addCount <= 0) {
-      return m.reply(`*Produk Ini Bertipe Fisik*\n\n` +
+      return m.reply(raraWrap("addstok", `*Produk Ini Bertipe Fisik*\n\n` +
           `Gunakan format: \`${m.prefix}addstok ${productNo + 1} <jumlah>\`\n\n` +
-          `📝 Contoh: \`${m.prefix}addstok ${productNo + 1} 8\` — Tambah 8 pcs`);
+          `📝 Contoh: \`${m.prefix}addstok ${productNo + 1} 8\` — Tambah 8 pcs`, "guide"));
     }
     product.stock = (product.stock === -1 ? 0 : product.stock) + addCount;
     db.setting("storeProducts", products);

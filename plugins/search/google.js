@@ -22,13 +22,13 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return m.reply( `🔍 *google news*\n\n` +
+    return m.reply( raraWrap("google", `🔍 *google news*\n\n` +
         `Cari berita terbaru dari Google News.\n\n` +
         `*cara pakai:*\n` +
         `*${m.prefix}google <topik>*\n\n` +
         `*contoh:*\n` +
         `*${m.prefix}google gempa hari ini*\n` +
-        `*${m.prefix}google teknologi terbaru*`, "google");
+        `*${m.prefix}google teknologi terbaru*`, "guide"), "google");
   }
   try {
     const result = await GoogleSearch(query);

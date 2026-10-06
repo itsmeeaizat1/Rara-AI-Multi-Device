@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
   if (!input) {
     const jeda = db.setting("jedaBcpc") || 5000;
     return m.reply(
-      "*Broadcast Private*\n\n" +
+      raraWrap("bcpc", "*Broadcast Private*\n\n" +
       "📋 Broadcast pesan + media ke semua kontak PC\n" +
       "⏱️ Jeda: " + jeda + "ms\n\n" +
       "📌 *Cara Pakai:*\n" +
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
       "💡 *Contoh:*\n" +
       "`" + m.prefix + "bcpc Info: bot update besok`\n" +
       "`" + m.prefix + "stopbcpc` — Hentikan broadcast\n" +
-      "`" + m.prefix + "bcpcjeda 5s` — Atur jeda"
+      "`" + m.prefix + "bcpcjeda 5s` — Atur jeda", "guide")
     );
   }
 

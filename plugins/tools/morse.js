@@ -76,13 +76,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "morse <teks>\n" +
+        raraWrap("morse", prefix + "morse <teks>\n" +
         prefix + "morse decode <morse>\n\n" +
         "Encode: teks ke morse code\n" +
         "Decode: morse code ke teks\n\n" +
         "Contoh:\n" +
         prefix + "morse SOS Help\n" +
-        prefix + "morse decode ... --- ... / .... . .-.. .--.",
+        prefix + "morse decode ... --- ... / .... . .-.. .--.", "guide"),
         { title: "Morse Code Translator" }
       );
     }

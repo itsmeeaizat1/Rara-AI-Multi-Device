@@ -22,9 +22,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `📱 *gsmarena*\n\n` +
+    return m.reply( raraWrap("gsmarena", `📱 *gsmarena*\n\n` +
         `Cari spesifikasi HP lengkap\n\n` +
-        `\`Contoh: ${m.prefix}gsmarena samsung galaxy s25\``, "gsmarena");
+        `\`Contoh: ${m.prefix}gsmarena samsung galaxy s25\``, "guide"), "gsmarena");
   }
   try {
     const results = await gsmarena.search.search(text);

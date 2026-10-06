@@ -80,7 +80,7 @@ async function handler(m, { sock, db }) {
       jadwalText = "- Gagal memuat jadwal dari MyQuran\n";
     }
 
-    return m.reply( `🕌 *Auto Sholat - Sistem Pengingat Waktu Beribadah*\n\n` +
+    return m.reply( raraWrap("autosholat", `🕌 *Auto Sholat - Sistem Pengingat Waktu Beribadah*\n\n` +
       `Sistem saat ini telah diatur untuk membantu kamu dan para anggota grup mengingat waktu beribadah secara otomatis. Berikut adalah pengaturan yang sedang berjalan:\n\n` +
       `- Status Pengingat: ${status}\n` +
       `- Penutupan Grup Otomatis: ${closeGroup}\n` +
@@ -94,7 +94,7 @@ async function handler(m, { sock, db }) {
       `- Ketik \`${m.prefix}autosholat close on\` atau \`off\` untuk menyalakan/mematikan fitur tutup grup otomatis.\n` +
       `- Ketik \`${m.prefix}autosholat duration <angka>\` untuk menentukan berapa lama grup akan ditutup (dalam menit).\n` +
       `- Ketik \`${m.prefix}autosholat kota <nama daerah>\` untuk menyinkronkan waktu sholat dengan daerah yang kamu pilih.\n\n` +
-      `_Semua jadwal diambil secara presisi dan langsung dari pusat data MyQuran API._`, "autosholat");
+      `_Semua jadwal diambil secara presisi dan langsung dari pusat data MyQuran API._`, "guide"), "autosholat");
   }
 
   if (args === "on") {

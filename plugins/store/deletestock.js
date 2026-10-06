@@ -31,11 +31,11 @@ async function handler(m, { sock }) {
     const itemNo = parseInt(args[1]) - 1
 
     if (args.length < 2 || isNaN(productNo) || isNaN(itemNo)) {
-        return m.reply( `🗑️ *hapus stok*\n\n` +
+        return m.reply( raraWrap("hapusstok", `🗑️ *hapus stok*\n\n` +
             `Format: \`${m.prefix}hapusstok <nomor_produk> <nomor_item>\`\n\n` +
             `📝 *contoh:*\n` +
             `\`${m.prefix}hapusstok 1 3\` — Hapus item ke-3 dari produk ke-1\n\n` +
-            `📋 Lihat nomor item: \`${m.prefix}liststok <nomor_produk>\``, "hapusstok")
+            `📋 Lihat nomor item: \`${m.prefix}liststok <nomor_produk>\``, "guide"), "hapusstok")
     }
 
     if (productNo < 0 || productNo >= products.length) {

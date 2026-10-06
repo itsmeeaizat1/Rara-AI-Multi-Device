@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
 
   if (products.length === 0) {
     return m.reply(
-      `📭 *belum ada produk tersedia.*\n\nKetik \`${m.prefix}listproduk\` untuk melihat daftar produk 🛍️`,
+      raraWrap("belistore", `📭 *belum ada produk tersedia.*\n\nKetik \`${m.prefix}listproduk\` untuk melihat daftar produk 🛍️`, "guide"),
     );
   }
 

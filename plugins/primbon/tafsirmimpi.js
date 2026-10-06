@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const keyword = m.args.join(' ')
     if (!keyword) {
-        return m.reply(`*Tafsir Mimpi*\n\nMasukkan kata kunci mimpi\n\n\`Contoh: ${m.prefix}tafsirmimpi bertemu\``)
+        return m.reply(raraWrap("tafsirmimpi", `*Tafsir Mimpi*\n\nMasukkan kata kunci mimpi\n\n\`Contoh: ${m.prefix}tafsirmimpi bertemu\``, "guide"))
     }
     
     

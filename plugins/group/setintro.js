@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const introText = m.fullArgs?.trim() || m.text?.trim()
     
     if (!introText) {
-        return m.reply( `📝 *set intro*\n\n` +
+        return m.reply( raraWrap("setintro", `📝 *set intro*\n\n` +
             `Masukkan pesan intro!\n\n` +
             `*placeholder yang tersedia:*\n` +
             `@user - Nama pengguna\n` +
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
             `@desc - Deskripsi grup\n` +
             `@botname - Nama bot\n\n` +
             `*contoh:*\n` +
-            `.setintro Selamat datang @user di grup @group! 👋`, "setintro")
+            `.setintro Selamat datang @user di grup @group! 👋`, "guide"), "setintro")
     }
     
     const groupData = db.getGroup(m.chat) || db.setGroup(m.chat)

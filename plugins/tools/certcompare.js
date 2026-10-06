@@ -65,12 +65,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "certcompare <domain1> <domain2>\n\n" +
+        raraWrap("certcompare", prefix + "certcompare <domain1> <domain2>\n\n" +
         "Bandingin SSL certificate 2 domain\n" +
         "Info: issuer, expiry, days left, self-signed, key size, SAN\n\n" +
         "Contoh:\n" +
         prefix + "certcompare google.com cloudflare.com\n" +
-        prefix + "certcompare github.com gitlab.com",
+        prefix + "certcompare github.com gitlab.com", "guide"),
         { title: "SSL Certificate Comparator" }
       );
     }

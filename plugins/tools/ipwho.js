@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
 
   const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
   if (!ipRegex.test(ip)) {
-    return m.reply(`❌ *ғORMAT TIDAK VALID*\n\n💡 *Contoh:* \`8.8.8.8\``);
+    return m.reply(raraWrap("ipwho", `❌ *ғORMAT TIDAK VALID*\n\n💡 *Contoh:* \`8.8.8.8\``, "guide"));
   }
   await m.react("🕒");
 

@@ -4,6 +4,7 @@
 // Semua cmd pakai prefix .kyio biar gak bentrok fitur lain. TABEL endpoint ada di file ini,
 // engine generik di src/lib/rara-kyio.js — tiap kategori bisa diedit sendiri-sendiri.
 import { runKyioTable } from "../../src/lib/rara-kyio.js";
+import { raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const TABLE = [
   { cmd: "kyiowhatsappreact", path: "/api/v2/tools/whatsapp-react", param: "url", method: "GET", hint: ".kyiowhatsappreact <url>" },
@@ -93,7 +94,7 @@ async function handler(m, { sock, db }) {
   // .kyio tanpa sub -> dashboard kategori
   if ((m.command || "").toLowerCase() === "kyio") {
     return m.reply(
-      "\u{1F4E1} KYIOAPI \u2014 330 ENDPOINT (api.kyio.web.id)\n" +
+      raraWrap("kyiotools", "\u{1F4E1} KYIOAPI \u2014 330 ENDPOINT (api.kyio.web.id)\n" +
       "Free tier tanpa key (10 RPM) \u2014 key opsional .setkey kyio.\n\n" +
       "\u{1F916} AI (69): .kyiodeepseek .kyiogemini .kyiogpt5 .kyiogpt4 .kyioclaudefree .kyioglm .kyioqwen .kyiokimi dkk\n" +
       "\u{2B07}\u{FE0F} Downloader (50): .kyiotiktok .kyioytdl .kyioigdl .kyiofbdl .kyiospotifydl .kyiomediafire .kyioterabox dkk\n" +
@@ -108,7 +109,7 @@ async function handler(m, { sock, db }) {
       "\u{1F464} Information (17): .kyiogempa .kyioigstalk2 .kyiospekhp .kyiomlbb .kyioiplookup dkk\n" +
       "\u{1F3AC} Movie & Anime (21): .kyiootakudesu .kyiomyanimelist .kyiodanbooru .kyiolk21 dkk\n" +
       "\u{1F50A} TTS (4): .kyioedgetts .kyiogoogletts .kyioqwents .kyioondoku\n\n" +
-      "Semua cmd prefix .kyio. Ketik salah satu buat pakai."
+      "Semua cmd prefix .kyio. Ketik salah satu buat pakai.", "guide")
     );
   }
   return runKyioTable(m, sock, TABLE, { title: "Kyio Tools" });

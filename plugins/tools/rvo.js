@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const quoted = m.quoted;
   if (!quoted) {
     return m.reply(
-      `Reply pesan sekali lihat (view once) untuk membukanya.\n\n\`Contoh: ${m.prefix}rvo\` (reply pesan view once)`,
+      raraWrap("rvo", `Reply pesan sekali lihat (view once) untuk membukanya.\n\n\`Contoh: ${m.prefix}rvo\` (reply pesan view once)`, "guide"),
     );
   }
 

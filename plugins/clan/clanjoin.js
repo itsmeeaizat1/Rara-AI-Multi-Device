@@ -25,10 +25,10 @@ async function handler(m, { sock }) {
     const clanId = m.text?.trim()
 
     if (!clanId) {
-        return m.reply( `🏰 *join clan*\n\n` +
+        return m.reply( raraWrap("clanjoin", `🏰 *join clan*\n\n` +
             `Masukkan ID clan!\n\n` +
             `Contoh: *.clanjoin clan_123456*\n` +
-            `Cek ID: *.clanleaderboard*`, "clanjoin")
+            `Cek ID: *.clanleaderboard*`, "guide"), "clanjoin")
     }
 
     if (user.clanId) {

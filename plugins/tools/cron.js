@@ -227,7 +227,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "cron <expression>\n" +
+        raraWrap("cron", prefix + "cron <expression>\n" +
         prefix + "cron build <opsi>\n\n" +
         "Explain: jelasin cron expression ke bahasa manusia\n" +
         "Build: bikin cron expression dari bahasa manusia\n\n" +
@@ -240,7 +240,7 @@ async function handler(m, { sock, config: botConfig }) {
         prefix + "cron build every 5 minutes\n" +
         prefix + "cron build daily at 09:30\n" +
         prefix + "cron build every weekday\n" +
-        prefix + "cron build every monday at 14:00",
+        prefix + "cron build every monday at 14:00", "guide"),
         { title: "Cron Builder & Explainer" }
       );
     }

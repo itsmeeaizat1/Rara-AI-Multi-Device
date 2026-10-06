@@ -261,12 +261,12 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!surahInput) {
         return m.reply(
-          prefix + "hafalan add <surah> <ayat_mulai-ayat_akhir>\n\n" +
+          raraWrap("hafalan", prefix + "hafalan add <surah> <ayat_mulai-ayat_akhir>\n\n" +
           "Contoh:\n" +
           prefix + "hafalan add Al-Fatihah 1-7\n" +
           prefix + "hafalan add 112 1-4\n" +
           prefix + "hafalan add Ya-Sin 1-20\n\n" +
-          "Surah bisa nama (Al-Fatihah) atau nomor (1-114)",
+          "Surah bisa nama (Al-Fatihah) atau nomor (1-114)", "guide"),
           { title: "Hafalan - Add" }
         );
       }

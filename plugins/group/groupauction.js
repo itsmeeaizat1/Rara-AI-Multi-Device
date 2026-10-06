@@ -223,9 +223,9 @@ async function handler(m, { sock, config: botConfig }) {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 3) {
         return m.reply(
-          prefix + "lelang create <judul> | <harga awal> | <durasi>\n\n" +
+          raraWrap("lelang", prefix + "lelang create <judul> | <harga awal> | <durasi>\n\n" +
           "Contoh: " + prefix + "lelang create jam tangan | 50000 | 30m\n\n" +
-          "Durasi: 30s / 15m / 2h / 1d",
+          "Durasi: 30s / 15m / 2h / 1d", "guide"),
           { title: "Lelang - Create" }
         );
       }

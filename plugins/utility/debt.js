@@ -73,11 +73,11 @@ async function handler(m, { sock, config: botConfig }) {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 2) {
         return m.reply(
-          prefix + "hutang add <nama> | <jumlah> | <keterangan> | <jatuh_tempo>\n\n" +
+          raraWrap("hutang", prefix + "hutang add <nama> | <jumlah> | <keterangan> | <jatuh_tempo>\n\n" +
           "Jatuh tempo format: DD-MM-YYYY (opsional)\n\n" +
           "Contoh:\n" +
           prefix + "hutang add Budi | 50000 | bayar kos\n" +
-          prefix + "hutang add Toko Listrik | 150000 | beli kabel | 30-08-2026",
+          prefix + "hutang add Toko Listrik | 150000 | beli kabel | 30-08-2026", "guide"),
           { title: "Hutang - Add" }
         );
       }
@@ -132,10 +132,10 @@ async function handler(m, { sock, config: botConfig }) {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 2) {
         return m.reply(
-          prefix + "hutang piutang <nama> | <jumlah> | <keterangan> | <jatuh_tempo>\n\n" +
+          raraWrap("hutang", prefix + "hutang piutang <nama> | <jumlah> | <keterangan> | <jatuh_tempo>\n\n" +
           "Contoh:\n" +
           prefix + "hutang piutang Andi | 100000 | pinjam紧急\n" +
-          prefix + "hutang piutang Sari | 75000 | beli makan | 25-08-2026",
+          prefix + "hutang piutang Sari | 75000 | beli makan | 25-08-2026", "guide"),
           { title: "Piutang - Add" }
         );
       }
@@ -390,7 +390,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // --- HELP / default ---
     return m.reply(
-      prefix + "hutang add <nama> | <jumlah> | <keterangan> | <tgl>\n" +
+      raraWrap("hutang", prefix + "hutang add <nama> | <jumlah> | <keterangan> | <tgl>\n" +
       prefix + "hutang piutang <nama> | <jumlah> | <keterangan> | <tgl>\n" +
       prefix + "hutang list\n" +
       prefix + "hutang info <ID>\n" +
@@ -398,7 +398,7 @@ async function handler(m, { sock, config: botConfig }) {
       prefix + "hutang remove <ID>\n" +
       prefix + "hutang total\n" +
       prefix + "hutang history\n\n" +
-      "Tanggal format: DD-MM-YYYY (opsional)",
+      "Tanggal format: DD-MM-YYYY (opsional)", "guide"),
       { title: "Hutang - Menu" }
     );
   } catch (e) {

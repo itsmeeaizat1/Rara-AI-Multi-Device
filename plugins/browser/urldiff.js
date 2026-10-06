@@ -65,12 +65,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "urldiff <url1> <url2>\n\n" +
+        raraWrap("urldiff", prefix + "urldiff <url1> <url2>\n\n" +
         "Bandingin response 2 URL\n" +
         "Info: status, TTFB, body size, server, content-type, headers\n\n" +
         "Contoh:\n" +
         prefix + "urldiff https://httpbin.org/get https://httpbin.org/status/200\n" +
-        prefix + "urldiff site1.com site2.com",
+        prefix + "urldiff site1.com site2.com", "guide"),
         { title: "URL Comparator" }
       );
     }

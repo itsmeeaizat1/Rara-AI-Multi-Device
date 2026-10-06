@@ -582,14 +582,14 @@ async function handler(m, { sock }) {
     if (!personBuf) {
       const styleList = Object.keys(PRESET_STYLES).filter((k, i, a) => a.indexOf(k) === i && !["resmi", "kantoran", "kerja", "santai", "pesta", "glam", "streetwear", "olahraga", "gym", "liburan", "pantai", "dingin", "kpop", "muslim", "hijab", "muslimah", "wedding", "militer"].includes(k)).join(", ");
       await m.reply(
-        `👕 *${toSC("ganti baju ai")}*\n\n` +
+        raraWrap("aiclotheschanger", `👕 *${toSC("ganti baju ai")}*\n\n` +
         `${toSC("kirim/reply foto orangnya dulu")}!\n\n` +
         `1. ${prefix}${cmd} <${toSC("prompt baju")}> — ${toSC("reply foto orang")}\n` +
         `2. ${prefix}${cmd} <${toSC("preset")}> — ${toSC("reply foto orang")}\n   ${toSC("preset")}: ${styleList}\n` +
         `3. ${prefix}${cmd} — ${toSC("reply foto orang, sambil kirim gambar bajunya")}\n\n` +
         `✨ hd = ${toSC("hasil jernih")} | hd2/2k = ${toSC("hasil 2x lebih besar")}\n` +
         `🎭 ${toSC("fitur keluarga")}: ${prefix}${cmd}faceswap | ${prefix}${cmd}age | ${prefix}${cmd}hair | ${prefix}${cmd}gender | ${prefix}${cmd}bg | ${prefix}${cmd}hapus\n\n` +
-        `${toSC("contoh")}: ${prefix}${cmd} change the shirt to red | ${prefix}${cmd} hd formal`
+        `${toSC("contoh")}: ${prefix}${cmd} change the shirt to red | ${prefix}${cmd} hd formal`, "guide")
       );
       return;
     }

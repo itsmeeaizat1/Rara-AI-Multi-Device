@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
   const trxId = (args[0] || m.text?.trim() || "").toUpperCase().replace(/\s+/g, "");
   if (!trxId || trxId === "") {
     return m.reply(
-      "LACAK PESANAN\n\n" +
+      raraWrap("track", "LACAK PESANAN\n\n" +
       "Cek status pesanan kamu dengan nomor transaksi.\n\n" +
       "Cara pakai:\n" +
       "1. .track <nomor_trx> — Lacak 1 pesanan\n" +
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
       "Status pesanan:\n" +
       "pending -> paid -> processing -> shipped -> delivered -> completed\n\n" +
       "Contoh: .track TRX-001\n\n" +
-      "Nomor transaksi didapat saat kamu .beli <produk>",
+      "Nomor transaksi didapat saat kamu .beli <produk>", "guide"),
       "track"
     );
   }
@@ -309,7 +309,7 @@ async function updateOrderStatus(m, sock, db, args) {
 
   if (!trxId || !newStatus) {
     return m.reply(
-      "UPDATE STATUS PESANAN\n\n" +
+      raraWrap("track", "UPDATE STATUS PESANAN\n\n" +
       "Format: .track update <nomor_trx> <status>\n\n" +
       "Status tersedia:\n" +
       "1. pending — Menunggu pembayaran\n" +
@@ -323,7 +323,7 @@ async function updateOrderStatus(m, sock, db, args) {
       ".track update <trx> shipped resi:<nomor_resi> kurir:<nama_kurir>\n\n" +
       "Contoh:\n" +
       ".track update TRX-001 paid\n" +
-      ".track update TRX-001 shipped resi:JTR123456 kurir:JNE"
+      ".track update TRX-001 shipped resi:JTR123456 kurir:JNE", "guide")
     );
   }
 

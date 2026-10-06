@@ -107,9 +107,9 @@ async function handler(m, { sock }) {
       const schedules = buildSchedules(args.slice(1));
       if (!schedules) {
         return m.reply(
-          "Format jadwal salah.\n" +
+          raraWrap("autobmkg", "Format jadwal salah.\n" +
           "Contoh: .autobmkg jadwal 00:00 06:00 12:00 18:00\n\n" +
-          "Default 6 jamanan: 00:00, 06:00, 12:00, 18:00 WIB"
+          "Default 6 jamanan: 00:00, 06:00, 12:00, 18:00 WIB", "guide")
         );
       }
       const settings = updateBmkgSettings((cur) => ({ ...cur, schedules }));

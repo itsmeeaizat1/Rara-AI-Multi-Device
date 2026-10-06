@@ -1149,7 +1149,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       }
       const jid = toWaJid(sub)
       if (!jid || jid.replace(/\D/g, '').length < 8) {
-        return m.reply(`⚠ Nomor tidak valid. Contoh: \`${prefix}switch auto ${autoKey} set dm 628123456789\``)
+        return m.reply(raraWrap("switch", `⚠ Nomor tidak valid. Contoh: \`${prefix}switch auto ${autoKey} set dm 628123456789\``, "guide"))
       }
       setAutoTargetConfig(autoKey, { mode: 'dm', groups: [], dm: jid.replace('@s.whatsapp.net', '') })
       return m.reply(`✅ *${reg.label}* dikirim ke **DM ${jid}**.`)
@@ -1349,7 +1349,7 @@ async function handleFitur(m, { sock, config: cfg }) {
   else { mode = 'toggle'; name = action }
 
   if (!name)
-    return m.reply(`Contoh: \`${prefix}switch fitur off rpg\`\nContoh: \`${prefix}switch fitur maker on\``)
+    return m.reply(raraWrap("switch", `Contoh: \`${prefix}switch fitur off rpg\`\nContoh: \`${prefix}switch fitur maker on\``, "guide"))
 
   const allCats = [...(pluginStore.categories?.keys() || [])].sort()
   const allCmds = [...(pluginStore.commands?.keys() || [])].sort()
@@ -1357,7 +1357,7 @@ async function handleFitur(m, { sock, config: cfg }) {
   const isCommand = allCmds.includes(name)
 
   if (!isCategory && !isCommand)
-    return m.reply(`❌ Tidak ditemukan: ${name}\nKetik \`${prefix}switch fitur list\``)
+    return m.reply(raraWrap("switch", `❌ Tidak ditemukan: ${name}\nKetik \`${prefix}switch fitur list\``, "guide"))
   // GUARD self-lockout: command switch (+ alias togglefitur/onofffitur/enable/
   // disable) DAN kategori "owner" (switch sendiri ada di kategori ini) gak
   // boleh dinonaktifkan mode='off'/'toggle'-ke-off — kalau ke-disable, owner

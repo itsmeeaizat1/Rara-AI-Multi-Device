@@ -127,8 +127,8 @@ async function handler(m, { sock }) {
         ...(list.length > 12 ? [`... +${list.length - 12} lainnya`] : []),
       ]));
     }
-    return m.reply(pendingBox + boxes.join("\n\n") + "\n\n" +
-      tipText(`Ketik ${prefix}buyrpgitem <item> <jumlah> — contoh: ${prefix}buyrpgitem hpPotion 5`));
+    return m.reply(raraWrap("buyrpgitem", pendingBox + boxes.join("\n\n") + "\n\n" +
+      tipText(`Ketik ${prefix}buyrpgitem <item> <jumlah> — contoh: ${prefix}buyrpgitem hpPotion 5`), "guide"));
   }
 
   // ── .buyrpgitem <item> [jumlah] ──
@@ -192,8 +192,8 @@ async function handler(m, { sock }) {
   ]);
 
   await m.react("🐣");
-  await m.reply(detailBox + "\n\n" + stepsBox + "\n\n" + contactBox + "\n\n" +
-    tipText(`${isReplace ? "Pesanan lama diganti • " : ""}Ketik ${prefix}buyrpgitem batal untuk batalkan`));
+  await m.reply(raraWrap("buyrpgitem", detailBox + "\n\n" + stepsBox + "\n\n" + contactBox + "\n\n" +
+    tipText(`${isReplace ? "Pesanan lama diganti • " : ""}Ketik ${prefix}buyrpgitem batal untuk batalkan`), "guide"));
   await sendQRIS(sock, m);
   await notifyOwner(sock, m, { id: itemId, ...itemDef }, qtyRaw, price.rupiah, prefix);
 }

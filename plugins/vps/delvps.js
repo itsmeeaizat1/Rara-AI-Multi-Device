@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     
     const dropletId = m.text?.trim()
     if (!dropletId) {
-        return m.reply( `Cara pakai:\n${m.prefix}delvps <droplet_id>\n\nGunakan ${m.prefix}listvps untuk melihat ID`, "delvps")
+        return m.reply( raraWrap("delvps", `Cara pakai:\n${m.prefix}delvps <droplet_id>\n\nGunakan ${m.prefix}listvps untuk melihat ID`, "guide"), "delvps")
     }
     
     await m.reply(raraWrap("VPS", `\u23f3 Menghapus VPS...\nID: ${dropletId}`))

@@ -44,9 +44,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const query = m.text?.trim();
   if (!query) {
-    return m.reply( `🔍 *pinterest search*\n\n` +
+    return m.reply( raraWrap("pins", `🔍 *pinterest search*\n\n` +
       `Contoh:\n` +
-      `\`${m.prefix}pins Zhao Lusi\``, "pins");
+      `\`${m.prefix}pins Zhao Lusi\``, "guide"), "pins");
   }
   try {
     const data = await f(

@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "biner <nilai> <dari> <ke>\n" +
+        raraWrap("biner", prefix + "biner <nilai> <dari> <ke>\n" +
         prefix + "biner <nilai> <dari> (tampilkan semua base)\n\n" +
         "Base tersedia:\n" +
         "bin = Binary (2)\n" +
@@ -74,7 +74,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Contoh:\n" +
         prefix + "biner 255 dec hex\n" +
         prefix + "biner FF hex dec\n" +
-        prefix + "biner 1010 bin (tampil semua)",
+        prefix + "biner 1010 bin (tampil semua)", "guide"),
         { title: "Base Converter" }
       );
     }

@@ -26,12 +26,12 @@ function handler(m, { sock }) {
 
     if (!subCmd || subCmd === 'status') {
         const status = current ? '✅ ON' : '❌ OFF'
-        return m.reply( `🎤 *Cmd Voice Note*\n\n` +
+        return m.reply( raraWrap("cmdvn", `🎤 *Cmd Voice Note*\n\n` +
             `Status: *${status}*\n\n` +
             `\`${m.prefix}cmdvn on\` — Command via VN\n` +
             `\`${m.prefix}cmdvn off\` — Command via text (default)\n\n` +
             `Saat ON, kirim VN berisi nama command\n` +
-            `Contoh: VN "menu" → trigger .menu`, "cmdvn")
+            `Contoh: VN "menu" → trigger .menu`, "guide"), "cmdvn")
     }
 
     if (subCmd === 'on') {

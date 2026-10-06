@@ -28,7 +28,7 @@
 
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
-import { toSC, raraError } from "../../src/lib/rara-menu-style.js";
+import { toSC, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "" manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
@@ -182,7 +182,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     if (!action || action === "status") {
       try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
       return m.reply(
-        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
         "• " + toSC("Info Section") + " : " + (settings.realtime ? "ON ✅" : "OFF ❌") + "\n" +
         "• " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
         "• " + toSC("Koordinat") + " : " + (settings.location?.latitude || "-") + ", " + (settings.location?.longitude || "-") + "\n" +
@@ -225,7 +225,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + prefix + "wsw adm4 31.71.03.1001 — " + toSC("kode wilayah BMKG") + "\n" +
         "\n" +
         "💡 " + toSC("Singkatan") + ": " + prefix + "wsw = " + prefix + "weathersystemwatch"
-        )
+        ), "guide")
       );
     }
 
@@ -262,11 +262,11 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (!query) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
-          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Format") + ":\n" +
           "• " + prefix + "weathersystemwatch lokasi Serang\n" +
           "• " + prefix + "weathersystemwatch lokasi -6.12,106.14\n" 
-          )
+          ), "guide")
         );
       }
 
@@ -402,11 +402,11 @@ async function handler(m, { sock, config: botConfig, db }) {
       }
       try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
       return m.reply(
-        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
         "⚠ " + toSC("Format") + ":\n" +
         "• " + prefix + "weathersystemwatch notification on\n" +
         "• " + prefix + "weathersystemwatch notification off\n" 
-        )
+        ), "guide")
       );
     }
 
@@ -434,10 +434,10 @@ async function handler(m, { sock, config: botConfig, db }) {
             list += "• " + prefix + "weathersystemwatch threshold set " + k + " <" + b.min + "-" + b.max + " " + b.unit + "> — " + toSC(b.desc.split("(")[0].trim()) + "\n";
           }
           return m.reply(
-            boxMessage("◆ " + "Weather Realtime" + " ◆",
+            raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
             "⚠ " + toSC("Format threshold — nilai di luar range ditolak") + ":\n" + list +
             "• " + prefix + "weathersystemwatch threshold reset\n" 
-            )
+            ), "guide")
           );
         }
         settings.thresholds = { ...(settings.thresholds || {}), [key]: val };
@@ -530,12 +530,12 @@ async function handler(m, { sock, config: botConfig, db }) {
       }
       try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
       return m.reply(
-        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
         "⚠ " + toSC("Format") + ":\n" +
         "• " + prefix + "weathersystemwatch alert on\n" +
         "• " + prefix + "weathersystemwatch alert off\n" +
         "• " + prefix + "weathersystemwatch alert test\n" 
-        )
+        ), "guide")
       );
     }
 
@@ -562,13 +562,13 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (!Number.isFinite(mnt) || mnt < 1 || mnt > 60) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
-          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Format") + ":\n" +
           "• " + prefix + "weathersystemwatch otomatis\n" +
           "• " + prefix + "weathersystemwatch otomatis 5\n" +
           "• " + prefix + "weathersystemwatch otomatis off\n" +
           "(" + toSC("cek tiap 1-60 menit, default 5 — kirim notif pas cuaca berubah") + ")\n"
-          )
+          ), "guide")
         );
       }
       settings.notificationMode = "otomatis";
@@ -604,12 +604,12 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (!Number.isFinite(h) || h < 1 || h > 12) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
-          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Format") + ":\n" +
           "• " + prefix + "weathersystemwatch interval 2\n" +
           "• " + prefix + "weathersystemwatch interval off\n" +
           "(" + toSC("1-12 jam, ala script default 2 jam") + ")\n" 
-          )
+          ), "guide")
         );
       }
       settings.notificationMode = "interval";
@@ -655,11 +655,11 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (prov === "bmkg" && !settings.adm4) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
-          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Provider BMKG butuh kode wilayah (adm4)") + "\n" +
           "• " + prefix + "weathersystemwatch adm4 31.71.03.1001\n" +
           "(" + toSC("contoh: 31.71.03.1001 = Kemayoran, Jakarta Pusat") + ")\n" 
-          )
+          ), "guide")
         );
       }
       settings.provider = prov;
@@ -683,11 +683,11 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (!/^\d{2}\.\d{2}\.\d{2}\.\d{4}$/.test(code)) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
-          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Format kode wilayah: XX.XX.XX.XXXX") + "\n" +
           "• " + prefix + "weathersystemwatch adm4 31.71.03.1001\n" +
           "(" + toSC("contoh: 31.71.03.1001 = Kemayoran, Jakarta Pusat") + ")\n" 
-          )
+          ), "guide")
         );
       }
       // Verifikasi kode live ke BMKG
@@ -717,9 +717,9 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (!times.length) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
-          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          raraWrap("weathersystemwatch", boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Format") + ": " + prefix + "weathersystemwatch jadwal 06:30 12:00 17:00 20:00\n" 
-          )
+          ), "guide")
         );
       }
       const labels = ["Pagi", "Siang", "Sore", "Malam"];

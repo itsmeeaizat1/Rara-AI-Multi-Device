@@ -93,11 +93,11 @@ async function handler(m, { sock, args }) {
     const rawTriggers = args.slice(1).join(" ").trim();
     if (!rawTriggers) {
       return m.reply(
-        "Format salah!\n\nKirim/reply VN dengan caption:\n" +
+        raraWrap("autoreactvn", "Format salah!\n\nKirim/reply VN dengan caption:\n" +
         m.prefix + "autoreactvn set <trigger>\n\n" +
         "Contoh:\n" +
         m.prefix + "autoreactvn set hai\n" +
-        m.prefix + "autoreactvn set ga mungkin,bohong,emang"
+        m.prefix + "autoreactvn set ga mungkin,bohong,emang", "guide")
       );
     }
 

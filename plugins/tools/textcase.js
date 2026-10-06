@@ -43,13 +43,13 @@ async function handler(m, { sock, config: botConfig }) {
     if (!text) {
       const modeList = Object.entries(MODES).map(([k, v]) => k + " = " + v.desc).join("\n");
       return m.reply(
-        prefix + "textcase <mode> <teks>\n\n" +
+        raraWrap("textcase", prefix + "textcase <mode> <teks>\n\n" +
         "Mode tersedia:\n" + modeList + "\n\n" +
         "Contoh:\n" +
         prefix + "textcase upper halo dunia\n" +
         prefix + "textcase camel hello world\n" +
         prefix + "textcase snake Halo Dunia Baru\n" +
-        prefix + "textcase all halo dunia (tampilkan semua mode)",
+        prefix + "textcase all halo dunia (tampilkan semua mode)", "guide"),
         { title: "Text Case Converter" }
       );
     }

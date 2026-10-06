@@ -104,7 +104,7 @@ async function handler(m, { sock, config: botConfig }) {
   }
 
   return m.reply(
-    "Event tidak dikenal.\n\nPilihan: owner, admin, all\n💡 *Contoh:* " + prefix + "togglejoinreq owner"
+    raraWrap("togglejoinreq", "Event tidak dikenal.\n\nPilihan: owner, admin, all\n💡 *Contoh:* " + prefix + "togglejoinreq owner", "guide")
   );
 }
 

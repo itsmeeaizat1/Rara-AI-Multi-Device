@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const kategori = m.args.join(' ')?.trim()
     
     if (!kategori) {
-        return m.reply(`\`Contoh: ${m.prefix}top orang pintar\``, "top")
+        return m.reply(raraWrap("topfun", `\`Contoh: ${m.prefix}top orang pintar\``, "guide"), "top")
     }
     try {
     await m.react("🕒");

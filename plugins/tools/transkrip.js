@@ -51,9 +51,9 @@ async function handler(m, { sock }) {
     const quoted = m.quoted || m;
     const isAudio = quoted.type === 'audioMessage' || /audio/.test(quoted.mimetype || '');
     if (!isAudio) {
-        return m.reply( `🎤 *transkrip*\n\n` +
+        return m.reply( raraWrap("transkrip", `🎤 *transkrip*\n\n` +
             `Reply voice note atau audio untuk mengonversi ke teks\n` +
-            `Contoh: reply VN → ketik \`${m.prefix}transkrip\``, "transkrip");
+            `Contoh: reply VN → ketik \`${m.prefix}transkrip\``, "guide"), "transkrip");
     }
     const groqKey = config.APIkey?.groq;
     if (!groqKey) {

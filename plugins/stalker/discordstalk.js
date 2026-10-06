@@ -42,9 +42,9 @@ async function handler(m, { sock }) {
 
   if (!userId) {
     return m.reply(
-      `🎮 *discord stalk*\n\n` +
+      raraWrap("discordstalk", `🎮 *discord stalk*\n\n` +
         `Masukkan Discord User ID\n\n` +
-        `\`Contoh: ${m.prefix}discordstalk 297574907510784000\``,
+        `\`Contoh: ${m.prefix}discordstalk 297574907510784000\``, "guide"),
     );
   }
 

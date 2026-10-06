@@ -75,7 +75,7 @@ function handler(m, { sock }) {
 
     const parts = text.split('|')
     if (parts.length < 5) {
-        return m.reply(`❌ Format salah!\n\nGunakan: \`ip|password|link_wa|link_group|link_channel\``)
+        return m.reply(raraWrap("installtemaenigma", `❌ Format salah!\n\nGunakan: \`ip|password|link_wa|link_group|link_channel\``, "guide"))
     }
 
     const ipvps = parts[0].trim()

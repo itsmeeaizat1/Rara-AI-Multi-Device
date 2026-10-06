@@ -47,11 +47,11 @@ async function handler(m, { sock }) {
     }
     
     if (!targetJid || amount <= 0) {
-        return m.reply( `⭐ *Add Exp*\n\n` +
+        return m.reply( raraWrap("addexp", `⭐ *Add Exp*\n\n` +
             `\`.addexp <jumlah>\` - ke diri sendiri\n` +
             `\`.addexp <jumlah> @user\` - ke user\n` +
             `Max: 9.000.000.000 (9B)\n\n` +
-            `\`Contoh: ${m.prefix}addexp 10000\``, "addexp")
+            `\`Contoh: ${m.prefix}addexp 10000\``, "guide"), "addexp")
     }
     
     if (amount <= 0) {

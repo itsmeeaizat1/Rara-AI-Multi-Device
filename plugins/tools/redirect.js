@@ -90,13 +90,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "redirect <url>\n\n" +
+        raraWrap("redirect", prefix + "redirect <url>\n\n" +
         "Trace redirect chain URL\n" +
         "Lihat semua hop, status code, response time, final destination\n\n" +
         "Contoh:\n" +
         prefix + "redirect http://example.com\n" +
         prefix + "redirect bit.ly/demo\n" +
-        prefix + "redirect t.co/abc123",
+        prefix + "redirect t.co/abc123", "guide"),
         { title: "Redirect Chain Tracer" }
       );
     }

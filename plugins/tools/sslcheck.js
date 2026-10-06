@@ -78,12 +78,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       return m.reply(
-        prefix + "sslcheck <domain>\n\n" +
+        raraWrap("sslcheck", prefix + "sslcheck <domain>\n\n" +
         "Cek SSL certificate website (port 443)\n" +
         "Info: issuer, expiry, days left, self-signed, SAN\n\n" +
         "Contoh:\n" +
         prefix + "sslcheck google.com\n" +
-        prefix + "sslcheck github.com",
+        prefix + "sslcheck github.com", "guide"),
         { title: "SSL Certificate Checker" }
       );
     }

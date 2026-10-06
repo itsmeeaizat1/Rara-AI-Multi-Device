@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
     const a = s.autopost;
     if (verb === "on") {
       const jam = rest[1] ? parseJamSaluran(rest[1]) : parseJamSaluran(a.jam || "08:00");
-      if (rest[1] && !jam) { await m.react("❌"); return m.reply("⚠ Format jam harus HH:MM, contoh: .channelhub autopost on 08:00"); }
+      if (rest[1] && !jam) { await m.react("❌"); return m.reply(raraWrap("channelhub", "⚠ Format jam harus HH:MM, contoh: .channelhub autopost on 08:00", "guide")); }
       a.on = true;
       if (jam) a.jam = jam;
       db.save?.();
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
     }
     if (verb === "cooldown") {
       const n = Math.max(1, Number(rest[1]) || 0);
-      if (!n) { await m.react("❌"); return m.reply("⚠ Format: .channelhub react cooldown <menit>"); }
+      if (!n) { await m.react("❌"); return m.reply(raraWrap("channelhub", "⚠ Format: .channelhub react cooldown <menit>", "guide")); }
       r.cooldownMin = Math.min(720, n);
       db.save?.();
       await m.react("🐣");
@@ -211,7 +211,7 @@ async function handler(m, { sock }) {
     if (verb === "add") {
       const raw = rest.slice(1).join(" ").trim();
       const sep = raw.indexOf("|");
-      if (!raw || sep < 1) { await m.react("❌"); return m.reply("⚠ Format: .channelhub reply add <keyword>|<balasan>"); }
+      if (!raw || sep < 1) { await m.react("❌"); return m.reply(raraWrap("channelhub", "⚠ Format: .channelhub reply add <keyword>|<balasan>", "guide")); }
       const key = raw.slice(0, sep).trim();
       const text = raw.slice(sep + 1).trim();
       if (!key || !text) { await m.react("❌"); return m.reply("⚠ Keyword dan balasan gak boleh kosong"); }
@@ -222,7 +222,7 @@ async function handler(m, { sock }) {
       return m.reply("✅ Rule ditambahkan (" + rp.rules.length + "/20): \"" + key + "\" → balasan dikirim ke saluran");
     }
     if (verb === "list") {
-      if (!(rp.rules || []).length) { await m.react("❌"); return m.reply("⚠ Belum ada rule — tambah: .channelhub reply add menu|ketik .menu di chat bot"); }
+      if (!(rp.rules || []).length) { await m.react("❌"); return m.reply(raraWrap("channelhub", "⚠ Belum ada rule — tambah: .channelhub reply add menu|ketik .menu di chat bot", "guide")); }
       const lines = rp.rules.map((x, i) => (i + 1) + ". \"" + x.key + "\" · terpakai " + (x.hits || 0) + "x\n   → " + String(x.text).slice(0, 80));
       await m.react("🐣");
       return m.reply(raraWrap("Reply Rules", ["status: " + (rp.on ? "ON" : "off"), ""].concat(lines)));
@@ -240,7 +240,7 @@ async function handler(m, { sock }) {
   }
 
   await m.react("❌");
-  return m.reply("⚠ Sub tidak dikenal. Ketik .channelhub untuk panduan lengkap.");
+  return m.reply(raraWrap("channelhub", "⚠ Sub tidak dikenal. Ketik .channelhub untuk panduan lengkap.", "guide"));
 }
 
 export { pluginConfig as config, handler };

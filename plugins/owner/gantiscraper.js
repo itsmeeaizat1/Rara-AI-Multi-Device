@@ -165,7 +165,7 @@ async function handler(m, { sock }) {
 
   if (!hasExport) {
     return m.reply(
-      `❌ *GAGAL*\n\nCode bukan format scraper yang valid\nHarus ada export`,
+      raraWrap("gantiscraper", `❌ *GAGAL*\n\nCode bukan format scraper yang valid\nHarus ada export`, "guide"),
     );
   }
 

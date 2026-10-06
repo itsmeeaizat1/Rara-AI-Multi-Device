@@ -26,12 +26,12 @@ async function handler(m, { sock }) {
   const query = args.join(" ").trim();
 
   if (!query) {
-    return m.reply( `🎬 *film search*\n\n` +
+    return m.reply( raraWrap("film", `🎬 *film search*\n\n` +
         `Cari dan nonton film online\n\n` +
         `*format:*\n` +
         `\`${m.prefix}film <judul>\`\n\n` +
         `*contoh:*\n` +
-        `\`${m.prefix}film civil war\``, "film");
+        `\`${m.prefix}film civil war\``, "guide"), "film");
   }
 
 

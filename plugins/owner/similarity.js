@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const args = m.args
     
     if (!args[0]) {
-        return m.reply(`⚠️ *Cara Pakai*\n\n\`.similarity on\` - Aktifkan\n\`.similarity off\` - Matikan`)
+        return m.reply(raraWrap("similarity", `⚠️ *Cara Pakai*\n\n\`.similarity on\` - Aktifkan\n\`.similarity off\` - Matikan`, "guide"))
     }
     
     const mode = args[0].toLowerCase()
