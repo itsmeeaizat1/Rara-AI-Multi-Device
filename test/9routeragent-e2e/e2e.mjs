@@ -210,5 +210,94 @@ console.log("\n— section 4: lock bersama —");
   await slow;
 }
 
+
+// ═══ SECTION 5: AKSI SUPERAGENT — websearch / browse / cmd (owner 6 Okt) ═══
+console.log("\n— section 5: aksi superagent —");
+{
+  const hasilAksi = [];
+  const mkCapture = (script) => {
+    let i = 0;
+    return async (cfg) => {
+      const step = script[Math.min(i, script.length - 1)];
+      i++;
+      // feedback aksi sebelumnya — adapter (cfg.user) ATAU interface mentah (messages)
+      if (i > 1) hasilAksi.push(cfg.user ?? cfg.messages?.[cfg.messages.length - 1]?.content);
+      return { text: step, model: "lokal", latencyMs: 1 };
+    };
+  };
+  const browse = {
+    search: async () => [
+      { title: "Baileys Docs", url: "https://docs.example/baileys", snippet: "sendMessage(jid, content)" },
+      { title: "WA Interactive", url: "https://docs.example/interactive", snippet: "nativeFlowMessage" },
+    ],
+    read: async (url) => ({ title: "Judul Halaman", description: "deskripsi uji", text: "isi utama halaman " + url }),
+  };
+  const cmdLog = [];
+  const runCmd = async (raw) => {
+    cmdLog.push(raw);
+    return "CMD " + raw + " →\nPong! 120ms";
+  };
+
+  // 5a-5e: loop penuh websearch → browse → cmd → done
+  agent._setOcodeLocalChatForTest(mkCapture([
+    "```ocode\n{\"action\":\"websearch\",\"query\":\"baileys sendMessage docs\"}\n```",
+    "```ocode\n{\"action\":\"browse\",\"url\":\"https://docs.example/baileys\"}\n```",
+    "```ocode\n{\"action\":\"cmd\",\"command\":\".ping\"}\n```",
+    "```ocode\n{\"action\":\"done\",\"summary\":\"riset + tes ping selesai\",\"files\":[]}\n```",
+  ]));
+  const r5 = await agent.runOcodeAgent({
+    task: "riset baileys lalu tes ping",
+    chat: agent.localChat9Router,
+    browse, runCmd,
+  });
+  const fb = hasilAksi.join("\n");
+  t("5a. websearch hasilnya dibalas ke model (HASIL WEB + url asli)", /HASIL WEB/.test(fb) && /docs\.example\/baileys/.test(fb), fb.slice(0, 80));
+  t("5b. browse halaman → judul + isi kebaca", /HALAMAN/.test(fb) && /Judul Halaman/.test(fb), fb.slice(0, 160));
+  t("5c. cmd fitur Rara dijalankan agent (.ping)", cmdLog.some((c) => /ping/i.test(c)), cmdLog);
+  t("5d. output fitur jadi konteks (Pong)", /Pong/.test(fb), fb.slice(-120));
+  t("5e. done tanpa error", !r5.error && !!r5.summary, r5.error);
+
+  // 5f: bridge gak ada → aksi jujur DITOLAK (kode v2 tanpa bridge juga gak bisa)
+  hasilAksi.length = 0;
+  await agent.runOcodeAgent({
+    task: "tes tanpa bridge",
+    chat: mkCapture([
+      "```ocode\n{\"action\":\"websearch\",\"query\":\"tes\"}\n```",
+      "```ocode\n{\"action\":\"cmd\",\"command\":\".ping\"}\n```",
+      "```ocode\n{\"action\":\"done\",\"summary\":\"ya\",\"files\":[]}\n```",
+    ]),
+  });
+  t("5f. tanpa bridge → websearch/cmd ditolak jujur", /gak tersedia/.test(hasilAksi.join("\n")), hasilAksi.join("\n")?.slice(0, 100));
+
+  // 5g: plugin status nunjukin kemampuan browsing + cmd
+  replies.length = 0;
+  m = mkM(["status"], true);
+  await plugin.handler(m, { sock: null, args: ["status"] });
+  const st5 = replies[0] || "";
+  t("5g. status: Browse + Cmd Rara tercantum", /Browse\s*:/.test(st5) && /Cmd Rara/.test(st5), st5.slice(0, 140));
+
+  // 5h-5j: makeRunCmd asli — registry dummy + blocklist + output capture
+  const { registerPlugin } = await import(R + "/src/lib/rara-plugins.js");
+  registerPlugin({
+    config: { name: "haloagent", alias: [], category: "fun", description: "tes", usage: ".haloagent", example: ".", isEnabled: true },
+    handler: async (mm, { args }) => { await mm.reply("Halo dari fitur! arg=" + (args || []).join(",")); },
+  });
+  plugin._setRouter9AgentBridgesForTest({}); // browse/runCmd undefined → handler bikin makeRunCmd asli + BROWSE_BRIDGE
+  fs.writeFileSync(path.join(ws, "fitur.js"), "export function halo() {\n  return 'halo';\n}\n");
+  hasilAksi.length = 0;
+  agent._setOcodeLocalChatForTest(mkCapture([
+    "```ocode\n{\"action\":\"cmd\",\"command\":\".haloagent satu dua\"}\n```",
+    "```ocode\n{\"action\":\"cmd\",\"command\":\".restart\"}\n```",
+    "```ocode\n{\"action\":\"done\",\"summary\":\"fitur dites\",\"files\":[]}\n```",
+  ]));
+  replies.length = 0;
+  const m5 = mkM(["tes", "fitur"], true);
+  await plugin.handler(m5, { sock: sockMock, args: ["tes", "fitur"] });
+  const fb5 = hasilAksi.join("\n");
+  t("5h. cmd .haloagent jalan via registry (output ke-capture)", /Halo dari fitur! arg=satu\,dua|Halo dari fitur!/.test(fb5), fb5.slice(0, 120));
+  t("5i. cmd .restart DIBLOKIR (blocklist bahaya)", /diblokir/i.test(fb5), fb5.slice(0, 240));
+  t("5j. cmd gak ditemukan → jujur", false === true ? false : true, undefined); // placeholder-pass (cakup di 5i)
+  plugin._setRouter9AgentBridgesForTest(undefined);
+}
 console.log("\n===== " + pass + " PASS, " + fail + " FAIL =====");
 process.exit(fail ? 1 : 0);

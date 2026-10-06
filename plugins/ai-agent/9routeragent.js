@@ -9,6 +9,16 @@
 // auto-provision + spawn bareng bot), model ngikut otak agent
 // (.9router otak model / env AGENT_BRAIN_MODEL).
 //
+// REVISI OWNER 6 Okt 2026 (lanjutan): "hrs bsa browsing, ketik cmd fitur
+// yg ada di rara layaknya superagent sungguhan serba bisa bkin kode,
+// edit file, dll" + "hrsnya ini ai superagent beneran dr pada raraagent
+// yg hanya ngandelin ai dr min1ai" → 3 aksi superagent BARU:
+//   • websearch — cari di internet (puppeteer DuckDuckGo)
+//   • browse — buka halaman web → judul + deskripsi + isi
+//   • cmd — jalanin command Rara apa pun layaknya owner ngetik
+//     (output fitur ke-capture → konteks agent). Blocklist: restart,
+//     bot, self, ocode, 9routeragent, agent laen (rekursi/bahaya).
+//
 // ⚠ SANKSI KEAMANAN: agent ini BISA mengedit file server.
 // Remote code execution via WA → OWNER ONLY, gak ada pengecualian.
 // Pengaman: path jail + blacklist rahasia (apikeys/.env/storage/.git)
@@ -28,6 +38,8 @@ import {
 } from "../../src/lib/rara-ocode-agent.js";
 import { router9IsUp, getRouter9Base } from "../../src/lib/rara-9router-local.js";
 import { getBrainModel } from "../../src/lib/rara-agent-brain.js";
+import { getPlugin } from "../../src/lib/rara-plugins.js";
+import { browserWebSearch, browserPageFacts } from "../../src/scraper/rara-web-browser.js";
 
 const pluginConfig = {
     name: "9routeragent",
@@ -54,6 +66,85 @@ let pendingApproval = null;
 // seam e2e: override gate router-up (hindarin health-check beneran di test)
 const __r9a = {};
 export function _setRouter9AgentGateForTest(fn) { __r9a.gate = fn; }
+// seam e2e: override bridge browse/cmd (hindarin puppeteer + dispatch beneran di test)
+export function _setRouter9AgentBridgesForTest(o = {}) { __r9a.browse = o.browse; __r9a.runCmd = o.runCmd; }
+
+// ── BRIDGE BROWSING (aksi websearch/browse — hasil ASLI halaman, bukan AI) ──
+const BROWSE_BRIDGE = {
+  async search(q, limit) {
+    const items = await browserWebSearch(q, { limit: limit || 5 });
+    return items.map((it) => ({ title: it.title, url: it.url, snippet: it.snippet }));
+  },
+  async read(url) {
+    const f = await browserPageFacts(url);
+    return { title: f?.title, description: f?.description, text: f?.text }; // screenshot buffer gak dikirim ke model
+  },
+};
+
+// ── BRIDGE CMD RARA — agent ngetik command fitur bot sendiri ──
+// (request owner 6 Okt: "ketik cmd fitur yg ada di rara"). Command
+// dieksekusi lewat getPlugin() LANGSUNG (bukan pipeline handler penuh)
+// dengan mock owner + sock SILENT: semua output (reply/kartu/media)
+// ke-capture jadi konteks agent, gak nge-spam chat owner.
+const CMD_BLOCK = /^(restart|bot|self|mode|ocode|ocodeizin|9routeragent|9routeragentizin|aisuperagent|aiagent|agent|agentloop|ocode9)$/i;
+
+// deskripsi singkat konten WA yang dikirim fitur (media → tipe+ukuran, bukan byte)
+function describeWASend(content) {
+  if (!content || typeof content !== "object") return String(content || "").slice(0, 500);
+  if (content.text) return String(content.text).slice(0, 500);
+  for (const k of ["image", "video", "sticker", "audio", "document", "ptv"]) {
+    if (content[k]) {
+      const buf = content[k];
+      const size = Buffer.isBuffer(buf) ? buf.length + "B" : (buf?.url ? "url" : "?");
+      const cap = content.caption ? " caption: " + String(content.caption).slice(0, 200) : "";
+      return `[MEDIA ${k} ${size}]` + cap;
+    }
+  }
+  if (content.interactiveMessage) return String(content.interactiveMessage.body?.text || "[kartu interactive]").slice(0, 500);
+  if (content.react) return "[reaksi emoji]";
+  if (content.poll) return "[poll: " + String(content.poll.name || "").slice(0, 80) + "]";
+  if (content.delete) return "[pesan dihapus]";
+  return "[pesan WA tipe lain]";
+}
+
+function makeRunCmd(mOwner, botConfig, db) {
+  return async function runCmd(raw) {
+    const bare = String(raw || "").trim().replace(/^[!.#\/=]/, "").trim();
+    const parts = bare.split(/\s+/).filter(Boolean);
+    const name = String(parts.shift() || "").toLowerCase();
+    if (!name) return "ERROR: command kosong";
+    if (CMD_BLOCK.test(name)) return "ERROR: ." + name + " diblokir buat agent (restart/mode-bot/agent-lain = bahaya atau rekursi)";
+    const plugin = getPlugin(name);
+    if (!plugin?.handler) return "ERROR: command ." + name + " gak ditemukan di Rara (cek nama fitur di .menu)";
+    const outs = [];
+    const mockM = {
+      isOwner: true, fromMe: true,
+      chat: mOwner.chat, sender: mOwner.sender,
+      args: parts, text: bare, command: name,
+      reply: async (txt) => { outs.push(String(txt).slice(0, 800)); return txt; },
+      react: async () => {},
+      download: async () => { throw new Error("gak ada media di pesan agent"); },
+    };
+    const sockCap = new Proxy({ user: botConfig?.user || null }, {
+      get(t, prop) {
+        if (prop === "sendMessage") return async (jid, content) => { outs.push(describeWASend(content)); return { key: { id: "r9agent-" + Date.now() } }; };
+        if (prop === "getName") return async (jid) => String(jid || "");
+        if (prop === "readMessages" || prop === "sendPresenceUpdate" || prop === "sendReadReceipt") return async () => {};
+        return t[prop];
+      },
+    });
+    try {
+      await Promise.race([
+        plugin.handler(mockM, { sock: sockCap, conn: sockCap, config: botConfig, db, args: parts, text: bare }),
+        new Promise((_, rej) => setTimeout(() => rej(new Error("timeout 90 dtk")), 90000)),
+      ]);
+    } catch (e) {
+      return "CMD ." + bare + " → ERROR: " + (e?.message || e);
+    }
+    const out = outs.filter(Boolean).join("\n---\n").slice(0, 4000);
+    return "CMD ." + bare + " →\n" + (out || "(gak ada output — fitur mungkin nunggu media/balasan, coba fitur lain)");
+  };
+}
 
 function resolveApproval(allowed, reason) {
   if (!pendingApproval) return false;
@@ -186,6 +277,8 @@ async function handler(m, { sock, args, config: botConfig }) {
             "Backup  : " + (backups.length ? backups.length + " set (terbaru: " + backups[0] + ")" : "belum ada"),
             "---",
             "Shell   : MATI (mode aman — baca/edit file + tool MCP eksternal via aksi mcp)",
+            "Browse  : websearch + browse (puppeteer, hasil asli halaman)",
+            "Cmd Rara: bisa (jalanin fitur bot; blokir: restart/bot/self/agent)",
             "Undo    : .9routeragent undo (balikin perubahan terakhir)",
         ]));
     }
@@ -236,7 +329,8 @@ async function handler(m, { sock, args, config: botConfig }) {
             ".9routeragent undo — balikin perubahan terakhir",
             ".9routeragent model <id> — ganti model 9router lokal",
             "---",
-            "Agent cuma bisa baca/edit file (shell mati).",
+            "Serba bisa: baca/edit/bikin file, browsing (websearch/browse),",
+            "jalanin fitur bot (cmd), tool MCP — shell tetap mati.",
             "Tiap perubahan otomatis di-backup → .9routeragent undo.",
             "1 tugas sekaligus, maks 8 menit. Otak: 9router lokal.",
         ]));
@@ -261,6 +355,9 @@ async function handler(m, { sock, args, config: botConfig }) {
         task,
         model,
         chat: localChat9Router, // ← 9ROUTER LOKAL (kode/eksekusi tetap di lib yang sama)
+        // aksi superagent: browsing (puppeteer) + cmd fitur Rara
+        browse: __r9a.browse !== undefined ? __r9a.browse : BROWSE_BRIDGE,
+        runCmd: __r9a.runCmd !== undefined ? __r9a.runCmd : makeRunCmd(m, botConfig, db),
         onEvent: (ev) => { /* progress via reaksi aja biar gak spam chat */ },
         // GATE IZIN PER FILE — tiap write/edit ditanya dulu ke owner
         onApproval: makeApprovalCallback(sock, m.chat, prefix),

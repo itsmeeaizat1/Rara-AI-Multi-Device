@@ -150,7 +150,7 @@ export function ocodePathCheck(root, rel) {
 
 // ── eksekusi satu aksi → string hasil untuk model ──
 // async: aksi mcp panggil server eksternal (tool MCP dari .mcp).
-async function execAction(root, a) {
+async function execAction(root, a, ctx = {}) {
   const act = String(a.action || "").toLowerCase();
   if (act === "done") return null; // sinyal selesai (ditangani caller)
   if (act === "list") {
@@ -220,6 +220,45 @@ async function execAction(root, a) {
     fs.writeFileSync(p.abs, content, "utf8");
     return "OK: " + a.path + " ditulis (" + content.split("\n").length + " baris) — backup otomatis dibuat";
   }
+  // ── AKSI SUPERAGENT (revisi owner 6 Okt 2026: "hrs bsa browsing, ketik cmd
+  // fitur yg ada di rara layaknya superagent sungguhan serba bisa") —
+  // cuma nyala kalau caller nyediain bridge (cuma .9routeragent;
+  // .ocode v2 tanpa bridge → aksi jujur gak tersedia) ──
+  if (act === "websearch") {
+    if (!ctx.browse?.search) return "ERROR: aksi websearch gak tersedia di command ini (cuma .9routeragent)";
+    const q = String(a.query || "").trim();
+    if (!q) return "ERROR: field query kosong";
+    try {
+      const limit = Math.min(8, Math.max(1, Number(a.limit) || 5));
+      const items = await ctx.browse.search(q, limit);
+      const lines = items.map((it, i) => `${i + 1}. ${it.title}\n   ${it.url}` + (it.snippet ? "\n   " + String(it.snippet).slice(0, 200) : ""));
+      return "HASIL WEB “" + q + "”:\n" + lines.join("\n");
+    } catch (e) {
+      return "ERROR: websearch gagal: " + (e?.message || e);
+    }
+  }
+  if (act === "browse") {
+    if (!ctx.browse?.read) return "ERROR: aksi browse gak tersedia di command ini (cuma .9routeragent)";
+    const url = String(a.url || "").trim();
+    if (!/^https?:\/\//i.test(url)) return "ERROR: field url harus http(s)://";
+    try {
+      const f = await ctx.browse.read(url);
+      const txt = String(f?.text || "").replace(/\s+/g, " ").trim().slice(0, MAX_MCP_OUT_CHARS);
+      return "HALAMAN " + url + "\nJudul: " + (f?.title || "-") + "\nDeskripsi: " + (f?.description || "-") + "\nIsi: " + txt;
+    } catch (e) {
+      return "ERROR: browse gagal: " + (e?.message || e);
+    }
+  }
+  if (act === "cmd") {
+    if (!ctx.runCmd) return "ERROR: aksi cmd gak tersedia di command ini (cuma .9routeragent)";
+    const raw = String(a.command || "").trim();
+    if (!raw) return "ERROR: field command kosong";
+    try {
+      return await ctx.runCmd(raw);
+    } catch (e) {
+      return "ERROR: cmd gagal: " + (e?.message || e);
+    }
+  }
   if (act === "mcp") {
     const server = String(a.server || "").toLowerCase();
     const tool = String(a.tool || "");
@@ -233,9 +272,9 @@ async function execAction(root, a) {
     }
   }
   if (act === "run" || act === "bash" || act === "shell") {
-    return "ERROR: shell DIMATIKAN (mode aman). Aksi yang ada: list, read, search, mcp, write, edit, done.";
+    return "ERROR: shell DIMATIKAN (mode aman). Aksi yang ada: list, read, search, write, edit, mcp, websearch, browse, cmd, done.";
   }
-  return "ERROR: aksi gak dikenal: " + act + " (yang ada: list, read, search, mcp, write, edit, done)";
+  return "ERROR: aksi gak dikenal: " + act + " (yang ada: list, read, search, write, edit, mcp, websearch, browse, cmd, done)";
 }
 
 // ── parse blok ```ocode {json}``` dari jawaban model ──
@@ -301,8 +340,36 @@ ATURAN:
 - Setelah done, tulis ringkasan perubahan + file yang disentuh + apakah perlu pm2 restart.`;
 
 // system prompt + daftar tool MCP terpasang (dinamis per tugas)
-function buildSystemPrompt(mcpTools) {
+// + aksi superagent (websearch/browse/cmd) — cuma diiklankan kalau bridge
+// tersedia (.9routeragent); .ocode v2 gak lihat aksi ini (jujur gak ada).
+function buildSystemPrompt(mcpTools, caps = {}) {
   let p = SYSTEM_PROMPT;
+  if (caps.browse) {
+    p += `
+
+AKSI BROWSING (cuma di command ini — dipakai buat riset beneran):
+\`\`\`ocode
+{"action":"websearch","query":"baileys sendMessage interactiveMessage tutorial","limit":5}
+\`\`\`
+→ cari di internet (DuckDuckGo, hasil asli halaman + url + cuplikan).
+
+\`\`\`ocode
+{"action":"browse","url":"https://docs.whatsapp.com/..."}
+\`\`\`
+→ buka halaman web (puppeteer) → judul + deskripsi + isi utama (dipotong biar context aman).
+Kalau butuh info terkini / dokumentasi library / contoh kode dari internet: websearch dulu, lalu browse halaman paling relevan.`;
+  }
+  if (caps.cmd) {
+    p += `
+
+AKSI CMD RARA — jalanin fitur bot sendiri layaknya owner ngetik (cuma di command ini):
+\`\`\`ocode
+{"action":"cmd","command":".ping"}
+\`\`\`
+→ eksekusi command Rara apa pun (.menu gak perlu — daftar kategori fitur bisa dibaca dari kode). Output fitur (teks/kartu/media) ke-capture dan dibalas ke kamu sebagai konteks.
+GUNAKAN buat: tes fitur hasil editan kamu (mis. {"action":"cmd","command":".halo"}), konversi file, ambil info, dsb.
+DILARANG otomatis (diblokir sistem): .restart .bot .self .ocode .9routeragent + agent laen (rekursi).`;
+  }
   if (mcpTools && mcpTools.length) {
     const lines = mcpTools.slice(0, 60).map((t) => `- mcp.${t.server}.${t.tool} — ${(t.desc || "").slice(0, 120)}`);
     p += "\n\nTOOL MCP TERPASANG (aksi mcp, field server/tool HARUS persis):\n" + lines.join("\n")
@@ -344,15 +411,19 @@ export function localChat9Router({ messages, model, maxTokens, temperature }) {
 }
 export function _setOcodeLocalChatForTest(fn) { __oc.localChat = fn; }
 
-export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval, chat: chatOverride }) {
+export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval, chat: chatOverride, runCmd, browse }) {
   if (state.running) return { error: "masih ada tugas berjalan" };
   state.running = true; state.abort = false; state.task = task; state.startedAt = Date.now();
   const root = __oc.root || path.resolve(repoRoot || process.cwd());
   // urutan: chatOverride (dari .9routeragent = LOKAL) > seam e2e > default v2 (ocode)
   const chat = chatOverride || __oc.chat || ((o) => router9v2Chat(o));
   const mcpToolList = __oc.mcpTools !== null ? __oc.mcpTools : await defaultMcpTools();
+  // aksi superagent (revisi owner 6 Okt): bridge browse/cmd dari plugin
+  // .9routeragent — .ocode v2 gak kirim bridge → aksi gak diiklankan & ditolak jujur
+  const agentCtx = { runCmd, browse };
+  const caps = { browse: !!browse, cmd: !!runCmd };
   const messages = [
-    { role: "system", content: buildSystemPrompt(mcpToolList) },
+    { role: "system", content: buildSystemPrompt(mcpToolList, caps) },
     { role: "user", content: "Tugas: " + task + "\n\nKerjakan sekarang, mulai dari aksi pertama." },
   ];
   const changed = [];
@@ -389,7 +460,11 @@ export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval
       for (const a of actions) {
         if (state.abort) { aborted = true; break; }
         if (a.action === "done") { doneHere = true; summary = String(a.summary || ""); files = (a.files || []).map(String); break; }
-        const rel = a.path ? String(a.path) : (a.action === "mcp" ? `mcp ${a.server}.${a.tool}` : "");
+        let rel = a.path ? String(a.path) : "";
+        if (!rel && a.action === "mcp") rel = `mcp ${a.server}.${a.tool}`;
+        if (!rel && a.action === "cmd") rel = "cmd " + String(a.command || "").slice(0, 60);
+        if (!rel && a.action === "websearch") rel = "websearch " + String(a.query || "").slice(0, 40);
+        if (!rel && a.action === "browse") rel = "browse " + String(a.url || "").slice(0, 50);
         // ── GATE IZIN PER FILE (allow/deny ala AI agent umum) ──
         // tanya owner SEBELUM nulis; 1x per file per tugas; tanpa callback →
         // auto-izin (backward-compat pemanggil lama / non-ownerless flow)
@@ -414,7 +489,7 @@ export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval
             }
           }
         }
-        const r = await execAction(root, a);
+        const r = await execAction(root, a, agentCtx);
         results.push("→ " + rel + "\n" + r);
         if ((a.action === "write" || a.action === "edit") && !/^ERROR/.test(r) && !changed.includes(rel)) changed.push(rel);
         if (onEvent) onEvent({ type: "phase", text: (a.action === "write" || a.action === "edit" ? "\u270f\ufe0f " : "\U0001f4d6 ") + rel });
