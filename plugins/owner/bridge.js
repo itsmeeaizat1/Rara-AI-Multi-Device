@@ -13,6 +13,7 @@ import { getApiKey } from "../../src/lib/rara-api-keys.js";
 import {
   startTelegramBridge,
   stopTelegramBridge,
+  getTelegramClient,
   startDiscordBridge,
   stopDiscordBridge,
   bridgeStatus,
@@ -25,8 +26,8 @@ const pluginConfig = {
   alias: ["rarabridge", "bridgenova"],
   category: "owner",
   description: "Rara multi-platform — pakai bot dari DM Telegram & Discord",
-  usage: ".bridge — status semua platform\n.bridge on <telegram|discord|all> — nyalain\n.bridge off <telegram|discord|all> — matiin\n.bridge kategori — whitelist (default * = semua kebuka)\n.bridge kategori del * lalu add <kategori> — mode restriktif\n.bridge ownerid add/del <platform> <id>",
-  example: ".bridge on telegram\n.bridge kategori add islami\n.bridge ownerid add telegram 123456789",
+  usage: ".bridge — status semua platform\n.bridge on <telegram|discord|all> — nyalain\n.bridge off <telegram|discord|all> — matiin\n.bridge kategori — whitelist (default * = semua kebuka)\n.bridge kategori del * lalu add <kategori> — mode restriktif\n.bridge ownerid add/del <platform> <id>\n.bridge notif — status target notif Telegram\n.bridge notif <group|channel> <id> — set target notif\n.bridge notif <group|channel> off — hapus target\n.bridge notif tes — kirim pesan tes ke target",
+  example: ".bridge on telegram\n.bridge ownerid add telegram 123456789\n.bridge notif group -1001234567890\n.bridge notif tes",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -99,6 +100,50 @@ async function handler(m, { sock }) {
       ));
     }
 
+    // ── NOTIF (target grup & channel Telegram buat info bot) ──
+    if (sub === "notif") {
+      const { getTgNotifyTargets, setTgNotifyTarget, broadcastToTelegramTargets } = await import("../../src/lib/rara-telegram-notify.js");
+      const kind = (args[1] || "").toLowerCase();
+      const val = (args[2] || "").trim();
+      const cur = getTgNotifyTargets();
+      const fmt = (v) => v || "belum di-set";
+      if (!kind) {
+        return m.reply(raraWrap("📍 Target Notif Telegram", [
+          `👥 Grup: ${fmt(cur.group)}`,
+          `📢 Channel: ${fmt(cur.channel)}`,
+          "",
+          `Set: ${prefix}bridge notif group <id>`,
+          `     ${prefix}bridge notif channel <id>`,
+          `Hapus: ${prefix}bridge notif group off`,
+          `Tes kirim: ${prefix}bridge notif tes`,
+          "",
+          "Semua info bot (ban/sewa/premium/server, ngikutin toggle .autobroadcastchannel) otomatis ikut ke Telegram begitu .bridge on telegram.",
+          "Cara ambil ID: add bot ke grup/channel (channel: jadikan admin) → chat @userinfobot atau lihat t.me link (-100…).",
+        ].join("\n")));
+      }
+      if (kind === "tes") {
+        const r = await broadcastToTelegramTargets(
+          "📍 Tes Notif Rara AI\n\nKalau pesan ini muncul di grup/channel kamu, berarti notif bot Telegram udah nyambung. ✅"
+        );
+        if (r.sent) return m.reply(raraWrap("📍 Tes Notif Telegram", `Terikirim ke: ${(r.sentTo || []).join(", ") || "-"} ✅`));
+        return m.reply(raraWrap("📍 Tes Notif Telegram", `Gagal: ${r.reason || (r.failed || []).join("; ") || "tidak diketahui"}`));
+      }
+      if (kind !== "group" && kind !== "channel")
+        return m.reply(raraWrap("📌 " + prefix + "bridge notif <group|channel> <id>", "Target harus group atau channel. Contoh: " + prefix + "bridge notif group -1001234567890"));
+      let r;
+      try {
+        r = setTgNotifyTarget(kind, val);
+      } catch (e) {
+        return m.reply(raraWrap("📌 " + prefix + "bridge notif " + kind + " <id>", e?.message || String(e)));
+      }
+      if (r.cleared) return m.reply(raraWrap("📍 Target Notif Telegram", `Target ${kind === "group" ? "grup" : "channel"} dihapus dari daftar notif.`));
+      return m.reply(raraWrap("📍 Target Notif Telegram", [
+        `Target ${kind === "group" ? "grup" : "channel"} disimpan: ${r.id} ✅`,
+        kind === "group" ? "Pastikan bot udah di-add ke grup itu." : "Pastikan bot udah jadi admin channel itu.",
+        `Cek: ${prefix}bridge notif tes`,
+      ].join("\n")));
+    }
+
     // ── OWNERID ──
     if (sub === "ownerid") {
       const act = (args[1] || "").toLowerCase();
@@ -121,6 +166,7 @@ async function handler(m, { sock }) {
 
     // ── STATUS ──
     const st = bridgeStatus();
+    const tgTargets = (await import("../../src/lib/rara-telegram-notify.js")).getTgNotifyTargets();
     const tgTok = !!(getApiKey("telegram") || process.env.TELEGRAM_BOT_TOKEN);
     const dcTok = !!(getApiKey("discord") || process.env.DISCORD_BOT_TOKEN);
     return m.reply(raraWrap(
@@ -131,10 +177,12 @@ async function handler(m, { sock }) {
         "",
         `Whitelist (${b.categories.length}): ${b.categories.join(", ")}`,
         `Owner platform: telegram ${b.ownerIds.telegram?.length || 0} · discord ${b.ownerIds.discord?.length || 0}`,
+        `Notif TG: grup ${tgTargets.group || "-"} · channel ${tgTargets.channel || "-"}`,
         "",
         `Nyalain: ${prefix}bridge on telegram`,
         `Token: ${prefix}setkey telegram <token> (bikin bot di @BotFather)`,
         `       ${prefix}setkey discord <token> (discord.com/developers)`,
+        `Notif TG: ${prefix}bridge notif group <id> · ${prefix}bridge notif channel <id>`,
         "",
         "Fase 1: DM only, command teks. Input media menyusul.",
       ].join("\n"),

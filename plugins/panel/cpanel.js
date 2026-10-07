@@ -186,8 +186,9 @@ async function createWithRole(m, { sock }, spec) {
   if (!jedaCheck.allowed) return m.reply(jedaCheck.message);
 
   const targetUser = cleanJid(spec.nomor || (m.sender || "").split("@")[0]);
+const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // bridge: user TG/Discord bukan nomor WA
   try {
-    const [onWa] = await sock.onWhatsApp(targetUser.split("@")[0]);
+    const [onWa] = isPlatformUser ? [{ exists: true }] : await sock.onWhatsApp(targetUser.split("@")[0]);
     if (!onWa?.exists) {
       return m.reply(raraWrap("cpanel", `Nomor ${targetUser.split("@")[0]} tidak terdaftar di WhatsApp.`));
     }
@@ -713,8 +714,9 @@ async function handler(m, { sock }) {
     if (!jedaCheck.allowed) return m.reply(jedaCheck.message);
 
     const targetUser = cleanJid(nomor);
+const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // bridge: user TG/Discord bukan nomor WA
     try {
-      const [onWa] = await sock.onWhatsApp(targetUser.split("@")[0]);
+      const [onWa] = isPlatformUser ? [{ exists: true }] : await sock.onWhatsApp(targetUser.split("@")[0]);
       if (!onWa?.exists) {
         return m.reply(raraWrap("cpanel", `Nomor ${targetUser.split("@")[0]} tidak terdaftar di WhatsApp.`));
       }

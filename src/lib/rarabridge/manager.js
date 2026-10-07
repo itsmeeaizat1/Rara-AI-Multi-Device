@@ -125,10 +125,17 @@ export async function startTelegramBridge(opts = {}) {
   return { ok: true, me };
 }
 
+// 🔹 dipakai rara-telegram-notify: kirim notif bot ke grup/channel TG tanpa
+// harus lewat adapter chat — client hidup = bridge telegram ON.
+export function getTelegramClient() {
+  return state.telegram.client;
+}
+
 export function stopTelegramBridge() {
   state.telegram.bridgeSock = null;
 
   try { state.telegram.client?.stop(); } catch {}
+  state.telegram.client = null; // FIX 7 Okt: client mati dibuang — getTelegramClient() gak boleh balikin client mati
   state.telegram.running = false;
   return { ok: true };
 }

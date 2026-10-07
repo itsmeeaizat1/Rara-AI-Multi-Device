@@ -370,6 +370,118 @@ async function main() {
     manager._setBridgeClientFactoryForTest({});
   }
 
+  // ── 10. NOTIF TELEGRAM: target grup & channel diset dari chat (.bridge notif) ──
+  {
+    const tgNotify = await import(url("src/lib/rara-telegram-notify.js"));
+    const saluranSrc = fs.readFileSync(path.join(R, "src/lib/rara-saluran-broadcast.js"), "utf8");
+    check("10a. lib rara-telegram-notify.js ada + di-hook ke broadcastToSaluran", fs.existsSync(path.join(R, "src/lib/rara-telegram-notify.js")) && saluranSrc.includes("broadcastToTelegramTargets"));
+    const mgr10 = await import(url("src/lib/rarabridge/manager.js"));
+    check("10b. manager export getTelegramClient", typeof mgr10.getTelegramClient === "function");
+
+    // target awal kosong
+    let t0 = tgNotify.getTgNotifyTargets();
+    check("10c. awal: grup & channel kosong", t0.group === "" && t0.channel === "", JSON.stringify(t0));
+
+    // set group + channel
+    const rg = tgNotify.setTgNotifyTarget("group", "-1001234567890");
+    const rc = tgNotify.setTgNotifyTarget("channel", "-1009876543210");
+    t0 = tgNotify.getTgNotifyTargets();
+    check("10d. set grup & channel tersimpan di db", rg.id === "-1001234567890" && rc.id === "-1009876543210" && t0.group === "-1001234567890" && t0.channel === "-1009876543210", JSON.stringify(t0));
+
+    // id nyasar ditolak
+    let bad = null;
+    try { tgNotify.setTgNotifyTarget("group", "abc"); } catch (e) { bad = e.message; }
+    check("10e. id bukan angka → error jelas", !!bad && /angka/.test(bad), bad);
+    let bad2 = null;
+    try { tgNotify.setTgNotifyTarget("grup", "123"); } catch (e) { bad2 = e.message; }
+    check("10f. kind nyasar → error", !!bad2 && /group|channel/.test(bad2), bad2);
+
+    // broadcast: bridge off → jelas alasannya
+    const rOff = await tgNotify.broadcastToTelegramTargets("tes notif");
+    check("10g. bridge off → {sent:false, reason bridge ON}", rOff.sent === false && /on telegram/i.test(rOff.reason), JSON.stringify(rOff));
+
+    // nyalain client factory fake → broadcast kirim ke 2 target
+    const sent10 = [];
+    mgr10._setBridgeClientFactoryForTest({
+      telegram: ({ token }) => ({
+        start: async () => ({ id: 42, username: "notif_bot" }),
+        stop: () => true,
+        sendMessage: async (chatId, text) => { sent10.push([String(chatId), String(text)]); return { message_id: 1 }; },
+        setMessageReaction: async () => ({}),
+        editMessageText: async () => ({}),
+      }),
+    });
+    await mgr10.startTelegramBridge();
+    const rOn = await tgNotify.broadcastToTelegramTargets("📍 info bot tes");
+    check("10h. bridge on → terkirim ke grup + channel", rOn.sent === true && rOn.sentTo.length === 2 && sent10.some(([c]) => c === "-1001234567890") && sent10.some(([c]) => c === "-1009876543210"), JSON.stringify(rOn));
+
+    // clear target → broadcast senyap
+    tgNotify.setTgNotifyTarget("group", "off");
+    const rClear = await tgNotify.broadcastToTelegramTargets("tes");
+    check("10i. group off → cuma channel yang kekirim", rClear.sentTo.length === 1 && rClear.sentTo[0] === "-1009876543210", JSON.stringify(rClear));
+    tgNotify.setTgNotifyTarget("channel", "");
+    const rNone = await tgNotify.broadcastToTelegramTargets("tes");
+    check("10j. semua target kosong → reason belum di-set", rNone.sent === false && /belum di-set/.test(rNone.reason), JSON.stringify(rNone));
+
+    // plugin handler: .bridge notif (status) / notif group <id> / notif tes
+    const bridgePlug = await import(url("plugins/owner/bridge.js"));
+    const replies = [];
+    const mk = (text) => ({ text, reply: async (msg) => { replies.push(String(msg)); return true; } });
+    await bridgePlug.handler(mk("notif"), { sock: {} });
+    check("10k. .bridge notif → kartu status target", replies.length === 1 && replies[0].includes("belum di-set"), replies[0]?.slice(0, 80));
+    replies.length = 0;
+    await bridgePlug.handler(mk("notif group -100111222333"), { sock: {} });
+    t0 = tgNotify.getTgNotifyTargets();
+    check("10l. .bridge notif group <id> → tersimpan", t0.group === "-100111222333" && replies[0].includes("-100111222333"), JSON.stringify(t0));
+    replies.length = 0;
+    await bridgePlug.handler(mk("notif channel -100444555666"), { sock: {} });
+    t0 = tgNotify.getTgNotifyTargets();
+    check("10m. .bridge notif channel <id> → tersimpan", t0.channel === "-100444555666", JSON.stringify(t0));
+    replies.length = 0;
+    await bridgePlug.handler(mk("notif tes"), { sock: {} });
+    check("10n. .bridge notif tes → terkirim ke 2 target (via client bridge)", replies.length === 1 && replies[0].includes("Terikirim") && sent10.length >= 4, replies[0]?.slice(0, 90));
+    replies.length = 0;
+    await bridgePlug.handler(mk("notif group off"), { sock: {} });
+    t0 = tgNotify.getTgNotifyTargets();
+    check("10o. .bridge notif group off → target kehapus", t0.group === "" && replies[0].includes("dihapus"), JSON.stringify(t0));
+    replies.length = 0;
+    await bridgePlug.handler(mk("notif grup 123"), { sock: {} });
+    check("10p. target nyasar → usage jelas", replies.length === 1 && replies[0].includes("group"), replies[0]?.slice(0, 80));
+    // status card utama nyebut notif TG
+    replies.length = 0;
+    await bridgePlug.handler(mk(""), { sock: {} });
+    check("10q. .bridge status → nyebut Notif TG + setkey", replies[0].includes("Notif TG") && replies[0].includes("setkey telegram"), replies[0]?.slice(0, 100));
+
+    // cleanup state
+    tgNotify.setTgNotifyTarget("group", "");
+    tgNotify.setTgNotifyTarget("channel", "");
+    mgr10._setBridgeClientFactoryForTest({});
+    mgr10.stopTelegramBridge();
+  }
+
+  // ── 11. CPANEL DARI TELEGRAM: gate kategori + skip validasi WA utk user platform ──
+  {
+    const adapter11 = adapter;
+    const gateOk = adapter11.isCategoryAllowed(db, "cpanel");
+    check("11a. gate kategori: .cpanel (panel) lolos whitelist default *", gateOk === true);
+    // mapping grup TG → jid grup → command jalan di grup telegram
+    const rawGrp = adapter11.telegramToRaw({ from: { id: 555 }, chat: { id: -100777888, type: "supergroup", title: "Grup Panel Aku" }, text: ".cpanel 1gb 5gb 50%", message_id: 1, date: 1 });
+    check("11b. grup TG → jid tg_g…@g.us (cpanel di grup telegram kebaca)", String(rawGrp.key.remoteJid).startsWith("tg_g") && rawGrp.key.remoteJid.endsWith("@g.us"), rawGrp.key.remoteJid);
+    check("11c. grup TG → text utuh lolos ke handler", rawGrp.message.conversation === ".cpanel 1gb 5gb 50%");
+    // validasi onWhatsApp dilewati buat user platform
+    const cpanelSrc = fs.readFileSync(path.join(R, "plugins/panel/cpanel.js"), "utf8");
+    const csSrc = fs.readFileSync(path.join(R, "plugins/panel/createserver.js"), "utf8");
+        check("11d. cpanel.js: skip onWhatsApp utk id platform (tg_/dc_) di 2 jalur create", (cpanelSrc.match(/isPlatformUser \? \[\{ exists: true \}\]/g) || []).length === 2 && (cpanelSrc.match(/\^\(tg\|dc\)_\//g) || []).length === 2, "isPlatformUser=" + (cpanelSrc.match(/isPlatformUser/g) || []).length);    check("11e. createserver/cadmin/cp: skip onWhatsApp utk id platform", ["plugins/panel/createserver.js", "plugins/panel/cadmin.js", "plugins/panel/cp.js"].every((f) => fs.readFileSync(path.join(R, f), "utf8").includes("isPlatformUser ? [{ exists: true }]")));
+    // handler cpanel jalan dari grup TG (panel belum diset → kartu "belum dikonfigurasi", bukan crash)
+    const cpanelPlug = await import(url("plugins/panel/cpanel.js"));
+    const repliesC = [];
+    const mkC = (text) => ({ text, sender: "tg_555", chat: "tg_g100777888@g.us", prefix: ".", reply: async (msg) => { repliesC.push(String(msg)); return true; } });
+    await cpanelPlug.handler(mkC("1gb 5gb 50%"), { sock: {} });
+    check("11f. .cpanel dari grup TG → dibales kartu (gak crash)", repliesC.length === 1 && repliesC[0].length > 10, repliesC[0]?.slice(0, 60));
+    // info user create server → notifyServerCreated → broadcastToSaluran → forward TG (source hook)
+    check("11g. createserver manggil notifyServerCreated (sambungan info → saluran/TG)", csSrc.includes("notifyServerCreated"));
+  }
+
   // cleanup: stop bridge nyata (kalau ada yang ke-start) + pulihkan env
   try {
     const m2 = await import(url("src/lib/rarabridge/manager.js"));

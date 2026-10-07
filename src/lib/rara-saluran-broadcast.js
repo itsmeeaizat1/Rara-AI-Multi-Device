@@ -88,6 +88,13 @@ async function broadcastToSaluran(sock, message, options = {}, bannerTitle, thum
     await _sendForTest(message, options, bannerTitle, thumbName);
     return { sent: true, saluranId: "test@newsletter" };
   }
+  // REVISI OWNER 7 Okt 2026: notif yang sama juga ngalir ke grup & channel
+  // Telegram (target di-set via .bridge notif) — jalan walau saluran WA belum
+  // dikonfigurasi / resolve gagal; fire-and-forget biar gak nunda kirim WA.
+  try {
+    const { broadcastToTelegramTargets } = await import("./rara-telegram-notify.js");
+    broadcastToTelegramTargets(message).catch(() => {});
+  } catch {}
   // FIX 19 Sep 2026 (owner: "notif ke saluran rara official sama sekali gak terkirim"):
   // dulu gerbang `saluranId === "@newsletter" → return "belum dikonfigurasi"` — padahal
   // config default adalah placeholder persis itu → SEMUA notif (sewa/premium/ban/block/

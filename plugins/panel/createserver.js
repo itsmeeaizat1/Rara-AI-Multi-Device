@@ -321,8 +321,9 @@ async function handler(m, { sock }) {
     return m.reply(raraWrap("Panel", `❌ Tidak dapat menentukan nomor target.`));
   }
 
+  const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // bridge: user TG/Discord bukan nomor WA
   try {
-    const [onWa] = await sock.onWhatsApp(targetUser.split("@")[0]);
+    const [onWa] = isPlatformUser ? [{ exists: true }] : await sock.onWhatsApp(targetUser.split("@")[0]);
     if (!onWa?.exists) {
       return m.reply(
         `❌ Nomor \`${targetUser.split("@")[0]}\` tidak terdaftar di WhatsApp!`,
