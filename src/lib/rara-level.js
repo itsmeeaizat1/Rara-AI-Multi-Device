@@ -2,6 +2,7 @@
 import config from "../../config.js";
 import sharp from "sharp";
 import { getAssetBuffer } from "./rara-asset-manager.js";
+import { bridgeMentionText } from "./rarabridge/adapter.js";
 
 const EXP_PER_LEVEL = 10000;
 
@@ -398,7 +399,7 @@ async function checkAndNotifyLevelUp(sock, m, db, user, oldExp, newExp) {
           : await sock.profilePictureUrl(m.sender, "image");
     } catch {}
 
-    const txt = `🎊 *SELAMAT @${m.sender.split("@")[0]}!*
+    const txt = `🎊 *SELAMAT ${bridgeMentionText(m)}!*
 
 Level kamu bertambah ${newLevel - oldLevel}
 🥗 Level kamu sekarang *${newLevel}*

@@ -102,7 +102,11 @@ export function telegramToRaw(tgMsg) {
     pushName: from.first_name || from.username || "Telegram User",
     _bridge: { platform: "telegram", chatId: chat.id, invokeMsgId: tgMsg?.message_id, isBot: !!from.is_bot, hasMedia: !!(tgMsg && (tgMsg.photo || tgMsg.video || tgMsg.document || tgMsg.audio || tgMsg.voice)), isGroup: isGroupChat, isChannel: isChannelChat,
       // judul grup (registry .jasher — broadcast promosi lintas platform, 29 Sep)
-      groupTitle: (isGroupChat || isChannelChat) ? (chat.title || null) : null },
+      groupTitle: (isGroupChat || isChannelChat) ? (chat.title || null) : null,
+      // USERNAME TELEGRAM ASLI (7 Okt: owner minta mention "@username" bukan
+      // "@tg_<id>" di notif level-up dll) — null kalau user gak punya username
+      // (banyak akun Telegram cuma pakai nama, gak set username).
+      username: from.username || null },
   };
 }
 
@@ -126,8 +130,28 @@ export function discordToRaw(dcMsg) {
     message: { conversation: text },
     messageTimestamp: Math.floor((dcMsg?.createdTimestamp || Date.now()) / 1000),
     pushName: author.username || "Discord User",
-    _bridge: { platform: "discord", chatId: dcMsg?.channelId || author.id, invokeMsgId: dcMsg?.id, isBot: !!author.bot, hasMedia: !!(dcMsg && dcMsg.attachments && dcMsg.attachments.size), isGroup: isGroupChat },
+    _bridge: { platform: "discord", chatId: dcMsg?.channelId || author.id, invokeMsgId: dcMsg?.id, isBot: !!author.bot, hasMedia: !!(dcMsg && dcMsg.attachments && dcMsg.attachments.size), isGroup: isGroupChat,
+      // simetri sama telegram — discord author.username EMANG handle asli dia
+      username: author.username || null },
   };
+}
+
+// ── Mention display (7 Okt: owner "bisa ga bukan id tapi nama usernya aja klo
+// ke bridge telegramnya") ─────────────────────────────────────────────────
+// Bridge jid (tg_<id>, dc_<id>) gak punya "@" domain → "@" + m.sender.split("@")[0]
+// (dipakai di banyak notif, mis. level-up) ngasilin "@tg_8672332446" mentah, bukan
+// mention beneran (bridge kirim teks plain, bukan protokol WA asli). Fix: kalau
+// m punya _bridge.username (akun Telegram YANG PUNYA username), tampilin itu;
+// fallback ke pushName (nama tampilan) kalau gak punya username; fallback akhir
+// ke ID mentah (perilaku lama, dipakai juga buat WA non-bridge).
+export function bridgeMentionText(m) {
+  const bridge = m?._bridge;
+  if (bridge?.platform === "telegram" && bridge.username) return "@" + bridge.username;
+  if (bridge?.platform === "discord" && bridge.username) return "@" + bridge.username;
+  if (bridge && m?.pushName && m.pushName !== "Telegram User" && m.pushName !== "Discord User") {
+    return "@" + m.pushName;
+  }
+  return "@" + String(m?.sender || "").split("@")[0];
 }
 
 // ── Sock shim ───────────────────────────────────────────

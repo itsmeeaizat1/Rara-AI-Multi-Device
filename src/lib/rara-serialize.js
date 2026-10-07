@@ -588,6 +588,10 @@ async function serialize(sock, msg, store = {}) {
     finalPushName = dbContacts[m.sender].name;
   }
   m.pushName = finalPushName;
+  // simpan metadata bridge (platform/username dari telegramToRaw/discordToRaw)
+  // biar helper bridgeMentionText() bisa pilih "@username" asli, bukan "@tg_<id>"
+  // (owner 7 Okt: minta mention bridge Telegram pakai username, bukan ID).
+  if (msg._bridge) m._bridge = msg._bridge;
   m.isBot = m.fromMe;
   m.isOwner = m.isNewsletter || m.fromMe ? true : isOwner(m.sender);
   m.isPartner = m.isNewsletter || m.fromMe ? true : isPartner(m.sender);
