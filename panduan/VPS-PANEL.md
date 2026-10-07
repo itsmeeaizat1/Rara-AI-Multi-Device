@@ -615,6 +615,8 @@ sleep 2
 systemctl status wings     # harus active (running) hijau
 ```
 
+> 💡 **Alternatif tanpa browser:** `cd /var/www/pterodactyl && php artisan p:node:configuration <ID_NODE> > /etc/pterodactyl/config.yml` menggantikan Auto-Deploy — hasilnya sama persis (token + port dibaca langsung dari database panel). Detail & kasus errornya di bagian Troubleshooting.
+
 ---
 
 ## Langkah 13 — Buat Server Bot di Panel
@@ -656,14 +658,54 @@ Pairing nomor bot: di console bakal muncul QR code (kalau pakai QR) atau kode pa
 
 ## Langkah 15 — Bikin API Key Panel (buat `.cpanel` bot)
 
-Bot Rara (.cpanel / .setpanel) butuh Application API key:
+Panel punya 2 jenis API key — tempat bikinnya BEDA dan fungsinya BEDA:
 
-1. Panel (sebagai admin): klik avatar → **API Credentials** → Create New
-2. Copy key (format `ptla_xxx...`) — **hanya sekali ditampilin!**
-3. Di bot owner:
+| | `ptla_` (Application API) | `ptlc_` (Client API) |
+|---|---|---|
+| Untuk siapa | Bot Rara | Akun panel sendiri (kamu/user) |
+| Fungsi | BIKIN user + server, power (start/stop/restart/kill), list server — semuanya atas nama admin | KONTROL akun panel sendiri: login bot, cek status, upload file ke server milik sendiri |
+| Tempat bikin | Area **Admin** → sidebar **Application API** | Halaman **Account** → tab **API Credentials** |
+| Bisa akses area admin? | Bisa (admin level) | TIDAK — cuma akun sendiri |
+| Wajib buat bot? | ✅ WAJIB | ⚠️ Opsional (cuma buat `capikey`, lihat bawah) |
+
+### A. Bikin `ptla_` (Application API — WAJIB buat bot)
+
+1. Login panel sebagai admin → klik avatar kanan atas → **Admin** (ikon gear)
+2. Di sidebar admin, buka **Application API** → klik **Create New**
+3. Description bebas (misal `Rara Bot`) → Allowed IPs kosongin aja → **Create**
+4. Copy key yang muncul (format `ptla_xxx...`) — **⚠️ cuma ditampilin SEKALI!** Kalau kehilang, delete dan bikin baru.
+5. Daftarin ke bot (chat WA owner, di bot):
 
 ```
-.setpanel http://IP_VPS, ptla_xxx...
+.setpanel v1 apikey ptla_xxx...
+```
+
+Dengan ptla doang, SEMUA fitur create udah jalan:
+- `.cpanel client, 5gb 5gb, 200, user, 628xxx, 1` → user biasa + server (tanpa akses admin)
+- `.cpanel admin, 5gb 5gb, 200, user, 628xxx, 1` → user + server SEKALIGUS akses admin (owner bot only)
+
+### B. Bikin `ptlc_` (Client API — cuma kalau perlu `capikey`)
+
+`ptlc_` gak ada di area Admin. Bikinnya di halaman akun SENDIRI:
+
+1. Klik avatar kanan atas → **Account** (yang pertama, BUKAN Admin Control Panel)
+2. Buka tab **API Credentials** → **Create New** → description bebas → **Create**
+3. Copy key (format `ptlc_xxx...`) — cuma sekali ditampilin juga.
+
+Kepakenya cuma 2:
+- **User login bot (gak perlu bikin manual!)** — user cukup `.cpanel login <username>,<password>,1`, bot otomatis bikinin session ptlc pribadinya sendiri (berlaku 7 hari). Key dari halaman Account gak dipakai sama sekali di jalur ini.
+- **`capikey` owner (opsional)** — kalau KAMU mau bot bisa `.cpanel status` / `.cpanel upload` ke server milik user lain atas nama akunmu:
+
+```
+.setpanel v1 capikey ptlc_xxx...
+```
+
+> 💡 Tanpa capikey pun bot tetap fungsi penuh: create (client/admin), power start/stop/restart/kill, listserver — semua via ptla. `ptlc_` murni kontrol akun, bukan buat bikin server.
+
+### Set domain panel (kalau belum)
+
+```
+.setpanel v1 http://IP_VPS
 ```
 
 > ⚠️ Gunakan URL panel yang aktif (IP langsung atau tunnel). Jangan pakai URL tunnel lama yang udah mati/ganti.
@@ -717,6 +759,108 @@ Bot Rara (.cpanel / .setpanel) butuh Application API key:
 
 ---
 
+**Node offline: "Cannot communicate with daemon" / panel gak bisa nyambung ke Wings**
+
+Diagnosa cepat (jalankan di VPS):
+
+```bash
+systemctl is-active wings                          # harus: active
+ss -tlnp | grep -E ':8080|:2022'                    # wings harus LISTEN di 8080 + 2022
+curl -s -o /dev/null -w '%{http_code}\n' --max-time 5 http://IP_VPS:8080/   # 401/404 = bagus (reachable)
+```
+
+Kalau curl-nya timeout dari luar VPS → port ke-block UFW (`ufw allow 8080/tcp`) atau wings emang gak jalan. Kalau keluar 401/404 → jalur jaringan OK, masalahnya di auth/token (lihat kasus di bawah).
+
+**Kasus 1 — "Reset Daemon Key" dicentang, TAPI token baru gak di-deploy ke Wings**
+
+- Gejala: node tiba-tiba offline setelah klik "Reset Daemon Key" di panel; wings sendiri masih `active`; console/panel bilang gak bisa komunikasi dengan daemon.
+- Penyebab: reset itu cuma bikin token BARU di database panel. `/etc/pterodactyl/config.yml` di VPS masih megang token LAMA → kunci panel dan wings gak cocok lagi.
+- Cek mismatch:
+
+```bash
+grep token_id /etc/pterodactyl/config.yml
+mysql -N -e "select daemon_token_id from panel.nodes where id=1"
+```
+
+Beda nilai = mismatch. Fix: deploy ulang token baru (lihat "Deploy token baru" di bawah), lalu `systemctl restart wings`.
+
+- ⚠️ PENTING: kolom `daemon_token` di database itu hasil ENKRIPSI Laravel (awalan `eyJ...`). JANGAN copy-paste mentah dari MySQL ke config.yml — gak akan pernah cocok. Pakai Auto-Deploy atau `p:node:configuration` (mereka yang menterjemahin token asli).
+
+**Kasus 2 — Auto-Deploy / Generate Token dijalankan, TAPI daemon key gak direset**
+
+- Ini sendiri TIDAK bikin rusak: selama token masih sama, deploy ulang config = cuma restart wings biasa. Node tetap online.
+- Yang bahaya: deploy dijalankan pas setelan node masih SALAH / setengah diedit, karena config wings ditimpa pake nilai salah dari panel:
+  - `api.port: 80` → wings nabrak nginx (port 80 dipake panel web) → wings crash loop / gagal start.
+  - `ssl.enabled: true` + sertifikat letsencrypt buat IP → IP gak bisa punya sertifikat → wings gak bisa start.
+  - Daemon Port node beda dengan `api.port` config → panel nyambung ke port yang kosong.
+- Fix: rapikan dulu setelan node di admin (FQDN = IP/domain, scheme `http` kalau akses langsung, Daemon Port `8080`, SSL off), BARU deploy ulang config.
+- Urutan aman kapan pun: **edit setelan node → (opsional) reset daemon key → deploy config → restart wings.** Dua-duanya (reset tanpa deploy, deploy dengan setelan salah) bikin node offline — cuma sebabnya beda.
+
+**Deploy token baru (cara cepet, tanpa browser)**
+
+Cara GUI: admin → Nodes → node kamu → tab Configuration → **Auto-Deploy** → jalankan command-nya di VPS.
+Cara CLI (hasil sama persis, dia baca langsung dari database panel):
+
+```bash
+cp /etc/pterodactyl/config.yml /etc/pterodactyl/config.yml.bak   # backup dulu!
+cd /var/www/pterodactyl
+php artisan p:node:configuration 1 > /etc/pterodactyl/config.yml
+systemctl restart wings
+sleep 5 && systemctl is-active wings     # harus: active
+```
+
+Angka `1` = ID node. Cek ID: `mysql -N -e "select id,name from panel.nodes"`.
+
+**Kasus 3 — Wings mati total / crash loop (status failed/activating terus)**
+
+```bash
+systemctl status wings --no-pager | head -10
+journalctl -u wings --no-pager -n 30
+```
+
+Penyebab umum dan tanda di log:
+
+1. Port bentrok → log: `address already in use` / `error listening` → cek `api.port` config (harus 8080, bukan 80/443)
+2. `config.yml` rusak (indentasi YAML salah hasil edit manual) → log: `unmarshal` / `yaml` error
+3. Docker mati → `systemctl restart docker && sleep 3 && systemctl restart wings`
+4. Proses wings basi → `pkill -9 -f "/usr/local/bin/wings" && systemctl reset-failed wings && systemctl start wings`
+
+Fix paling gampang buat semua: deploy ulang config via Auto-Deploy / `p:node:configuration` — sekalian benerin port, token, dan format YAML.
+
+**Kasus 4 — Web panel / IP gak kebuka**
+
+- Cek nginx: `systemctl status nginx` (harus active) + `ss -tlnp | grep ':80 '`
+- Firewall: `ufw status` → kalau active, `ufw allow 80/tcp` dan `ufw allow 8080/tcp`
+- `APP_URL` di `/var/www/pterodactyl/.env` HARUS sama persis dengan URL yang dipakai browser (contoh `http://IP_VPS`), habis itu `php artisan config:cache`
+- Akses `https://IP` gak akan pernah jalan — IP gak bisa punya sertifikat SSL. Panel via IP = `http://` polos.
+
+**Kasus 5 — Node online, tapi console server gak konek**
+
+- `allowed_origins` di config wings WAJIB diisi URL panel yang dipakai browser (contoh `- 'http://IP_VPS'`). Kosong `[]` = console loading forever.
+- Daemon Port node HARUS sama dengan `api.port` wings:
+
+```bash
+mysql -N -e "select daemonListen from panel.nodes where id=1"    # harus 8080
+grep -A3 'api:' /etc/pterodactyl/config.yml | grep port          # harus 8080
+```
+
+Beda = console gak akan pernah nyambung. Benerin: set Daemon Port 8080 di admin → deploy ulang config → restart wings.
+
+- Pakai proxy/tunnel → `behind_proxy` = 1; akses langsung IP → `behind_proxy` = 0: `mysql -e "update panel.nodes set behind_proxy=0 where id=1"`
+
+**Verifikasi akhir (semua harus lolos)**
+
+```bash
+systemctl is-active wings                                         # active
+ss -tlnp | grep -E ':8080|:2022'                                  # dua-duanya LISTEN
+journalctl -u wings --no-pager -n 5                               # ada "updating server states on Panel"
+curl -s -o /dev/null -w '%{http_code}\n' http://IP_VPS:8080/      # 401/404
+```
+
+Kalau semua hijau, cek panel admin → node harus ONLINE (bukan merah), lalu di WhatsApp bot: `.setpanel v1 http://IP_VPS` → tes `.cpanel status`.
+
+---
+
 ## Checklist Final
 
 - [ ] Password root sudah diganti
@@ -727,7 +871,7 @@ Bot Rara (.cpanel / .setpanel) butuh Application API key:
 - [ ] Panel accessible (IP / tunnel)
 - [ ] Wings `active (running)`
 - [ ] FQDN node = URL Wings; `allowed_origins` = URL panel
-- [ ] Daemon Port di panel = 443 (tunnel)
+- [ ] Daemon Port di panel = 443 (tunnel) / 8080 (akses langsung IP) — HARUS sama dengan `api.port` config wings
 - [ ] Console server connect (hijau)
 - [ ] Egg pakai `ghcr.io/parkervcp/yolks:nodejs_20`
 - [ ] Bot Rara ter-upload + running
