@@ -1,10 +1,10 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // cpanel-allow.js — Konfirmasi owner buat create panel (owner 6 Okt 2026):
 // "user gak bisa langsung create cpanel, owner harus menambahkan dulu"
-//   .addcpanel @user 7d             → izin create tipe client 7 hari
-//   .addcpanel role @user client 7d → sama (kata "role" opsional)
-//   .addcpanel 628xxx admin 30d     → izin create tipe admin 30 hari
-//   .addcpanel @user unli          → tipe client selamanya
+//   .addaksescpanel @user 7d             → izin create tipe client 7 hari
+//   .addaksescpanel role @user client 7d → sama (kata "role" opsional)
+//   .addaksescpanel 628xxx admin 30d     → izin create tipe admin 30 hari
+//   .addaksescpanel @user unli          → tipe client selamanya
 //   (revisi owner 7 Okt): owner mutusin tipe client|admin + durasi —
 //   user berizin cuma bisa create sesuai tipenya.
 //   .delcpanel @user         → cabut izin
@@ -23,12 +23,12 @@ import {
 } from "../../src/lib/rara-cpanel-allow.js";
 
 const pluginConfig = {
-  name: ["addcpanel", "delcpanel", "listcpanel"],
-  alias: ["listallowed"],
+  name: ["addaksescpanel", "delcpanel", "listcpanel"],
+  alias: ["addcpanel", "listallowed"], // addcpanel = nama lama, tetap jalan
   category: "panel",
-  description: "Izin create panel dari owner: tipe (client|admin) + durasi ditentukan saat .addcpanel — user berizin cuma bisa create sesuai tipenya",
-  usage: ".addcpanel role @user|nomor <client|admin> <durasi> | .delcpanel @user|nomor | .listcpanel (tipe default client; durasi: 30m/12h/7d/2w/unli)",
-  example: ".addcpanel role @user 7d",
+  description: "Izin create panel dari owner: tipe (client|admin) + durasi ditentukan saat .addaksescpanel — user berizin cuma bisa create sesuai tipenya",
+  usage: ".addaksescpanel role @user|nomor <client|admin> <durasi> | .delcpanel @user|nomor | .listcpanel (tipe default client; durasi: 30m/12h/7d/2w/unli)",
+  example: ".addaksescpanel role @user 7d",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
   if (cmd === "listcpanel") {
     const list = listCreateAllow();
     if (!list.length) {
-      return m.reply(raraWrap("cpanel", `Belum ada user yang punya izin create panel.\n\nTambah dengan: ${(m.prefix || ".")}addcpanel @user <client|admin> 7d`));
+      return m.reply(raraWrap("cpanel", `Belum ada user yang punya izin create panel.\n\nTambah dengan: ${(m.prefix || ".")}addaksescpanel @user <client|admin> 7d`));
     }
     let txt = "";
     for (const e of list) {
@@ -76,8 +76,8 @@ async function handler(m, { sock }) {
 
   const target = resolveTarget(m, args);
   if (!target) {
-    const c = cmd === "delcpanel" ? "delcpanel" : "addcpanel";
-    return m.reply(raraGuide("cpanel", `${(m.prefix || ".")}${c} role <@user|nomor> <client|admin> <durasi>\n\nContoh:\n${(m.prefix || ".")}addcpanel role @user client 7d\n${(m.prefix || ".")}addcpanel 62812345678 admin 30d\n${(m.prefix || ".")}addcpanel @user unli (tipe client selamanya)\n${(m.prefix || ".")}delcpanel @user\n\nTipe: client (ngatur server sendiri) | admin (akses panel admin)\nDurasi: 30m | 12h | 7d | 2w | unli\nTanpa tipe = client | Tanpa durasi = selamanya.`));
+    const c = cmd === "delcpanel" ? "delcpanel" : "addaksescpanel";
+    return m.reply(raraGuide("cpanel", `${(m.prefix || ".")}${c} role <@user|nomor> <client|admin> <durasi>\n\nContoh:\n${(m.prefix || ".")}addaksescpanel role @user client 7d\n${(m.prefix || ".")}addaksescpanel 62812345678 admin 30d\n${(m.prefix || ".")}addaksescpanel @user unli (tipe client selamanya)\n${(m.prefix || ".")}delcpanel @user\n\nTipe: client (ngatur server sendiri) | admin (akses panel admin)\nDurasi: 30m | 12h | 7d | 2w | unli\nTanpa tipe = client | Tanpa durasi = selamanya.`));
   }
 
   // ── .delcpanel ──
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     return m.reply(raraWrap("cpanel", `「 ✦ Izin Dicabut ✦ 」\n\n📱 Nomor: ${cleanNumber(target)}\n\nDia gak bisa create cpanel lagi sampai ditambahkan ulang.`));
   }
 
-  // ── .addcpanel ──
+  // ── .addaksescpanel ──
   // token durasi = token pertama yang bukan mention/nomor/kata "role"/tipe.
   // (revisi owner 7 Okt): tipe client|admin opsional di posisi mana pun,
   // default client. Token nyasar (mis. "7x") JANGAN diabaikan diam-diam →

@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE — E2E: izin create panel (owner 6 Okt 2026):
 // ".cpanel ada fitur butuh konfirmasi add dr owner — user gak bisa langsung
-// create, owner harus menambahkan dulu: .addcpanel role @user / nomor <durasi>"
-// Lib src/lib/rara-cpanel-allow.js + plugin .addcpanel/.delcpanel/.listcpanel
+// create, owner harus menambahkan dulu: .addaksescpanel role @user / nomor <durasi>"
+// Lib src/lib/rara-cpanel-allow.js + plugin .addaksescpanel/.delcpanel/.listcpanel
 // + gate di plugins/panel/cpanel.js (2 jalur create). Mock HTTP panel lokal.
 import http from "node:http";
 import os from "node:os";
@@ -57,8 +57,8 @@ t("1s. isCreateAllowed bawa tipe utk gate", lib.isCreateAllowed("628600111222").
 t("1t. tipe ngawur → error jelas", lib.allowCreate("628999888777", null, "reseller").ok === false && /Tipe harus/.test(lib.allowCreate("628999888777", null, "reseller").error || ""));
 t("1u. re-add tipe beda → tipe keupdate", lib.allowCreate("628600111222", 7 * 864e5, "client").ok === true && lib.isCreateAllowed("628600111222").entry?.tipe === "client");
 
-// ═══ SECTION 2: plugin .addcpanel / .delcpanel / .listcpanel ═══
-section("2. plugin .addcpanel");
+// ═══ SECTION 2: plugin .addaksescpanel / .delcpanel / .listcpanel ═══
+section("2. plugin .addaksescpanel");
 const plugin = await import(R + "/plugins/panel/cpanel-allow.js");
 const replies = [];
 function mkM(command, text, opts = {}) {
@@ -74,36 +74,41 @@ function mkM(command, text, opts = {}) {
 const replyTxt = () => replies.join("\n");
 
 replies.length = 0;
-await plugin.handler(mkM("addcpanel", "role @user 7d", { mentionedJid: ["628111222333@s.whatsapp.net"] }), { sock: {} });
-t("2a. .addcpanel role @user 7d → izin 7 hari tipe client", /7 hari/.test(replyTxt()) && /628111222333/.test(replyTxt()) && /Tipe: Client/.test(replyTxt()), replyTxt().slice(0, 200));
+await plugin.handler(mkM("addaksescpanel", "role @user 7d", { mentionedJid: ["628111222333@s.whatsapp.net"] }), { sock: {} });
+t("2a. .addaksescpanel role @user 7d → izin 7 hari tipe client", /7 hari/.test(replyTxt()) && /628111222333/.test(replyTxt()) && /Tipe: Client/.test(replyTxt()), replyTxt().slice(0, 200));
 t("2b. izin tercatat di lib", lib.isCreateAllowed("628111222333").allowed === true);
 
 replies.length = 0;
-await plugin.handler(mkM("addcpanel", "628777888999 30d"), { sock: {} });
-t("2c. .addcpanel <nomor> 30d → 30 hari", /30 hari/.test(replyTxt()) && /628777888999/.test(replyTxt()), replyTxt().slice(0, 160));
+await plugin.handler(mkM("addaksescpanel", "628777888999 30d"), { sock: {} });
+t("2c. .addaksescpanel <nomor> 30d → 30 hari", /30 hari/.test(replyTxt()) && /628777888999/.test(replyTxt()), replyTxt().slice(0, 160));
 
 replies.length = 0;
-await plugin.handler(mkM("addcpanel", "@user unli", { mentionedJid: ["628666777888@s.whatsapp.net"] }), { sock: {} });
-t("2d. .addcpanel @user unli → Selamanya", /Selamanya/.test(replyTxt()), replyTxt().slice(0, 160));
+await plugin.handler(mkM("addaksescpanel", "@user unli", { mentionedJid: ["628666777888@s.whatsapp.net"] }), { sock: {} });
+t("2d. .addaksescpanel @user unli → Selamanya", /Selamanya/.test(replyTxt()), replyTxt().slice(0, 160));
 
 replies.length = 0;
-await plugin.handler(mkM("addcpanel", "role @user admin 14d", { mentionedJid: ["628666777888@s.whatsapp.net"] }), { sock: {} });
-t("2d2. .addcpanel role @user admin 14d → tipe admin 14 hari", /Tipe: Admin/.test(replyTxt()) && /14 hari/.test(replyTxt()) && lib.isCreateAllowed("628666777888").entry?.tipe === "admin", replyTxt().slice(0, 200));
+await plugin.handler(mkM("addaksescpanel", "role @user admin 14d", { mentionedJid: ["628666777888@s.whatsapp.net"] }), { sock: {} });
+t("2d2. .addaksescpanel role @user admin 14d → tipe admin 14 hari", /Tipe: Admin/.test(replyTxt()) && /14 hari/.test(replyTxt()) && lib.isCreateAllowed("628666777888").entry?.tipe === "admin", replyTxt().slice(0, 200));
 
 replies.length = 0;
-await plugin.handler(mkM("addcpanel", "@user 7d admin", { mentionedJid: ["628666777888@s.whatsapp.net"] }), { sock: {} });
+await plugin.handler(mkM("addaksescpanel", "@user 7d admin", { mentionedJid: ["628666777888@s.whatsapp.net"] }), { sock: {} });
 t("2d3. tipe setelah durasi juga kebaca", lib.isCreateAllowed("628666777888").entry?.tipe === "admin", lib.isCreateAllowed("628666777888").entry);
 
 replies.length = 0;
 const expBefore7x = lib.isCreateAllowed("628666777888").entry?.expiresAt;
 const tipeBefore7x = lib.isCreateAllowed("628666777888").entry?.tipe;
-await plugin.handler(mkM("addcpanel", "@user 7x", { mentionedJid: ["628666777888@s.whatsapp.net"] }), { sock: {} });
+await plugin.handler(mkM("addaksescpanel", "@user 7x", { mentionedJid: ["628666777888@s.whatsapp.net"] }), { sock: {} });
 t("2e. durasi ngawur → ditolak, izin lama gak keubah",
   /gak dikenal/.test(replyTxt()) && lib.isCreateAllowed("628666777888").entry?.expiresAt === expBefore7x && lib.isCreateAllowed("628666777888").entry?.tipe === tipeBefore7x, replyTxt().slice(0, 160));
 
 replies.length = 0;
-await plugin.handler(mkM("addcpanel", ""), { sock: {} });
-t("2f. tanpa target → guide format", /addcpanel/.test(replyTxt()) && /Contoh/.test(replyTxt()), replyTxt().slice(0, 140));
+await plugin.handler(mkM("addaksescpanel", ""), { sock: {} });
+t("2f. tanpa target → guide format", /addaksescpanel/.test(replyTxt()) && /Contoh/.test(replyTxt()), replyTxt().slice(0, 140));
+
+replies.length = 0;
+await plugin.handler(mkM("addcpanel", "@user 12h", { mentionedJid: ["628999000111@s.whatsapp.net"] }), { sock: {} });
+t("2f2. nama lama .addcpanel (alias) → tetap jalan & izin tercatat",
+  /Izin Create Panel/.test(replyTxt()) && lib.isCreateAllowed("628999000111").allowed === true, replyTxt().slice(0, 140));
 
 replies.length = 0;
 await plugin.handler(mkM("listcpanel", ""), { sock: {} });
@@ -118,7 +123,7 @@ await plugin.handler(mkM("delcpanel", "628777888999"), { sock: {} });
 t("2i. .delcpanel nomor gak terdaftar → info jelas", /tidak ada di daftar/.test(replyTxt()), replyTxt().slice(0, 140));
 
 replies.length = 0;
-await plugin.handler(mkM("addcpanel", "role @user 14d", { quoted: { sender: "628555444333@s.whatsapp.net" } }), { sock: {} });
+await plugin.handler(mkM("addaksescpanel", "role @user 14d", { quoted: { sender: "628555444333@s.whatsapp.net" } }), { sock: {} });
 t("2j. target via reply tanpa mention → jalan", lib.isCreateAllowed("628555444333").allowed === true, replyTxt().slice(0, 140));
 
 // ═══ SECTION 3: gate di .cpanel (mock panel) ═══
@@ -184,7 +189,7 @@ cpReplies.length = 0; dms.length = 0;
 const beforeUsers = users.length;
 await cp.handler(mkC("client, 1gb 1gb, 100, freeload, 628990003333, 1", { sender: "628444555666@s.whatsapp.net" }), { sock });
 t("3b. non-owner tanpa izin → ditolak", users.length === beforeUsers && /butuh konfirmasi owner/.test(cpTxt()), cpTxt().slice(0, 160));
-t("3c. saran command .addcpanel di pesan tolak", /\.addcpanel/.test(cpTxt()) && /7d/.test(cpTxt()));
+t("3c. saran command .addaksescpanel di pesan tolak", /\.addaksescpanel/.test(cpTxt()) && /7d/.test(cpTxt()));
 t("3d. DM permintaan ke owner kekirim (kartu Permintaan Akses Panel)", dms.some((d) => /Permintaan Akses Panel/.test(d.text) && /628444555666/.test(d.text)), dms.map((d) => d.to).join(","));
 
 // 3e. throttle: coba lagi dalam 10 menit → DM gak dobel
@@ -192,18 +197,18 @@ cpReplies.length = 0; dms.length = 0;
 await cp.handler(mkC("client, 1gb 1gb, 100, freeload2, 628990003333, 1", { sender: "628444555666@s.whatsapp.net" }), { sock });
 t("3e. throttle 10 menit → DM owner gak dobel", !dms.some((d) => /Permintaan Akses Panel/.test(d.text)) && users.length === beforeUsers);
 
-// 3f. non-owner DENGAN izin (dari .addcpanel) → create jalan
+// 3f. non-owner DENGAN izin (dari .addaksescpanel) → create jalan
 lib.allowCreate("628444555666", 7 * 864e5);
 cpReplies.length = 0;
 await cp.handler(mkC("client, 1gb 2gb, 100, allowedguy, 628990004444, 1", { sender: "628444555666@s.whatsapp.net" }), { sock });
-t("3f. non-owner DENGAN izin .addcpanel → create jalan", users.at(-1)?.username === "allowedguy" && servers.at(-1)?.limits?.memory === 2048, users.at(-1));
+t("3f. non-owner DENGAN izin .addaksescpanel → create jalan", users.at(-1)?.username === "allowedguy" && servers.at(-1)?.limits?.memory === 2048, users.at(-1));
 
 // 3f2. izin tipe client coba create tipe admin → ditolak + arahan format
 cpReplies.length = 0;
 const beforeMism = users.length;
 await cp.handler(mkC("admin, 1gb 5gb, 200, sneaky, 628990004445, 1", { sender: "628444555666@s.whatsapp.net" }), { sock });
 t("3f2. izin client create admin → ditolak (cuma tipe client)", users.length === beforeMism && /cuma tipe \*client\*/.test(cpTxt()), cpTxt().slice(-180));
-t("3f3. saran tipe admin ke owner di pesan tolak", /addcpanel <nomor kamu> admin/.test(cpTxt()), cpTxt().slice(-180));
+t("3f3. saran tipe admin ke owner di pesan tolak", /addaksescpanel <nomor kamu> admin/.test(cpTxt()), cpTxt().slice(-180));
 
 // 3f4. izin tipe admin → create admin jalan root_admin true
 lib.allowCreate("628915000111", 7 * 864e5, "admin");
@@ -243,7 +248,7 @@ addRole("628888999000@s.whatsapp.net", "v1", "reseller");
 cpReplies.length = 0;
 const before4 = users.length;
 await cp.handler(mkC("client, 1gb 1gb, 100, resellertry, 628990007777, 1", { sender: "628888999000@s.whatsapp.net" }), { sock });
-t("3j. role panel tanpa .addcpanel → ditolak (konfirmasi owner wajib)", users.length === before4 && /butuh konfirmasi owner/.test(cpTxt()), cpTxt().slice(0, 140));
+t("3j. role panel tanpa .addaksescpanel → ditolak (konfirmasi owner wajib)", users.length === before4 && /butuh konfirmasi owner/.test(cpTxt()), cpTxt().slice(0, 140));
 
 srv.close();
 try { fs.unlinkSync(ALLOW_FILE); } catch {}

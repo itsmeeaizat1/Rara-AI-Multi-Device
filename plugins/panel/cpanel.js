@@ -5,7 +5,7 @@
 // Upload  : .cpanel upload <namaserver> <idpanel> (reply file)
 // Create  : .cpanel <tipe>, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>
 //          (revisi owner 7 Okt: tipe client|admin + durasi izin ditentukan
-//          owner pas .addcpanel; user berizin create sesuai tipenya) | singkat:
+//          owner pas .addaksescpanel; user berizin create sesuai tipenya) | singkat:
 //          .cpanel <ram> <username>,<nomor>,<idpanel>  → akun dikirim ke nomor
 // Login   : .cpanel login <username>,<password>,<idpanel> → akses kontrol server sendiri (7 hari)
 // Logout  : .cpanel logout <idpanel>
@@ -47,8 +47,8 @@ const pluginConfig = {
   name: ["cpanel"],
   alias: ["panel"],
   category: "panel",
-  description: "Pusat kontrol panel Pterodactyl (v1-v100): buat akun client/admin + spesifikasi (izin .addcpanel dari owner; kredensial bisa dikirim ke DM WhatsApp ATAU DM Telegram via bridge), power/status/upload server, login client 7 hari",
-  usage: ".cpanel client|admin, <disk> <ram>, <cpu>, <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel <ram> <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel> | izin create: .addcpanel <nomor> <client|admin> <durasi>",
+  description: "Pusat kontrol panel Pterodactyl (v1-v100): buat akun client/admin + spesifikasi (izin .addaksescpanel dari owner; kredensial bisa dikirim ke DM WhatsApp ATAU DM Telegram via bridge), power/status/upload server, login client 7 hari",
+  usage: ".cpanel client|admin, <disk> <ram>, <cpu>, <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel <ram> <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel> | izin create: .addaksescpanel <nomor> <client|admin> <durasi>",
   example: ".panel aizat aizat123, 1",
   isOwner: false,
   isPremium: false,
@@ -117,8 +117,8 @@ export async function resolveCreateTarget(raw, sock) {
   return { kind: "wa", jid, tgId: null, display: l2 }; // jid platform lain (dc_) — perilaku lama
 }
 
-// ── GATE KONFIRMASI OWNER (6 Okt 2026): create cpanel butuh izin .addcpanel ──
-// user gak bisa langsung create; owner harus .addcpanel <nomor> <durasi> dulu.
+// ── GATE KONFIRMASI OWNER (6 Okt 2026): create cpanel butuh izin .addaksescpanel ──
+// user gak bisa langsung create; owner harus .addaksescpanel <nomor> <durasi> dulu.
 // Throttle 10 menit per nomor biar gak spam DM owner.
 const _createReqNotify = new Map();
 async function notifyOwnerCreateRequest(sock, sender) {
@@ -136,9 +136,9 @@ async function notifyOwnerCreateRequest(sock, sender) {
 Dia mencoba membuat akun panel tapi belum punya izin create.
 
 Izinkan dengan:
-.addcpanel ${num} 7d
-.addcpanel ${num} 30d
-.addcpanel ${num} unli
+.addaksescpanel ${num} 7d
+.addaksescpanel ${num} 30d
+.addaksescpanel ${num} unli
 
 Tolak: cukup diabaikan.`;
   for (const o of owners) {
@@ -221,23 +221,23 @@ async function createWithRole(m, { sock }, spec) {
 
   // Mode admin (root_admin) = akun bisa masuk area admin panel.
   // (revisi owner 7 Okt 2026): user mau akses panel harus di-add owner dulu —
-  // owner mutusin TIPE (client|admin) + durasi pas .addcpanel; user berizin
+  // owner mutusin TIPE (client|admin) + durasi pas .addaksescpanel; user berizin
   // cuma bisa create sesuai tipenya (enforcement di gate bawah).
   const isAdmin = spec.role === "admin";
 
-  // GATE (owner 6 Okt 2026): create butuh izin .addcpanel dari owner.
+  // GATE (owner 6 Okt 2026): create butuh izin .addaksescpanel dari owner.
   // Owner bot selalu lolos; role panel/gc-seller TIDAK lagi otomatis bisa create.
-  // (revisi owner 7 Okt): TIPE client|admin ditentukan owner pas .addcpanel —
+  // (revisi owner 7 Okt): TIPE client|admin ditentukan owner pas .addaksescpanel —
   // user berizin cuma bisa create sesuai tipenya (izin lama = client).
   if (!m.isOwner) {
     const allow = isCreateAllowed(m.sender);
     if (!allow.allowed) {
       try { await notifyOwnerCreateRequest(sock, m.sender); } catch {}
-      return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addcpanel <nomor kamu> <client|admin> <durasi>\n\nContoh: ${(m.prefix || ".")}addcpanel ${allowCleanNumber(m.sender)} client 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+      return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addaksescpanel <nomor kamu> <client|admin> <durasi>\n\nContoh: ${(m.prefix || ".")}addaksescpanel ${allowCleanNumber(m.sender)} client 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
     }
     const allowTipe = String(allow.entry?.tipe || "client").toLowerCase();
     if (allowTipe !== spec.role) {
-      return m.reply(raraWrap("cpanel", `Izin create kamu cuma tipe *${allowTipe}*.\n\nGunakan format:\n${m.prefix || "."}cpanel ${allowTipe}, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>\n\nMau tipe ${spec.role}? Minta owner:\n${m.prefix || "."}addcpanel <nomor kamu> ${spec.role} <durasi>`));
+      return m.reply(raraWrap("cpanel", `Izin create kamu cuma tipe *${allowTipe}*.\n\nGunakan format:\n${m.prefix || "."}cpanel ${allowTipe}, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>\n\nMau tipe ${spec.role}? Minta owner:\n${m.prefix || "."}addaksescpanel <nomor kamu> ${spec.role} <durasi>`));
     }
   }
   const jedaCheck = checkPanelJeda(m);
@@ -434,10 +434,10 @@ PTLA & PTLC boleh barengan, gak saling hapus.
 
 「 🛠️ Cara Kasih Akses Create 」
 User mau akses panel harus di-add owner dulu (owner bot otomatis bisa).
-Owner mutusin tipe + durasi pas .addcpanel:
-.addcpanel @user client 7d   → izin create tipe client 7 hari
-.addcpanel @user admin unli → izin create tipe admin selamanya
-.addcpanel 628xxx 7d         → tanpa tipe = client
+Owner mutusin tipe + durasi pas .addaksescpanel:
+.addaksescpanel @user client 7d   → izin create tipe client 7 hari
+.addaksescpanel @user admin unli → izin create tipe admin selamanya
+.addaksescpanel 628xxx 7d         → tanpa tipe = client
 .delcpanel @user            → cabut izin
 .listcpanel                  → daftar izin aktif + tipe
 Durasi: 30m / 12h / 7d / 2w / unli
@@ -811,14 +811,14 @@ async function handler(m, { sock }) {
       return m.reply(raraWrap("cpanel", `Username hanya boleh huruf kecil, angka, underscore (3-16 karakter).`));
     }
 
-    // GATE (owner 6 Okt 2026): create butuh izin .addcpanel dari owner.
+    // GATE (owner 6 Okt 2026): create butuh izin .addaksescpanel dari owner.
     // (revisi owner 7 Okt): jalur paket RAM ini otomatis tipe client — pemilik
     // izin tipe admin harus pakai format lengkap .cpanel admin, <disk> <ram>, <cpu>, ...
     if (!m.isOwner) {
       const allow = isCreateAllowed(m.sender);
       if (!allow.allowed) {
         try { await notifyOwnerCreateRequest(sock, m.sender); } catch {}
-        return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addcpanel <nomor kamu> <client|admin> <durasi>\n\nContoh: ${(m.prefix || ".")}addcpanel ${allowCleanNumber(m.sender)} client 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+        return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addaksescpanel <nomor kamu> <client|admin> <durasi>\n\nContoh: ${(m.prefix || ".")}addaksescpanel ${allowCleanNumber(m.sender)} client 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
       }
       const allowTipe = String(allow.entry?.tipe || "client").toLowerCase();
       if (allowTipe === "admin") {

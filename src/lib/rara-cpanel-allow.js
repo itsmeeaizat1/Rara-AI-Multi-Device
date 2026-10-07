@@ -3,7 +3,7 @@
 // "cpanel ada fitur butuh konfirmasi add dr owner — user gak bisa langsung
 // create, owner harus menambahkan dulu: .addrole @user / nomor <durasi>"
 // (revisi owner 7 Okt): owner juga mutusin TIPE client|admin + durasi pas
-// .addcpanel — tipe create user ngikutin izinnya.
+// .addaksescpanel — tipe create user ngikutin izinnya.
 // Penyimpanan: src/database/panel/cpanel/create_allow.json
 // Entry: { number, tipe: client|admin, addedAt, expiresAt (null = selamanya) }
 // Seam _setAllowFileForTest buat E2E isolasi.
@@ -82,7 +82,7 @@ export function isCreateAllowed(jid) {
 }
 
 // tambah/perpanjang. ms = null → selamanya. Return entry baru.
-// (revisi owner 7 Okt 2026): tipe client|admin ditentukan owner pas .addcpanel —
+// (revisi owner 7 Okt 2026): tipe client|admin ditentukan owner pas .addaksescpanel —
 // user berizin cuma bisa create sesuai tipenya (default client utk izin lama).
 export function allowCreate(jid, ms, tipe = "client") {
   const number = cleanNumber(jid);
