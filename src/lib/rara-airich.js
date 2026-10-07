@@ -57,34 +57,34 @@ export async function fetchCertificate(force = false) {
 // overscroll contain + touch-action none), (3) meta viewport (payload
 // tanpa meta → webview mobile render 980px), (4) idempoten.
 export function polishPayload(html) {
+  // ── 7 Okt 2026: gaya HIROBOT (plugins/game/dino.js) — JANGAN maksa
+  // layout: WA render GenAI HTML di wadahnya sendiri. CSS lama (position:fixed
+  // fullscreen + .card width:100% + wrapper max-width:none) bikin game kebuka
+  // SEGITU GEDENYA di WA web (laporan owner). Sekarang cuma:
+  // viewport meta + margin 0 + konten center — ukuran biar payload sendiri
+  // yang ngatur (.wrapper max-width:480px).
   if (html.includes("data-nova-bottomsheet")) return html;
   const meta = '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">';
   const css = [
     meta,
     "<style data-nova-bottomsheet>",
-    // anti-geser: gak ada scroll di dalam gelembung sama sekali
-    "html, body { position: fixed !important; inset: 0 !important; width: 100% !important; height: 100% !important; overflow: hidden !important; overscroll-behavior: contain !important; touch-action: none !important; }",
-    // layout bottom sheet: konten nempel bawah, sisa ruang di atas
-    "body { display: flex !important; align-items: flex-end !important; }",
-    // kartu = sheet: radius atas doang, tanpa garis samping/bawah, full lebar
-    ".card { width: 100% !important; margin: 0 !important; border-radius: 22px 22px 0 0 !important; border-left: none !important; border-right: none !important; border-bottom: none !important; padding-bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important; }",
-    // grab handle klasik bottom sheet di atas kartu
-    ".card::before { content: '' !important; display: block !important; width: 38px !important; height: 4px !important; border-radius: 2px !important; background: #64748b !important; margin: 0 auto 10px auto !important; box-shadow: none !important; }",
-    // game auto-fit biar kartu selalu muat viewport (canvas nge-scale, tap tetep akurat)
-    "#game-container { height: min(350px, calc(100vh - 240px)) !important; }",
-    "#game-container, canvas, .btn { touch-action: none !important; }",
-    ".wrapper { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }",
+    "html, body { margin: 0 !important; padding: 0 !important; background: transparent !important; }",
+    "body { display: flex !important; justify-content: center !important; align-items: center !important; min-height: 100vh !important; }",
+    "* { -webkit-tap-highlight-color: transparent; }",
     "</style>",
   ].join(" ");
-  // inject tepat sebelum <body> — kalau gak ada, tempel di depan
-  if (/<body[^>]*>/i.test(html)) return html.replace(/(<body[^>]*>)/i, css + "$1");
-  return css + html;
+  const headAt = html.search(/<head[^>]*>/i);
+  const styleAt = html.search(/<style/i);
+  const bodyAt = html.search(/<body/i);
+  let idx = 0;
+  if (headAt >= 0) {
+    idx = headAt + html.slice(headAt).indexOf(">") + 1;
+  } else if (styleAt > 0 || bodyAt > 0) {
+    idx = (styleAt > 0 && (bodyAt < 0 || styleAt < bodyAt)) ? styleAt : bodyAt;
+  }
+  return idx > 0 ? html.slice(0, idx) + css + html.slice(idx) : css + html;
 }
 
-// ── perakit pesan — struktur VERBATIM kode owner (jangan diutak-atik) ──
-// opts: { responseId, botResponseId, title } — semuanya opsional, default
-// nilai dari eksperimen .plane (id unik per pesan biar gak nyangkut cache).
-// ── varian eksperimen (AIRICH_MODE) — baca env tiap kirim, urusannya murah ──
 export function airichMode() {
   const m = String(process.env.AIRICH_MODE || "").trim().toLowerCase();
   return (m === "nofwd" || m === "noverify" || m === "clean") ? m : "full";

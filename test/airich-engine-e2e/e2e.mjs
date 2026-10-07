@@ -70,8 +70,9 @@ t("  opts: title → messageDisclaimerText + responseId eksplisit dihormati",
 // ═══ 2. polishPayload ═══
 w("\n— polishPayload —");
 const p = polishPayload(HTML);
-t("  bottom sheet + meta viewport + anti-geser ke-inject",
-  p.includes("data-nova-bottomsheet") && p.includes("<meta name=\"viewport\"") && /overscroll-behavior: contain/.test(p));
+t("  7 Okt: gaya HIROBOT — center + meta viewport, TANPA paksaan fullscreen/width100%",
+  p.includes("data-nova-bottomsheet") && p.includes("<meta name=\"viewport\"") && /justify-content: center/.test(p)
+  && !/position: fixed/.test(p) && !/max-width: none/.test(p) && !/width: 100% !important; margin: 0 !important; border-radius: 22px 22px 0 0/.test(p));
 t("  idempoten", polishPayload(p) === p);
 
 // ═══ 3. fetchCertificate — cache 10 mnt + error kosong ═══
