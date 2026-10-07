@@ -42,6 +42,7 @@ const CATEGORY_NAMES = {
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
   ephoto: "Ephoto", jpm: "JPM", promotion: "Promotion",
   panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium", bot: "Bot",
+  telegram: "Telegram",
   anime: "Anime", asupan: "Asupan", clan: "Clan", convert: "Convert",
   downloader: "Downloader", education: "Education", future: "Future",
   islami: "Islami", islamic: "Islamic", menu: "Menu", maker: "Maker",

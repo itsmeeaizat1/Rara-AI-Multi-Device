@@ -33,6 +33,7 @@ const CATEGORY_NAMES = {
   future: "Future", misc: "Misc", random: "Random",
   utility: "Utility", vps: "VPS", linode: "Linode",
   panel: "Panel", jpm: "JPM",
+  telegram: "Telegram",
   bot: "Bot",
   owner: "Owner",
 };
@@ -52,10 +53,11 @@ const CATEGORY_ORDER = [
   "islami", "smart", "utility", "misc", "random",
   "store", "market", "jpm",
   // PALING AKHIR (revisi owner 26 Sep): main & bot sebelum owner, panel setelah owner
-  "vps", "main", "info", "bot", "owner", "panel",
+  "vps", "main", "info", "bot", "owner", "panel", "telegram",
 ];
 
 const CATEGORY_EMOJI = {
+  telegram: "✈️",
   ai: "🧠",
   "ai agent": "🤖", "smart": "✨",
   "ai image": "🎨", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️", browser: "🌐",

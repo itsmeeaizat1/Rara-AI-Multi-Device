@@ -24,7 +24,7 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 const pluginConfig = {
   name: "bridge",
   alias: ["rarabridge", "bridgenova"],
-  category: "owner",
+  category: "telegram",
   description: "Rara multi-platform — pakai bot dari DM Telegram & Discord",
   usage: ".bridge — status semua platform\n.bridge on <telegram|discord|all> — nyalain\n.bridge off <telegram|discord|all> — matiin\n.bridge kategori — whitelist (default * = semua kebuka)\n.bridge kategori del * lalu add <kategori> — mode restriktif\n.bridge ownerid add/del <platform> <id>\n.bridge notif — status target notif Telegram\n.bridge notif <group|channel> <id> — set target notif\n.bridge notif <group|channel> off — hapus target\n.bridge notif tes — kirim pesan tes ke target",
   example: ".bridge on telegram\n.bridge ownerid add telegram 123456789\n.bridge notif group -1001234567890\n.bridge notif tes",

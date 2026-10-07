@@ -31,7 +31,7 @@ async function main() {
     "src/lib/rarabridge/telegram.js",
     "src/lib/rarabridge/adapter.js",
     "src/lib/rarabridge/manager.js",
-    "plugins/owner/bridge.js",
+    "plugins/telegram/bridge.js",
   ];
   for (const f of files) check(`0. file ${f} ada`, fs.existsSync(path.join(R, f)));
   const idxSrc = fs.readFileSync(path.join(R, "index.js"), "utf8");
@@ -39,7 +39,7 @@ async function main() {
   const keysSrc = fs.readFileSync(path.join(R, "src/lib/rara-api-keys.js"), "utf8");
   check("0. registry .setkey telegram (env TELEGRAM_BOT_TOKEN)", keysSrc.includes("telegram: {") && keysSrc.includes("process.env.TELEGRAM_BOT_TOKEN"));
   check("0. registry .setkey discord (env DISCORD_BOT_TOKEN)", keysSrc.includes("discord: {") && keysSrc.includes("process.env.DISCORD_BOT_TOKEN"));
-  const plugSrc = fs.readFileSync(path.join(R, "plugins/owner/bridge.js"), "utf8");
+  const plugSrc = fs.readFileSync(path.join(R, "plugins/telegram/bridge.js"), "utf8");
   check("0. plugin .bridge owner-only + alias rarabridge", plugSrc.includes('isOwner: true') && plugSrc.includes('"rarabridge"'));
   const featSrc = fs.readFileSync(path.join(R, "changelogs", "FEATURES.md"), "utf8");
   check("0. FEATURES.md ada entri .bridge", /\.bridge\b/.test(featSrc));
@@ -220,8 +220,8 @@ async function main() {
 
 
   w("\n— 6. plugin .bridge (m fake) —");
-  const { config: bridgeCfg, handler: bridgeHandler } = await import(url("plugins/owner/bridge.js"));
-  check("6a. pluginConfig rapi (name bridge, category owner)", bridgeCfg.name === "bridge" && bridgeCfg.category === "owner");
+  const { config: bridgeCfg, handler: bridgeHandler } = await import(url("plugins/telegram/bridge.js"));
+  check("6a. pluginConfig rapi (name bridge, kategori telegram)", bridgeCfg.name === "bridge" && bridgeCfg.category === "telegram");
   const replies = [];
   const fakeM = (text, over = {}) => ({ text, reply: (t) => replies.push(String(t)), ...over });
   const { fromSC } = await import(url("src/lib/styler.js"));
@@ -295,7 +295,7 @@ async function main() {
   w("\n— 8. regresi ringan —");
   const keys2 = await import(url("src/lib/rara-api-keys.js"));
   check("8a. getApiKey('telegram') kebaca dari db", (keys2.getApiKey("telegram") || "").includes("TESTTOKEN"));
-  const cfg2 = await import(url("plugins/owner/bridge.js"));
+  const cfg2 = await import(url("plugins/telegram/bridge.js"));
   check("8b. export plugin konvensi (config + handler)", typeof cfg2.config === "object" && typeof cfg2.handler === "function");
 
   // ── SERVICE MESSAGE: join/leave → groupHandler (welcome/goodbye) ──
@@ -424,7 +424,7 @@ async function main() {
     check("10j. semua target kosong → reason belum di-set", rNone.sent === false && /belum di-set/.test(rNone.reason), JSON.stringify(rNone));
 
     // plugin handler: .bridge notif (status) / notif group <id> / notif tes
-    const bridgePlug = await import(url("plugins/owner/bridge.js"));
+    const bridgePlug = await import(url("plugins/telegram/bridge.js"));
     const replies = [];
     const mk = (text) => ({ text, reply: async (msg) => { replies.push(String(msg)); return true; } });
     await bridgePlug.handler(mk("notif"), { sock: {} });
@@ -480,6 +480,59 @@ async function main() {
     check("11f. .cpanel dari grup TG → dibales kartu (gak crash)", repliesC.length === 1 && repliesC[0].length > 10, repliesC[0]?.slice(0, 60));
     // info user create server → notifyServerCreated → broadcastToSaluran → forward TG (source hook)
     check("11g. createserver manggil notifyServerCreated (sambungan info → saluran/TG)", csSrc.includes("notifyServerCreated"));
+  }
+
+  // ── 12. .tgid — cek ID akun/grup/channel Telegram (+ channel_post diproses) ──
+  {
+    const tgidPlug = await import(url("plugins/telegram/tgid.js"));
+    const replies12 = [];
+    const mk12 = (sender, chat) => ({ sender, chat, reply: async (msg) => { replies12.push(String(msg)); return true; } });
+
+    // DM Telegram
+    await tgidPlug.handler(mk12("tg_771234", "tg_771234"), {});
+    check("12a. .tgid DM TG → ID akun muncul", replies12[0]?.includes("771234") && replies12[0].includes("ID Akun"), replies12[0]?.slice(0, 80));
+    check("12b. .tgid DM TG → perintah ownerid siap pakai", replies12[0]?.includes(".bridge ownerid add telegram 771234"), "");
+    replies12.length = 0;
+
+    // Grup Telegram — minus dipulihkan (tg_g1001234567890 → -1001234567890)
+    await tgidPlug.handler(mk12("tg_555", "tg_g1001234567890@g.us"), {});
+    check("12c. .tgid grup TG → ID grup + minus dipulihkan", replies12[0]?.includes("-1001234567890") && replies12[0].includes("Grup"), replies12[0]?.slice(0, 100));
+    check("12d. .tgid grup TG → perintah .bridge notif group siap pakai", replies12[0]?.includes(".bridge notif group -1001234567890"), "");
+    replies12.length = 0;
+
+    // Channel Telegram
+    await tgidPlug.handler(mk12("tg_771234", "tg_c1009876543210@newsletter"), {});
+    check("12e. .tgid channel TG → ID channel", replies12[0]?.includes("-1009876543210") && replies12[0].includes(".bridge notif channel -1009876543210"), replies12[0]?.slice(0, 100));
+    replies12.length = 0;
+
+    // Discord
+    await tgidPlug.handler(mk12("dc_333", "dc_g555@g.us"), {});
+    check("12f. .tgid Discord → ID user + chat", replies12[0]?.includes("333") && replies12[0].includes("555") && replies12[0].includes(".bridge ownerid add discord 333"), replies12[0]?.slice(0, 100));
+    replies12.length = 0;
+
+    // WhatsApp → kartu panduan (bukan crash)
+    await tgidPlug.handler(mk12("628123456789@s.whatsapp.net", "12036302@g.us"), {});
+    check("12g. .tgid dari WA → kartu panduan @userinfobot", replies12[0]?.includes("userinfobot") && replies12[0].includes("channel"), replies12[0]?.slice(0, 80));
+
+    // client TG sekarang proses channel_post (biar .tgid hidup di channel)
+    const tgSrc = fs.readFileSync(path.join(R, "src/lib/rarabridge/telegram.js"), "utf8");
+    check("12h. telegram.js: channel_post diproses", tgSrc.includes("channel_post"), "");
+    // adapter: chat.type channel → jid tg_c…@newsletter (raw channel nyambung)
+    const rawCh = adapter.telegramToRaw({ from: { id: 771234, is_bot: true }, chat: { id: -1009876543210, type: "channel", title: "Channel Aku" }, text: ".tgid", message_id: 1, date: 1 });
+    check("12i. channel_post → jid tg_c…@newsletter", rawCh.key.remoteJid === "tg_c1009876543210@newsletter", rawCh.key.remoteJid);
+    // nama grup/saluran dari registry jasher kalo ada
+    const jasher = db?.db?.data?.jasher;
+    if (!jasher?.groups?.["tg_g1001234567890@g.us"]) {
+      (db.db.data.jasher ??= { groups: {} }).groups["tg_g1001234567890@g.us"] = { name: "Grup Panel Aku", platform: "telegram", updated: Date.now() };
+    }
+    replies12.length = 0;
+    await tgidPlug.handler(mk12("tg_555", "tg_g1001234567890@g.us"), {});
+    check("12j. .tgid grup → nama grup dari registry .jasher", replies12[0]?.includes("Grup Panel Aku"), replies12[0]?.slice(0, 140));
+    // plugin terdaftar di registry & kategori tools lolos gate
+    const bridgePlug12 = await import(url("plugins/telegram/bridge.js"));
+    check("12k. kategori telegram: .tgid & .bridge masuk kategori baru (lolos gate default *)", tgidPlug.pluginConfig.category === "telegram" && bridgePlug12.config.category === "telegram" && adapter.isCategoryAllowed(db, "tgid") === true);
+    const catListSrc = fs.readFileSync(path.join(R, "src/lib/rara-category-list.js"), "utf8");
+    check("12l. kategori Telegram terdaftar (nama+urutan+emoji)", catListSrc.includes('telegram: "Telegram"') && catListSrc.includes('"telegram"') && catListSrc.includes('telegram: "✈️"'));
   }
 
   // cleanup: stop bridge nyata (kalau ada yang ke-start) + pulihkan env
