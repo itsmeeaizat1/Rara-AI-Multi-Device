@@ -101,7 +101,7 @@
     "node-upload-images": "^1.0.1",
     "node-webpmux": "^3.2.1",
     "nodemailer": "^10.0.10",
-    "rara": "npm:@itsmee_aizat.id/baileys2@^1.6.0",
+    "rara": "npm:@itsmee_aizat.id/baileys@1.1.1",
     "openai": "^6.49.0",
     "openpgp": "^6.3.1",
     "otpauth": "^9.5.2",
