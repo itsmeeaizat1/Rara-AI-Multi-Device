@@ -658,14 +658,54 @@ Pairing nomor bot: di console bakal muncul QR code (kalau pakai QR) atau kode pa
 
 ## Langkah 15 — Bikin API Key Panel (buat `.cpanel` bot)
 
-Bot Rara (.cpanel / .setpanel) butuh Application API key:
+Panel punya 2 jenis API key — tempat bikinnya BEDA dan fungsinya BEDA:
 
-1. Panel (sebagai admin): klik avatar → **API Credentials** → Create New
-2. Copy key (format `ptla_xxx...`) — **hanya sekali ditampilin!**
-3. Di bot owner:
+| | `ptla_` (Application API) | `ptlc_` (Client API) |
+|---|---|---|
+| Untuk siapa | Bot Rara | Akun panel sendiri (kamu/user) |
+| Fungsi | BIKIN user + server, power (start/stop/restart/kill), list server — semuanya atas nama admin | KONTROL akun panel sendiri: login bot, cek status, upload file ke server milik sendiri |
+| Tempat bikin | Area **Admin** → sidebar **Application API** | Halaman **Account** → tab **API Credentials** |
+| Bisa akses area admin? | Bisa (admin level) | TIDAK — cuma akun sendiri |
+| Wajib buat bot? | ✅ WAJIB | ⚠️ Opsional (cuma buat `capikey`, lihat bawah) |
+
+### A. Bikin `ptla_` (Application API — WAJIB buat bot)
+
+1. Login panel sebagai admin → klik avatar kanan atas → **Admin** (ikon gear)
+2. Di sidebar admin, buka **Application API** → klik **Create New**
+3. Description bebas (misal `Rara Bot`) → Allowed IPs kosongin aja → **Create**
+4. Copy key yang muncul (format `ptla_xxx...`) — **⚠️ cuma ditampilin SEKALI!** Kalau kehilang, delete dan bikin baru.
+5. Daftarin ke bot (chat WA owner, di bot):
 
 ```
-.setpanel http://IP_VPS, ptla_xxx...
+.setpanel v1 apikey ptla_xxx...
+```
+
+Dengan ptla doang, SEMUA fitur create udah jalan:
+- `.cpanel client, 5gb 5gb, 200, user, 628xxx, 1` → user biasa + server (tanpa akses admin)
+- `.cpanel admin, 5gb 5gb, 200, user, 628xxx, 1` → user + server SEKALIGUS akses admin (owner bot only)
+
+### B. Bikin `ptlc_` (Client API — cuma kalau perlu `capikey`)
+
+`ptlc_` gak ada di area Admin. Bikinnya di halaman akun SENDIRI:
+
+1. Klik avatar kanan atas → **Account** (yang pertama, BUKAN Admin Control Panel)
+2. Buka tab **API Credentials** → **Create New** → description bebas → **Create**
+3. Copy key (format `ptlc_xxx...`) — cuma sekali ditampilin juga.
+
+Kepakenya cuma 2:
+- **User login bot (gak perlu bikin manual!)** — user cukup `.cpanel login <username>,<password>,1`, bot otomatis bikinin session ptlc pribadinya sendiri (berlaku 7 hari). Key dari halaman Account gak dipakai sama sekali di jalur ini.
+- **`capikey` owner (opsional)** — kalau KAMU mau bot bisa `.cpanel status` / `.cpanel upload` ke server milik user lain atas nama akunmu:
+
+```
+.setpanel v1 capikey ptlc_xxx...
+```
+
+> 💡 Tanpa capikey pun bot tetap fungsi penuh: create (client/admin), power start/stop/restart/kill, listserver — semua via ptla. `ptlc_` murni kontrol akun, bukan buat bikin server.
+
+### Set domain panel (kalau belum)
+
+```
+.setpanel v1 http://IP_VPS
 ```
 
 > ⚠️ Gunakan URL panel yang aktif (IP langsung atau tunnel). Jangan pakai URL tunnel lama yang udah mati/ganti.
