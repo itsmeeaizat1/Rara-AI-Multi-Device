@@ -51,6 +51,11 @@ async function handler(m, { sock }) {
         }
         if (configured === 0) txt += '  (belum ada panel terkonfigurasi)\n'
 
+        txt += 'Jenis key (beda peran, boleh barengan):\n'
+        txt += '  apikey  = PTLA (awalan ptla_) key application\n'
+        txt += '  → WAJIB: create akun/server & kontrol semua\n'
+        txt += '  capikey = PTLC (awalan ptlc_) key client\n'
+        txt += '  → opsional: operasi client tanpa login\n'
         txt += '\nCara pakai:\n'
         txt += '  ' + prefix + 'setpanel v1 https://domain.com\n'
         txt += '  (set domain panel server v1)\n\n'

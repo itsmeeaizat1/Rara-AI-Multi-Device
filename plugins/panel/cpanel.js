@@ -215,7 +215,7 @@ async function createWithRole(m, { sock }, spec) {
   const panelId = spec.panelId || 1;
   const slot = getSlot(panelId);
   if (!slot?.domain || !slot?.apikey) {
-    return m.reply(raraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}\nSet via: ${(m.prefix || ".")}setpanel v${panelId} <domain>`));
+    return m.reply(raraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi (butuh domain + PTLA).\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}\nSet domain: ${(m.prefix || ".")}setpanel v${panelId} http://domain-panel.com\nSet PTLA: ${(m.prefix || ".")}setpanel v${panelId} apikey ptla_xxxx`));
   }
   const ver = "v" + panelId;
 
@@ -425,6 +425,13 @@ function getSession(m, panelId) {
 
 const GUIDE = `Kontrol Panel Pterodactyl (v1-v100)
 
+「 🔧 Setup Panel (owner, sekali aja) 」
+{p}setpanel v1 http://domain-panel.com → set domain
+{p}setpanel v1 apikey ptla_xxxx → PTLA: key application, WAJIB (buat create & kontrol semua)
+{p}setpanel v1 capikey ptlc_xxxx → PTLC: key client, opsional (buat operasi client tanpa login)
+Ambil PTLA: panel → Admin → API | PTLC: panel → Account → API Credentials
+PTLA & PTLC boleh barengan, gak saling hapus.
+
 「 🛠️ Cara Kasih Akses Create 」
 User mau akses panel harus di-add owner dulu (owner bot otomatis bisa).
 Owner mutusin tipe + durasi pas .addcpanel:
@@ -621,7 +628,7 @@ async function handler(m, { sock }) {
     }
     const slot = getSlot(panelId);
     if (!slot?.domain || !slot?.apikey) {
-      return m.reply(raraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}\nSet via: ${m.prefix || "."}setpanel v${panelId} <domain>`));
+      return m.reply(raraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi (butuh domain + PTLA).\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}\nSet domain: ${m.prefix || "."}setpanel v${panelId} http://domain-panel.com\nSet PTLA: ${m.prefix || "."}setpanel v${panelId} apikey ptla_xxxx`));
     }
     const ver = "v" + panelId;
     // akses: owner / gc-seller / role panel  →  ATAU  session login user (server sendiri)
