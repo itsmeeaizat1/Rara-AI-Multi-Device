@@ -14,7 +14,9 @@ import fs from "fs";
 import path from "path";
 
 export const MAX_PANELS = 100;
-const STORE_PATH = path.join(process.cwd(), "src/database/panel/ptero-panels.json");
+let STORE_PATH = path.join(process.cwd(), "src/database/panel/ptero-panels.json");
+// seam test-only: redirect file store biar suite gak nyentuh store asli
+export function _setPanelStoreForTest(p) { STORE_PATH = p; }
 const VALID_FIELDS = ["domain", "apikey", "capikey", "egg", "nestid", "location"];
 
 // ── store JSON ──
@@ -48,6 +50,11 @@ export function isValidPanelNum(n) {
 export function setPanelField(panelNum, field, value) {
   if (!isValidPanelNum(panelNum)) return { success: false, error: "Slot panel harus v1 sampai v100" };
   if (!VALID_FIELDS.includes(field)) return { success: false, error: "Field tidak valid: " + field };
+  // (guard 8 Okt) domain yang isinya API key ditolak — domain harus URL panel.
+  // Insiden: `.setpanel v1 <ptla_...>` tanpa kata apikey → domain rusak → ENOTFOUND ptla_.
+  if (field === "domain" && /ptl[ac]_/i.test(String(value))) {
+    return { success: false, error: "Itu API key (ptla_/ptlc_), bukan domain. Gunakan: .setpanel v1 apikey <ptla_...> atau capikey <ptlc_...>" };
+  }
   const store = loadStore();
   const key = "server" + parseInt(panelNum, 10);
   if (!store[key] || typeof store[key] !== "object") store[key] = {};

@@ -733,6 +733,19 @@ Kepakenya cuma 2:
 - Fix cepat (sementara): `journalctl -u cloudflared-panel --no-pager | grep "https://" | tail -1` → update `.setpanel v1 <URL-baru>`
 - Fix permanen: pindah ke Named Tunnel (Langkah 10 Opsi B) → URL gak akan pernah berubah lagi
 
+**Bot `.cpanel` error `getaddrinfo ENOTFOUND ptla_...` (domain keisi API key)**
+- Penyebab: pernah jalanin `.setpanel v1 <ptla_key>` **tanpa kata `apikey`** — kode lama menganggapnya domain (auto ditambah `https://`) → semua request create kirim ke host `ptla_...` yang gak ada → ENOTFOUND
+- Fix cepat: `.setpanel v1 http://domain-panel-ente` (atau edit langsung `src/database/panel/ptero-panels.json` di container, tanpa restart — langsung aktif)
+- Pencegahan (patched 8 Okt): guard di `setPanelField` + plugin `.setpanel` **menolak** value `ptla_`/`ptlc_` sebagai domain, dibales arahan `.setpanel v1 apikey <key>`
+- Tes key dari VPS (byte-exact, tanpa salah baca huruf besar/kecil):
+  ```bash
+  K=$(docker exec $(docker ps -q) sh -c "grep '\"apikey\"' src/database/panel/ptero-panels.json | grep -o 'ptla_[a-zA-Z0-9]*'")
+  curl -s -o /dev/null -w '%{http_code}\n' -H 'Accept: application/json' -H "Authorization: Bearer $K" http://127.0.0.1/api/application/nests
+  ```
+  → `200` = key + permission oke; `401` = key salah; `302` = header Accept ketinggalan (curl doang, bot gak kena)
+- Create server butuh egg/nest/location BENAR per panel (bukan default template): cek ID asli via `php artisan tinker` → `Pterodactyl\Models\Server::first()->only('egg_id','nest_id')` dan `Pterodactyl\Models\Location::first()->id`, lalu set: `.setpanel v1 egg 16` / `.setpanel v1 nestid 5` / `.setpanel v1 location 1`
+
+
 **Wings crash karena iptables Docker**
 - Fix: `systemctl restart docker && sleep 3 && systemctl restart wings`
 

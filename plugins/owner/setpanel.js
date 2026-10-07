@@ -135,6 +135,11 @@ async function handler(m, { sock }) {
     } else if (args[1]) {
         // .setpanel v1 https://domain.com (set domain)
         let domain = args[1]
+        // (guard 8 Okt) key yang tanpa sengaja diketik sebagai domain → arahkan ke apikey/capikey
+        if (/^ptl[ac]_/i.test(domain)) {
+            const jenis = domain.toLowerCase().startsWith('ptla_') ? 'apikey' : 'capikey'
+            return m.reply(raraWrap('setpanel', 'Itu API key, bukan domain.\n\nGunakan:\n  ' + prefix + 'setpanel v1 ' + jenis + ' ' + domain + '\n\nDomain diisi URL panel, contoh:\n  ' + prefix + 'setpanel v1 https://panel.domainmu.com'))
+        }
         // Pastikan ada https://
         if (!domain.startsWith('http://') && !domain.startsWith('https://')) {
             domain = 'https://' + domain
