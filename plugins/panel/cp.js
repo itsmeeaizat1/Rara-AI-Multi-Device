@@ -249,7 +249,7 @@ async function handler(m, { sock }) {
 
   // Use custom username from command
   const username = usernameInput.toLowerCase().replace(/[^a-z0-9_]/g, '')
-  const email = `${username}@rara.md`
+  const email = `${username}@raramultidevice.id`
   const name = capitalize(username) + " Server"
   const password = username + crypto.randomBytes(3).toString("hex")
   const serverLabel = serverVersion.toUpperCase()

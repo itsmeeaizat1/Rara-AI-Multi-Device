@@ -117,7 +117,7 @@ export async function provisionPanel(panelCfg, pkgKey, username) {
   const pkg = RAM_PACKAGES[pkgKey];
   const clean = String(username || "").toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 24);
   if (!clean) return { ok: false, error: "username tidak valid" };
-  const email = `${clean}@rara.md`;
+  const email = `${clean}@raramultidevice.id`;
   const password = clean + Math.random().toString(36).slice(2, 8);
   const H = { Authorization: `Bearer ${panelCfg.apikey}`, "Content-Type": "application/json", Accept: "application/vnd.pterodactyl.v1+json" };
   const base = panelCfg.domain;
@@ -161,7 +161,7 @@ export async function provisionPanel(panelCfg, pkgKey, username) {
 export async function provisionAdmin(panelCfg, username) {
   const clean = String(username || "").toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 24);
   if (!clean) return { ok: false, error: "username tidak valid" };
-  const email = `${clean}@rara.md`;
+  const email = `${clean}@raramultidevice.id`;
   const password = clean + Math.random().toString(36).slice(2, 8);
   try {
     const u = await http().post(`${panelCfg.domain}/api/application/users`, {

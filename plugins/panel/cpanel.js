@@ -196,7 +196,7 @@ async function createWithRole(m, { sock }, spec) {
   }
 
   await m.react("🕒");
-  const email = `${spec.username}@rara.md`;
+  const email = `${spec.username}@raramultidevice.id`;
   const name = capitalize(spec.username) + " Server";
   const password = spec.username + crypto.randomBytes(3).toString("hex");
   const gbLabel = (mb) => (mb === 0 ? "Unlimited" : `${mb / 1024} GB`);
@@ -723,7 +723,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🕒");
-    const email = `${username}@rara.md`;
+    const email = `${username}@raramultidevice.id`;
     const name = capitalize(username) + " Server";
     const password = username + crypto.randomBytes(3).toString("hex");
     const ramLabel = specs.ram === 0 ? "Unlimited" : `${specs.ram / 1000} GB`;

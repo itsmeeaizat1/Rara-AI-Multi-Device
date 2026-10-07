@@ -337,7 +337,7 @@ async function handler(m, { sock }) {
     return m.reply(raraWrap("Panel", `❌ Paket tidak ditemukan.`));
   }
 
-  const email = `${username}@rara.md`;
+  const email = `${username}@raramultidevice.id`;
   const name = capitalize(username) + " Server";
   const password = username + crypto.randomBytes(3).toString("hex");
   const serverLabel = serverVersion.toUpperCase();
