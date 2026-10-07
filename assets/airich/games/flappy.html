@@ -27,6 +27,15 @@ canvas { width: 100%; height: 100%; display: block; background: #070a12; }
 .btn:active { transform: scale(0.95); filter: brightness(0.9); }
 .credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
 .credit-bar span { color: #38bdf8; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
 </style>
 </head>
 <body>
@@ -51,6 +60,14 @@ canvas { width: 100%; height: 100%; display: block; background: #070a12; }
     <div class="controls">
       <button class="btn btn-flap" id="flapBtn">🪽 Tap Buat Terbang</button>
       <button class="btn btn-restart" id="restartBtn">⟳ Main Lagi</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+            <tr><td>Tap layar / tombol</td><td>Bikin burung terbang — hindari pipa</td></tr>
+      <tr><td>Tap saat Game Over</td><td>Main lagi dari awal</td></tr>
+      <tr><td class="hd2" colspan="2">Skor &amp; rekor otomatis tersimpan di browser</td></tr>
+      </table>
     </div>
     <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
   </div>
@@ -166,6 +183,11 @@ canvas { width: 100%; height: 100%; display: block; background: #070a12; }
   cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); flap(); });
   resize(); reset(); requestAnimationFrame(loop);
 })();
+
+// 🔹 anti-scroll: kunci gesture di dalam game (chat WA gak kegeser)
+["touchstart", "touchmove", "gesturestart", "gesturechange"].forEach(function (ev) {
+  document.addEventListener(ev, function (e) { if (e.cancelable) e.preventDefault(); }, { passive: false });
+});
 </script>
 </body>
 </html>

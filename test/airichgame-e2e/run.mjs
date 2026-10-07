@@ -164,6 +164,17 @@ test("handler game ftool: .memori → memory (alias Indonesia)", async () => {
   assert.ok(seams.sends[0].opts.title.includes("Kartu Memori"));
 });
 
+// ── 4b. anti-scroll: semua game html gak boleh geser chat WA ──
+test("anti-scroll: overscroll contain + guard touch + tabel panduan di semua game", () => {
+  for (const k of listGames()) {
+    const html = fetchGameHtml(k);
+    assert.ok(html.includes("overscroll-behavior: contain"), `${k}: gak ada overscroll-behavior`);
+    assert.ok(html.includes("touchmove"), `${k}: gak ada guard touchmove`);
+    assert.ok(html.includes("{ passive: false }"), `${k}: guard harus non-passive`);
+    assert.ok(html.includes("guide-table"), `${k}: gak ada tabel panduan`);
+  }
+});
+
 // ── 5. handler: error ──
 test("handler nama nyasar → kartu error + daftar game", async () => {
   mockSeams();
