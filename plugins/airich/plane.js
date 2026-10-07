@@ -17,6 +17,8 @@
 //   struktur di buildRichResponse() — sumber & alur gak berubah.
 // ============================================================
 import axios from "axios";
+import fs from "node:fs";
+import path from "node:path";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 // engine bersama (mulai .googleairich, logika relay/pindah ke src/lib/rara-airich.js)
 import { sendRichResponse, notifyRichDownload } from "../../src/lib/rara-airich.js";
@@ -38,18 +40,43 @@ const pluginConfig = {
 };
 
 const PAYLOAD_URL = "https://raw.githubusercontent.com/noxXza/data/refs/heads/main/plane.html";
+// LOCAL FALLBACK (owner 7 Okt 2026: "knp g mncul cardnya") — payload
+// game gak lagi 100% bergantung repo noxXza (bisa dicabut kapan aja).
+// Urutan: remote (selalu fresh) → file lokal vendored → error jelas.
+const LOCAL_PAYLOAD = path.join(path.dirname(new URL(import.meta.url).pathname), "..", "..", "assets", "airich", "plane.html");
 
 // ── seams http buat e2e offline ──
 const __planeHttp = {};
 export function _setPlaneHttpForTest(h) { Object.assign(__planeHttp, h); }
 export function _resetPlaneHttpForTest() { for (const k of Object.keys(__planeHttp)) delete __planeHttp[k]; }
 
-async function fetchPayload() {
+function validHtml(html) {
+  return html && html.length >= 500 && /<[a-z]/i.test(html);
+}
+
+export async function fetchPayload() {
+  // 1. remote (fresh)
   const get = __planeHttp.getText
     || ((url) => axios.get(url, { timeout: 20000, responseType: "text", transformResponse: [(d) => d] }).then((r) => r.data));
-  const html = await get(PAYLOAD_URL);
-  if (!html || html.length < 500 || !/<[a-z]/i.test(html)) throw new Error("payload HTML kosong/gak valid");
-  return html;
+  try {
+    const html = await get(PAYLOAD_URL);
+    if (validHtml(html)) return html;
+  } catch (e) {
+    console.error("[airich] payload remote gagal (" + (e?.message || e) + "), fallback lokal");
+  }
+  // 2. lokal vendored
+  if (!__planeHttp.getText) {
+    try {
+      const html = fs.readFileSync(LOCAL_PAYLOAD, "utf-8");
+      if (validHtml(html)) {
+        console.error("[airich] pakai payload lokal assets/airich/plane.html");
+        return html;
+      }
+    } catch (e) {
+      console.error("[airich] payload lokal gak kebaca: " + (e?.message || e));
+    }
+  }
+  throw new Error("payload game gak ketemu (remote mati & file lokal gak ada)");
 }
 
 async function handler(m, { sock }) {

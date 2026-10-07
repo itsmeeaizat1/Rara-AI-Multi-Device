@@ -104,6 +104,7 @@ export function applyAirichVariant(msg, mode) {
     }
   }
   if (mode === "noverify" || mode === "clean") {
+    // struktur HIROBOT-exact emang gak ada verificationMetadata — no-op aman
     delete msg?.messageContextInfo?.botMetadata?.verificationMetadata;
   }
   return msg;
@@ -129,71 +130,58 @@ export function generateVerificationMetadata() {
 }
 
 export function buildRichResponse(htmlPayload, opts = {}) {
-  // response_id & botResponseId SEGAR TIAP PESAN (crypto.randomUUID) kecuali
-  // caller nyuplain eksplisit — AKAR "AI rich g mncul": versi lama hardcode
-  // response_id + botResponseId SAMA buat SEMUA pesan, server WA dedupe →
-  // pesan kedua dst. ditelan senyap. NIXCODE refresh id tiap build.
+  // ── HIROBOT-EXACT (7 Okt 2026, owner: "cba ke script hirobot cra kerja
+  // ai rich mereka gmna") — port verbatim class AIRich.build():
+  //   addHtml → section GenAIaeacdsnwHtmlPrimitive { payload, url,
+  //   trusted_sources } ; submessages [{ messageType: 2, "[ CANNOT_LOAD_HTML ]" }]
+  //   contextInfo: forwardingScore 1 + botJid "0@bot" + forwardOrigin 4
+  //   (TANPA stanzaId/participant/quotedMessage — dulu hardcode punya orang
+  //   lain = dugaan pesan dilenyapkan WA)
+  //   botMetadata: messageDisclaimerText + richResponseSourcesMetadata
+  //   (TANPA botResponseId — HIROBOT gak pernah ngirim)
   const responseData = {
     response_id: opts.responseId || crypto.randomUUID(),
     sections: [
       {
         view_model: {
           primitive: {
-            __typename: "GenAIaeacdsnwHtmlPrimitive",
             payload: htmlPayload,
-            trusted_sources: ["noxXza.js", "noxXza.dev"],
+            url: opts.url || "",
+            trusted_sources: opts.trustedSources || [],
+            __typename: "GenAIaeacdsnwHtmlPrimitive",
           },
           __typename: "GenAISingleLayoutViewModel",
         },
       },
     ],
   };
-  // payload COMPACT (indent 2 spasi dibuang — hemat ~30% ukuran base64)
   const dataBase64 = Buffer.from(JSON.stringify(responseData)).toString("base64");
   return {
     messageContextInfo: {
       deviceListMetadata: {},
       deviceListMetadataVersion: 2,
       botMetadata: {
-        messageDisclaimerText: "",
-        botResponseId: opts.botResponseId || crypto.randomUUID(),
-        // HIROBOT-EXACT (5 Okt 2026): default TANPA verificationMetadata —
-        // HIROBOT (acuan AI rich yang work) tidak pernah mengirimnya.
-        // Opt-in RARA_AIRICH_VERIFY=1 untuk A/B perilaku lama (30 Sep).
-        ...(process.env.RARA_AIRICH_VERIFY === "1"
-          ? { verificationMetadata: generateVerificationMetadata() }
-          : {}),
+        messageDisclaimerText: opts.title || "",
+        richResponseSourcesMetadata: { sources: opts.sources || [] },
       },
     },
     botForwardedMessage: {
       message: {
         richResponseMessage: {
-          // messageType enum ANGKA (NIXCODE: 1) — string enum name versi lama
-          // lolos di beberapa build protobuf tapi rawan; angka pasti valid
           messageType: 1,
           submessages: [
             {
-              messageType: "AI_RICH_RESPONSE_TEXT",
-              messageText: opts.title || "Space Rush 🚀",
+              messageType: 2,
+              messageText: "[ CANNOT_LOAD_HTML ]",
             },
           ],
           unifiedResponse: {
             data: dataBase64,
           },
           contextInfo: {
-            stanzaId: "A5FBA758891A16FD260767C2569F87E4",
-            participant: "262955698532521@lid",
-            quotedMessage: {
-              extendedTextMessage: {
-                previewType: "NONE",
-                inviteLinkGroupTypeV2: "DEFAULT",
-              },
-            },
             forwardingScore: 1,
             isForwarded: true,
-            forwardedAiBotMessageInfo: {
-              botJid: "867051314767696@bot",
-            },
+            forwardedAiBotMessageInfo: { botJid: "0@bot" },
             forwardOrigin: 4,
           },
         },
@@ -211,9 +199,12 @@ export async function sendRichResponse(sock, chat, html, opts = {}) {
   const payload = polishPayload(html);
   console.log(`[airich] kirim rich response: payload ${Buffer.byteLength(payload)} B, ${process.env.RARA_AIRICH_VERIFY === "1" ? "verifikasi lokal" : "HIROBOT-exact (tanpa verify)"}, ke ${chat}`);
   const msg = applyAirichVariant(buildRichResponse(payload, opts));
+  const rid = (() => { try {
+    return JSON.parse(Buffer.from(msg.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id;
+  } catch { return "?"; } })();
   try {
     await sock.relayMessage(chat, msg, {});
-    console.log(`[airich] ✅ relay diterima server (response_id=${msg.messageContextInfo.botMetadata.botResponseId.slice(0, 12)}...)`);
+    console.log(`[airich] ✅ relay diterima server (response_id=${String(rid).slice(0, 12)}...)`);
   } catch (err) {
     console.error(`[airich] ❌ relay DITOLAK: ${err?.message || err}`);
     throw err;

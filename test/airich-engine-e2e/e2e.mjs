@@ -29,43 +29,43 @@ const HTML = "<!DOCTYPE html><html><body><div class=\"card\"><canvas id=\"c\"></
 // ═══ 1. buildRichResponse — v2 NIXCODE-align (17 Sep 2026 fix "g mncul") ═══
 w("\n— buildRichResponse —");
 const r = buildRichResponse(HTML);
-t("  HIROBOT-EXACT 5 Okt: default TANPA verificationMetadata + struktur inti tetap utuh",
+t("  HIROBOT-EXACT 7 Okt: botJid 0@bot + TANPA stanzaId/participant/quotedMessage (spoof dibuang)",
   (() => { const ci = r.botForwardedMessage.message.richResponseMessage.contextInfo;
-    return !r.messageContextInfo.botMetadata.verificationMetadata
-      && r.botForwardedMessage.message.richResponseMessage.messageType === 1
-      && ci.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"
-      && ci.participant === "262955698532521@lid"
-      && ci.forwardOrigin === 4; })());
+    return r.botForwardedMessage.message.richResponseMessage.messageType === 1
+      && ci.forwardedAiBotMessageInfo.botJid === "0@bot"
+      && ci.forwardOrigin === 4 && ci.forwardingScore === 1
+      && ci.stanzaId === undefined && ci.participant === undefined && ci.quotedMessage === undefined; })());
+t("  HIROBOT-EXACT: submessages messageType 2 (angka) + [ CANNOT_LOAD_HTML ]",
+  (() => { const sm = r.botForwardedMessage.message.richResponseMessage.submessages[0];
+    return sm.messageType === 2 && sm.messageText === "[ CANNOT_LOAD_HTML ]"; })());
+t("  HIROBOT-EXACT: botMetadata = disclaimer + richResponseSourcesMetadata, TANPA botResponseId/verify",
+  (() => { const bm = r.messageContextInfo.botMetadata;
+    return typeof bm.messageDisclaimerText === "string"
+      && bm.richResponseSourcesMetadata && Array.isArray(bm.richResponseSourcesMetadata.sources)
+      && bm.botResponseId === undefined && bm.verificationMetadata === undefined; })());
+t("  primitive HTML: payload + url + trusted_sources (HIROBOT addHtml shape)",
+  (() => { const pr = JSON.parse(Buffer.from(r.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).sections[0].view_model.primitive;
+    return pr.__typename === "GenAIaeacdsnwHtmlPrimitive" && typeof pr.url === "string" && Array.isArray(pr.trusted_sources); })());
 process.env.RARA_AIRICH_VERIFY = "1";
 const rv = buildRichResponse(HTML);
 delete process.env.RARA_AIRICH_VERIFY;
-t("  opt-in RARA_AIRICH_VERIFY=1 → proofs v1 + useCase enum 1 + cert LOKAL (A/B perilaku 30 Sep)",
-  (() => { const p = rv.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
-    return p.version === 1 && p.useCase === 1 && Array.isArray(p.certificateChain) && p.certificateChain.length === 2
-      && typeof p.signature === "string"; })());
-t("  cert lokal (opt-in): signature 64 byte + chain 684/892 byte (material NIXCODE)",
-  (() => { const p = rv.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
-    const sig = Buffer.from(p.signature, "base64");
-    const c1 = Buffer.from(p.certificateChain[0], "base64");
-    const c2 = Buffer.from(p.certificateChain[1], "base64");
-    return sig.length === 64 && sig.toString("utf-8").startsWith("NIXEL.MessageBuilderV4.7-VerificationSignature.Metadata")
-      && c1.length === 684 && c1.toString("utf-8").startsWith("NIXEL.MessageBuilderV4.7-CertificateChain.Metadata")
-      && c2.length === 892 && c2.toString("utf-8").startsWith("NIXEL.MessageBuilderV4.7-CertificateChain.Metadata"); })());
-t("  ID SEGAR tiap build (response_id + botResponseId beda antar pesan — akar dedupe)",
+t("  RARA_AIRICH_VERIFY=1 kini NO-OP (HIROBOT gak pernah kirim verificationMetadata)",
+  (() => { return !rv.messageContextInfo.botMetadata.verificationMetadata
+    && rv.botForwardedMessage.message.richResponseMessage.submessages[0].messageType === 2; })());
+t("  ID SEGAR tiap build (response_id beda antar pesan — akar dedupe)",
   (() => { const r2 = buildRichResponse(HTML);
     const id1 = JSON.parse(Buffer.from(r.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id;
     const id2 = JSON.parse(Buffer.from(r2.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id;
-    return id1 !== id2 && r.messageContextInfo.botMetadata.botResponseId !== r2.messageContextInfo.botMetadata.botResponseId
-      && /^[0-9a-f-]{36}$/.test(id1) && /^[0-9a-f-]{36}$/.test(id2); })());
+    return id1 !== id2 && /^[0-9a-f-]{36}$/.test(id1) && /^[0-9a-f-]{36}$/.test(id2); })());
 t("  payload base64 ke-decode = HTML asli",
   JSON.parse(Buffer.from(r.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).sections[0].view_model.primitive.payload === HTML);
 t("  payload COMPACT (gak ada indent 2 spasi versi lama)",
   !Buffer.from(r.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8").includes("\n  "));
-t("  opts: title custom + responseId/botResponseId eksplisit dihormati",
-  (() => { const r2 = buildRichResponse(HTML, { title: "T", responseId: "rid-fix", botResponseId: "bid-fix" });
-    return r2.botForwardedMessage.message.richResponseMessage.submessages[0].messageText === "T"
-      && JSON.parse(Buffer.from(r2.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id === "rid-fix"
-      && r2.messageContextInfo.botMetadata.botResponseId === "bid-fix"; })());
+t("  opts: title → messageDisclaimerText + responseId eksplisit dihormati",
+  (() => { const r2 = buildRichResponse(HTML, { title: "T", responseId: "rid-fix" });
+    return r2.messageContextInfo.botMetadata.messageDisclaimerText === "T"
+      && r2.botForwardedMessage.message.richResponseMessage.submessages[0].messageText === "[ CANNOT_LOAD_HTML ]"
+      && JSON.parse(Buffer.from(r2.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id === "rid-fix"; })());
 
 // ═══ 2. polishPayload ═══
 w("\n— polishPayload —");
@@ -94,7 +94,7 @@ await sendRichResponse(sock, "g@test", HTML, { title: "Google 🔍" });
 t("  polish→rakit→relay: 1x relay ke chat, payload ke-polish",
   relays.length === 1 && relays[0].chat === "g@test"
   && JSON.parse(Buffer.from(relays[0].msg.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).sections[0].view_model.primitive.payload.includes("data-nova-bottomsheet"));
-t("  opts.title nyampe ke submessage", relays[0].msg.botForwardedMessage.message.richResponseMessage.submessages[0].messageText === "Google 🔍");
+t("  opts.title nyampe ke messageDisclaimerText (HIROBOT-exact)", relays[0].msg.messageContextInfo.botMetadata.messageDisclaimerText === "Google 🔍");
 
 // ═══ 4b. varian eksperimen AIRICH_MODE ═══
 w("\n— varian AIRICH_MODE —");
@@ -105,7 +105,7 @@ const baseMsg = () => buildRichResponse(HTML);
   t("  nofwd: tanda forward kehapus (forwardingScore/isForwarded/botInfo/origin)",
     !("forwardingScore" in ci) && !("isForwarded" in ci) && !("forwardedAiBotMessageInfo" in ci) && !("forwardOrigin" in ci));
   t("  nofwd: verificationMetadata mengikuti default (absen — HIROBOT-EXACT 5 Okt)", !m.messageContextInfo.botMetadata.verificationMetadata);
-  t("  nofwd: stanzaId/participant tetap utuh", ci.stanzaId === "A5FBA758891A16FD260767C2569F87E4" && ci.participant === "262955698532521@lid");
+  t("  nofwd: gak ada stanzaId/participant (spoof udah dibuang 7 Okt)", ci.stanzaId === undefined && ci.participant === undefined);
 }
 {
   const m = applyAirichVariant(baseMsg(), "noverify");
