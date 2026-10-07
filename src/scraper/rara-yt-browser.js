@@ -41,6 +41,25 @@ function getChromiumPath() {
   return null; // full puppeteer handle sendiri via cache ~/.cache/puppeteer
 }
 
+// 🔹 7 Okt 2026 (owner: "gamenya kebuka segiiut" → nemu Chrome gak jalan di
+// container Ptero): image yolks gak bawa lib Chrome (libatk/cups/avahi dll),
+// rootfs read-only gak bisa apt install. Solusi: lib ditaruh di VOLUME
+// (writable) folder ~/.chromelibs → di-inject ke env launch via
+// LD_LIBRARY_PATH. Cuma aktif kalau foldernya ada (sandbox aman).
+function chromeLibsEnv() {
+  try {
+    const os = require("os");
+    const fs = require("fs");
+    const path = require("path");
+    const dirs = [path.join(os.homedir(), ".chromelibs"), "/home/container/.chromelibs"];
+    const found = dirs.find((d) => fs.existsSync(d));
+    if (!found) return null;
+    const cur = process.env.LD_LIBRARY_PATH ? process.env.LD_LIBRARY_PATH.split(":") : [];
+    const merged = [found, ...cur.filter(Boolean)].join(":");
+    return { LD_LIBRARY_PATH: merged };
+  } catch { return null; }
+}
+
 export async function getBrowser() {
   const { puppeteer, isCore } = await loadPuppeteer();
   // reuse browser yang masih hidup biar gak launch tiap pencarian (berat)
@@ -91,6 +110,8 @@ export async function getBrowser() {
     }
     launchOptions.executablePath = chromePath;
   }
+  const libsEnv = chromeLibsEnv();
+  if (libsEnv) launchOptions.env = { ...process.env, ...libsEnv };
   browserInstance = await puppeteer.launch(launchOptions);
   lastUse = Date.now();
   return browserInstance;
