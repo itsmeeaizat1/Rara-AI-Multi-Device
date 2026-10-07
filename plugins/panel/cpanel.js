@@ -19,6 +19,7 @@ import { raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/r
 import { isLid, lidToJid } from "../../src/lib/rara-lid.js";
 import { hasAccessToServer, getUserRole } from "../../src/lib/rara-roles-cpanel.js";
 import { isCreateAllowed, cleanNumber as allowCleanNumber } from "../../src/lib/rara-cpanel-allow.js";
+import { isProtected as protectOn } from "../../src/lib/rara-cpanel-protect.js";
 import { isGcSeller } from "./gcseller.js";
 import { checkPanelJeda, setPanelLastUsed } from "../../src/lib/rara-panel-jeda.js";
 import * as timeHelper from "../../src/lib/rara-time.js";
@@ -227,6 +228,10 @@ async function createWithRole(m, { sock }, spec) {
   // cuma bisa create sesuai tipenya (enforcement di gate bawah).
   const isAdmin = spec.role === "admin";
 
+  // PROTEKSI (owner 7 Okt 2026): .cpanelprotect create aktif → create diblokir (owner bypass)
+  if (!m.isOwner && protectOn("create")) {
+    return m.reply(raraWrap("cpanelprotect", `\ud83d\udee1\ufe0f Create panel sedang diproteksi owner.\n\nAksi bikin akun/server diblokir buat semua user (owner tetap bisa).\n\nStatus proteksi: ${(m.prefix || ".")}cpanelprotect settings`));
+  }
   // GATE (owner 6 Okt 2026): create butuh izin .addaksescpanel dari owner.
   // Owner bot selalu lolos; role panel/gc-seller TIDAK lagi otomatis bisa create.
   // (revisi owner 7 Okt): TIPE client|admin ditentukan owner pas .addaksescpanel —
@@ -683,6 +688,16 @@ async function handler(m, { sock }) {
         attr = found.exact.attributes;
       }
 
+      // PROTEKSI (owner 7 Okt 2026): .cpanelprotect power/upload — owner bypass
+      if (!m.isOwner && POWER_SIGNALS.includes(sub) && sub !== "start" && protectOn(sub)) {
+        await m.react("❗");
+        return m.reply(raraWrap("cpanelprotect", `🛡️ Server sedang diproteksi owner.\n\nAksi *${sub}* diblokir buat semua user (owner tetap bisa).\n\nStatus proteksi: ${(m.prefix || ".")}cpanelprotect settings`));
+      }
+      if (!m.isOwner && sub === "upload" && protectOn("upload")) {
+        await m.react("❗");
+        return m.reply(raraWrap("cpanelprotect", `🛡️ Server sedang diproteksi owner.\n\nAksi *upload* diblokir buat semua user (owner tetap bisa).\n\nStatus proteksi: ${(m.prefix || ".")}cpanelprotect settings`));
+      }
+
       // ── power control (application API) ──
       if (POWER_SIGNALS.includes(sub)) {
         await axios.post(
@@ -822,6 +837,11 @@ async function handler(m, { sock }) {
     const specs = RAM_SPECS[sub];
     if (!/^[a-z0-9_]{3,16}$/.test(username)) {
       return m.reply(raraWrap("cpanel", `Username hanya boleh huruf kecil, angka, underscore (3-16 karakter).`));
+    }
+
+    // PROTEKSI (owner 7 Okt 2026): .cpanelprotect create aktif → create diblokir (owner bypass)
+    if (!m.isOwner && protectOn("create")) {
+      return m.reply(raraWrap("cpanelprotect", `\ud83d\udee1\ufe0f Create panel sedang diproteksi owner.\n\nAksi bikin akun/server diblokir buat semua user (owner tetap bisa).\n\nStatus proteksi: ${(m.prefix || ".")}cpanelprotect settings`));
     }
 
     // GATE (owner 6 Okt 2026): create butuh izin .addaksescpanel dari owner.

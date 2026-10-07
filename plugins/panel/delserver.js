@@ -4,6 +4,7 @@ import axios from 'axios'
 import config from '../../config.js'
 import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/rara-roles-cpanel.js'
 import te from '../../src/lib/rara-error.js'
+import { isProtected as protectOn } from "../../src/lib/rara-cpanel-protect.js"
 const allCommands = VALID_SERVERS.slice(0, 5).map(v => `delserver${v}`)
 const allAliases = VALID_SERVERS.map(v => `hapusserver${v}`)
 
@@ -59,6 +60,10 @@ function getAvailableServers(pteroConfig) {
 }
 
 async function handler(m, { sock }) {
+    // PROTEKSI (owner 7 Okt 2026): .cpanelprotect delete — owner bypass
+    if (!m.isOwner && protectOn("delete")) {
+        return m.reply(raraWrap("cpanelprotect", `🛡️ Server sedang diproteksi owner.\n\nAksi hapus server diblokir buat semua user (owner tetap bisa).\n\nStatus proteksi: ${(m.prefix || ".")}cpanelprotect settings`))
+    }
     const pteroConfig = config.pterodactyl
     
     const { server: serverVersion, serverKey } = parseServerVersion(m.command, m.args)

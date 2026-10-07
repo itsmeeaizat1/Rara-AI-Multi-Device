@@ -4,6 +4,7 @@ import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
+import { isProtected as protectOn } from "../../src/lib/rara-cpanel-protect.js"
 const pluginConfig = {
     name: 'delpanel',
     alias: ["delpanel"],
@@ -43,6 +44,10 @@ function getAvailableServers(pteroConfig) {
 }
 
 async function handler(m, { sock }) {
+    // PROTEKSI (owner 7 Okt 2026): .cpanelprotect delete — owner bypass
+    if (!m.isOwner && protectOn("delete")) {
+        return m.reply(raraWrap("cpanelprotect", `🛡️ Panel sedang diproteksi owner.\n\nAksi hapus panel diblokir buat semua user (owner tetap bisa).\n\nStatus proteksi: ${(m.prefix || ".")}cpanelprotect settings`))
+    }
     const pteroConfig = config.pterodactyl
     
     const args = m.text?.trim().split(' ') || []
