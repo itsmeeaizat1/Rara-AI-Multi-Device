@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Pukul Tikus</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #ef4444; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #ef4444; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-start { background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 4px 14px rgba(239,68,68,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); font-size: 13px; }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Pukul Tikus 🔨</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Waktu</div><div class="val" id="tmStat">30s</div></div>
+      <div class="stat-pill"><div class="lbl">Meleset</div><div class="val" id="msStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="stStat">Siap</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="320" height="320"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-start" id="startBtn">🔨 Mulai</button>
+      <button class="btn btn-restart" id="restartBtn">⟳ Main Lagi</button>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var tmEl = document.getElementById('tmStat'), msEl = document.getElementById('msStat'), stEl = document.getElementById('stStat');
+  var S = 320, N = 3, cell = S / N;
+  var running, timeLeft, score, missed, moles, best = 0, spawnTimer, lastSpawn, lastTick;
+  try { best = parseInt(localStorage.getItem('rara_mole_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function reset() {
+    running = false; timeLeft = 30; score = 0; missed = 0; moles = [null, null, null, null, null, null, null, null, null];
+    lastSpawn = 0; spawnTimer = 700;
+    scoreEl.textContent = '0'; tmEl.textContent = '30s'; msEl.textContent = '0'; stEl.textContent = 'Siap';
+  }
+  function start() {
+    reset(); running = true; stEl.textContent = 'Main'; lastTick = performance.now();
+  }
+  function spawn(now) {
+    var empty = [];
+    for (var i = 0; i < 9; i++) if (!moles[i]) empty.push(i);
+    if (!empty.length) return;
+    var idx = empty[(Math.random() * empty.length) | 0];
+    moles[idx] = { until: now + 650 + Math.random() * 450, hit: false };
+  }
+  function tick(now) {
+    if (!running) return;
+    // timer
+    if (now - lastTick >= 1000) {
+      lastTick += 1000; timeLeft--;
+      tmEl.textContent = Math.max(0, timeLeft) + 's';
+      if (timeLeft <= 0) return finish();
+    }
+    // tikus kadaluarsa = lolos
+    for (var i = 0; i < 9; i++) {
+      if (moles[i] && now > moles[i].until) { moles[i] = null; }
+    }
+    // makin lama makin rapat
+    if (now - lastSpawn > spawnTimer) {
+      lastSpawn = now;
+      spawn(now);
+      spawnTimer = Math.max(320, 700 - (30 - timeLeft) * 12);
+    }
+  }
+  function finish() {
+    running = false; stEl.textContent = 'Selesai';
+    for (var i = 0; i < 9; i++) moles[i] = null;
+    if (score > best) { best = score; bestEl.textContent = 'Best ' + best; try { localStorage.setItem('rara_mole_best', String(best)); } catch (e) {} }
+  }
+  function tap(e) {
+    if (!running) return;
+    var rect = cvs.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (S / rect.width);
+    var y = (e.clientY - rect.top) * (S / rect.height);
+    var cx = (x / cell) | 0, cy = (y / cell) | 0;
+    var idx = cy * N + cx;
+    if (idx < 0 || idx > 8) return;
+    if (moles[idx]) {
+      moles[idx].hit = true; moles[idx].until = 0;
+      score++; scoreEl.textContent = score;
+      stEl.textContent = 'Kena! 🔨';
+    } else {
+      missed++; msEl.textContent = missed;
+      stEl.textContent = 'Meleset 😅';
+    }
+  }
+  function drawHole(gx, gy) {
+    X.fillStyle = '#1e293b';
+    X.beginPath(); X.ellipse(gx + cell / 2, gy + cell * 0.68, cell * 0.34, cell * 0.13, 0, 0, 7); X.fill();
+    X.fillStyle = 'rgba(0,0,0,0.5)';
+    X.beginPath(); X.ellipse(gx + cell / 2, gy + cell * 0.68, cell * 0.27, cell * 0.1, 0, 0, 7); X.fill();
+  }
+  function draw() {
+    X.fillStyle = '#070a12'; X.fillRect(0, 0, S, S);
+    X.fillStyle = '#0d1320'; X.fillRect(0, 0, S, S);
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+      var gx = c * cell, gy = r * cell;
+      drawHole(gx, gy);
+      var m = moles[r * N + c];
+      if (m) {
+        var pop = m.hit ? 1 : Math.min(1, 0.55 + 0.1);
+        X.font = Math.floor(cell * 0.52) + 'px serif'; X.textAlign = 'center';
+        X.fillText(m.hit ? '💥' : '🐹', gx + cell / 2, gy + cell * 0.66);
+        X.textAlign = 'left';
+      }
+    }
+    if (!running) {
+      X.fillStyle = 'rgba(0,0,0,0.66)'; X.fillRect(0, 0, S, S);
+      X.fillStyle = timeLeft <= 0 ? '#f87171' : '#fff';
+      X.font = '900 22px sans-serif'; X.textAlign = 'center';
+      X.fillText(timeLeft <= 0 ? 'Waktu Habis!' : 'Pukul Tikus 🔨', S / 2, S / 2 - 14);
+      X.fillStyle = '#fff'; X.font = '700 13px sans-serif';
+      X.fillText(timeLeft <= 0 ? 'Skor ' + score + ' — tap ⟳ Main Lagi' : 'Tap 🔨 Mulai — pukul 🐹 30 detik', S / 2, S / 2 + 14);
+      X.textAlign = 'left';
+    }
+  }
+  cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); tap(e); });
+  document.getElementById('startBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); if (!running) start(); });
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); reset(); });
+  reset();
+  requestAnimationFrame(function loop() { tick(performance.now()); draw(); requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

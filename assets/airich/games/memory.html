@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Kartu Memori</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-shuffle { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); font-size: 13px; }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Kartu Memori 🧠</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Pasangan</div><div class="val" id="prStat">0/8</div></div>
+      <div class="stat-pill"><div class="lbl">Langkah</div><div class="val" id="mvStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="stStat">Siap</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="320" height="320"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-shuffle" id="shuffleBtn">🔀 Acak Ulang</button>
+      <button class="btn btn-restart" id="restartBtn">⟳ Baru</button>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var prEl = document.getElementById('prStat'), mvEl = document.getElementById('mvStat'), stEl = document.getElementById('stStat');
+  var S = 320, N = 4, cell = S / N, pad = 6;
+  var EMOJI = ['🍕', '🚀', '🐼', '⚽', '🎸', '🌈', '🍩', '🦋'];
+  var cards, flipped, lock, moves, pairs, won, best = 0;
+  try { best = parseInt(localStorage.getItem('rara_memory_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function reset() {
+    cards = [];
+    var deck = EMOJI.concat(EMOJI);
+    // acak Fisher-Yates
+    for (var i = deck.length - 1; i > 0; i--) {
+      var j = (Math.random() * (i + 1)) | 0;
+      var t = deck[i]; deck[i] = deck[j]; deck[j] = t;
+    }
+    for (var d = 0; d < deck.length; d++) cards.push({ e: deck[d], open: false, done: false });
+    flipped = []; lock = false; moves = 0; pairs = 0; won = false;
+    scoreEl.textContent = '0'; prEl.textContent = '0/8'; mvEl.textContent = '0'; stEl.textContent = 'Main';
+  }
+  function tap(e) {
+    if (lock || won) return;
+    var rect = cvs.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (S / rect.width);
+    var y = (e.clientY - rect.top) * (S / rect.height);
+    var cx = (x / cell) | 0, cy = (y / cell) | 0;
+    if (cx < 0 || cx >= N || cy < 0 || cy >= N) return;
+    var idx = cy * N + cx;
+    var c = cards[idx];
+    if (!c || c.open || c.done) return;
+    c.open = true; flipped.push(idx);
+    if (flipped.length === 2) {
+      moves++; mvEl.textContent = moves;
+      var a = cards[flipped[0]], b = cards[flipped[1]];
+      if (a.e === b.e) {
+        a.done = true; b.done = true; pairs++;
+        prEl.textContent = pairs + '/8';
+        scoreEl.textContent = pairs * 10 + Math.max(0, 80 - moves * 2);
+        flipped = [];
+        if (pairs === 8) {
+          won = true; stEl.textContent = 'Selesai 🎉';
+          var sc = pairs * 10 + Math.max(0, 80 - moves * 2);
+          if (sc > best) { best = sc; bestEl.textContent = 'Best ' + best; try { localStorage.setItem('rara_memory_best', String(best)); } catch (err) {} }
+        }
+      } else {
+        lock = true;
+        setTimeout(function () {
+          a.open = false; b.open = false; flipped = []; lock = false;
+        }, 700);
+      }
+    }
+  }
+  function rr(x, y, w, h, r) {
+    X.beginPath(); X.moveTo(x + r, y);
+    X.arcTo(x + w, y, x + w, y + h, r); X.arcTo(x + w, y + h, x, y + h, r);
+    X.arcTo(x, y + h, x, y, r); X.arcTo(x, y, x + w, y, r); X.closePath();
+  }
+  function draw() {
+    X.fillStyle = '#070a12'; X.fillRect(0, 0, S, S);
+    for (var i = 0; i < cards.length; i++) {
+      var gx = (i % N) * cell + pad, gy = ((i / N) | 0) * cell + pad, sz = cell - pad * 2;
+      var c = cards[i];
+      if (c.open || c.done) {
+        X.fillStyle = c.done ? 'rgba(52,211,153,0.16)' : 'rgba(99,102,241,0.25)';
+        rr(gx, gy, sz, sz, 10); X.fill();
+        X.strokeStyle = c.done ? '#34d399' : '#6366f1'; X.lineWidth = 2; X.stroke();
+        X.font = Math.floor(sz * 0.5) + 'px serif'; X.textAlign = 'center'; X.textBaseline = 'middle';
+        X.fillText(c.e, gx + sz / 2, gy + sz / 2);
+      } else {
+        X.fillStyle = '#1b2431';
+        rr(gx, gy, sz, sz, 10); X.fill();
+        X.strokeStyle = 'rgba(255,255,255,0.1)'; X.lineWidth = 1.5; X.stroke();
+        X.fillStyle = 'rgba(255,255,255,0.18)';
+        X.font = '900 ' + Math.floor(sz * 0.4) + 'px sans-serif';
+        X.textAlign = 'center'; X.textBaseline = 'middle';
+        X.fillText('R', gx + sz / 2, gy + sz / 2);
+      }
+    }
+    X.textAlign = 'left'; X.textBaseline = 'alphabetic';
+    if (won) {
+      X.fillStyle = 'rgba(0,0,0,0.66)'; X.fillRect(0, 0, S, S);
+      X.fillStyle = '#34d399'; X.font = '900 22px sans-serif'; X.textAlign = 'center';
+      X.fillText('Semua Pasangan! 🎉', S / 2, S / 2 - 14);
+      X.fillStyle = '#fff'; X.font = '700 13px sans-serif';
+      X.fillText(moves + ' langkah — tap ⟳ Baru', S / 2, S / 2 + 14);
+      X.textAlign = 'left';
+    }
+  }
+  cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); tap(e); });
+  document.getElementById('shuffleBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); reset(); });
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); reset(); });
+  reset();
+  requestAnimationFrame(function loop() { draw(); requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

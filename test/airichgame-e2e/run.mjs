@@ -39,17 +39,17 @@ test("config: nama, kategori, alias", () => {
   assert.equal(config.name, "airichgame");
   assert.equal(config.category, "airich");
   assert.equal(def.command, "airichgame");
-  for (const a of ["gameairich", "gameai", "ular", "flappy", "blok", "gabung", "suisut"]) {
+  for (const a of ["gameairich", "gameai", "ular", "flappy", "blok", "gabung", "suisut", "dino", "pong", "tikus", "memori"]) {
     assert.ok(config.alias.includes(a), `alias ${a} hilang`);
   }
   assert.equal(config.isEnabled, true);
 });
 
 // ── 2. registry & file game ──
-test("registry: 5 game terdaftar", () => {
+test("registry: 9 game terdaftar", () => {
   const keys = listGames();
-  assert.equal(keys.length, 5);
-  for (const k of ["snake", "flappy", "tetris", "2048", "tictactoe"]) assert.ok(keys.includes(k), `${k} hilang`);
+  assert.equal(keys.length, 9);
+  for (const k of ["snake", "flappy", "tetris", "2048", "tictactoe", "dino", "pong", "whackamole", "memory"]) assert.ok(keys.includes(k), `${k} hilang`);
 });
 
 test("file game: ada, valid, self-contained, berbranding", () => {
@@ -127,6 +127,43 @@ test("handler .airichgame 2048 (key numerik)", async () => {
   assert.equal(seams.sends[0].html, fetchGameHtml("2048"));
 });
 
+test("handler game ftool: .dino (m.command dino)", async () => {
+  const seams = mockSeams();
+  const { m } = mockM({ command: "dino", args: [] });
+  await handler(m, { sock: {} });
+  assert.equal(seams.sends.length, 1);
+  assert.equal(seams.sends[0].html, fetchGameHtml("dino"));
+  assert.ok(seams.sends[0].opts.title.includes("Dino Run"));
+});
+
+test("handler game ftool: .airichgame pong", async () => {
+  const seams = mockSeams();
+  const { m } = mockM({ args: ["pong"] });
+  await handler(m, { sock: {} });
+  assert.equal(seams.sends.length, 1);
+  assert.equal(seams.sends[0].html, fetchGameHtml("pong"));
+});
+
+test("handler game ftool: .airichgame whackamole + alias .tikus → sama", async () => {
+  const seams = mockSeams();
+  const { m } = mockM({ args: ["whackamole"] });
+  await handler(m, { sock: {} });
+  assert.equal(seams.sends.length, 1);
+  const seams2 = mockSeams();
+  const { m: m2 } = mockM({ command: "tikus", args: [] });
+  await handler(m2, { sock: {} });
+  assert.equal(seams2.sends[0].html, seams.sends[0].html, "alias .tikus harus sama dengan whackamole");
+});
+
+test("handler game ftool: .memori → memory (alias Indonesia)", async () => {
+  const seams = mockSeams();
+  const { m } = mockM({ command: "memori", args: [] });
+  await handler(m, { sock: {} });
+  assert.equal(seams.sends.length, 1);
+  assert.equal(seams.sends[0].html, fetchGameHtml("memory"));
+  assert.ok(seams.sends[0].opts.title.includes("Kartu Memori"));
+});
+
 // ── 5. handler: error ──
 test("handler nama nyasar → kartu error + daftar game", async () => {
   mockSeams();
@@ -143,6 +180,7 @@ test("hub .airich nyebut .airichgame", () => {
   const src = fs.readFileSync(path.join(ROOT, "plugins/airich/airich.js"), "utf-8");
   assert.ok(src.includes("airichgame"), "hub gak nyebut airichgame");
   assert.ok(src.includes("suisut"), "hub gak nyebut daftar game");
+  assert.ok(src.includes("dino") && src.includes("pong") && src.includes("tikus") && src.includes("memori"), "hub gak nyebut game ftool baru");
 });
 
 _resetAirichGameForTest();

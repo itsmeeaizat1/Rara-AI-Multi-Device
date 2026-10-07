@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Dino Run</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #fb923c; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #fb923c; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #fb923c; text-shadow: 0 0 12px rgba(251,146,60,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-jump { background: linear-gradient(135deg, #fb923c, #c2410c); box-shadow: 0 4px 14px rgba(251,146,60,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); font-size: 13px; }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Dino Run 🦖</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Kecepatan</div><div class="val" id="spdStat">1x</div></div>
+      <div class="stat-pill"><div class="lbl">Rintangan</div><div class="val" id="obStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="stStat">Siap</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="340" height="170"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-jump" id="jumpBtn">🦘 Lompat</button>
+      <button class="btn btn-restart" id="restartBtn">⟳ Main Lagi</button>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var spdEl = document.getElementById('spdStat'), obEl = document.getElementById('obStat'), stEl = document.getElementById('stStat');
+  var W = 340, H = 170, G = 130;
+  var y, vy, jumping, obs, speed, score, dead, t, best = 0, passed;
+  try { best = parseInt(localStorage.getItem('rara_dino_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function reset() {
+    y = G; vy = 0; jumping = false; obs = []; speed = 5; score = 0; passed = 0; dead = false; t = 0;
+    scoreEl.textContent = '0'; spdEl.textContent = '1x'; obEl.textContent = '0'; stEl.textContent = 'Siap';
+  }
+  function jump() {
+    if (dead) return;
+    if (!jumping) { jumping = true; vy = -11; stEl.textContent = 'Main'; }
+  }
+  function die() {
+    dead = true; stEl.textContent = 'Game Over';
+    var s = Math.floor(score);
+    if (s > best) { best = s; bestEl.textContent = 'Best ' + best; try { localStorage.setItem('rara_dino_best', String(best)); } catch (e) {} }
+  }
+  function tick() {
+    if (dead) return;
+    t++;
+    if (jumping) { vy += 0.55; y += vy; if (y >= G) { y = G; jumping = false; vy = 0; } }
+    if (t % Math.max(45, 90 - Math.floor(score / 50)) === 0) obs.push({ x: 360, h: 22 + Math.floor(Math.random() * 16) });
+    for (var i = obs.length - 1; i >= 0; i--) {
+      var o = obs[i];
+      o.x -= speed;
+      if (o.x < -30) { obs.splice(i, 1); passed++; obEl.textContent = passed; continue; }
+      if (o.x < 44 && o.x + 18 > 22 && y + 24 > G - o.h + 4) return die();
+    }
+    score += 0.15; speed = 5 + score / 40;
+    scoreEl.textContent = Math.floor(score);
+    spdEl.textContent = Math.round(speed / 5 * 10) / 10 + 'x';
+  }
+  function draw() {
+    X.fillStyle = '#070a12'; X.fillRect(0, 0, W, H);
+    X.strokeStyle = '#1e293b'; X.lineWidth = 2;
+    X.beginPath(); X.moveTo(0, G + 26); X.lineTo(W, G + 26); X.stroke();
+    X.fillStyle = 'rgba(148,163,184,0.25)';
+    for (var c = 0; c < 6; c++) X.fillRect(((c * 70 - t * 3) % (W + 70) + W + 70) % (W + 70) - 35, G + 30, 24, 3);
+    X.font = '24px serif'; X.fillText('🦖', 20, y + 8);
+    X.font = '18px serif';
+    for (var j = 0; j < obs.length; j++) X.fillText('🌵', obs[j].x, G + 16 - obs[j].h + 8);
+    if (!t && !dead) {
+      X.fillStyle = 'rgba(255,255,255,0.85)'; X.font = '700 13px sans-serif'; X.textAlign = 'center';
+      X.fillText('Tap Lompat buat mulai', W / 2, H / 2 - 10);
+      X.textAlign = 'left';
+    }
+    if (dead) {
+      X.fillStyle = 'rgba(0,0,0,0.68)'; X.fillRect(0, 0, W, H);
+      X.fillStyle = '#f87171'; X.font = '900 22px sans-serif'; X.textAlign = 'center';
+      X.fillText('Game Over', W / 2, H / 2 - 12);
+      X.fillStyle = '#fff'; X.font = '700 12px sans-serif';
+      X.fillText('Skor ' + Math.floor(score) + ' — tap ⟳ Main Lagi', W / 2, H / 2 + 12);
+      X.textAlign = 'left';
+    }
+  }
+  var last = performance.now();
+  function loop(now) {
+    var n = Math.min(3, Math.round((now - last) / 16.7)); last = now;
+    for (var k = 0; k < n; k++) tick();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); jump(); });
+  document.getElementById('jumpBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); jump(); });
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); reset(); });
+  reset(); requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

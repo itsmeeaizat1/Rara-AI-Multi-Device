@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Pong AI</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #14b8a6; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #14b8a6; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #14b8a6; text-shadow: 0 0 12px rgba(20,184,166,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 13px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-serve { background: linear-gradient(135deg, #14b8a6, #0f766e); box-shadow: 0 4px 14px rgba(20,184,166,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Pong AI 🏓</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0 — 0</div>
+        <div class="best-badge" id="best">Menang 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Kamu</div><div class="val" id="psStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Bot</div><div class="val" id="asStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="stStat">Siap</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="340" height="220"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-serve" id="serveBtn">🏓 Seru Bola</button>
+      <button class="btn btn-restart" id="restartBtn">⟳ Main Lagi</button>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var psEl = document.getElementById('psStat'), asEl = document.getElementById('asStat'), stEl = document.getElementById('stStat');
+  var W = 340, H = 220, PW = 9, PH = 52, BR = 7;
+  var py, ay, bx, by, vx, vy, ps, as, over, wins = 0, aimY;
+  try { wins = parseInt(localStorage.getItem('rara_pong_wins') || '0', 10) || 0; } catch (e) { wins = 0; }
+  bestEl.textContent = 'Menang ' + wins;
+  var TARGET = 7;
+
+  function reset() {
+    py = H / 2 - PH / 2; ay = H / 2 - PH / 2; ps = 0; as = 0; over = false;
+    psEl.textContent = '0'; asEl.textContent = '0'; stEl.textContent = 'Siap';
+    scoreEl.textContent = '0 — 0';
+    bx = null; by = null;
+  }
+  function serve(d) { bx = W / 2; by = H / 2; vx = 4 * d; vy = Math.random() * 4 - 2; }
+  function tapServe() { if (!over && bx === null) serve(Math.random() < 0.5 ? 1 : -1); }
+  function point(who) {
+    if (who === 'p') ps++; else as++;
+    psEl.textContent = ps; asEl.textContent = as;
+    scoreEl.textContent = ps + ' — ' + as;
+    if (ps >= TARGET) { over = true; stEl.textContent = 'Kamu Menang 🎉'; wins++; bestEl.textContent = 'Menang ' + wins; try { localStorage.setItem('rara_pong_wins', String(wins)); } catch (e) {} }
+    else if (as >= TARGET) { over = true; stEl.textContent = 'Bot Menang 🤖'; }
+    if (!over) serve(who === 'p' ? 1 : -1);
+  }
+  function tick() {
+    if (over || bx === null) return;
+    bx += vx; by += vy;
+    if (by < BR || by > H - BR) vy = -vy;
+    // AI: kejar bola, ada kelambatan
+    aimY = by - PH / 2;
+    if (bx > W * 0.35 && vx > 0) ay += (aimY - ay) * 0.11;
+    else ay += (H / 2 - PH / 2 - ay) * 0.04;
+    ay = Math.max(4, Math.min(H - PH - 4, ay));
+    if (bx < 10 + PW + BR && bx > 10 && by > py && by < py + PH && vx < 0) { vx = -vx * 1.04; vy += (by - (py + PH / 2)) * 0.06; }
+    if (bx > W - 10 - PW - BR && bx < W - 10 && by > ay && by < ay + PH && vx > 0) { vx = -vx * 1.04; vy += (by - (ay + PH / 2)) * 0.06; }
+    vx = Math.max(-9, Math.min(9, vx));
+    if (bx < -12) point('a');
+    if (bx > W + 12) point('p');
+  }
+  function draw() {
+    X.fillStyle = '#070a12'; X.fillRect(0, 0, W, H);
+    X.strokeStyle = 'rgba(255,255,255,0.08)'; X.setLineDash([6, 8]); X.lineWidth = 2;
+    X.beginPath(); X.moveTo(W / 2, 0); X.lineTo(W / 2, H); X.stroke(); X.setLineDash([]);
+    X.fillStyle = '#14b8a6';
+    X.fillRect(10, py, PW, PH);
+    X.fillStyle = '#f87171';
+    X.fillRect(W - 10 - PW, ay, PW, PH);
+    if (bx !== null) { X.fillStyle = '#fff'; X.beginPath(); X.arc(bx, by, BR, 0, 7); X.fill(); }
+    if (!over && bx === null) {
+      X.fillStyle = 'rgba(255,255,255,0.85)'; X.font = '700 13px sans-serif'; X.textAlign = 'center';
+      X.fillText('Tap 🏓 Seru Bola buat mulai', W / 2, H / 2 - 10); X.textAlign = 'left';
+    }
+    if (over) {
+      X.fillStyle = 'rgba(0,0,0,0.68)'; X.fillRect(0, 0, W, H);
+      X.fillStyle = '#34d399'; X.font = '900 20px sans-serif'; X.textAlign = 'center';
+      X.fillText(stEl.textContent, W / 2, H / 2 - 12);
+      X.fillStyle = '#fff'; X.font = '700 12px sans-serif';
+      X.fillText(ps + ' — ' + as + ' · tap ⟳ Main Lagi', W / 2, H / 2 + 12); X.textAlign = 'left';
+    }
+  }
+  // kontrol: geser jari di canvas buat gerakkan paddle
+  function drag(e) {
+    var rect = cvs.getBoundingClientRect();
+    var y = (e.clientY - rect.top) * (H / rect.height);
+    py = Math.max(4, Math.min(H - PH - 4, y - PH / 2));
+  }
+  cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); drag(e); cvs.setPointerCapture && cvs.setPointerCapture(e.pointerId); });
+  cvs.addEventListener('pointermove', function (e) { if (e.buttons || e.pressure > 0) { e.preventDefault(); drag(e); } });
+  document.getElementById('serveBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); tapServe(); });
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); reset(); });
+  var last = performance.now();
+  function loop(now) {
+    var n = Math.min(3, Math.round((now - last) / 16.7)); last = now;
+    for (var k = 0; k < n; k++) tick();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  reset();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

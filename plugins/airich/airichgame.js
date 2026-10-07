@@ -19,9 +19,9 @@ import { sendRichResponse, notifyRichDownload } from "../../src/lib/rara-airich.
 
 const pluginConfig = {
   name: "airichgame",
-  alias: ["gameairich", "gameai", "ular", "flappy", "flappybird", "blok", "blokjatuh", "gabung", "suisut", "tictactoe", "snakegame", "2048game"],
+  alias: ["gameairich", "gameai", "ular", "flappy", "flappybird", "blok", "blokjatuh", "gabung", "suisut", "tictactoe", "snakegame", "2048game", "dino", "dinorun", "pong", "pongai", "tikus", "pukultikus", "memori", "memory"],
   category: "airich",
-  description: "AI Rich Games 🎮 — koleksi game HTML langsung di chat (snake, flappy, tetris, 2048, sui sut)",
+  description: "AI Rich Games 🎮 — koleksi game HTML langsung di chat (snake, flappy, tetris, 2048, sui sut, dino, pong, pukul tikus, kartu memori)",
   usage: ".airichgame <nama game> — daftar game: .airichgame",
   example: ".airichgame snake",
   isOwner: false, isPremium: false, isGroup: true, isPrivate: true,
@@ -54,6 +54,26 @@ const GAMES = {
     title: "Sui Sut Bot ⭕",
     tip: "Tap kotak — kamu ❌ lawan bot ⭕, pemenang 3 garis lurus",
     alias: ["suisut", "tictactoe"],
+  },
+  dino: {
+    title: "Dino Run 🦖",
+    tip: "Tap buat lompat — hindari kaktus, makin lama makin ngebut",
+    alias: ["dino", "dinorun"],
+  },
+  pong: {
+    title: "Pong AI 🏓",
+    tip: "Geser jari di layar buat gerakkan paddle — kalahkan bot sampai 7 poin",
+    alias: ["pong", "pongai"],
+  },
+  whackamole: {
+    title: "Pukul Tikus 🔨",
+    tip: "Pukul 🐹 yang muncul selama 30 detik — jangan sampai lolos",
+    alias: ["tikus", "pukultikus"],
+  },
+  memory: {
+    title: "Kartu Memori 🧠",
+    tip: "Buka 2 kartu — pasangkan semua emoji yang sama",
+    alias: ["memori", "memory"],
   },
 };
 
@@ -104,8 +124,12 @@ function menuCard() {
     "🧱 .airichgame tetris — Blok Jatuh",
     "🔢 .airichgame 2048 — Gabung 2048",
     "⭕ .airichgame tictactoe — Sui Sut Bot",
+    "🦖 .airichgame dino — Dino Run",
+    "🏓 .airichgame pong — Pong AI",
+    "🔨 .airichgame whackamole — Pukul Tikus",
+    "🧠 .airichgame memory — Kartu Memori",
     "",
-    "_Alias singkat juga bisa: .ular .flappy .blok .gabung .suisut_",
+    "_Alias singkat juga bisa: .ular .flappy .blok .gabung .suisut .dino .pong .tikus .memori_",
     "_Klik tombol *Unduh* di kartu untuk membuka gamenya._",
   ];
   return raraWrap("airichgame", lines.join("\n"), "guide");
