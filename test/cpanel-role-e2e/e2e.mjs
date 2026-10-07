@@ -120,21 +120,32 @@ t("2g. admin unli: limits 0/0/0", servers[1]?.limits?.memory === 0 && servers[1]
 t("2h. Tipe Akun Admin di DM", /Tipe Akun: Admin/.test(dms[1]?.text || ""), dms[1]?.text?.slice(0, 160));
 t("2i. deskripsi server ditandai [ADMIN]/[CLIENT]", /\[ADMIN\]/.test(servers[1]?.description || "") && /\[CLIENT\]/.test(servers[0]?.description || ""));
 
-// 2c. admin oleh non-owner → ditolak, gak ada create baru
+// 2c. admin oleh non-owner TANPA izin → ditolak gate .addcpanel, gak ada create baru
 const userCountBefore = users.length;
 await handler(mkM("admin, 1gb 1gb, 100, hacker, 628999, 1", { isOwner: false }), { sock });
-t("2j. admin oleh non-owner ditolak", users.length === userCountBefore && /owner/.test(replyTxt()), replyTxt().slice(-160));
+t("2j. admin oleh non-owner tanpa izin ditolak (gate .addcpanel)",
+  users.length === userCountBefore && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
+
+// 2c2. (revisi owner 7 Okt) user berizin .addcpanel bisa buat tipe ADMIN juga
+allowCreateFor("628999000111", 7 * 864e5);
+await handler(mkM("admin, 5gb 5gb, 200, aizat2, 628174887770, 1", { isOwner: false, sender: "628999000111@s.whatsapp.net" }), { sock });
+t("2j2. user berizin create tipe admin → root_admin true",
+  users.at(-1)?.username === "aizat2" && users.at(-1)?.root_admin === true, users.at(-1));
+t("2j3. spec admin: memory 5120 / disk 5120 / cpu 200",
+  servers.at(-1)?.limits?.memory === 5120 && servers.at(-1)?.limits?.disk === 5120 && servers.at(-1)?.limits?.cpu === 200, servers.at(-1)?.limits);
+t("2j4. kartu DM tipe Admin ke target", /Tipe Akun: Admin/.test(dms.at(-1)?.text || ""), dms.at(-1)?.text?.slice(0, 160));
 
 // 2d. client oleh non-owner tanpa izin → ditolak (gate .addcpanel, owner 6 Okt)
+const count2k = users.length; // re-baseline (2j2 udah create user admin)
 await handler(mkM("client, 1gb 1gb, 100, freeload, 628999, 1", { isOwner: false }), { sock });
-t("2k. non-owner tanpa izin create → ditolak (gate .addcpanel)", users.length === userCountBefore && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
+t("2k. non-owner tanpa izin create → ditolak (gate .addcpanel)", users.length === count2k && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
 
 // 2e. role panel SAJA gak cukup lagi (owner 6 Okt) — butuh .addcpanel
 const { addRole } = await import(R + "/src/lib/rara-roles-cpanel.js");
 addRole("628555000111@s.whatsapp.net", "v1", "reseller");
 await handler(mkM("client, 1gb 2gb, 100, sellerserver, 628555000111, 1", { isOwner: false, sender: "628555000111@s.whatsapp.net" }), { sock });
 t("2l. role panel TANPA .addcpanel → ditolak",
-  users.length === userCountBefore && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
+  users.length === count2k && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
 // baru setelah .addcpanel (izin owner) → create jalan
 allowCreateFor("628555000111", 7 * 864e5);
 await handler(mkM("client, 1gb 2gb, 100, sellerserver, 628555000111, 1", { isOwner: false, sender: "628555000111@s.whatsapp.net" }), { sock });
@@ -154,6 +165,14 @@ t("2p. Total server terbuat dari meta pagination", /🧩 Total server terbuat: 7
 saluranCaptured.length = 0;
 await handler(mkM("1gb aizat2,628174887770,1"), { sock });
 t("2q. path RAM lama → akun tetap kebuat + notif saluran", servers.at(-1)?.limits?.memory === 1024 && saluranCaptured[0]?.includes("🛡 Tipe Akun: Client"), saluranCaptured[0]?.slice(0, 140));
+
+// 2i2. panduan (revisi owner 7 Okt): harus jelas soal .addcpanel + client & admin
+replies.length = 0;
+await handler(mkM("", { isOwner: true }), { sock });
+const guideTxt = replyTxt();
+t("2r0. panduan: cara buka izin .addcpanel", /\.addcpanel @user 7d/.test(guideTxt) && /\.listcpanel/.test(guideTxt), guideTxt.slice(0, 200));
+t("2r1. panduan: contoh client & admin create + catatan client gak bisa ubah spec",
+  /\.cpanel client, 5gb 5gb, 200, aizat2, 628174887770, 1/.test(guideTxt) && /\.cpanel admin, 5gb 5gb, 200, aizat2, 628174887770, 1/.test(guideTxt) && /Client gak bisa ubah ram\/cpu sendiri/.test(guideTxt), guideTxt.slice(0, 200));
 
 // 2i. panel gak dikonfigurasi → pesan jelas (v9 kosong)
 replies.length = 0;

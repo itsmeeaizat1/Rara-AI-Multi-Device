@@ -3,7 +3,10 @@
 // Power   : .cpanel start|stop|restart|kill <namaserver> <idpanel>
 // Status  : .cpanel status <namaserver> <idpanel>
 // Upload  : .cpanel upload <namaserver> <idpanel> (reply file)
-// Create  : .cpanel <ram> <username>,<nomor>,<idpanel>  → akun dikirim ke nomor
+// Create  : .cpanel <tipe>, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>
+//          tipe client/admin (revisi owner 7 Okt: creator berizin bisa keduanya,
+//          izin non-owner dibuka owner via .addcpanel) | format singkat:
+//          .cpanel <ram> <username>,<nomor>,<idpanel>  → akun dikirim ke nomor
 // Login   : .cpanel login <username>,<password>,<idpanel> → akses kontrol server sendiri (7 hari)
 // Logout  : .cpanel logout <idpanel>
 // Menu lama dipindah ke .panelmenu
@@ -44,8 +47,8 @@ const pluginConfig = {
   name: ["cpanel"],
   alias: ["panel"],
   category: "panel",
-  description: "Pusat kontrol panel Pterodactyl: power/status/upload (admin atau login user), buat akun, session login 7 hari (v1-v100)",
-  usage: ".cpanel client, 1gb 5gb, 200, aizat,628xxx,1 | .cpanel admin, 1gb 5gb, unli, aizat,628xxx,1 | .cpanel <ram> <username>,<nomor>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel>",
+  description: "Pusat kontrol panel Pterodactyl (v1-v100): buat akun client/admin + spesifikasi (butuh izin .addcpanel dari owner), power/status/upload server, login client 7 hari",
+  usage: ".cpanel client|admin, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel> | .cpanel <ram> <username>,<nomor>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel> | izin create: .addcpanel <nomor> <durasi>",
   example: ".panel aizat aizat123, 1",
   isOwner: false,
   isPremium: false,
@@ -166,12 +169,11 @@ async function createWithRole(m, { sock }, spec) {
   }
   const ver = "v" + panelId;
 
-  // Mode admin (root_admin) = akun bisa masuk area admin panel —
-  // cuma owner bot yang boleh bikin akun sel level ini.
+  // Mode admin (root_admin) = akun bisa masuk area admin panel.
+  // (revisi owner 7 Okt 2026): tipe client MAUPUN admin bisa dibuat creator
+  // berizin — owner bot otomatis, user lain tetap harus dibuka dulu via
+  // .addcpanel oleh owner (gate di bawah).
   const isAdmin = spec.role === "admin";
-  if (isAdmin && !m.isOwner) {
-    return m.reply(raraWrap("cpanel", `Mode *admin* (akses panel admin) hanya bisa dibuat oleh owner bot.`));
-  }
 
   // GATE (owner 6 Okt 2026): create butuh izin .addcpanel dari owner.
   // Owner bot selalu lolos; role panel/gc-seller TIDAK lagi otomatis bisa create.
@@ -348,31 +350,54 @@ function getSession(m, panelId) {
   return s;
 }
 
+const GUIDE = `Kontrol Panel Pterodactyl (v1-v100)
+
+「 🛠️ Cara Kasih Akses Create 」
+Create akun panel butuh izin owner dulu (owner bot otomatis bisa).
+Owner buka izin ke orang lain lewat command berikut:
+.addcpanel @user 7d          → izin create 7 hari
+.addcpanel 628xxx unli       → izin create selamanya
+.delcpanel @user            → cabut izin
+.listcpanel                  → daftar izin aktif
+Durasi: 30m / 12h / 7d / 2w / unli
+User yang udah dibuka izinnya bisa create sendiri lewat format di bawah.
+
+「 📦 Buat Akun + Spesifikasi 」
+.cpanel <tipe>, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>
+Contoh tipe client:
+.cpanel client, 5gb 5gb, 200, aizat2, 628174887770, 1
+Contoh tipe admin:
+.cpanel admin, 5gb 5gb, 200, aizat2, 628174887770, 1
+Tipe (spek create-nya sama lengkap, bedanya level akses):
+• client = cuma bisa ngatur server sendiri
+• admin = masuk area admin panel (lihat semua server, ubah spek siapa pun)
+Disk/RAM: 1gb - 100gb, unli | CPU: angka persen (200 = 2 core), unli
+Atau format singkat (paket ram otomatis):
+.cpanel <ram> <username>,<nomor>,<idpanel>
+Contoh: .cpanel 5gb aizat2,628174887770,1
+RAM: 1gb - 10gb, unli
+
+「 ⚡ Kontrol Server 」
+Power:
+.cpanel start|stop|restart|kill <namaserver> <idpanel>
+Status & Upload:
+.cpanel status <namaserver> <idpanel>
+.cpanel upload <namaserver> <idpanel> (reply file)
+
+「 🔑 Login Client (kontrol server sendiri) 」
+.cpanel login <username>,<password>,<idpanel>
+Contoh: .cpanel login aizat,aizat123,1
+Logout: .cpanel logout <idpanel>
+
+「 ℹ️ 」
+Spesifikasi server (ram/cpu/disk) diatur pas create oleh creator.
+Client gak bisa ubah ram/cpu sendiri — minta creator/admin.
+Panel aktif: {available}`;
+
 function buildGuide(m) {
   const p = m.prefix || ".";
-  const available = getAvailableSlots();
-  let txt = `Kontrol Panel Pterodactyl (v1-v100)\n\n`;
-  txt += `Power Server:\n`;
-  txt += `${p}cpanel start <namaserver> <idpanel>\n`;
-  txt += `${p}cpanel stop <namaserver> <idpanel>\n`;
-  txt += `${p}cpanel restart <namaserver> <idpanel>\n`;
-  txt += `${p}cpanel kill <namaserver> <idpanel>\n\n`;
-  txt += `Status & Upload:\n`;
-  txt += `${p}cpanel status <namaserver> <idpanel>\n`;
-  txt += `${p}cpanel upload <namaserver> <idpanel> (reply file)\n\n`;
-  txt += `Login User (kontrol server sendiri):\n`;
-  txt += `${p}cpanel <username> <password>,<idpanel>\n`;
-  txt += `Contoh: ${p}panel aizat aizat123, 1\n\n`;
-  txt += `Logout: ${p}cpanel logout <idpanel>\n\n`;
-  txt += `Buat Akun Panel (butuh izin owner — .addcpanel <nomor> <durasi>):\n`;
-  txt += `${p}cpanel <ram> <username>,<nomor>,<idpanel>\n`;
-  txt += `Contoh: ${p}cpanel unli aizat,628174887770,1\n`;
-  txt += `RAM: 1gb - 10gb, unli\n\n`;  txt += `Buat Akun Client/Admin + Spesifikasi:\n`;
-  txt += `${p}cpanel <tipe>, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>\n`;
-  txt += `Contoh: ${p}cpanel client, 1gb 5gb, 200, aizat,628174887770,1\n`;
-  txt += `Tipe: client (tanpa akses admin) | admin (akses admin, owner only)\n`;
-  txt += `Disk/RAM: 1gb - 100gb, unli | CPU: angka persen, unli\n\n`;
-  txt += `Panel aktif: ${available.join(", ") || "belum ada"}`;
+  const available = getAvailableSlots().join(", ") || "belum ada";
+  const txt = GUIDE.replace("{available}", available).replace(/\{p\}/g, p);
   return raraWrap("cpanel", txt);
 }
 
