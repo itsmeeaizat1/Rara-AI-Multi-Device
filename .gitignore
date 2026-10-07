@@ -5,7 +5,7 @@ conversations/
 .base44-conversation-workspace
 
 # Dependencies
-node_modules/
+node_modules
 .npm/
 
 # Cache
