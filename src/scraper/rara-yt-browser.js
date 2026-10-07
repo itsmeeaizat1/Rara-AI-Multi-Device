@@ -12,6 +12,10 @@
 // hasil browsing, bukan tebakan AI.
 // ============================================================
 
+import os from "os";
+import fs from "fs";
+import path from "path";
+
 let browserInstance = null;
 let lastUse = 0;
 const SESSION_TIMEOUT = 90 * 1000; // 90 dtk idle → browser di-close
@@ -47,10 +51,9 @@ function getChromiumPath() {
 // (writable) folder ~/.chromelibs → di-inject ke env launch via
 // LD_LIBRARY_PATH. Cuma aktif kalau foldernya ada (sandbox aman).
 function chromeLibsEnv() {
+  // 🔹 FIX 7 Okt: dulu pakai require() di file ESM → ReferenceError
+  // ketelen catch senyap → env gak pernah ke-inject → Chrome tetap error.
   try {
-    const os = require("os");
-    const fs = require("fs");
-    const path = require("path");
     const dirs = [path.join(os.homedir(), ".chromelibs"), "/home/container/.chromelibs"];
     const found = dirs.find((d) => fs.existsSync(d));
     if (!found) return null;
