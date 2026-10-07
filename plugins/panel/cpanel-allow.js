@@ -1,10 +1,12 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // cpanel-allow.js — Konfirmasi owner buat create panel (owner 6 Okt 2026):
 // "user gak bisa langsung create cpanel, owner harus menambahkan dulu"
-//   .addcpanel @user 7d      → izinkan create 7 hari
-//   .addcpanel role @user 7d → sama (kata "role" opsional)
-//   .addcpanel 628xxx 30d    → izinkan 30 hari
-//   .addcpanel @user unli    → izinkan selamanya
+//   .addcpanel @user 7d             → izin create tipe client 7 hari
+//   .addcpanel role @user client 7d → sama (kata "role" opsional)
+//   .addcpanel 628xxx admin 30d     → izin create tipe admin 30 hari
+//   .addcpanel @user unli          → tipe client selamanya
+//   (revisi owner 7 Okt): owner mutusin tipe client|admin + durasi —
+//   user berizin cuma bisa create sesuai tipenya.
 //   .delcpanel @user         → cabut izin
 //   .listcpanel              → daftar izin aktif + sisa waktu
 // OWNER BOT ONLY. Akses create dicek oleh .cpanel (buat akun panel).
@@ -24,8 +26,8 @@ const pluginConfig = {
   name: ["addcpanel", "delcpanel", "listcpanel"],
   alias: ["listallowed"],
   category: "panel",
-  description: "Izin create panel butuh konfirmasi owner — user gak bisa langsung create cpanel sampai owner .addcpanel dia",
-  usage: ".addcpanel role @user|nomor <durasi> | .delcpanel @user|nomor | .listcpanel (durasi: 30m/12h/7d/2w/unli)",
+  description: "Izin create panel dari owner: tipe (client|admin) + durasi ditentukan saat .addcpanel — user berizin cuma bisa create sesuai tipenya",
+  usage: ".addcpanel role @user|nomor <client|admin> <durasi> | .delcpanel @user|nomor | .listcpanel (tipe default client; durasi: 30m/12h/7d/2w/unli)",
   example: ".addcpanel role @user 7d",
   isOwner: true,
   isPremium: false,
@@ -63,11 +65,11 @@ async function handler(m, { sock }) {
   if (cmd === "listcpanel") {
     const list = listCreateAllow();
     if (!list.length) {
-      return m.reply(raraWrap("cpanel", `Belum ada user yang punya izin create panel.\n\nTambah dengan: ${(m.prefix || ".")}addcpanel @user 7d`));
+      return m.reply(raraWrap("cpanel", `Belum ada user yang punya izin create panel.\n\nTambah dengan: ${(m.prefix || ".")}addcpanel @user <client|admin> 7d`));
     }
     let txt = "";
     for (const e of list) {
-      txt += `📱 ${e.number}\n⏳ ${formatSisa(e.expiresAt)}${e.expiresAt ? ` (berakhir ${formatTanggal(e.expiresAt)})` : ""}\n\n`;
+      txt += `📱 ${e.number}\n🛡 Tipe: ${String(e.tipe || "client").toLowerCase() === "admin" ? "Admin" : "Client"}\n⏳ ${formatSisa(e.expiresAt)}${e.expiresAt ? ` (berakhir ${formatTanggal(e.expiresAt)})` : ""}\n\n`;
     }
     return m.reply(raraWrap("cpanel", `「 ✦ Izin Create Panel ✦ 」\n\nTotal: ${list.length} user\n\n${txt.trim()}\nCabut dengan: ${(m.prefix || ".")}delcpanel <nomor>`));
   }
@@ -75,7 +77,7 @@ async function handler(m, { sock }) {
   const target = resolveTarget(m, args);
   if (!target) {
     const c = cmd === "delcpanel" ? "delcpanel" : "addcpanel";
-    return m.reply(raraGuide("cpanel", `${(m.prefix || ".")}${c} role <@user|nomor> <durasi>\n\nContoh:\n${(m.prefix || ".")}addcpanel role @user 7d\n${(m.prefix || ".")}addcpanel 62812345678 30d\n${(m.prefix || ".")}addcpanel @user unli (selamanya)\n${(m.prefix || ".")}delcpanel @user\n\nDurasi: 30m | 12h | 7d | 2w | unli\nTanpa durasi = selamanya.`));
+    return m.reply(raraGuide("cpanel", `${(m.prefix || ".")}${c} role <@user|nomor> <client|admin> <durasi>\n\nContoh:\n${(m.prefix || ".")}addcpanel role @user client 7d\n${(m.prefix || ".")}addcpanel 62812345678 admin 30d\n${(m.prefix || ".")}addcpanel @user unli (tipe client selamanya)\n${(m.prefix || ".")}delcpanel @user\n\nTipe: client (ngatur server sendiri) | admin (akses panel admin)\nDurasi: 30m | 12h | 7d | 2w | unli\nTanpa tipe = client | Tanpa durasi = selamanya.`));
   }
 
   // ── .delcpanel ──
@@ -88,12 +90,18 @@ async function handler(m, { sock }) {
   }
 
   // ── .addcpanel ──
-  // token durasi = token pertama yang bukan mention/nomor/kata "role".
-  // Token nyasar (mis. "7x") JANGAN diabaikan diam-diam → kasih error jelas,
-  // biar owner gak dikira dah di-izin padahal formatnya salah.
+  // token durasi = token pertama yang bukan mention/nomor/kata "role"/tipe.
+  // (revisi owner 7 Okt): tipe client|admin opsional di posisi mana pun,
+  // default client. Token nyasar (mis. "7x") JANGAN diabaikan diam-diam →
+  // kasih error jelas, biar owner gak dikira dah di-izin padahal salah format.
+  let tipe = "client";
+  for (const a of args) {
+    if (/^(client|admin)$/i.test(a)) tipe = a.toLowerCase();
+  }
   let durasiTok = null;
   for (const a of args) {
     if (a.startsWith("@") || /^role$/i.test(a)) continue;
+    if (/^(client|admin)$/i.test(a)) continue;
     if (a.replace(/\D/g, "").length >= 7) continue;
     durasiTok = a;
     break;
@@ -102,12 +110,12 @@ async function handler(m, { sock }) {
   if (d.invalid) {
     return m.reply(raraError("cpanel", `Durasi "${durasiTok}" gak dikenal.\n\nFormat: 30m | 12h | 7d | 2w | unli`));
   }
-  const res = allowCreate(target, d.ms);
+  const res = allowCreate(target, d.ms, tipe);
   if (!res.ok) {
     return m.reply(raraError("cpanel", res.error || "Gagal menambahkan izin."));
   }
   const e = res.entry;
-  return m.reply(raraWrap("cpanel", `「 ✦ Izin Create Panel ✦ 」\n\n📱 Nomor: ${e.number}\n⏳ Durasi: ${formatSisa(e.expiresAt)}${e.expiresAt ? `\n📅 Berakhir: ${formatTanggal(e.expiresAt)}` : ""}\n\nDia sekarang bisa buat akun panel via ${(m.prefix || ".")}cpanel.\nContoh: .cpanel client, 1gb 5gb, 200, username,${e.number},1\n\nCabut: ${(m.prefix || ".")}delcpanel ${e.number}`));
+  return m.reply(raraWrap("cpanel", `「 ✦ Izin Create Panel ✦ 」\n\n📱 Nomor: ${e.number}\n🛡 Tipe: ${tipe === "admin" ? "Admin (akses panel admin)" : "Client (ngatur server sendiri)"}\n⏳ Durasi: ${formatSisa(e.expiresAt)}${e.expiresAt ? `\n📅 Berakhir: ${formatTanggal(e.expiresAt)}` : ""}\n\nDia sekarang bisa buat akun panel tipe *${tipe}* via ${(m.prefix || ".")}cpanel.\nContoh: .cpanel ${tipe}, 1gb 5gb, 200, username,${e.number},1\n\nCabut: ${(m.prefix || ".")}delcpanel ${e.number}`));
 }
 
 export { handler, pluginConfig, resolveTarget };

@@ -4,8 +4,8 @@
 // Status  : .cpanel status <namaserver> <idpanel>
 // Upload  : .cpanel upload <namaserver> <idpanel> (reply file)
 // Create  : .cpanel <tipe>, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>
-//          tipe client/admin (revisi owner 7 Okt: creator berizin bisa keduanya,
-//          izin non-owner dibuka owner via .addcpanel) | format singkat:
+//          (revisi owner 7 Okt: tipe client|admin + durasi izin ditentukan
+//          owner pas .addcpanel; user berizin create sesuai tipenya) | singkat:
 //          .cpanel <ram> <username>,<nomor>,<idpanel>  → akun dikirim ke nomor
 // Login   : .cpanel login <username>,<password>,<idpanel> → akses kontrol server sendiri (7 hari)
 // Logout  : .cpanel logout <idpanel>
@@ -170,18 +170,24 @@ async function createWithRole(m, { sock }, spec) {
   const ver = "v" + panelId;
 
   // Mode admin (root_admin) = akun bisa masuk area admin panel.
-  // (revisi owner 7 Okt 2026): tipe client MAUPUN admin bisa dibuat creator
-  // berizin — owner bot otomatis, user lain tetap harus dibuka dulu via
-  // .addcpanel oleh owner (gate di bawah).
+  // (revisi owner 7 Okt 2026): user mau akses panel harus di-add owner dulu —
+  // owner mutusin TIPE (client|admin) + durasi pas .addcpanel; user berizin
+  // cuma bisa create sesuai tipenya (enforcement di gate bawah).
   const isAdmin = spec.role === "admin";
 
   // GATE (owner 6 Okt 2026): create butuh izin .addcpanel dari owner.
   // Owner bot selalu lolos; role panel/gc-seller TIDAK lagi otomatis bisa create.
+  // (revisi owner 7 Okt): TIPE client|admin ditentukan owner pas .addcpanel —
+  // user berizin cuma bisa create sesuai tipenya (izin lama = client).
   if (!m.isOwner) {
     const allow = isCreateAllowed(m.sender);
     if (!allow.allowed) {
       try { await notifyOwnerCreateRequest(sock, m.sender); } catch {}
-      return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addcpanel <nomor kamu> <durasi>\n\nContoh: ${(m.prefix || ".")}addcpanel ${allowCleanNumber(m.sender)} 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+      return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addcpanel <nomor kamu> <client|admin> <durasi>\n\nContoh: ${(m.prefix || ".")}addcpanel ${allowCleanNumber(m.sender)} client 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+    }
+    const allowTipe = String(allow.entry?.tipe || "client").toLowerCase();
+    if (allowTipe !== spec.role) {
+      return m.reply(raraWrap("cpanel", `Izin create kamu cuma tipe *${allowTipe}*.\n\nGunakan format:\n${m.prefix || "."}cpanel ${allowTipe}, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>\n\nMau tipe ${spec.role}? Minta owner:\n${m.prefix || "."}addcpanel <nomor kamu> ${spec.role} <durasi>`));
     }
   }
   const jedaCheck = checkPanelJeda(m);
@@ -353,14 +359,15 @@ function getSession(m, panelId) {
 const GUIDE = `Kontrol Panel Pterodactyl (v1-v100)
 
 「 🛠️ Cara Kasih Akses Create 」
-Create akun panel butuh izin owner dulu (owner bot otomatis bisa).
-Owner buka izin ke orang lain lewat command berikut:
-.addcpanel @user 7d          → izin create 7 hari
-.addcpanel 628xxx unli       → izin create selamanya
+User mau akses panel harus di-add owner dulu (owner bot otomatis bisa).
+Owner mutusin tipe + durasi pas .addcpanel:
+.addcpanel @user client 7d   → izin create tipe client 7 hari
+.addcpanel @user admin unli → izin create tipe admin selamanya
+.addcpanel 628xxx 7d         → tanpa tipe = client
 .delcpanel @user            → cabut izin
-.listcpanel                  → daftar izin aktif
+.listcpanel                  → daftar izin aktif + tipe
 Durasi: 30m / 12h / 7d / 2w / unli
-User yang udah dibuka izinnya bisa create sendiri lewat format di bawah.
+User yang udah dibuka izinnya tinggal create sesuai tipenya, format di bawah.
 
 「 📦 Buat Akun + Spesifikasi 」
 .cpanel <tipe>, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>
@@ -368,9 +375,9 @@ Contoh tipe client:
 .cpanel client, 5gb 5gb, 200, aizat2, 628174887770, 1
 Contoh tipe admin:
 .cpanel admin, 5gb 5gb, 200, aizat2, 628174887770, 1
-Tipe (spek create-nya sama lengkap, bedanya level akses):
-• client = cuma bisa ngatur server sendiri
-• admin = masuk area admin panel (lihat semua server, ubah spek siapa pun)
+Tipe ngikutin izin dari owner (spek create-nya sama lengkap):
+• client = izin client, cuma ngatur server sendiri
+• admin = izin admin, masuk area admin panel (lihat semua server, ubah spek siapa pun)
 Disk/RAM: 1gb - 100gb, unli | CPU: angka persen (200 = 2 core), unli
 Atau format singkat (paket ram otomatis):
 .cpanel <ram> <username>,<nomor>,<idpanel>
@@ -728,11 +735,17 @@ async function handler(m, { sock }) {
     }
 
     // GATE (owner 6 Okt 2026): create butuh izin .addcpanel dari owner.
+    // (revisi owner 7 Okt): jalur paket RAM ini otomatis tipe client — pemilik
+    // izin tipe admin harus pakai format lengkap .cpanel admin, <disk> <ram>, <cpu>, ...
     if (!m.isOwner) {
       const allow = isCreateAllowed(m.sender);
       if (!allow.allowed) {
         try { await notifyOwnerCreateRequest(sock, m.sender); } catch {}
-        return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addcpanel <nomor kamu> <durasi>\n\nContoh: ${(m.prefix || ".")}addcpanel ${allowCleanNumber(m.sender)} 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+        return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addcpanel <nomor kamu> <client|admin> <durasi>\n\nContoh: ${(m.prefix || ".")}addcpanel ${allowCleanNumber(m.sender)} client 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+      }
+      const allowTipe = String(allow.entry?.tipe || "client").toLowerCase();
+      if (allowTipe === "admin") {
+        return m.reply(raraWrap("cpanel", `Izin create kamu tipe *admin* — pakai format lengkap:\n${m.prefix || "."}cpanel admin, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>\n\nContoh: ${(m.prefix || ".")}cpanel admin, 5gb 5gb, 200, aizat,${allowCleanNumber(m.sender)},1`));
       }
     }
     const jedaCheck = checkPanelJeda(m);

@@ -126,14 +126,21 @@ await handler(mkM("admin, 1gb 1gb, 100, hacker, 628999, 1", { isOwner: false }),
 t("2j. admin oleh non-owner tanpa izin ditolak (gate .addcpanel)",
   users.length === userCountBefore && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
 
-// 2c2. (revisi owner 7 Okt) user berizin .addcpanel bisa buat tipe ADMIN juga
-allowCreateFor("628999000111", 7 * 864e5);
+// 2c2. (revisi owner 7 Okt) owner .addcpanel tipe ADMIN → user create tipe admin
+allowCreateFor("628999000111", 7 * 864e5, "admin");
 await handler(mkM("admin, 5gb 5gb, 200, aizat2, 628174887770, 1", { isOwner: false, sender: "628999000111@s.whatsapp.net" }), { sock });
-t("2j2. user berizin create tipe admin → root_admin true",
+t("2j2. izin tipe admin → create admin root_admin true",
   users.at(-1)?.username === "aizat2" && users.at(-1)?.root_admin === true, users.at(-1));
 t("2j3. spec admin: memory 5120 / disk 5120 / cpu 200",
   servers.at(-1)?.limits?.memory === 5120 && servers.at(-1)?.limits?.disk === 5120 && servers.at(-1)?.limits?.cpu === 200, servers.at(-1)?.limits);
 t("2j4. kartu DM tipe Admin ke target", /Tipe Akun: Admin/.test(dms.at(-1)?.text || ""), dms.at(-1)?.text?.slice(0, 160));
+
+// 2c3. izin tipe client coba create admin → ditolak, arahkan format client
+allowCreateFor("628910000111", 7 * 864e5); // tanpa tipe = client
+const cntMismatch = users.length;
+await handler(mkM("admin, 1gb 1gb, 100, sneaky, 628174887770, 1", { isOwner: false, sender: "628910000111@s.whatsapp.net" }), { sock });
+t("2j5. izin client create admin → ditolak tipe (gak nembus)",
+  users.length === cntMismatch && /cuma tipe \*client\*/.test(replyTxt()), replyTxt().slice(-160));
 
 // 2d. client oleh non-owner tanpa izin → ditolak (gate .addcpanel, owner 6 Okt)
 const count2k = users.length; // re-baseline (2j2 udah create user admin)
@@ -170,7 +177,7 @@ t("2q. path RAM lama → akun tetap kebuat + notif saluran", servers.at(-1)?.lim
 replies.length = 0;
 await handler(mkM("", { isOwner: true }), { sock });
 const guideTxt = replyTxt();
-t("2r0. panduan: cara buka izin .addcpanel", /\.addcpanel @user 7d/.test(guideTxt) && /\.listcpanel/.test(guideTxt), guideTxt.slice(0, 200));
+t("2r0. panduan: cara buka izin .addcpanel + tipe", /\.addcpanel @user client 7d/.test(guideTxt) && /\.addcpanel @user admin unli/.test(guideTxt) && /\.listcpanel/.test(guideTxt), guideTxt.slice(0, 240));
 t("2r1. panduan: contoh client & admin create + catatan client gak bisa ubah spec",
   /\.cpanel client, 5gb 5gb, 200, aizat2, 628174887770, 1/.test(guideTxt) && /\.cpanel admin, 5gb 5gb, 200, aizat2, 628174887770, 1/.test(guideTxt) && /Client gak bisa ubah ram\/cpu sendiri/.test(guideTxt), guideTxt.slice(0, 200));
 

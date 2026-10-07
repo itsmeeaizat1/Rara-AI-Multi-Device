@@ -2,8 +2,10 @@
 // rara-cpanel-allow.js — Allowlist create panel (owner 6 Okt 2026):
 // "cpanel ada fitur butuh konfirmasi add dr owner — user gak bisa langsung
 // create, owner harus menambahkan dulu: .addrole @user / nomor <durasi>"
+// (revisi owner 7 Okt): owner juga mutusin TIPE client|admin + durasi pas
+// .addcpanel — tipe create user ngikutin izinnya.
 // Penyimpanan: src/database/panel/cpanel/create_allow.json
-// EntrI: { number, addedAt, expiresAt (null = selamanya) }
+// Entry: { number, tipe: client|admin, addedAt, expiresAt (null = selamanya) }
 // Seam _setAllowFileForTest buat E2E isolasi.
 import fs from "fs";
 import path from "path";
@@ -80,15 +82,19 @@ export function isCreateAllowed(jid) {
 }
 
 // tambah/perpanjang. ms = null → selamanya. Return entry baru.
-export function allowCreate(jid, ms) {
+// (revisi owner 7 Okt 2026): tipe client|admin ditentukan owner pas .addcpanel —
+// user berizin cuma bisa create sesuai tipenya (default client utk izin lama).
+export function allowCreate(jid, ms, tipe = "client") {
   const number = cleanNumber(jid);
   if (!number) return { ok: false, error: "Nomor tidak valid" };
   if (ms !== null && (!Number.isFinite(ms) || ms <= 0)) return { ok: false, error: "Durasi tidak valid" };
+  const t = String(tipe || "client").toLowerCase();
+  if (t !== "client" && t !== "admin") return { ok: false, error: "Tipe harus client atau admin" };
   const now = Date.now();
   const expiresAt = ms === null ? null : now + ms;
   const list = prune(load());
   const i = list.findIndex((e) => e.number === number);
-  const entry = { number, addedAt: i >= 0 ? list[i].addedAt : now, expiresAt };
+  const entry = { number, tipe: t, addedAt: i >= 0 ? list[i].addedAt : now, expiresAt };
   if (i >= 0) list[i] = entry;
   else list.push(entry);
   save(list);
