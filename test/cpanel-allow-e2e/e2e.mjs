@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE — E2E: izin create panel (owner 6 Okt 2026):
 // ".cpanel ada fitur butuh konfirmasi add dr owner — user gak bisa langsung
 // create, owner harus menambahkan dulu: .addaksescpanel role @user / nomor <durasi>"
-// Lib src/lib/rara-cpanel-allow.js + plugin .addaksescpanel/.delcpanel/.listcpanel
+// Lib src/lib/rara-cpanel-allow.js + plugin .addaksescpanel/.delaksescpanel/.listaksescpanel
 // + gate di plugins/panel/cpanel.js (2 jalur create). Mock HTTP panel lokal.
 import http from "node:http";
 import os from "node:os";
@@ -57,7 +57,7 @@ t("1s. isCreateAllowed bawa tipe utk gate", lib.isCreateAllowed("628600111222").
 t("1t. tipe ngawur → error jelas", lib.allowCreate("628999888777", null, "reseller").ok === false && /Tipe harus/.test(lib.allowCreate("628999888777", null, "reseller").error || ""));
 t("1u. re-add tipe beda → tipe keupdate", lib.allowCreate("628600111222", 7 * 864e5, "client").ok === true && lib.isCreateAllowed("628600111222").entry?.tipe === "client");
 
-// ═══ SECTION 2: plugin .addaksescpanel / .delcpanel / .listcpanel ═══
+// ═══ SECTION 2: plugin .addaksescpanel / .delaksescpanel / .listaksescpanel ═══
 section("2. plugin .addaksescpanel");
 const plugin = await import(R + "/plugins/panel/cpanel-allow.js");
 const replies = [];
@@ -111,16 +111,27 @@ t("2f2. nama lama .addcpanel (alias) → tetap jalan & izin tercatat",
   /Izin Create Panel/.test(replyTxt()) && lib.isCreateAllowed("628999000111").allowed === true, replyTxt().slice(0, 140));
 
 replies.length = 0;
+await plugin.handler(mkM("listaksescpanel", ""), { sock: {} });
+t("2g. .listaksescpanel → daftar + tipe + sisa waktu", /Izin Create Panel/.test(replyTxt()) && /628777888999/.test(replyTxt()) && /30 hari/.test(replyTxt()) && /Tipe: Client/.test(replyTxt()) && /Tipe: Admin/.test(replyTxt()), replyTxt().slice(0, 260));
+
+replies.length = 0;
+replies.length = 0;
 await plugin.handler(mkM("listcpanel", ""), { sock: {} });
-t("2g. .listcpanel → daftar + tipe + sisa waktu", /Izin Create Panel/.test(replyTxt()) && /628777888999/.test(replyTxt()) && /30 hari/.test(replyTxt()) && /Tipe: Client/.test(replyTxt()) && /Tipe: Admin/.test(replyTxt()), replyTxt().slice(0, 260));
+t("2g2. nama lama .listcpanel (alias) → daftar tetap muncul",
+  /Izin Create Panel/.test(replyTxt()), replyTxt().slice(0, 120));
 
 replies.length = 0;
-await plugin.handler(mkM("delcpanel", "628777888999"), { sock: {} });
-t("2h. .delcpanel → dicabut", /Izin Dicabut/.test(replyTxt()) && lib.isCreateAllowed("628777888999").allowed === false, replyTxt().slice(0, 140));
+await plugin.handler(mkM("delcpanel", "628111222333"), { sock: {} });
+t("2h2. nama lama .delcpanel (alias) → izin tercabut",
+  /Izin Dicabut/.test(replyTxt()) && lib.isCreateAllowed("628111222333").allowed === false, replyTxt().slice(0, 120));
 
 replies.length = 0;
-await plugin.handler(mkM("delcpanel", "628777888999"), { sock: {} });
-t("2i. .delcpanel nomor gak terdaftar → info jelas", /tidak ada di daftar/.test(replyTxt()), replyTxt().slice(0, 140));
+await plugin.handler(mkM("delaksescpanel", "628777888999"), { sock: {} });
+t("2h. .delaksescpanel → dicabut", /Izin Dicabut/.test(replyTxt()) && lib.isCreateAllowed("628777888999").allowed === false, replyTxt().slice(0, 140));
+
+replies.length = 0;
+await plugin.handler(mkM("delaksescpanel", "628777888999"), { sock: {} });
+t("2i. .delaksescpanel nomor gak terdaftar → info jelas", /tidak ada di daftar/.test(replyTxt()), replyTxt().slice(0, 140));
 
 replies.length = 0;
 await plugin.handler(mkM("addaksescpanel", "role @user 14d", { quoted: { sender: "628555444333@s.whatsapp.net" } }), { sock: {} });

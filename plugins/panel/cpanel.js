@@ -438,8 +438,8 @@ Owner mutusin tipe + durasi pas .addaksescpanel:
 .addaksescpanel @user client 7d   → izin create tipe client 7 hari
 .addaksescpanel @user admin unli → izin create tipe admin selamanya
 .addaksescpanel 628xxx 7d         → tanpa tipe = client
-.delcpanel @user            → cabut izin
-.listcpanel                  → daftar izin aktif + tipe
+.delaksescpanel @user            → cabut izin
+.listaksescpanel                  → daftar izin aktif + tipe
 Durasi: 30m / 12h / 7d / 2w / unli
 User yang udah dibuka izinnya tinggal create sesuai tipenya, format di bawah.
 

@@ -177,7 +177,7 @@ t("2q. path RAM lama → akun tetap kebuat + notif saluran", servers.at(-1)?.lim
 replies.length = 0;
 await handler(mkM("", { isOwner: true }), { sock });
 const guideTxt = replyTxt();
-t("2r0. panduan: cara buka izin .addaksescpanel + tipe", /\.addaksescpanel @user client 7d/.test(guideTxt) && /\.addaksescpanel @user admin unli/.test(guideTxt) && /\.listcpanel/.test(guideTxt), guideTxt.slice(0, 240));
+t("2r0. panduan: cara buka izin .addaksescpanel + tipe", /\.addaksescpanel @user client 7d/.test(guideTxt) && /\.addaksescpanel @user admin unli/.test(guideTxt) && /\.listaksescpanel/.test(guideTxt), guideTxt.slice(0, 240));
 t("2r1. panduan: contoh client & admin create + catatan client gak bisa ubah spec",
   /\.cpanel client, 5gb 5gb, 200, aizat2, 628174887770, 1/.test(guideTxt) && /\.cpanel admin, 5gb 5gb, 200, aizat2, 628174887770, 1/.test(guideTxt) && /Client gak bisa ubah ram\/cpu sendiri/.test(guideTxt), guideTxt.slice(0, 200));
 
