@@ -109,6 +109,12 @@ class Database {
         // CHAT HISTORY PERSISTEN (owner 21 Sep: histori chat tetap kesimpan
         // saat restart, hilang hanya kalau file databasenya dihapus)
         chathistory: { file: "chathistory/chathistory.json", defaults: {} },
+        // KV PERSISTEN (owner 7 Okt: "setingan token, id telegram dll g tahan
+        // restart, hrs set ulang") — key ekstra db.data (apiKeys token bridge,
+        // bridge ownerIds/enabled, jasher, tgNotify* dll) dulunya cuma hidup di
+        // memori: db.data dibangun ulang dari 8 store aja tiap boot → semuanya
+        // lenyap. Store kv ini nampung SEMUA top-level key di luar store tetap.
+        kv: { file: "settings/kv.json", defaults: {} },
       };
 
       for (const [key, { file, defaults }] of Object.entries(fileMap)) {
@@ -139,6 +145,12 @@ class Database {
         owner: this.stores.owner.data,
         chathistory: this.stores.chathistory.data,
       };
+      // pulihkan key ekstra dari store kv ke top-level db.data (persistensi
+      // apiKeys/bridge/jasher/dll — hasilnya struktur db.data lama tetap sama,
+      // cuma sekarang gak hilang pas restart)
+      for (const [k, v] of Object.entries(this.stores.kv.data || {})) {
+        if (!(k in this.db.data)) this.db.data[k] = v;
+      }
 
       this.db.write = () => this.flushAll();
       this.db.read = () => this.readAll();
@@ -256,6 +268,16 @@ class Database {
   }
 
   flushAll() {
+    // snapshot key ekstra top-level db.data → store kv (yang gak di sini
+    // bakal lenyap pas boot berikutnya rebuild db.data dari store tetap)
+    try {
+      const fixed = new Set(["users", "groups", "settings", "stats", "sewa", "premium", "owner", "partner", "chathistory", "kv"]);
+      const extra = {};
+      for (const k of Object.keys(this.db.data || {})) {
+        if (!fixed.has(k)) extra[k] = this.db.data[k];
+      }
+      this.stores.kv.data = extra;
+    } catch {}
     for (const key of Object.keys(this.stores)) {
       try {
         this.stores[key].write();
@@ -859,6 +881,13 @@ class Database {
       this.db.data.partner = this.stores.partner.data;
     }
 
+    // pulihkan key ekstra dari store kv (readAll versi — sama kayak init())
+    if (this.stores.kv) {
+      for (const [k, v] of Object.entries(this.stores.kv.data || {})) {
+        if (!(k in this.db.data)) this.db.data[k] = v;
+      }
+    }
+
     this.dirty = {
       users: false,
       groups: false,
@@ -1089,5 +1118,11 @@ function getDatabase() {
 // Pengait untuk config.isPremium (config.js tidak boleh impor file ini: siklus impor). Tidak
 // melempar saat DB belum siap -> isPremium cukup jatuh ke sumber lain.
 globalThis.__raraGetDatabase = () => dbInstance || null;
+
+// Seam e2e (db-kv-persist-e2e): simulasi RESTART — buang singleton biar initDatabase
+// berikutnya bikin instance baru dari disk (path sama). JANGAN dipakai produksi.
+export function __resetDatabaseForTest() {
+  dbInstance = null;
+}
 
 export { Database, initDatabase, getDatabase };
