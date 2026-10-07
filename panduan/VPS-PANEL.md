@@ -848,6 +848,34 @@ Beda = console gak akan pernah nyambung. Benerin: set Daemon Port 8080 di admin 
 
 - Pakai proxy/tunnel → `behind_proxy` = 1; akses langsung IP → `behind_proxy` = 0: `mysql -e "update panel.nodes set behind_proxy=0 where id=1"`
 
+**Kasus 6 — Port diblok FIREWALL CLOUD provider (ufw udah allow tapi tetap timeout)**
+
+- Gejala: `ufw allow` udah dijalankan tapi port tetap gak bisa diakses dari luar; `curl` dari DALAM VPS lancar (jebakan — itu gak bukti port kebuka).
+- UFW/iptables host BUKAN satu-satunya firewall: provider cloud (DigitalOcean/Linode/dll) punya firewall sendiri di dashboard yang gak kelihatan dari dalam VPS. Provider umumnya cuma buka 22/80/443.
+- Cara cek dari luar: buka `check-host.net` → Check TCP → `IP_VPS:PORT` (lihat hasil dari beberapa negara). Jangan percaya tes dari dalam VPS.
+- Solusi A: buka port yang dibutuhkan di firewall dashboard provider.
+- Solusi B (tanpa minta provider): pindahkan wings ke port yang udah kebuka — 443:
+
+```bash
+sed -i '8s/8080/443/' /etc/pterodactyl/config.yml     # api port → 443 (sftp 2022 tetap)
+mysql -e "update panel.nodes set daemonListen=443 where id=1"
+systemctl restart wings
+```
+
+- Setelah pindah: `curl http://IP_VPS:443/api/system` dari luar harus jawab JSON wings (error auth = NORMAL, itu tanda tembus).
+- Catatan: wings di 443 tetap HTTP polos (`use_ssl=false`), bukan TLS — jangan enable `ssl.enabled` tanpa sertifikat beneran, wings bakal gagal start.
+
+**Kasus 7 — Ganti FQDN/domain node → HATI MERAH padahal wings sehat**
+
+- Kunci yang sering kelupaan: **tiap ganti FQDN/scheme node, WAJIB deploy ulang token daemon** (tombol **Auto Deploy** di samping kolom token di admin → Nodes) atau `php artisan p:node:configuration`, baru `systemctl restart wings`. Ganti FQDN di form doang GAK cukup — token/config lama masih nyangkut.
+- Urutan lengkap ganti domain/FQDN:
+  1. Update FQDN node + scheme (`http`) di admin → **klik Auto Deploy di samping token** → `systemctl restart wings`
+  2. Update `APP_URL` di `.env` panel → `php artisan config:cache` → `systemctl restart pterodactyl` (queue worker baca config lama sampai direstart)
+  3. Update domain di bot: `.setpanel v1 http://domain-baru` (atau edit `src/database/panel/ptero-panels.json`)
+- Cek cepat biar gak salah tuduh: dari luar VPS buka `http://FQDN:443/api/system` — kalau jawab JSON/error auth berarti wings + DNS tembus, masalahnya bukan di server.
+- **Mixed content = hati merah PALSU:** kalau panel dibuka via `https://` tapi scheme node `http://`, browser ngeblok ping ke wings dari halaman https → hati merah padahal semua sehat. Akses panel via `http://` yang sama persis dengan `APP_URL`, atau setup sertifikat SSL beneran dulu baru ganti scheme node jadi https.
+- DNS subdomain baru butuh waktu propagate — kalau device kamu belum resolve, IP tetap bisa dipakai sementara.
+
 **Verifikasi akhir (semua harus lolos)**
 
 ```bash
@@ -885,4 +913,5 @@ Kalau semua hijau, cek panel admin → node harus ONLINE (bukan merah), lalu di 
 2. **JANGAN install UFW/Fail2Ban sebelum Docker** — Docker butuh iptables chains sendiri.
 3. **Quick Tunnel URL berubah tiap restart.** Untuk URL permanen: Named Tunnel Cloudflare + domain sendiri.
 4. **Dua URL beda:** FQDN node = URL WINGS tunnel (port 8080); `allowed_origins` + `APP_URL` = URL PANEL (port 80).
-5. **Image docker server bot:** wajib varian yolks Pterodactyl (ada entrypoint), plus butuh `git` di dalam image buat install dependency.
+5. **Ganti FQDN/domain node = WAJIB deploy ulang token daemon** (Auto Deploy di admin → Nodes) + restart wings. FQDN baru tanpa redeploy token = node merah.
+6. **Image docker server bot:** wajib varian yolks Pterodactyl (ada entrypoint), plus butuh `git` di dalam image buat install dependency.
