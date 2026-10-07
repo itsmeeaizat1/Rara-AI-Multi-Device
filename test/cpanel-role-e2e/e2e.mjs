@@ -22,7 +22,7 @@ const section = (x) => console.log("\n— " + x + " —");
 const { initDatabase, getDatabase } = await import(R + "/src/lib/rara-database.js");
 await initDatabase(path.join(os.tmpdir(), "cpanel-role-e2e-db-" + Date.now()));
 
-const { handler, parseRoleSpec, config } = await import(R + "/plugins/panel/cpanel.js");
+const { handler, parseRoleSpec, config, _setTgClientForTest, resolveCreateTarget } = await import(R + "/plugins/panel/cpanel.js");
 // seam izin create (owner 6 Okt): .cpanel create butuh .addcpanel dulu
 const { _setAllowFileForTest, allowCreate: allowCreateFor } = await import(R + "/src/lib/rara-cpanel-allow.js");
 _setAllowFileForTest(path.join(os.tmpdir(), "cpanel-role-e2e-allow-" + Date.now() + ".json"));
@@ -187,6 +187,68 @@ await handler(mkM("client, 1gb 1gb, 100, aizat, 628123, 9"), { sock });
 t("2r. panel kosong → pesan belum dikonfigurasi", /belum dikonfigurasi/i.test(replyTxt()), replyTxt().slice(0, 140));
 
 setNotifyEnabled("serverCreated", false);
+
+// ═══ SECTION 4: kredensial ke DM TELEGRAM (owner 7 Okt) ═══
+section("4. create → DM Telegram");
+const tgDms = [];
+const tgClientMock = {
+  sendMessage: async (id, text) => { tgDms.push({ id: String(id), text }); },
+};
+const origOnWa = sock.onWhatsApp;
+
+// 4a. prefix tg:<id> → akun jadi + kredensial ke DM Telegram
+_setTgClientForTest(tgClientMock);
+await handler(mkM("client, 5gb 5gb, 200, aizat2, tg:4436252, 1", { isOwner: true }), { sock });
+t("4a. .cpanel client, 5gb 5gb, 200, aizat2, tg:4436252, 1 → akun jadi",
+  users.at(-1)?.username === "aizat2", users.at(-1));
+t("4b. kredensial ke DM Telegram 4436252 (bukan WA DM)",
+  tgDms.length === 1 && tgDms[0].id === "4436252" && /Username: aizat2/.test(tgDms[0].text), tgDms[0]);
+t("4c. gak ada DM WhatsApp nyasar ke jid tg_", !dms.some((d) => String(d.to).includes("tg_")), dms.map((d) => d.to));
+t("4d. reply creator nunjukin DM Telegram", /DM Telegram 4436252/.test(replyTxt()), replyTxt().slice(-200));
+
+// 4e. fallback: angka gak terdaftar WA + bridge TG nyala → anggap id TG
+sock.onWhatsApp = async (n) => [{ exists: !/^443/.test(String(n)) }];
+tgDms.length = 0;
+await handler(mkM("client, 1gb 1gb, 100, tgplain, 4436252, 1", { isOwner: true }), { sock });
+t("4e. nomor gak terdaftar WA (7 digit) → fallback DM Telegram",
+  users.at(-1)?.username === "tgplain" && tgDms[0]?.id === "4436252", { u: users.at(-1)?.username, tg: tgDms[0]?.id });
+sock.onWhatsApp = origOnWa;
+
+// 4f. tg: target tapi bridge Telegram mati → ditolak SEBELUM create
+_setTgClientForTest(null);
+const cntBeforeTgOff = users.length;
+await handler(mkM("client, 1gb 1gb, 100, tgoff, tg:4436252, 1", { isOwner: true }), { sock });
+t("4f. bridge TG mati + tg: target → ditolak, akun gak jadi",
+  users.length === cntBeforeTgOff && /Bridge Telegram belum nyala/.test(replyTxt()), replyTxt().slice(-160));
+
+// 4g. nomor gak terdaftar WA + bridge mati → error + hint tg:
+sock.onWhatsApp = async () => [{ exists: false }]; // 12 digit: bukan WA, kepanjangan utk id TG
+const cntBeforeHint = users.length;
+await handler(mkM("client, 1gb 1gb, 100, ngawur, 443999999999, 1", { isOwner: true }), { sock });
+sock.onWhatsApp = origOnWa;
+t("4g. nomor salah panjang → hint format tg:",
+  users.length === cntBeforeHint && /tidak terdaftar di WhatsApp/.test(replyTxt()) && /tg:<id_tele>/.test(replyTxt()), replyTxt().slice(-200));
+
+// 4h. DM TG gagal kirim (user belum pernah chat bot) → akun tetap jadi + kredensial manual
+_setTgClientForTest({ sendMessage: async () => { throw new Error("Forbidden: bot can't initiate conversation"); } });
+await handler(mkM("client, 1gb 1gb, 100, tgfail, tg:4436252, 1", { isOwner: true }), { sock });
+t("4h. kirim TG gagal → akun jadi + kredensial manual di reply",
+  users.at(-1)?.username === "tgfail" && /BERHASIL dibuat/.test(replyTxt()) && /Password:/.test(replyTxt()), replyTxt().slice(-260));
+
+// 4i. jalur RAM lama juga support tg:
+_setTgClientForTest(tgClientMock);
+tgDms.length = 0;
+await handler(mkM("1gb legacytg,tg:4436252,1"), { sock });
+t("4i. .cpanel 1gb user,tg:4436252,1 (path RAM) → DM Telegram",
+  users.at(-1)?.username === "legacytg" && tgDms[0]?.id === "4436252" && /Username: legacytg/.test(tgDms[0]?.text || ""), { u: users.at(-1)?.username, tg: tgDms[0]?.id });
+
+// 4j. resolveCreateTarget unit: jid bridge tg_ → tg
+const rt = await resolveCreateTarget("tg_4436252", { onWhatsApp: async () => [{ exists: true }] });
+t("4j. jid bridge tg_<id> → kind tg", rt.kind === "tg" && rt.tgId === "4436252", rt);
+const rt2 = await resolveCreateTarget("628174887770", { onWhatsApp: async () => [{ exists: true }] });
+t("4k. nomor WA valid → kind wa", rt2.kind === "wa" && rt2.display === "628174887770", rt2);
+
+_setTgClientForTest(undefined);
 _resetBroadcastSendForTest();
 srv.close();
 

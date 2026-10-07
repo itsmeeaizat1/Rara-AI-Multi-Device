@@ -47,8 +47,8 @@ const pluginConfig = {
   name: ["cpanel"],
   alias: ["panel"],
   category: "panel",
-  description: "Pusat kontrol panel Pterodactyl (v1-v100): buat akun client/admin + spesifikasi (butuh izin .addcpanel dari owner), power/status/upload server, login client 7 hari",
-  usage: ".cpanel client|admin, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel> | .cpanel <ram> <username>,<nomor>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel> | izin create: .addcpanel <nomor> <durasi>",
+  description: "Pusat kontrol panel Pterodactyl (v1-v100): buat akun client/admin + spesifikasi (izin .addcpanel dari owner; kredensial bisa dikirim ke DM WhatsApp ATAU DM Telegram via bridge), power/status/upload server, login client 7 hari",
+  usage: ".cpanel client|admin, <disk> <ram>, <cpu>, <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel <ram> <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel> | izin create: .addcpanel <nomor> <client|admin> <durasi>",
   example: ".panel aizat aizat123, 1",
   isOwner: false,
   isPremium: false,
@@ -67,6 +67,54 @@ function cleanJid(jid) {
 
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+// ── (owner 7 Okt) TARGET CREATE: nomor WA → DM WhatsApp; ID Telegram → DM TG ──
+// 3 cara nunjukin user Telegram: prefix tg:<id> (atau telegram:<id>), jid
+// bridge tg_<id> (create dari chat Telegram), atau fallback angka yang gak
+// terdaftar di WhatsApp (3-10 digit = id user TG, bridge harus nyala).
+// Return { kind: "wa"|"tg", jid, tgId, display } — throw Error kalau invalid.
+let _tgClientForTest = undefined;
+export function _setTgClientForTest(client) { _tgClientForTest = client; }
+export async function getTgClient() {
+  if (_tgClientForTest !== undefined) return _tgClientForTest;
+  try {
+    const mgr = await import("../../src/lib/rarabridge/manager.js");
+    return (mgr.getTelegramClient && mgr.getTelegramClient()) || null;
+  } catch { return null; }
+}
+export async function resolveCreateTarget(raw, sock) {
+  let t = String(raw || "").trim();
+  let forcedTg = false;
+  const pref = t.match(/^(?:tg|telegram)[:_]/i);
+  if (pref) { t = t.slice(pref[0].length); forcedTg = true; }
+  let local = t.split("@")[0];
+  if (!forcedTg && /^tg_/i.test(local)) { local = local.slice(3); forcedTg = true; }
+  if (forcedTg) {
+    const id = local.replace(/[^0-9-]/g, "");
+    if (!/^-?\d{3,15}$/.test(id)) {
+      throw new Error(`ID Telegram "${local}" tidak valid (harus angka, contoh: tg:4436252).`);
+    }
+    const client = await getTgClient();
+    if (!client) throw new Error(`Bridge Telegram belum nyala — aktifkan dulu:\n.bridge on telegram`);
+    return { kind: "tg", tgId: id, jid: `tg_${id}@s.whatsapp.net`, display: id };
+  }
+  const jid = cleanJid(t);
+  const l2 = jid.split("@")[0];
+  const isPlatformUser = /^(tg|dc)_/.test(l2); // bridge: user TG/Discord bukan nomor WA
+  if (!isPlatformUser) {
+    let onWa = null;
+    try { const [r] = await sock.onWhatsApp(l2); onWa = r; } catch { onWa = null; }
+    if (onWa?.exists) return { kind: "wa", jid, tgId: null, display: l2 };
+    // fallback: angka gak terdaftar WA + bridge TG nyala → anggap id user TG
+    const digits = l2.replace(/[^0-9]/g, "");
+    const client = await getTgClient();
+    if (digits.length >= 3 && digits.length <= 10 && client) {
+      return { kind: "tg", tgId: digits, jid, display: digits };
+    }
+    throw new Error(`Nomor ${l2} tidak terdaftar di WhatsApp.\nKalau targetnya user Telegram, format:\n.cpanel <tipe>, <disk> <ram>, <cpu>, <username>,tg:<id_tele>,<idpanel>\nContoh: .cpanel client, 5gb 5gb, 200, aizat2,tg:4436252,1`);
+  }
+  return { kind: "wa", jid, tgId: null, display: l2 }; // jid platform lain (dc_) — perilaku lama
 }
 
 // ── GATE KONFIRMASI OWNER (6 Okt 2026): create cpanel butuh izin .addcpanel ──
@@ -148,8 +196,10 @@ function parseRoleSpec(text) {
   const username = parts[3]?.toLowerCase();
   if (!username || !/^[a-z0-9_]{3,16}$/.test(username)) return null;
   let nomor = null;
+  let nomorRaw = null; // (owner 7 Okt) penanda platform tg:4436252 dipertahankan
   let panelId = null;
   if (parts[4]) {
+    nomorRaw = parts[4];
     nomor = parts[4].replace(/[^0-9]/g, "");
     if (!nomor) return null;
     if (parts[5]) {
@@ -157,7 +207,7 @@ function parseRoleSpec(text) {
       if (!panelId) return null; // idpanel ditulis tapi invalid → jangan tebak
     }
   }
-  return { role, diskMB, ramMB, cpuPct, username, nomor, panelId };
+  return { role, diskMB, ramMB, cpuPct, username, nomor, nomorRaw, panelId };
 }
 
 // Buat akun via format tipe client/admin (root_admin) + disk/ram/cpu custom.
@@ -193,16 +243,15 @@ async function createWithRole(m, { sock }, spec) {
   const jedaCheck = checkPanelJeda(m);
   if (!jedaCheck.allowed) return m.reply(jedaCheck.message);
 
-  const targetUser = cleanJid(spec.nomor || (m.sender || "").split("@")[0]);
-const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // bridge: user TG/Discord bukan nomor WA
+  // (owner 7 Okt) target: nomor WA → DM WhatsApp; ID Telegram (tg:<id> / jid
+  // bridge tg_ / fallback angka gak terdaftar WA) → DM via bridge Telegram.
+  let tgt;
   try {
-    const [onWa] = isPlatformUser ? [{ exists: true }] : await sock.onWhatsApp(targetUser.split("@")[0]);
-    if (!onWa?.exists) {
-      return m.reply(raraWrap("cpanel", `Nomor ${targetUser.split("@")[0]} tidak terdaftar di WhatsApp.`));
-    }
+    tgt = await resolveCreateTarget(spec.nomorRaw || spec.nomor || (m.sender || "").split("@")[0], sock);
   } catch (e) {
-    return m.reply(raraWrap("cpanel", `Gagal validasi nomor WhatsApp.`));
+    return m.reply(raraWrap("cpanel", String(e?.message || e)));
   }
+  const targetUser = tgt.jid;
 
   await m.react("🕒");
   const email = `${spec.username}@raramultidevice.id`;
@@ -292,7 +341,25 @@ const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // br
     credTxt += `.cpanel status <namaserver> ${panelId}\n`;
     credTxt += `.cpanel start <namaserver> ${panelId}\n`;
     credTxt += `\nSimpan data ini, jangan bagikan ke siapapun!`;
-    await sock.sendMessage(targetUser, { text: credTxt });
+    // (owner 7 Okt) kirim: WA DM atau DM Telegram via bridge — kalau TG gagal
+    // (user belum pernah chat bot / blokir), akun tetap jadi + kredensial
+    // ditunjukin ke creator biar gak hilang.
+    let sentLabel = tgt.display;
+    let tgFailed = null;
+    if (tgt.kind === "tg") {
+      const client = await getTgClient();
+      if (!client) tgFailed = "bridge Telegram mati";
+      else {
+        try { await client.sendMessage(tgt.tgId, credTxt); sentLabel = `DM Telegram ${tgt.tgId}`; }
+        catch (e) { tgFailed = e?.message || "gagal kirim DM Telegram"; }
+      }
+    } else {
+      await sock.sendMessage(targetUser, { text: credTxt });
+    }
+    if (tgFailed) {
+      await m.react("❗");
+      return m.reply(raraWrap("cpanel", `Akun ${user.username} BERHASIL dibuat, tapi kirim ke DM Telegram ${tgt.tgId} gagal (${tgFailed} — user belum pernah chat bot / blokir).\n\nSimpan kredensial ini manual:\nDomain: ${slot.domain}\nUsername: ${user.username}\nPassword: ${password}\nTipe: ${tipeLabel}`));
+    }
 
     // 5. notif saluran (anti-throw — gagal gak ganggu akun ke user)
     try {
@@ -305,7 +372,7 @@ const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // br
         totalServers = resCount.data?.meta?.pagination?.total ?? null;
       } catch {}
       await notifyServerCreated(sock, {
-        phoneNumber: targetUser.split("@")[0],
+        phoneNumber: tgt.display,
         tipe: isAdmin ? "Admin" : "Client",
         username: user.username,
         server: server.name,
@@ -321,7 +388,7 @@ const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // br
 
     await m.react("🐣");
     await setPanelLastUsed();
-    return m.reply(`Akun panel untuk ${user.username} berhasil dibuat di panel ${ver.toUpperCase()} kak 🥳\n\nTipe: ${tipeLabel}\nRAM: ${ramLabel} | Disk: ${diskLabel} | CPU: ${cpuLabel}\nData akun sudah dikirim ke ${targetUser.split("@")[0]}\n\nKontrol server sendiri (user):\n${m.prefix || "."}panel ${user.username} <password>,${panelId}`);
+    return m.reply(`Akun panel untuk ${user.username} berhasil dibuat di panel ${ver.toUpperCase()} kak 🥳\n\nTipe: ${tipeLabel}\nRAM: ${ramLabel} | Disk: ${diskLabel} | CPU: ${cpuLabel}\nData akun sudah dikirim ke ${sentLabel}\n\nKontrol server sendiri (user):\n${m.prefix || "."}panel ${user.username} <password>,${panelId}`);
   } catch (err) {
     console.error("[cpanel create role]", err?.response?.data || err.message);
     await m.react("❌");
@@ -375,6 +442,8 @@ Contoh tipe client:
 .cpanel client, 5gb 5gb, 200, aizat2, 628174887770, 1
 Contoh tipe admin:
 .cpanel admin, 5gb 5gb, 200, aizat2, 628174887770, 1
+Kirim ke DM Telegram (ganti nomor dengan tg:<id_tele>):
+.cpanel client, 5gb 5gb, 200, aizat2,tg:4436252,1
 Tipe ngikutin izin dari owner (spek create-nya sama lengkap):
 • client = izin client, cuma ngatur server sendiri
 • admin = izin admin, masuk area admin panel (lihat semua server, ubah spek siapa pun)
@@ -717,7 +786,8 @@ async function handler(m, { sock }) {
     // format: username,nomor,idpanel  (idpanel boleh token ke-3 terpisah)
     const parts = restTokens.join(" ").split(",").map((s) => s.trim()).filter(Boolean);
     const username = parts[0];
-    const nomor = parts[1] ? parts[1].replace(/[^0-9]/g, "") : null;
+    const nomorRaw = parts[1] || null; // (owner 7 Okt) penanda tg: dipertahankan
+    const nomor = nomorRaw ? nomorRaw.replace(/[^0-9]/g, "") : null;
     let panelId = parsePanelId(parts[2]);
     if (!panelId) panelId = parsePanelId(restTokens[restTokens.length - 1]);
 
@@ -751,16 +821,14 @@ async function handler(m, { sock }) {
     const jedaCheck = checkPanelJeda(m);
     if (!jedaCheck.allowed) return m.reply(jedaCheck.message);
 
-    const targetUser = cleanJid(nomor);
-const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // bridge: user TG/Discord bukan nomor WA
+    // (owner 7 Okt) target: nomor WA → DM WA; tg:<id_tele> → DM bridge Telegram
+    let tgt;
     try {
-      const [onWa] = isPlatformUser ? [{ exists: true }] : await sock.onWhatsApp(targetUser.split("@")[0]);
-      if (!onWa?.exists) {
-        return m.reply(raraWrap("cpanel", `Nomor ${targetUser.split("@")[0]} tidak terdaftar di WhatsApp.`));
-      }
+      tgt = await resolveCreateTarget(nomorRaw || (m.sender || "").split("@")[0], sock);
     } catch (e) {
-      return m.reply(raraWrap("cpanel", `Gagal validasi nomor WhatsApp.`));
+      return m.reply(raraWrap("cpanel", String(e?.message || e)));
     }
+    const targetUser = tgt.jid;
 
     await m.react("🕒");
     const email = `${username}@raramultidevice.id`;
@@ -844,7 +912,23 @@ const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // br
       credTxt += `.cpanel status <namaserver> ${panelId}\n`;
       credTxt += `.cpanel start <namaserver> ${panelId}\n`;
       credTxt += `\nSimpan data ini, jangan bagikan ke siapapun!`;
-      await sock.sendMessage(targetUser, { text: credTxt });
+      // (owner 7 Okt) WA DM atau DM Telegram via bridge (fallback manual bila gagal)
+      let sentLabel = tgt.display;
+      let tgFailed = null;
+      if (tgt.kind === "tg") {
+        const client = await getTgClient();
+        if (!client) tgFailed = "bridge Telegram mati";
+        else {
+          try { await client.sendMessage(tgt.tgId, credTxt); sentLabel = `DM Telegram ${tgt.tgId}`; }
+          catch (e) { tgFailed = e?.message || "gagal kirim DM Telegram"; }
+        }
+      } else {
+        await sock.sendMessage(targetUser, { text: credTxt });
+      }
+      if (tgFailed) {
+        await m.react("❗");
+        return m.reply(raraWrap("cpanel", `Akun ${user.username} BERHASIL dibuat, tapi kirim ke DM Telegram ${tgt.tgId} gagal (${tgFailed} — user belum pernah chat bot / blokir).\n\nSimpan kredensial ini manual:\nDomain: ${slot.domain}\nUsername: ${user.username}\nPassword: ${password}`));
+      }
 
       // notif saluran (anti-throw) — .cpanel <ram> path lama = akun client biasa
       try {
@@ -857,7 +941,7 @@ const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // br
           totalServers = resCount.data?.meta?.pagination?.total ?? null;
         } catch {}
         await notifyServerCreated(sock, {
-          phoneNumber: targetUser.split("@")[0],
+          phoneNumber: tgt.display,
           tipe: "Client",
           username: user.username,
           server: server.name,
@@ -873,7 +957,7 @@ const isPlatformUser = /^(tg|dc)_/.test(String(targetUser.split("@")[0])); // br
 
       await m.react("🐣");
       await setPanelLastUsed();
-      return m.reply(`Akun panel untuk ${user.username} berhasil dibuat di panel ${ver.toUpperCase()} kak 🥳\n\nRAM: ${ramLabel}\nData akun sudah dikirim ke ${targetUser.split("@")[0]}\n\nKontrol server sendiri (user):\n${m.prefix || "."}panel ${user.username} <password>,${panelId}`);
+      return m.reply(`Akun panel untuk ${user.username} berhasil dibuat di panel ${ver.toUpperCase()} kak 🥳\n\nRAM: ${ramLabel}\nData akun sudah dikirim ke ${sentLabel}\n\nKontrol server sendiri (user):\n${m.prefix || "."}panel ${user.username} <password>,${panelId}`);
     } catch (err) {
       console.error("[cpanel create]", err?.response?.data || err.message);
       await m.react("❌");
