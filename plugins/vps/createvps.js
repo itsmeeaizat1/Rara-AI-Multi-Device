@@ -142,7 +142,7 @@ Simpan data ini baik-baik!`
         await m.reply(raraWrap("VPS", "✅ VPS berhasil dibuat. Data dikirim ke private chat."))
         
     } catch (err) {
-        return m.reply(te(m.prefix, m.command, m.pushName))
+        return m.reply(te(m.prefix, m.command, m.pushName, err))
     }
 }
 

@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     ress.on('ready', () => {
         ress.exec(command, (err, stream) => {
             if (err) {
-                return m.reply(raraWrap("root", te(m.prefix, m.command, m.pushName), "error"))
+                return m.reply(raraWrap("root", te(m.prefix, m.command, m.pushName, err), "error"))
             }
             
             stream.on('close', async () => {

@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
             `Status: ${actionResult.status}`)
         
     } catch (err) {
-        return m.reply(te(m.prefix, m.command, m.pushName))
+        return m.reply(te(m.prefix, m.command, m.pushName, err))
     }
 }
 

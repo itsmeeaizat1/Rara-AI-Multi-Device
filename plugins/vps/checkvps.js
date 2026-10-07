@@ -73,7 +73,7 @@ OS: ${droplet.image?.distribution} ${droplet.image?.name}
 Created: ${timeHelper.fromTimestamp(droplet.created_at, "DD MMMM YYYY HH:mm:ss")}`;
     await m.reply(txt);
   } catch (err) {
-    return m.reply(te(m.prefix, m.command, m.pushName));
+    return m.reply(te(m.prefix, m.command, m.pushName, err));
   }
 }
 

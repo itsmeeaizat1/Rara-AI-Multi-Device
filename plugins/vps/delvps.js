@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
 `)
         
     } catch (err) {
-        return m.reply(te(m.prefix, m.command, m.pushName))
+        return m.reply(te(m.prefix, m.command, m.pushName, err))
     }
 }
 

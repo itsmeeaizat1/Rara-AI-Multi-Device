@@ -74,7 +74,7 @@ function handler(m, { sock }) {
 │ sTatus: *terinstall*
 │ Ip: ${ipvps}\n\n_Tema Stellar + dependencies berhasil diinstall!_`))
         } catch (err) {
-            m.reply(raraWrap("installtemastellar", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(raraWrap("installtemastellar", te(m.prefix, m.command, m.pushName, err), "error"))
         } finally {
             conn.end()
         }

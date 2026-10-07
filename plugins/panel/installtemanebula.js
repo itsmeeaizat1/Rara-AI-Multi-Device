@@ -107,7 +107,7 @@ function handler(m, { sock }) {
 │ Ip: ${ipvps}\n\n_Tema Nebula berhasil diinstall!_`))
         } catch (err) {
             console.error('[Nebula Install Error]', err)
-            m.reply(raraWrap("installtemanebula", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(raraWrap("installtemanebula", te(m.prefix, m.command, m.pushName, err), "error"))
         } finally {
             conn.end()
         }

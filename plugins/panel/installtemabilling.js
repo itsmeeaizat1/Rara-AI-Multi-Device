@@ -104,7 +104,7 @@ function handler(m, { sock }) {
                         await execSSH(conn, BUILD_CMD)
             await m.reply(raraWrap("installtemabilling", `✅ Status: *Terinstall*\nIP: ${ipvps}\n\n_Tema Billing + dependencies berhasil diinstall!_`))
         } catch (err) {
-            m.reply(raraWrap("installtemabilling", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(raraWrap("installtemabilling", te(m.prefix, m.command, m.pushName, err), "error"))
         } finally {
             conn.end()
         }
