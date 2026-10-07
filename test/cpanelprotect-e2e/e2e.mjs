@@ -73,7 +73,7 @@ const replyTxt = () => replies.join("\n");
 replies.length = 0;
 await plugin.handler(mkM("settings"), { sock: {} });
 t("2a. .cpanelprotect settings (master mati) → status + daftar 6 fitur",
-  /CPANEL PROTECT/.test(replyTxt()) && /🔴 MATI/.test(replyTxt()) && replyTxt().match(/⛔/g)?.length === 6 && /create, delete, stop, restart, kill, upload/.test(replyTxt()), replyTxt().slice(0, 180));
+  /CPANEL PROTECT/.test(replyTxt()) && /🔴 MATI/.test(replyTxt()) && replyTxt().match(/⛔/g)?.length === 9 && /create, delete, stop, restart, kill, upload/.test(replyTxt()) && /GUARD LIMIT RESOURCE/.test(replyTxt()), replyTxt().slice(0, 180));
 replies.length = 0;
 await plugin.handler(mkM(""), { sock: {} });
 t("2b. tanpa argumen → settings juga", /CPANEL PROTECT/.test(replyTxt()));

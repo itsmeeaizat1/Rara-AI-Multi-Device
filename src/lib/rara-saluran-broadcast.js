@@ -34,6 +34,7 @@ const NOTIFY_EVENTS = {
   spamDetected: "Spam Terdeteksi",
   warningGiven: "Peringatan Pengguna",
   serverCreated: "Server Baru Dibuat",
+  serverGuardOff: "Server Melebihi Limit",
 };
 
 // Cek apakah event ini enabled (default: OFF)
@@ -386,6 +387,28 @@ async function notifyServerCreated(sock, data) {
   return broadcastToSaluran(sock, msg, {}, "Server Baru Dibuat", "serverCreated");
 }
 
+// RESOURCE GUARD (owner 7 Okt 2026): server nekat batas cpu/ram/disk → dimatikan
+// otomatis sama rara-cpanel-guard.js. Notif cuma terkirim kalau toggle saluran
+// event ini aktif (.autobroadcastchannel serverGuardOff on — default OFF).
+async function notifyServerGuardOff(sock, data) {
+  if (!isNotifyEnabled("serverGuardOff")) return { sent: false, reason: "Toggle off" };
+  const nama = resolveUserName(data.phoneNumber);
+  const lines = [];
+  if (nama) lines.push(`👤 Nama: ${nama}`);
+  lines.push(`📱 Nomor: ${data.phoneNumber || "-"}`);
+  if (data.username) lines.push(`🏷 Username: ${data.username}`);
+  lines.push(
+    `🖥 Server: ${data.server || "-"}`,
+    `⚠️ Pelanggaran: ${data.kind || "Resource"}`,
+    `📊 Pemakaian: ${data.meter || "-"}`,
+    `🛑 Aksi: Dimatikan otomatis (${data.action || "Kill"})`,
+    `🆔 Server ID: ${data.serverId || "-"}`,
+    `🕒 Waktu: ${formatTime()}`,
+  );
+  const msg = saluranCard("Server Melebihi Limit", lines);
+  return broadcastToSaluran(sock, msg, {}, "Server Melebihi Limit", "serverGuardOff");
+}
+
 export {
   NOTIFY_EVENTS,
   broadcastToSaluran,
@@ -407,4 +430,5 @@ export {
   notifyDailyLimitReset,
   notifyUserRegister,
   notifyServerCreated,
+  notifyServerGuardOff,
 };
