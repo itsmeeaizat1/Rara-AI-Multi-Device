@@ -6,7 +6,7 @@
 <title>Pong AI</title>
 <style>
 * { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
-body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
 .wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
 .card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #14b8a6; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
 .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -155,10 +155,6 @@ html, body { overscroll-behavior: contain; }
   requestAnimationFrame(loop);
 })();
 
-// 🔹 anti-scroll: kunci gesture di dalam game (chat WA gak kegeser)
-["touchstart", "touchmove", "gesturestart", "gesturechange"].forEach(function (ev) {
-  document.addEventListener(ev, function (e) { if (e.cancelable) e.preventDefault(); }, { passive: false });
-});
 </script>
 </body>
 </html>

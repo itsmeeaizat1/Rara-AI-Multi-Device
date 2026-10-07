@@ -164,13 +164,19 @@ test("handler game ftool: .memori → memory (alias Indonesia)", async () => {
   assert.ok(seams.sends[0].opts.title.includes("Kartu Memori"));
 });
 
-// ── 4b. anti-scroll: semua game html gak boleh geser chat WA ──
-test("anti-scroll: overscroll contain + guard touch + tabel panduan di semua game", () => {
+// ── 4b. anti-scroll v3: dokumen game punya scroll internal sendiri ──
+// akar masalah: scroll chat WA ada di layer NATIVE luar webview — preventDefault gak nembus.
+// solusi: body pan-y + overflow auto + min-height 101vh biar webview selalu punya scroll
+// internal (gesture ketangkep di dalem), canvas tetep touch-action:none buat input game.
+test("anti-scroll v3: scroll internal (101vh + pan-y + overscroll) di semua game", () => {
   for (const k of listGames()) {
     const html = fetchGameHtml(k);
+    assert.ok(html.includes("min-height: 101vh"), `${k}: gak ada min-height 101vh`);
+    assert.ok(html.includes("touch-action: pan-y"), `${k}: body bukan pan-y`);
     assert.ok(html.includes("overscroll-behavior: contain"), `${k}: gak ada overscroll-behavior`);
-    assert.ok(html.includes("touchmove"), `${k}: gak ada guard touchmove`);
-    assert.ok(html.includes("{ passive: false }"), `${k}: guard harus non-passive`);
+    const cm = html.match(/canvas \{([^}]*)\}/);
+    assert.ok(cm && cm[1].includes("touch-action: none"), `${k}: canvas gak punya touch-action none`);
+    assert.ok(!html.includes("gesturestart"), `${k}: guard preventDefault lama masih nyangkut`);
     assert.ok(html.includes("guide-table"), `${k}: gak ada tabel panduan`);
   }
 });

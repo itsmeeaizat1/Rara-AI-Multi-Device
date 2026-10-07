@@ -6,7 +6,7 @@
 <title>Dino Run</title>
 <style>
 * { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
-body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
 .wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
 .card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #fb923c; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
 .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -19,7 +19,7 @@ h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
 .stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
 .stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
 #game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
-canvas { width: 100%; height: auto; display: block; background: #070a12; }
+canvas { width: 100%; height: auto; display: block; background: #070a12;  touch-action: none; }
 .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
 .btn { padding: 14px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
 .btn-jump { background: linear-gradient(135deg, #fb923c, #c2410c); box-shadow: 0 4px 14px rgba(251,146,60,0.35); }
@@ -145,10 +145,6 @@ html, body { overscroll-behavior: contain; }
   reset(); requestAnimationFrame(loop);
 })();
 
-// 🔹 anti-scroll: kunci gesture di dalam game (chat WA gak kegeser)
-["touchstart", "touchmove", "gesturestart", "gesturechange"].forEach(function (ev) {
-  document.addEventListener(ev, function (e) { if (e.cancelable) e.preventDefault(); }, { passive: false });
-});
 </script>
 </body>
 </html>

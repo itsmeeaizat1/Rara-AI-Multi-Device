@@ -54,13 +54,32 @@ function validHtml(html) {
   return html && html.length >= 500 && /<[a-z]/i.test(html);
 }
 
+// 🔹 anti-scroll v3: dokumen game WAJIB punya scroll internal sendiri — scroll chat WA
+// ada di layer native luar webview, jadi satu-satunya cara nangkep gesture adalah bikin
+// webview-nya scrollable (body pan-y + min-height 101vh + overscroll contain).
+function antiscrollPatch(html) {
+  let out = String(html);
+  out = out.replace(
+    "touch-action: none; overflow: hidden;",
+    "touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh;"
+  );
+  out = out.replace(
+    "canvas { width: 100%; height: 100%; display: block; background: #070a12; }",
+    "canvas { width: 100%; height: 100%; display: block; background: #070a12; touch-action: none; }"
+  );
+  if (!out.includes("overscroll-behavior")) {
+    out = out.replace("</style>", "html, body { overscroll-behavior: contain; }\n</style>");
+  }
+  return out;
+}
+
 export async function fetchPayload() {
   // 1. remote (fresh)
   const get = __planeHttp.getText
     || ((url) => axios.get(url, { timeout: 20000, responseType: "text", transformResponse: [(d) => d] }).then((r) => r.data));
   try {
     const html = await get(PAYLOAD_URL);
-    if (validHtml(html)) return html;
+    if (validHtml(html)) return antiscrollPatch(html);
   } catch (e) {
     console.error("[airich] payload remote gagal (" + (e?.message || e) + "), fallback lokal");
   }
