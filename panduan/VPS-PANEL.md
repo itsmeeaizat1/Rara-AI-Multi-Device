@@ -901,6 +901,19 @@ Penyebab umum dan tanda di log:
 
 Fix paling gampang buat semua: deploy ulang config via Auto-Deploy / `p:node:configuration` — sekalian benerin port, token, dan format YAML.
 
+**Kasus 3b — Node offline SETELAH install tema/extension Blueprint**
+
+- Gejala: habis `blueprint -install <tema>` node merah/offline di admin, tapi `systemctl is-active wings` = active dan `journalctl -u wings` BERSIH (gak ada error auth/token).
+- Penyebab: pas install, panel masuk maintenance + rebuild aset + reload nginx → koneksi wings ke panel sempet putus dan kadang gak auto-reconnect setelah panel balik.
+- Fix (30 detik):
+
+```bash
+systemctl restart wings
+sleep 10 && journalctl -u wings -n 10 --no-pager   # cari: authenticated / listening
+```
+
+- Kalau setelah restart masih offline, baru lanjut ke Kasus 1/2 di atas (cek token & setelan node).
+
 **Kasus 4 — Web panel / IP gak kebuka**
 
 - Cek nginx: `systemctl status nginx` (harus active) + `ss -tlnp | grep ':80 '`
@@ -949,6 +962,20 @@ systemctl restart wings
 - Cek cepat biar gak salah tuduh: dari luar VPS buka `http://FQDN:443/api/system` — kalau jawab JSON/error auth berarti wings + DNS tembus, masalahnya bukan di server.
 - **Mixed content = hati merah PALSU:** kalau panel dibuka via `https://` tapi scheme node `http://`, browser ngeblok ping ke wings dari halaman https → hati merah padahal semua sehat. Akses panel via `http://` yang sama persis dengan `APP_URL`, atau setup sertifikat SSL beneran dulu baru ganti scheme node jadi https.
 - DNS subdomain baru butuh waktu propagate — kalau device kamu belum resolve, IP tetap bisa dipakai sementara.
+
+**Kasus 8 — Panel masih nampil IP padahal sudah ada subdomain**
+
+- Gejala: address bar / link di panel masih `http://213.163.192.209`, bukan `http://panel.domainkamu.id` padahal DNS A record sudah benar.
+- Penyebab: `APP_URL` di `.env` masih IP + nginx pakai `server_name _;` (catch-all). Panel gak otomatis redirect IP → domain; dia cuma nyajain URL sesuai `APP_URL`.
+- Fix:
+
+```bash
+cd /var/www/pterodactyl
+sed -i 's|^APP_URL=.*|APP_URL=http://aizatstore.pterocloud.my.id|' .env
+php artisan config:cache
+```
+
+Lalu akses panel lewat URL subdomainnya (bookmark baru). DNS sudah menunjuk ke VPS yang sama, jadi bot & wings yang konek via IP **tidak perlu diubah** — nginx catch-all melayani dua-duanya.
 
 **Verifikasi akhir (semua harus lolos)**
 
