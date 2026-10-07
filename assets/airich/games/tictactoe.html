@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Sui Sut Bot</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #f472b6; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #f472b6; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #f472b6; text-shadow: 0 0 12px rgba(244,114,182,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; height: 350px; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: 100%; display: block; background: #070a12; }
+.controls { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 13px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; background: linear-gradient(135deg, #f472b6, #db2777); box-shadow: 0 4px 14px rgba(244,114,182,0.35); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+.credit-bar span { color: #f472b6; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Sui Sut Bot ⭕</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge">Kamu ❌ vs Bot ⭕</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Menang</div><div class="val" id="wStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Seri</div><div class="val" id="dStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Kalah</div><div class="val" id="lStat">0</div></div>
+    </div>
+    <div id="game-container"><canvas id="c"></canvas></div>
+    <div class="controls">
+      <button class="btn" id="restartBtn">⟳ Main Lagi</button>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score');
+  var wEl = document.getElementById('wStat'), dEl = document.getElementById('dStat'), lEl = document.getElementById('lStat');
+  var W, H, board, turn, over, result, wins = 0, draws = 0, losses = 0, busy = false;
+  var LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+  function resize() { W = cvs.clientWidth; H = cvs.clientHeight; cvs.width = W; cvs.height = H; }
+  function reset() {
+    board = new Array(9).fill(0); turn = 1; over = false; result = ''; busy = false;
+    scoreEl.textContent = '0';
+  }
+  function winner(b) {
+    for (var i = 0; i < LINES.length; i++) {
+      var l = LINES[i];
+      if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[1]] === b[l[2]]) return { p: b[l[0]], line: l };
+    }
+    if (b.every(function (v) { return v; })) return { p: 0, line: null };
+    return null;
+  }
+  function place(cell, player) {
+    if (board[cell] || over) return;
+    board[cell] = player;
+    var w = winner(board);
+    if (w) finish(w);
+  }
+  function finish(w) {
+    over = true; busy = false;
+    if (w.p === 1) { wins++; wEl.textContent = wins; result = 'Kamu Menang! 🎉'; scoreEl.textContent = wins; }
+    else if (w.p === 2) { losses++; lEl.textContent = losses; result = 'Bot Menang 🤖'; }
+    else { draws++; dEl.textContent = draws; result = 'Seri 🤝'; }
+  }
+  function botMove() {
+    busy = true;
+    setTimeout(function () {
+      var empty = [];
+      for (var i = 0; i < 9; i++) if (!board[i]) empty.push(i);
+      if (!empty.length || over) { busy = false; return; }
+      var pick = -1;
+      // 1) langkah menang bot
+      for (var i2 = 0; i2 < empty.length; i2++) { var t = board.slice(); t[empty[i2]] = 2; if (winner(t) && winner(t).p === 2) { pick = empty[i2]; break; } }
+      // 2) blok kemenangan pemain
+      if (pick < 0) for (var i3 = 0; i3 < empty.length; i3++) { var t2 = board.slice(); t2[empty[i3]] = 1; if (winner(t2) && winner(t2).p === 1) { pick = empty[i3]; break; } }
+      // 3) tengah, 4) pojok, 5) acak
+      if (pick < 0 && !board[4]) pick = 4;
+      if (pick < 0) {
+        var corners = [0, 2, 6, 8].filter(function (c) { return !board[c]; });
+        if (corners.length) pick = corners[(Math.random() * corners.length) | 0];
+      }
+      if (pick < 0) pick = empty[(Math.random() * empty.length) | 0];
+      place(pick, 2);
+      busy = false;
+      turn = 1;
+    }, 480);
+  }
+  function tap(e) {
+    if (over || busy || turn !== 1) return;
+    var rect = cvs.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (W / rect.width);
+    var y = (e.clientY - rect.top) * (H / rect.height);
+    var s = Math.min(W, H) - 24, ox = (W - s) / 2, oy = (H - s) / 2, cell = s / 3;
+    if (x < ox || x > ox + s || y < oy || y > oy + s) return;
+    var cx = ((x - ox) / cell) | 0, cy = ((y - oy) / cell) | 0;
+    var idx = cy * 3 + cx;
+    if (board[idx]) return;
+    place(idx, 1);
+    if (!over) { turn = 2; botMove(); }
+  }
+  function drawX(x, y, s) {
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = s * 0.09; ctx.lineCap = 'round';
+    var m = s * 0.24;
+    ctx.beginPath(); ctx.moveTo(x + m, y + m); ctx.lineTo(x + s - m, y + s - m); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + s - m, y + m); ctx.lineTo(x + m, y + s - m); ctx.stroke();
+  }
+  function drawO(x, y, s) {
+    ctx.strokeStyle = '#f472b6'; ctx.lineWidth = s * 0.09;
+    ctx.beginPath(); ctx.arc(x + s / 2, y + s / 2, s * 0.3, 0, 7); ctx.stroke();
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#070a12'; ctx.fillRect(0, 0, W, H);
+    var s = Math.min(W, H) - 24, ox = (W - s) / 2, oy = (H - s) / 2, cell = s / 3;
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 2;
+    for (var i = 1; i < 3; i++) {
+      ctx.beginPath(); ctx.moveTo(ox + i * cell, oy); ctx.lineTo(ox + i * cell, oy + s); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ox, oy + i * cell); ctx.lineTo(ox + s, oy + i * cell); ctx.stroke();
+    }
+    var wl = (over && winner(board) && winner(board).line) ? winner(board).line : null;
+    for (var j = 0; j < 9; j++) {
+      var gx = ox + (j % 3) * cell, gy = oy + ((j / 3) | 0) * cell;
+      if (wl && wl.indexOf(j) >= 0) { ctx.fillStyle = 'rgba(52,211,153,0.18)'; ctx.fillRect(gx + 3, gy + 3, cell - 6, cell - 6); }
+      if (board[j] === 1) drawX(gx, gy, cell);
+      else if (board[j] === 2) drawO(gx, gy, cell);
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '700 12px sans-serif'; ctx.textAlign = 'center';
+    if (!over) ctx.fillText(busy ? 'Bot mikir…' : 'Giliran kamu ❌ — tap kotak', W / 2, oy - 10 > 10 ? oy - 10 : 10);
+    else {
+      ctx.fillStyle = '#34d399'; ctx.font = '900 20px sans-serif';
+      ctx.fillText(result, W / 2, H / 2 - s / 2 - 8 > 20 ? H / 2 - s / 2 - 8 : 20);
+    }
+  }
+  cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); tap(e); });
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); reset(); });
+  resize(); reset();
+  requestAnimationFrame(function loop() { draw(); requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

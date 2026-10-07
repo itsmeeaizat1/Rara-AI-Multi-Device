@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Ular Kelas</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #22c55e; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #4ade80; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #4ade80; text-shadow: 0 0 12px rgba(74,222,128,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; height: 350px; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: 100%; display: block; background: #070a12; }
+.controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.btn { padding: 13px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; background: linear-gradient(135deg, #22c55e, #15803d); box-shadow: 0 4px 14px rgba(34,197,94,0.35); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.btn-restart { grid-column: 1 / -1; background: linear-gradient(135deg, #3b82f6, #1d4ed8); font-size: 13px; }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+.credit-bar span { color: #4ade80; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Ular Kelas 🐍</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Panjang</div><div class="val" id="lenStat">3</div></div>
+      <div class="stat-pill"><div class="lbl">Kecepatan</div><div class="val" id="spdStat">1x</div></div>
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="stStat">Main</div></div>
+    </div>
+    <div id="game-container"><canvas id="c"></canvas></div>
+    <div class="controls">
+      <div></div>
+      <button class="btn" id="upBtn">▲</button>
+      <div></div>
+      <button class="btn" id="leftBtn">◀</button>
+      <button class="btn" id="downBtn">▼</button>
+      <button class="btn" id="rightBtn">▶</button>
+      <button class="btn btn-restart" id="restartBtn">⟳ Main Lagi</button>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var lenEl = document.getElementById('lenStat'), spdEl = document.getElementById('spdStat'), stEl = document.getElementById('stStat');
+  var COLS = 20, ROWS = 20, cell, W, H;
+  var snake, dir, queue, food, score, dead, step, acc, last, best = 0;
+  try { best = parseInt(localStorage.getItem('rara_snake_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function resize() {
+    W = cvs.clientWidth; H = cvs.clientHeight;
+    cvs.width = W; cvs.height = H;
+    cell = Math.min(W / COLS, H / ROWS);
+  }
+  function spawnFood() {
+    var ok = false, p;
+    while (!ok) {
+      p = { x: (Math.random() * COLS) | 0, y: (Math.random() * ROWS) | 0 };
+      ok = !snake.some(function (s) { return s.x === p.x && s.y === p.y; });
+    }
+    food = p;
+  }
+  function reset() {
+    snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
+    dir = { x: 1, y: 0 }; queue = [];
+    score = 0; dead = false; step = 160; acc = 0; last = performance.now();
+    spawnFood();
+    scoreEl.textContent = '0';
+    lenEl.textContent = '3'; spdEl.textContent = '1x'; stEl.textContent = 'Main';
+  }
+  function turn(nx, ny) {
+    var d = queue.length ? queue[queue.length - 1] : dir;
+    if (d.x === -nx && d.y === -ny) return;
+    if (d.x === nx && d.y === ny) return;
+    if (queue.length < 3) queue.push({ x: nx, y: ny });
+  }
+  function tick() {
+    if (queue.length) dir = queue.shift();
+    var h = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+    if (h.x < 0 || h.y < 0 || h.x >= COLS || h.y >= ROWS) return die();
+    for (var i = 0; i < snake.length; i++) if (snake[i].x === h.x && snake[i].y === h.y) return die();
+    snake.unshift(h);
+    if (h.x === food.x && h.y === food.y) {
+      score++; scoreEl.textContent = score;
+      lenEl.textContent = snake.length;
+      step = Math.max(70, step - 8);
+      spdEl.textContent = Math.round(160 / step * 10) / 10 + 'x';
+      spawnFood();
+    } else snake.pop();
+  }
+  function die() {
+    dead = true; stEl.textContent = 'Game Over';
+    if (score > best) { best = score; bestEl.textContent = 'Best ' + best; try { localStorage.setItem('rara_snake_best', String(best)); } catch (e) {} }
+  }
+  function rr(x, y, s, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + s, y, x + s, y + s, r); ctx.arcTo(x + s, y + s, x, y + s, r); ctx.arcTo(x, y + s, x, y, r); ctx.arcTo(x, y, x + s, y, r); ctx.closePath(); }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#070a12'; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1;
+    for (var g = 1; g < COLS; g++) { ctx.beginPath(); ctx.moveTo(g * cell, 0); ctx.lineTo(g * cell, H); ctx.stroke(); }
+    for (var g2 = 1; g2 < ROWS; g2++) { ctx.beginPath(); ctx.moveTo(0, g2 * cell); ctx.lineTo(W, g2 * cell); ctx.stroke(); }
+    var fx = (W - cell * COLS) / 2, fy = (H - cell * ROWS) / 2;
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath(); ctx.arc(fx + (food.x + .5) * cell, fy + (food.y + .5) * cell, cell * .38, 0, 7); ctx.fill();
+    ctx.fillStyle = '#22c55e';
+    ctx.beginPath(); ctx.ellipse(fx + (food.x + .5) * cell, fy + (food.y + .1) * cell, cell * .12, cell * .18, .6, 0, 7); ctx.fill();
+    for (var i = snake.length - 1; i >= 0; i--) {
+      var s = snake[i];
+      ctx.fillStyle = i === 0 ? '#4ade80' : 'rgba(34,197,94,' + Math.max(.35, 1 - i / snake.length * .65) + ')';
+      rr(fx + s.x * cell + 1, fy + s.y * cell + 1, cell - 2, cell - 2, 5); ctx.fill();
+    }
+    var hd = snake[0];
+    ctx.fillStyle = '#070a12';
+    var ex = fx + (hd.x + .5) * cell, ey = fy + (hd.y + .5) * cell;
+    ctx.beginPath(); ctx.arc(ex + dir.x * cell * .18 - dir.y * cell * .12, ey + dir.y * cell * .18 - dir.x * cell * .12, cell * .07, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(ex + dir.x * cell * .18 + dir.y * cell * .12, ey + dir.y * cell * .18 + dir.x * cell * .12, cell * .07, 0, 7); ctx.fill();
+    if (dead) {
+      ctx.fillStyle = 'rgba(0,0,0,0.68)'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#f87171'; ctx.font = '900 24px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('Game Over', W / 2, H / 2 - 14);
+      ctx.fillStyle = '#fff'; ctx.font = '700 14px sans-serif';
+      ctx.fillText('Skor ' + score + ' — tap ⟳ Main Lagi', W / 2, H / 2 + 14);
+    }
+  }
+  function loop(t) {
+    if (!dead) {
+      acc += t - last; last = t;
+      while (acc >= step) { acc -= step; if (!dead) tick(); }
+    } else last = t;
+    draw();
+    requestAnimationFrame(loop);
+  }
+  function bind(id, fn) { document.getElementById(id).addEventListener('pointerdown', function (e) { e.preventDefault(); fn(); }); }
+  bind('upBtn', function () { turn(0, -1); });
+  bind('downBtn', function () { turn(0, 1); });
+  bind('leftBtn', function () { turn(-1, 0); });
+  bind('rightBtn', function () { turn(1, 0); });
+  bind('restartBtn', reset);
+  resize(); reset(); requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

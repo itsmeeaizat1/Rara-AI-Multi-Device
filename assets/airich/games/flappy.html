@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Rara Terbang</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #38bdf8; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #38bdf8; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #38bdf8; text-shadow: 0 0 12px rgba(56,189,248,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; height: 350px; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: 100%; display: block; background: #070a12; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-flap { background: linear-gradient(135deg, #38bdf8, #0284c7); box-shadow: 0 4px 14px rgba(56,189,248,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); font-size: 13px; }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+.credit-bar span { color: #38bdf8; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Rara Terbang 🐤</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="stStat">Siap</div></div>
+      <div class="stat-pill"><div class="lbl">Rekor</div><div class="val" id="rcStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Rintangan</div><div class="val" id="ppStat">0</div></div>
+    </div>
+    <div id="game-container"><canvas id="c"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-flap" id="flapBtn">🪽 Tap Buat Terbang</button>
+      <button class="btn btn-restart" id="restartBtn">⟳ Main Lagi</button>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var stEl = document.getElementById('stStat'), rcEl = document.getElementById('rcStat'), ppEl = document.getElementById('ppStat');
+  var W, H, birdY, vy, pipes, score, dead, started, passed, best = 0, wing = 0, groundY;
+  var GRAV = 0.45, FLAP = -7.4, SPEED = 2.5, GAP = 132, PW = 62, INTERVAL = 175;
+  try { best = parseInt(localStorage.getItem('rara_flappy_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best; rcEl.textContent = best;
+
+  function resize() {
+    W = cvs.clientWidth; H = cvs.clientHeight;
+    cvs.width = W; cvs.height = H; groundY = H - 26;
+  }
+  function reset() {
+    birdY = H / 2; vy = 0; pipes = []; score = 0; dead = false; started = false; passed = 0;
+    scoreEl.textContent = '0'; ppEl.textContent = '0'; stEl.textContent = 'Siap';
+  }
+  function flap() {
+    if (dead) return;
+    started = true; vy = FLAP; wing = 6;
+    stEl.textContent = 'Terbang';
+  }
+  function addPipe() {
+    var g = GAP + Math.max(0, 40 - score * 2);
+    var top = 40 + Math.random() * (groundY - g - 80);
+    pipes.push({ x: W + PW, top: top, gap: g, counted: false });
+  }
+  function tick() {
+    if (dead || !started) return;
+    vy += GRAV; birdY += vy; wing--;
+    if (birdY > groundY - 12 || birdY < 8) return die();
+    for (var i = pipes.length - 1; i >= 0; i--) {
+      var p = pipes[i];
+      p.x -= SPEED;
+      if (p.x + PW < 40 && !p.counted) { p.counted = true; score++; passed++; scoreEl.textContent = score; ppEl.textContent = passed; }
+      if (p.x + PW < -10) { pipes.splice(i, 1); continue; }
+      if (40 + 12 > p.x && 40 - 12 < p.x + PW) {
+        if (birdY - 12 < p.top || birdY + 12 > p.top + p.gap) return die();
+      }
+    }
+    if (!pipes.length || pipes[pipes.length - 1].x < W - INTERVAL) addPipe();
+  }
+  function die() {
+    dead = true; stEl.textContent = 'Game Over';
+    if (score > best) { best = score; bestEl.textContent = 'Best ' + best; rcEl.textContent = best; try { localStorage.setItem('rara_flappy_best', String(best)); } catch (e) {} }
+  }
+  function drawBird() {
+    ctx.save(); ctx.translate(40, birdY);
+    ctx.rotate(Math.max(-0.5, Math.min(1, vy * 0.05)));
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath(); ctx.arc(0, 0, 12, 0, 7); ctx.fill();
+    ctx.fillStyle = '#f59e0b';
+    var wy = wing > 0 ? -3 : 3;
+    ctx.beginPath(); ctx.ellipse(-6, wy, 7, 5, 0.5, 0, 7); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(5, -4, 4, 0, 7); ctx.fill();
+    ctx.fillStyle = '#070a12';
+    ctx.beginPath(); ctx.arc(6, -4, 2, 0, 7); ctx.fill();
+    ctx.fillStyle = '#f97316';
+    ctx.beginPath(); ctx.moveTo(11, 0); ctx.lineTo(18, 2); ctx.lineTo(11, 4); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    var sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, '#0b1220'); sky.addColorStop(1, '#070a12');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(148,163,184,0.12)';
+    for (var s = 0; s < 14; s++) {
+      var sx = (s * 97 + (performance.now() / 90)) % W, sy = (s * 53) % (groundY - 30);
+      ctx.fillRect(W - sx, sy + 10, 2, 2);
+    }
+    for (var i = 0; i < pipes.length; i++) {
+      var p = pipes[i];
+      ctx.fillStyle = '#16a34a';
+      ctx.fillRect(p.x, 0, PW, p.top);
+      ctx.fillRect(p.x + 4, p.top - 14, PW - 8, 14);
+      ctx.fillRect(p.x, p.top + p.gap, PW, groundY - p.top - p.gap);
+      ctx.fillRect(p.x + 4, p.top + p.gap, PW - 8, 14);
+      ctx.fillStyle = 'rgba(255,255,255,0.08)';
+      ctx.fillRect(p.x + 6, 0, 8, p.top - 14);
+      ctx.fillRect(p.x + 6, p.top + p.gap + 14, 8, groundY - p.top - p.gap - 14);
+    }
+    ctx.fillStyle = '#1e293b'; ctx.fillRect(0, groundY, W, H - groundY);
+    ctx.fillStyle = '#334155'; ctx.fillRect(0, groundY, W, 4);
+    drawBird();
+    if (!started && !dead) {
+      ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.font = '700 13px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('Tap tombol buat mulai terbang', W / 2, H / 2 - 40);
+    }
+    if (dead) {
+      ctx.fillStyle = 'rgba(0,0,0,0.68)'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#f87171'; ctx.font = '900 24px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('Game Over', W / 2, H / 2 - 14);
+      ctx.fillStyle = '#fff'; ctx.font = '700 14px sans-serif';
+      ctx.fillText('Skor ' + score + ' — tap ⟳ Main Lagi', W / 2, H / 2 + 14);
+    }
+  }
+  var last = performance.now();
+  function loop(t) {
+    var dt = Math.min(3, (t - last) / 16.7); last = t;
+    for (var k = 0; k < dt; k++) tick();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('flapBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); flap(); });
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); resize(); reset(); });
+  cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); flap(); });
+  resize(); reset(); requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

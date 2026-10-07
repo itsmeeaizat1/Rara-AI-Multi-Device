@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Blok Jatuh</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: none; overflow: hidden; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #a78bfa; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #a78bfa; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #a78bfa; text-shadow: 0 0 12px rgba(167,139,250,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; height: 350px; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: 100%; display: block; background: #070a12; }
+.controls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+.btn { padding: 13px; font-size: 16px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; background: linear-gradient(135deg, #a78bfa, #7c3aed); box-shadow: 0 4px 14px rgba(167,139,250,0.35); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.btn-restart { grid-column: 1 / -1; background: linear-gradient(135deg, #3b82f6, #1d4ed8); font-size: 13px; }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+.credit-bar span { color: #a78bfa; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Blok Jatuh 🧱</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Garis</div><div class="val" id="lnStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Level</div><div class="val" id="lvStat">1</div></div>
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="stStat">Main</div></div>
+    </div>
+    <div id="game-container"><canvas id="c"></canvas></div>
+    <div class="controls">
+      <button class="btn" id="leftBtn">◀</button>
+      <button class="btn" id="rotBtn">⟳</button>
+      <button class="btn" id="rightBtn">▶</button>
+      <button class="btn" id="dropBtn">⬇</button>
+      <button class="btn btn-restart" id="restartBtn">⟳ Main Lagi</button>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var lnEl = document.getElementById('lnStat'), lvEl = document.getElementById('lvStat'), stEl = document.getElementById('stStat');
+  var COLS = 10, ROWS = 20, cell, W, H, ox, oy;
+  var SHAPES = [
+    [[1,1,1,1]],
+    [[1,1],[1,1]],
+    [[0,1,0],[1,1,1]],
+    [[0,1,1],[1,1,0]],
+    [[1,1,0],[0,1,1]],
+    [[1,0,0],[1,1,1]],
+    [[0,0,1],[1,1,1]]
+  ];
+  var COLORS = ['#22d3ee', '#facc15', '#a78bfa', '#4ade80', '#f87171', '#3b82f6', '#fb923c'];
+  var grid, cur, curX, curY, curC, score, lines, level, dead, dropMs, acc, last, best = 0;
+  try { best = parseInt(localStorage.getItem('rara_tetris_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function resize() {
+    W = cvs.clientWidth; H = cvs.clientHeight;
+    cvs.width = W; cvs.height = H;
+    cell = Math.min(W / (COLS + 4), H / ROWS);
+    ox = (W - cell * COLS) / 2; oy = (H - cell * ROWS) / 2;
+  }
+  function newPiece() {
+    var t = (Math.random() * SHAPES.length) | 0;
+    cur = SHAPES[t].map(function (r) { return r.slice(); });
+    curC = COLORS[t];
+    curX = ((COLS / 2) | 0) - ((cur[0].length / 2) | 0);
+    curY = 0;
+    if (collide(curX, curY, cur)) die();
+  }
+  function collide(px, py, sh) {
+    for (var y = 0; y < sh.length; y++) for (var x = 0; x < sh[y].length; x++) {
+      if (!sh[y][x]) continue;
+      var gx = px + x, gy = py + y;
+      if (gx < 0 || gx >= COLS || gy >= ROWS) return true;
+      if (gy >= 0 && grid[gy][gx]) return true;
+    }
+    return false;
+  }
+  function lock() {
+    for (var y = 0; y < cur.length; y++) for (var x = 0; x < cur[y].length; x++)
+      if (cur[y][x] && curY + y >= 0) grid[curY + y][curX + x] = curC;
+    var cleared = 0;
+    for (var r = ROWS - 1; r >= 0; r--) {
+      var full = true;
+      for (var c = 0; c < COLS; c++) if (!grid[r][c]) { full = false; break; }
+      if (full) { grid.splice(r, 1); grid.unshift(new Array(COLS).fill(0)); cleared++; r++; }
+    }
+    if (cleared) {
+      lines += cleared; lnEl.textContent = lines;
+      var pts = [0, 100, 300, 500, 800][cleared] * level;
+      score += pts; scoreEl.textContent = score;
+      level = 1 + ((lines / 10) | 0); lvEl.textContent = level;
+      dropMs = Math.max(90, 620 - (level - 1) * 55);
+    }
+    newPiece();
+  }
+  function step() {
+    if (dead) return;
+    if (!collide(curX, curY + 1, cur)) curY++;
+    else { lock(); return; }
+  }
+  function move(dx) {
+    if (dead || !cur) return;
+    if (!collide(curX + dx, curY, cur)) curX += dx;
+  }
+  function rotate() {
+    if (dead || !cur) return;
+    var sh = [], h = cur.length, w = cur[0].length;
+    for (var x = 0; x < w; x++) { sh.push(new Array(h).fill(0)); }
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) sh[x][h - 1 - y] = cur[y][x];
+    for (var kick = 0; kick <= 2; kick++) {
+      if (!collide(curX - kick, curY, sh)) { cur = sh; curX -= kick; return; }
+      if (!collide(curX + kick, curY, sh)) { cur = sh; curX += kick; return; }
+    }
+  }
+  function softDrop() {
+    if (dead) return;
+    if (!collide(curX, curY + 1, cur)) { curY++; score += 1; scoreEl.textContent = score; }
+    else lock();
+  }
+  function die() {
+    dead = true; cur = null; stEl.textContent = 'Game Over';
+    if (score > best) { best = score; bestEl.textContent = 'Best ' + best; try { localStorage.setItem('rara_tetris_best', String(best)); } catch (e) {} }
+  }
+  function cellRect(gx, gy, color, alpha) {
+    ctx.globalAlpha = alpha === undefined ? 1 : alpha;
+    ctx.fillStyle = color;
+    var x = ox + gx * cell, y = oy + gy * cell;
+    ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fillRect(x + 1, y + 1, cell - 2, 3);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillRect(x + 1, y + cell - 4, cell - 2, 3);
+    ctx.globalAlpha = 1;
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#070a12'; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    for (var g = 0; g <= COLS; g++) { ctx.beginPath(); ctx.moveTo(ox + g * cell, oy); ctx.lineTo(ox + g * cell, oy + ROWS * cell); ctx.stroke(); }
+    for (var g2 = 0; g2 <= ROWS; g2++) { ctx.beginPath(); ctx.moveTo(ox, oy + g2 * cell); ctx.lineTo(ox + COLS * cell, oy + g2 * cell); ctx.stroke(); }
+    for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) if (grid[r][c]) cellRect(c, r, grid[r][c]);
+    if (cur && !dead) {
+      var gy = curY, ghostY = curY;
+      while (!collide(curX, ghostY + 1, cur)) ghostY++;
+      for (var y = 0; y < cur.length; y++) for (var x = 0; x < cur[y].length; x++)
+        if (cur[y][x]) { if (ghostY + y >= 0) cellRect(curX + x, ghostY + y, curC, 0.18); }
+      for (var y2 = 0; y2 < cur.length; y2++) for (var x2 = 0; x2 < cur[y2].length; x2++)
+        if (cur[y2][x2] && curY + y2 >= 0) cellRect(curX + x2, curY + y2, curC);
+    }
+    if (dead) {
+      ctx.fillStyle = 'rgba(0,0,0,0.68)'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#f87171'; ctx.font = '900 24px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('Game Over', W / 2, H / 2 - 14);
+      ctx.fillStyle = '#fff'; ctx.font = '700 14px sans-serif';
+      ctx.fillText('Skor ' + score + ' — tap ⟳ Main Lagi', W / 2, H / 2 + 14);
+    }
+  }
+  function reset() {
+    grid = []; for (var r = 0; r < ROWS; r++) grid.push(new Array(COLS).fill(0));
+    score = 0; lines = 0; level = 1; dead = false; dropMs = 620; acc = 0; last = performance.now();
+    scoreEl.textContent = '0'; lnEl.textContent = '0'; lvEl.textContent = '1'; stEl.textContent = 'Main';
+    newPiece();
+  }
+  function loop(t) {
+    if (!dead) {
+      acc += t - last;
+      while (acc >= dropMs) { acc -= dropMs; step(); if (dead) break; }
+    }
+    last = t;
+    draw();
+    requestAnimationFrame(loop);
+  }
+  function bind(id, fn) { document.getElementById(id).addEventListener('pointerdown', function (e) { e.preventDefault(); fn(); }); }
+  bind('leftBtn', function () { move(-1); });
+  bind('rightBtn', function () { move(1); });
+  bind('rotBtn', rotate);
+  bind('dropBtn', softDrop);
+  bind('restartBtn', reset);
+  resize(); reset(); requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
