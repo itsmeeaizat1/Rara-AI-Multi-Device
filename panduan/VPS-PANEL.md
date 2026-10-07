@@ -389,7 +389,9 @@ sysctl --system
 
 ---
 
-## Langkah 10 — Cloudflare Tunnel (Opsional tapi disarankan)
+## Langkah 10 — Cloudflare Tunnel (2 Opsi: Sementara vs PERMANEN)
+
+### Opsi A — Quick Tunnel (cepat, TAPI URL berubah tiap restart)
 
 Dua tunnel terpisah: PANEL (port 80) dan WINGS (port 8080).
 
@@ -438,9 +440,126 @@ nano /var/www/pterodactyl/.env
 cd /var/www/pterodactyl && php artisan config:cache
 ```
 
-> ⚠️ URL Quick Tunnel **BERUBAH tiap restart service**. Solusi permanen: Cloudflare **Named Tunnel** (`cloudflared tunnel login` → `tunnel create` → route DNS domain sendiri).
+> ⚠️ **KELEMAHAN QUICK TUNNEL:** URL `trycloudflare.com` itu acak dan **MATI tiap service restart / VPS reboot** (error `getaddrinfo ENOTFOUND` di bot = URL udah basi). Tiap mati harus update `.setpanel` manual lagi. **MAKANYA pakai Opsi B di bawah.**
 
 ---
+
+### Opsi B — Named Tunnel PERMANEN (disarankan: URL tetap SELAMANYA)
+
+Dengan Named Tunnel, URL-nya domain sendiri (contoh: `panel.domainku.com`) yang **gak pernah berubah**, walau VPS reboot berulang kali. Setup **SEKALI**, setelah itu gak perlu sentuh apa-apa lagi.
+
+**Prasyarat:**
+- Akun Cloudflare gratis (daftar di cloudflare.com)
+- 1 domain (murah ~Rp 20-30rb/tahun, atau pakai domain yang udah kamu punya). Nameserver domain harus diarahkan ke Cloudflare (di dashboard registrar domain, ganti NS ke yang Cloudflare kasih, tunggu propagate).
+
+**Langkah B1 — Install cloudflared** (kalau belum, lihat Opsi A di atas)
+
+**Langkah B2 — Login ke Cloudflare (dari VPS):**
+
+```bash
+cloudflared tunnel login
+```
+
+Muncul URL panjang → copy, buka di browser HP/PC → login akun Cloudflare → pilih domain kamu → Authorize. Nanti muncul `cert.pem` tersimpan otomatis di `/root/.cloudflared/`.
+
+**Langkah B3 — Buat tunnel:**
+
+```bash
+cloudflared tunnel create rara
+```
+
+Output-nya ada **UUID tunnel** (contoh: `1a2b3c4d-...`). CATAT UUID itu.
+
+**Langkah B4 — Route DNS (sekali per subdomain):**
+
+```bash
+# subdomain panel
+cloudflared tunnel route dns rara panel.domainmu.com
+# subdomain wings (untuk node/server daemon)
+cloudflared tunnel route dns rara wings.domainmu.com
+```
+
+(Ganti `domainmu.com` sama domain kamu. DNS record dibuat otomatis.)
+
+**Langkah B5 — Config tunnel:**
+
+```bash
+mkdir -p /etc/cloudflared
+nano /etc/cloudflared/config.yml
+```
+
+```yaml
+tunnel: UUID-TUNNEL-KAMU
+credentials-file: /root/.cloudflared/UUID-TUNNEL-KAMU.json
+
+ingress:
+  - hostname: panel.domainmu.com
+    service: http://localhost:80
+  - hostname: wings.domainmu.com
+    service: http://localhost:8080
+  - service: http_status:404
+```
+
+Satu tunnel nangkap 2 hostname sekaligus: panel + wings.
+
+**Langkah B6 — Service systemd (auto-start saat boot + auto-restart saat crash):**
+
+```bash
+nano /etc/systemd/system/cloudflared-tunnel.service
+```
+
+```ini
+[Unit]
+Description=Cloudflare Named Tunnel (Permanen)
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/cloudflared tunnel --config /etc/cloudflared/config.yml run rara
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+systemctl daemon-reload
+systemctl enable cloudflared-tunnel      # auto-start tiap boot
+systemctl start cloudflared-tunnel
+systemctl status cloudflared-tunnel      # harus active (running)
+```
+
+**Langkah B7 — Matikan quick tunnel lama (kalau tadinya pakai Opsi A):**
+
+```bash
+systemctl disable --now cloudflared-panel cloudflared-wings 2>/dev/null
+```
+
+**Langkah B8 — Update .env panel & wings:**
+
+```bash
+nano /var/www/pterodactyl/.env
+# APP_URL=https://panel.domainmu.com
+cd /var/www/pterodactyl && php artisan config:cache
+```
+
+Untuk wings: edit file node config (`/etc/pterodactyl/config.yml`) bagian `remote:` → `https://wings.domainmu.com` (ini URL FQDN yang dipakai panel nyambung ke daemon).
+
+**Langkah B9 — Update bot SEKALI:**
+
+```
+.setpanel v1 https://panel.domainmu.com
+```
+
+Selesai. URL ini **gak akan pernah berubah lagi** — VPS reboot, cloudflared crash, apapun, systemd otomatis nyalain ulang dan domainnya tetap sama. Gak perlu setting manual lagi selamanya.
+
+> ✅ **Perbandingan:**
+> | | Quick Tunnel (Opsi A) | Named Tunnel (Opsi B) |
+> |---|---|---|
+> | URL | acak `.trycloudflare.com` | domain sendiri, tetap selamanya |
+> | Restart/reboot | URL mati, setup ulang manual | auto-up, URL sama |
+> | Biaya | gratis | domain ~Rp 20rb/thn |
+> | Update `.setpanel` | tiap restart | SEKALI aja |
 
 ## Langkah 11 — Konfigurasi Panel di Browser (Admin)
 
@@ -566,6 +685,11 @@ Bot Rara (.cpanel / .setpanel) butuh Application API key:
 - Penyebab 1: `allowed_origins` kosong di config.yml → isi URL panel, `systemctl restart wings`
 - Penyebab 2: Daemon Port salah di panel → set 443 (setup tunnel), abaikan indikator merah
 - Penyebab 3: URL tunnel berubah setelah restart → cek `journalctl -u cloudflared-wings | grep "https://" | tail -1`, update FQDN node + config.yml, restart wings
+
+**Bot `.cpanel` error `getaddrinfo ENOTFOUND ...trycloudflare.com`**
+- Penyebab: URL quick tunnel basi — cloudflared/VPS pernah restart, URL acak lama mati
+- Fix cepat (sementara): `journalctl -u cloudflared-panel --no-pager | grep "https://" | tail -1` → update `.setpanel v1 <URL-baru>`
+- Fix permanen: pindah ke Named Tunnel (Langkah 10 Opsi B) → URL gak akan pernah berubah lagi
 
 **Wings crash karena iptables Docker**
 - Fix: `systemctl restart docker && sleep 3 && systemctl restart wings`
