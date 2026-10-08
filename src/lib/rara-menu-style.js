@@ -607,6 +607,8 @@ function raraInfoSections(info = [], sc = true, opts = {}) {
   // pendek (Nama, Role) dapat 5-6 spasi kosong sebelum ":". Dihapus total:
   // label langsung diikuti " : " tanpa padding, rapat konsisten semua baris.
   const scFn = sc ? toSC : (s) => String(s);
+  // OWNER 8 Okt: titleStyle "bracket" — judul section jadi 『 *Title* 』 (dipakai menu/allmenu/allmenucategory)
+  const titleStyle = opts.titleStyle || "corner";
   let out = "";
   let open = false;
 
@@ -616,7 +618,7 @@ function raraInfoSections(info = [], sc = true, opts = {}) {
       const s = item.trim();
       if (!s) continue;
       if (open) out += `\n`;
-      out += `「 ✦ ${scFn(s)} ✦ 」\n${opts.headerGap ? "\n" : ""}`;
+      out += titleStyle === "bracket" ? `『 *${scFn(s)}* 』\n${opts.headerGap ? "\n" : ""}` : `「 ✦ ${scFn(s)} ✦ 」\n${opts.headerGap ? "\n" : ""}`;
       open = true;
     } else if (item && item.label !== undefined && open) {
       const label = scFn(item.label);
@@ -627,7 +629,7 @@ function raraInfoSections(info = [], sc = true, opts = {}) {
   return out;
 }
 
-function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false, legend = null, footerName = null, infoBullet = false, categoryBoxStyle = false } = {}) { // infoBullet default OFF (owner 2 Okt) — titik bullet info section dihapus di semua menu; categoryBoxStyle (owner 8 Okt) — kotak ╭『 』ᯓ╰ khusus allmenu
+function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false, legend = null, footerName = null, infoBullet = false, categoryBoxStyle = false, infoTitleStyle = null } = {}) { // infoBullet default OFF (owner 2 Okt) — titik bullet info section dihapus di semua menu; categoryBoxStyle (owner 8 Okt) — kotak ╭『 』ᯓ╰ khusus allmenu
   const scFn = sc ? toSC : (s) => String(s);
   
   let out = "";
@@ -661,7 +663,7 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
   // ── Info section: BOX TERPISAH per kategori (Info User, Info Waktu, dst) ──
   // REVISI OWNER 3 Okt 2026: balik desain lama — judul 「 ✦ X ✦ 」 sebagai pembatas field, tanpa divider ♡
   // dan tanpa jarak ekstra setelah judul.
-  const infoOut = raraInfoSections(info, sc, { bullet: infoBullet });
+  const infoOut = raraInfoSections(info, sc, { bullet: infoBullet, titleStyle: infoTitleStyle || undefined });
   out += infoOut;
   if (infoOut) out += "\n";
 

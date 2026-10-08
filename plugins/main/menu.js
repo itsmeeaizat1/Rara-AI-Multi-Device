@@ -127,6 +127,8 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
       footerName: botConfig?.bot?.name || "Rara AI - Multi Device",
       // OWNER 8 Okt 2026: gaya kotak kategori (sama kayak .allmenu)
       categoryBoxStyle: true,
+      // OWNER 8 Okt: judul info section jadi 『 *Title* 』
+      infoTitleStyle: "bracket",
     });
 
     let result = txt;
