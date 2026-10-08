@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Placeholder label PANJANG FIX (48 karakter): di-patch runtime dengan nama app
+         user (byte-swap 1:1 di resources.arsc, sisa diisi spasi). JANGAN DIPENDEKKAN. -->
+    <string name="app_name">RaraWebAppPPPPPPPPPPPPPPPPPPPPPPPPPPPP</string>
+</resources>

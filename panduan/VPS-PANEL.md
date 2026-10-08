@@ -713,6 +713,52 @@ Kepakenya cuma 2:
 
 ---
 
+## Langkah 17 — Builder APK & Flutter (Project → .apk)
+
+Server builder khusus di panel yang nge-compile project jadi file `.apk` siap install. **4 jenis project** dideteksi otomatis: `build.sh`/`rara-build.sh` (build script custom), `gradlew` (Android native), `pubspec.yaml` (Flutter), `index.html` (WebView APK dari template). Bisa dipakai **dari panel** (customer) dan **dari bot** (`.buildapk`), plus **HTTP API** buat script eksternal.
+
+### A. Build image di VPS HOST (sekali doang, ~15-30 menit)
+Image = Java 21 + Android SDK + Flutter + Node. Butuh ~15 GB disk sementara build.
+```bash
+git clone https://github.com/itsmeeaizat1/Rara-AI-Multi-Device.git /tmp/rara
+cd /tmp/rara && docker build -t apk-builder:latest builder/apk/
+docker images | grep apk-builder   # plus minus 7-8 GB
+rm -r /tmp/rara
+```
+
+### B. Import egg ke panel (sekali doang)
+Admin panel → **Nests** → pilih nest mana aja → **Import** → upload file `builder/apk/apk-builder-egg.json` (unduh dari repo). Egg muncul dengan nama "APK Builder".
+
+### C. Jalur PANEL (customer langsung, tanpa bot)
+1. Bikin server dari egg "APK Builder" (image `apk-builder:latest`) — misal lewat admin panel.
+2. Upload project ke server: ZIP → file manager → klik kanan ZIP → **Decompress**. (Atau upload file project langsung.)
+3. **Start** server → build jalan di console → `BUILD_OK` → server berhenti otomatis (offline = selesai).
+4. Ambil APK di folder `output/` → download. Gagal? pesan `BUILD_GAGAL` keliatan di console.
+
+### D. Jalur BOT — `.buildapk` (auto, server builder diurus bot)
+Bot otomatis bikin server `apk-builder` (mode receiver, 5120 MB RAM / 10240 MB disk / 300% CPU) saat dipakai pertama kali:
+- Reply ZIP project → `.buildapk` — build project (deteksi otomatis jenisnya)
+- `.buildapk web Nama Aplikasi|https://website.com` — WebView APK (reply gambar = icon custom)
+- `.buildapk https://github.com/user/repo` — clone & build
+- `.buildapk status` — status builder + log terakhir · `.buildapk on/off` — owner toggle
+- Limit: 1 job global, 15 menit per user (owner bebas), max 200 MB, timeout 25 menit.
+
+### E. Jalur API (script eksternal / integrasi)
+Receiver = HTTP API di port server builder (cuma kebuka internal VPS):
+```bash
+curl -X POST -H "Content-Type: application/zip" --data-binary @project.zip http://<ip-server>:<port>/build
+curl -s http://<ip-server>:<port>/status     # state / apks / logTail
+curl -s -o app.apk http://<ip-server>:<port>/download/0
+# web app:  curl -X POST -H "Content-Type: application/json" -d '{"url":"https://web.com","name":"Nama"}' .../build
+# repo:      ... -d '{"repo":"https://github.com/user/repo"}'
+```
+Opsional set token: variable egg `BUILD_TOKEN` → semua request wajib header `X-Build-Token`.
+
+### Catatan & batasan
+- 1 job pada satu waktu (request saat sibuk → 409).
+- Hasil Android = **debug APK** (assembleDebug) — langsung installable. Flutter = `flutter build apk --debug` (release butuh signing sendiri, taruh di build script custom aja).
+- WebView template: `com.aizat.webapk`, minSdk 21 target 28 — jalan di Android 5.0+.
+
 ## Troubleshooting (Error yang Sering Terjadi)
 
 **Tidak bisa login SSH setelah ganti port**
