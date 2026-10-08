@@ -239,13 +239,104 @@ t("12c cpu core + load rapi", rs.cpu === "4 core, load 0.15, 0.08, 0.02", rs.cpu
 t("12d services 9 entri bersih", Object.keys(rs.services).length === 9 && rs.services.nginx === "active" && rs.services["php8.1-fpm"] === "inactive");
 t("12e panelUrl tanpa prefix APP_URL=", rs.panelUrl === "http://aizatstore.pteroqdactyl.my.id", rs.panelUrl);
 t("12f tema tanpa .blueprint", rs.themes.length === 1 && rs.themes[0] === "nebula", rs.themes);
+
+// ── 13. kartu status VPS baru (revisi owner 8 Okt: emoji server, dipakai dulu, arti warna) ──
+section("13. kartu .vps status baru + .statuspanel");
+const VPS_OUT = [
+  "===HOST", "buyer", "===OS", "Ubuntu 22.04.5 LTS", "5.15.0-160-generic", "===UP", "up 2 days, 6 hours, 52 minutes", "===IP", "213.163.192.209",
+  "===RAM", "1645 7900", "300 2047", "===DISK", "/dev/vda2 50G 27G 21G 57% /",
+  "===CPU", "4", "0.06 0.05 0.00", " Intel Xeon", "===SSH", "22", "===PHPUSED", "8.2",
+  "===SVC", "nginx=active", "mariadb=active", "redis-server=active", "docker=active", "wings=active", "pteroq=inactive", "fail2ban=inactive", "php8.1-fpm=inactive", "php8.2-fpm=active", "php8.3-fpm=inactive",
+  "===PTERO", "panel-terinstal", "===THEME", "nebula.blueprint", "===PANELURL", "APP_URL=http://aizatstore.pteroqdactyl.my.id", "===PROT", "mati",
+].join("\n");
+L._setSshForTest(async () => ({ code: 0, stdout: VPS_OUT }));
+L.saveCreds("owner@s", { host: "213.163.192.209", port: 22, user: "root", password: "Aizat123#*" });
 replies.length = 0;
-L.saveCreds("owner@s", { host: "213.163.192.209", port: 22, user: "root", password: "x" });
 await P.handler(mkM("owner@s", "status", true, false), { sock: mkSock() });
-const card = replies[replies.length - 1];
-t("12g kartu: tiap field sekali (anti numpuk)", (card.match(/Disk:/g) || []).length === 1 && (card.match(/RAM:/g) || []).length === 1 && (card.match(/CPU:/g) || []).length === 1 && (card.match(/nginx/g) || []).length === 1, card);
-t("12h kartu: gak bocor penanda ===/APP_URL=/panel-terinstal", !/===|APP_URL=|panel-terinstal/.test(card), card);
-t("12i kartu: layanan inactive merah, active hijau", card.includes("🟢 nginx") && card.includes("🔴 php8.1-fpm"), card);
+const vc = replies[replies.length - 1];
+t("13a emoji server 📡 (bukan dinosaurus) di judul/server", vc.includes("📡 *Server*") && vc.includes("🖧 *STATUS VPS*"), vc.slice(0, 200));
+t("13b dinosaurus cuma buat blok Panel (bukan 'server')", !vc.includes("🦖 *Server*"));
+t("13c RAM dipakai dulu baru total (1.6 GB / 7.7 GB)", /RAM : 1\.6 GB \/ 7\.7 GB \(21%\)/.test(vc), vc);
+t("13d Disk dipakai dulu baru total", vc.includes("Disk: 27G dipakai / 50G (57%)"), vc);
+t("13e swap dipakai dulu baru total", vc.includes("Swap: 300 MB dipakai / 2.0 GB"), vc);
+t("13f pteroq merah + alasan MATI", vc.includes("🔴 pteroq — MATI — perlu dihidupkan"), vc);
+t("13g php nonaktif normal = ⚪ BUKAN merah", vc.includes("⚪ php8.1-fpm") && vc.includes("⚪ php8.3-fpm") && vc.includes("🟢 php8.2-fpm") && !vc.includes("🔴 php8.1-fpm"), vc);
+t("13h peringatan layanan penting mati menyebut pteroq", /1 layanan penting mati: pteroq/.test(vc), vc);
+t("13i legenda arti warna lengkap", vc.includes("🟢 jalan normal") && vc.includes("🔴 mati / bermasalah") && vc.includes("⚪ nonaktif tapi memang normal"));
+t("13j fungsi pteroq dijelaskan", vc.includes("pteroq: worker antrian"));
+t("13k info akses login: host/port/user/pass masked", vc.includes("Host : 213.163.192.209") && vc.includes("User : root") && /Pass : A•{8}\*/.test(vc) && !vc.includes("Aizat123#*"), vc);
+t("13l info server: hostname/OS/kernel/uptime/IP", vc.includes("Hostname : buyer") && vc.includes("Ubuntu 22.04.5") && vc.includes("5.15.0-160") && vc.includes("2 days"), vc);
+t("13m status protect panel belum dipasang", vc.includes("Protect: ⚠️ belum dipasang"), vc);
+t("13n anti-numpuk: tiap field 1x", (vc.match(/RAM :/g) || []).length === 1 && (vc.match(/🟢 nginx/g) || []).length === 1);
+
+// ── panelStatus + kartu .statuspanel ──
+const PS_OUT = [
+  "===ADMINS", "1\taizat\taizat@mail.com\tadmin\t0", "2\tmira\tmira@mail.com\tadmin\t1",
+  "===USERCOUNT", "5", "===USERS", "9\tbudi\tbudi@mail.com", "8\tsiti\tsiti@mail.com",
+  "===SRVCOUNT", "3", "===SERVERS", "3\trara-bot\tbudi\t5120\t10240\taktif", "2\ttest\tsiti\t1024\t2048\taktif",
+  "===NODES", "1\tAuto Node\taizatstore.pteroqdactyl.my.id\t443\t7900\t50000",
+  "===EGGS", "12", "===LASTLOGIN", "1\taizat\t114.5.6.7\t2026-10-08 09:10:11",
+  "===VER", "Pterodactyl 1.11.10", "===ENV", "APP_URL=http://aizatstore.pteroqdactyl.my.id", "APP_ENV=production", "APP_DEBUG=false", "DB_DATABASE=panel", "DB_USERNAME=pterodactyl",
+  "===QUEUE", "inactive", "===FAILED", "2", "===PROT", "mati", "===F2B", "inactive", "===BANNED", "", "===WL", "", "===BACKUP", "",
+].join("\n");
+L._setSshForTest(async () => ({ code: 0, stdout: PS_OUT }));
+const ps = await L.panelStatus(L.getCreds("owner@s"));
+t("13o panelStatus parse admin banyak + 2FA", ps.installed && ps.admins.length === 2 && ps.admins[1].username === "mira" && ps.admins[1].twofa === true && ps.admins[0].twofa === false, ps.admins);
+t("13p panelStatus: user/server/node/egg/versi", ps.userCount === 5 && ps.users.length === 2 && ps.serverCount === 3 && ps.servers[0].name === "rara-bot" && ps.servers[0].memory === 5120 && ps.nodes[0].port === "443" && ps.eggCount === 12 && ps.version.includes("1.11.10"), ps);
+const PSM = await import(path.join(R, "plugins/panel/panelstatus.js"));
+replies.length = 0;
+await PSM.handler(mkM("owner@s", "", true, false), { sock: mkSock() });
+const pc = replies[replies.length - 1];
+t("13q kartu panel: admin berderet (2 admin) + email + 2FA", pc.includes("1. aizat (#1)") && pc.includes("2. mira (#2)") && pc.includes("2FA: aktif") && pc.includes("mira@mail.com"), pc);
+t("13r kartu panel: user & server berderet", pc.includes("budi (#9) — budi@mail.com") && pc.includes("siti (#8)") && pc.includes("rara-bot (#3) — budi — 5.0 GB RAM / 10.0 GB disk") && pc.includes("test (#2) — siti"), pc.split("\n").filter((l) => /budi|rara-bot|siti/.test(l)).join(" | "));
+t("13s kartu panel: info host/port/user/pass VPS masked", pc.includes("Host VPS: 213.163.192.209:22 (root)") && /Pass VPS: A•{8}\*/.test(pc) && !pc.includes("Aizat123#*"), pc);
+t("13t kartu panel: node + login terakhir admin", pc.includes("Auto Node") && pc.includes("114.5.6.7"), pc);
+t("13u kartu panel: protect BELUM terpasang + arahan install", pc.includes("BELUM TERPASANG") && pc.includes("vps protect install"), pc);
+t("13v kartu panel: pteroq mati + job gagal + arahan fixqueue", pc.includes("🔴 pteroq MATI") && pc.includes("2 job antrian gagal") && pc.includes("statuspanel fixqueue"), pc);
+
+// protect aktif
+L._setSshForTest(async () => ({ code: 0, stdout: PS_OUT.replace("===PROT\nmati", "===PROT\naktif").replace("===F2B\ninactive", "===F2B\nactive").replace("===BANNED\n", "===BANNED\n4\n").replace("===WL\n", "===WL\n203.0.113.7\n").replace("===QUEUE\ninactive", "===QUEUE\nactive") }));
+replies.length = 0;
+await PSM.handler(mkM("owner@s", "status", true, false), { sock: mkSock() });
+const pc2 = replies[replies.length - 1];
+t("13w protect aktif → AKTIF + whitelist + banned", pc2.includes("AKTIF") && pc2.includes("203.0.113.7") && pc2.includes("IP terbanned: 4"), pc2);
+t("13x pteroq jalan → hijau", pc2.includes("🟢 pteroq jalan"), pc2);
+
+// gate: grup & belum login
+replies.length = 0;
+await PSM.handler(mkM("owner@s", "", true, true), { sock: mkSock() });
+t("13y di grup → DM only", /Khusus DM/.test(replies[replies.length - 1]));
+replies.length = 0;
+await PSM.handler(mkM("user9@s", "", false, false), { sock: mkSock() });
+t("13z user belum login → ditolak", /BELUM LOGIN VPS/.test(replies[replies.length - 1]) && replies[replies.length - 1].includes("USER"));
+
+// fixqueue + .vps pteroq
+L._setSshForTest(async (c, cmd) => ({ code: 0, stdout: "UNIT_DIBUAT\nSTATE=active" }));
+replies.length = 0;
+await PSM.handler(mkM("owner@s", "fixqueue", true, false), { sock: mkSock() });
+t("13aa fixqueue → pteroq JALAN + unit dibuat", /pteroq JALAN/.test(replies[replies.length - 1]) && replies[replies.length - 1].includes("unit systemd dibuat"));
+replies.length = 0;
+await P.handler(mkM("owner@s", "pteroq", true, false), { sock: mkSock() });
+t("13ab .vps pteroq juga jalan", /pteroq JALAN/.test(replies[replies.length - 1]));
+
+// panel belum terpasang
+L._setSshForTest(async () => ({ code: 0, stdout: "NOPANEL" }));
+replies.length = 0;
+await PSM.handler(mkM("owner@s", "", true, false), { sock: mkSock() });
+t("13ac panel belum ada → pesan pasang", /belum terpasang/.test(replies[replies.length - 1]));
+
+// ── pencegat .panel status di cpanel.js ──
+const CP = await import(path.join(R, "plugins/panel/cpanel.js"));
+L._setSshForTest(async () => ({ code: 0, stdout: PS_OUT }));
+replies.length = 0;
+const mp = mkM("owner@s", "status", true, false); mp.command = "panel"; mp.args = ["status"];
+await CP.handler(mp, { sock: mkSock() });
+t("13ad .panel status → dicegat ke info panel VPS", replies.some((r) => r.includes("STATUS PANEL")), replies);
+replies.length = 0;
+const mp2 = mkM("owner@s", "status rara-bot 1", true, false); mp2.command = "panel"; mp2.args = ["status", "rara-bot", "1"];
+try { await CP.handler(mp2, { sock: mkSock() }); } catch {}
+t("13ae .panel status <server> <id> TIDAK dicegat (jalur status server game utuh)", !replies.some((r) => r.includes("STATUS PANEL")), replies);
+t("13af plugin statuspanel terdaftar di kategori panel", PSM.config.category === "panel" && PSM.config.name === "statuspanel" && PSM.config.alias.includes("infopanel"));
 
 L._resetSshForTest();
 L._resetVpsStoreForTest();

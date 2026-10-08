@@ -290,6 +290,151 @@ export async function runScriptUrl(creds, url, onProgress) {
   return r.stdout.slice(-800);
 }
 
+
+// ── arti tiap layanan (buat kartu status) ──
+export const SERVICE_INFO = {
+  nginx: "web server — buka panel di browser",
+  mariadb: "database panel (akun, server, data)",
+  "redis-server": "cache + antrian panel",
+  docker: "mesin container server game/bot",
+  wings: "daemon yang jalanin server di node",
+  pteroq: "worker antrian — install server, email, backup",
+  "php8.1-fpm": "mesin PHP 8.1",
+  "php8.2-fpm": "mesin PHP 8.2",
+  "php8.3-fpm": "mesin PHP 8.3",
+  fail2ban: "pemblokir IP pembobol (protect panel)",
+};
+export const SERVICE_CRITICAL = new Set(["nginx", "mariadb", "redis-server", "wings", "pteroq"]);
+
+// PHP fpm tak terpakai = normal (cuma 1 versi dipakai) → bukan error
+export function classifyServices(services, phpUsed) {
+  const out = [];
+  for (const [name, state] of Object.entries(services)) {
+    if (state === "-" ) continue;
+    const isPhp = /^php[\d.]+-fpm$/.test(name);
+    const active = state === "active";
+    let icon, note;
+    if (active) { icon = "🟢"; note = "jalan"; }
+    else if (isPhp && phpUsed && name !== `php${phpUsed}-fpm`) { icon = "⚪"; note = "nonaktif (normal, bukan versi dipakai)"; }
+    else if (isPhp && !phpUsed) { icon = "⚪"; note = "nonaktif (tak terpakai)"; }
+    else if (SERVICE_CRITICAL.has(name) || isPhp) { icon = "🔴"; note = state === "inactive" ? "MATI — perlu dihidupkan" : state; }
+    else { icon = "🟡"; note = state; }
+    out.push({ name, state, icon, note, desc: SERVICE_INFO[name] || "" });
+  }
+  return out;
+}
+
+// ── status VPS lengkap (identitas + resource + layanan) ──
+export async function vpsInfo(creds) {
+  const cmd = `echo "===HOST"; hostname
+echo "===OS"; . /etc/os-release 2>/dev/null; echo "$PRETTY_NAME"; uname -r
+echo "===UP"; uptime -p
+echo "===IP"; curl -s -m 5 https://api.ipify.org || hostname -I | awk '{print $1}'
+echo "===RAM"; free -m | awk 'NR==2{print $3" "$2}'; free -m | awk 'NR==3{print $3" "$2}'
+echo "===DISK"; df -h / | tail -1
+echo "===CPU"; nproc; awk '{print $1" "$2" "$3}' /proc/loadavg; grep -m1 'model name' /proc/cpuinfo | cut -d: -f2
+echo "===SSH"; grep -m1 -oP '^Port \\K[0-9]+' /etc/ssh/sshd_config || echo 22
+echo "===PHPUSED"; php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;' 2>/dev/null || echo -
+echo "===SVC"; for s in nginx mariadb redis-server docker wings pteroq fail2ban php8.1-fpm php8.2-fpm php8.3-fpm; do printf "%s=%s\\n" "$s" "$(systemctl is-active $s 2>/dev/null || echo -)"; done
+echo "===PTERO"; [ -d /var/www/pterodactyl ] && echo panel-terinstal || echo panel-tidak-ada
+echo "===THEME"; ls /var/www/pterodactyl/*.blueprint 2>/dev/null | xargs -n1 basename 2>/dev/null || echo -
+echo "===PANELURL"; grep -h '^APP_URL' /var/www/pterodactyl/.env 2>/dev/null || echo -
+echo "===PROT"; [ -f /etc/nginx/ptero-protect-locations.conf ] && echo aktif || echo mati`;
+  const out = await sshOk(creds, cmd, { timeoutMs: 30000 });
+  const secs = {}; let cur = null;
+  for (const line of out.split("\n")) {
+    const mk = line.trim().match(/^===([A-Z]+)$/);
+    if (mk) { cur = mk[1]; secs[cur] = []; continue; }
+    if (cur) secs[cur].push(line.trim());
+  }
+  const L = (k) => (secs[k] || []).filter(Boolean);
+  const [ramU, ramT] = (L("RAM")[0] || "0 0").split(" ").map(Number);
+  const [swU, swT] = (L("RAM")[1] || "0 0").split(" ").map(Number);
+  const dp = (L("DISK")[0] || "").split(/\s+/);
+  const load = (L("CPU")[1] || "").split(" ");
+  const svc = {};
+  for (const l of L("SVC")) { const i = l.indexOf("="); if (i > 0) svc[l.slice(0, i)] = l.slice(i + 1); }
+  const phpUsed = (L("PHPUSED")[0] || "-") === "-" ? null : L("PHPUSED")[0];
+  return {
+    hostname: L("HOST")[0] || "-", os: L("OS")[0] || "-", kernel: L("OS")[1] || "-", uptime: (L("UP")[0] || "-").replace(/^up\s+/, ""),
+    publicIp: L("IP")[0] || "-", sshPort: L("SSH")[0] || "22",
+    ram: { used: ramU, total: ramT }, swap: { used: swU, total: swT },
+    disk: dp.length >= 5 ? { used: dp[2], total: dp[1], pct: dp[4] } : null,
+    cpu: { cores: L("CPU")[0] || "-", load: load.join(", "), model: (L("CPU")[2] || "-").trim() },
+    phpUsed, services: classifyServices(svc, phpUsed),
+    panelInstalled: (L("PTERO")[0] || "").includes("panel-terinstal"),
+    panelUrl: (L("PANELURL")[0] || "-").replace(/^APP_URL=/, ""),
+    themes: L("THEME").filter((x) => x !== "-").map((x) => x.replace(/\.blueprint$/, "")),
+    protectNginx: (L("PROT")[0] || "") === "aktif",
+  };
+}
+
+// ── status panel: baca langsung dari DB panel (butuh login VPS) ──
+export async function panelStatus(creds) {
+  const sql = (q) => `mysql panel -N -B -e "${q}" 2>/dev/null`;
+  const cmd = `[ -d /var/www/pterodactyl ] || { echo NOPANEL; exit 0; }
+echo "===ADMINS"; ${sql("SELECT id,username,email,CASE root_admin WHEN 1 THEN 'admin' ELSE 'user' END,use_totp FROM users WHERE root_admin=1 ORDER BY id")}
+echo "===USERCOUNT"; ${sql("SELECT COUNT(*) FROM users")}
+echo "===USERS"; ${sql("SELECT id,username,email FROM users WHERE root_admin=0 ORDER BY id DESC LIMIT 15")}
+echo "===SRVCOUNT"; ${sql("SELECT COUNT(*) FROM servers")}
+echo "===SERVERS"; ${sql("SELECT s.id,s.name,u.username,s.memory,s.disk,IFNULL(s.status,'aktif') FROM servers s LEFT JOIN users u ON u.id=s.owner_id ORDER BY s.id DESC LIMIT 15")}
+echo "===NODES"; ${sql("SELECT id,name,fqdn,daemonListen,memory,disk FROM nodes")}
+echo "===EGGS"; ${sql("SELECT COUNT(*) FROM eggs")}
+echo "===LASTLOGIN"; ${sql("SELECT u.id,u.username,a.ip,a.timestamp FROM users u JOIN (SELECT actor_id,ip,timestamp FROM activity_log_events ORDER BY id DESC LIMIT 400) a ON a.actor_id=u.id WHERE u.root_admin=1 GROUP BY u.id")}
+echo "===VER"; cd /var/www/pterodactyl && php artisan --version 2>/dev/null | tail -1; grep -m1 -oP "'version' => '\\K[^']+" config/app.php 2>/dev/null || echo -
+echo "===ENV"; grep -E '^(APP_URL|APP_ENV|APP_DEBUG|DB_DATABASE|DB_USERNAME|DB_PORT|MAIL_MAILER)=' .env 2>/dev/null
+echo "===QUEUE"; systemctl is-active pteroq 2>/dev/null || echo mati
+echo "===FAILED"; ${sql("SELECT COUNT(*) FROM failed_jobs")}
+echo "===PROT"; [ -f /etc/nginx/ptero-protect-locations.conf ] && echo aktif || echo mati
+echo "===F2B"; systemctl is-active fail2ban 2>/dev/null || echo mati
+echo "===BANNED"; fail2ban-client status ptero-auth 2>/dev/null | grep -m1 'Currently banned' | awk '{print $NF}'
+echo "===WL"; grep -h ignoreip /etc/fail2ban/jail.d/ptero.local 2>/dev/null | awk '{print $NF}'
+echo "===BACKUP"; ls -t /root/*panel*backup* /root/panel-backup* 2>/dev/null | head -1`;
+  const out = await sshOk(creds, cmd, { timeoutMs: 40000 });
+  if (/NOPANEL/.test(out)) return { installed: false };
+  const secs = {}; let cur = null;
+  for (const line of out.split("\n")) {
+    const mk = line.trim().match(/^===([A-Z0-9]+)$/);
+    if (mk) { cur = mk[1]; secs[cur] = []; continue; }
+    if (cur && line.trim()) secs[cur].push(line.trim());
+  }
+  const rows = (k) => (secs[k] || []).map((l) => l.split("\t"));
+  const env = {};
+  for (const l of (secs.ENV || [])) { const i = l.indexOf("="); if (i > 0) env[l.slice(0, i)] = l.slice(i + 1); }
+  return {
+    installed: true,
+    admins: rows("ADMINS").map(([id, username, email, , totp]) => ({ id, username, email, twofa: totp === "1" })),
+    userCount: Number((secs.USERCOUNT || ["0"])[0]),
+    users: rows("USERS").map(([id, username, email]) => ({ id, username, email })),
+    serverCount: Number((secs.SRVCOUNT || ["0"])[0]),
+    servers: rows("SERVERS").map(([id, name, owner, memory, disk, status]) => ({ id, name, owner, memory: Number(memory), disk: Number(disk), status })),
+    nodes: rows("NODES").map(([id, name, fqdn, port, memory, disk]) => ({ id, name, fqdn, port, memory: Number(memory), disk: Number(disk) })),
+    eggCount: Number((secs.EGGS || ["0"])[0]),
+    lastLogin: rows("LASTLOGIN").map(([id, username, ip, ts]) => ({ id, username, ip, ts })),
+    version: (secs.VER || []).join(" ").trim() || "-",
+    env,
+    queueActive: (secs.QUEUE || [""])[0] === "active",
+    failedJobs: Number((secs.FAILED || ["0"])[0]),
+    protectNginx: (secs.PROT || [""])[0] === "aktif",
+    f2b: (secs.F2B || [""])[0] === "active",
+    banned: Number((secs.BANNED || ["0"])[0]) || 0,
+    whitelist: (secs.WL || [""])[0] || "",
+    lastBackup: (secs.BACKUP || [""])[0] || "",
+  };
+}
+
+// ── perbaiki pteroq: buat unit kalau belum ada, enable+start ──
+export async function pteroqFix(creds) {
+  const out = await sshOk(creds, `cd /var/www/pterodactyl || exit 9
+if [ ! -f /etc/systemd/system/pteroq.service ]; then
+printf '%s\\n' '[Unit]' 'Description=Pterodactyl Queue Worker' 'After=redis-server.service mariadb.service' '[Service]' 'User=www-data' 'Group=www-data' 'Restart=always' 'ExecStart=/usr/bin/php /var/www/pterodactyl/artisan queue:work --queue=high,standard,low --sleep=3 --tries=3' 'StartLimitInterval=180' 'StartLimitBurst=30' 'RestartSec=5s' '[Install]' 'WantedBy=multi-user.target' > /etc/systemd/system/pteroq.service
+echo UNIT_DIBUAT
+fi
+systemctl daemon-reload; systemctl enable --now pteroq 2>&1 | tail -1; systemctl restart pteroq; sleep 2
+echo STATE=$(systemctl is-active pteroq)`, { timeoutMs: 40000 });
+  return { created: /UNIT_DIBUAT/.test(out), active: /STATE=active/.test(out) };
+}
+
 // ── protect panel (fail2ban + rate limit + whitelist admin) ──
 const PTERO_NGINX_SITE = "/etc/nginx/sites-available/pterodactyl.conf";
 const PTERO_LOC_SNIPPET = "/etc/nginx/ptero-protect-locations.conf";

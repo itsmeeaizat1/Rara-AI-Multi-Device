@@ -5,9 +5,10 @@
 //   • OWNER — owner pakai VPS yang sudah dia login sendiri (mode owner)
 //   • USER  — user lain DITOLAK sampai login akun root VPS-nya sendiri
 // Login per-orang & tersimpan terisolasi — akun owner gak bisa dipakai user lain.
+import { formatVpsStatus } from "../../src/lib/rara-vps-cards.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import {
-  getCreds, saveCreds, clearCreds, maskCreds, testConnection, hostStatus,
+  getCreds, saveCreds, clearCreds, maskCreds, testConnection, hostStatus, vpsInfo, pteroqFix,
   panelService, panelInstall, panelUninstall, themeInstall, themeUninstall, themeList,
   changeSshPort, changeRootPw, wingsRestart, wingsSetPort, runScriptUrl,
   protectInstall, protectStatus, protectUninstall, protectBanned,
@@ -68,6 +69,8 @@ Kelola VPS kamu langsung dari bot — login akun root VPS-mu dulu (tersimpan pri
 🛡️ Protect Panel:
 • ${p}vps protect install <ip-panel>|<pw-vps>|<id-admin> — antibot + fail2ban + whitelist admin
 • ${p}vps protect install <id-admin> (kalau sudah login)
+• ${p}vps pteroq — hidupkan/perbaiki worker antrian panel (kalau 🔴)
+• ${p}statuspanel — info lengkap panel (admin, user, server, node, protect, antrian). Pintasan: ${p}panel status
 • ${p}vps protect status / banned / uninstall
 
 ⚠️ Semua operasi jalan di VPS MILIKMU SENDIRI. Data login gak bisa dilihat user lain.`);
@@ -145,21 +148,15 @@ Login ulang kapan pun: ${p}vps login — hapus: ${p}vps logout`));
       return m.reply(raraWrap("vps", `✅ *KONEKSI OK* (Mode ${mode})\nServer: ${info.hostname} — ${info.os}\nUptime: ${info.uptime}`));
     }
     if (sub === "status") {
-      const st = await hostStatus(creds);
-      const order = ["nginx", "mariadb", "redis-server", "docker", "wings", "pteroq", "php8.1-fpm", "php8.2-fpm", "php8.3-fpm"];
-      const svc = order.filter((k) => st.services[k] && st.services[k] !== "-").map((k) => `${st.services[k] === "active" ? "🟢" : "🔴"} ${k}`).join("\n");
-      return m.reply(raraWrap("vps", `📊 *STATUS VPS* (Mode ${mode})
-
-💾 Disk: ${st.disk}
-🧠 RAM: ${st.mem}
-⚙️ CPU: ${st.cpu}
-
-🦖 Panel: ${st.panelInstalled ? "✅ terpasang" : "❌ belum ada"}
-🌐 URL: ${st.panelUrl}
-🎨 Tema: ${st.themes.length ? st.themes.join(", ") : "-"}
-
-🔧 Layanan:
-${svc || "-"}`));
+      const info = await vpsInfo(creds);
+      return m.reply(raraWrap("vps", formatVpsStatus(info, creds, mode)));
+    }
+    if (sub === "pteroq") {
+      await progress("🔧 Periksa & hidupkan pteroq (worker antrian panel)…");
+      const r = await pteroqFix(creds);
+      return m.reply(raraWrap("vps", r.active
+        ? `✅ *pteroq JALAN*${r.created ? " (unit systemd dibuat baru, enable otomatis saat boot)" : " (di-restart)"}\nServer baru sekarang bisa selesai install.`
+        : "❌ pteroq masih belum aktif. Cek log: " + p + "vps exec journalctl -u pteroq -n 20 --no-pager"));
     }
     if (sub === "exec") {
       const cmd = args.slice(1).join(" ");

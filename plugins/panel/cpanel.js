@@ -621,6 +621,13 @@ async function handler(m, { sock }) {
 
   const sub = String(args[0] || "").toLowerCase();
 
+  // (owner 8 Okt) `.panel status|info|fixqueue` TANPA nama server = info panel via VPS
+  // (plugin statuspanel). `.cpanel status <server> <idpanel>` tetap status server game.
+  if (["status", "info", "fixqueue"].includes(sub) && args.length === 1 && (m.command === "panel" || m.command === "p")) {
+    const ps = await import("./panelstatus.js");
+    return ps.handler(m, { sock });
+  }
+
   // FORMAT TIPE (owner 6 Okt 2026): .cpanel client, 1gb 5gb, 200, aizat, 628xxx, 1
   const roleSpec = parseRoleSpec(m.text);
   if (roleSpec) return createWithRole(m, { sock }, roleSpec);
