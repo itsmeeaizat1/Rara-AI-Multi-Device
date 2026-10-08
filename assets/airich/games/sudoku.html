@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Sudoku Harian</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.keypad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
+.btn-key { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: #fff; font-size: 16px; font-weight: 900; padding: 11px 0; text-align: center; cursor: pointer; }
+.btn-key:active { transform: scale(0.95); background: #6366f1; border-color: #6366f1; }
+.btn-key.erase { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.35); color: #f87171; font-size: 13px; }
+.controls { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 10px; }
+.btn { padding: 12px 6px; font-size: 12px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-new { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn-check { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.btn-hint { background: linear-gradient(135deg, #eab308, #ca8a04); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Sudoku Harian 🔢</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">00:00</div>
+        <div class="best-badge" id="best">Best --:--</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Terisi</div><div class="val" id="fillStat">0/81</div></div>
+      <div class="stat-pill"><div class="lbl">Waktu</div><div class="val" id="timeStat">00:00</div></div>
+      <div class="stat-pill"><div class="lbl">Kesalahan</div><div class="val" id="errStat">0</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="360" height="360"></canvas></div>
+    <div class="keypad">
+      <button class="btn-key" data-val="1">1</button>
+      <button class="btn-key" data-val="2">2</button>
+      <button class="btn-key" data-val="3">3</button>
+      <button class="btn-key" data-val="4">4</button>
+      <button class="btn-key" data-val="5">5</button>
+      <button class="btn-key" data-val="6">6</button>
+      <button class="btn-key" data-val="7">7</button>
+      <button class="btn-key" data-val="8">8</button>
+      <button class="btn-key" data-val="9">9</button>
+      <button class="btn-key erase" data-val="del">⌫ Hapus</button>
+    </div>
+    <div class="controls">
+      <button class="btn btn-new" id="newBtn">🧩 Puzzle Baru</button>
+      <button class="btn btn-check" id="checkBtn">🔍 Cek</button>
+      <button class="btn btn-hint" id="hintBtn">💡 Hint</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Tap Sel</td><td>Pilih kotak kosong untuk diisi</td></tr>
+      <tr><td>Keypad 1-9</td><td>Isi angka — konflik baris/kolom ditolak</td></tr>
+      <tr><td>🔍 Cek &amp; 💡 Hint</td><td>Bantuan cek salah &amp; buka 1 jawaban</td></tr>
+      <tr><td class="hd2" colspan="2">Waktu tercepat tersimpan otomatis di browser</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var fillEl = document.getElementById('fillStat'), timeEl = document.getElementById('timeStat'), errEl = document.getElementById('errStat');
+  
+  var sol = [], given = [], board = [], wrongFlags = [];
+  var selected = null, flashCell = null, errors = 0, startTime = Date.now(), timerSec = 0, won = false;
+  var bestSec = 0;
+
+  try {
+    bestSec = parseInt(localStorage.getItem('rara_sudoku_best') || '0', 10) || 0;
+  } catch (e) { bestSec = 0; }
+  
+  function formatTime(s) {
+    var m = (s / 60) | 0, sec = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  if (bestSec > 0) bestEl.textContent = 'Best ' + formatTime(bestSec);
+  else bestEl.textContent = 'Best --:--';
+
+  function generateSolvedBoard() {
+    var b = new Array(81);
+    for (var r = 0; r < 9; r++) {
+      for (var c = 0; c < 9; c++) {
+        b[r * 9 + c] = ((r % 3) * 3 + Math.floor(r / 3) + c) % 9 + 1;
+      }
+    }
+    var digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    for (var i = 8; i > 0; i--) {
+      var j = (Math.random() * (i + 1)) | 0;
+      var t = digits[i]; digits[i] = digits[j]; digits[j] = t;
+    }
+    var map = {};
+    for (var d = 0; d < 9; d++) map[d + 1] = digits[d];
+    for (var k = 0; k < 81; k++) b[k] = map[b[k]];
+
+    for (var block = 0; block < 3; block++) {
+      for (var i = 0; i < 3; i++) {
+        var r1 = block * 3 + i;
+        var r2 = block * 3 + ((Math.random() * 3) | 0);
+        if (r1 !== r2) {
+          for (var col = 0; col < 9; col++) {
+            var tmp = b[r1 * 9 + col];
+            b[r1 * 9 + col] = b[r2 * 9 + col];
+            b[r2 * 9 + col] = tmp;
+          }
+        }
+      }
+    }
+
+    for (var block = 0; block < 3; block++) {
+      for (var i = 0; i < 3; i++) {
+        var c1 = block * 3 + i;
+        var c2 = block * 3 + ((Math.random() * 3) | 0);
+        if (c1 !== c2) {
+          for (var row = 0; row < 9; row++) {
+            var tmp = b[row * 9 + c1];
+            b[row * 9 + c1] = b[row * 9 + c2];
+            b[row * 9 + c2] = tmp;
+          }
+        }
+      }
+    }
+
+    if (Math.random() < 0.5) {
+      var tb = new Array(81);
+      for (var r = 0; r < 9; r++) {
+        for (var c = 0; c < 9; c++) {
+          tb[c * 9 + r] = b[r * 9 + c];
+        }
+      }
+      b = tb;
+    }
+    return b;
+  }
+
+  function newGame() {
+    sol = generateSolvedBoard();
+    given = new Array(81).fill(0);
+    board = new Array(81).fill(0);
+    wrongFlags = new Array(81).fill(false);
+
+    var indices = [];
+    for (var i = 0; i < 81; i++) indices.push(i);
+    for (var i = 80; i > 0; i--) {
+      var j = (Math.random() * (i + 1)) | 0;
+      var t = indices[i]; indices[i] = indices[j]; indices[j] = t;
+    }
+
+    var removeCount = 45;
+    for (var i = removeCount; i < 81; i++) {
+      var idx = indices[i];
+      given[idx] = sol[idx];
+      board[idx] = sol[idx];
+    }
+
+    selected = null;
+    flashCell = null;
+    errors = 0;
+    startTime = Date.now();
+    timerSec = 0;
+    won = false;
+    updateStats();
+  }
+
+  function hasConflict(r, c, val) {
+    for (var i = 0; i < 9; i++) {
+      if (i !== c && board[r * 9 + i] === val) return true;
+      if (i !== r && board[i * 9 + c] === val) return true;
+    }
+    var br = Math.floor(r / 3) * 3;
+    var bc = Math.floor(c / 3) * 3;
+    for (var dr = 0; dr < 3; dr++) {
+      for (var dc = 0; dc < 3; dc++) {
+        var nr = br + dr;
+        var nc = bc + dc;
+        if ((nr !== r || nc !== c) && board[nr * 9 + nc] === val) return true;
+      }
+    }
+    return false;
+  }
+
+  function updateStats() {
+    var count = 0;
+    for (var i = 0; i < 81; i++) if (board[i] > 0) count++;
+    fillEl.textContent = count + '/81';
+    errEl.textContent = errors;
+    timeEl.textContent = formatTime(timerSec);
+    scoreEl.textContent = formatTime(timerSec);
+  }
+
+  function checkWin() {
+    var full = true, correct = true;
+    for (var i = 0; i < 81; i++) {
+      if (board[i] === 0) full = false;
+      if (board[i] !== sol[i]) correct = false;
+    }
+    if (full && correct) {
+      won = true;
+      if (bestSec === 0 || timerSec < bestSec) {
+        bestSec = timerSec;
+        try { localStorage.setItem('rara_sudoku_best', String(bestSec)); } catch (e) {}
+        bestEl.textContent = 'Best ' + formatTime(bestSec);
+      }
+    }
+  }
+
+  function inputVal(v) {
+    if (!selected || won) return;
+    var idx = selected.r * 9 + selected.c;
+    if (given[idx] !== 0) return;
+
+    if (v === 'del') {
+      board[idx] = 0;
+      wrongFlags[idx] = false;
+      updateStats();
+      return;
+    }
+
+    var num = parseInt(v, 10);
+    if (hasConflict(selected.r, selected.c, num)) {
+      errors++;
+      flashCell = { r: selected.r, c: selected.c, until: Date.now() + 400 };
+      updateStats();
+      return;
+    }
+
+    board[idx] = num;
+    wrongFlags[idx] = false;
+    updateStats();
+    checkWin();
+  }
+
+  function checkBoard() {
+    if (won) return;
+    var foundWrong = false;
+    for (var i = 0; i < 81; i++) {
+      if (given[i] === 0 && board[i] !== 0) {
+        if (board[i] !== sol[i]) {
+          wrongFlags[i] = true;
+          foundWrong = true;
+        } else {
+          wrongFlags[i] = false;
+        }
+      }
+    }
+    if (foundWrong) {
+      errors++;
+      updateStats();
+    }
+  }
+
+  function giveHint() {
+    if (won) return;
+    var candidates = [];
+    for (var i = 0; i < 81; i++) {
+      if (given[i] === 0 && board[i] !== sol[i]) candidates.push(i);
+    }
+    if (!candidates.length) return;
+    var pick = candidates[(Math.random() * candidates.length) | 0];
+    board[pick] = sol[pick];
+    given[pick] = sol[pick];
+    wrongFlags[pick] = false;
+    updateStats();
+    checkWin();
+  }
+
+  function tapCanvas(e) {
+    var rect = cvs.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (360 / rect.width);
+    var y = (e.clientY - rect.top) * (360 / rect.height);
+    var c = (x / 40) | 0, r = (y / 40) | 0;
+    if (r >= 0 && r < 9 && c >= 0 && c < 9) {
+      selected = { r: r, c: c };
+    }
+  }
+
+  function draw() {
+    X.fillStyle = '#070a12';
+    X.fillRect(0, 0, 360, 360);
+
+    var now = Date.now();
+    var selVal = (selected && board[selected.r * 9 + selected.c]) ? board[selected.r * 9 + selected.c] : 0;
+
+    for (var r = 0; r < 9; r++) {
+      for (var c = 0; c < 9; c++) {
+        var idx = r * 9 + c;
+        var val = board[idx];
+        var gx = c * 40, gy = r * 40;
+
+        if (selected && selected.r === r && selected.c === c) {
+          X.fillStyle = 'rgba(99,102,241,0.3)';
+          X.fillRect(gx, gy, 40, 40);
+        } else if (selVal > 0 && val === selVal) {
+          X.fillStyle = 'rgba(99,102,241,0.14)';
+          X.fillRect(gx, gy, 40, 40);
+        } else if (selected && (selected.r === r || selected.c === c)) {
+          X.fillStyle = 'rgba(255,255,255,0.03)';
+          X.fillRect(gx, gy, 40, 40);
+        }
+
+        if (flashCell && flashCell.r === r && flashCell.c === c && now < flashCell.until) {
+          X.fillStyle = 'rgba(239,68,68,0.5)';
+          X.fillRect(gx, gy, 40, 40);
+          X.strokeStyle = '#ef4444';
+          X.lineWidth = 2;
+          X.strokeRect(gx + 1, gy + 1, 38, 38);
+        }
+
+        if (wrongFlags[idx]) {
+          X.strokeStyle = '#ef4444';
+          X.lineWidth = 2;
+          X.strokeRect(gx + 2, gy + 2, 36, 36);
+        }
+
+        if (val > 0) {
+          var isGiven = given[idx] !== 0;
+          X.fillStyle = isGiven ? '#ffffff' : '#6366f1';
+          X.font = 'bold ' + (isGiven ? '21px' : '20px') + ' sans-serif';
+          X.textAlign = 'center';
+          X.textBaseline = 'middle';
+          X.fillText(val, gx + 20, gy + 20);
+        }
+      }
+    }
+
+    for (var i = 0; i <= 9; i++) {
+      X.beginPath();
+      var isThick = (i % 3 === 0);
+      X.strokeStyle = isThick ? '#475569' : '#1e293b';
+      X.lineWidth = isThick ? 2 : 1;
+      X.moveTo(i * 40, 0); X.lineTo(i * 40, 360);
+      X.moveTo(0, i * 40); X.lineTo(360, i * 40);
+      X.stroke();
+    }
+
+    if (selected) {
+      X.strokeStyle = '#6366f1';
+      X.lineWidth = 2;
+      X.strokeRect(selected.c * 40 + 1, selected.r * 40 + 1, 38, 38);
+    }
+
+    if (won) {
+      X.fillStyle = 'rgba(7, 10, 18, 0.88)';
+      X.fillRect(0, 0, 360, 360);
+      X.fillStyle = '#34d399';
+      X.font = '900 24px sans-serif';
+      X.textAlign = 'center';
+      X.textBaseline = 'middle';
+      X.fillText('Menang! 🎉', 180, 150);
+      X.fillStyle = '#ffffff';
+      X.font = '700 14px sans-serif';
+      X.fillText('Waktu: ' + formatTime(timerSec) + ' | Salah: ' + errors, 180, 185);
+      X.fillStyle = '#94a3b8';
+      X.font = '600 12px sans-serif';
+      X.fillText('Tap 🧩 Puzzle Baru untuk main lagi', 180, 215);
+    }
+  }
+
+  cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); tapCanvas(e); });
+
+  var keyBtns = document.querySelectorAll('.btn-key');
+  for (var k = 0; k < keyBtns.length; k++) {
+    (function (btn) {
+      btn.addEventListener('pointerdown', function (e) {
+        e.preventDefault();
+        inputVal(btn.getAttribute('data-val'));
+      });
+    })(keyBtns[k]);
+  }
+
+  document.getElementById('newBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); newGame(); });
+  document.getElementById('checkBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); checkBoard(); });
+  document.getElementById('hintBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); giveHint(); });
+
+  setInterval(function () {
+    if (!won) {
+      timerSec = Math.floor((Date.now() - startTime) / 1000);
+      timeEl.textContent = formatTime(timerSec);
+      scoreEl.textContent = formatTime(timerSec);
+    }
+  }, 1000);
+
+  newGame();
+  requestAnimationFrame(function loop() { draw(); requestAnimationFrame(loop); });
+})();
+
+</script>
+</body>
+</html>

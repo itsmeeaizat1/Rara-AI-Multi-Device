@@ -19,9 +19,9 @@ import { sendRichResponse, notifyRichDownload } from "../../src/lib/rara-airich.
 
 const pluginConfig = {
   name: "airichgame",
-  alias: ["gameairich", "gameai", "ular", "flappy", "flappybird", "blok", "blokjatuh", "gabung", "suisut", "tictactoe", "snakegame", "2048game", "dino", "dinorun", "pong", "pongai", "tikus", "pukultikus", "memori", "memory"],
+  alias: ["gameairich", "gameai", "ular", "flappy", "flappybird", "blok", "blokjatuh", "gabung", "suisut", "tictactoe", "snakegame", "2048game", "dino", "dinorun", "pong", "pongai", "tikus", "pukultikus", "memori", "memory", "sudoku", "susunangka", "simon", "simonsays", "warna", "ranjau", "caribom", "geser", "puzzlegeser", "15", "empatbaris", "connectfour", "c4", "bata", "pecahbata", "breakout"],
   category: "airich",
-  description: "AI Rich Games 🎮 — koleksi game HTML langsung di chat (snake, flappy, tetris, 2048, sui sut, dino, pong, pukul tikus, kartu memori)",
+  description: "AI Rich Games 🎮 — koleksi game HTML langsung di chat (snake, flappy, tetris, 2048, sui sut, dino, pong, pukul tikus, kartu memori, sudoku, simon, cari ranjau, puzzle geser, empat baris, pecah bata)",
   usage: ".airichgame <nama game> — daftar game: .airichgame",
   example: ".airichgame snake",
   isOwner: false, isPremium: false, isGroup: true, isPrivate: true,
@@ -75,6 +75,36 @@ const GAMES = {
     tip: "Buka 2 kartu — pasangkan semua emoji yang sama",
     alias: ["memori", "memory"],
   },
+  sudoku: {
+    title: "Sudoku Harian \ud83d\udd22",
+    tip: "Tap sel lalu angka 1-9 — isi baris, kolom & blok 3x3 tanpa angka dobel",
+    alias: ["sudoku", "susunangka"],
+  },
+  simon: {
+    title: "Simon Says \ud83c\udfb5",
+    tip: "Ingat urutan warna yang menyala lalu ulangi — tiap level makin panjang & cepat",
+    alias: ["simon", "simonsays", "warna"],
+  },
+  minesweeper: {
+    title: "Cari Ranjau \ud83d\udca3",
+    tip: "Tap buka sel — angka = jumlah bom di sekitar. Mode bendera buat tandai",
+    alias: ["ranjau", "caribom"],
+  },
+  slidingpuzzle: {
+    title: "Puzzle Geser \u25b2",
+    tip: "Tile geser ke kotak kosong — urutkan 1-15 dengan langkah sesedikit mungkin",
+    alias: ["geser", "puzzlegeser", "15"],
+  },
+  fourinarow: {
+    title: "Empat Baris \ud83d\udd34",
+    tip: "Tap kolom — susun 4 disc sebaris sebelum AI",
+    alias: ["empatbaris", "connectfour", "c4"],
+  },
+  brickbreaker: {
+    title: "Pecah Bata \ud83e\uddf1",
+    tip: "Geser paddle — mantulkan bola, hancurkan semua bata 3 level",
+    alias: ["bata", "pecahbata", "breakout"],
+  },
 };
 
 const ALIAS2GAME = {};
@@ -112,6 +142,9 @@ function resolveGame(m) {
   return null;
 }
 
+// emoji per game — fallback 🎮
+const GAME_EMOJI = {"snake": "🐍", "flappy": "🐤", "tetris": "🧱", "2048": "🔢", "tictactoe": "⭕", "dino": "🦖", "pong": "🏓", "whackamole": "🔨", "memory": "🧠", "sudoku": "🔢", "simon": "🎵", "minesweeper": "💣", "slidingpuzzle": "🔲", "fourinarow": "🔴", "brickbreaker": "🧱"};
+
 function menuCard() {
   const lines = [
     "🎮 *AI Rich Games — game HTML di dalam chat*",
@@ -119,19 +152,13 @@ function menuCard() {
     "Kartu game beneran (bisa dimainin langsung),",
     "bukan gambar/gIF.",
     "",
-    "🐍 .airichgame snake — Ular Kelas",
-    "🐤 .airichgame flappy — Rara Terbang",
-    "🧱 .airichgame tetris — Blok Jatuh",
-    "🔢 .airichgame 2048 — Gabung 2048",
-    "⭕ .airichgame tictactoe — Sui Sut Bot",
-    "🦖 .airichgame dino — Dino Run",
-    "🏓 .airichgame pong — Pong AI",
-    "🔨 .airichgame whackamole — Pukul Tikus",
-    "🧠 .airichgame memory — Kartu Memori",
-    "",
-    "_Alias singkat juga bisa: .ular .flappy .blok .gabung .suisut .dino .pong .tikus .memori_",
-    "_Klik tombol *Unduh* di kartu untuk membuka gamenya._",
   ];
+  for (const [key, g] of Object.entries(GAMES)) {
+    lines.push(`${GAME_EMOJI[key] || "🎮"} .airichgame ${key} — ${g.title}`);
+  }
+  lines.push("");
+  lines.push("_Alias singkat juga bisa: .ular .flappy .blok .gabung .suisut .dino .pong .tikus .memori .sudoku .simon .ranjau .geser .empatbaris .bata_");
+  lines.push("_Klik tombol *Unduh* di kartu untuk membuka gamenya._");
   return raraWrap("airichgame", lines.join("\n"), "guide");
 }
 

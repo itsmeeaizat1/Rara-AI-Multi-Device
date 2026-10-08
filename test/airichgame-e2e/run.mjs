@@ -46,10 +46,10 @@ test("config: nama, kategori, alias", () => {
 });
 
 // ── 2. registry & file game ──
-test("registry: 9 game terdaftar", () => {
+test("registry: 15 game terdaftar", () => {
   const keys = listGames();
-  assert.equal(keys.length, 9);
-  for (const k of ["snake", "flappy", "tetris", "2048", "tictactoe", "dino", "pong", "whackamole", "memory"]) assert.ok(keys.includes(k), `${k} hilang`);
+  assert.equal(keys.length, 15);
+  for (const k of ["snake", "flappy", "tetris", "2048", "tictactoe", "dino", "pong", "whackamole", "memory", "sudoku", "simon", "minesweeper", "slidingpuzzle", "fourinarow", "brickbreaker"]) assert.ok(keys.includes(k), `${k} hilang`);
 });
 
 test("file game: ada, valid, self-contained, berbranding", () => {

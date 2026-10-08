@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Empat Baris</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 6px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 6px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 12px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.controls { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 13px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 14px rgba(99,102,241,0.35); text-align: center; }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+.credit-bar span { color: #6366f1; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Empat Baris 🔴</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0 — 0</div>
+        <div class="best-badge">Kamu 🔴 vs AI 🟡</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Kamu</div><div class="val" id="pStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">AI</div><div class="val" id="aiStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Ronde</div><div class="val" id="rStat">1</div></div>
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="stStat">Giliranmu…</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="360" height="310"></canvas></div>
+    <div class="controls">
+      <button class="btn" id="restartBtn">🔄 Ronde Baru</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Tap kolom papan</td><td>Jatuhkan koin 🔴 kamu ke kolom terpilih</td></tr>
+      <tr><td>4 segaris</td><td>Susun 4 koin mendatar, tegak, atau diagonal</td></tr>
+      <tr><td class="hd2" colspan="2">Skor bertahan antar ronde selama dimainkan</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score');
+  var pStatEl = document.getElementById('pStat'), aiStatEl = document.getElementById('aiStat');
+  var rStatEl = document.getElementById('rStat'), stStatEl = document.getElementById('stStat');
+
+  var W = 360, H = 310;
+  var board, turn, over, busy, round = 1, pWins = 0, aiWins = 0;
+  var anim = null, hoverCol = -1, winLine = null;
+  var COL_ORDER = [3, 2, 4, 1, 5, 0, 6];
+
+  function resetBoard() {
+    board = [];
+    for (var r = 0; r < 6; r++) {
+      board.push([0, 0, 0, 0, 0, 0, 0]);
+    }
+    turn = 1; over = false; busy = false; anim = null; winLine = null;
+    stStatEl.textContent = 'Giliranmu…';
+  }
+
+  function newRound() {
+    round++;
+    rStatEl.textContent = round;
+    resetBoard();
+  }
+
+  function checkWin(b) {
+    // Horizontal
+    for (var r = 0; r < 6; r++) {
+      for (var c = 0; c < 4; c++) {
+        var p = b[r][c];
+        if (p && p === b[r][c+1] && p === b[r][c+2] && p === b[r][c+3]) {
+          return { p: p, line: [[r,c],[r,c+1],[r,c+2],[r,c+3]] };
+        }
+      }
+    }
+    // Vertical
+    for (var r = 0; r < 3; r++) {
+      for (var c = 0; c < 7; c++) {
+        var p = b[r][c];
+        if (p && p === b[r+1][c] && p === b[r+2][c] && p === b[r+3][c]) {
+          return { p: p, line: [[r,c],[r+1,c],[r+2,c],[r+3,c]] };
+        }
+      }
+    }
+    // Diagonal Down-Right
+    for (var r = 0; r < 3; r++) {
+      for (var c = 0; c < 4; c++) {
+        var p = b[r][c];
+        if (p && p === b[r+1][c+1] && p === b[r+2][c+2] && p === b[r+3][c+3]) {
+          return { p: p, line: [[r,c],[r+1,c+1],[r+2,c+2],[r+3,c+3]] };
+        }
+      }
+    }
+    // Diagonal Up-Right
+    for (var r = 3; r < 6; r++) {
+      for (var c = 0; c < 4; c++) {
+        var p = b[r][c];
+        if (p && p === b[r-1][c+1] && p === b[r-2][c+2] && p === b[r-3][c+3]) {
+          return { p: p, line: [[r,c],[r-1,c+1],[r-2,c+2],[r-3,c+3]] };
+        }
+      }
+    }
+    return null;
+  }
+
+  function isFull(b) {
+    for (var c = 0; c < 7; c++) {
+      if (b[0][c] === 0) return false;
+    }
+    return true;
+  }
+
+  function evalWindow(w) {
+    var ai = 0, player = 0, empty = 0;
+    for (var i = 0; i < 4; i++) {
+      if (w[i] === 2) ai++;
+      else if (w[i] === 1) player++;
+      else empty++;
+    }
+    if (ai === 4) return 100000;
+    if (ai === 3 && empty === 1) return 140;
+    if (ai === 2 && empty === 2) return 12;
+    if (player === 4) return -100000;
+    if (player === 3 && empty === 1) return -350;
+    if (player === 2 && empty === 2) return -16;
+    return 0;
+  }
+
+  function evalBoard(b) {
+    var score = 0;
+    for (var r = 0; r < 6; r++) {
+      if (b[r][3] === 2) score += 6;
+      else if (b[r][3] === 1) score -= 6;
+    }
+    for (var r = 0; r < 6; r++) {
+      for (var c = 0; c < 4; c++) {
+        score += evalWindow([b[r][c], b[r][c+1], b[r][c+2], b[r][c+3]]);
+      }
+    }
+    for (var r = 0; r < 3; r++) {
+      for (var c = 0; c < 7; c++) {
+        score += evalWindow([b[r][c], b[r+1][c], b[r+2][c], b[r+3][c]]);
+      }
+    }
+    for (var r = 0; r < 3; r++) {
+      for (var c = 0; c < 4; c++) {
+        score += evalWindow([b[r][c], b[r+1][c+1], b[r+2][c+2], b[r+3][c+3]]);
+      }
+    }
+    for (var r = 3; r < 6; r++) {
+      for (var c = 0; c < 4; c++) {
+        score += evalWindow([b[r][c], b[r-1][c+1], b[r-2][c+2], b[r-3][c+3]]);
+      }
+    }
+    return score;
+  }
+
+  function getTopRow(b, c) {
+    for (var r = 5; r >= 0; r--) {
+      if (b[r][c] === 0) return r;
+    }
+    return -1;
+  }
+
+  function minimax(b, depth, alpha, beta, isMax) {
+    var w = checkWin(b);
+    if (w) return w.p === 2 ? (1000000 + depth) : (-1000000 - depth);
+    if (isFull(b) || depth === 0) return evalBoard(b);
+
+    if (isMax) {
+      var maxEval = -Infinity;
+      for (var i = 0; i < 7; i++) {
+        var c = COL_ORDER[i];
+        if (b[0][c] === 0) {
+          var r = getTopRow(b, c);
+          b[r][c] = 2;
+          var ev = minimax(b, depth - 1, alpha, beta, false);
+          b[r][c] = 0;
+          if (ev > maxEval) maxEval = ev;
+          if (ev > alpha) alpha = ev;
+          if (beta <= alpha) break;
+        }
+      }
+      return maxEval;
+    } else {
+      var minEval = Infinity;
+      for (var i = 0; i < 7; i++) {
+        var c = COL_ORDER[i];
+        if (b[0][c] === 0) {
+          var r = getTopRow(b, c);
+          b[r][c] = 1;
+          var ev = minimax(b, depth - 1, alpha, beta, true);
+          b[r][c] = 0;
+          if (ev < minEval) minEval = ev;
+          if (ev < beta) beta = ev;
+          if (beta <= alpha) break;
+        }
+      }
+      return minEval;
+    }
+  }
+
+  function getBestMove(b) {
+    for (var i = 0; i < 7; i++) {
+      var c = COL_ORDER[i];
+      if (b[0][c] === 0) {
+        var r = getTopRow(b, c);
+        b[r][c] = 2;
+        if (checkWin(b)) { b[r][c] = 0; return c; }
+        b[r][c] = 0;
+      }
+    }
+    for (var i = 0; i < 7; i++) {
+      var c = COL_ORDER[i];
+      if (b[0][c] === 0) {
+        var r = getTopRow(b, c);
+        b[r][c] = 1;
+        if (checkWin(b)) { b[r][c] = 0; return c; }
+        b[r][c] = 0;
+      }
+    }
+    var bestScore = -Infinity, bestCol = -1, validCols = [];
+    for (var i = 0; i < 7; i++) {
+      var c = COL_ORDER[i];
+      if (b[0][c] === 0) {
+        validCols.push(c);
+        var r = getTopRow(b, c);
+        b[r][c] = 2;
+        var score = minimax(b, 4, -Infinity, Infinity, false);
+        b[r][c] = 0;
+        if (score > bestScore) {
+          bestScore = score;
+          bestCol = c;
+        }
+      }
+    }
+    return bestCol >= 0 ? bestCol : (validCols[0] !== undefined ? validCols[0] : 0);
+  }
+
+  function dropDisc(col, player) {
+    var targetRow = getTopRow(board, col);
+    if (targetRow < 0) return false;
+
+    var startY = 22;
+    var targetY = 48 + targetRow * 42 + 21;
+    anim = {
+      col: col,
+      targetRow: targetRow,
+      player: player,
+      x: 12 + col * 48 + 24,
+      y: startY,
+      targetY: targetY,
+      speed: 8
+    };
+    return true;
+  }
+
+  function afterDrop(col, row, player) {
+    var w = checkWin(board);
+    if (w) {
+      over = true;
+      winLine = w.line;
+      if (w.p === 1) {
+        pWins++;
+        pStatEl.textContent = pWins;
+        stStatEl.textContent = 'Menang! 🎉';
+      } else {
+        aiWins++;
+        aiStatEl.textContent = aiWins;
+        stStatEl.textContent = 'AI Menang 🤖';
+      }
+      scoreEl.textContent = pWins + ' — ' + aiWins;
+    } else if (isFull(board)) {
+      over = true;
+      stStatEl.textContent = 'Seri 🤝';
+    } else {
+      if (player === 1) {
+        turn = 2;
+        busy = true;
+        stStatEl.textContent = 'AI berpikir…';
+        setTimeout(aiMove, 500);
+      } else {
+        turn = 1;
+        busy = false;
+        stStatEl.textContent = 'Giliranmu…';
+      }
+    }
+  }
+
+  function aiMove() {
+    if (over) { busy = false; return; }
+    var c = getBestMove(board);
+    dropDisc(c, 2);
+  }
+
+  function getColFromX(clientX) {
+    var rect = cvs.getBoundingClientRect();
+    var x = (clientX - rect.left) * (W / rect.width);
+    if (x < 12 || x > 348) return -1;
+    var c = Math.floor((x - 12) / 48);
+    return (c >= 0 && c <= 6) ? c : -1;
+  }
+
+  function handleTap(e) {
+    if (over || busy || turn !== 1 || anim) return;
+    var col = getColFromX(e.clientX);
+    if (col >= 0 && board[0][col] === 0) {
+      dropDisc(col, 1);
+    }
+  }
+
+  function handleMove(e) {
+    if (over || turn !== 1 || busy) { hoverCol = -1; return; }
+    hoverCol = getColFromX(e.clientX);
+  }
+
+  cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); handleTap(e); });
+  cvs.addEventListener('pointermove', function (e) { handleMove(e); });
+  cvs.addEventListener('pointerleave', function () { hoverCol = -1; });
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); newRound(); });
+
+  function drawDisc(cx, cy, radius, player) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    var grad = ctx.createRadialGradient(cx - radius * 0.3, cy - radius * 0.3, radius * 0.1, cx, cy, radius);
+    if (player === 1) {
+      grad.addColorStop(0, '#fca5a5');
+      grad.addColorStop(0.4, '#ef4444');
+      grad.addColorStop(1, '#991b1b');
+    } else {
+      grad.addColorStop(0, '#fef08a');
+      grad.addColorStop(0.4, '#eab308');
+      grad.addColorStop(1, '#854d0e');
+    }
+    ctx.fillStyle = grad;
+    ctx.shadowColor = player === 1 ? 'rgba(239,68,68,0.5)' : 'rgba(234,179,8,0.5)';
+    ctx.shadowBlur = 8;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function update() {
+    if (anim) {
+      anim.y += anim.speed;
+      anim.speed += 2.2;
+      if (anim.y >= anim.targetY) {
+        anim.y = anim.targetY;
+        board[anim.targetRow][anim.col] = anim.player;
+        var p = anim.player;
+        var col = anim.col;
+        var r = anim.targetRow;
+        anim = null;
+        afterDrop(col, r, p);
+      }
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#070a12';
+    ctx.fillRect(0, 0, W, H);
+
+    // Top indicator row (y: 0 to 48)
+    if (hoverCol >= 0 && turn === 1 && !over && !anim && !busy && board[0][hoverCol] === 0) {
+      var hx = 12 + hoverCol * 48 + 24;
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.4)';
+      ctx.beginPath();
+      ctx.arc(hx, 22, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.moveTo(hx - 6, 34);
+      ctx.lineTo(hx + 6, 34);
+      ctx.lineTo(hx, 42);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Board background frame
+    ctx.fillStyle = '#1e1b4b';
+    ctx.strokeStyle = '#4338ca';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(8, 44, 344, 258, 14);
+    ctx.fill();
+    ctx.stroke();
+
+    // Draw board holes & discs
+    for (var r = 0; r < 6; r++) {
+      for (var c = 0; c < 7; c++) {
+        var cx = 12 + c * 48 + 24;
+        var cy = 48 + r * 42 + 21;
+        var val = board[r][c];
+
+        // Draw background hole cutout
+        ctx.beginPath();
+        ctx.arc(cx, cy, 17, 0, Math.PI * 2);
+        ctx.fillStyle = '#0b0f19';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        if (val > 0) {
+          drawDisc(cx, cy, 16, val);
+        }
+      }
+    }
+
+    // Draw animating disc
+    if (anim) {
+      drawDisc(anim.x, anim.y, 16, anim.player);
+    }
+
+    // Highlight winning line
+    if (winLine && winLine.length === 4) {
+      ctx.save();
+      ctx.strokeStyle = '#34d399';
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.shadowColor = '#34d399';
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      var p0 = winLine[0], p3 = winLine[3];
+      var x0 = 12 + p0[1] * 48 + 24, y0 = 48 + p0[0] * 42 + 21;
+      var x3 = 12 + p3[1] * 48 + 24, y3 = 48 + p3[0] * 42 + 21;
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x3, y3);
+      ctx.stroke();
+
+      for (var k = 0; k < 4; k++) {
+        var pt = winLine[k];
+        var wx = 12 + pt[1] * 48 + 24, wy = 48 + pt[0] * 42 + 21;
+        ctx.beginPath();
+        ctx.arc(wx, wy, 8, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // Game over banner overlay
+    if (over) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+      ctx.fillRect(8, 44, 344, 258);
+      ctx.fillStyle = stStatEl.textContent.indexOf('Menang!') >= 0 ? '#34d399' : (stStatEl.textContent.indexOf('AI') >= 0 ? '#f87171' : '#fbbf24');
+      ctx.font = '900 22px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(stStatEl.textContent, W / 2, H / 2 - 6);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '700 12px sans-serif';
+      ctx.fillText('Tap 🔄 Ronde Baru untuk main lagi', W / 2, H / 2 + 18);
+    }
+  }
+
+  function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  resetBoard();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Cari Ranjau</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 13px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-mode { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Cari Ranjau 💣</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Terbuka</div><div class="val" id="openStat">0/54</div></div>
+      <div class="stat-pill"><div class="lbl">Bom Tersisa</div><div class="val" id="bombStat">10</div></div>
+      <div class="stat-pill"><div class="lbl">Waktu</div><div class="val" id="timeStat">00:00</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="360" height="360"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-mode" id="modeBtn">🚩 Mode Bendera</button>
+      <button class="btn btn-restart" id="restartBtn">🔄 Papan Baru</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Tap (Mode Buka ⛏️)</td><td>Buka kotak aman &amp; temukan angka</td></tr>
+      <tr><td>Tap (Mode Bendera 🚩)</td><td>Pasang atau hapus bendera 🚩</td></tr>
+      <tr><td>Klik Pertama</td><td>100% dijamin aman tanpa bom!</td></tr>
+      <tr><td class="hd2" colspan="2">Skor &amp; rekor otomatis tersimpan di browser</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var openEl = document.getElementById('openStat'), bombEl = document.getElementById('bombStat'), timeEl = document.getElementById('timeStat');
+  var modeBtn = document.getElementById('modeBtn'), restartBtn = document.getElementById('restartBtn');
+
+  var S = 360, N = 8, TOTAL_MINES = 10, SAFE_TOTAL = N * N - TOTAL_MINES;
+  var cell = S / N; // 45px
+  var board = [], started = false, gameOver = false, won = false;
+  var mode = 'open'; // 'open' or 'flag'
+  var flagCount = 0, openCount = 0, score = 0, best = 0;
+  var startTime = 0, elapsed = 0, timerInterval = null;
+  var selCell = null, flashRed = 0;
+
+  var NUM_COLORS = {
+    1: '#60a5fa',
+    2: '#4ade80',
+    3: '#f87171',
+    4: '#c084fc',
+    5: '#fb923c',
+    6: '#ffffff',
+    7: '#ffffff',
+    8: '#ffffff'
+  };
+
+  try { best = parseInt(localStorage.getItem('rara_minesweeper_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function fmtTime(sec) {
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function startTimer() {
+    stopTimer();
+    startTime = Date.now();
+    elapsed = 0;
+    timerInterval = setInterval(function () {
+      if (!started || gameOver || won) return;
+      elapsed = Math.floor((Date.now() - startTime) / 1000);
+      timeEl.textContent = fmtTime(elapsed);
+    }, 200);
+  }
+
+  function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  function reset() {
+    stopTimer();
+    board = [];
+    for (var r = 0; r < N; r++) {
+      var row = [];
+      for (var c = 0; c < N; c++) {
+        row.push({ mine: false, open: false, flag: false, count: 0 });
+      }
+      board.push(row);
+    }
+    started = false; gameOver = false; won = false;
+    flagCount = 0; openCount = 0; score = 0; elapsed = 0; flashRed = 0; selCell = null;
+    scoreEl.textContent = '0';
+    openEl.textContent = '0/' + SAFE_TOTAL;
+    bombEl.textContent = String(TOTAL_MINES);
+    timeEl.textContent = '00:00';
+    updateModeBtn();
+  }
+
+  function updateModeBtn() {
+    if (mode === 'open') {
+      modeBtn.textContent = '🚩 Mode Bendera';
+      modeBtn.style.background = 'linear-gradient(135deg, #6366f1, #4338ca)';
+    } else {
+      modeBtn.textContent = '⛏️ Mode Buka';
+      modeBtn.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+    }
+  }
+
+  function initMines(safeR, safeC) {
+    var excluded = {};
+    for (var dr = -1; dr <= 1; dr++) {
+      for (var dc = -1; dc <= 1; dc++) {
+        var nr = safeR + dr, nc = safeC + dc;
+        if (nr >= 0 && nr < N && nc >= 0 && nc < N) {
+          excluded[nr + ',' + nc] = true;
+        }
+      }
+    }
+
+    var pool = [];
+    for (var r = 0; r < N; r++) {
+      for (var c = 0; c < N; c++) {
+        if (!excluded[r + ',' + c]) {
+          pool.push({ r: r, c: c });
+        }
+      }
+    }
+
+    // Shuffle pool
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = pool[i]; pool[i] = pool[j]; pool[j] = temp;
+    }
+
+    for (var k = 0; k < TOTAL_MINES && k < pool.length; k++) {
+      var p = pool[k];
+      board[p.r][p.c].mine = true;
+    }
+
+    // Compute numbers
+    for (var r2 = 0; r2 < N; r2++) {
+      for (var c2 = 0; c2 < N; c2++) {
+        if (board[r2][c2].mine) continue;
+        var cnt = 0;
+        for (var dr2 = -1; dr2 <= 1; dr2++) {
+          for (var dc2 = -1; dc2 <= 1; dc2++) {
+            var nr2 = r2 + dr2, nc2 = c2 + dc2;
+            if (nr2 >= 0 && nr2 < N && nc2 >= 0 && nc2 < N && board[nr2][nc2].mine) cnt++;
+          }
+        }
+        board[r2][c2].count = cnt;
+      }
+    }
+  }
+
+  function floodFill(sr, sc) {
+    var stack = [{ r: sr, c: sc }];
+    while (stack.length > 0) {
+      var curr = stack.pop();
+      var r = curr.r, c = curr.c;
+      var tile = board[r][c];
+      if (tile.open || tile.flag || tile.mine) continue;
+
+      tile.open = true;
+      openCount++;
+
+      if (tile.count === 0) {
+        for (var dr = -1; dr <= 1; dr++) {
+          for (var dc = -1; dc <= 1; dc++) {
+            var nr = r + dr, nc = c + dc;
+            if (nr >= 0 && nr < N && nc >= 0 && nc < N) {
+              if (!board[nr][nc].open && !board[nr][nc].flag && !board[nr][nc].mine) {
+                stack.push({ r: nr, c: nc });
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function handleCellTap(r, c) {
+    if (gameOver || won) return;
+    selCell = { r: r, c: c };
+
+    if (!started) {
+      started = true;
+      initMines(r, c);
+      startTimer();
+    }
+
+    var tile = board[r][c];
+
+    if (mode === 'flag') {
+      if (tile.open) return;
+      tile.flag = !tile.flag;
+      flagCount += tile.flag ? 1 : -1;
+      bombEl.textContent = String(Math.max(0, TOTAL_MINES - flagCount));
+      return;
+    }
+
+    // mode === 'open'
+    if (tile.flag || tile.open) return;
+
+    if (tile.mine) {
+      // Game Over
+      tile.open = true;
+      gameOver = true;
+      flashRed = 1.0;
+      stopTimer();
+      // reveal all mines
+      for (var mr = 0; mr < N; mr++) {
+        for (var mc = 0; mc < N; mc++) {
+          if (board[mr][mc].mine) board[mr][mc].open = true;
+        }
+      }
+      return;
+    }
+
+    if (tile.count === 0) {
+      floodFill(r, c);
+    } else {
+      tile.open = true;
+      openCount++;
+    }
+
+    score = openCount * 10;
+    scoreEl.textContent = String(score);
+    openEl.textContent = openCount + '/' + SAFE_TOTAL;
+
+    if (openCount >= SAFE_TOTAL) {
+      won = true;
+      stopTimer();
+      // Auto flag remaining mines
+      for (var wr = 0; wr < N; wr++) {
+        for (var wc = 0; wc < N; wc++) {
+          if (board[wr][wc].mine) board[wr][wc].flag = true;
+        }
+      }
+      bombEl.textContent = '0';
+      var timeBonus = Math.max(0, 500 - elapsed * 5);
+      var finalScore = openCount * 10 + timeBonus;
+      score = finalScore;
+      scoreEl.textContent = String(score);
+      if (score > best) {
+        best = score;
+        bestEl.textContent = 'Best ' + best;
+        try { localStorage.setItem('rara_minesweeper_best', String(best)); } catch (e) {}
+      }
+    }
+  }
+
+  function rr(x, y, w, h, r) {
+    X.beginPath(); X.moveTo(x + r, y);
+    X.arcTo(x + w, y, x + w, y + h, r); X.arcTo(x + w, y + h, x, y + h, r);
+    X.arcTo(x, y + h, x, y, r); X.arcTo(x, y, x + w, y, r); X.closePath();
+  }
+
+  function draw() {
+    X.fillStyle = '#070a12'; X.fillRect(0, 0, S, S);
+
+    var pad = 2, sz = cell - pad * 2;
+    for (var r = 0; r < N; r++) {
+      for (var c = 0; c < N; c++) {
+        var gx = c * cell + pad, gy = r * cell + pad;
+        var tile = board[r][c];
+
+        if (tile.open) {
+          if (tile.mine) {
+            X.fillStyle = 'rgba(239,68,68,0.35)';
+            rr(gx, gy, sz, sz, 8); X.fill();
+            X.strokeStyle = '#ef4444'; X.lineWidth = 2; X.stroke();
+            X.font = Math.floor(sz * 0.55) + 'px serif';
+            X.textAlign = 'center'; X.textBaseline = 'middle';
+            X.fillText('💣', gx + sz / 2, gy + sz / 2);
+          } else {
+            X.fillStyle = 'rgba(15,23,42,0.8)';
+            rr(gx, gy, sz, sz, 8); X.fill();
+            X.strokeStyle = 'rgba(255,255,255,0.06)'; X.lineWidth = 1; X.stroke();
+            if (tile.count > 0) {
+              X.fillStyle = NUM_COLORS[tile.count] || '#ffffff';
+              X.font = '900 ' + Math.floor(sz * 0.5) + 'px sans-serif';
+              X.textAlign = 'center'; X.textBaseline = 'middle';
+              X.fillText(String(tile.count), gx + sz / 2, gy + sz / 2 + 1);
+            }
+          }
+        } else {
+          // Unopened
+          X.fillStyle = '#1e293b';
+          rr(gx, gy, sz, sz, 8); X.fill();
+          X.strokeStyle = 'rgba(255,255,255,0.12)'; X.lineWidth = 1.5; X.stroke();
+
+          if (tile.flag) {
+            X.font = Math.floor(sz * 0.55) + 'px serif';
+            X.textAlign = 'center'; X.textBaseline = 'middle';
+            X.fillText('🚩', gx + sz / 2, gy + sz / 2);
+          }
+        }
+
+        // Highlight selected cell
+        if (selCell && selCell.r === r && selCell.c === c) {
+          X.strokeStyle = '#818cf8'; X.lineWidth = 2.5;
+          rr(gx - 1, gy - 1, sz + 2, sz + 2, 9); X.stroke();
+        }
+      }
+    }
+
+    if (flashRed > 0) {
+      X.fillStyle = 'rgba(239,68,68,' + (flashRed * 0.35) + ')';
+      X.fillRect(0, 0, S, S);
+      flashRed -= 0.05;
+    }
+
+    if (gameOver) {
+      X.fillStyle = 'rgba(0,0,0,0.72)'; X.fillRect(0, 0, S, S);
+      X.fillStyle = '#f87171'; X.font = '900 22px sans-serif'; X.textAlign = 'center';
+      X.fillText('Kena Bom! 💥', S / 2, S / 2 - 14);
+      X.fillStyle = '#fff'; X.font = '700 13px sans-serif';
+      X.fillText('Terbuka ' + openCount + ' sel — tap 🔄 Papan Baru', S / 2, S / 2 + 14);
+    } else if (won) {
+      X.fillStyle = 'rgba(0,0,0,0.72)'; X.fillRect(0, 0, S, S);
+      X.fillStyle = '#4ade80'; X.font = '900 22px sans-serif'; X.textAlign = 'center';
+      X.fillText('Menang! 🎉', S / 2, S / 2 - 14);
+      X.fillStyle = '#fff'; X.font = '700 13px sans-serif';
+      X.fillText('Waktu ' + fmtTime(elapsed) + ' — Skor: ' + score, S / 2, S / 2 + 14);
+    }
+  }
+
+  function handleTapEvent(e) {
+    e.preventDefault();
+    var rect = cvs.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (S / rect.width);
+    var y = (e.clientY - rect.top) * (S / rect.height);
+    var c = Math.floor(x / cell), r = Math.floor(y / cell);
+    if (r >= 0 && r < N && c >= 0 && c < N) {
+      handleCellTap(r, c);
+    }
+  }
+
+  cvs.addEventListener('pointerdown', handleTapEvent);
+  cvs.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    var rect = cvs.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (S / rect.width);
+    var y = (e.clientY - rect.top) * (S / rect.height);
+    var c = Math.floor(x / cell), r = Math.floor(y / cell);
+    if (r >= 0 && r < N && c >= 0 && c < N) {
+      var prevMode = mode;
+      mode = 'flag';
+      handleCellTap(r, c);
+      mode = prevMode;
+    }
+  });
+
+  modeBtn.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    mode = (mode === 'open') ? 'flag' : 'open';
+    updateModeBtn();
+  });
+
+  restartBtn.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    reset();
+  });
+
+  reset();
+  requestAnimationFrame(function loop() { draw(); requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Simon Says</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-start { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Simon Says 🎵</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">Lvl 1</div>
+        <div class="best-badge" id="best">Best Lvl 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Level</div><div class="val" id="lvlStat">1</div></div>
+      <div class="stat-pill"><div class="lbl">Panjang Urutan</div><div class="val" id="lenStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Best</div><div class="val" id="bestStat">0</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="320" height="320"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-start" id="startBtn">▶️ Mulai</button>
+      <button class="btn btn-restart" id="restartBtn">🔄 Ulang</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>▶️ Mulai</td><td>Tekan Mulai untuk mendengar &amp; melihat pola</td></tr>
+      <tr><td>Tap Kuadran</td><td>Ikuti urutan warna sesuai giliran bot</td></tr>
+      <tr><td>Level Naik</td><td>Kecepatan &amp; urutan makin panjang 🔥</td></tr>
+      <tr><td class="hd2" colspan="2">Rekor level tertinggi tersimpan otomatis di browser</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var lvlEl = document.getElementById('lvlStat'), lenEl = document.getElementById('lenStat'), bestStatEl = document.getElementById('bestStat');
+
+  var S = 320, CX = 160, CY = 160, outerR = 145, innerR = 52;
+  var level = 1, sequence = [], userIndex = 0, state = 'idle'; // 'idle', 'showing', 'user', 'gameover'
+  var litQuadrant = -1, allRed = false;
+  var bestLevel = 0;
+
+  try {
+    bestLevel = parseInt(localStorage.getItem('rara_simon_best') || '0', 10) || 0;
+  } catch (e) { bestLevel = 0; }
+
+  bestStatEl.textContent = bestLevel;
+  bestEl.textContent = 'Best Lvl ' + bestLevel;
+
+  var audioCtx = null;
+  function getAudioContext() {
+    if (!audioCtx) {
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      } catch (e) {}
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(function () {});
+    }
+    return audioCtx;
+  }
+
+  var FREQS = [329.63, 261.63, 220.00, 164.81];
+
+  function playTone(freq, durationMs, type) {
+    try {
+      var ctx = getAudioContext();
+      if (!ctx) return;
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + durationMs / 1000);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + durationMs / 1000);
+    } catch (e) {}
+  }
+
+  var COLORS = [
+    { base: '#15803d', lit: '#4ade80', name: 'Hijau' },  // 0: Top-Left
+    { base: '#b91c1c', lit: '#f87171', name: 'Merah' },  // 1: Top-Right
+    { base: '#a16207', lit: '#facc15', name: 'Kuning' }, // 2: Bottom-Right
+    { base: '#1d4ed8', lit: '#60a5fa', name: 'Biru' }    // 3: Bottom-Left
+  ];
+
+  function playSequence() {
+    state = 'showing';
+    userIndex = 0;
+    lenEl.textContent = sequence.length;
+
+    var speed = Math.max(250, 600 - (level - 1) * 35);
+    var i = 0;
+
+    function nextStep() {
+      if (i >= sequence.length) {
+        state = 'user';
+        litQuadrant = -1;
+        return;
+      }
+      var q = sequence[i];
+      litQuadrant = q;
+      playTone(FREQS[q], 350, 'sine');
+
+      setTimeout(function () {
+        litQuadrant = -1;
+        i++;
+        setTimeout(nextStep, Math.max(80, speed - 350));
+      }, 350);
+    }
+
+    setTimeout(nextStep, 500);
+  }
+
+  function startGame() {
+    level = 1;
+    sequence = [(Math.random() * 4) | 0];
+    userIndex = 0;
+    scoreEl.textContent = 'Lvl 1';
+    lvlEl.textContent = '1';
+    lenEl.textContent = '1';
+    allRed = false;
+    playSequence();
+  }
+
+  function getQuadrant(x, y) {
+    var dx = x - CX;
+    var dy = y - CY;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < innerR || dist > outerR) return -1;
+    if (dx < 0 && dy < 0) return 0; // Top-Left Green
+    if (dx >= 0 && dy < 0) return 1; // Top-Right Red
+    if (dx >= 0 && dy >= 0) return 2; // Bottom-Right Yellow
+    if (dx < 0 && dy >= 0) return 3; // Bottom-Left Blue
+    return -1;
+  }
+
+  function tapCanvas(e) {
+    var rect = cvs.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (S / rect.width);
+    var y = (e.clientY - rect.top) * (S / rect.height);
+    var q = getQuadrant(x, y);
+
+    if (q < 0 || state !== 'user') return;
+
+    litQuadrant = q;
+    playTone(FREQS[q], 250, 'sine');
+
+    setTimeout(function () {
+      if (state === 'user' && litQuadrant === q) litQuadrant = -1;
+    }, 250);
+
+    if (q === sequence[userIndex]) {
+      userIndex++;
+      if (userIndex === sequence.length) {
+        level++;
+        scoreEl.textContent = 'Lvl ' + level;
+        lvlEl.textContent = level;
+
+        var reachedLvl = level - 1;
+        if (reachedLvl > bestLevel) {
+          bestLevel = reachedLvl;
+          bestStatEl.textContent = bestLevel;
+          bestEl.textContent = 'Best Lvl ' + bestLevel;
+          try { localStorage.setItem('rara_simon_best', String(bestLevel)); } catch (err) {}
+        }
+
+        setTimeout(function () {
+          sequence.push((Math.random() * 4) | 0);
+          playSequence();
+        }, 800);
+      }
+    } else {
+      state = 'gameover';
+      allRed = true;
+      playTone(110, 500, 'sawtooth');
+      setTimeout(function () {
+        allRed = false;
+      }, 600);
+    }
+  }
+
+  function drawSector(qIdx, isLit) {
+    var startA = 0, endA = 0;
+    var gap = 0.04;
+    if (qIdx === 0) { startA = Math.PI + gap; endA = 1.5 * Math.PI - gap; }
+    else if (qIdx === 1) { startA = 1.5 * Math.PI + gap; endA = 2 * Math.PI - gap; }
+    else if (qIdx === 2) { startA = 0 + gap; endA = 0.5 * Math.PI - gap; }
+    else if (qIdx === 3) { startA = 0.5 * Math.PI + gap; endA = Math.PI - gap; }
+
+    X.save();
+    X.beginPath();
+    X.arc(CX, CY, outerR, startA, endA, false);
+    X.arc(CX, CY, innerR, endA, startA, true);
+    X.closePath();
+
+    var col = COLORS[qIdx];
+    if (allRed) {
+      X.fillStyle = '#ef4444';
+    } else {
+      X.fillStyle = isLit ? col.lit : col.base;
+    }
+    X.fill();
+
+    if (isLit || allRed) {
+      X.strokeStyle = '#ffffff';
+      X.lineWidth = 4;
+      X.stroke();
+      X.fillStyle = 'rgba(255,255,255,0.25)';
+      X.fill();
+    } else {
+      X.strokeStyle = 'rgba(0,0,0,0.4)';
+      X.lineWidth = 3;
+      X.stroke();
+    }
+    X.restore();
+  }
+
+  function draw() {
+    X.fillStyle = '#070a12';
+    X.fillRect(0, 0, S, S);
+
+    for (var q = 0; q < 4; q++) {
+      drawSector(q, litQuadrant === q);
+    }
+
+    // Center circle
+    X.beginPath();
+    X.arc(CX, CY, innerR - 2, 0, 2 * Math.PI);
+    X.fillStyle = '#0f172a';
+    X.fill();
+    X.strokeStyle = '#1e293b';
+    X.lineWidth = 3;
+    X.stroke();
+
+    X.textAlign = 'center';
+    X.textBaseline = 'middle';
+
+    if (state === 'idle') {
+      X.fillStyle = '#6366f1';
+      X.font = '900 12px sans-serif';
+      X.fillText('SIMON', CX, CY - 10);
+      X.fillStyle = '#ffffff';
+      X.font = '800 11px sans-serif';
+      X.fillText('TAP MULAI', CX, CY + 10);
+    } else if (state === 'showing') {
+      X.fillStyle = '#facc15';
+      X.font = '900 11px sans-serif';
+      X.fillText('DENGAR…', CX, CY - 10);
+      X.fillStyle = '#ffffff';
+      X.font = '800 13px sans-serif';
+      X.fillText('LVL ' + level, CX, CY + 10);
+    } else if (state === 'user') {
+      X.fillStyle = '#4ade80';
+      X.font = '900 11px sans-serif';
+      X.fillText('GILIRANMU', CX, CY - 10);
+      X.fillStyle = '#ffffff';
+      X.font = '800 13px sans-serif';
+      X.fillText(userIndex + '/' + sequence.length, CX, CY + 10);
+    } else if (state === 'gameover') {
+      X.fillStyle = '#ef4444';
+      X.font = '900 11px sans-serif';
+      X.fillText('GAME OVER', CX, CY - 10);
+      X.fillStyle = '#ffffff';
+      X.font = '800 13px sans-serif';
+      X.fillText('SKOR ' + (level - 1), CX, CY + 10);
+    }
+  }
+
+  cvs.addEventListener('pointerdown', function (e) { e.preventDefault(); tapCanvas(e); });
+  document.getElementById('startBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); startGame(); });
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) { e.preventDefault(); startGame(); });
+
+  requestAnimationFrame(function loop() { draw(); requestAnimationFrame(loop); });
+})();
+
+</script>
+</body>
+</html>

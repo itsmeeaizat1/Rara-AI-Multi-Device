@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Puzzle Geser</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 13px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-shuffle { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Puzzle Geser 🔲</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Langkah</div><div class="val" id="moveStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Terurut</div><div class="val" id="correctStat">0/15</div></div>
+      <div class="stat-pill"><div class="lbl">Waktu</div><div class="val" id="timeStat">00:00</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="360" height="360"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-shuffle" id="shuffleBtn">🔀 Acak Ulang</button>
+      <button class="btn btn-restart" id="restartBtn">⟳ Baru</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Tap tile tetangga</td><td>Geser tile ke kotak kosong</td></tr>
+      <tr><td>Border Hijau ✨</td><td>Indikator tile sudah di posisi benar</td></tr>
+      <tr><td>Urutan Menang</td><td>Susun angka 1 s/d 15 secara berurutan</td></tr>
+      <tr><td class="hd2" colspan="2">Skor &amp; rekor otomatis tersimpan di browser</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var moveEl = document.getElementById('moveStat'), correctEl = document.getElementById('correctStat'), timeEl = document.getElementById('timeStat');
+  var shuffleBtn = document.getElementById('shuffleBtn'), restartBtn = document.getElementById('restartBtn');
+
+  var S = 360, N = 4, pad = 6, gap = 4, tileSize = 84; // 6 + 4*84 + 3*4 + 6 = 360px
+  var board = [], emptyR = 3, emptyC = 3;
+  var moves = 0, started = false, won = false, best = 0;
+  var startTime = 0, elapsed = 0, timerInterval = null;
+  var anim = null; // { val, fromR, fromC, toR, toC, startTime, duration }
+
+  var COLOR_MAP = {
+    1: ['#6366f1', '#4f46e5'],
+    2: ['#5b5cf0', '#4338ca'],
+    3: ['#4f46e5', '#3730a3'],
+    4: ['#3b82f6', '#2563eb'],
+    5: ['#2563eb', '#1d4ed8'],
+    6: ['#1d4ed8', '#1e40af'],
+    7: ['#0284c7', '#0369a1'],
+    8: ['#06b6d4', '#0891b2'],
+    9: ['#0891b2', '#0e7490'],
+    10: ['#14b8a6', '#0d9488'],
+    11: ['#0d9488', '#0f766e'],
+    12: ['#10b981', '#059669'],
+    13: ['#f59e0b', '#d97706'],
+    14: ['#f97316', '#ea580c'],
+    15: ['#ec4899', '#db2777']
+  };
+
+  try { best = parseInt(localStorage.getItem('rara_slidingpuzzle_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function fmtTime(sec) {
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function startTimer() {
+    stopTimer();
+    startTime = Date.now();
+    elapsed = 0;
+    timerInterval = setInterval(function () {
+      if (!started || won) return;
+      elapsed = Math.floor((Date.now() - startTime) / 1000);
+      timeEl.textContent = fmtTime(elapsed);
+    }, 200);
+  }
+
+  function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  function countCorrect() {
+    var cnt = 0;
+    for (var r = 0; r < N; r++) {
+      for (var c = 0; c < N; c++) {
+        if (board[r][c] !== 0 && board[r][c] === r * N + c + 1) {
+          cnt++;
+        }
+      }
+    }
+    return cnt;
+  }
+
+  function updateStats() {
+    moveEl.textContent = String(moves);
+    var corr = countCorrect();
+    correctEl.textContent = corr + '/15';
+    scoreEl.textContent = String(moves);
+  }
+
+  function shuffleLegal() {
+    stopTimer();
+    anim = null;
+    board = [
+      [1, 2, 3, 4],
+      [5, 6, 7, 8],
+      [9, 10, 11, 12],
+      [13, 14, 15, 0]
+    ];
+    emptyR = 3; emptyC = 3;
+    var lastR = -1, lastC = -1;
+
+    for (var step = 0; step < 150; step++) {
+      var neighbors = [];
+      var dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+      for (var d = 0; d < dirs.length; d++) {
+        var nr = emptyR + dirs[d][0], nc = emptyC + dirs[d][1];
+        if (nr >= 0 && nr < N && nc >= 0 && nc < N) {
+          if (nr !== lastR || nc !== lastC) {
+            neighbors.push({ r: nr, c: nc });
+          }
+        }
+      }
+      if (neighbors.length === 0) {
+        dirs.forEach(function (dr) {
+          var nr = emptyR + dr[0], nc = emptyC + dr[1];
+          if (nr >= 0 && nr < N && nc >= 0 && nc < N) neighbors.push({ r: nr, c: nc });
+        });
+      }
+      var pick = neighbors[Math.floor(Math.random() * neighbors.length)];
+      board[emptyR][emptyC] = board[pick.r][pick.c];
+      board[pick.r][pick.c] = 0;
+      lastR = emptyR; lastC = emptyC;
+      emptyR = pick.r; emptyC = pick.c;
+    }
+
+    moves = 0;
+    started = false;
+    won = false;
+    timeEl.textContent = '00:00';
+    updateStats();
+  }
+
+  function handleTileTap(r, c) {
+    if (won) return;
+    if (board[r][c] === 0) return;
+
+    // Check if adjacent to empty space
+    var isNeighbor = (Math.abs(r - emptyR) + Math.abs(c - emptyC)) === 1;
+    if (!isNeighbor) return;
+
+    if (!started) {
+      started = true;
+      startTimer();
+    }
+
+    var val = board[r][c];
+    anim = {
+      val: val,
+      fromR: r, fromC: c,
+      toR: emptyR, toC: emptyC,
+      startTime: performance.now(),
+      duration: 120
+    };
+
+    board[emptyR][emptyC] = val;
+    board[r][c] = 0;
+    emptyR = r; emptyC = c;
+
+    moves++;
+    updateStats();
+
+    // Check win condition
+    if (countCorrect() === 15 && board[3][3] === 0) {
+      won = true;
+      stopTimer();
+      var timeBonus = Math.max(0, 600 - elapsed * 3);
+      var moveBonus = Math.max(0, 1000 - moves * 5);
+      var finalScore = 500 + timeBonus + moveBonus;
+      scoreEl.textContent = String(finalScore);
+      if (finalScore > best) {
+        best = finalScore;
+        bestEl.textContent = 'Best ' + best;
+        try { localStorage.setItem('rara_slidingpuzzle_best', String(best)); } catch (e) {}
+      }
+    }
+  }
+
+  function rr(x, y, w, h, r) {
+    X.beginPath(); X.moveTo(x + r, y);
+    X.arcTo(x + w, y, x + w, y + h, r); X.arcTo(x + w, y + h, x, y + h, r);
+    X.arcTo(x, y + h, x, y, r); X.arcTo(x, y, x + w, y, r); X.closePath();
+  }
+
+  function draw() {
+    X.fillStyle = '#070a12'; X.fillRect(0, 0, S, S);
+
+    var now = performance.now();
+    var animVal = (anim && anim.val) ? anim.val : null;
+
+    // Draw grid slots / empty background
+    for (var r = 0; r < N; r++) {
+      for (var c = 0; c < N; c++) {
+        var gx = pad + c * (tileSize + gap);
+        var gy = pad + r * (tileSize + gap);
+        X.fillStyle = '#101623';
+        rr(gx, gy, tileSize, tileSize, 10); X.fill();
+        X.strokeStyle = 'rgba(255,255,255,0.04)'; X.lineWidth = 1; X.stroke();
+      }
+    }
+
+    // Draw tiles
+    for (var r2 = 0; r2 < N; r2++) {
+      for (var c2 = 0; c2 < N; c2++) {
+        var val = board[r2][c2];
+        if (val === 0) continue;
+
+        var currR = r2, currC = c2;
+        if (animVal === val) {
+          var p = Math.min(1, (now - anim.startTime) / anim.duration);
+          currR = anim.fromR + (anim.toR - anim.fromR) * p;
+          currC = anim.fromC + (anim.toC - anim.fromC) * p;
+          if (p >= 1) anim = null;
+        }
+
+        var tx = pad + currC * (tileSize + gap);
+        var ty = pad + currR * (tileSize + gap);
+
+        // Tile background gradient
+        var colors = COLOR_MAP[val] || ['#6366f1', '#4338ca'];
+        var grad = X.createLinearGradient(tx, ty, tx + tileSize, ty + tileSize);
+        grad.addColorStop(0, colors[0]);
+        grad.addColorStop(1, colors[1]);
+
+        X.fillStyle = grad;
+        rr(tx, ty, tileSize, tileSize, 10); X.fill();
+
+        // Green glow if in correct solved spot
+        var isCorrect = (r2 * N + c2 + 1 === val);
+        if (isCorrect && !anim) {
+          X.strokeStyle = '#34d399'; X.lineWidth = 2.5;
+          X.shadowColor = 'rgba(52,211,153,0.7)'; X.shadowBlur = 8;
+        } else {
+          X.strokeStyle = 'rgba(255,255,255,0.2)'; X.lineWidth = 1.5;
+          X.shadowBlur = 0;
+        }
+        X.stroke();
+        X.shadowBlur = 0; // reset shadow
+
+        // Number text
+        X.fillStyle = '#ffffff';
+        X.font = '900 30px sans-serif';
+        X.textAlign = 'center'; X.textBaseline = 'middle';
+        X.fillText(String(val), tx + tileSize / 2, ty + tileSize / 2 + 1);
+      }
+    }
+
+    if (won) {
+      X.fillStyle = 'rgba(0,0,0,0.72)'; X.fillRect(0, 0, S, S);
+      X.fillStyle = '#34d399'; X.font = '900 22px sans-serif'; X.textAlign = 'center';
+      X.fillText('Menang! 🎉', S / 2, S / 2 - 14);
+      X.fillStyle = '#fff'; X.font = '700 13px sans-serif';
+      X.fillText(moves + ' langkah · waktu ' + fmtTime(elapsed), S / 2, S / 2 + 14);
+    }
+  }
+
+  function handleTapEvent(e) {
+    e.preventDefault();
+    var rect = cvs.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (S / rect.width);
+    var y = (e.clientY - rect.top) * (S / rect.height);
+    var c = Math.floor((x - pad) / (tileSize + gap));
+    var r = Math.floor((y - pad) / (tileSize + gap));
+    if (r >= 0 && r < N && c >= 0 && c < N) {
+      handleTileTap(r, c);
+    }
+  }
+
+  cvs.addEventListener('pointerdown', handleTapEvent);
+
+  shuffleBtn.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    shuffleLegal();
+  });
+
+  restartBtn.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    shuffleLegal();
+  });
+
+  shuffleLegal();
+  requestAnimationFrame(function loop() { draw(); requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Pecah Bata</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 6px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 6px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 12px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 13px; font-size: 13px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-launch { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+.credit-bar span { color: #6366f1; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Pecah Bata 🧱</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Level</div><div class="val" id="lvlStat">1</div></div>
+      <div class="stat-pill"><div class="lbl">Skor</div><div class="val" id="scoreStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Nyawa</div><div class="val" id="lifeStat">❤️❤️❤️</div></div>
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="stStat">Siap</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="360" height="480"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-launch" id="launchBtn">🚀 Lempar Bola</button>
+      <button class="btn btn-restart" id="restartBtn">🔄 Restart</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Geser jari di layar</td><td>Gerakkan paddle ke kiri / kanan</td></tr>
+      <tr><td>Pantulkan bola ⚽</td><td>Pecahkan bata &amp; kumpulkan skor</td></tr>
+      <tr><td class="hd2" colspan="2">Bata multi-HP berubah warna saat terkena benturan</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var lvlStatEl = document.getElementById('lvlStat'), scoreStatEl = document.getElementById('scoreStat');
+  var lifeStatEl = document.getElementById('lifeStat'), stStatEl = document.getElementById('stStat');
+
+  var W = 360, H = 480;
+  var paddleW = 72, paddleH = 12, paddleX, paddleY = H - 28, paddleFlash = 0;
+  var ballR = 6, ballX, ballY, ballVx = 0, ballVy = 0, ballStuck = true;
+  var level = 1, score = 0, lives = 3, best = 0, over = false, gameWon = false;
+  var bricks = [], particles = [];
+
+  try { best = parseInt(localStorage.getItem('rara_brick_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function getHeartString(n) {
+    if (n <= 0) return '💀';
+    var s = '';
+    for (var i = 0; i < n; i++) s += '❤️';
+    return s;
+  }
+
+  function initLevel(lvl) {
+    bricks = [];
+    level = lvl;
+    lvlStatEl.textContent = level;
+
+    if (lvl === 1) {
+      // 6 cols x 4 rows
+      var cols = 6, rows = 4, bw = 52, bh = 18, gap = 4;
+      var marginX = (W - (cols * bw + (cols - 1) * gap)) / 2;
+      var startY = 50;
+      var colors = ['#6366f1', '#3b82f6', '#06b6d4', '#14b8a6'];
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          bricks.push({
+            x: marginX + c * (bw + gap),
+            y: startY + r * (bh + gap),
+            w: bw, h: bh,
+            hp: 1, maxHp: 1,
+            color: colors[r % colors.length]
+          });
+        }
+      }
+    } else if (lvl === 2) {
+      // 7 cols x 5 rows, top row hp=2
+      var cols = 7, rows = 5, bw = 44, bh = 16, gap = 4;
+      var marginX = (W - (cols * bw + (cols - 1) * gap)) / 2;
+      var startY = 46;
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          var hp = (r === 0) ? 2 : 1;
+          bricks.push({
+            x: marginX + c * (bw + gap),
+            y: startY + r * (bh + gap),
+            w: bw, h: bh,
+            hp: hp, maxHp: hp,
+            color: hp === 2 ? '#a855f7' : (r % 2 === 0 ? '#3b82f6' : '#06b6d4')
+          });
+        }
+      }
+    } else {
+      // Level 3: Pyramid layout with 3-hp bricks
+      var rowConfigs = [
+        { cols: 7, hp: 3, color: '#ec4899' },
+        { cols: 6, hp: 2, color: '#a855f7' },
+        { cols: 5, hp: 2, color: '#6366f1' },
+        { cols: 4, hp: 1, color: '#3b82f6' },
+        { cols: 3, hp: 1, color: '#06b6d4' }
+      ];
+      var bh = 16, gap = 4, startY = 42;
+      for (var r = 0; r < rowConfigs.length; r++) {
+        var cfg = rowConfigs[r];
+        var bw = 44;
+        var rowW = cfg.cols * bw + (cfg.cols - 1) * gap;
+        var marginX = (W - rowW) / 2;
+        for (var c = 0; c < cfg.cols; c++) {
+          bricks.push({
+            x: marginX + c * (bw + gap),
+            y: startY + r * (bh + gap),
+            w: bw, h: bh,
+            hp: cfg.hp, maxHp: cfg.hp,
+            color: cfg.color
+          });
+        }
+      }
+    }
+  }
+
+  function resetBall() {
+    paddleX = (W - paddleW) / 2;
+    ballStuck = true;
+    ballX = paddleX + paddleW / 2;
+    ballY = paddleY - ballR - 1;
+    ballVx = 0; ballVy = 0;
+  }
+
+  function launchBall() {
+    if (!ballStuck || over) return;
+    ballStuck = false;
+    var speed = 6.2 + (level - 1) * 0.6;
+    var angle = (Math.random() * 0.5 - 0.25) - Math.PI / 2;
+    ballVx = speed * Math.cos(angle);
+    ballVy = speed * Math.sin(angle);
+    stStatEl.textContent = 'Main';
+  }
+
+  function resetGame() {
+    score = 0; lives = 3; level = 1; over = false; gameWon = false;
+    particles = [];
+    scoreEl.textContent = '0'; scoreStatEl.textContent = '0';
+    lifeStatEl.textContent = getHeartString(lives);
+    stStatEl.textContent = 'Siap';
+    initLevel(1);
+    resetBall();
+  }
+
+  function spawnParticles(x, y, color) {
+    for (var i = 0; i < 7; i++) {
+      particles.push({
+        x: x, y: y,
+        vx: (Math.random() - 0.5) * 6,
+        vy: (Math.random() - 0.5) * 6,
+        size: Math.random() * 4 + 2,
+        color: color,
+        life: 1.0
+      });
+    }
+  }
+
+  function update() {
+    if (over) return;
+
+    if (paddleFlash > 0) paddleFlash--;
+
+    // Update particles
+    for (var p = particles.length - 1; p >= 0; p--) {
+      var pt = particles[p];
+      pt.x += pt.vx;
+      pt.y += pt.vy;
+      pt.life -= 0.04;
+      if (pt.life <= 0) particles.splice(p, 1);
+    }
+
+    if (ballStuck) {
+      ballX = paddleX + paddleW / 2;
+      ballY = paddleY - ballR - 1;
+      return;
+    }
+
+    // Move ball
+    ballX += ballVx;
+    ballY += ballVy;
+
+    // Wall collision
+    if (ballX - ballR <= 0) { ballX = ballR; ballVx = -ballVx; }
+    if (ballX + ballR >= W) { ballX = W - ballR; ballVx = -ballVx; }
+    if (ballY - ballR <= 0) { ballY = ballR; ballVy = -ballVy; }
+
+    // Bottom loss
+    if (ballY - ballR >= H) {
+      lives--;
+      lifeStatEl.textContent = getHeartString(lives);
+      if (lives <= 0) {
+        over = true;
+        stStatEl.textContent = 'Kalah 💀';
+      } else {
+        stStatEl.textContent = 'Tap Lempar!';
+        resetBall();
+      }
+      return;
+    }
+
+    // Ensure ball velocity is not stuck purely horizontal
+    if (Math.abs(ballVy) < 1.8) {
+      ballVy = ballVy < 0 ? -1.8 : 1.8;
+      var curSpd = 6.2 + (level - 1) * 0.6;
+      var mag = Math.sqrt(ballVx * ballVx + ballVy * ballVy);
+      ballVx = (ballVx / mag) * curSpd;
+      ballVy = (ballVy / mag) * curSpd;
+    }
+
+    // Paddle collision
+    if (ballVy > 0 &&
+        ballY + ballR >= paddleY &&
+        ballY - ballR <= paddleY + paddleH &&
+        ballX >= paddleX - ballR &&
+        ballX <= paddleX + paddleW + ballR) {
+
+      ballY = paddleY - ballR;
+      var hitOffset = (ballX - (paddleX + paddleW / 2)) / (paddleW / 2);
+      hitOffset = Math.max(-0.9, Math.min(0.9, hitOffset));
+
+      var maxAngle = Math.PI * 0.36;
+      var angle = hitOffset * maxAngle;
+      var speed = Math.sqrt(ballVx * ballVx + ballVy * ballVy);
+
+      ballVx = speed * Math.sin(angle);
+      ballVy = -speed * Math.cos(angle);
+      paddleFlash = 5;
+    }
+
+    // Brick collisions
+    var remaining = 0;
+    for (var i = 0; i < bricks.length; i++) {
+      var b = bricks[i];
+      if (b.hp <= 0) continue;
+      remaining++;
+
+      // Circle to AABB collision
+      var closestX = Math.max(b.x, Math.min(ballX, b.x + b.w));
+      var closestY = Math.max(b.y, Math.min(ballY, b.y + b.h));
+      var dx = ballX - closestX;
+      var dy = ballY - closestY;
+      var distSq = dx * dx + dy * dy;
+
+      if (distSq < ballR * ballR) {
+        b.hp--;
+        score += 10 * level;
+        scoreStatEl.textContent = score;
+        scoreEl.textContent = score;
+
+        if (score > best) {
+          best = score;
+          bestEl.textContent = 'Best ' + best;
+          try { localStorage.setItem('rara_brick_best', String(best)); } catch (e) {}
+        }
+
+        // Color shift on multi-hp hit
+        if (b.hp === 2) b.color = '#a855f7';
+        else if (b.hp === 1) b.color = '#6366f1';
+
+        spawnParticles(closestX, closestY, b.color);
+
+        // Simple bounce direction determination
+        if (Math.abs(dx) > Math.abs(dy)) ballVx = -ballVx;
+        else ballVy = -ballVy;
+
+        if (b.hp <= 0) remaining--;
+        break; // Process 1 collision per frame
+      }
+    }
+
+    // Check level complete
+    if (remaining === 0) {
+      score += level * 100; // level completion bonus
+      scoreStatEl.textContent = score;
+      scoreEl.textContent = score;
+
+      if (level < 3) {
+        stStatEl.textContent = 'Level Beres! 🎉';
+        initLevel(level + 1);
+        resetBall();
+      } else {
+        over = true;
+        gameWon = true;
+        stStatEl.textContent = 'Menang! 🎉';
+      }
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#070a12';
+    ctx.fillRect(0, 0, W, H);
+
+    // Draw grid background lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 1;
+    for (var x = 30; x < W; x += 30) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (var y = 30; y < H; y += 30) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    // Draw bricks
+    for (var i = 0; i < bricks.length; i++) {
+      var b = bricks[i];
+      if (b.hp <= 0) continue;
+
+      ctx.save();
+      ctx.fillStyle = b.color;
+      ctx.beginPath();
+      ctx.roundRect(b.x, b.y, b.w, b.h, 4);
+      ctx.fill();
+
+      // Top light bevel
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.fillRect(b.x + 2, b.y + 1, b.w - 4, 3);
+
+      // Multi-hp indicator badge
+      if (b.maxHp > 1) {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 9px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(b.hp, b.x + b.w / 2, b.y + b.h - 3);
+      }
+      ctx.restore();
+    }
+
+    // Draw particles
+    for (var p = 0; p < particles.length; p++) {
+      var pt = particles[p];
+      ctx.fillStyle = pt.color;
+      ctx.globalAlpha = Math.max(0, pt.life);
+      ctx.fillRect(pt.x - pt.size / 2, pt.y - pt.size / 2, pt.size, pt.size);
+    }
+    ctx.globalAlpha = 1.0;
+
+    // Draw paddle
+    ctx.save();
+    ctx.fillStyle = paddleFlash > 0 ? '#ffffff' : '#6366f1';
+    ctx.shadowColor = '#6366f1';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.roundRect(paddleX, paddleY, paddleW, paddleH, 6);
+    ctx.fill();
+
+    // Paddle center accent mark
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.fillRect(paddleX + paddleW / 2 - 8, paddleY + 3, 16, 3);
+    ctx.restore();
+
+    // Draw ball
+    ctx.save();
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.arc(ballX, ballY, ballR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Ball launch hint if stuck
+    if (ballStuck && !over) {
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = '700 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Tap layar / tombol 🚀 Lempar', W / 2, H - 70);
+    }
+
+    // Overlay if over / won / level clear
+    if (over) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.72)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = gameWon ? '#34d399' : '#f87171';
+      ctx.font = '900 24px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(gameWon ? 'Level Beres! 🎉' : 'Kalah 💀', W / 2, H / 2 - 12);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 13px sans-serif';
+      ctx.fillText('Skor ' + score + ' — tap 🔄 Restart', W / 2, H / 2 + 16);
+    }
+  }
+
+  function handleMove(clientX) {
+    var rect = cvs.getBoundingClientRect();
+    var x = (clientX - rect.left) * (W / rect.width);
+    paddleX = Math.max(0, Math.min(W - paddleW, x - paddleW / 2));
+  }
+
+  cvs.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    cvs.setPointerCapture && cvs.setPointerCapture(e.pointerId);
+    handleMove(e.clientX);
+    if (ballStuck) launchBall();
+  });
+
+  cvs.addEventListener('pointermove', function (e) {
+    if (e.buttons || e.pressure > 0 || !ballStuck) {
+      e.preventDefault();
+      handleMove(e.clientX);
+    }
+  });
+
+  document.getElementById('launchBtn').addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    launchBall();
+  });
+
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    resetGame();
+  });
+
+  var lastT = performance.now();
+  function loop(now) {
+    var delta = Math.min(3, Math.round((now - lastT) / 16.7));
+    lastT = now;
+    for (var k = 0; k < delta; k++) update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  resetGame();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
