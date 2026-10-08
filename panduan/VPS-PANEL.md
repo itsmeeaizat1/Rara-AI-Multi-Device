@@ -805,6 +805,30 @@ Opsional set token: variable egg `BUILD_TOKEN` → semua request wajib header `X
   → langsung aktif tanpa restart, coba create lagi.
 - Otomatis (8 Okt): kalau create masih kena error itu, bot bales sendiri kartu "⚠️ LOCATION PANEL SALAH" berisi location config sekarang + daftar location live + saran `.setpanel v1 location <id>`. Jadi gak perlu tebak-tebakan manual.
 - Kalau SEMUA location ⛔ tanpa node: bikin node dulu (Admin → Nodes → Create New, pilih location) atau pindahin node yang ada ke location lain (edit node → Location).
+- Diagnosa lanjutan via trigger `$` shell owner (2 menit, tanpa SSH):
+  1. `$ cat src/database/panel/ptero-panels.json` → liat `"location"` di `server1`
+  2. `$ curl -s -H "Authorization: Bearer <ptla>" -H "Accept: application/vnd.pterodactyl.v1+json" http://<domain-panel>/api/application/locations` → list semua location (cari yang punya node)
+  3. `$ curl -s ... /api/application/nodes` → `relationships.location` nunjukin location id node
+- Alternatif fix B: pindahin node-nya ke location lama (admin UI → Nodes → edit Location, atau PATCH `/api/application/nodes/<id>` body `{"location_id": 1}`) — cocok kalau mau default `1` beneran jalan.
+- Verifikasi: `.cpanel client, 1gb 1gb, 100, tes01,<nomor-kamu>,v1` → harus dibales kartu kredensial. Bersihin artefak tes via API: `DELETE /api/application/servers/<id>` + `DELETE /api/application/users/<id>` (harus `204`).
+- Catatan: ada jeda create global antar create buat semua user — kena jeda bukan berarti error, cek `.cekjeda`.
+
+**`git pull` di container bot gagal: `fatal: '/var/lib/pterodactyl/rara-old-...' does not appear to be a git repository`**
+- Penyebab: `remote origin` masih **path lokal** folder server lama yang udah direname/dihapus (`rara-old-<timestamp>`), bukan GitHub
+- Fix: set ulang remote lalu pull:
+  ```bash
+  git remote set-url origin https://<user>:<token>@github.com/itsmeeaizat1/Rara-AI-Multi-Device.git
+  git pull --ff-only origin main
+  ```
+- **GOTCHA (WAJIB) sebelum pull**: file config/runtime yang TRACKED bakal bikin pull konflik atau ketimpa. Backup dulu, stash, pull, restore:
+  ```bash
+  mkdir -p /tmp/dbbak && cp src/database/panel/ptero-panels.json src/database/settings/settings.json src/database/stats/stats.json src/database/user/users.json src/database/system/lid-cache.json /tmp/dbbak/
+  git stash push -m pre-pull-runtime
+  git pull --ff-only origin main
+  cp /tmp/dbbak/ptero-panels.json src/database/panel/ && cp /tmp/dbbak/settings.json src/database/settings/ && cp /tmp/dbbak/stats.json src/database/stats/ && cp /tmp/dbbak/users.json src/database/user/ && cp /tmp/dbbak/lid-cache.json src/database/system/
+  ```
+  → ini nyelametin `ptero-panels.json` (domain + PTLA/PTLC + location) dari ketimpa versi repo. Abis itu `.restart` — startup egg otomatis `npm install`.
+- Keamanan: token GitHub nyangkut di remote URL = hindari share `.git/config`/container ke pihak lain; rotate token kalau pernah bocor.
 
 
 **Wings crash karena iptables Docker**
