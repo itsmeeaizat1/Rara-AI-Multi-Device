@@ -696,7 +696,8 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
     if (i > 0) out += `\n`;
 
     if (categoryBoxStyle) {
-      out += `╭─────『 *${catName}* 』\n`; // OWNER 8 Okt: title kategori bold ala 『 *Title* 』
+      // OWNER 8 Okt: title kategori bold + GAK UPPERCASE (Title Case apa adanya, mis. Download)
+      out += `╭─────『 *${scFn(String(cat.name))}* 』\n`;
       for (const cmd of cat.commands) {
         if (cmd && typeof cmd === "object") {
           const sym = cmd.symbols ? ` ${String(cmd.symbols).trim()}` : "";

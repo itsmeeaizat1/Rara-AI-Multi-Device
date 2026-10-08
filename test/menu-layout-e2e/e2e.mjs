@@ -41,7 +41,7 @@ const box = raraMenuLayout({
   prefix: ".",
   categoryBoxStyle: true,
 });
-t("2a. header kotak kategori ╭─────『 *NAME* 』", box.includes("╭─────『 *") && box.includes("*DOWNLOAD* 』"), box.split("\n").find((l) => l.includes("╭")));
+t("2a. header kotak kategori ╭─────『 *NAME* 』", box.includes("╭─────『 *") && box.includes("*Download* 』"), box.split("\n").find((l) => l.includes("╭")));
 t("2b. command bullet ᯓ + prefix", box.includes("    ᯓ .play Ⓟ Ⓛ") && box.includes("    ᯓ .ytmp4"));
 t("2c. footer kotak ╰────────────√", box.includes("╰────────────√"));
 t("2d. gaya default (tanpa categoryBoxStyle) tetap 「 ✦ 」 lama", (() => {
