@@ -125,14 +125,15 @@ const mkM = (sender, text, isOwner, isGroup) => ({
 });
 const mkSock = () => ({ sendMessage: async (a, b) => replies.push(b) });
 let out = await P.handler(mkM("user2@s", ".vps status", false, false), { sock: mkSock() });
-t("8f user belum login → ditolak + arahan login", /BELUM LOGIN/.test(replies[replies.length - 1]) && replies[replies.length - 1].includes(".vps login"));
+t("8f user non-owner .vps status → DITOLAK KHUSUS OWNER (revisi 8 Okt)", /KHUSUS OWNER/.test(replies[replies.length - 1]) && !replies[replies.length - 1].includes("BELUM LOGIN"));
 replies.length = 0;
 out = await P.handler(mkM("user2@s", ".vps login 5.6.7.8|2222|root|PwUser2", false, false), { sock: mkSock() });
 t("8g user login format 4 bagian → sukses mode USER", /LOGIN VPS BERHASIL/.test(replies[replies.length - 1]) && replies[replies.length - 1].includes("USER"));
 t("8h creds user2 tersimpan", L.getCreds("user2@s")?.host === "5.6.7.8" && L.getCreds("user2@s")?.port === 2222);
 replies.length = 0;
+const callsBefore8i = calls.length;
 out = await P.handler(mkM("user2@s", ".vps status", false, false), { sock: mkSock() });
-t("8i user2 status → jalan di VPS user2 (5.6.7.8)", calls.at(-1)?.host === "5.6.7.8" && /STATUS VPS/.test(replies[replies.length - 1]));
+t("8i user2 status → DITOLAK KHUSUS OWNER walau sudah login, SSH gak pernah dipanggil", /KHUSUS OWNER/.test(replies[replies.length - 1]) && !replies[replies.length - 1].includes("STATUS VPS") && calls.length === callsBefore8i);
 replies.length = 0;
 out = await P.handler(mkM("user2@s", ".vps status", false, true), { sock: mkSock() });
 t("8j dipakai di grup → ditolak DM only", /Khusus DM/.test(replies[replies.length - 1]));
@@ -320,7 +321,12 @@ await PSM.handler(mkM("owner@s", "", true, true), { sock: mkSock() });
 t("13y di grup → DM only", /Khusus DM/.test(replies[replies.length - 1]));
 replies.length = 0;
 await PSM.handler(mkM("user9@s", "", false, false), { sock: mkSock() });
-t("13z user belum login → ditolak", /BELUM LOGIN VPS/.test(replies[replies.length - 1]) && replies[replies.length - 1].includes("USER"));
+t("13z user non-owner .statuspanel → DITOLAK KHUSUS OWNER (walau belum login)", /KHUSUS OWNER/.test(replies[replies.length - 1]));
+// user sudah login pun tetap ditolak untuk status panel
+L.saveCreds("user9@s", { host: "5.6.7.9", port: 22, user: "root", password: "PwUser9" });
+replies.length = 0;
+await PSM.handler(mkM("user9@s", "status", false, false), { sock: mkSock() });
+t("13z2 user9 login sendiri pun .statuspanel status → KHUSUS OWNER", /KHUSUS OWNER/.test(replies[replies.length - 1]));
 
 // fixqueue + .vps pteroq
 L._setSshForTest(async (c, cmd) => ({ code: 0, stdout: "UNIT_DIBUAT\nSTATE=active" }));

@@ -40,6 +40,12 @@ async function handler(m, { sock } = {}) {
   const args = parseArgs(m);
   const sub = (args[0] || "status").toLowerCase();
 
+  // ── gate owner-only: status/info panel (revisi owner 8 Okt — jgn sampai user lain bisa liat) ──
+  if ((sub === "status" || sub === "info") && !m.isOwner) {
+    return m.reply(raraWrap("panel", `🔒 *KHUSUS OWNER*
+Status panel (admin, user, server, proteksi) cuma bisa dilihat owner.`));
+  }
+
   const creds = getCreds(m.sender);
   if (!creds) {
     return m.reply(raraWrap("panel", `🔒 *BELUM LOGIN VPS* (Mode ${mode})

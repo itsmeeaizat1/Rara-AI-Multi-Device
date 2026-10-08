@@ -118,6 +118,17 @@ Sekarang semua fitur .vps jalan di VPS ini.`));
     return m.reply(raraWrap("vps", had ? `🗑️ Data login VPS-mu dihapus dari bot. .vps login buat masuk lagi.` : "Kamu belum login VPS."));
   }
 
+  // ── gate owner-only: status VPS (revisi owner 8 Okt — jgn sampai user lain bisa liat) ──
+  if (sub === "status" && !m.isOwner) {
+    return m.reply(raraWrap("vps", `🔒 *KHUSUS OWNER*
+Status VPS (server, resource, layanan) cuma bisa dilihat owner.
+
+Fitur .vps lain tetap bisa dipakai setelah login VPS-mu sendiri:
+• ${p}vps login <ip>|<password>
+• ${p}vps test
+• ${p}vps sethost / setport / setpw`));
+  }
+
   // ── dari sini wajib sudah login ──
   const creds = getCreds(m.sender);
   if (!creds) {
