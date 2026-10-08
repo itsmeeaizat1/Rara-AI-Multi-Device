@@ -22,7 +22,6 @@ export function formatVpsStatus(info, creds, mode) {
   const disk = info.disk ? `${info.disk.used} dipakai / ${info.disk.total} (${info.disk.pct})` : "-";
   const svc = info.services.map((s) => `${s.icon} ${s.name}${s.icon === "🟢" ? "" : ` — ${s.note}`}`).join("\n");
   const down = info.services.filter((s) => s.icon === "🔴");
-  const arti = info.services.filter((s) => s.icon !== "⚪").map((s) => `• ${s.name}: ${s.desc}`).join("\n");
   return `🖧 *STATUS VPS* (Mode ${mode})
 
 📡 *Server*
@@ -52,13 +51,7 @@ export function formatVpsStatus(info, creds, mode) {
 
 🔧 *Layanan*
 ${svc}
-${down.length ? `\n⚠️ ${down.length} layanan penting mati: ${down.map((d) => d.name).join(", ")}` : "\n✅ Semua layanan penting jalan"}
-
-📖 *Arti warna*
-${legendBlock()}
-
-ℹ️ *Fungsi layanan*
-${arti}`;
+${down.length ? `\n⚠️ ${down.length} layanan penting mati: ${down.map((d) => d.name).join(", ")}` : "\n✅ Semua layanan penting jalan"}`;
 }
 
 export function formatPanelStatus(ps, creds, mode, p = ".") {

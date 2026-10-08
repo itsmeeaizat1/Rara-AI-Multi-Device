@@ -262,8 +262,20 @@ t("13e swap dipakai dulu baru total", vc.includes("Swap: 300 MB dipakai / 2.0 GB
 t("13f pteroq merah + alasan MATI", vc.includes("🔴 pteroq — MATI — perlu dihidupkan"), vc);
 t("13g php nonaktif normal = ⚪ BUKAN merah", vc.includes("⚪ php8.1-fpm") && vc.includes("⚪ php8.3-fpm") && vc.includes("🟢 php8.2-fpm") && !vc.includes("🔴 php8.1-fpm"), vc);
 t("13h peringatan layanan penting mati menyebut pteroq", /1 layanan penting mati: pteroq/.test(vc), vc);
-t("13i legenda arti warna lengkap", vc.includes("🟢 jalan normal") && vc.includes("🔴 mati / bermasalah") && vc.includes("⚪ nonaktif tapi memang normal"));
-t("13j fungsi pteroq dijelaskan", vc.includes("pteroq: worker antrian"));
+t("13i TANPA blok Arti warna & Fungsi layanan (revisi owner 8 Okt)", !vc.includes("Arti warna") && !vc.includes("Fungsi layanan") && !vc.includes("jalan normal"), vc);
+t("13i2 daftar layanan per-baris lengkap (nginx/mariadb/redis/docker/wings/pteroq)", ["nginx", "mariadb", "redis-server", "docker", "wings", "pteroq"].every((n) => vc.includes(n)), vc);
+// regresi produksi: php -r tanpa newline -> penanda ===SVC nempel di baris PHP ("8.2===SVC")
+const GLUED = VPS_OUT.replace("8.2\n===SVC", "8.2===SVC");
+t("13i3 fixture nempel beneran ada", GLUED.includes("8.2===SVC"));
+L._setSshForTest(async () => ({ code: 0, stdout: GLUED }));
+replies.length = 0;
+await P.handler(mkM("owner@s", "status", true, false), { sock: mkSock() });
+const vg = replies[replies.length - 1];
+t("13i4 penanda nempel: RAM tetap kebaca (bukan 0 MB)", /RAM : 1\.6 GB \/ 7\.7 GB/.test(vg) && !vg.includes("0 MB / 0 MB"), vg);
+t("13i5 penanda nempel: PHP bersih '8.2' (tanpa ===SVC)", /PHP\s*: 8\.2\n/.test(vg) && !vg.includes("===SVC"), vg);
+t("13i6 penanda nempel: daftar layanan tetap tampil", vg.includes("nginx") && vg.includes("mariadb") && vg.includes("redis-server") && vg.includes("🔴 pteroq"), vg);
+L._setSshForTest(async () => ({ code: 0, stdout: VPS_OUT }));
+t("13j penjelasan fungsi layanan TIDAK ikut di kartu status (dibuang)", !vc.includes("worker antrian"), vc);
 t("13k info akses login: host/port/user/pass masked", vc.includes("Host : 213.163.192.209") && vc.includes("User : root") && /Pass : A•{8}\*/.test(vc) && !vc.includes("Aizat123#*"), vc);
 t("13l info server: hostname/OS/kernel/uptime/IP", vc.includes("Hostname : buyer") && vc.includes("Ubuntu 22.04.5") && vc.includes("5.15.0-160") && vc.includes("2 days"), vc);
 t("13m status protect panel belum dipasang", vc.includes("Protect: ⚠️ belum dipasang"), vc);

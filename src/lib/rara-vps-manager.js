@@ -115,7 +115,7 @@ export async function hostStatus(creds) {
   // parse per-baris penanda "===NAMA" (section = semua baris sampai penanda berikutnya)
   const secs = {};
   let cur = null;
-  for (const line of out.split("\n")) {
+  for (const line of out.replace(/([^\n])(===[A-Z]+)/g, "$1\n$2").split("\n")) {
     const mk = line.trim().match(/^===([A-Z]+)$/);
     if (mk) { cur = mk[1]; secs[cur] = []; continue; }
     if (cur) secs[cur].push(line.trim());
@@ -334,7 +334,7 @@ echo "===RAM"; free -m | awk 'NR==2{print $3" "$2}'; free -m | awk 'NR==3{print 
 echo "===DISK"; df -h / | tail -1
 echo "===CPU"; nproc; awk '{print $1" "$2" "$3}' /proc/loadavg; grep -m1 'model name' /proc/cpuinfo | cut -d: -f2
 echo "===SSH"; grep -m1 -oP '^Port \\K[0-9]+' /etc/ssh/sshd_config || echo 22
-echo "===PHPUSED"; php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;' 2>/dev/null || echo -
+echo "===PHPUSED"; { php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;' 2>/dev/null; echo; } | head -1 | grep . || echo -
 echo "===SVC"; for s in nginx mariadb redis-server docker wings pteroq fail2ban php8.1-fpm php8.2-fpm php8.3-fpm; do printf "%s=%s\\n" "$s" "$(systemctl is-active $s 2>/dev/null || echo -)"; done
 echo "===PTERO"; [ -d /var/www/pterodactyl ] && echo panel-terinstal || echo panel-tidak-ada
 echo "===THEME"; ls /var/www/pterodactyl/*.blueprint 2>/dev/null | xargs -n1 basename 2>/dev/null || echo -
@@ -342,7 +342,7 @@ echo "===PANELURL"; grep -h '^APP_URL' /var/www/pterodactyl/.env 2>/dev/null || 
 echo "===PROT"; [ -f /etc/nginx/ptero-protect-locations.conf ] && echo aktif || echo mati`;
   const out = await sshOk(creds, cmd, { timeoutMs: 30000 });
   const secs = {}; let cur = null;
-  for (const line of out.split("\n")) {
+  for (const line of out.replace(/([^\n])(===[A-Z]+)/g, "$1\n$2").split("\n")) {
     const mk = line.trim().match(/^===([A-Z]+)$/);
     if (mk) { cur = mk[1]; secs[cur] = []; continue; }
     if (cur) secs[cur].push(line.trim());
