@@ -1,8 +1,12 @@
 [
   {
+    "id": "wa:628333222111",
     "number": "628333222111",
+    "platform": "wa",
+    "role": "basic",
     "tipe": "client",
     "addedAt": 1791346964587,
+    "addedBy": "owner",
     "expiresAt": null
   }
 ]

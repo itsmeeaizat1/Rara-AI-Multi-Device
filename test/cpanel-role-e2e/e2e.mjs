@@ -124,7 +124,7 @@ t("2i. deskripsi server ditandai [ADMIN]/[CLIENT]", /\[ADMIN\]/.test(servers[1]?
 const userCountBefore = users.length;
 await handler(mkM("admin, 1gb 1gb, 100, hacker, 628999, 1", { isOwner: false }), { sock });
 t("2j. admin oleh non-owner tanpa izin ditolak (gate .addaksescpanel)",
-  users.length === userCountBefore && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
+  users.length === userCountBefore && /butuh izin dari owner atau reseller/i.test(replyTxt()), replyTxt().slice(-160));
 
 // 2c2. (revisi owner 7 Okt) owner .addaksescpanel tipe ADMIN → user create tipe admin
 allowCreateFor("628999000111", 7 * 864e5, "admin");
@@ -145,14 +145,14 @@ t("2j5. izin client create admin → ditolak tipe (gak nembus)",
 // 2d. client oleh non-owner tanpa izin → ditolak (gate .addaksescpanel, owner 6 Okt)
 const count2k = users.length; // re-baseline (2j2 udah create user admin)
 await handler(mkM("client, 1gb 1gb, 100, freeload, 628999, 1", { isOwner: false }), { sock });
-t("2k. non-owner tanpa izin create → ditolak (gate .addaksescpanel)", users.length === count2k && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
+t("2k. non-owner tanpa izin create → ditolak (gate .addaksescpanel)", users.length === count2k && /butuh izin dari owner atau reseller/i.test(replyTxt()), replyTxt().slice(-160));
 
 // 2e. role panel SAJA gak cukup lagi (owner 6 Okt) — butuh .addaksescpanel
 const { addRole } = await import(R + "/src/lib/rara-roles-cpanel.js");
 addRole("628555000111@s.whatsapp.net", "v1", "reseller");
 await handler(mkM("client, 1gb 2gb, 100, sellerserver, 628555000111, 1", { isOwner: false, sender: "628555000111@s.whatsapp.net" }), { sock });
 t("2l. role panel TANPA .addaksescpanel → ditolak",
-  users.length === count2k && /butuh konfirmasi owner/i.test(replyTxt()), replyTxt().slice(-160));
+  users.length === count2k && /butuh izin dari owner atau reseller/i.test(replyTxt()), replyTxt().slice(-160));
 // baru setelah .addaksescpanel (izin owner) → create jalan
 allowCreateFor("628555000111", 7 * 864e5);
 await handler(mkM("client, 1gb 2gb, 100, sellerserver, 628555000111, 1", { isOwner: false, sender: "628555000111@s.whatsapp.net" }), { sock });
@@ -177,7 +177,7 @@ t("2q. path RAM lama → akun tetap kebuat + notif saluran", servers.at(-1)?.lim
 replies.length = 0;
 await handler(mkM("", { isOwner: true }), { sock });
 const guideTxt = replyTxt();
-t("2r0. panduan: cara buka izin .addaksescpanel + tipe", /\.addaksescpanel @user client 7d/.test(guideTxt) && /\.addaksescpanel @user admin unli/.test(guideTxt) && /\.listaksescpanel/.test(guideTxt), guideTxt.slice(0, 240));
+t("2r0. panduan: role basic/reseller + tipe + durasi baru", /\.addaksescpanel basic, 628xxx, 7d/.test(guideTxt) && /\.addaksescpanel reseller, @user, 17\/05\/2026/.test(guideTxt) && /reseller.*nambahin user lain sebagai basic/i.test(guideTxt) && /\.listaksescpanel/.test(guideTxt), guideTxt.slice(0, 400));
 t("2r1. panduan: contoh client & admin create + catatan client gak bisa ubah spec",
   /\.cpanel client, 5gb 5gb, 200, aizat2, 628174887770, 1/.test(guideTxt) && /\.cpanel admin, 5gb 5gb, 200, aizat2, 628174887770, 1/.test(guideTxt) && /Client gak bisa ubah ram\/cpu sendiri/.test(guideTxt), guideTxt.slice(0, 200));
 
