@@ -19,9 +19,9 @@ import { sendRichResponse, notifyRichDownload } from "../../src/lib/rara-airich.
 
 const pluginConfig = {
   name: "airichgame",
-  alias: ["gameairich", "gameai", "ular", "flappy", "flappybird", "blok", "blokjatuh", "gabung", "suisut", "tictactoe", "snakegame", "2048game", "dino", "dinorun", "pong", "pongai", "tikus", "pukultikus", "memori", "memory", "sudoku", "susunangka", "simon", "simonsays", "warna", "ranjau", "caribom", "geser", "puzzlegeser", "15", "empatbaris", "connectfour", "c4", "bata", "pecahbata", "breakout"],
+  alias: ["gameairich", "gameai", "ular", "flappy", "flappybird", "blok", "blokjatuh", "gabung", "suisut", "tictactoe", "snakegame", "2048game", "dino", "dinorun", "pong", "pongai", "tikus", "pukultikus", "memori", "memory", "sudoku", "susunangka", "simon", "simonsays", "warna", "ranjau", "caribom", "geser", "puzzlegeser", "15", "empatbaris", "connectfour", "c4", "bata", "pecahbata", "breakout", "carikata", "carikata2", "gantung", "hangmangame", "menara", "stacker", "tumpuk", "refleks", "targetcepat", "sortir", "tuangwarna", "sesat"],
   category: "airich",
-  description: "AI Rich Games 🎮 — koleksi game HTML langsung di chat (snake, flappy, tetris, 2048, sui sut, dino, pong, pukul tikus, kartu memori, sudoku, simon, cari ranjau, puzzle geser, empat baris, pecah bata)",
+  description: "AI Rich Games 🎮 — 21 game HTML langsung di chat (snake, flappy, tetris, 2048, sui sut, dino, pong, pukul tikus, kartu memori, sudoku, simon, cari ranjau, puzzle geser, empat baris, pecah bata, cari kata, tebak kata, menara kayu, uji refleks, sortir warna, labirin)",
   usage: ".airichgame <nama game> — daftar game: .airichgame",
   example: ".airichgame snake",
   isOwner: false, isPremium: false, isGroup: true, isPrivate: true,
@@ -105,6 +105,36 @@ const GAMES = {
     tip: "Geser paddle — mantulkan bola, hancurkan semua bata 3 level",
     alias: ["bata", "pecahbata", "breakout"],
   },
+  wordsearch: {
+    title: "Cari Kata 🔍",
+    tip: "Tap sel awal lalu sel akhir — temukan 6 kata tersembunyi di grid 8 arah",
+    alias: ["carikata", "carikata2"],
+  },
+  hangman: {
+    title: "Tebak Kata 💀",
+    tip: "Tap huruf A-Z — tebak kata rahasia sebelum gambar hangman kelar (6 salah)",
+    alias: ["gantung", "hangmangame"],
+  },
+  blockstacker: {
+    title: "Menara Kayu 🏗️",
+    tip: "Tap pas blok bergerak sejajar — bagian melesot kepotong, jangan habis",
+    alias: ["menara", "stacker", "tumpuk"],
+  },
+  aimtrainer: {
+    title: "Uji Refleks 🎯",
+    tip: "Tap target secepat mungkin 30 detik — mode Target Muncul & Klik Cepat",
+    alias: ["refleks", "targetcepat"],
+  },
+  watersort: {
+    title: "Sortir Warna 🌈",
+    tip: "Tap tabung sumber lalu tujuan — pisahkan tiap warna ke tabungnya sendiri",
+    alias: ["sortir", "tuangwarna"],
+  },
+  maze: {
+    title: "Labirin 🌀",
+    tip: "Geser bola ke permata — labirin baru tiap ronde, ada tombol solusi",
+    alias: ["sesat", "labirin2"],
+  },
 };
 
 const ALIAS2GAME = {};
@@ -143,7 +173,7 @@ function resolveGame(m) {
 }
 
 // emoji per game — fallback 🎮
-const GAME_EMOJI = {"snake": "🐍", "flappy": "🐤", "tetris": "🧱", "2048": "🔢", "tictactoe": "⭕", "dino": "🦖", "pong": "🏓", "whackamole": "🔨", "memory": "🧠", "sudoku": "🔢", "simon": "🎵", "minesweeper": "💣", "slidingpuzzle": "🔲", "fourinarow": "🔴", "brickbreaker": "🧱"};
+const GAME_EMOJI = {"snake": "🐍", "flappy": "🐤", "tetris": "🧱", "2048": "🔢", "tictactoe": "⭕", "dino": "🦖", "pong": "🏓", "whackamole": "🔨", "memory": "🧠", "sudoku": "🔢", "simon": "🎵", "minesweeper": "💣", "slidingpuzzle": "🔲", "fourinarow": "🔴", "brickbreaker": "🧱", "wordsearch": "🔍", "hangman": "💀", "blockstacker": "🏗️", "aimtrainer": "🎯", "watersort": "🌈", "maze": "🌀"};
 
 function menuCard() {
   const lines = [
@@ -157,7 +187,7 @@ function menuCard() {
     lines.push(`${GAME_EMOJI[key] || "🎮"} .airichgame ${key} — ${g.title}`);
   }
   lines.push("");
-  lines.push("_Alias singkat juga bisa: .ular .flappy .blok .gabung .suisut .dino .pong .tikus .memori .sudoku .simon .ranjau .geser .empatbaris .bata_");
+  lines.push("_Alias singkat juga bisa: .ular .flappy .blok .gabung .suisut .dino .pong .tikus .memori .sudoku .simon .ranjau .geser .empatbaris .bata .carikata .tebakkata .menara .refleks .sortir .sesat_");
   lines.push("_Klik tombol *Unduh* di kartu untuk membuka gamenya._");
   return raraWrap("airichgame", lines.join("\n"), "guide");
 }

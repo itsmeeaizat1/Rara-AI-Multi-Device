@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Menara Kayu</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-stack { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn-restart { background: linear-gradient(135deg, #3b82f6, #1d4ed8); font-size: 13px; }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Menara Kayu 🏗️</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Skor</div><div class="val" id="scStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Level</div><div class="val" id="lvStat">1</div></div>
+      <div class="stat-pill"><div class="lbl">Best</div><div class="val" id="rcStat">0</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="360" height="480"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-stack" id="stackBtn">🧱 Tumpuk</button>
+      <button class="btn btn-restart" id="restartBtn">🔄 Ulang</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Tap layar / 🧱 Tumpuk</td><td>Tap layar pas blok sejajar sama blok di bawahnya. Bagian yang melesot kepotong!</td></tr>
+      <tr><td>Setiap 10 Blok</td><td>Level &amp; kecepatan naik, warna blok berganti</td></tr>
+      <tr><td class="hd2" colspan="2">Skor &amp; rekor otomatis tersimpan di browser</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var scEl = document.getElementById('scStat'), lvEl = document.getElementById('lvStat'), rcEl = document.getElementById('rcStat');
+
+  var W = 360, H = 480, BH = 24, BASE_Y = H - 40;
+  var stack = [], debris = [], popups = [];
+  var activeBlock = null;
+  var score = 0, level = 1, blockCount = 0, best = 0;
+  var dead = false, started = false;
+  var cameraY = 0, targetCameraY = 0;
+
+  try { best = parseInt(localStorage.getItem('rara_stacker_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best; rcEl.textContent = best;
+
+  var PALETTES = [
+    { top: '#a5b4fc', bot: '#6366f1', border: '#4338ca' }, // Indigo (Lvl 1)
+    { top: '#93c5fd', bot: '#3b82f6', border: '#1d4ed8' }, // Biru (Lvl 2)
+    { top: '#67e8f9', bot: '#06b6d4', border: '#0891b2' }, // Cyan (Lvl 3)
+    { top: '#d8b4fe', bot: '#a855f7', border: '#7e22ce' }, // Ungu (Lvl 4)
+    { top: '#fde047', bot: '#eab308', border: '#ca8a04' }, // Kuning Gold (Lvl 5+)
+    { top: '#6ee7b7', bot: '#10b981', border: '#047857' }  // Hijau Emerald
+  ];
+
+  function getPalette(idx) {
+    var stage = Math.floor(idx / 10);
+    return PALETTES[stage % PALETTES.length];
+  }
+
+  function reset() {
+    stack = []; debris = []; popups = [];
+    score = 0; level = 1; blockCount = 0; dead = false; started = false;
+    cameraY = 0; targetCameraY = 0;
+
+    var initWidth = 180;
+    var baseBlock = {
+      x: (W - initWidth) / 2,
+      y: BASE_Y,
+      w: initWidth,
+      palette: getPalette(0),
+      idx: 0
+    };
+    stack.push(baseBlock);
+
+    activeBlock = {
+      x: 0,
+      y: BASE_Y - BH,
+      w: initWidth,
+      dir: 1,
+      speed: 3.2,
+      palette: getPalette(1)
+    };
+
+    scoreEl.textContent = '0';
+    scEl.textContent = '0';
+    lvEl.textContent = '1';
+  }
+
+  function tap() {
+    if (dead) {
+      reset();
+      return;
+    }
+    if (!started) {
+      started = true;
+    }
+
+    var prev = stack[stack.length - 1];
+    var pLeft = prev.x, pRight = prev.x + prev.w;
+    var aLeft = activeBlock.x, aRight = activeBlock.x + activeBlock.w;
+
+    // Perfect alignment check (<= 3px tolerance)
+    var diff = aLeft - pLeft;
+    if (Math.abs(diff) <= 3) {
+      aLeft = pLeft;
+      aRight = pRight;
+      activeBlock.x = pLeft;
+      popups.push({ text: 'SEMPURNA! ✨', x: W / 2, y: activeBlock.y - cameraY - 10, alpha: 1, vy: -1.2 });
+    }
+
+    var oLeft = Math.max(pLeft, aLeft);
+    var oRight = Math.min(pRight, aRight);
+    var oWidth = oRight - oLeft;
+
+    if (oWidth <= 0) {
+      // Missed completely -> Game Over
+      dead = true;
+      debris.push({
+        x: activeBlock.x,
+        y: activeBlock.y,
+        w: activeBlock.w,
+        vx: activeBlock.dir * 2,
+        vy: 1,
+        rot: 0,
+        vrot: activeBlock.dir * 0.08,
+        alpha: 1,
+        palette: activeBlock.palette
+      });
+      if (score > best) {
+        best = score;
+        bestEl.textContent = 'Best ' + best;
+        rcEl.textContent = best;
+        try { localStorage.setItem('rara_stacker_best', String(best)); } catch (e) {}
+      }
+      return;
+    }
+
+    // Cut off debris pieces
+    if (aLeft < pLeft) {
+      var leftCutW = pLeft - aLeft;
+      debris.push({
+        x: aLeft,
+        y: activeBlock.y,
+        w: leftCutW,
+        vx: -2.2,
+        vy: -0.5,
+        rot: 0,
+        vrot: -0.07,
+        alpha: 1,
+        palette: activeBlock.palette
+      });
+    }
+    if (aRight > pRight) {
+      var rightCutW = aRight - pRight;
+      debris.push({
+        x: pRight,
+        y: activeBlock.y,
+        w: rightCutW,
+        vx: 2.2,
+        vy: -0.5,
+        rot: 0,
+        vrot: 0.07,
+        alpha: 1,
+        palette: activeBlock.palette
+      });
+    }
+
+    // Stack new block
+    var newBlock = {
+      x: oLeft,
+      y: activeBlock.y,
+      w: oWidth,
+      palette: activeBlock.palette,
+      idx: stack.length
+    };
+    stack.push(newBlock);
+
+    blockCount++;
+    score += level;
+    level = Math.floor(blockCount / 10) + 1;
+
+    scoreEl.textContent = score;
+    scEl.textContent = score;
+    lvEl.textContent = level;
+
+    // Adjust camera target height
+    if (newBlock.y - targetCameraY < 200) {
+      targetCameraY = (BASE_Y - 200) - (stack.length * BH);
+    }
+
+    // Setup next active block
+    var nextPalette = getPalette(stack.length);
+    var nextSpeed = 3.2 + (level - 1) * 0.75 + Math.min(stack.length * 0.05, 4);
+    var startFromLeft = Math.random() < 0.5;
+    activeBlock = {
+      x: startFromLeft ? -oWidth + 10 : W - 10,
+      y: newBlock.y - BH,
+      w: oWidth,
+      dir: startFromLeft ? 1 : -1,
+      speed: nextSpeed,
+      palette: nextPalette
+    };
+  }
+
+  function tick() {
+    // Camera smooth movement
+    cameraY += (targetCameraY - cameraY) * 0.12;
+
+    if (started && !dead && activeBlock) {
+      activeBlock.x += activeBlock.dir * activeBlock.speed;
+      if (activeBlock.dir === 1 && activeBlock.x + activeBlock.w >= W + 15) {
+        activeBlock.x = W + 15 - activeBlock.w;
+        activeBlock.dir = -1;
+      } else if (activeBlock.dir === -1 && activeBlock.x <= -15) {
+        activeBlock.x = -15;
+        activeBlock.dir = 1;
+      }
+    }
+
+    // Update debris physics
+    for (var i = debris.length - 1; i >= 0; i--) {
+      var d = debris[i];
+      d.x += d.vx;
+      d.y += d.vy;
+      d.vy += 0.5;
+      d.rot += d.vrot;
+      d.alpha -= 0.025;
+      if (d.alpha <= 0 || d.y > H + 100) {
+        debris.splice(i, 1);
+      }
+    }
+
+    // Update popups
+    for (var p = popups.length - 1; p >= 0; p--) {
+      var pop = popups[p];
+      pop.y += pop.vy;
+      pop.alpha -= 0.02;
+      if (pop.alpha <= 0) {
+        popups.splice(p, 1);
+      }
+    }
+  }
+
+  function drawBlock(b, isCameraRelative) {
+    ctx.save();
+    var sy = isCameraRelative ? b.y + cameraY : b.y;
+    ctx.translate(b.x, sy);
+
+    var grad = ctx.createLinearGradient(0, 0, 0, BH);
+    grad.addColorStop(0, b.palette.top);
+    grad.addColorStop(1, b.palette.bot);
+    ctx.fillStyle = grad;
+
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(0, 0, b.w, BH, 4) : ctx.rect(0, 0, b.w, BH);
+    ctx.fill();
+
+    // Top highlight bevel
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx.fillRect(2, 1, b.w - 4, 3);
+
+    // Border
+    ctx.strokeStyle = b.palette.border;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, b.w, BH);
+
+    ctx.restore();
+  }
+
+  function drawDebris(d) {
+    ctx.save();
+    var sy = d.y + cameraY;
+    ctx.translate(d.x + d.w / 2, sy + BH / 2);
+    ctx.rotate(d.rot);
+    ctx.globalAlpha = Math.max(0, d.alpha);
+
+    var grad = ctx.createLinearGradient(0, -BH / 2, 0, BH / 2);
+    grad.addColorStop(0, d.palette.top);
+    grad.addColorStop(1, d.palette.bot);
+    ctx.fillStyle = grad;
+
+    ctx.fillRect(-d.w / 2, -BH / 2, d.w, BH);
+    ctx.restore();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background gradient
+    var bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#070a12');
+    bgGrad.addColorStop(1, '#0d1322');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Background grid / stars
+    ctx.fillStyle = 'rgba(99, 102, 241, 0.08)';
+    for (var s = 0; s < 16; s++) {
+      var sx = (s * 83) % W, sy = (s * 47 + cameraY * 0.3) % H;
+      ctx.fillRect(sx, sy, 2, 2);
+    }
+
+    // Draw stacked blocks
+    for (var i = 0; i < stack.length; i++) {
+      drawBlock(stack[i], true);
+    }
+
+    // Draw active moving block
+    if (started && !dead && activeBlock) {
+      drawBlock(activeBlock, true);
+    }
+
+    // Draw debris
+    for (var j = 0; j < debris.length; j++) {
+      drawDebris(debris[j]);
+    }
+
+    // Draw popups
+    for (var k = 0; k < popups.length; k++) {
+      var pop = popups[k];
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, pop.alpha);
+      ctx.fillStyle = '#67e8f9';
+      ctx.font = '900 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(pop.text, pop.x, pop.y);
+      ctx.restore();
+    }
+
+    // Overlay Start
+    if (!started && !dead) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#fff';
+      ctx.font = '900 20px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Menara Kayu 🏗️', W / 2, H / 2 - 20);
+      ctx.fillStyle = '#a5b4fc';
+      ctx.font = '700 13px sans-serif';
+      ctx.fillText('Tap 🧱 Tumpuk / Layar untuk mulai', W / 2, H / 2 + 15);
+      ctx.textAlign = 'left';
+    }
+
+    // Overlay Game Over
+    if (dead) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.72)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#f87171';
+      ctx.font = '900 26px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Kalah 💀', W / 2, H / 2 - 30);
+      ctx.fillStyle = '#fff';
+      ctx.font = '700 14px sans-serif';
+      ctx.fillText('Skor Akhir: ' + score + ' (Level ' + level + ')', W / 2, H / 2 + 5);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '600 12px sans-serif';
+      ctx.fillText('Tap 🔄 Ulang untuk main lagi', W / 2, H / 2 + 35);
+      ctx.textAlign = 'left';
+    }
+  }
+
+  function handlePointer(e) {
+    e.preventDefault();
+    tap();
+  }
+
+  cvs.addEventListener('pointerdown', handlePointer);
+  document.getElementById('stackBtn').addEventListener('pointerdown', handlePointer);
+  document.getElementById('restartBtn').addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    reset();
+  });
+
+  reset();
+
+  var last = performance.now();
+  function loop(now) {
+    tick();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

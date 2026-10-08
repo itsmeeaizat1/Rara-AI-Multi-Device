@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Cari Kata</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+
+.word-list { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 10px; }
+.word-item { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 5px 10px; border-radius: 8px; color: #cbd5e1; font-size: 12px; font-weight: 800; letter-spacing: 1px; transition: all 0.2s; }
+.word-item.found { text-decoration: line-through; opacity: 0.5; color: #fff; }
+
+.controls { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-shuffle { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Cari Kata 🔍</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">00:00</div>
+        <div class="best-badge" id="best">Best --:--</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Ketemu</div><div class="val" id="foundStat">0/6</div></div>
+      <div class="stat-pill"><div class="lbl">Waktu</div><div class="val" id="timeStat">00:00</div></div>
+      <div class="stat-pill"><div class="lbl">Tersisa</div><div class="val" id="leftStat">6</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="360" height="360"></canvas></div>
+    <div class="word-list" id="wordList"></div>
+    <div class="controls">
+      <button class="btn btn-shuffle" id="newBtn">🔀 Puzzle Baru</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Tap Sel Awal &amp; Akhir</td><td>Pilih huruf pertama dan terakhir kata</td></tr>
+      <tr><td>8 Arah Kata</td><td>Horizontal, vertikal, &amp; diagonal</td></tr>
+      <tr><td>Cari Semua</td><td>Temukan 6 kata tersembunyi di grid</td></tr>
+      <tr><td class="hd2" colspan="2">Waktu tercepat tersimpan otomatis di browser</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var foundStatEl = document.getElementById('foundStat'), timeStatEl = document.getElementById('timeStat'), leftStatEl = document.getElementById('leftStat');
+  var wordListEl = document.getElementById('wordList');
+
+  var S = 360, N = 8, cell = S / N;
+  var WORD_POOL = ['BOTNYA', 'RARA', 'GEMING', 'AIZAT', 'WIBU', 'SALURAAN', 'KANEL', 'ANIME', 'STIKER', 'GRUP', 'KARTU', 'PANEL'];
+  var DIRS = [
+    {dr: 0, dc: 1}, {dr: 1, dc: 1}, {dr: 1, dc: 0}, {dr: 1, dc: -1},
+    {dr: 0, dc: -1}, {dr: -1, dc: -1}, {dr: -1, dc: 0}, {dr: -1, dc: 1}
+  ];
+  var PALETTE = [
+    { fill: 'rgba(99, 102, 241, 0.45)', stroke: '#6366f1' },
+    { fill: 'rgba(6, 182, 212, 0.45)', stroke: '#06b6d4' },
+    { fill: 'rgba(59, 130, 246, 0.45)', stroke: '#3b82f6' },
+    { fill: 'rgba(168, 85, 247, 0.45)', stroke: '#a855f7' },
+    { fill: 'rgba(16, 185, 129, 0.45)', stroke: '#10b981' },
+    { fill: 'rgba(249, 115, 22, 0.45)', stroke: '#f97316' }
+  ];
+
+  var grid = [], targetWords = [], startCell = null, hoverCell = null;
+  var flashErrTill = 0, flashErrStart = null, flashErrEnd = null;
+  var timerSec = 0, timerInterval = null, won = false, bestSec = 0;
+
+  try { bestSec = parseInt(localStorage.getItem('rara_wordsearch_best') || '0', 10) || 0; } catch (e) { bestSec = 0; }
+
+  function formatTime(s) {
+    var m = (s / 60) | 0, sec = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  if (bestSec > 0) bestEl.textContent = 'Best ' + formatTime(bestSec);
+  else bestEl.textContent = 'Best --:--';
+
+  function generateBoard() {
+    var success = false;
+    var outerAttempts = 0;
+    while (!success && outerAttempts < 100) {
+      outerAttempts++;
+      var pool = WORD_POOL.slice();
+      for (var i = pool.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+      }
+      var chosen = pool.slice(0, 6);
+      var g = [];
+      for (var r = 0; r < N; r++) {
+        g[r] = [];
+        for (var c = 0; c < N; c++) g[r][c] = null;
+      }
+      var placed = [], allPlaced = true;
+
+      for (var w = 0; w < chosen.length; w++) {
+        var word = chosen[w];
+        var wordPlaced = false, tries = 0;
+        while (!wordPlaced && tries < 300) {
+          tries++;
+          var dir = DIRS[Math.floor(Math.random() * DIRS.length)];
+          var sr = Math.floor(Math.random() * N);
+          var sc = Math.floor(Math.random() * N);
+          var er = sr + dir.dr * (word.length - 1);
+          var ec = sc + dir.dc * (word.length - 1);
+          if (er >= 0 && er < N && ec >= 0 && ec < N) {
+            var can = true;
+            for (var k = 0; k < word.length; k++) {
+              var rr = sr + dir.dr * k, cc = sc + dir.dc * k;
+              if (g[rr][cc] !== null && g[rr][cc] !== word[k]) { can = false; break; }
+            }
+            if (can) {
+              var cells = [];
+              for (var k = 0; k < word.length; k++) {
+                var rr = sr + dir.dr * k, cc = sc + dir.dc * k;
+                g[rr][cc] = word[k];
+                cells.push({r: rr, c: cc});
+              }
+              placed.push({ word: word, cells: cells, start: cells[0], end: cells[cells.length - 1], found: false, color: PALETTE[w] });
+              wordPlaced = true;
+            }
+          }
+        }
+        if (!wordPlaced) { allPlaced = false; break; }
+      }
+
+      if (allPlaced) {
+        var ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for (var r = 0; r < N; r++) {
+          for (var c = 0; c < N; c++) {
+            if (g[r][c] === null) g[r][c] = ALPHA[Math.floor(Math.random() * ALPHA.length)];
+          }
+        }
+        grid = g;
+        targetWords = placed;
+        success = true;
+      }
+    }
+  }
+
+  function startTimer() {
+    clearInterval(timerInterval);
+    timerSec = 0;
+    timeStatEl.textContent = '00:00';
+    scoreEl.textContent = '00:00';
+    timerInterval = setInterval(function () {
+      if (!won) {
+        timerSec++;
+        var tStr = formatTime(timerSec);
+        timeStatEl.textContent = tStr;
+        scoreEl.textContent = tStr;
+      }
+    }, 1000);
+  }
+
+  function updateWordListUI() {
+    wordListEl.innerHTML = '';
+    var foundCount = 0;
+    targetWords.forEach(function (tw) {
+      var div = document.createElement('div');
+      div.className = 'word-item' + (tw.found ? ' found' : '');
+      div.textContent = tw.word;
+      if (tw.found) {
+        foundCount++;
+        div.style.borderColor = tw.color.stroke;
+        div.style.backgroundColor = tw.color.fill;
+      }
+      wordListEl.appendChild(div);
+    });
+    foundStatEl.textContent = foundCount + '/6';
+    leftStatEl.textContent = (6 - foundCount);
+
+    if (foundCount === 6 && !won) {
+      won = true;
+      clearInterval(timerInterval);
+      if (bestSec === 0 || timerSec < bestSec) {
+        bestSec = timerSec;
+        bestEl.textContent = 'Best ' + formatTime(bestSec);
+        try { localStorage.setItem('rara_wordsearch_best', String(bestSec)); } catch (e) {}
+      }
+    }
+  }
+
+  function resetGame() {
+    generateBoard();
+    startCell = null; hoverCell = null;
+    flashErrTill = 0; won = false;
+    startTimer();
+    updateWordListUI();
+  }
+
+  function getGridPos(e) {
+    var rect = cvs.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (S / rect.width);
+    var y = (e.clientY - rect.top) * (S / rect.height);
+    var c = Math.floor(x / cell);
+    var r = Math.floor(y / cell);
+    if (r >= 0 && r < N && c >= 0 && c < N) return {r: r, c: c};
+    return null;
+  }
+
+  function triggerError(st, en) {
+    flashErrStart = st;
+    flashErrEnd = en;
+    flashErrTill = Date.now() + 350;
+  }
+
+  function handleCellSelection(st, en) {
+    if (st.r === en.r && st.c === en.c) return false;
+    var dr = en.r - st.r, dc = en.c - st.c;
+    var steps = Math.max(Math.abs(dr), Math.abs(dc));
+    var isStraight = (dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc));
+
+    if (!isStraight || steps === 0) {
+      triggerError(st, en);
+      return false;
+    }
+
+    var stepR = dr === 0 ? 0 : (dr > 0 ? 1 : -1);
+    var stepC = dc === 0 ? 0 : (dc > 0 ? 1 : -1);
+
+    var selWord = '';
+    for (var i = 0; i <= steps; i++) {
+      var rr = st.r + stepR * i;
+      var cc = st.c + stepC * i;
+      selWord += grid[rr][cc];
+    }
+    var revWord = selWord.split('').reverse().join('');
+
+    var match = false;
+    for (var w = 0; w < targetWords.length; w++) {
+      var tw = targetWords[w];
+      if (!tw.found) {
+        if (tw.word === selWord || tw.word === revWord) {
+          tw.found = true;
+          tw.foundStart = st;
+          tw.foundEnd = en;
+          match = true;
+          break;
+        }
+      }
+    }
+
+    if (match) {
+      updateWordListUI();
+    } else {
+      triggerError(st, en);
+    }
+    return match;
+  }
+
+  cvs.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    if (won) return;
+    var pos = getGridPos(e);
+    if (!pos) return;
+
+    if (!startCell) {
+      startCell = pos;
+      hoverCell = pos;
+    } else {
+      if (startCell.r === pos.r && startCell.c === pos.c) {
+        startCell = null; hoverCell = null;
+      } else {
+        handleCellSelection(startCell, pos);
+        startCell = null; hoverCell = null;
+      }
+    }
+  });
+
+  cvs.addEventListener('pointermove', function (e) {
+    if (startCell && !won) {
+      var pos = getGridPos(e);
+      if (pos) hoverCell = pos;
+    }
+  });
+
+  document.getElementById('newBtn').addEventListener('pointerdown', function (e) {
+    e.preventDefault(); resetGame();
+  });
+
+  function drawCapsule(st, en, fillColor, strokeColor, alpha) {
+    var x1 = st.c * cell + cell / 2, y1 = st.r * cell + cell / 2;
+    var x2 = en.c * cell + cell / 2, y2 = en.r * cell + cell / 2;
+    X.save();
+    X.globalAlpha = alpha;
+    X.beginPath();
+    X.moveTo(x1, y1);
+    X.lineTo(x2, y2);
+    X.lineWidth = 32;
+    X.lineCap = 'round';
+    X.strokeStyle = strokeColor;
+    X.stroke();
+    X.restore();
+  }
+
+  function draw() {
+    X.fillStyle = '#070a12'; X.fillRect(0, 0, S, S);
+
+    // Grid lines
+    X.strokeStyle = 'rgba(255,255,255,0.06)'; X.lineWidth = 1;
+    for (var i = 0; i <= N; i++) {
+      X.beginPath(); X.moveTo(i * cell, 0); X.lineTo(i * cell, S); X.stroke();
+      X.beginPath(); X.moveTo(0, i * cell); X.lineTo(S, i * cell); X.stroke();
+    }
+
+    // Found word capsules
+    targetWords.forEach(function (tw) {
+      if (tw.found) {
+        drawCapsule(tw.foundStart || tw.start, tw.foundEnd || tw.end, tw.color.fill, tw.color.stroke, 0.55);
+      }
+    });
+
+    // Active selection guide capsule
+    if (startCell && hoverCell && (startCell.r !== hoverCell.r || startCell.c !== hoverCell.c)) {
+      var dr = hoverCell.r - startCell.r, dc = hoverCell.c - startCell.c;
+      var isStraight = (dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc));
+      if (isStraight) {
+        drawCapsule(startCell, hoverCell, 'rgba(99, 102, 241, 0.4)', '#818cf8', 0.5);
+      } else {
+        drawCapsule(startCell, hoverCell, 'rgba(239, 68, 68, 0.3)', '#ef4444', 0.3);
+      }
+    }
+
+    // Start cell highlight
+    if (startCell) {
+      var sx = startCell.c * cell + 4, sy = startCell.r * cell + 4, sz = cell - 8;
+      X.fillStyle = 'rgba(99, 102, 241, 0.35)';
+      X.fillRect(sx, sy, sz, sz);
+      X.strokeStyle = '#6366f1'; X.lineWidth = 2;
+      X.strokeRect(sx, sy, sz, sz);
+    }
+
+    // Flash error capsule
+    if (Date.now() < flashErrTill && flashErrStart && flashErrEnd) {
+      drawCapsule(flashErrStart, flashErrEnd, 'rgba(239, 68, 68, 0.6)', '#ef4444', 0.7);
+    }
+
+    // Letters
+    for (var r = 0; r < N; r++) {
+      for (var c = 0; c < N; c++) {
+        X.fillStyle = '#ffffff';
+        X.font = '900 19px sans-serif';
+        X.textAlign = 'center'; X.textBaseline = 'middle';
+        X.fillText(grid[r][c] || '', c * cell + cell / 2, r * cell + cell / 2);
+      }
+    }
+
+    // Win overlay
+    if (won) {
+      X.fillStyle = 'rgba(7, 10, 18, 0.82)'; X.fillRect(0, 0, S, S);
+      X.fillStyle = '#34d399'; X.font = '900 24px sans-serif'; X.textAlign = 'center';
+      X.fillText('Menang! 🎉', S / 2, S / 2 - 16);
+      X.fillStyle = '#fff'; X.font = '700 14px sans-serif';
+      X.fillText('Waktu: ' + formatTime(timerSec), S / 2, S / 2 + 12);
+      X.fillStyle = '#94a3b8'; X.font = '600 11px sans-serif';
+      X.fillText('Tap 🔀 Puzzle Baru untuk main lagi', S / 2, S / 2 + 34);
+    }
+  }
+
+  resetGame();
+  requestAnimationFrame(function loop() { draw(); requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

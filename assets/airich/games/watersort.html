@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Sortir Warna</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 13px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-new { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn-undo { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 14px rgba(59,130,246,0.35); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">RARA AI</div>
+        <h2>Sortir Warna 🌈</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Langkah</div><div class="val" id="moveStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Tabung Selesai</div><div class="val" id="doneStat">0/4</div></div>
+      <div class="stat-pill"><div class="lbl">Status</div><div class="val" id="statusStat">Main</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="360" height="400"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-new" id="newGameBtn">🔄 Level Baru</button>
+      <button class="btn btn-undo" id="undoBtn">↩️ Undo</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Tap Tabung 1</td><td>Pilih tabung sumber (lapisan atas melayang)</td></tr>
+      <tr><td>Tap Tabung 2</td><td>Tuang lapisan ke tabung tujuan</td></tr>
+      <tr><td>Aturan Tuang</td><td>Warna atas sama ATAU tujuan kosong &amp; ada ruang</td></tr>
+      <tr><td>Tombol ↩️ Undo</td><td>Batalkan gerakan terakhir (max 20x)</td></tr>
+      <tr><td class="hd2" colspan="2">Pisahkan 4 warna ke masing-masing tabung!</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var moveEl = document.getElementById('moveStat'), doneEl = document.getElementById('doneStat'), statusEl = document.getElementById('statusStat');
+  var newGameBtn = document.getElementById('newGameBtn'), undoBtn = document.getElementById('undoBtn');
+
+  var COLOR_PALETTE = {
+    indigo: '#6366f1',
+    cyan: '#22d3ee',
+    merah: '#ef4444',
+    hijau: '#22c55e'
+  };
+  var COLOR_KEYS = ['indigo', 'cyan', 'merah', 'hijau'];
+
+  var tubes = []; // Array of 5 arrays, each holding up to 4 color keys
+  var selectedTube = null;
+  var moves = 0;
+  var won = false;
+  var best = 0;
+  var undoStack = []; // History of {tubes, moves}
+  var flashRedUntil = 0;
+  var animFrameId = null;
+
+  try { best = parseInt(localStorage.getItem('rara_watersort_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function countFinishedTubes() {
+    var count = 0;
+    for (var i = 0; i < tubes.length; i++) {
+      var t = tubes[i];
+      if (t.length > 0) {
+        var first = t[0];
+        var allSame = true;
+        for (var k = 1; k < t.length; k++) {
+          if (t[k] !== first) { allSame = false; break; }
+        }
+        if (allSame) count++;
+      }
+    }
+    return count;
+  }
+
+  function checkWin() {
+    var finished = countFinishedTubes();
+    doneEl.textContent = finished + '/4';
+    if (finished === 4) {
+      won = true;
+      statusEl.textContent = 'Menang! 🎉';
+      var scoreVal = Math.max(100, 1000 - moves * 20);
+      scoreEl.textContent = String(scoreVal);
+      if (scoreVal > best) {
+        best = scoreVal;
+        bestEl.textContent = 'Best ' + best;
+        try { localStorage.setItem('rara_watersort_best', String(best)); } catch (e) {}
+      }
+    }
+  }
+
+  function initGame() {
+    // 4 colors x 3 units = 12 blocks total distributed into 3 tubes of capacity 4
+    var pool = [];
+    for (var c = 0; c < COLOR_KEYS.length; c++) {
+      pool.push(COLOR_KEYS[c], COLOR_KEYS[c], COLOR_KEYS[c]);
+    }
+
+    // Shuffle pool
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = pool[i];
+      pool[i] = pool[j];
+      pool[j] = temp;
+    }
+
+    tubes = [
+      pool.slice(0, 4),
+      pool.slice(4, 8),
+      pool.slice(8, 12),
+      [],
+      []
+    ];
+
+    selectedTube = null;
+    moves = 0;
+    won = false;
+    undoStack = [];
+    flashRedUntil = 0;
+
+    moveEl.textContent = '0';
+    doneEl.textContent = countFinishedTubes() + '/4';
+    statusEl.textContent = 'Main';
+    scoreEl.textContent = '0';
+
+    draw();
+  }
+
+  function getCanvasPos(evt) {
+    var rect = cvs.getBoundingClientRect();
+    var clientX = evt.clientX, clientY = evt.clientY;
+    if (evt.touches && evt.touches.length > 0) {
+      clientX = evt.touches[0].clientX;
+      clientY = evt.touches[0].clientY;
+    } else if (evt.changedTouches && evt.changedTouches.length > 0) {
+      clientX = evt.changedTouches[0].clientX;
+      clientY = evt.changedTouches[0].clientY;
+    }
+    var scaleX = cvs.width / rect.width;
+    var scaleY = cvs.height / rect.height;
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY
+    };
+  }
+
+  function handleTap(pos) {
+    if (won) return;
+    var x = pos.x, y = pos.y;
+
+    // Tube X bounds for 5 tubes on 360 width:
+    // startX = 22, gap = 18, tubeW = 46.
+    var tappedIdx = -1;
+    for (var i = 0; i < 5; i++) {
+      var tx = 22 + i * 64;
+      if (x >= tx - 10 && x <= tx + 46 + 10 && y >= 60 && y <= 380) {
+        tappedIdx = i;
+        break;
+      }
+    }
+
+    if (tappedIdx === -1) {
+      selectedTube = null;
+      draw();
+      return;
+    }
+
+    if (selectedTube === null) {
+      if (tubes[tappedIdx].length > 0) {
+        selectedTube = tappedIdx;
+      }
+    } else if (selectedTube === tappedIdx) {
+      selectedTube = null; // Deselect
+    } else {
+      // Try pour from selectedTube to tappedIdx
+      var src = tubes[selectedTube];
+      var dest = tubes[tappedIdx];
+      var topColor = src[src.length - 1];
+
+      // Count top contiguous matching blocks
+      var count = 0;
+      for (var k = src.length - 1; k >= 0; k--) {
+        if (src[k] === topColor) count++;
+        else break;
+      }
+
+      var space = 4 - dest.length;
+      var isValid = (space > 0) && (dest.length === 0 || dest[dest.length - 1] === topColor);
+
+      if (isValid) {
+        // Save undo state
+        if (undoStack.length >= 20) undoStack.shift();
+        undoStack.push({
+          tubes: JSON.parse(JSON.stringify(tubes)),
+          moves: moves
+        });
+
+        var numToPour = Math.min(count, space);
+        for (var p = 0; p < numToPour; p++) {
+          dest.push(src.pop());
+        }
+
+        moves++;
+        moveEl.textContent = String(moves);
+        selectedTube = null;
+        checkWin();
+      } else {
+        // Flash red + reset highlight
+        flashRedUntil = Date.now() + 350;
+        selectedTube = null;
+      }
+    }
+    draw();
+  }
+
+  function drawRoundedRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function drawTube(x, y, w, h, contents, isSelected, isFloating) {
+    // Glass Body
+    ctx.save();
+    
+    // Fill subtle glass background
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y + h - 16);
+    ctx.quadraticCurveTo(x, y + h, x + 16, y + h);
+    ctx.lineTo(x + w - 16, y + h);
+    ctx.quadraticCurveTo(x + w, y + h, x + w, y + h - 16);
+    ctx.lineTo(x + w, y);
+    ctx.closePath();
+    ctx.fill();
+
+    // Draw Liquid layers
+    var layerH = (h - 20) / 4;
+    var countTopMatch = 0;
+    if (isSelected && contents.length > 0) {
+      var topC = contents[contents.length - 1];
+      for (var m = contents.length - 1; m >= 0; m--) {
+        if (contents[m] === topC) countTopMatch++;
+        else break;
+      }
+    }
+
+    for (var idx = 0; idx < contents.length; idx++) {
+      var colorKey = contents[idx];
+      var colorHex = COLOR_PALETTE[colorKey] || '#ffffff';
+
+      var isTopFloating = isSelected && (idx >= contents.length - countTopMatch);
+      var layerY = y + h - 10 - (idx + 1) * layerH;
+      if (isTopFloating) {
+        layerY -= 35; // Floating animation shift
+      }
+
+      ctx.fillStyle = colorHex;
+      ctx.beginPath();
+
+      if (idx === 0 && !isTopFloating) {
+        // Bottom layer with rounded corners
+        ctx.moveTo(x + 4, layerY);
+        ctx.lineTo(x + w - 4, layerY);
+        ctx.lineTo(x + w - 4, y + h - 14);
+        ctx.quadraticCurveTo(x + w - 4, y + h - 4, x + w - 14, y + h - 4);
+        ctx.lineTo(x + 14, y + h - 4);
+        ctx.quadraticCurveTo(x + 4, y + h - 4, x + 4, y + h - 14);
+      } else {
+        // Rectangular layer
+        drawRoundedRect(x + 4, layerY + 2, w - 8, layerH - 3, 6);
+      }
+      ctx.fill();
+
+      // Liquid shine highlight
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+      ctx.fillRect(x + 8, layerY + 4, 6, layerH - 7);
+    }
+
+    // Glass stroke outline
+    ctx.strokeStyle = isSelected ? '#6366f1' : 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = isSelected ? 3.5 : 2;
+    if (isSelected) {
+      ctx.shadowColor = '#6366f1';
+      ctx.shadowBlur = 12;
+    }
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y + h - 16);
+    ctx.quadraticCurveTo(x, y + h, x + 16, y + h);
+    ctx.lineTo(x + w - 16, y + h);
+    ctx.quadraticCurveTo(x + w, y + h, x + w, y + h - 16);
+    ctx.lineTo(x + w, y);
+    ctx.stroke();
+
+    // Top Rim Lip
+    ctx.fillStyle = isSelected ? '#818cf8' : '#475569';
+    ctx.beginPath();
+    ctx.ellipse(x + w / 2, y, w / 2 + 3, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 360, 400);
+
+    // Background
+    ctx.fillStyle = '#070a12';
+    ctx.fillRect(0, 0, 360, 400);
+
+    // Draw 5 tubes
+    var tubeW = 46, tubeH = 190, tubeY = 150;
+    for (var i = 0; i < 5; i++) {
+      var tubeX = 22 + i * 64;
+      drawTube(tubeX, tubeY, tubeW, tubeH, tubes[i], selectedTube === i);
+    }
+
+    // Red flash feedback on invalid pour
+    if (Date.now() < flashRedUntil) {
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.25)';
+      ctx.fillRect(0, 0, 360, 400);
+      ctx.fillStyle = '#ef4444';
+      ctx.font = '900 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('❌ Tidak bisa menuang di sini!', 180, 100);
+      requestAnimationFrame(draw);
+    }
+
+    // Win Banner Overlay
+    if (won) {
+      ctx.fillStyle = 'rgba(7, 10, 18, 0.85)';
+      ctx.fillRect(0, 120, 360, 160);
+      ctx.fillStyle = '#6366f1';
+      ctx.font = '900 24px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Menang! 🎉', 180, 180);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '700 14px sans-serif';
+      ctx.fillText('Selesai dalam ' + moves + ' langkah!', 180, 215);
+    }
+  }
+
+  // Canvas Tap/Click Listeners
+  cvs.addEventListener('click', function (e) {
+    handleTap(getCanvasPos(e));
+  });
+
+  cvs.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    handleTap(getCanvasPos(e));
+  }, { passive: false });
+
+  // Button Listeners
+  newGameBtn.addEventListener('click', function () {
+    initGame();
+  });
+
+  undoBtn.addEventListener('click', function () {
+    if (undoStack.length === 0 || won) return;
+    var state = undoStack.pop();
+    tubes = state.tubes;
+    moves = state.moves;
+    selectedTube = null;
+    moveEl.textContent = String(moves);
+    doneEl.textContent = countFinishedTubes() + '/4';
+    statusEl.textContent = 'Main';
+    draw();
+  });
+
+  initGame();
+})();
+</script>
+</body>
+</html>

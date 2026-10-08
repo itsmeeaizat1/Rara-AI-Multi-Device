@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Tebak Kata</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+
+.keyboard { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; width: 100%; }
+.key-row { display: flex; justify-content: center; gap: 4px; }
+.btn-key { flex: 1; max-width: 38px; height: 38px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; user-select: none; }
+.btn-key:active { transform: scale(0.92); }
+.btn-key.correct { background: rgba(52, 211, 153, 0.25); border-color: #34d399; color: #34d399; opacity: 0.7; pointer-events: none; }
+.btn-key.wrong { background: rgba(239, 68, 68, 0.25); border-color: #f87171; color: #f87171; opacity: 0.45; pointer-events: none; }
+
+.controls { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 14px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-new { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">Rara AI</div>
+        <h2>Tebak Kata 💀</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Rekor 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Nyawa</div><div class="val" id="livesStat">6/6</div></div>
+      <div class="stat-pill"><div class="lbl">Kategori</div><div class="val" id="catStat">-</div></div>
+      <div class="stat-pill"><div class="lbl">Streak</div><div class="val" id="streakStat">0</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="320" height="320"></canvas></div>
+    
+    <div class="keyboard" id="keyboard">
+      <div class="key-row">
+        <button class="btn-key" data-key="Q">Q</button>
+        <button class="btn-key" data-key="W">W</button>
+        <button class="btn-key" data-key="E">E</button>
+        <button class="btn-key" data-key="R">R</button>
+        <button class="btn-key" data-key="T">T</button>
+        <button class="btn-key" data-key="Y">Y</button>
+        <button class="btn-key" data-key="U">U</button>
+        <button class="btn-key" data-key="I">I</button>
+        <button class="btn-key" data-key="O">O</button>
+        <button class="btn-key" data-key="P">P</button>
+      </div>
+      <div class="key-row">
+        <button class="btn-key" data-key="A">A</button>
+        <button class="btn-key" data-key="S">S</button>
+        <button class="btn-key" data-key="D">D</button>
+        <button class="btn-key" data-key="F">F</button>
+        <button class="btn-key" data-key="G">G</button>
+        <button class="btn-key" data-key="H">H</button>
+        <button class="btn-key" data-key="J">J</button>
+        <button class="btn-key" data-key="K">K</button>
+        <button class="btn-key" data-key="L">L</button>
+      </div>
+      <div class="key-row">
+        <button class="btn-key" data-key="Z">Z</button>
+        <button class="btn-key" data-key="X">X</button>
+        <button class="btn-key" data-key="C">C</button>
+        <button class="btn-key" data-key="V">V</button>
+        <button class="btn-key" data-key="B">B</button>
+        <button class="btn-key" data-key="N">N</button>
+        <button class="btn-key" data-key="M">M</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-new" id="newBtn">🔄 Kata Baru</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Tap Keyboard A-Z</td><td>Tebak huruf satu per satu</td></tr>
+      <tr><td>6 Kesempatan</td><td>Hindari 6 kesalahan agar tidak tereliminasi</td></tr>
+      <tr><td>Streak Beruntun</td><td>Pertahankan kemenangan beruntun sebanyak mungkin</td></tr>
+      <tr><td class="hd2" colspan="2">Rekor streak tersimpan otomatis di browser</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), X = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var livesStatEl = document.getElementById('livesStat'), catStatEl = document.getElementById('catStat'), streakStatEl = document.getElementById('streakStat');
+  var keyboardEl = document.getElementById('keyboard');
+
+  var S = 320;
+  var WORD_POOL = [
+    { w: 'NASGOR', cat: 'Makanan' }, { w: 'BOTAK', cat: 'Ciri' },
+    { w: 'KUCING', cat: 'Hewan' }, { w: 'MOTOR', cat: 'Kendaraan' },
+    { w: 'GORILA', cat: 'Hewan' }, { w: 'PANTAI', cat: 'Tempat' },
+    { w: 'DOMPET', cat: 'Benda' }, { w: 'KOPI', cat: 'Minuman' },
+    { w: 'SEPATU', cat: 'Benda' }, { w: 'GITAR', cat: 'Alat Musik' },
+    { w: 'KOMPUTER', cat: 'Elektronik' }, { w: 'PAYUNG', cat: 'Benda' },
+    { w: 'KEMEJA', cat: 'Pakaian' }, { w: 'LEMARI', cat: 'Mebel' },
+    { w: 'KENTANG', cat: 'Makanan' }, { w: 'HARIMAU', cat: 'Hewan' },
+    { w: 'PESAWAT', cat: 'Kendaraan' }, { w: 'DUREN', cat: 'Buah' },
+    { w: 'KACANG', cat: 'Makanan' }, { w: 'CELANA', cat: 'Pakaian' },
+    { w: 'JENDELA', cat: 'Rumah' }, { w: 'SEPEDA', cat: 'Kendaraan' },
+    { w: 'SENDOK', cat: 'Alat' }, { w: 'CANGKIR', cat: 'Wadah' },
+    { w: 'PENSIL', cat: 'Alat' }, { w: 'KAMERA', cat: 'Elektronik' },
+    { w: 'KELAPA', cat: 'Buah' }, { w: 'DOMBA', cat: 'Hewan' },
+    { w: 'MELON', cat: 'Buah' }, { w: 'RUMAH', cat: 'Tempat' },
+    { w: 'MARTABAK', cat: 'Makanan' }, { w: 'SATE', cat: 'Makanan' }
+  ];
+
+  var currentWordObj = null, secretWord = '', category = '';
+  var guessedLetters = {}, mistakes = 0, streak = 0, bestStreak = 0;
+  var won = false, lost = false;
+
+  try { bestStreak = parseInt(localStorage.getItem('rara_hangman_best') || '0', 10) || 0; } catch (e) { bestStreak = 0; }
+  bestEl.textContent = 'Rekor ' + bestStreak;
+
+  function resetKeyboardUI() {
+    var buttons = keyboardEl.querySelectorAll('.btn-key');
+    buttons.forEach(function (btn) {
+      btn.className = 'btn-key';
+    });
+  }
+
+  function startNewRound() {
+    var pool = WORD_POOL.filter(function (item) { return item !== currentWordObj; });
+    currentWordObj = pool[Math.floor(Math.random() * pool.length)];
+    secretWord = currentWordObj.w;
+    category = currentWordObj.cat;
+
+    guessedLetters = {};
+    mistakes = 0;
+    won = false;
+    lost = false;
+
+    livesStatEl.textContent = '6/6';
+    catStatEl.textContent = category;
+    streakStatEl.textContent = streak;
+    scoreEl.textContent = streak;
+
+    resetKeyboardUI();
+  }
+
+  function checkGameStatus() {
+    var allGuessed = true;
+    for (var i = 0; i < secretWord.length; i++) {
+      if (!guessedLetters[secretWord[i]]) {
+        allGuessed = false;
+        break;
+      }
+    }
+
+    if (allGuessed && !won) {
+      won = true;
+      streak++;
+      streakStatEl.textContent = streak;
+      scoreEl.textContent = streak;
+      if (streak > bestStreak) {
+        bestStreak = streak;
+        bestEl.textContent = 'Rekor ' + bestStreak;
+        try { localStorage.setItem('rara_hangman_best', String(bestStreak)); } catch (e) {}
+      }
+    } else if (mistakes >= 6 && !lost) {
+      lost = true;
+      streak = 0;
+      streakStatEl.textContent = streak;
+      scoreEl.textContent = streak;
+    }
+
+    livesStatEl.textContent = (6 - mistakes) + '/6';
+  }
+
+  function guessLetter(letter) {
+    if (won || lost || guessedLetters[letter]) return;
+    guessedLetters[letter] = true;
+
+    var btn = keyboardEl.querySelector('[data-key="' + letter + '"]');
+    if (secretWord.indexOf(letter) !== -1) {
+      if (btn) btn.classList.add('correct');
+    } else {
+      mistakes++;
+      if (btn) btn.classList.add('wrong');
+    }
+    checkGameStatus();
+  }
+
+  keyboardEl.addEventListener('pointerdown', function (e) {
+    var target = e.target;
+    if (target && target.classList.contains('btn-key')) {
+      e.preventDefault();
+      var key = target.getAttribute('data-key');
+      if (key) guessLetter(key);
+    }
+  });
+
+  window.addEventListener('keydown', function (e) {
+    var key = e.key.toUpperCase();
+    if (key >= 'A' && key <= 'Z' && key.length === 1) {
+      guessLetter(key);
+    }
+  });
+
+  document.getElementById('newBtn').addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    startNewRound();
+  });
+
+  function drawHangman(m) {
+    X.strokeStyle = '#ffffff';
+    X.lineWidth = 3;
+    X.lineCap = 'round';
+    X.lineJoin = 'round';
+
+    // Base ground line
+    X.beginPath(); X.moveTo(30, 230); X.lineTo(290, 230); X.stroke();
+
+    if (m >= 1) {
+      // Tiang
+      X.beginPath();
+      X.moveTo(60, 230); X.lineTo(60, 40);
+      X.lineTo(200, 40);
+      X.moveTo(60, 80); X.lineTo(100, 40);
+      X.stroke();
+    }
+    if (m >= 2) {
+      // Tali
+      X.beginPath();
+      X.moveTo(200, 40); X.lineTo(200, 75);
+      X.stroke();
+    }
+    if (m >= 3) {
+      // Kepala
+      X.beginPath();
+      X.arc(200, 93, 18, 0, Math.PI * 2);
+      X.stroke();
+      if (m >= 6) {
+        // Dead face eyes X X
+        X.lineWidth = 2;
+        X.beginPath();
+        X.moveTo(191, 87); X.lineTo(197, 93);
+        X.moveTo(197, 87); X.lineTo(191, 93);
+        X.moveTo(203, 87); X.lineTo(209, 93);
+        X.moveTo(209, 87); X.lineTo(203, 93);
+        X.stroke();
+        X.lineWidth = 3;
+      }
+    }
+    if (m >= 4) {
+      // Badan
+      X.beginPath();
+      X.moveTo(200, 111); X.lineTo(200, 165);
+      X.stroke();
+    }
+    if (m >= 5) {
+      // Tangan
+      X.beginPath();
+      X.moveTo(200, 125); X.lineTo(172, 148);
+      X.moveTo(200, 125); X.lineTo(228, 148);
+      X.stroke();
+    }
+    if (m >= 6) {
+      // Kaki
+      X.beginPath();
+      X.moveTo(200, 165); X.lineTo(172, 205);
+      X.moveTo(200, 165); X.lineTo(228, 205);
+      X.stroke();
+    }
+  }
+
+  function drawWordSlots() {
+    var len = secretWord.length;
+    var w = Math.min(32, Math.floor(240 / len));
+    var gap = 6;
+    var totalW = len * w + (len - 1) * gap;
+    var startX = (S - totalW) / 2;
+    var yLine = 285;
+
+    for (var i = 0; i < len; i++) {
+      var x = startX + i * (w + gap);
+      var ch = secretWord[i];
+
+      // Slot line
+      X.strokeStyle = 'rgba(99, 102, 241, 0.6)';
+      X.lineWidth = 3;
+      X.beginPath();
+      X.moveTo(x, yLine);
+      X.lineTo(x + w, yLine);
+      X.stroke();
+
+      // Letter text
+      if (guessedLetters[ch]) {
+        X.fillStyle = won ? '#34d399' : '#ffffff';
+        X.font = '900 20px sans-serif';
+        X.textAlign = 'center'; X.textBaseline = 'bottom';
+        X.fillText(ch, x + w / 2, yLine - 4);
+      } else if (lost) {
+        X.fillStyle = '#f87171';
+        X.font = '900 20px sans-serif';
+        X.textAlign = 'center'; X.textBaseline = 'bottom';
+        X.fillText(ch, x + w / 2, yLine - 4);
+      }
+    }
+  }
+
+  function draw() {
+    X.fillStyle = '#070a12'; X.fillRect(0, 0, S, S);
+
+    drawHangman(mistakes);
+    drawWordSlots();
+
+    // Banner message on Win or Lose
+    if (won) {
+      X.fillStyle = 'rgba(7, 10, 18, 0.75)'; X.fillRect(0, 0, S, 60);
+      X.fillStyle = '#34d399'; X.font = '900 20px sans-serif'; X.textAlign = 'center';
+      X.fillText('Menang! 🎉', S / 2, 28);
+      X.fillStyle = '#94a3b8'; X.font = '600 11px sans-serif';
+      X.fillText('Streak saat ini: ' + streak + ' 🔥 — Tap 🔄 Kata Baru', S / 2, 46);
+    } else if (lost) {
+      X.fillStyle = 'rgba(7, 10, 18, 0.75)'; X.fillRect(0, 0, S, 60);
+      X.fillStyle = '#f87171'; X.font = '900 20px sans-serif'; X.textAlign = 'center';
+      X.fillText('Kalah 💀', S / 2, 28);
+      X.fillStyle = '#94a3b8'; X.font = '600 11px sans-serif';
+      X.fillText('Jawaban: ' + secretWord + ' — Tap 🔄 Kata Baru', S / 2, 46);
+    }
+  }
+
+  startNewRound();
+  requestAnimationFrame(function loop() { draw(); requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

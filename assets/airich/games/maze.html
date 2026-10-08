@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Labirin</title>
+<style>
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #fff; touch-action: pan-y; overflow-y: auto; overscroll-behavior: contain; min-height: 101vh; }
+.wrapper { width: 100%; max-width: 480px; margin: auto; padding: 12px; }
+.card { background: linear-gradient(180deg, rgba(15,18,26,0.97), rgba(10,12,18,0.97)); border: 2px solid #6366f1; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 44px rgba(0,0,0,0.75); padding: 14px; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.title { font-size: 10px; letter-spacing: 1.5px; color: #6366f1; font-weight: 800; text-transform: uppercase; }
+h2 { font-size: 17px; font-weight: 900; color: #fff; margin-top: 2px; }
+.score-badge { font-size: 20px; font-weight: 900; color: #6366f1; text-shadow: 0 0 12px rgba(99,102,241,0.5); font-variant-numeric: tabular-nums; }
+.best-badge { font-size: 10px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.stat-pill { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 5px 8px; text-align: center; }
+.stat-pill .lbl { font-size: 8px; letter-spacing: 1px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.stat-pill .val { font-size: 13px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+#game-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid #1e293b; }
+canvas { width: 100%; height: auto; display: block; background: #070a12; touch-action: none; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.btn { padding: 14px; font-size: 13px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; color: #fff; text-align: center; }
+.btn-sol { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 14px rgba(245,158,11,0.35); }
+.btn-restart { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+.btn:active { transform: scale(0.95); filter: brightness(0.9); }
+.credit-bar { margin-top: 10px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 8px; }
+
+/* anti-scroll biar swipe game gak geser chat WA */
+html, body { overscroll-behavior: contain; }
+.guide { margin-top: 10px; }
+.guide-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.guide-table td { padding: 5px 8px; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+.guide-table td:first-child { color: #fff; font-weight: 800; white-space: nowrap; }
+.guide-table .hd { text-align: center; font-weight: 900; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; font-size: 9px; }
+.guide-table .hd2 { text-align: center; color: #64748b; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <div class="header">
+      <div>
+        <div class="title">RARA AI</div>
+        <h2>Labirin 🌀</h2>
+      </div>
+      <div style="text-align:right;">
+        <div class="score-badge" id="score">0</div>
+        <div class="best-badge" id="best">Best 0</div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="lbl">Langkah</div><div class="val" id="moveStat">0</div></div>
+      <div class="stat-pill"><div class="lbl">Waktu</div><div class="val" id="timeStat">00:00</div></div>
+      <div class="stat-pill"><div class="lbl">Level</div><div class="val" id="levelStat">1</div></div>
+    </div>
+    <div id="game-container"><canvas id="c" width="360" height="360"></canvas></div>
+    <div class="controls">
+      <button class="btn btn-sol" id="solBtn">💬 Solusi (3/3)</button>
+      <button class="btn btn-restart" id="restartBtn">🔄 Maze Baru</button>
+    </div>
+    <div class="guide">
+      <table class="guide-table">
+      <tr><td class="hd" colspan="2">📜 Panduan Kontrol</td></tr>
+      <tr><td>Swipe / Drag</td><td>Geser di canvas ke atas, bawah, kiri, kanan</td></tr>
+      <tr><td>Tap Zona Tepi</td><td>Ketuk area tepi canvas sesuai arah gerak</td></tr>
+      <tr><td>Tombol 💬 Solusi</td><td>Garis kuning petunjuk jalur BFS (max 3x)</td></tr>
+      <tr><td>Target 💎</td><td>Arahkan bola indigo ke berlian kuning di kanan bawah</td></tr>
+      <tr><td class="hd2" colspan="2">Selesaikan labirin secepat mungkin!</td></tr>
+      </table>
+    </div>
+    <div class="credit-bar">RARA AI - MULTI DEVICE ⚡</div>
+  </div>
+</div>
+<script>
+(function () {
+  var cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  var scoreEl = document.getElementById('score'), bestEl = document.getElementById('best');
+  var moveEl = document.getElementById('moveStat'), timeEl = document.getElementById('timeStat'), levelEl = document.getElementById('levelStat');
+  var solBtn = document.getElementById('solBtn'), restartBtn = document.getElementById('restartBtn');
+
+  var GRID_SIZE = 13;
+  var CELL_SIZE = 360 / GRID_SIZE; // ~27.69px
+
+  var grid = [];
+  var playerR = 0, playerC = 0;
+  var renderR = 0, renderC = 0;
+  var startR = 0, startC = 0;
+  var targetR = 0, targetC = 0;
+  var isMoving = false;
+  var animStart = 0, animDuration = 80;
+
+  var level = 1;
+  var moves = 0;
+  var score = 0;
+  var best = 0;
+  var won = false;
+  var solUses = 3;
+  var solutionPath = null;
+  var showSolUntil = 0;
+
+  var startTime = 0, elapsed = 0, timerInterval = null;
+  var touchStartX = 0, touchStartY = 0;
+
+  try { best = parseInt(localStorage.getItem('rara_maze_best') || '0', 10) || 0; } catch (e) { best = 0; }
+  bestEl.textContent = 'Best ' + best;
+
+  function fmtTime(sec) {
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function startTimer() {
+    stopTimer();
+    startTime = Date.now();
+    elapsed = 0;
+    timerInterval = setInterval(function () {
+      if (won) return;
+      elapsed = Math.floor((Date.now() - startTime) / 1000);
+      timeEl.textContent = fmtTime(elapsed);
+    }, 250);
+  }
+
+  function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  // Recursive Backtracker Maze Generator
+  function generateMaze(N) {
+    var g = [];
+    for (var r = 0; r < N; r++) {
+      var row = [];
+      for (var c = 0; c < N; c++) {
+        row.push({ walls: [true, true, true, true], visited: false });
+      }
+      g.push(row);
+    }
+
+    var stack = [];
+    g[0][0].visited = true;
+    stack.push({ r: 0, c: 0 });
+
+    while (stack.length > 0) {
+      var curr = stack[stack.length - 1];
+      var neighbors = [];
+      var dirs = [
+        { dr: -1, dc: 0, wall: 0, opp: 2 }, // Up
+        { dr: 0, dc: 1, wall: 1, opp: 3 },  // Right
+        { dr: 1, dc: 0, wall: 2, opp: 0 },  // Down
+        { dr: 0, dc: -1, wall: 3, opp: 1 }   // Left
+      ];
+
+      for (var d = 0; d < dirs.length; d++) {
+        var nr = curr.r + dirs[d].dr;
+        var nc = curr.c + dirs[d].dc;
+        if (nr >= 0 && nr < N && nc >= 0 && nc < N && !g[nr][nc].visited) {
+          neighbors.push({ r: nr, c: nc, dir: dirs[d] });
+        }
+      }
+
+      if (neighbors.length > 0) {
+        var next = neighbors[Math.floor(Math.random() * neighbors.length)];
+        g[curr.r][curr.c].walls[next.dir.wall] = false;
+        g[next.r][next.c].walls[next.dir.opp] = false;
+        g[next.r][next.c].visited = true;
+        stack.push({ r: next.r, c: next.c });
+      } else {
+        stack.pop();
+      }
+    }
+    return g;
+  }
+
+  // BFS Solver for Solution Hint
+  function solveBFS(sR, sC, tR, tC) {
+    var queue = [[{ r: sR, c: sC }]];
+    var visited = [];
+    for (var r = 0; r < GRID_SIZE; r++) visited.push(new Array(GRID_SIZE).fill(false));
+    visited[sR][sC] = true;
+
+    var dirs = [
+      { dr: -1, dc: 0, wall: 0 },
+      { dr: 0, dc: 1, wall: 1 },
+      { dr: 1, dc: 0, wall: 2 },
+      { dr: 0, dc: -1, wall: 3 }
+    ];
+
+    while (queue.length > 0) {
+      var path = queue.shift();
+      var last = path[path.length - 1];
+      if (last.r === tR && last.c === tC) return path;
+
+      for (var d = 0; d < 4; d++) {
+        if (!grid[last.r][last.c].walls[d]) {
+          var nr = last.r + dirs[d].dr;
+          var nc = last.c + dirs[d].dc;
+          if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE && !visited[nr][nc]) {
+            visited[nr][nc] = true;
+            queue.push(path.concat([{ r: nr, c: nc }]));
+          }
+        }
+      }
+    }
+    return [];
+  }
+
+  function initRound(resetLevel) {
+    if (resetLevel) {
+      level = 1;
+      score = 0;
+      solUses = 3;
+    }
+    grid = generateMaze(GRID_SIZE);
+    playerR = 0; playerC = 0;
+    renderR = 0; renderC = 0;
+    startR = 0; startC = 0;
+    targetR = 0; targetC = 0;
+    isMoving = false;
+    moves = 0;
+    won = false;
+    solutionPath = null;
+    showSolUntil = 0;
+
+    moveEl.textContent = '0';
+    timeEl.textContent = '00:00';
+    levelEl.textContent = String(level);
+    scoreEl.textContent = String(score);
+    solBtn.textContent = '💬 Solusi (' + solUses + '/3)';
+
+    startTimer();
+  }
+
+  function movePlayer(dir) {
+    if (won || isMoving) return;
+
+    // dir: 0=Up, 1=Right, 2=Down, 3=Left
+    if (!grid[playerR][playerC].walls[dir]) {
+      var dr = [ -1, 0, 1, 0 ][dir];
+      var dc = [ 0, 1, 0, -1 ][dir];
+
+      startR = renderR;
+      startC = renderC;
+      targetR = playerR + dr;
+      targetC = playerC + dc;
+      playerR = targetR;
+      playerC = targetC;
+
+      isMoving = true;
+      animStart = performance.now();
+      moves++;
+      moveEl.textContent = String(moves);
+    }
+  }
+
+  function checkWin() {
+    if (playerR === GRID_SIZE - 1 && playerC === GRID_SIZE - 1 && !won) {
+      won = true;
+      stopTimer();
+
+      var timeBonus = Math.max(0, 300 - elapsed * 5);
+      var moveBonus = Math.max(0, 500 - moves * 8);
+      var roundScore = 200 + timeBonus + moveBonus;
+      score += roundScore;
+      scoreEl.textContent = String(score);
+
+      if (score > best) {
+        best = score;
+        bestEl.textContent = 'Best ' + best;
+        try { localStorage.setItem('rara_maze_best', String(best)); } catch (e) {}
+      }
+
+      // Automatically start next level after short delay
+      setTimeout(function () {
+        level++;
+        initRound(false);
+      }, 1500);
+    }
+  }
+
+  function getCanvasPos(evt) {
+    var rect = cvs.getBoundingClientRect();
+    var clientX = evt.clientX, clientY = evt.clientY;
+    if (evt.touches && evt.touches.length > 0) {
+      clientX = evt.touches[0].clientX;
+      clientY = evt.touches[0].clientY;
+    } else if (evt.changedTouches && evt.changedTouches.length > 0) {
+      clientX = evt.changedTouches[0].clientX;
+      clientY = evt.changedTouches[0].clientY;
+    }
+    var scaleX = cvs.width / rect.width;
+    var scaleY = cvs.height / rect.height;
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY
+    };
+  }
+
+  function handleGesture(x1, y1, x2, y2) {
+    if (won) return;
+    var dx = x2 - x1, dy = y2 - y1;
+    var dist = Math.hypot(dx, dy);
+
+    if (dist > 18) {
+      // Swipe gesture
+      if (Math.abs(dx) > Math.abs(dy)) {
+        movePlayer(dx > 0 ? 1 : 3); // Right or Left
+      } else {
+        movePlayer(dy > 0 ? 2 : 0); // Down or Up
+      }
+    } else {
+      // Tap gesture relative to canvas center (180, 180)
+      var cx = x1 - 180;
+      var cy = y1 - 180;
+      if (Math.abs(cx) > Math.abs(cy)) {
+        movePlayer(cx > 0 ? 1 : 3);
+      } else {
+        movePlayer(cy > 0 ? 2 : 0);
+      }
+    }
+  }
+
+  function draw() {
+    var now = performance.now();
+
+    // Lerp animation for smooth 80ms movement
+    if (isMoving) {
+      var t = Math.min(1, (now - animStart) / animDuration);
+      renderR = startR + (targetR - startR) * t;
+      renderC = startC + (targetC - startC) * t;
+      if (t >= 1) {
+        renderR = targetR;
+        renderC = targetC;
+        isMoving = false;
+        checkWin();
+      }
+    }
+
+    ctx.clearRect(0, 0, 360, 360);
+    ctx.fillStyle = '#070a12';
+    ctx.fillRect(0, 0, 360, 360);
+
+    // Draw Solution BFS Path if active
+    if (Date.now() < showSolUntil && solutionPath && solutionPath.length > 0) {
+      ctx.save();
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 3.5;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      for (var p = 0; p < solutionPath.length; p++) {
+        var px = (solutionPath[p].c + 0.5) * CELL_SIZE;
+        var py = (solutionPath[p].r + 0.5) * CELL_SIZE;
+        if (p === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Draw Maze Walls
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+
+    for (var r = 0; r < GRID_SIZE; r++) {
+      for (var c = 0; c < GRID_SIZE; c++) {
+        var x = c * CELL_SIZE;
+        var y = r * CELL_SIZE;
+        var cell = grid[r][c];
+
+        ctx.beginPath();
+        if (cell.walls[0]) { ctx.moveTo(x, y); ctx.lineTo(x + CELL_SIZE, y); } // Top
+        if (cell.walls[1]) { ctx.moveTo(x + CELL_SIZE, y); ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE); } // Right
+        if (cell.walls[2]) { ctx.moveTo(x, y + CELL_SIZE); ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE); } // Bottom
+        if (cell.walls[3]) { ctx.moveTo(x, y); ctx.lineTo(x, y + CELL_SIZE); } // Left
+        ctx.stroke();
+      }
+    }
+
+    // Draw Target Gem 💎 at bottom-right cell (12, 12)
+    var targetX = (GRID_SIZE - 0.5) * CELL_SIZE;
+    var targetY = (GRID_SIZE - 0.5) * CELL_SIZE;
+    ctx.font = '18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('💎', targetX, targetY);
+
+    // Draw Indigo Player Ball
+    var pX = (renderC + 0.5) * CELL_SIZE;
+    var pY = (renderR + 0.5) * CELL_SIZE;
+    var radius = CELL_SIZE * 0.35;
+
+    ctx.save();
+    var grad = ctx.createRadialGradient(pX - 2, pY - 2, 2, pX, pY, radius);
+    grad.addColorStop(0, '#818cf8');
+    grad.addColorStop(1, '#4338ca');
+    ctx.fillStyle = grad;
+    ctx.shadowColor = '#6366f1';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.arc(pX, pY, radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Win Banner Overlay
+    if (won) {
+      ctx.fillStyle = 'rgba(7, 10, 18, 0.85)';
+      ctx.fillRect(0, 110, 360, 140);
+      ctx.fillStyle = '#6366f1';
+      ctx.font = '900 24px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Keluar! 🎉', 180, 165);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '700 13px sans-serif';
+      ctx.fillText('Waktu: ' + fmtTime(elapsed) + ' | Langkah: ' + moves, 180, 200);
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  // Touch and Mouse listeners
+  cvs.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    var p = getCanvasPos(e);
+    touchStartX = p.x;
+    touchStartY = p.y;
+  }, { passive: false });
+
+  cvs.addEventListener('touchend', function (e) {
+    e.preventDefault();
+    var p = getCanvasPos(e);
+    handleGesture(touchStartX, touchStartY, p.x, p.y);
+  }, { passive: false });
+
+  cvs.addEventListener('mousedown', function (e) {
+    var p = getCanvasPos(e);
+    touchStartX = p.x;
+    touchStartY = p.y;
+  });
+
+  cvs.addEventListener('mouseup', function (e) {
+    var p = getCanvasPos(e);
+    handleGesture(touchStartX, touchStartY, p.x, p.y);
+  });
+
+  // Buttons
+  solBtn.addEventListener('click', function () {
+    if (solUses <= 0 || won) return;
+    solUses--;
+    solBtn.textContent = '💬 Solusi (' + solUses + '/3)';
+    solutionPath = solveBFS(playerR, playerC, GRID_SIZE - 1, GRID_SIZE - 1);
+    showSolUntil = Date.now() + 3000;
+  });
+
+  restartBtn.addEventListener('click', function () {
+    initRound(true);
+  });
+
+  initRound(true);
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
