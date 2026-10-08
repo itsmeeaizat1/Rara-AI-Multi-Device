@@ -183,4 +183,6 @@ async function handler(m, { sock } = {}) {
 
 export { handler, pluginConfig, buildSettings };
 
-export default handler;
+// CATATAN (8 Okt): default WAJIB OBJECT — `export default handler` bikin loader
+// swap namespace ke fungsi handler → pluginConfig hilang → plugin di-skip SENYAP.
+export default { config: pluginConfig, handler };

@@ -229,4 +229,8 @@ async function handler(m, { sock }) {
 }
 
 export { handler, pluginConfig, resolveTarget, parseArgs };
-export default handler;
+// CATATAN (8 Okt): loader nge-swap namespace ke `default` kalau export `config`
+// gak ada — default WAJIB OBJECT { config, handler }, BUKAN fungsi handler.
+// Bug lama `export default handler` bikin plugin di-skip SENYAP dari registry
+// (command live gak pernah kejawab pluginnya; cuma E2E yang import langsung).
+export default { config: pluginConfig, handler };
