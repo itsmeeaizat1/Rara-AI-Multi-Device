@@ -241,6 +241,8 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
       prefix,
       readMoreBeforeCategories: true,
         footerName: botName,
+        // OWNER 8 Okt 2026: gaya box (sama kayak .allmenu)
+        categoryBoxStyle: true,
     });
 
     const navButtons2 = buildNavButtons(m, db, prefix);
