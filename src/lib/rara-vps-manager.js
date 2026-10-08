@@ -168,9 +168,10 @@ server {
     charset utf-8;
     client_max_body_size 32m;
     location / { try_files $uri $uri/ /index.php?$query_string; }
-    location ~ \\.php$ { fastcgi_pass unix:/run/php/php-\${PHPVER}-fpm.sock; fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; include fastcgi_params; fastcgi_hide_header X-Powered-By; }
+    location ~ \\.php$ { fastcgi_pass unix:/run/php/php-__PHPVER__-fpm.sock; fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; include fastcgi_params; fastcgi_hide_header X-Powered-By; }
 }
 NGINX
+PHPV=$(ls /etc/php | head -1) && sed -i "s/__PHPVER__/\$PHPV/g" /etc/nginx/sites-available/pterodactyl.conf
 ln -sf /etc/nginx/sites-available/pterodactyl.conf /etc/nginx/sites-enabled/ && rm -f /etc/nginx/sites-enabled/default && nginx -t && systemctl reload nginx && chown -R www-data:www-data /var/www/pterodactyl && echo INSTALL_DONE`],
   ];
   for (const [label, c] of cmds) {
@@ -272,4 +273,98 @@ export async function runScriptUrl(creds, url, onProgress) {
   const r = await sshExec(creds, `bash <(curl -sSL ${url}) 2>&1 | tail -20`, { timeoutMs: 10 * 60 * 1000 });
   if (r.code !== 0) throw new Error("Script gagal:\n" + (r.stdout || r.stderr).slice(-700));
   return r.stdout.slice(-800);
+}
+
+// ── protect panel (fail2ban + rate limit + whitelist admin) ──
+const PTERO_NGINX_SITE = "/etc/nginx/sites-available/pterodactyl.conf";
+const PTERO_LOC_SNIPPET = "/etc/nginx/ptero-protect-locations.conf";
+const PTERO_CONF_HTTP = "/etc/nginx/conf.d/ptero-protect.conf";
+const PTERO_F2B_JAIL = "/etc/fail2ban/jail.d/ptero.local";
+const PTERO_F2B_FILTER = "/etc/fail2ban/filter.d/ptero-auth.conf";
+const PTERO_INCLUDE = "include /etc/nginx/ptero-protect-locations.conf;";
+
+export async function protectStatus(creds) {
+  const out = await sshOk(creds, `echo SITE=$([ -f ${PTERO_NGINX_SITE} ] && echo ada || echo tidak)
+echo SNIPPET=$([ -f ${PTERO_LOC_SNIPPET} ] && echo ada || echo tidak)
+echo F2B=$(systemctl is-active fail2ban 2>/dev/null || echo -)
+echo BANNED=$(fail2ban-client status ptero-auth 2>/dev/null | grep -m1 'Currently banned' | awk '{print $NF}')
+echo WHITELIST=$(grep -h ignoreip ${PTERO_F2B_JAIL} 2>/dev/null | awk '{print $2}')
+echo SSHD_BANNED=$(fail2ban-client status sshd 2>/dev/null | grep -m1 'Currently banned' | awk '{print $NF}')`, { timeoutMs: 30000 });
+  return Object.fromEntries(out.trim().split("\n").map((l) => [l.split("=")[0], l.split("=").slice(1).join("=")]));
+}
+
+export async function protectInstall(creds, { adminId }, onProgress) {
+  if (!/^\d+$/.test(String(adminId || ""))) throw new Error("ID admin utama panel harus angka — ID user admin di panel (admin panel → Users, kolom paling kiri).");
+  onProgress?.("• cek panel + dependensi…");
+  await sshOk(creds, `[ -f /var/www/pterodactyl/artisan ] || { echo 'Panel Pterodactyl gak ketemu di /var/www/pterodactyl'; exit 9; }
+[ -f ${PTERO_NGINX_SITE} ] || { echo 'Site nginx panel gak ketemu'; exit 9; }
+apt-get install -y -qq fail2ban > /dev/null 2>&1 || true
+command -v fail2ban-client > /dev/null || { echo 'fail2ban gagal terinstal'; exit 8; }`, { timeoutMs: 180000 });
+
+  onProgress?.(`• cari IP terakhir admin (ID ${adminId}) dari log aktivitas panel…`);
+  const ipOut = await sshOk(creds, `mysql panel -N -e "SELECT ip FROM activity_log_events WHERE actor_id=${adminId} AND ip IS NOT NULL AND ip != '' ORDER BY id DESC LIMIT 1;" 2>/dev/null | tail -1`, { timeoutMs: 15000 });
+  const adminIp = (ipOut || "").trim();
+  if (!/^(\d{1,3}\.){3}\d{1,3}$/.test(adminIp)) throw new Error("IP admin gak ketemu di log panel — ID admin salah atau admin belum pernah login panel.");
+
+  onProgress?.(`• pasang rate-limit nginx (whitelist ${adminIp})…`);
+  const r = await sshExec(creds, `PHPVER=$(ls /etc/php | head -1)
+printf '%s\\n' \\
+  'geo \\$ptero_whitelist {' '    default 0;' '    ${adminIp} 1;' '}' \\
+  'map \\$ptero_whitelist \\$ptero_login_key { 1 ""; 0 \\$binary_remote_addr; }' \\
+  'map \\$ptero_whitelist \\$ptero_api_key { 1 ""; 0 \\$binary_remote_addr; }' \\
+  'limit_req_zone \\$ptero_login_key zone=ptero_login:10m rate=10r/m;' \\
+  'limit_req_zone \\$ptero_api_key zone=ptero_api:10m rate=120r/m;' \\
+  > ${PTERO_CONF_HTTP}
+printf '%s\\n' \\
+  'limit_req_status 429;' \\
+  'location = /auth/login {' '    limit_req zone=ptero_login burst=5 nodelay;' \\
+  '    try_files \\$uri \\$uri/ /index.php?\\$query_string;' \\
+  '    fastcgi_pass unix:/run/php/php-__PHPVER__-fpm.sock;' \\
+  '    fastcgi_param SCRIPT_FILENAME \\$document_root\\$fastcgi_script_name;' \\
+  '    include fastcgi_params;' '    fastcgi_hide_header X-Powered-By;' '}' \\
+  'location ^~ /api/ {' '    limit_req zone=ptero_api burst=20 nodelay;' \\
+  '    try_files \\$uri \\$uri/ /index.php?\\$query_string;' \\
+  '    fastcgi_pass unix:/run/php/php-__PHPVER__-fpm.sock;' \\
+  '    fastcgi_param SCRIPT_FILENAME \\$document_root\\$fastcgi_script_name;' \\
+  '    include fastcgi_params;' '    fastcgi_hide_header X-Powered-By;' '}' \\
+  > ${PTERO_LOC_SNIPPET}
+sed -i "s/__PHPVER__/\$PHPVER/g" ${PTERO_LOC_SNIPPET}
+grep -q '${PTERO_INCLUDE}' ${PTERO_NGINX_SITE} || sed -i "/^    server_name /a\\    ${PTERO_INCLUDE}" ${PTERO_NGINX_SITE}
+nginx -t 2>&1 | tail -1 && systemctl reload nginx && echo NGINX_OK`, { timeoutMs: 60000 });
+  if (r.code !== 0) throw new Error("Gagal pasang rate-limit nginx:\n" + (r.stderr || r.stdout).slice(-600));
+
+  onProgress?.("• pasang fail2ban (panel + sshd)…");
+  const r2 = await sshExec(creds, `printf '%s\\n' '[Definition]' \\
+  'failregex = ^<HOST> .* "(POST|GET) /auth/login[^"]*" (401|403|429|500) .*$' \\
+  '            ^<HOST> .* "GET /api/application[^"]*" (401|403|429) .*$' \\
+  'ignoreregex =' \\
+  > ${PTERO_F2B_FILTER}
+SSHP=$(grep -m1 -oP '^Port \\K[0-9]+' /etc/ssh/sshd_config || echo 22)
+printf '%s\\n' '[DEFAULT]' "ignoreip = 127.0.0.1/8 ${adminIp}" 'bantime = 3600' 'findtime = 600' \\
+  '[ptero-auth]' 'enabled = true' 'port = http,https' 'filter = ptero-auth' \\
+  'logpath = /var/log/nginx/access.log' 'maxretry = 6' \\
+  '[sshd]' 'enabled = true' "port = \\$SSHP" 'maxretry = 4' \\
+  > ${PTERO_F2B_JAIL}
+systemctl enable --now fail2ban > /dev/null 2>&1
+systemctl restart fail2ban && sleep 2
+fail2ban-client status ptero-auth > /dev/null 2>&1 && fail2ban-client status sshd > /dev/null 2>&1 && echo F2B_OK`, { timeoutMs: 90000 });
+  if (r2.code !== 0) throw new Error("Gagal pasang fail2ban:\n" + (r2.stderr || r2.stdout).slice(-600));
+
+  const st = await protectStatus(creds);
+  return { adminIp, status: st };
+}
+
+export async function protectUninstall(creds, onProgress) {
+  onProgress?.("• lepas proteksi panel…");
+  await sshOk(creds, `sed -i '/ptero-protect-locations.conf/d' ${PTERO_NGINX_SITE}
+rm -f ${PTERO_LOC_SNIPPET} ${PTERO_CONF_HTTP} ${PTERO_F2B_JAIL} ${PTERO_F2B_FILTER}
+nginx -t 2>&1 | tail -1 && systemctl reload nginx
+systemctl restart fail2ban 2>/dev/null
+echo UNPROTECT_OK`, { timeoutMs: 60000 });
+  return { ok: true };
+}
+
+export async function protectBanned(creds) {
+  const out = await sshOk(creds, `echo PANEL:; fail2ban-client get ptero-auth banned 2>/dev/null | tail -1; echo SSHD:; fail2ban-client get sshd banned 2>/dev/null | tail -1`, { timeoutMs: 30000 });
+  return out.trim();
 }

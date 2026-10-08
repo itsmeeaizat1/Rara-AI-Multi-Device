@@ -146,8 +146,59 @@ replies.length = 0;
 out = await P.handler(mkM("owner@s", ".vps logout", true, false), { sock: mkSock() });
 t("8m logout hapus", /dihapus/.test(replies[replies.length - 1]) && L.getCreds("owner@s") === null);
 
+
+// ── 9. protect panel ──
+section("9. protect panel (fail2ban + rate limit + whitelist admin)");
+const pmockCalls = [];
+const pmock = async (creds, cmd) => { pmockCalls.push({ host: creds.host, cmd }); return pmockImpl(creds, cmd); };
+const pmockImpl = async (creds, cmd) => {
+  if (/hostname &&/.test(cmd)) return { code: 0, stdout: "vpsprotect\nUbuntu 22.04\nup 1 day" };
+  if (/echo SITE=/.test(cmd)) return { code: 0, stdout: "SITE=ada\nSNIPPET=ada\nF2B=active\nBANNED=2\nWHITELIST=203.0.113.77\nSSHD_BANNED=1" };
+  if (/apt-get install -y -qq fail2ban/.test(cmd) || /\[ -f \/var\/www\/pterodactyl\/artisan \]/.test(cmd)) return { code: 0, stdout: "ok" };
+  if (/activity_log_events/.test(cmd)) return { code: 0, stdout: "203.0.113.77" };
+  if (/ptero-protect.conf/.test(cmd) || /ptero-protect-locations.conf/.test(cmd) || /server_name/.test(cmd)) return { code: 0, stdout: "syntax is ok\nNGINX_OK" };
+  if (/ptero-auth.conf/.test(cmd) || /jail.d\/ptero.local/.test(cmd)) return { code: 0, stdout: "F2B_OK" };
+  if (/echo SITE=/.test(cmd)) return { code: 0, stdout: "SITE=ada\nSNIPPET=ada\nF2B=active\nBANNED=2\nWHITELIST=203.0.113.77\nSSHD_BANNED=1" };
+  if (/fail2ban-client get ptero-auth banned/.test(cmd)) return { code: 0, stdout: "PANEL:\n1.2.3.4\nSSHD:\n5.6.7.8" };
+  if (/lepas proteksi/.test(cmd) || /sed -i '\/ptero-protect-locations.conf\/d'/.test(cmd)) return { code: 0, stdout: "UNPROTECT_OK" };
+  return { code: 1, stdout: "unexpected-protect: " + cmd.slice(0, 50) };
+};
+L._setSshForTest(pmock);
+let protectErr = null;
+try { await L.protectInstall(L.getCreds("user2@s"), { adminId: "abc" }); } catch (e) { protectErr = e.message; }
+t("9a admin ID non-angka ditolak", /harus angka/.test(protectErr));
+let pi = await L.protectInstall(L.getCreds("user2@s"), { adminId: 1 }, () => {});
+t("9b whitelist IP diambil dari activity_log (actor_id)", pi.adminIp === "203.0.113.77");
+t("9c command whitelist IP masuk geo + ignoreip", pmockCalls.some((c) => c.cmd.includes("203.0.113.77") && c.cmd.includes("ignoreip")));
+const pst = await L.protectStatus(L.getCreds("user2@s"));
+t("9d status parse", pst.SNIPPET === "ada" && pst.WHITELIST === "203.0.113.77" && pst.BANNED === "2");
+t("9e banned list", (await L.protectBanned(L.getCreds("user2@s"))).includes("1.2.3.4"));
+const pu = await L.protectUninstall(L.getCreds("user2@s"), () => {});
+t("9f uninstall hapus snippet + jail + include line", pu.ok === true);
+
+// ── 10. plugin .vps protect ──
+section("10. plugin .vps protect");
+const srcvps = fs.readFileSync(path.join(R, "plugins/panel/vps.js"), "utf8");
+t("10a sub protect ada di plugin", srcvps.includes("protect install") && srcvps.includes("protect uninstall"));
+replies.length = 0;
+out = await P.handler(mkM("user2@s", ".vps protect install 1.2.3.4|pwvps123|1", false, false), { sock: mkSock() });
+t("10b format inline ip|pw|adminId → PROTECT AKTIF + whitelist", /PROTECT PANEL AKTIF/.test(replies[replies.length - 1]) && /Whitelist admin: 203.0.113.77/.test(replies[replies.length - 1]));
+replies.length = 0;
+out = await P.handler(mkM("user2@s", ".vps protect status", false, false), { sock: mkSock() });
+t("10c protect status → whitelist + banned tampil", /Whitelist admin: 203.0.113.77/.test(replies[replies.length - 1]) && /Terbanned/.test(replies[replies.length - 1]));
+replies.length = 0;
+out = await P.handler(mkM("user2@s", ".vps protect banned", false, false), { sock: mkSock() });
+t("10d daftar banned IP", replies[replies.length - 1].includes("1.2.3.4"));
+replies.length = 0;
+out = await P.handler(mkM("user2@s", ".vps protect uninstall", false, false), { sock: mkSock() });
+t("10e protect uninstall lepas proteksi", /dilepas/.test(replies[replies.length - 1]));
+replies.length = 0;
+out = await P.handler(mkM("user2@s", ".vps protect install 99", false, false), { sock: mkSock() });
+t("10f format adminId saja (pakai login tersimpan)", /PROTECT PANEL AKTIF/.test(replies[replies.length - 1]));
+
 L._resetSshForTest();
 L._resetVpsStoreForTest();
 
 console.log(`\n${pass} PASS / ${fail} FAIL`);
 process.exit(fail ? 1 : 0);
+EOF_MARKER_NEVER

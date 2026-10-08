@@ -10,6 +10,7 @@ import {
   getCreds, saveCreds, clearCreds, maskCreds, testConnection, hostStatus,
   panelService, panelInstall, panelUninstall, themeInstall, themeUninstall, themeList,
   changeSshPort, changeRootPw, wingsRestart, wingsSetPort, runScriptUrl,
+  protectInstall, protectStatus, protectUninstall, protectBanned,
   THEME_PRESETS, _setVpsStoreForTest,
 } from "../../src/lib/rara-vps-manager.js";
 
@@ -63,6 +64,11 @@ Kelola VPS kamu langsung dari bot — login akun root VPS-mu dulu (tersimpan pri
 • ${p}vps wings restart — restart wings daemon
 • ${p}vps wingsport <port> — ganti port wings
 • ${p}vps script <url> — jalankan installer script https
+
+🛡️ Protect Panel:
+• ${p}vps protect install <ip-panel>|<pw-vps>|<id-admin> — antibot + fail2ban + whitelist admin
+• ${p}vps protect install <id-admin> (kalau sudah login)
+• ${p}vps protect status / banned / uninstall
 
 ⚠️ Semua operasi jalan di VPS MILIKMU SENDIRI. Data login gak bisa dilihat user lain.`);
 }
@@ -198,6 +204,52 @@ ${svc}`));
         return m.reply(raraWrap("vps", `✅ *TEMA ${r.nama} DIHAPUS* — balik ke tema bawaan\n${r.log}\n\n${r.note}`));
       }
       return m.reply(raraWrap("vps", `Sub tema gak dikenal. Pakai: ${p}vps tema list|install|uninstall`));
+    }
+
+    // ── protect panel ──
+    if (sub === "protect") {
+      const act = (a2 || "").toLowerCase();
+      if (act === "install") {
+        let adminId = a3;
+        if (adminId && !args.slice(1).join(" ").includes("|")) {
+          // format: .vps protect install <adminId> — pakai login tersimpan
+        } else {
+          // format: .vps protect install <ip-panel>|<pw-vps>|<id-admin> — inline
+          const parts = args.slice(2).join(" ").split("|").map((x) => x?.trim()).filter(Boolean);
+          if (parts.length !== 3) return m.reply(raraWrap("vps", `Format salah. Pakai salah satu:\n• ${p}vps protect install <ip-panel>|<pw-vps>|<id-admin>\n• ${p}vps protect install <id-admin> (kalau sudah .vps login)`));
+          [adminId] = parts.slice(2);
+          await m.reply(raraWrap("vps", `⏳ Cek akses VPS *${parts[0]}*…`));
+          await testConnection({ host: parts[0], port: 22, user: "root", password: parts[1] });
+          saveCreds(m.sender, { host: parts[0], port: 22, user: "root", password: parts[1] });
+        }
+        if (!adminId) return m.reply(raraWrap("vps", `ID admin utama panel-nya mana? ${p}vps protect install <ip-panel>|<pw-vps>|<id-admin>`));
+        await progress("🛡️ Instal protect panel: fail2ban + rate-limit login + whitelist admin (±1–3 menit)…");
+        const r = await protectInstall(getCreds(m.sender), { adminId }, () => {});
+        return m.reply(raraWrap("vps", `✅ *PROTECT PANEL AKTIF* (Mode ${mode})
+Whitelist admin: ${r.adminIp} (ID ${adminId})
+
+• Rate limit: login 10x/menit + API 120x/menit (admin bebas limit)
+• fail2ban: 6x gagal login = ban 1 jam (panel + SSH 4x)
+• Admin gak akan ke-ban / ke-limit (IP terakhir dari log panel)
+
+Status: ${p}vps protect status — lepas: ${p}vps protect uninstall`));
+      }
+      if (act === "status") {
+        const st = await protectStatus(getCreds(m.sender));
+        return m.reply(raraWrap("vps", `🛡️ *PROTECT PANEL STATUS*
+Snippet rate-limit: ${st.SNIPPET || "-"} | fail2ban: ${st.F2B || "-"}
+Whitelist admin: ${st.WHITELIST || "-"}
+Terbanned (panel): ${st.BANNED || "0"} | Terbanned (SSH): ${st.SSHD_BANNED || "0"}`));
+      }
+      if (act === "banned") {
+        return m.reply(raraWrap("vps", `🚫 *IP TERBANNED*\n\`\`\`\n${await protectBanned(getCreds(m.sender))}\n\`\`\``));
+      }
+      if (act === "uninstall") {
+        await progress("🔓 Lepas protect panel (rate-limit + fail2ban dinonaktif)…");
+        await protectUninstall(getCreds(m.sender), () => {});
+        return m.reply(raraWrap("vps", "✅ Protect panel dilepas — panel balik normal tanpa limit."));
+      }
+      return m.reply(raraWrap("vps", `Sub protect gak dikenal. Pakai: ${p}vps protect install|status|banned|uninstall`));
     }
 
     // ── sethost/setport/setpw (data login) ──
