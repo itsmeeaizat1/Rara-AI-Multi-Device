@@ -257,6 +257,8 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       footerName: botName,
       // OWNER 8 Okt 2026: gaya box per kategori — ╭─『 Nama 』 / ᯓ .cmd / ╰—༓
       categoryBoxStyle: true,
+      // OWNER 8 Okt: judul info section jadi 『 *Title* 』
+      infoTitleStyle: "bracket",
     });
 
     let finalText = txt;

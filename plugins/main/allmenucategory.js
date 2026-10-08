@@ -173,6 +173,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         ],
         prefix: "",
         footerName: botName,
+        infoTitleStyle: "bracket",
       });
 
       const navButtons = buildNavButtons(m, db, prefix);
@@ -243,6 +244,8 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         footerName: botName,
         // OWNER 8 Okt 2026: gaya box (sama kayak .allmenu)
         categoryBoxStyle: true,
+      // OWNER 8 Okt: judul info section jadi 『 *Title* 』
+      infoTitleStyle: "bracket",
     });
 
     const navButtons2 = buildNavButtons(m, db, prefix);
