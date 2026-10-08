@@ -51,7 +51,7 @@ const pluginConfig = {
   alias: ["panel"],
   category: "panel",
   description: "Pusat kontrol panel Pterodactyl (v1-v100): buat akun client/admin + spesifikasi (izin .addaksescpanel dari owner; kredensial bisa dikirim ke DM WhatsApp ATAU DM Telegram via bridge), power/status/upload server, login client 7 hari",
-  usage: ".cpanel client|admin, <disk> <ram>, <cpu>, <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel <ram> <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel> | izin create: .addaksescpanel <nomor> <client|admin> <durasi>",
+  usage: ".cpanel client|admin, <disk> <ram>, <cpu>, <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel <ram> <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel> | izin create: .addaksescpanel <basic|reseller|admin>, <nomor|tg:id>, <durasi>",
   example: ".panel aizat aizat123, 1",
   isOwner: false,
   isPremium: false,
@@ -240,11 +240,11 @@ async function createWithRole(m, { sock }, spec) {
     const allow = isCreateAllowed(m.sender);
     if (!allow.allowed) {
       try { await notifyOwnerCreateRequest(sock, m.sender); } catch {}
-      return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addaksescpanel <nomor kamu> <client|admin> <durasi>\n\nContoh: ${(m.prefix || ".")}addaksescpanel ${allowCleanNumber(m.sender)} client 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+      return m.reply(raraWrap("cpanel", `Akses create panel butuh izin dari owner atau reseller.\n\nMinta mereka nambahin kamu:\n${m.prefix || "."}addaksescpanel basic, <nomor kamu>, <durasi>\n\nContoh: ${(m.prefix || ".")}addaksescpanel basic, ${allowCleanNumber(m.sender)}, 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
     }
     const allowTipe = String(allow.entry?.tipe || "client").toLowerCase();
     if (allowTipe !== spec.role) {
-      return m.reply(raraWrap("cpanel", `Izin create kamu cuma tipe *${allowTipe}*.\n\nGunakan format:\n${m.prefix || "."}cpanel ${allowTipe}, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>\n\nMau tipe ${spec.role}? Minta owner:\n${m.prefix || "."}addaksescpanel <nomor kamu> ${spec.role} <durasi>`));
+      return m.reply(raraWrap("cpanel", `Izin create kamu cuma tipe *${allowTipe}*.\n\nGunakan format:\n${m.prefix || "."}cpanel ${allowTipe}, <disk> <ram>, <cpu>, <username>,<nomor>,<idpanel>\n\nMau tipe ${spec.role}? Minta owner:\n${m.prefix || "."}addaksescpanel basic, <nomor kamu>, <durasi>  (lalu tipe di .cpanel)`));
     }
   }
   const jedaCheck = checkPanelJeda(m);
@@ -444,14 +444,19 @@ Ambil PTLA: panel → Admin → API | PTLC: panel → Account → API Credential
 PTLA & PTLC boleh barengan, gak saling hapus.
 
 「 🛠️ Cara Kasih Akses Create 」
-User mau akses panel harus di-add owner dulu (owner bot otomatis bisa).
-Owner mutusin tipe + durasi pas .addaksescpanel:
-.addaksescpanel @user client 7d   → izin create tipe client 7 hari
-.addaksescpanel @user admin unli → izin create tipe admin selamanya
-.addaksescpanel 628xxx 7d         → tanpa tipe = client
-.delaksescpanel @user            → cabut izin
-.listaksescpanel                  → daftar izin aktif + tipe
-Durasi: 30m / 12h / 7d / 2w / unli
+Akses diatur lewat role (owner 8 Okt):
+• basic    → bisa create panel, gak bisa nambahin orang lain
+• reseller → bisa create + nambahin user lain sebagai basic
+• admin    → bisa nambahin user gak-berakses / di bawah admin jadi basic ATAU reseller
+Owner mutusin role + tipe + durasi pas .addaksescpanel:
+.addaksescpanel basic, 628xxx, 7d          → user basic 7 hari
+.addaksescpanel reseller, @user, 17/05/2026 → user reseller sampai tanggal itu
+.addaksescpanel admin, 628xxx, 7d          → user admin 7 hari
+.addaksescpanel basic, tg:4436252, 16:00   → user Telegram sampai jam itu
+.addaksescpanel basic, @user               → tanpa durasi = selamanya
+( format lama juga jalan: .addaksescpanel role @user client 7d )
+Reseller juga bisa .listaksescpanel / .delaksescpanel buat user basic dia sendiri.
+Durasi: 30m / 12h / 7d / 2w / unli / 16:00 / 17/05/2026 / 17/05/2026 16:00
 User yang udah dibuka izinnya tinggal create sesuai tipenya, format di bawah.
 
 「 📦 Buat Akun + Spesifikasi 」
@@ -851,7 +856,7 @@ async function handler(m, { sock }) {
       const allow = isCreateAllowed(m.sender);
       if (!allow.allowed) {
         try { await notifyOwnerCreateRequest(sock, m.sender); } catch {}
-        return m.reply(raraWrap("cpanel", `Akses create panel butuh konfirmasi owner.\n\nOwner harus menambahkanmu dulu:\n${m.prefix || "."}addaksescpanel <nomor kamu> <client|admin> <durasi>\n\nContoh: ${(m.prefix || ".")}addaksescpanel ${allowCleanNumber(m.sender)} client 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
+        return m.reply(raraWrap("cpanel", `Akses create panel butuh izin dari owner atau reseller.\n\nMinta mereka nambahin kamu:\n${m.prefix || "."}addaksescpanel basic, <nomor kamu>, <durasi>\n\nContoh: ${(m.prefix || ".")}addaksescpanel basic, ${allowCleanNumber(m.sender)}, 7d\n\nPermintaanmu sudah diberitahukan ke owner.`));
       }
       const allowTipe = String(allow.entry?.tipe || "client").toLowerCase();
       if (allowTipe === "admin") {
