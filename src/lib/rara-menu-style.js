@@ -627,7 +627,7 @@ function raraInfoSections(info = [], sc = true, opts = {}) {
   return out;
 }
 
-function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false, legend = null, footerName = null, infoBullet = false } = {}) { // default OFF: request owner 2 Okt — titik bullet info section dihapus di semua menu
+function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false, legend = null, footerName = null, infoBullet = false, categoryBoxStyle = false } = {}) { // infoBullet default OFF (owner 2 Okt) — titik bullet info section dihapus di semua menu; categoryBoxStyle (owner 8 Okt) — kotak ╭『 』ᯓ╰ khusus allmenu
   const scFn = sc ? toSC : (s) => String(s);
   
   let out = "";
@@ -682,12 +682,31 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
   out += `\n`;
 
   // ── Category sections ──
+  // GAYA BOX (owner 8 Okt 2026 — request "ubah gaya allmenu"): tiap kategori
+  // jadi kotak terpisah ala template klasik — header ╭─『 Nama 』, command
+  // bullet ᯓ, footer ╰. Khusus allmenu (categoryBoxStyle: true); .menu &
+  // index kategori tetap gaya 「 ✦ 」 lama.
   for (let i = 0; i < categories.length; i++) {
     const cat = categories[i];
     const catName = scFn(String(cat.name).toUpperCase());
-    
+
     // Proper close prev + open new section
     if (i > 0) out += `\n`;
+
+    if (categoryBoxStyle) {
+      out += `╭─────『 ${catName} 』\n`;
+      for (const cmd of cat.commands) {
+        if (cmd && typeof cmd === "object") {
+          const sym = cmd.symbols ? ` ${String(cmd.symbols).trim()}` : "";
+          out += `    ᯓ ${prefix}${cmd.name}${sym}\n`;
+        } else {
+          out += `    ᯓ ${prefix}${cmd}\n`;
+        }
+      }
+      out += `╰–––––––––––––––༓\n`;
+      continue;
+    }
+
     out += `「 ✦ ${catName} ✦ 」\n`;
     
     // Commands: .command polos tanpa symbol ✦ (request owner 10 Sep:

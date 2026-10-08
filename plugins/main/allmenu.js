@@ -255,6 +255,8 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       prefix,
       readMoreBeforeCategories: true,
       footerName: botName,
+      // OWNER 8 Okt 2026: gaya box per kategori — ╭─『 Nama 』 / ᯓ .cmd / ╰—༓
+      categoryBoxStyle: true,
     });
 
     let finalText = txt;
