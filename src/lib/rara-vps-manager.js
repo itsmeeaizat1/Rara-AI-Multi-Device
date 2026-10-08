@@ -112,11 +112,26 @@ export async function testConnection(creds) {
 export async function hostStatus(creds) {
   const cmd = `echo "===DISK"; df -h / | tail -1; echo "===MEM"; free -m | awk 'NR==2{print $2" MB total, "$3" MB dipakai"}'; echo "===CPU"; nproc; uptime | awk -F'load average:' '{print "load:"$2}'; echo "===SVC"; for s in nginx mariadb redis-server docker wings pteroq php8.1-fpm php8.2-fpm php8.3-fpm; do printf "%s=%s\\n" "$s" "$(systemctl is-active $s 2>/dev/null || echo -)"; done; echo "===PTERO"; [ -d /var/www/pterodactyl ] && echo panel-terinstal || echo panel-tidak-ada; echo "===THEME"; ls /var/www/pterodactyl/*.blueprint 2>/dev/null | xargs -n1 basename 2>/dev/null || echo -; echo "===PANELURL"; grep -h '^APP_URL' /var/www/pterodactyl/.env 2>/dev/null || echo -`;
   const out = await sshOk(creds, cmd, { timeoutMs: 20000 });
-  const sec = (k) => out.split("===" + k + "\n")[1]?.split("===\n")[0].trim() || "-";
+  // parse per-baris penanda "===NAMA" (section = semua baris sampai penanda berikutnya)
+  const secs = {};
+  let cur = null;
+  for (const line of out.split("\n")) {
+    const mk = line.trim().match(/^===([A-Z]+)$/);
+    if (mk) { cur = mk[1]; secs[cur] = []; continue; }
+    if (cur) secs[cur].push(line.trim());
+  }
+  const sec = (k) => (secs[k] || []).filter(Boolean).join("\n") || "-";
   const svc = {};
-  for (const l of sec("SVC").split("\n")) { const [n, v] = l.split("="); if (n && v) svc[n] = v; }
-  return { disk: sec("DISK"), mem: sec("MEM"), cpu: sec("CPU"), services: svc,
-    panelInstalled: sec("PTERO").includes("panel-terinstal"), themes: sec("THEME") === "-" ? [] : sec("THEME").split("\n"), panelUrl: sec("PANELURL") };
+  for (const l of (secs.SVC || [])) { const i = l.indexOf("="); if (i > 0) svc[l.slice(0, i)] = l.slice(i + 1); }
+  const diskParts = sec("DISK").split(/\s+/);          // /dev/vda2 60G 27G 31G 47% /
+  const disk = diskParts.length >= 5 ? `${diskParts[2]} dipakai / ${diskParts[1]} (${diskParts[4]})` : sec("DISK");
+  const cpuLines = (secs.CPU || []).filter(Boolean);
+  const cpu = cpuLines.length >= 2 ? `${cpuLines[0]} core, ${cpuLines[1].replace(/^load:\s*/, "load ")}` : sec("CPU");
+  const urlRaw = sec("PANELURL");
+  const panelUrl = urlRaw === "-" ? "-" : urlRaw.replace(/^APP_URL=/, "");
+  const themes = (secs.THEME || []).filter((x) => x && x !== "-").map((x) => x.replace(/\.blueprint$/, ""));
+  return { disk, mem: sec("MEM"), cpu, services: svc,
+    panelInstalled: sec("PTERO").includes("panel-terinstal"), themes, panelUrl };
 }
 
 // ── panel: fix / kill / restart / start ──

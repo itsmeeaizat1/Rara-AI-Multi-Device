@@ -146,16 +146,20 @@ Login ulang kapan pun: ${p}vps login — hapus: ${p}vps logout`));
     }
     if (sub === "status") {
       const st = await hostStatus(creds);
-      const svc = Object.entries(st.services).filter(([, v]) => v !== "-").map(([k, v]) => `${v === "active" ? "🟢" : "🔴"} ${k}`).join("\n");
+      const order = ["nginx", "mariadb", "redis-server", "docker", "wings", "pteroq", "php8.1-fpm", "php8.2-fpm", "php8.3-fpm"];
+      const svc = order.filter((k) => st.services[k] && st.services[k] !== "-").map((k) => `${st.services[k] === "active" ? "🟢" : "🔴"} ${k}`).join("\n");
       return m.reply(raraWrap("vps", `📊 *STATUS VPS* (Mode ${mode})
-Disk: ${st.disk}
-RAM: ${st.mem}
-CPU: ${st.cpu}
-Panel: ${st.panelInstalled ? "✅ terpasang" : "❌ belum ada"}${st.panelUrl !== "-" ? "\nURL: " + st.panelUrl : ""}
-Tema (.blueprint): ${st.themes.length ? st.themes.join(", ") : "-"}
 
-Layanan:
-${svc}`));
+💾 Disk: ${st.disk}
+🧠 RAM: ${st.mem}
+⚙️ CPU: ${st.cpu}
+
+🦖 Panel: ${st.panelInstalled ? "✅ terpasang" : "❌ belum ada"}
+🌐 URL: ${st.panelUrl}
+🎨 Tema: ${st.themes.length ? st.themes.join(", ") : "-"}
+
+🔧 Layanan:
+${svc || "-"}`));
     }
     if (sub === "exec") {
       const cmd = args.slice(1).join(" ");

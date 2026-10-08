@@ -63,9 +63,9 @@ t("2b sshErr mapping auth", /Autentikasi gagal/.test(await L.testConnection({ ho
 // ── 3. status ──
 section("3. hostStatus");
 const st = await L.hostStatus(L.getCreds("owner@s"));
-t("3a disk/mem/cpu keparse", st.disk.includes("60G") && st.mem.includes("7900") && st.cpu.includes("4"));
+t("3a disk/mem/cpu keparse", st.disk.includes("30G") && st.disk.includes("60G") && st.mem.includes("7900") && st.cpu.includes("4 core"), st);
 t("3b services map", st.services.nginx === "active" && st.services.wings === "active" && st.services["php8.2-fpm"] === "-");
-t("3c panel + tema + url", st.panelInstalled === true && st.themes.includes("nebula.blueprint") && st.panelUrl === "APP_URL=http://panel.ku.com");
+t("3c panel + tema + url", st.panelInstalled === true && st.themes.includes("nebula") && st.panelUrl === "http://panel.ku.com", st);
 
 // ── 4. panel fix + uninstall confirm ──
 section("4. panel fix & uninstall");
@@ -219,6 +219,33 @@ t("11e kosong → kartu panduan", /VPS & PANEL MANAGER/.test(replies[replies.len
 replies.length = 0;
 await P.handler(mkM("owner@s", "protect status", true, false), { sock: mkSock() });
 t("11f args-only 'protect status' dikenali", !/Sub protect gak dikenal|VPS & PANEL MANAGER/.test(replies[replies.length - 1]) || /PROTECT/.test(replies[replies.length - 1]));
+
+
+// ── 12. status: output nyata VPS owner (regresi 'acak-acakan' 8 Okt) ──
+section("12. hostStatus output nyata (tanpa numpuk)");
+L._setSshForTest(async () => ({ code: 0, stdout: [
+  "===DISK", "/dev/vda2        80G   27G   51G  35% /",
+  "===MEM", "7900 MB total, 1520 MB dipakai",
+  "===CPU", "4", "load: 0.15, 0.08, 0.02",
+  "===SVC", "nginx=active", "mariadb=active", "redis-server=active", "docker=active", "wings=active", "pteroq=active", "php8.1-fpm=inactive", "php8.2-fpm=active", "php8.3-fpm=inactive",
+  "===PTERO", "panel-terinstal",
+  "===THEME", "nebula.blueprint",
+  "===PANELURL", "APP_URL=http://aizatstore.pteroqdactyl.my.id",
+].join("\n") }));
+const rs = await L.hostStatus({ host: "x", password: "y" });
+t("12a disk satu baris rapi", rs.disk === "27G dipakai / 80G (35%)", rs.disk);
+t("12b mem cuma isi MEM (gak nelan section lain)", rs.mem === "7900 MB total, 1520 MB dipakai", rs.mem);
+t("12c cpu core + load rapi", rs.cpu === "4 core, load 0.15, 0.08, 0.02", rs.cpu);
+t("12d services 9 entri bersih", Object.keys(rs.services).length === 9 && rs.services.nginx === "active" && rs.services["php8.1-fpm"] === "inactive");
+t("12e panelUrl tanpa prefix APP_URL=", rs.panelUrl === "http://aizatstore.pteroqdactyl.my.id", rs.panelUrl);
+t("12f tema tanpa .blueprint", rs.themes.length === 1 && rs.themes[0] === "nebula", rs.themes);
+replies.length = 0;
+L.saveCreds("owner@s", { host: "213.163.192.209", port: 22, user: "root", password: "x" });
+await P.handler(mkM("owner@s", "status", true, false), { sock: mkSock() });
+const card = replies[replies.length - 1];
+t("12g kartu: tiap field sekali (anti numpuk)", (card.match(/Disk:/g) || []).length === 1 && (card.match(/RAM:/g) || []).length === 1 && (card.match(/CPU:/g) || []).length === 1 && (card.match(/nginx/g) || []).length === 1, card);
+t("12h kartu: gak bocor penanda ===/APP_URL=/panel-terinstal", !/===|APP_URL=|panel-terinstal/.test(card), card);
+t("12i kartu: layanan inactive merah, active hijau", card.includes("🟢 nginx") && card.includes("🔴 php8.1-fpm"), card);
 
 L._resetSshForTest();
 L._resetVpsStoreForTest();
