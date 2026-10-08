@@ -26,6 +26,14 @@ const SC_MAP = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k
 // toSC: convert a-zA-Z → smallcaps, sisanya tetap
 // UPDATE OWNER 1 Okt 2026: toSC passthrough — teks keluar bot jadi teks biasa.
 const toSC = (s) => String(s);
+// OWNER 8 Okt 2026: judul pesan bot (usage/helper/guide) jadi 『 *Title* 』 —
+// Title Case (bukan huruf besar semua), bold, konsisten sama judul section menu.
+const usageTitleCase = (s) => {
+  const t = String(s || "").trim();
+  if (!t) return "Guide";
+  return t.toLowerCase().replace(/(^|[\s\-_\/&(])([a-z0-9])/g, (m, sep, ch) => sep + ch.toUpperCase());
+};
+const usageHeader = (s) => `『 *${usageTitleCase(s)}* 』`;
 
 // scLine: apply smallcaps to text content, tapi preserve:
 // - box drawing chars (╭╮╰╯│├─┊┃━)
@@ -123,7 +131,7 @@ function buildBox(headerTitle, lines = []) {
   // isi polos tanpa prefix │, tanpa footer ╰────, tanpa wrapLine 30-char
   // (gak ada border yang bisa putus, WhatsApp wrap natural). buildBox dipakai
   // raraWrap/raraReply/raraCaption/bracketBox → SEMUA reply plugin kebagian.
-  const header = `「 ✦ ${toSC(String(headerTitle))} ✦ 」`;
+  const header = usageHeader(headerTitle); // OWNER 8 Okt: 『 *Title* 』 Title Case
   // FIX OWNER 20 Sep 2026 ("kenapa formatnya gak rata kiri, ada spasi di awal
   // nomor — yg rata kiri cuma judul doang"): baris isi yang di-indent spasi
   // (contoh baris lanjutan "   contoh: ..." di tutorial) bikin blok keliatan
@@ -558,7 +566,7 @@ function raraInfoBox(title, items = [], opts = {}) {
   // gap kosong, border ╭╰│ bikin wrap WA keliatan putus — semua dicabut.
   const useSC = opts.sc !== false;
   const hdr = useSC ? toSC(title) : title;
-  let out = `「 ✦ ${hdr} ✦ 」\n`;
+  let out = usageHeader(title) + "\n"; // OWNER 8 Okt: 『 *Title* 』 Title Case polos
   for (const item of items) {
     if (item === "---" || item === "─") { out += "\n"; continue; }
     if (typeof item === "string") {
@@ -608,7 +616,7 @@ function raraInfoSections(info = [], sc = true, opts = {}) {
   // label langsung diikuti " : " tanpa padding, rapat konsisten semua baris.
   const scFn = sc ? toSC : (s) => String(s);
   // OWNER 8 Okt: titleStyle "bracket" — judul section jadi 『 *Title* 』 (dipakai menu/allmenu/allmenucategory)
-  const titleStyle = opts.titleStyle || "corner";
+  const titleStyle = opts.titleStyle || "bracket"; // OWNER 8 Okt: default bracket — semua kartu bot satu gaya
   let out = "";
   let open = false;
 
@@ -871,8 +879,8 @@ function boxRows(text) {
 
 function raraError(commandName, detail) {
   // REVISI OWNER 3 Okt 2026: balik desain lama (tanpa kaomoji) — 「 ✦ NAMA ✦ 」 + ❌
-  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("ERROR");
-  let out = `「 ✦ ${title} ✦ 」\n`;
+  const title = usageTitleCase(commandName || "Error");
+  let out = usageHeader(title) + "\n";
   out += `❌ ${scLine(detail || "Gagal, coba lagi ya")}\n`;
   return out;
 }
@@ -884,8 +892,8 @@ function raraError(commandName, detail) {
  */
 function raraEmpty(commandName, detail) {
   // REVISI OWNER 3 Okt 2026: balik desain lama (tanpa kaomoji)
-  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("KOSONG");
-  let out = `「 ✦ ${title} ✦ 」\n`;
+  const title = usageTitleCase(commandName || "Kosong");
+  let out = usageHeader(title) + "\n";
   out += `❌ ${scLine(detail || "Kosong, tidak ada data")}\n`;
   return out;
 }
@@ -901,7 +909,7 @@ function raraEmpty(commandName, detail) {
 function raraNoInput(commandName, hint, example) {
   // REVISI OWNER 3 Okt 2026: balik desain lama — 「 ✦ NAMA ✦ 」 + ⚠ + Cara Pakai + Contoh (tanpa kaomoji).
   // Blok info registry (kategori/akses/tempat/cooldown/alias) tetap ditempel untuk non-game.
-  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  let out = usageHeader(commandName) + "\n";
   out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
   if (hint && String(hint).trim()) out += `\n📝 ${toSC("Cara Pakai")}:\n${scLine(hint)}\n`;
   if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
@@ -919,7 +927,7 @@ function raraNoInput(commandName, hint, example) {
  */
 function raraNoQuoted(commandName, mediaType) {
   // REVISI OWNER 3 Okt 2026: balik desain lama (tanpa kaomoji)
-  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  let out = usageHeader(commandName) + "\n";
   out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}\n`;
   if (mediaType) out += scLine(`Butuh: ${mediaType}`) + "\n";
   return out.replace(/\n+$/, "");
@@ -932,8 +940,8 @@ function raraNoQuoted(commandName, mediaType) {
  */
 function raraSuccess(commandName, message) {
   // REVISI OWNER 3 Okt 2026: balik desain lama (tanpa kaomoji)
-  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("SUKSES");
-  let out = `「 ✦ ${title} ✦ 」\n`;
+  const title = usageTitleCase(commandName || "Sukses");
+  let out = usageHeader(title) + "\n";
   out += `✅ ${scLine(message || "Berhasil!")}\n`;
   return out.replace(/\n+$/, "");
 }
@@ -982,7 +990,7 @@ const CUTE_EMPTY_POOL = ["(._.)", "(´･_･`)", "(︶︹︶)", "(´-ω-`)", "(
 function cuteHeader(name) {
   // REVISI OWNER 3 Okt 2026: balik ke desain lama (tanpa ୨୧ / kaomoji) — header klasik 「 ✦ nama ✦ 」.
   // Nama fungsi dipertahankan supaya 20+ pemanggil tidak perlu diubah.
-  return `「 ✦ ${toSC(String(name || "").toLowerCase())} ✦ 」`;
+  return usageHeader(name);
 }
 const CUTE_DIVIDER = ""; // REVISI 3 Okt 2026: divider cute dibuang (blok info cukup dipisah baris kosong)
 // ── TEMA KHAS CEWEK MENU (2 Okt 2026, owner: "jd bair bot ini menu tema
@@ -1105,7 +1113,7 @@ function isGameCmd(commandName) {
 function raraGuideClassic(commandName, intro, example, note) {
   // GUARD LEBAR (1 Okt, dijaga lagi 3 Okt): intro & note = prosa -> scWrap (<=30 char/baris, standar allmenu).
   // example = command VERBATIM -> TIDAK dipotong (harus bisa di-copas utuh).
-  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  let out = usageHeader(commandName) + "\n";
   if (intro && String(intro).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scWrap(intro)}\n`;
   if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
   if (note) {
@@ -1231,7 +1239,7 @@ function renderGuideV2Body(commandName, opts = {}) {
     sapaan = "", cara = "", contoh = "", note = "",
     modelAktif = null, models = [], spec = [], extra = [],
   } = opts;
-  let out = `「 ✦ ${toSC(String(commandName).toUpperCase())} ✦ 」\n`;
+  let out = usageHeader(commandName) + "\n";
   if (sapaan && String(sapaan).trim() && !(cara && String(cara).trim())) out += `${scWrap(sapaan)}\n`;
   if (cara && String(cara).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scWrap(cara)}\n`;
   if (contoh) out += `\n💡 ${toSC("Contoh")}:\n${contoh}\n`;
@@ -1275,7 +1283,7 @@ export function raraAiUsage(brand, { prefix = ".", command, modelAktif = null, m
   // REVISI OWNER 3 Okt 2026: balik desain lama — 「 ✦ BRAND ✦ 」 + Cara Pakai + Contoh + Model (tanpa kaomoji).
   // Blok info registry tetap ditempel supaya field lengkap.
   const cmd = `${prefix}${command || brand}`;
-  let out = `「 ✦ ${toSC(String(brand).toUpperCase())} ✦ 」\n`;
+  let out = usageHeader(brand) + "\n";
   out += `📝 ${toSC("Cara Pakai")}:\n${cmd} [pertanyaan]\n`;
   out += `\n💡 ${toSC("Contoh")}:\n${cmd} apa itu AI?\n`;
   if (modelAktif) out += `\n✨ ${toSC("Model aktif")}: ${modelAktif}\n`;
@@ -1295,7 +1303,7 @@ export function raraBox(header, lines = [], opts = {}) {
   // tanpa footer, tanpa wrapLine. opts.border jadi moot (semua jalur sama).
   const useSC = opts.sc !== false;
   const hdr = useSC ? toSC(header) : header;
-  let out = `「 ✦ ${hdr} ✦ 」\n`;
+  let out = usageHeader(header) + "\n"; // OWNER 8 Okt: 『 *Title* 』 Title Case polos (bukan smallcaps)
   for (const l of lines) {
     if (l === "---" || l === "─") { out += "\n"; continue; }
     if (typeof l === "object" && l.sub) {

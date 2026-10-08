@@ -205,7 +205,7 @@ console.log("— section 6: usage tanpa argumen —");
 I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   replies = [];
   await handler(mkM({ text: "" }), { sock, db: getDatabase(), config: cfg });
-  t("6a. usage desain final keluar (「 ✦ NAMA ✦ 」)", replies.length === 1 && /「 ✦ AGENTLOOP ✦ 」/.test(replies[0]) && /📝/.test(replies[0]), replies[0]?.slice(0, 60));
+  t("6a. usage desain final keluar (『 *Nama* 』)", replies.length === 1 && /『 \*Agentloop\* 』/.test(replies[0]) && /📝/.test(replies[0]), replies[0]?.slice(0, 60));
   t("6b. usage nunjukin bedanya sama autotask", /autotask|autotask/i.test(replies[0]), replies[0]?.includes("autotask"));
 
   // tugas kependekan

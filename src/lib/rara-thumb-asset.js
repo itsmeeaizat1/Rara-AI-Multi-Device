@@ -141,17 +141,17 @@ const SC_MAP = { "ᴀ": "a", "ʙ": "b", "ᴄ": "c", "ᴅ": "d", "ᴇ": "e", "ꜰ
 function fromSC(str) {
   return String(str || "").replace(/[ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡʏᴢ]/g, (c) => SC_MAP[c] || c);
 }
-const HEAD_RE = /^「 ✦ (.+?) ✦ 」\n([❌⚠✅📝💡])/u;
+const HEAD_RE = /^(?:「 ✦ (.+?) ✦ 」|『 \*(.+?)\* 』)\n([❌⚠✅📝💡])/u; // OWNER 8 Okt: terima header baru 『 *Title* 』 juga
 const SALAH_RE = /^❗ /u;
 // Pesan not-found (rara-notfound-info.js): judul "Tidak Ditemukan", baris
 // isi gak diawali emoji status — request owner 6 Okt 2026: "aku mau ada
 // thumbnail jg" (kartu thumbnail ala .menu buat pesan not-found).
-const NOTFOUND_RE = /^「 ✦ \s*tidak ditemukan\s* ✦ 」/iu;
+const NOTFOUND_RE = /^(?:「 ✦ \s*tidak ditemukan\s* ✦ 」|『 \*tidak ditemukan\* 』)/iu;
 // Panduan raraCaption (plugins banyakan: convert dkk): header
 // 「 ✦ nama-fitur ✦ 」 + baris kosong + deskripsi + Cara Pakai — baris
 // keduanya BLANK jadi HEAD_RE gak kena. Aturan tambahan: nama di header
 // SAMA dengan command yang dijalanin → pasti panduan/usage fitur itu.
-const HEAD_ONLY_RE = /^「 ✦ (.+?) ✦ 」\s*$/u;
+const HEAD_ONLY_RE = /^(?:「 ✦ (.+?) ✦ 」|『 \*(.+?)\* 』)\s*$/u;
 
 // → { name } kalau teks = pesan helper, null kalau bukan
 export function detectHelper(text, fallbackName = "") {
@@ -162,7 +162,8 @@ export function detectHelper(text, fallbackName = "") {
   if (typeof text !== "string" || text.length > 4000) return null;
   const head = HEAD_RE.exec(text);
   if (head) {
-    const name = fromSC(head[1]).toLowerCase().replace(/[^a-z0-9-]/g, "");
+    const raw = head[1] || head[2] || "";
+    const name = fromSC(raw).toLowerCase().replace(/[^a-z0-9-]/g, "");
     return { name: name || String(fallbackName || "").toLowerCase() };
   }
   if (NOTFOUND_RE.test(text.split("\n")[0])) {
@@ -174,7 +175,7 @@ export function detectHelper(text, fallbackName = "") {
   // jadi kartu thumbnail (aturan lama: reroute semua pesan ke kartu media).
   // Header ini glyph khas bot — chat user biasa gak mungkin persis kena.
   const ho = HEAD_ONLY_RE.exec(text.split("\n")[0]);
-  if (ho) {
+  if (ho) { // ho[1] format lama, ho[2] format baru — dua-duanya nama fitur
     const fn = String(fallbackName || "").toLowerCase().replace(/[^a-z0-9-]/g, "");
     return { name: fn };
   }

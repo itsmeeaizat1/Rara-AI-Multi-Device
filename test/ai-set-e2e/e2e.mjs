@@ -1,7 +1,7 @@
 // E2E REWORK DESAIN .ai (ai-set) — 11 Sep 2026
 // Request owner: "fitur .ai itu udh pakai desain skrg ga soalnya berantakan
 // kelaitannya" — panel harus pake layout sekarang:
-// raraInfoSections (「 ✦ section ✦ 」 label smallcaps : value verbatim)
+// raraInfoSections (『 *Section* 』 label smallcaps : value verbatim)
 // + raraBox Perintah + raraSalah salah pemakaian + raraBox konfirmasi.
 // Jalankan dari cwd repo: node test/ai-set-e2e/e2e.mjs
 import { config as aiSetConfig, handler as aiSetHandler } from "../../plugins/ai/ai-set.js";
@@ -34,12 +34,12 @@ w("\n— 1. panel .ai (no action) — layout baru —");
   await aiSetHandler(m, { sock: {}, config: cfg });
   const r = m._replies[0] || "";
   check("1 reply", m._replies.length === 1 && !!r, `n=${m._replies.length}`);
-  check("section 1 「 ✦ ᴀɪ ꜱᴇᴛᴛɪɴɢꜱ ✦ 」", r.startsWith(`「 ✦ ${toSC("AI Settings")} ✦ 」`), r.slice(0, 40));
+  check("section 1 『 *ᴀɪ ꜱᴇᴛᴛɪɴɢꜱ* 』", r.startsWith(`『 *${toSC("AI Settings")}* 』`), r.slice(0, 40));
   check("label smallcaps (• ꜱᴛᴀᴛᴜꜱ :)", r.includes(`• ${toSC("Status")} :`), "");
   check("value model VERBATIM (gpt-4o-mini polos)", r.includes("gpt-4o-mini"), "");
-  check("section key 「 ✦ ᴋᴇʏ ᴛᴇʀᴘᴀꜱᴀɴɢ ✦ 」", r.includes(`「 ✦ ${toSC("Key Terpasang")} ✦ 」`), "");
-  check("section provider 「 ✦ ᴘʀᴏᴠɪᴅᴇʀ ᴛᴇʀꜱᴇᴅɪᴀ ✦ 」", r.includes(`「 ✦ ${toSC("Provider Tersedia")} ✦ 」`), "");
-  check("section perintah 「 ✦ ᴘᴇʀɪɴᴛᴀʜ ✦ 」", r.includes(`「 ✦ ${toSC("Perintah")} ✦ 」`), "");
+  check("section key 『 *ᴋᴇʏ ᴛᴇʀᴘᴀꜱᴀɴɢ* 』", r.includes(`『 *${toSC("Key Terpasang")}* 』`), "");
+  check("section provider 『 *ᴘʀᴏᴠɪᴅᴇʀ ᴛᴇʀꜱᴇᴅɪᴀ* 』", r.includes(`『 *${toSC("Provider Tersedia")}* 』`), "");
+  check("section perintah 『 *ᴘᴇʀɪɴᴛᴀʜ* 』", r.includes(`『 *${toSC("Perintah")}* 』`), "");
   check("command list VERBATIM .ai-set provider <nama>", r.includes(".ai-set provider <nama>"), "");
   check("gak ada baris kosong dobel (enter ganda)", !/\n{3,}/.test(r), "");
   check("reaksi 🕒 lalu 🐣", m._reacts[0] === "🕒" && m._reacts[1] === "🐣", m._reacts.join(","));
@@ -51,7 +51,7 @@ w("\n— 2. set provider/model → box konfirmasi baru —");
   const m = mkM(".ai-set provider gemini");
   await aiSetHandler(m, { sock: {}, config: cfg });
   const r = m._replies[0] || "";
-  check("header 「 ✦ ᴀɪ ꜱᴇᴛᴛɪɴɢꜱ ✦ 」", r.startsWith(`「 ✦ ${toSC("AI Settings")} ✦ 」`), r.slice(0, 40));
+  check("header 『 *ᴀɪ ꜱᴇᴛᴛɪɴɢꜱ* 』", r.startsWith(`『 *Ai Settings* 』`), r.slice(0, 40));
   check("provider + model default verbatim", r.includes("gemini") && !r.includes(toSC("gemini")) === false || r.includes("gemini"), "");
   check("ada Berhasil kak 🥳", r.includes("Berhasil kak 🥳"), "");
   check("config.aiHelp.provider = gemini + model defaultModel", cfg.aiHelp?.provider === "gemini" && !!cfg.aiHelp?.model, JSON.stringify(cfg.aiHelp || {}));
@@ -85,8 +85,8 @@ w("\n— 4. owner-gate + mode + apikey —");
   const m = mkM(".ai-set off", false);
   await aiSetHandler(m, { sock: {}, config: botConfig() });
   const r = m._replies[0] || "";
-  // 3 Okt: raraError balik desain lama — 「 ✦ NAMA ✦ 」 + ❌, teks detail tetap utuh
-  check("non-owner .ai-set off → raraError desain lama", r.startsWith(`「 ✦ ${toSC("AI-SET")} ✦ 」`) && r.includes("❌") && r.includes(toSC("khusus owner")), r.slice(0, 60));
+  // 3 Okt: raraError balik desain lama — 『 *Nama* 』 + ❌, teks detail tetap utuh
+  check("non-owner .ai-set off → raraError desain lama", r.startsWith(`『 *Ai-Set* 』`) && r.includes("❌") && r.includes(toSC("khusus owner")), r.slice(0, 60));
 
   const cfg = botConfig();
   const m2 = mkM(".ai-set mode online");

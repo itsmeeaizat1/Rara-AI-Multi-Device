@@ -102,7 +102,7 @@ async function handler(m, { sock, db }) {
     ];
 
     await m.react("🐣");
-    await stage(`「 ✦ ${toSC("Speedtest")} ✦ 」\n\n` + raraInfoSections(info));
+    await stage(`『 *${toSC("Speedtest")}* 』\n\n` + raraInfoSections(info)); // OWNER 8 Okt: gaya baru
   } catch (error) {
     await m.reply(raraError("speedtest", error.message));
   }

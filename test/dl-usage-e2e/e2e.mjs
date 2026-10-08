@@ -1,5 +1,5 @@
 // E2E DESAIN USAGE DOWNLOADER ala owner (10 Sep 2026, revisi "setiap fitur
-// beda layout jgn smuanya sama"): 「 ✦ Play ✦ 」 + 📝 Cara Pakai + 💡 Contoh —
+// beda layout jgn smuanya sama"): 『 *Play* 』 + 📝 Cara Pakai + 💡 Contoh —
 // layout downloader BEDA dari usage AI (tanpa section model).
 // Jalankan dari cwd DIR KOSONG:
 //   mkdir -p /tmp/dlusage-e2e && cd /tmp/dlusage-e2e && node <repo>/test/dl-usage-e2e/e2e.mjs
@@ -25,7 +25,7 @@ w("\n— raraDlUsage Play (contoh owner) —");
     contoh: [".play Faded Alan Walker", ".play 320 Faded Alan Walker"],
   });
   const lines = out.split("\n");
-  check("header 「 ✦ play ✦ 」", lines[0].toLowerCase() === `「 ✦ play ✦ 」`, lines[0]);
+  check("header 『 *Play* 』", lines[0].toLowerCase() === "『 *play* 』", lines[0]);
   check("📝 cara pakai: + .play [judul] verbatim", lines[1] === `📝 ${toSC("Cara Pakai")}:` && lines[2] === ".play [judul]", lines[1] + " / " + lines[2]);
   check("💡 contoh: + .play Faded Alan Walker", lines[4] === `💡 ${toSC("Contoh")}:` && lines[5] === ".play Faded Alan Walker", lines[4] + " / " + lines[5]);
   check("gak ada section model (beda dari usage AI)", !out.includes("✨") && !out.includes("📋"));
@@ -64,7 +64,7 @@ w("\n— handler plugins —");
   await playHandler(m1, {});
   const r1 = m1._replies[0];
   check(".play no-input → reply 1 pesan", m1._replies.length === 1 && !!r1);
-  check(".play → header 「 ✦ PLAY ✦ 」 + 📝 Cara Pakai (tanpa kaomoji)", r1.startsWith(`「 ✦ ${toSC("PLAY")} ✦ 」`) && r1.includes(`📝 ${toSC("Cara Pakai")}:`) && !r1.includes("!!") && r1.toLowerCase().includes("ketik judul lagunya"), r1.split("\n").slice(0, 4).join(" | "));
+  check(".play → header 『 *Play* 』 + 📝 Cara Pakai (tanpa kaomoji)", r1.startsWith(`『 *Play* 』`) && r1.includes(`📝 ${toSC("Cara Pakai")}:`) && !r1.includes("!!") && r1.toLowerCase().includes("ketik judul lagunya"), r1.split("\n").slice(0, 4).join(" | "));
   // FIX BASI (2 Okt, guard lebar 1 Okt): cara di-scWrap multi-baris → rejoin
   const r1j = r1.toLowerCase().split("\n").join(" ").replace(/\s+/g, " ");
   check(".play → cara pakai + 💡 contoh (rewrap utuh)", r1j.includes(`ketik judul lagunya sesudah command`) && r1j.includes(`💡 contoh: .play faded alan walker`), r1.split("\n").slice(0, 10).join(" | "));
@@ -73,16 +73,16 @@ w("\n— handler plugins —");
   const m2 = mkM("instagramdl", "");
   await igHandler(m2, {});
   const r2 = m2._replies[0];
-  check(".instagramdl no-input → header 「 ✦ INSTAGRAM ✦ 」 + contoh VERBATIM", r2.startsWith(`「 ✦ ${toSC("INSTAGRAM")} ✦ 」`) && r2.includes("💡") && r2.includes(".instagramdl https://www.instagram.com/reel/xxx"), r2.split("\n").slice(0, 6).join(" | "));
+  check(".instagramdl no-input → header 『 *Instagram* 』 + contoh VERBATIM", r2.startsWith(`『 *Instagram* 』`) && r2.includes("💡") && r2.includes(".instagramdl https://www.instagram.com/reel/xxx"), r2.split("\n").slice(0, 6).join(" | "));
   check(".instagramdl → contoh link reel", r2.includes(".instagramdl https://www.instagram.com/reel/xxx"));
   const m2b = mkM("instagramdl", "bukanlink");
   await igHandler(m2b, {});
-  check(".instagramdl link invalid → raraSalah lama (bukan kartu usage)", !m2b._replies[0].startsWith(`「 ✦ ${toSC("INSTAGRAM")} ✦ 」`) && m2b._replies[0].includes(toSC("linknya bukan link instagram nih, cek lagi ya~")) && m2b._replies[0].includes("Contoh: .instagramdl link instagram"), m2b._replies[0]);
+  check(".instagramdl link invalid → raraSalah lama (bukan kartu usage)", !m2b._replies[0].startsWith(`『 *Instagram* 』`) && m2b._replies[0].includes(toSC("linknya bukan link instagram nih, cek lagi ya~")) && m2b._replies[0].includes("Contoh: .instagramdl link instagram"), m2b._replies[0]);
 
   const m3 = mkM("ytmp3", "");
   await yt3Handler(m3, {});
   const r3 = m3._replies[0];
-  check(".ytmp3 no-input → header 「 ✦ YTMP3 ✦ 」 + contoh youtu.be VERBATIM", r3.startsWith(`「 ✦ ${toSC("YTMP3")} ✦ 」`) && r3.includes("💡") && r3.includes(".ytmp3 https://youtu.be/xxx"), r3.split("\n").slice(0, 6).join(" | "));
+  check(".ytmp3 no-input → header 『 *Ytmp3* 』 + contoh youtu.be VERBATIM", r3.startsWith(`『 *Ytmp3* 』`) && r3.includes("💡") && r3.includes(".ytmp3 https://youtu.be/xxx"), r3.split("\n").slice(0, 6).join(" | "));
   check(".ytmp3 → contoh youtu.be", r3.includes(".ytmp3 https://youtu.be/xxx"));
 
   check("pluginConfig play/instagramdl/ytmp3 utuh", playConfig.name === "play" && igConfig.name && yt3Config.name);

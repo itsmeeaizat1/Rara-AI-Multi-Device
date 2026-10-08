@@ -34,9 +34,9 @@ w("\n— 2. .ping baru — tanpa upload eksternal —");
   const r = replies[0] || "";
   check("1 reply + handled", r0?.handled === true && replies.length === 1);
   check("mulai 🏓 ᴘᴏɴɢ! (Xms)", r.toLowerCase().startsWith(`🏓 pong! (`) && /\(\d+(\.\d+)?ms\)/.test(r), r.slice(0, 30));
-  check("section 「 ✦ ꜱɪꜱᴛᴇᴍ ✦ 」", r.includes(`「 ✦ ${toSC("Sistem")} ✦ 」`));
-  check("section 「 ✦ ᴄᴘᴜ ✦ 」", r.includes(`「 ✦ ${toSC("CPU")} ✦ 」`));
-  check("section 「 ✦ ᴍᴇᴍᴏʀɪ ✦ 」", r.includes(`「 ✦ ${toSC("Memori")} ✦ 」`));
+  check("section 『 *ꜱɪꜱᴛᴇᴍ* 』", r.includes(`『 *${toSC("Sistem")}* 』`));
+  check("section 『 *ᴄᴘᴜ* 』", r.includes(`『 *${toSC("CPU")}* 』`));
+  check("section 『 *ᴍᴇᴍᴏʀɪ* 』", r.includes(`『 *${toSC("Memori")}* 』`));
   check("value verbatim (Node.js v20/v di output)", /v\d+\.\d+/.test(r));
 }
 

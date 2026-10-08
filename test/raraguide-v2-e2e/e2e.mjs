@@ -1,6 +1,6 @@
 // RARA AI - MULTI DEVICE — E2E: KARTU USAGE DESAIN LAMA (revisi owner 3 Okt 2026).
 // Owner: "kembali ke desain lama yg tiap fitur field lengkap, tanpa ala kaomoji".
-// Layout: 「 ✦ NAMA ✦ 」 + 📝 Cara Pakai + 💡 Contoh + 📍 catatan + baris spec ⚡⏱💸 (fakta nyata
+// Layout: 『 *Nama* 』 + 📝 Cara Pakai + 💡 Contoh + 📍 catatan + baris spec ⚡⏱💸 (fakta nyata
 // dari pluginConfig). Guard lebar: prosa <=30 char/baris, contoh VERBATIM. Game tetap desain khas.
 import { raraGuide } from "../../src/lib/rara-menu-style.js";
 import { config as playCfg, handler as playH } from "../../plugins/search/play.js";
@@ -33,7 +33,7 @@ w("\n— raraGuide render (desain lama) —");
     spec: ["⚡ 300x/hari", "⏱ 3dtk", "💸 gratis"],
   });
   const L = out.split("\n");
-  check("1a. header 「 ✦ PLAY ✦ 」", L[0] === `「 ✦ ${toSC("PLAY")} ✦ 」`, L[0]);
+  check("1a. header 『 *Play* 』", L[0] === `『 *Play* 』`, L[0]);
   check("1b. opsi kaomoji/sapaan DITERIMA tapi TIDAK ditampilkan", !out.includes("ヾ(") && !out.includes("!!") && !out.includes("୨୧"), L.slice(0, 3));
   check("1b2. baris 2 = 📝 Cara Pakai", L[1] === `📝 ${toSC("Cara Pakai")}:`, L[1]);
   const proseLineMaxLen = Math.max(...L.filter((l) =>
@@ -76,7 +76,7 @@ w("\n— opsional: sapaan/note/spec/model kosong —");
 {
   const out = raraGuide("simple", { cara: "ketik aja", contoh: ".simple" });
   const L = out.split("\n");
-  check("3a. tanpa note/spec/model → bersih: header + Cara Pakai + Contoh saja", L[0] === `「 ✦ ${toSC("SIMPLE")} ✦ 」` && L[1] === `📝 ${toSC("Cara Pakai")}:` && L[2] === toSC("ketik aja") && L.includes(`💡 ${toSC("Contoh")}:`) && L[L.length - 1] === ".simple" && !out.includes("📍"), JSON.stringify(L));
+  check("3a. tanpa note/spec/model → bersih: header + Cara Pakai + Contoh saja", L[0] === `『 *Simple* 』` && L[1] === `📝 ${toSC("Cara Pakai")}:` && L[2] === toSC("ketik aja") && L.includes(`💡 ${toSC("Contoh")}:`) && L[L.length - 1] === ".simple" && !out.includes("📍"), JSON.stringify(L));
 }
 
 // ─── 4. HANDLER NO-INPUT — plugin ter-migrasi beneran balas V2 ───
@@ -117,7 +117,7 @@ w("\n— handler no-input → kartu V2 (fakta spec nyata) —");
   await run1("ocrsolve", ocrH, { config: { command: { prefix: "." } } });
   await run1("ssweb", ssH, null);
 
-  const isV2 = (r) => r && r.startsWith("「 ✦ ") && r.split("\n")[1] === `📝 ${toSC("Cara Pakai")}:` && !r.includes("୨୧") && !r.includes("!!");
+  const isV2 = (r) => r && r.startsWith("『 *") && r.split("\n")[1] === `📝 ${toSC("Cara Pakai")}:` && !r.includes("୨୧") && !r.includes("!!");
   check("4a. play balas V2 + spec cd 15dtk nyata", isV2(first.play) && first.play.includes("⏱ 15dtk") && first.play.includes("💸 gratis"), first.play?.split("\n")[0]);
   check("4b. playvideo V2 + cd 20dtk", isV2(first.playvideo) && first.playvideo.includes("⏱ 20dtk"), first.playvideo?.split("\n")[0]);
   check("4c. instagramdl V2 + energi 1 cd 10dtk", isV2(first.instagramdl) && first.instagramdl.includes("⚡ energi 1") && first.instagramdl.includes("⏱ 10dtk"), first.instagramdl?.split("\n")[0]);
@@ -185,18 +185,18 @@ w("\n— raraSalah + handler salah pemakaian → cute —");
 w("\n— global: raraGuide/raraNoInput/raraSalah auto-V2 + guard game —");
 {
   const old = raraGuide("Tes", "intronya", ".tes contoh", "catatan");
-  check("5a. raraGuide positional render desain lama (non-game)", old.startsWith(`「 ✦ ${toSC("TES")} ✦ 」`) && old.includes(`📝 ${toSC("Cara Pakai")}:`) && !old.includes("୨୧"), old.split("\n")[0]);
+  check("5a. raraGuide positional render desain lama (non-game)", old.startsWith(`『 *Tes* 』`) && old.includes(`📝 ${toSC("Cara Pakai")}:`) && !old.includes("୨୧"), old.split("\n")[0]);
   const { raraNoInput: niF, raraSalah: salahF } = await import("../../src/lib/rara-menu-style.js");
   const niOut = niF("tesnoinput", "ketik teksnya", ".tesnoinput halo");
-  check("5a2. raraNoInput desain lama: ⚠ + Cara Pakai + Contoh, tanpa kaomoji", niOut.startsWith(`「 ✦ ${toSC("TESNOINPUT")} ✦ 」`) && (niOut.split("\n")[1] || "").startsWith("⚠ ") && niOut.includes(`💡 ${toSC("Contoh")}:`) && !/!!/.test(niOut), niOut.split("\n").slice(0, 3).join(" | "));
+  check("5a2. raraNoInput desain lama: ⚠ + Cara Pakai + Contoh, tanpa kaomoji", niOut.startsWith(`『 *Tesnoinput* 』`) && (niOut.split("\n")[1] || "").startsWith("⚠ ") && niOut.includes(`💡 ${toSC("Contoh")}:`) && !/!!/.test(niOut), niOut.split("\n").slice(0, 3).join(" | "));
   // guard game: register dummy game + dummy biasa di registry beneran
   const { registerPlugin: reg } = await import("../../src/lib/rara-plugins.js");
   reg({ name: "suitdummy", category: "game", cooldown: 7, energi: 2, aliases: [], handler: async () => {}, description: "test" });
   reg({ name: "tesbiasa", category: "tools", config: { name: "tesbiasa", category: "tools", cooldown: 9, energi: 3, description: "Fitur contoh untuk pengujian kartu" }, cooldown: 9, energi: 3, aliases: [], handler: async () => {}, description: "test" });
   const gGame = raraGuide("Suitdummy", "cara game", ".suitdummy a", "note game");
-  check("5a3. game category → render klasik 「 ✦ 」 (sama desain lama)", gGame.startsWith("「 ✦ ") && gGame.includes(`📝 ${toSC("Cara Pakai")}:`), gGame.split("\n")[0]);
+  check("5a3. game category → render 『 *Title* 』 (desain baru 8 Okt)", gGame.startsWith("『 *") && gGame.includes(`📝 ${toSC("Cara Pakai")}:`), gGame.split("\n")[0]);
   const gPlain = raraGuide("Tesbiasa", "cara biasa", ".tesbiasa a");
-  check("5a4. info otomatis dari pluginConfig asli (3 kelompok: energi 3, cooldown 9, gratis)", gPlain.includes(`「 ✦ ${toSC("Info Fitur")} ✦ 」`) && gPlain.includes(`「 ✦ ${toSC("Akses")} ✦ 」`) && gPlain.includes(`「 ✦ ${toSC("Batas Pakai")} ✦ 」`) && /• Energi\s*: 3/.test(gPlain) && /• Cooldown\s*: 9 dtk/.test(gPlain) && /• Biaya\s*: gratis/.test(gPlain), gPlain.split("\n").slice(-9).join(" | "));
+  check("5a4. info otomatis dari pluginConfig asli (flat spec: kategori/akses/energi 3/cooldown 9)", /kategori\s*: tools/.test(gPlain) && /akses\s+: semua user · gratis/.test(gPlain) && /energi\s+: 3/.test(gPlain) && /cooldown\s+: 9 dtk/.test(gPlain), gPlain.split("\n").slice(-9).join(" | "));
   const gSalah = salahF("Suitdummy", "salah game nih");
   check("5a5. raraSalah game & non-game → sama-sama format lama ❗ (tanpa yah kak)", gSalah.startsWith("❗") && salahF("tesbiasa", "salah biasa").startsWith("❗") && !salahF("tesbiasa", "salah biasa").includes("yah kak"), gSalah.split("\n")[0]);
   const ap = fs.readFileSync("plugins/ai/ai-providers.js", "utf8");

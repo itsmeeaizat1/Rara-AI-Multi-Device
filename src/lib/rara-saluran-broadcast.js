@@ -1,7 +1,7 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import { getDatabase } from "./rara-database.js";
-import { raraBox } from "./rara-menu-style.js";
+import { raraBox, toSC } from "./rara-menu-style.js";
 
 /**
  * Broadcast ke Saluran WA - Sistem terpusat
@@ -79,7 +79,12 @@ export function _resetBroadcastSendForTest() { _sendForTest = undefined; }
 // ── kartu notif desain modern 3 Okt (ala menu) ──
 const CARD_CREDIT = "Powered by Rara AI - Multi Device";
 function saluranCard(title, lines) {
-  return raraBox(title, lines) + "\n\n" + CARD_CREDIT;
+  // DESAIN SALURAN 5 Okt FINAL: header saluran TETAP 「 ✦ Title ✦ 」 — raraBox
+  // udah ganti ke 『 *Title* 』 (8 Okt), jadi baris pertama di-restore ke format lama.
+  const body = raraBox(title, lines);
+  const parts = body.split("\n");
+  parts[0] = `「 ✦ ${toSC(String(title))} ✦ 」`;
+  return parts.join("\n") + "\n\n" + CARD_CREDIT;
 }
 
 async function broadcastToSaluran(sock, message, options = {}, bannerTitle, thumbName = "") {

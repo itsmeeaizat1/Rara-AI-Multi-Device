@@ -67,7 +67,7 @@ w("\n— 1. alur lengkap .speedtest (stub network) —");
   const finalMsg = sent.filter((s) => s.text.includes(toSC("Hasil Tes"))).pop();
   check("ada box hasil final", !!finalMsg, "gak ada box cpu");
   if (finalMsg) {
-    check("header 「 ✦ speedtest ✦ 」", finalMsg.text.startsWith(`「 ✦ ${toSC("Speedtest")} ✦ 」`));
+    check("header 『 *Speedtest* 』", finalMsg.text.startsWith(`『 *${toSC("Speedtest")}* 』`));
     check("ping ms terisi", /• ping : [\d.]+ ms/i.test(finalMsg.text), finalMsg.text.slice(0, 80));
     check("jitter ms terisi", /• jitter : [\d.]+ ms/i.test(finalMsg.text));
     check("download Mbps terisi", /• download : [\d.]+ Mbps/i.test(finalMsg.text));
@@ -96,8 +96,8 @@ w("\n— 3. network mati total → raraError —");
   await stHandler(m, {});
   globalThis.fetch = realFetch;
   const err = replies[replies.length - 1] || "";
-  // 3 Okt: raraError balik desain lama — 「 ✦ SPEEDTEST ✦ 」 + ❌
-  check("raraError desain lama", err.startsWith(`「 ✦ ${toSC("SPEEDTEST")} ✦ 」`) && err.includes("❌"), err.slice(0, 60));
+  // 3 Okt: raraError balik desain lama — 『 *Speedtest* 』 + ❌
+  check("raraError desain lama", err.startsWith(`『 *Speedtest* 』`) && err.includes("❌"), err.slice(0, 60));
 }
 
 w("\n— 4. pluginConfig —");

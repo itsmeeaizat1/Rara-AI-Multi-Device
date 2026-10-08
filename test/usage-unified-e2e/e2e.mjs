@@ -20,8 +20,8 @@ w("\n— raraGuide (V2) —");
 {
   const out = raraGuide("Mediafire DL", "Download file dari MediaFire! Kasih linknya ya!", ".mfdl https://www.mediafire.com/file/xxx", "Maksimal 200MB sekali download");
   const lines = out.split("\n");
-  // 3 Okt (revisi owner): balik desain lama — 「 ✦ NAMA ✦ 」 + 📝 Cara Pakai + 💡 Contoh + 📍 catatan, tanpa kaomoji.
-  check("header 「 ✦ MEDIAFIRE DL ✦ 」", lines[0] === `「 ✦ ${toSC("MEDIAFIRE DL")} ✦ 」`, lines[0]);
+  // 3 Okt (revisi owner): balik desain lama — 『 *Nama* 』 + 📝 Cara Pakai + 💡 Contoh + 📍 catatan, tanpa kaomoji.
+  check("header 『 *Mediafire Dl* 』", lines[0] === `『 *Mediafire Dl* 』`, lines[0]);
   check("TANPA kaomoji / ୨୧ / nama!!", !/୨୧/.test(out) && !/!!/.test(out) && !/\(\S+\)/.test(lines[1]), lines[1]);
   const iCt0 = lines.findIndex((l) => l === `💡 ${toSC("Contoh")}:`);
   const introRe = lines.slice(2, iCt0).filter((l) => l.trim()).join(" ");
@@ -41,7 +41,7 @@ w("\n— raraGuide (V2) —");
   check("note MULTI-BARIS: baris pertama 📍, sisanya baris sendiri", iN > -1 && ml[iN] === `📍 ${toSC("Tipe:")}` && ml.includes(`1. ${toSC("Welcome biasa")}`) && ml.some((l) => l.startsWith(`2. ${toSC("Welcome dengan thumbnail")}`)), ml.slice(iN).join(" | "));
 
   const bare = raraGuide("Tes");
-  check("tanpa param apapun → gak crash, header doang", bare === `「 ✦ ${toSC("TES")} ✦ 」`, bare);
+  check("tanpa param apapun → gak crash, header doang", bare === `『 *Tes* 』`, bare);
 }
 
 // ─── 2. raraNoInput — desain lama (3 Okt) ───
@@ -49,12 +49,12 @@ w("\n— raraNoInput (desain lama) —");
 {
   const out = raraNoInput("Ttp", "Kirim teks yang mau jadi sticker", ".ttp halo");
   const lines = out.split("\n");
-  check("header 「 ✦ TTP ✦ 」 tanpa kaomoji", lines[0] === `「 ✦ ${toSC("TTP")} ✦ 」` && !/୨୧/.test(out) && !/ttp!!/.test(out), lines[0]);
+  check("header 『 *Ttp* 』 tanpa kaomoji", lines[0] === `『 *Ttp* 』` && !/୨୧/.test(out) && !/ttp!!/.test(out), lines[0]);
   check("baris 2 = ⚠ sapaan noInput", lines[1].startsWith("⚠ ") && lines[1].length > 5, lines[1]);
   check("📝 Cara Pakai: hint di baris sendiri", lines[3] === `📝 ${toSC("Cara Pakai")}:` && lines[4] === toSC("Kirim teks yang mau jadi sticker"), lines[3] + " | " + lines[4]);
   check("💡 Contoh: verbatim baris sendiri", lines[6] === `💡 ${toSC("Contoh")}:` && lines[7] === ".ttp halo", lines[6] + " | " + lines[7]);
   const bare = raraNoInput("Tes");
-  check("noInput tanpa hint/example → tetap jalan (header + ⚠)", bare.startsWith(`「 ✦ ${toSC("TES")} ✦ 」`) && (bare.split("\n")[1] || "").startsWith("⚠ "), bare);
+  check("noInput tanpa hint/example → tetap jalan (header + ⚠)", bare.startsWith(`『 *Tes* 』`) && (bare.split("\n")[1] || "").startsWith("⚠ "), bare);
 }
 
 // ─── 3. raraRpgGuide — label section konsisten ───
@@ -75,7 +75,7 @@ w("\n— convert format list —");
   await convHandler(m, { sock: null });
   const r = replies[0];
   check(".convert no-arg → reply 1 pesan", replies.length === 1 && !!r);
-  check("header convert + 📝 cara pakai: unggah/reply media", r.startsWith(`「 ✦ ${toSC("Convert")} ✦ 」`) && r.includes(`📝 ${toSC("Cara Pakai")}:`) && r.includes("Unggah atau reply media dengan caption .convert <format>"));
+  check("header convert + 📝 cara pakai: unggah/reply media", r.startsWith(`『 *Convert* 』`) && r.includes(`📝 ${toSC("Cara Pakai")}:`) && r.includes("Unggah atau reply media dengan caption .convert <format>"));
   check("💡 contoh: .convert mp3", r.includes(`💡 ${toSC("Contoh")}:`) && r.includes(".convert mp3 (reply video)"));
   check("📋 format tersedia: DETAIL di bawah contoh", r.indexOf(`📋 ${toSC("Format Tersedia")}:`) > r.indexOf(`💡 ${toSC("Contoh")}:`));
   check("daftar format: sub audio + video + gambar + item verbatim", r.includes(`「 ${toSC("Audio")} 」`) && r.includes(`「 ${toSC("Video")} 」`) && r.includes(`「 ${toSC("Gambar")} 」`) && r.includes("mp3 (universal)") && r.includes("mp4 (universal)") && !r.includes("• mp3"));
@@ -105,9 +105,9 @@ w("\n— raraSalah (desain lama) —");
 w("\n— error helpers (desain lama) —");
 {
   const e = raraError("Convert", "Format gak dikenal");
-  check("raraError: 「 ✦ CONVERT ✦ 」 + ❌ detail (tanpa kaomoji)", e.startsWith(`「 ✦ ${toSC("CONVERT")} ✦ 」`) && e.includes(`❌ ${toSC("Format gak dikenal")}`) && !/୨୧/.test(e), e.split("\n").slice(0, 2).join(" | "));
+  check("raraError: 『 *Convert* 』 + ❌ detail (tanpa kaomoji)", e.startsWith(`『 *Convert* 』`) && e.includes(`❌ ${toSC("Format gak dikenal")}`) && !/୨୧/.test(e), e.split("\n").slice(0, 2).join(" | "));
   const em = raraEmpty("Convert");
-  check("raraEmpty: 「 ✦ CONVERT ✦ 」 + ❌ (tanpa kaomoji)", em.startsWith(`「 ✦ ${toSC("CONVERT")} ✦ 」`) && em.includes("❌") && !/୨୧/.test(em), em.split("\n")[0]);
+  check("raraEmpty: 『 *Convert* 』 + ❌ (tanpa kaomoji)", em.startsWith(`『 *Convert* 』`) && em.includes("❌") && !/୨୧/.test(em), em.split("\n")[0]);
 }
 
 w(`\n${pass} PASS / ${fail} FAIL`);

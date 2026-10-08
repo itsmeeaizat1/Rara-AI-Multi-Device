@@ -216,7 +216,10 @@ const POST_CREDIT = "Powered by Rara AI - Multi Device";
 export function buildChannelPostCard(content) {
   const body = String(content || "").trim();
   if (!body) return body;
-  return raraBox("RARA AI OFFICIAL", [body]) + "\n\n" + POST_CREDIT;
+  const boxed = raraBox("RARA AI OFFICIAL", [body]);
+  const parts = boxed.split("\n");
+  parts[0] = `「 ✦ RARA AI OFFICIAL ✦ 」`; // desain saluran FINAL — header lama
+  return parts.join("\n") + "\n\n" + POST_CREDIT;
 }
 
 /**
