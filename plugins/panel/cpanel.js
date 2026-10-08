@@ -26,6 +26,7 @@ import { downloadMediaMessage } from "rara";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getPanel, listPanels } from "../../src/lib/panel/index.js";
 import { buildServerDescription } from "../../src/lib/panel/description.js";
+import { isLocationMismatchError, buildLocationMismatchHelp } from "../../src/lib/panel/locations.js";
 
 const MAX_PANELS = 100;
 const POWER_SIGNALS = ["start", "stop", "restart", "kill"];
@@ -401,6 +402,10 @@ async function createWithRole(m, { sock }, spec) {
       unauthorized: 'API key tidak punya permission atau salah (Unauthenticated)',
     };
     const friendly = Object.entries(errorMap).find(([k]) => String(rawMsg).toLowerCase().includes(k));
+    if (isLocationMismatchError(rawMsg)) {
+      const help = await buildLocationMismatchHelp(slot);
+      if (help) return m.reply(raraWrap("cpanel", help));
+    }
     return m.reply(raraWrap("cpanel", `Gagal membuat panel.\n\n${friendly ? friendly[1] : rawMsg}`));
   }
 }
@@ -976,6 +981,10 @@ async function handler(m, { sock }) {
         unauthorized: "API key tidak punya permission",
       };
       const friendly = Object.entries(errorMap).find(([k]) => String(rawMsg).toLowerCase().includes(k));
+      if (isLocationMismatchError(rawMsg)) {
+        const help = await buildLocationMismatchHelp(slot);
+        if (help) return m.reply(raraWrap("cpanel", help));
+      }
       return m.reply(raraWrap("cpanel", `Gagal membuat akun panel.\n\n${friendly ? friendly[1] : rawMsg}`));
     }
   }

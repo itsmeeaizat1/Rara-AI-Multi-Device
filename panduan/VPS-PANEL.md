@@ -745,6 +745,21 @@ Kepakenya cuma 2:
   → `200` = key + permission oke; `401` = key salah; `302` = header Accept ketinggalan (curl doang, bot gak kena)
 - Create server butuh egg/nest/location BENAR per panel (bukan default template): cek ID asli via `php artisan tinker` → `Pterodactyl\Models\Server::first()->only('egg_id','nest_id')` dan `Pterodactyl\Models\Location::first()->id`, lalu set: `.setpanel v1 egg 16` / `.setpanel v1 nestid 5` / `.setpanel v1 location 1`
 
+**Create gagal "No nodes satisfying the requirements" (node pindah location / banyak location)**
+- Penyebab: config bot (`.setpanel v1 location X`) nyasar — node di panel nempel di location lain, atau location X belum punya node sama sekali. Panel boleh punya BANYAK location (mis. `us.nyc.lvl3` ID 1, `sg-01` ID 2); deploy cuma nyari node di location yang dikirim bot.
+- Cek daftar location + mana yang punya node (live dari API panel, tanpa buka browser):
+  ```
+  .setpanel v1 location list
+  ```
+  → tiap baris: `• ID 2 — sg-01 ✅ node: Auto Node` (✅ = ada node, ⛔ = kosong).
+- Fix: set location yang PUNYA node:
+  ```
+  .setpanel v1 location 2
+  ```
+  → langsung aktif tanpa restart, coba create lagi.
+- Otomatis (8 Okt): kalau create masih kena error itu, bot bales sendiri kartu "⚠️ LOCATION PANEL SALAH" berisi location config sekarang + daftar location live + saran `.setpanel v1 location <id>`. Jadi gak perlu tebak-tebakan manual.
+- Kalau SEMUA location ⛔ tanpa node: bikin node dulu (Admin → Nodes → Create New, pilih location) atau pindahin node yang ada ke location lain (edit node → Location).
+
 
 **Wings crash karena iptables Docker**
 - Fix: `systemctl restart docker && sleep 3 && systemctl restart wings`

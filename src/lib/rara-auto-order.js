@@ -10,6 +10,7 @@ import { getDatabase } from "./rara-database.js";
 import { applyPteroOverrides } from "./panel/index.js";
 import { pterodactyl } from "./config/external.js";
 import { buildServerDescription } from "./panel/description.js";
+import { isLocationMismatchError, buildLocationMismatchHelp } from "./panel/locations.js";
 
 // ── paket RAM ala script asli (harga bisa di-override via .autoorder harga) ──
 export const RAM_PACKAGES = {
@@ -154,7 +155,12 @@ export async function provisionPanel(panelCfg, pkgKey, username) {
     };
   } catch (e) {
     const msg = e?.response?.data?.errors?.[0]?.detail || e?.message || String(e);
-    return { ok: false, error: `gagal buat panel: ${typeof msg === "string" ? msg : JSON.stringify(msg)}` };
+    let extra = "";
+    if (isLocationMismatchError(msg)) {
+      const help = await buildLocationMismatchHelp(panelCfg);
+      if (help) extra = `\n\n${help}`;
+    }
+    return { ok: false, error: `gagal buat panel: ${typeof msg === "string" ? msg : JSON.stringify(msg)}${extra}` };
   }
 }
 

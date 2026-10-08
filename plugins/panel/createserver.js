@@ -3,6 +3,7 @@ import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from "rara";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { buildServerDescription } from "../../src/lib/panel/description.js";
+import { isLocationMismatchError, buildLocationMismatchHelp } from "../../src/lib/panel/locations.js";
 import axios from 'axios'
 import crypto from 'crypto'
 import config from '../../config.js'
@@ -599,6 +600,10 @@ async function handler(m, { sock }) {
       'unauthorized': 'API key tidak punya permission, buat key baru dengan semua permissions',
     };
     const friendly = Object.entries(errorMap).find(([k]) => rawMsg.toLowerCase().includes(k));
+    if (isLocationMismatchError(rawMsg)) {
+      const help = await buildLocationMismatchHelp(serverConfig);
+      if (help) return m.reply(raraWrap("Panel", help));
+    }
     return m.reply(raraWrap("Panel", `GAGAL MEMBUAT PANEL\n\n${friendly ? friendly[1] : rawMsg}`));
   }
 }

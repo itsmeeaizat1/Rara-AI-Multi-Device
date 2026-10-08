@@ -1,8 +1,9 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { buildLocationMismatchHelp } from "../../src/lib/panel/locations.js";
 import config from '../../config.js'
 import { raraWrap } from "../../src/lib/rara-menu-style.js"
-import { setPanelField, clearPanelField, MAX_PANELS } from "../../src/lib/panel/index.js"
+import { setPanelField, clearPanelField, MAX_PANELS, getPanel } from "../../src/lib/panel/index.js"
 
 const pluginConfig = {
     name: 'setpanel',
@@ -69,6 +70,8 @@ async function handler(m, { sock }) {
         txt += '  (set nest ID)\n\n'
         txt += '  ' + prefix + 'setpanel v1 location 1\n'
         txt += '  (set location ID)\n\n'
+        txt += '  ' + prefix + 'setpanel v1 location list\n'
+        txt += '  (cek daftar location + mana yang punya node)\n\n'
         txt += '  ' + prefix + 'setpanel status\n'
         txt += '  (cek status semua server)'
 
@@ -112,6 +115,18 @@ async function handler(m, { sock }) {
     // Cek apakah args[1] adalah field name atau domain
     const fieldNames = ['apikey', 'capikey', 'egg', 'nestid', 'location']
     const secondArg = args[1]?.toLowerCase()
+
+    // (8 Okt) .setpanel v1 location list → daftar location LIVE dari panel
+    // (buat pas node pindah location / panel punya banyak location)
+    if (secondArg === 'location' && args[2]?.toLowerCase() === 'list') {
+        const p = getPanel(serverNumInt)
+        if (!p?.domain || !p?.apikey) {
+            return m.reply(raraWrap('setpanel', 'Panel ' + serverArg.toUpperCase() + ' belum dikonfigurasi (butuh domain + apikey PTLA).'))
+        }
+        const help = await buildLocationMismatchHelp(p)
+        const list = help || '⚠️ Tidak bisa mengambil daftar location dari panel. Cek domain/apikey PTLA.'
+        return m.reply(raraWrap('setpanel', '📍 Daftar location panel ' + serverArg.toUpperCase() + ' (config sekarang: ' + (p.location ?? 'belum di-set') + ')\n\n' + list.replace(/^⚠️ LOCATION PANEL SALAH\n+/, '')))
+    }
 
     if (secondArg && fieldNames.includes(secondArg)) {
         // .setpanel v1 apikey <value>
