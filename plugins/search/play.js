@@ -8,6 +8,7 @@
 // Genre gak ada di data YouTube — di-enrich best-effort dari iTunes Search
 // API (gratis, no key, sama seperti yang dipakai plugins/download/songs.js).
 import axios from "axios";
+import config from "../../config.js";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/rara-ytdlp.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan, raraGuide, raraSalah } from "../../src/lib/rara-menu-style.js";
@@ -29,6 +30,7 @@ async function dlCard(type, probe, request) {
 
 
 const IKYY = "https://api.ikyyxd.my.id";
+const CUKI_APIKEY = config.APIkey?.cuki || "cuki-x";
 
 let _itunesForTest = null;
 function _setItunesFnForTest(fn) { _itunesForTest = fn; }
@@ -163,6 +165,30 @@ async function searchYoutube(query) {
   return null;
 }
 
+/**
+ * Cuki API — endpoint ber-apikey (CDN savetube, bukan googlevideo IP-locked).
+ * Fallback sementara saat yt-dlp direct kena bot-check YouTube (8 Okt 2026).
+ */
+async function getAudioCuki(url, quality = "128") {
+  try {
+    const apiUrl = `https://api.cuki.biz.id/api/downloader/ytmp3?apikey=${CUKI_APIKEY}&url=${encodeURIComponent(url)}&quality=${quality}`;
+    const { data } = await axios.get(apiUrl, { timeout: 30000 });
+    if (data?.success && data?.data?.audio?.download?.downloadUrl) {
+      const { data: audioData } = await axios.get(data.data.audio.download.downloadUrl, {
+        responseType: "arraybuffer",
+        timeout: 60000,
+      });
+      const buffer = Buffer.from(audioData);
+      if (buffer.length > 10000) {
+        return { buffer, title: data.data.metadata?.title || "Audio" };
+      }
+    }
+  } catch (e) {
+    console.error("[Play] Cuki API error:", e.message);
+  }
+  return null;
+}
+
 async function downloadAudio(url, kbps) {
   // Try 1: yt-dlp / cobalt (rara-ytdlp) — kontrol bitrate persis
   try {
@@ -174,7 +200,17 @@ async function downloadAudio(url, kbps) {
     console.error("[Play] rara-ytdlp error:", e.message);
   }
 
-  // Try 2: ytdl.js (ymcdn)
+  // Try 2: Cuki API (ber-apikey, CDN — fallback sementara anti bot-check YouTube)
+  try {
+    const result = await getAudioCuki(url, kbps);
+    if (result?.buffer?.length > 10000) {
+      return { buffer: result.buffer, title: result.title };
+    }
+  } catch (e) {
+    console.error("[Play] Cuki error:", e.message);
+  }
+
+  // Try 3: ytdl.js (ymcdn)
   try {
     const result = await ytdl(url, "mp3");
     if (result?.status && result?.dl) {
@@ -187,7 +223,7 @@ async function downloadAudio(url, kbps) {
     console.error("[Play] ytdl.js error:", e.message);
   }
 
-  // Try 3: IkyyXD ytmp3
+  // Try 4: IkyyXD ytmp3
   try {
     const { data } = await axios.get(`${IKYY}/download/ytmp3`, {
       params: { url, apikey: "kyzz" },
