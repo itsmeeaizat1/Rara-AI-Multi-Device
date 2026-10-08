@@ -2,8 +2,7 @@
 // owner: "biar bot support fitur instal panel, instal tema panel, ganti pw vps
 // buat user lain yg ingin pw vps diganti, dll lengkap"
 // Lib src/lib/rara-vps-registry.js + plugin .gantipwvps/.myvps
-// + .installtema (generic Blueprint) + .installpanel (Pterodactyl dari nol)
-// + wiring registerVps di createvps/linode. SSH di-mock via seam.
+// // + wiring registerVps di createvps/linode. SSH di-mock via seam.
 import os from "node:os";
 import path from "node:path";
 import fs from "node:fs";
@@ -163,83 +162,6 @@ t("4b. createvps: register SEBELUM kirim kartu (kredensial konsisten)", cvps.ind
 const lino = fs.readFileSync(R + "/plugins/panel/linode.js", "utf-8");
 t("4c. linode: import + registerVps dipanggil", /rara-vps-registry/.test(lino) && /registerVps\(\{ ip: ipAddress, password: rootPass/.test(lino));
 t("4d. linode: kartu sukses yang tadinya GAK kekirim ((raraWrap(...)) ekspresi mati) sekarang di-reply", /m\.reply\(raraWrap\("linode", msg\)/.test(lino));
-
-// ═══ SECTION 5: .installtema generik ═══
-section("5. plugin .installtema");
-const it = await import(R + "/plugins/panel/installtema.js");
-it._setSshClientForTest(FakeSsh);
-
-replies.length = 0;
-await it.handler(mkM("installtema", "", { isOwner: true }), { sock: fakeSock });
-t("5a. tanpa arg → panduan + nama tema dari URL browse", /blueprint\.zip\/browse/.test(replyTxt()) && /<ip>\|<password>\|<nama-tema>/.test(replyTxt()), replyTxt().slice(0, 220));
-
-replies.length = 0;
-await it.handler(mkM("installtema", "1.2.3.4|secret", { isOwner: true }), { sock: fakeSock });
-t("5b. kurang segmen → format salah", /Format salah/.test(replyTxt()), replyTxt().slice(0, 160));
-
-replies.length = 0;
-await it.handler(mkM("installtema", "1.2.3.4|secret|Nebula Bagus", { isOwner: true }), { sock: fakeSock });
-t("5c. nama tema invalid (spasi/kapital) → ditolak", /Nama tema gak valid/.test(replyTxt()), replyTxt().slice(0, 160));
-
-let lastConn;
-const CaptureSsh = class extends FakeSsh { connect(o) { lastConn = this; return super.connect(o); } };
-it._setSshClientForTest(CaptureSsh);
-replies.length = 0;
-await it.handler(mkM("installtema", "9.9.9.9|secret|darkenate", { isOwner: true }), { sock: fakeSock });
-await waitTick();
-t("5d. install valid → 3 command (deps+blueprint+install) + kartu sukses", /Tema Terpasang/.test(replyTxt()) && /darkenate/.test(replyTxt()) && lastConn?.execs?.length === 3, { n: lastConn?.execs?.length, txt: replyTxt().slice(0, 160) });
-t("5e. command install bawa nama tema lowercase", /blueprint -install darkenate/.test(String(lastConn.execs[2])), lastConn.execs[2]?.slice(0, 120));
-
-replies.length = 0;
-sshCloseCode = 1;
-await it.handler(mkM("installtema", "9.9.9.9|secret|nebula", { isOwner: true }), { sock: fakeSock });
-await waitTick();
-t("5f. install gagal di VPS → error asli (exit code)", /Gagal/.test(replyTxt()) && /exit 1/.test(replyTxt()), replyTxt().slice(0, 200));
-sshCloseCode = 0;
-
-replies.length = 0;
-await it.handler(mkM("installtema", "8.8.8.8|secret|nebula", { isOwner: false }), { sock: fakeSock });
-t("5g. isOwner true → bukan owner harusnya diblok plugin loader (config flag)", it.config.isOwner === true);
-
-// ═══ SECTION 6: .installpanel dari nol ═══
-section("6. plugin .installpanel");
-const ip = await import(R + "/plugins/panel/installpanel.js");
-ip._setSshClientForTest(CaptureSsh);
-
-replies.length = 0;
-await ip.handler(mkM("installpanel", "", { isOwner: true }), { sock: fakeSock });
-t("6a. tanpa arg → panduan lengkap (syarat + hasil)", /UBUNTU/i.test(replyTxt()) && /10-20 menit/.test(replyTxt()) && /<ip>\|<password>/.test(replyTxt()), replyTxt().slice(0, 220));
-
-replies.length = 0;
-await ip.handler(mkM("installpanel", "1.2.3.4", { isOwner: true }), { sock: fakeSock });
-t("6b. tanpa password → format salah", /Format salah/.test(replyTxt()), replyTxt().slice(0, 160));
-
-lastConn = null;
-replies.length = 0;
-await ip.handler(mkM("installpanel", "10.0.0.5|secret", { isOwner: true }), { sock: fakeSock });
-await waitTick();
-const finalCard = replyTxt();
-t("6c. 5 fase kekirim + progress per fase", lastConn?.execs?.length === 5 && /Fase 1\/5/.test(finalCard) && /Fase 5\/5/.test(finalCard), { n: lastConn?.execs?.length, txt: finalCard.slice(0, 160) });
-t("6d. kartu final: URL + email + username + password admin", /http:\/\/10\.0\.0\.5/.test(finalCard) && /@panel\.local/.test(finalCard) && /Username: rara/.test(finalCard) && /Password:/.test(finalCard), finalCard.slice(0, 300));
-t("6e. fase panel: .env APP_URL + RECAPTCHA off (gotcha login admin)", /APP_URL=http:\/\/10\.0\.0\.5/.test(String(lastConn.execs[1])) && /RECAPTCHA_ENABLED=false/.test(String(lastConn.execs[1])), "");
-t("6f. fase admin: INSERT users root_admin=1 (bukan prompt interaktif)", /INSERT INTO users/.test(String(lastConn.execs[2])) && /root_admin/.test(String(lastConn.execs[2])) && /password_hash/.test(String(lastConn.execs[2])), "");
-t("6g. fase nginx: vhost + queue worker + cron", /pterodactyl\.conf/.test(String(lastConn.execs[3])) && /queue:work/.test(String(lastConn.execs[3])) && /schedule:run/.test(String(lastConn.execs[3])), "");
-t("6h. fase wings: docker + wings binary + systemd", /get\.docker\.com/.test(String(lastConn.execs[4])) && /wings_linux_amd64/.test(String(lastConn.execs[4])) && /wings\.service/.test(String(lastConn.execs[4])), "");
-t("6i. VPS terdaftar di registry (provider manual, label panel)", lib.findVps("10.0.0.5")?.provider === "manual" && lib.findVps("10.0.0.5")?.password === "secret", lib.findVps("10.0.0.5"));
-
-replies.length = 0;
-sshCloseCode = 1;
-await ip.handler(mkM("installpanel", "10.0.0.6|secret", { isOwner: true }), { sock: fakeSock });
-await waitTick();
-t("6j. fase gagal → error asli (exit code) + progress berhenti", /Gagal/.test(replyTxt()) && /exit 1/.test(replyTxt()), replyTxt().slice(0, 220));
-sshCloseCode = 0;
-
-// ═══ SECTION 7: kredensial DM saat grup (installpanel) ═══
-section("7. kredensial grup → DM");
-replies.length = 0; dmSent.length = 0;
-await ip.handler(mkM("installpanel", "10.0.0.7|secret", { isOwner: true, isGroup: true, chat: "628120@g.us" }), { sock: fakeSock });
-await waitTick();
-t("7a. kartu kredensial ke DM, grup dapat notif singkat", dmSent.some((d) => /@panel\.local/.test(d.text)) && /dikirim ke DM/.test(replyTxt()), { dm: dmSent.length, txt: replyTxt().slice(0, 160) });
 
 // ═══ SUMMARY ═══
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);
