@@ -25,6 +25,7 @@ import * as timeHelper from "../../src/lib/rara-time.js";
 import { downloadMediaMessage } from "rara";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getPanel, listPanels } from "../../src/lib/panel/index.js";
+import { buildServerDescription } from "../../src/lib/panel/description.js";
 
 const MAX_PANELS = 100;
 const POWER_SIGNALS = ["start", "stop", "restart", "kill"];
@@ -306,7 +307,7 @@ async function createWithRole(m, { sock }, spec) {
       `${slot.domain}/api/application/servers`,
       {
         name,
-        description: `Created at ${timeHelper.formatDateTime("D MMMM YYYY HH:mm")} [${ver.toUpperCase()}] [${isAdmin ? "ADMIN" : "CLIENT"}]`,
+        description: buildServerDescription(`Created at ${timeHelper.formatDateTime("D MMMM YYYY HH:mm")} [${ver.toUpperCase()}] [${isAdmin ? "ADMIN" : "CLIENT"}]`),
         user: user.id,
         egg: parseInt(slot.egg),
         docker_image: "ghcr.io/parkervcp/yolks:nodejs_20",
@@ -885,7 +886,7 @@ async function handler(m, { sock }) {
         `${slot.domain}/api/application/servers`,
         {
           name,
-          description: `Created at ${timeHelper.formatDateTime("D MMMM YYYY HH:mm")} [${ver.toUpperCase()}]`,
+          description: buildServerDescription(`Created at ${timeHelper.formatDateTime("D MMMM YYYY HH:mm")} [${ver.toUpperCase()}]`),
           user: user.id,
           egg: parseInt(slot.egg),
           docker_image: "ghcr.io/parkervcp/yolks:nodejs_18",

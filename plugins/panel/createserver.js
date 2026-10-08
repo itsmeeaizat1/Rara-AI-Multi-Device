@@ -2,6 +2,7 @@
 import { getAssetBuffer } from "../../src/lib/rara-asset-manager.js";
 import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from "rara";
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { buildServerDescription } from "../../src/lib/panel/description.js";
 import axios from 'axios'
 import crypto from 'crypto'
 import config from '../../config.js'
@@ -392,7 +393,7 @@ async function handler(m, { sock }) {
         `${serverConfig.domain}/api/application/servers`,
         {
           name,
-          description: `Created at ${formatDate()} [${serverLabel}]`,
+          description: buildServerDescription(`Created at ${formatDate()} [${serverLabel}]`),
           user: user.id,
           egg: parseInt(serverConfig.egg),
           docker_image: "ghcr.io/parkervcp/yolks:nodejs_18",

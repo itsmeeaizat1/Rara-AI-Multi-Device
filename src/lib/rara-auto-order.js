@@ -9,6 +9,7 @@ import axios from "axios";
 import { getDatabase } from "./rara-database.js";
 import { applyPteroOverrides } from "./panel/index.js";
 import { pterodactyl } from "./config/external.js";
+import { buildServerDescription } from "./panel/description.js";
 
 // ── paket RAM ala script asli (harga bisa di-override via .autoorder harga) ──
 export const RAM_PACKAGES = {
@@ -133,7 +134,7 @@ export async function provisionPanel(panelCfg, pkgKey, username) {
     // 3. create server
     await http().post(`${base}/api/application/servers`, {
       name: `${clean}-autoorder`,
-      description: `Auto Order ${pkgKey} — Rara`,
+      description: buildServerDescription(`Auto Order ${pkgKey}`),
       user: user.id,
       egg: parseInt(panelCfg.egg),
       docker_image: "ghcr.io/parkervcp/yolks:nodejs_18",
