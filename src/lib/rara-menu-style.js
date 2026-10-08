@@ -703,7 +703,7 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
           out += `    ᯓ ${prefix}${cmd}\n`;
         }
       }
-      out += `╰–––––––––––––––༓\n`;
+      out += `╰────────────√\n`;
       continue;
     }
 

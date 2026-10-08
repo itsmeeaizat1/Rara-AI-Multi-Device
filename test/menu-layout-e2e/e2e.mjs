@@ -35,7 +35,7 @@ t("1d. tanpa footerName pun tetap normal (opsional)", (() => {
   return t2.includes(".menu");
 })());
 
-// ── GAYA BOX KATEGORI (owner 8 Okt 2026: "ubah gaya allmenu" — ╭『 』 / ᯓ / ╰—༓) ──
+// ── GAYA BOX KATEGORI (owner 8 Okt 2026: "ubah gaya allmenu" — ╭『 』 / ᯓ / ╰─√) ──
 const box = raraMenuLayout({
   categories: [{ name: "Download", commands: [{ name: "play", symbols: "Ⓟ Ⓛ" }, "ytmp4"] }],
   prefix: ".",
@@ -43,7 +43,7 @@ const box = raraMenuLayout({
 });
 t("2a. header kotak kategori ╭─────『 NAME 』", box.includes("╭─────『 ") && box.includes("DOWNLOAD 』"), box.split("\n").find((l) => l.includes("╭")));
 t("2b. command bullet ᯓ + prefix", box.includes("    ᯓ .play Ⓟ Ⓛ") && box.includes("    ᯓ .ytmp4"));
-t("2c. footer kotak ╰–––––––––––––––༓", box.includes("╰–––––––––––––––༓"));
+t("2c. footer kotak ╰────────────√", box.includes("╰────────────√"));
 t("2d. gaya default (tanpa categoryBoxStyle) tetap 「 ✦ 」 lama", (() => {
   const d = raraMenuLayout({ categories: [{ name: "Download", commands: ["play"] }], prefix: "." });
   return d.includes("「 ✦ DOWNLOAD ✦ 」") && d.includes(".play") && !d.includes("ᯓ");
@@ -57,7 +57,7 @@ t("2e. lebih dari 1 kategori dipisah baris kosong (tiap kotak utuh)", (() => {
     prefix: ".",
     categoryBoxStyle: true,
   });
-  const parts = m.split("╰–––––––––––––––༓").filter((x) => x.trim());
+  const parts = m.split("╰────────────√").filter((x) => x.trim());
   return parts.length === 2 && (m.match(/╭─────『/g) || []).length === 2;
 })());
 
