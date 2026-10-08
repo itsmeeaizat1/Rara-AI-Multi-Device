@@ -80,7 +80,10 @@ async function handler(m, { sock }) {
   if (m.isGroup) {
     return m.reply(raraWrap("vps", `🔒 *Khusus DM*\n\nFitur .vps berisi data login pribadi — chat bot langsung di pesan pribadi.\nMode: *${MODE(m.isOwner)}*`));
   }
-  const args = (m.text || "").trim().split(/\s+/).slice(1).filter(Boolean);
+  // m.text produksi = isi SETELAH command ("login ip|pw"); jaga-jaga kalau datang lengkap (".vps login ..")
+  let raw = (m.text || "").trim();
+  raw = raw.replace(/^[^\w\s]?\s*(vps|manajemenvps)\b\s*/i, "");
+  const args = raw.split(/\s+/).filter(Boolean);
   const [sub, a2, a3, a4, a5] = args;
   const mode = MODE(m.isOwner);
 

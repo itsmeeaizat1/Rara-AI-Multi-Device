@@ -196,6 +196,30 @@ replies.length = 0;
 out = await P.handler(mkM("user2@s", ".vps protect install 99", false, false), { sock: mkSock() });
 t("10f format adminId saja (pakai login tersimpan)", /PROTECT PANEL AKTIF/.test(replies[replies.length - 1]));
 
+
+// ── 11. bentuk produksi: m.text = isi SETELAH command ──
+section("11. m.text produksi (args-only) + password karakter khusus");
+L._setSshForTest(async (creds, cmd) => {
+  if (/hostname &&/.test(cmd)) return { code: 0, stdout: "vpsprod\nUbuntu 22.04\nup 2 days" };
+  return { code: 0, stdout: "ok" };
+});
+replies.length = 0;
+await P.handler(mkM("owner@s", "login 213.163.192.209|Aizat123#*", true, false), { sock: mkSock() });
+t("11a args-only 'login ip|pw#*' → LOGIN BERHASIL mode OWNER", /LOGIN VPS BERHASIL/.test(replies[replies.length - 1]) && replies[replies.length - 1].includes("OWNER"), replies[replies.length - 1]);
+t("11b password # * tersimpan utuh", L.getCreds("owner@s")?.password === "Aizat123#*" && L.getCreds("owner@s")?.host === "213.163.192.209");
+replies.length = 0;
+await P.handler(mkM("owner@s", "status", true, false), { sock: mkSock() });
+t("11c args-only 'status' setelah login → jalan, bukan BELUM LOGIN", !/BELUM LOGIN/.test(replies[replies.length - 1]));
+replies.length = 0;
+await P.handler(mkM("owner@s", ".vps me", true, false), { sock: mkSock() });
+t("11d bentuk lengkap '.vps me' masih jalan", /DATA LOGIN VPS-MU/.test(replies[replies.length - 1]));
+replies.length = 0;
+await P.handler(mkM("owner@s", "", true, false), { sock: mkSock() });
+t("11e kosong → kartu panduan", /VPS & PANEL MANAGER/.test(replies[replies.length - 1]));
+replies.length = 0;
+await P.handler(mkM("owner@s", "protect status", true, false), { sock: mkSock() });
+t("11f args-only 'protect status' dikenali", !/Sub protect gak dikenal|VPS & PANEL MANAGER/.test(replies[replies.length - 1]) || /PROTECT/.test(replies[replies.length - 1]));
+
 L._resetSshForTest();
 L._resetVpsStoreForTest();
 
