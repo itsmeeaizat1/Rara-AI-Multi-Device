@@ -3,6 +3,7 @@ import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../sr
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
+import { registerVps } from '../../src/lib/rara-vps-registry.js'
 
 const VPS_SPECS = {
     'vps1g1c': { size: 's-1vcpu-1gb', ram: '1GB', cpu: '1 vCPU' },
@@ -138,6 +139,9 @@ ssh_pwauth: True`,
 
 Simpan data ini baik-baik!`
         
+        // daftarkan ke registry biar customer bisa self-service (.gantipwvps/.myvps)
+        registerVps({ ip, password, owner: m.sender, provider: "do", label: hostname })
+
         await sock.sendMessage(m.sender, { text: detailTxt })
         await m.reply(raraWrap("VPS", "✅ VPS berhasil dibuat. Data dikirim ke private chat."))
         

@@ -123,6 +123,7 @@ async function handler(m, { sock }) {
         txt += `│\n`
         txt += `Manage:\n`
         txt += `\`${prefix}listvps\` | \`${prefix}cekvps\` | \`${prefix}delvps\` | \`${prefix}sisavps\`\n`
+        txt += `\`${prefix}myvps\` | \`${prefix}gantipwvps <id/ip>\` | \`${prefix}installpanel\` | \`${prefix}installtema\`\n`
         txt += `│\n`
         txt += `Kontrol:\n`
         txt += `\`${prefix}turnon\` | \`${prefix}turnoff\` | \`${prefix}restartvps\`\n`

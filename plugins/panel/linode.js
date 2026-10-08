@@ -2,6 +2,7 @@
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
+import { registerVps } from '../../src/lib/rara-vps-registry.js'
 function randomKarakter(length) {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz'
     let result = ''
@@ -113,7 +114,11 @@ async function handler(m, { sock, command, args }) {
                 `📍 Region: ap-south`
             
             await m.react("🐣")
-            (raraWrap("linode", msg))
+            m.reply(raraWrap("linode", msg), "linode")
+            // daftarkan ke registry biar self-service .gantipwvps/.myvps jalan
+            try {
+                registerVps({ ip: ipAddress, password: rootPass, owner: m.sender, provider: "linode", label })
+            } catch (e) { console.error("[linode-registry]", e) }
             return
         }
         

@@ -989,3 +989,41 @@ Kalau semua hijau, cek panel admin → node harus ONLINE (bukan merah), lalu di 
 4. **Dua URL beda:** FQDN node = URL WINGS tunnel (port 8080); `allowed_origins` + `APP_URL` = URL PANEL (port 80).
 5. **Ganti FQDN/domain node = WAJIB deploy ulang token daemon** (Auto Deploy di admin → Nodes) + restart wings. FQDN baru tanpa redeploy token = node merah.
 6. **Image docker server bot:** wajib varian yolks Pterodactyl (ada entrypoint), plus butuh `git` di dalam image buat install dependency.
+
+---
+
+## Otomatisasi via Bot Rara 
+
+Semua fitur di panduan ini sekarang bisa dikerjakan lewat bot langsung dari chat.
+
+### `.vps login <ip>|<password>` — Install & Kelola Panel dari Nol
+
+Install panel Pterodactyl + tema dilakukan lewat `.vps` (login root dulu, khusus DM):
+
+```
+.vps login 1.2.3.4|passwordroot
+.vps panel install
+.vps tema install nebula
+```
+
+### `.myvps` — Daftar VPS Milikmu
+
+VPS yang dibuat lewat bot (`.vps1g1c` dkk / Linode) otomatis tercatat. Customer tinggal:
+
+```
+.myvps
+```
+
+### `.gantipwvps <id/ip> [password_baru]` — Ganti Password Root VPS (Self-Service)
+
+Pemilik VPS (tercatat di registry) bisa ganti password root VPS-nya sendiri tanpa minta owner:
+
+```
+.gantipwvps 1
+.gantipwvps 1.2.3.4 PassBaru99
+```
+
+- Password baru opsional — kosong = dibuatkan acak (14 karakter)
+- Kredensial dikirim ke **DM** (aman saat dipakai di grup)
+- Owner bot bisa ganti password VPS siapa pun; orang lain ditolak
+- Password lama diambil dari registry — kalau udah diganti manual via SSH, minta owner daftarkan ulang (`registerVps` update otomatis tiap create)
