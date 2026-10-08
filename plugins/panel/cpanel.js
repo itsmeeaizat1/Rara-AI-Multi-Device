@@ -51,7 +51,7 @@ const pluginConfig = {
   alias: ["panel"],
   category: "panel",
   description: "Pusat kontrol panel Pterodactyl (v1-v100): buat akun client/admin + spesifikasi (izin .addaksescpanel dari owner; kredensial bisa dikirim ke DM WhatsApp ATAU DM Telegram via bridge), power/status/upload server, login client 7 hari",
-  usage: ".cpanel client|admin, <disk> <ram>, <cpu>, <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel <ram> <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel> | izin create: .addaksescpanel <basic|reseller>, <nomor|tg:id>, <durasi>",
+  usage: ".cpanel client|admin, <disk> <ram>, <cpu>, <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel <ram> <username>,<nomor|tg:id_tele>,<idpanel> | .cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login <username>,<password>,<idpanel> | izin create: .addaksescpanel <basic|reseller|admin>, <nomor|tg:id>, <durasi>",
   example: ".panel aizat aizat123, 1",
   isOwner: false,
   isPremium: false,
@@ -447,9 +447,11 @@ PTLA & PTLC boleh barengan, gak saling hapus.
 Akses diatur lewat role (owner 8 Okt):
 • basic    → bisa create panel, gak bisa nambahin orang lain
 • reseller → bisa create + nambahin user lain sebagai basic
+• admin    → bisa nambahin user gak-berakses / di bawah admin jadi basic ATAU reseller
 Owner mutusin role + tipe + durasi pas .addaksescpanel:
 .addaksescpanel basic, 628xxx, 7d          → user basic 7 hari
 .addaksescpanel reseller, @user, 17/05/2026 → user reseller sampai tanggal itu
+.addaksescpanel admin, 628xxx, 7d          → user admin 7 hari
 .addaksescpanel basic, tg:4436252, 16:00   → user Telegram sampai jam itu
 .addaksescpanel basic, @user               → tanpa durasi = selamanya
 ( format lama juga jalan: .addaksescpanel role @user client 7d )

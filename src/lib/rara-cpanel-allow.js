@@ -7,7 +7,9 @@
 // (revisi owner 8 Okt): SISTEM ROLE HIERARKI —
 //   basic    → bisa create panel, GAK bisa nambahin orang lain
 //   reseller → bisa create panel + nambahin user lain sebagai basic
-//              (gak bisa kasih role reseller ke atas — itu owner)
+//   admin    → bisa nambahin user gak-berakses / yang role-nya di bawah
+//              admin jadi basic ATAU reseller (gak bisa kasih admin ke atas)
+//   (role di atas role pemanggil cuma owner bot)
 //   Target bisa nomor WA atau ID Telegram (tg:<id> / jid bridge tg_<id>).
 //   Durasi: 30m|12h|7d|2w|unli | jam "16:00" (hari ini, lewat → besok) |
 //   tanggal "17/05/2026" (sampai akhir hari itu) | "17/05/2026 16:00".
@@ -68,7 +70,7 @@ function save(list) {
   }
 }
 
-const ROLE_RANK = { basic: 1, reseller: 2 };
+const ROLE_RANK = { basic: 1, reseller: 2, admin: 3 };
 
 export function cleanNumber(jid) {
   if (!jid) return null;
@@ -166,7 +168,7 @@ export function allowCreate(jid, ms, tipe = "client", opts = {}) {
   const tp = String(tipe || "client").toLowerCase();
   if (tp !== "client" && tp !== "admin") return { ok: false, error: "Tipe harus client atau admin" };
   const role = String(opts.role || "basic").toLowerCase();
-  if (!ROLE_RANK[role]) return { ok: false, error: "Role harus basic atau reseller" };
+  if (!ROLE_RANK[role]) return { ok: false, error: "Role harus basic, reseller, atau admin" };
   if (opts.expiresAt !== undefined && opts.expiresAt !== null && !Number.isFinite(opts.expiresAt)) return { ok: false, error: "Durasi tidak valid" };
   const now = Date.now();
   const expiresAt = opts.expiresAt != null ? opts.expiresAt : ms === null || ms === undefined ? null : now + ms;
@@ -184,27 +186,33 @@ export function allowCreate(jid, ms, tipe = "client", opts = {}) {
   return { ok: true, entry };
 }
 
-// hapus akses. by = id pemanggil ("owner" | "wa:628.." | "tg:..") — opsional.
-// Kalau by diisi & bukan "owner" → cuma boleh hapus entri basic yang dia sendiri
-// yang nambahin (addedBy === by). Return true kalau ada yang kehapus.
-export function revokeCreate(jid, by = "owner") {
+// hapus akses. by = id pemanggil, byRole = role pemanggil ("owner" terpakai
+// juga buat owner bot). Aturan: owner → semua; admin → entri role di bawah
+// admin (basic/reseller); reseller → cuma basic yang dia sendiri nambahin.
+// Return true kalau ada yang kehapus.
+export function revokeCreate(jid, by = "owner", byRole = "owner") {
   const t = normalizeTarget(jid);
   if (!t) return false;
   const list = prune(load());
   const i = list.findIndex((e) => e.id === t.id);
   if (i < 0) return false;
-  if (by !== "owner" && list[i].addedBy !== by) return false;
-  if (by !== "owner" && list[i].role !== "basic") return false;
+  if (byRole === "reseller") {
+    if (list[i].addedBy !== by || list[i].role !== "basic") return false;
+  } else if (byRole === "admin") {
+    const rk = ROLE_RANK[list[i].role] || 1;
+    if (rk >= ROLE_RANK.admin) return false; // admin/owner punya entri → owner urusan
+  }
   list.splice(i, 1);
   save(list);
   return true;
 }
 
-// daftar aktif (sudah diprun). by = "owner" → semua;
-// selain itu → cuma entri yang ditambahin pemanggil itu.
-export function listCreateAllow(by = "owner") {
+// daftar aktif (sudah diprun). byRole: owner → semua; admin → semua entri
+// role di bawah admin (basic/reseller); reseller → cuma buatannya sendiri.
+export function listCreateAllow(by = "owner", byRole = "owner") {
   const list = prune(load());
-  if (by === "owner") return list;
+  if (byRole === "owner") return list;
+  if (byRole === "admin") return list.filter((e) => (ROLE_RANK[e.role] || 1) < ROLE_RANK.admin);
   return list.filter((e) => e.addedBy === by);
 }
 

@@ -361,7 +361,7 @@ replies.length = 0;
 await plugin.handler(mkM("addaksescpanel", "basic, 628170000006, 30d", { isOwner: false, sender: "628170000002@s.whatsapp.net" }), { sock: {} });
 const ent8 = lib.isCreateAllowed("628170000006").entry;
 const ent8res = lib.isCreateAllowed("628170000002").entry;
-t("8a. basic 30d dari reseller 14d → dibatasi sisa reseller", ent8?.expiresAt === ent8res?.expiresAt && /dibatasi sisa akses reseller/.test(replyTxt()), { ent8, reply: replyTxt().slice(0, 200) });
+t("8a. basic 30d dari reseller 14d → dibatasi sisa reseller", ent8?.expiresAt === ent8res?.expiresAt && /dibatasi sisa akses kamu/.test(replyTxt()), { ent8, reply: replyTxt().slice(0, 200) });
 // reseller finite coba kasih unli → tetap kebates
 replies.length = 0;
 await plugin.handler(mkM("addaksescpanel", "basic, 628170000007, unli", { isOwner: false, sender: "628170000002@s.whatsapp.net" }), { sock: {} });
@@ -371,6 +371,74 @@ lib.allowCreate("628170000008", null, "client", { role: "reseller" });
 replies.length = 0;
 await plugin.handler(mkM("addaksescpanel", "basic, 628170000009, unli", { isOwner: false, sender: "628170000008@s.whatsapp.net" }), { sock: {} });
 t("8c. reseller unli boleh kasih unli", lib.isCreateAllowed("628170000009").entry?.expiresAt === null && !/dibatasi/.test(replyTxt()), lib.isCreateAllowed("628170000009").entry);
+
+
+// ═══ SECTION 9: role admin — nambah basic & reseller (owner 8 Okt revisi 2) ═══
+section("9. role admin");
+t("9a. parseArgs 'admin, 628174887770, 7d' → role admin", plugin.parseArgs("admin, 628174887770, 7d").role === "admin");
+
+replies.length = 0;
+await plugin.handler(mkM("addaksescpanel", "admin, 628170000010, 30d"), { sock: {} });
+t("9b. owner add admin → kartu Role: Admin + tercatat", /Role: Admin/.test(replyTxt()) && lib.isCreateAllowed("628170000010").entry?.role === "admin", replyTxt().slice(0, 200));
+
+// admin nambah user baru jadi basic → boleh
+replies.length = 0;
+await plugin.handler(mkM("addaksescpanel", "basic, 628170000011, 7d", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+t("9c. admin nambah user baru jadi basic → jalan", /Akses Create Panel/.test(replyTxt()) && lib.isCreateAllowed("628170000011").entry?.role === "basic" && lib.isCreateAllowed("628170000011").entry?.addedBy === "wa:628170000010", replyTxt().slice(0, 200));
+
+// admin nambah user baru jadi reseller → boleh
+replies.length = 0;
+await plugin.handler(mkM("addaksescpanel", "reseller, 628170000012, 7d", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+t("9d. admin nambah user baru jadi reseller → jalan", /Role: Reseller/.test(replyTxt()) && lib.isCreateAllowed("628170000012").entry?.role === "reseller", replyTxt().slice(0, 200));
+
+// admin naikin basic (milik reseller lain) jadi reseller → boleh (dibawah admin)
+replies.length = 0;
+await plugin.handler(mkM("addaksescpanel", "reseller, 628170000003, 7d", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+t("9e. admin naikin basic buatan reseller lain → boleh", lib.isCreateAllowed("628170000003").entry?.role === "reseller", replyTxt().slice(0, 200));
+// pulihin 628170000003 ke basic milik reseller 2 utk tes del admin bawah
+lib.allowCreate("628170000003", 7 * 864e5, "client", { role: "basic", addedBy: "wa:628170000002" });
+
+// admin coba kasih role admin → ditolak
+replies.length = 0;
+await plugin.handler(mkM("addaksescpanel", "admin, 628170000013, 7d", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+t("9f. admin coba kasih role admin → ditolak", /Role \*admin\* cuma bisa dikasih owner bot/.test(replyTxt()) && !lib.isCreateAllowed("628170000013").allowed, replyTxt().slice(0, 160));
+
+// admin coba utak-atik user setara (admin lain) → ditolak
+replies.length = 0;
+await plugin.handler(mkM("addaksescpanel", "basic, 628170000010, 7d", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+t("9g. admin coba ubah admin lain → ditolak (setara)", /setara\/lebih tinggi/.test(replyTxt()), replyTxt().slice(0, 160));
+// entri admin 628170000010 tetap utuh
+t("9h. entri admin gak keubah", lib.isCreateAllowed("628170000010").entry?.role === "admin" && lib.isCreateAllowed("628170000010").entry?.addedBy === "owner", lib.isCreateAllowed("628170000010").entry);
+
+// admin coba kasih tipe admin (akses panel admin) → ditolak
+replies.length = 0;
+await plugin.handler(mkM("addaksescpanel", "basic, 628170000013, 7d, admin", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+t("9i. admin coba kasih tipe admin → ditolak (owner only)", /Tipe \*admin\*.*cuma bisa dikasih owner bot/.test(replyTxt()), replyTxt().slice(0, 160));
+
+// admin list → semua basic/reseller (admin gak keliatan)
+replies.length = 0;
+await plugin.handler(mkM("listaksescpanel", "", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+t("9j. admin list → cuma user di bawah admin (gak ada entry role Admin)", /Di Bawah Kamu/.test(replyTxt()) && !/Role: Admin/.test(replyTxt()) && /628170000011/.test(replyTxt()), replyTxt().slice(0, 400));
+
+// admin del user setara → gagal; del user basic → jalan
+lib.allowCreate("628170000015", 7 * 864e5, "client", { role: "admin" }); // admin kedua
+replies.length = 0;
+await plugin.handler(mkM("delaksescpanel", "628170000015", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+t("9k. admin del admin lain (setara) → ditolak", /setara\/lebih tinggi/.test(replyTxt()) && lib.isCreateAllowed("628170000015").allowed === true, replyTxt().slice(0, 160));
+replies.length = 0;
+await plugin.handler(mkM("delaksescpanel", "628170000011", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+t("9l. admin del user basic (bukan buatannya) → jalan", /Akses Dicabut/.test(replyTxt()) && lib.isCreateAllowed("628170000011").allowed === false, replyTxt().slice(0, 160));
+
+// cap: admin 30d kasih unli → dibatasi sisa admin
+replies.length = 0;
+await plugin.handler(mkM("addaksescpanel", "reseller, 628170000014, unli", { isOwner: false, sender: "628170000010@s.whatsapp.net" }), { sock: {} });
+const admExp = lib.isCreateAllowed("628170000010").entry?.expiresAt;
+t("9m. admin finite kasih unli → dibatasi sisa akses admin", lib.isCreateAllowed("628170000014").entry?.expiresAt === admExp && /dibatasi sisa akses kamu/.test(replyTxt()), { admExp, e: lib.isCreateAllowed("628170000014").entry, reply: replyTxt().slice(0, 200) });
+
+// reseller tetap gak bisa naikin ke reseller meski target basic milik orang lain
+replies.length = 0;
+await plugin.handler(mkM("addaksescpanel", "reseller, 628170000006, 7d", { isOwner: false, sender: "628170000002@s.whatsapp.net" }), { sock: {} });
+t("9n. reseller coba naikin basic orang lain jadi reseller → ditolak", /cuma bisa nambahin user \*basic\*/.test(replyTxt()) && lib.isCreateAllowed("628170000006").entry?.role === "basic", replyTxt().slice(0, 160));
 
 srv.close();
 try { fs.unlinkSync(ALLOW_FILE); } catch {}
