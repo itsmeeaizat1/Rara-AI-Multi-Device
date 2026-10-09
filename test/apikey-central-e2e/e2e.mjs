@@ -77,6 +77,54 @@ console.log("\n═══ 5. flatten & getter lain gak rusak ═══");
   t("5c. key section lain tetap ada (geminiStandalone dsb)", Object.keys(flat).length > 40, Object.keys(flat).length + " key");
 }
 
+console.log("\n═══ 5b. ATURAN WEB: tiap key punya label web di _note ═══");
+{
+  // ATURAN owner 10 Okt: tiap apikey dikomentari nama WEBSITE sumbernya di
+  // _note_<key>.web — biar pas key expired tinggal cari ke webnya.
+  // Key yang emang gak punya web → web: "-" (gak boleh kosong/hilang).
+  const center = JSON.parse(readFileSync(R("src/lib/apikey/apikeys.json"), "utf8"));
+  const DOMAIN = /https?:\/\/|[a-z0-9][a-z0-9-]*\.[a-z][a-z0-9.-]*/i;
+  let noWeb = [], emptyWeb = [];
+  const cekWeb = (sec, name, note) => {
+    const w = note?.web;
+    if (w === undefined || w === null) noWeb.push(sec + "." + name);
+    else if (String(w).trim() === "") emptyWeb.push(sec + "." + name);
+    else if (String(w).trim() !== "-" && !DOMAIN.test(String(w))) noWeb.push(sec + "." + " (web gak valid)");
+  };
+  for (const sec of ["aiSatuan", "raraai", "scraper", "fitur"]) {
+    for (const [k, v] of Object.entries(center[sec] || {})) {
+      if (k.startsWith("_") || typeof v !== "string") continue;
+      cekWeb(sec, k, center[sec]["_note_" + k]);
+    }
+  }
+  const provs = center.aiMultiprovider?.providers || {};
+  for (const [k, p] of Object.entries(provs)) {
+    if (k.startsWith("_") || typeof p !== "object" || !p) continue;
+    cekWeb("providers", k, p._note);
+  }
+  t("5d. semua key punya _note.web (hilang: 0)", noWeb.length === 0, noWeb.slice(0, 6).join(", "));
+  t("5e. gak ada web kosong — gak ada web = wajib '-'", emptyWeb.length === 0, emptyWeb.join(", "));
+  t("5f. web '-' diizinkan (tanpa web sumber)", true);
+
+  // ATURAN URUTAN (owner 10 Okt, WAJIB): nama fitur dulu, baru nama web
+  let salahUrut = [];
+  const cekUrut = (label, note) => {
+    const ks = Object.keys(note || {});
+    const fi = ks.indexOf("fitur"), wi = ks.indexOf("web");
+    if (wi >= 0 && (fi < 0 || fi > wi)) salahUrut.push(label);
+  };
+  for (const sec of ["aiSatuan", "raraai", "scraper", "fitur"]) {
+    for (const [k, v] of Object.entries(center[sec] || {})) {
+      if (k.startsWith("_note")) cekUrut(sec + "." + k, v);
+    }
+  }
+  for (const [k, p] of Object.entries(provs)) {
+    if (k.startsWith("_")) { cekUrut("providers." + k, p); continue; }
+    if (typeof p === "object" && p) cekUrut("providers." + k, p._note);
+  }
+  t("5g. URUTAN WAJIB: label fitur sebelum web di semua note", salahUrut.length === 0, salahUrut.slice(0, 5).join(", "));
+}
+
 console.log("\n═══ 6. repo bersih literal key ═══");
 {
   // scan kasar file .js di plugins/ — gak boleh ada literal AIza (kunci API google)
