@@ -7,6 +7,7 @@ import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 // kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
 async function dlCard(type, probe, request) {
   try {
@@ -95,7 +96,7 @@ async function twitterDownload(url) {
 async function handler(m, { sock }) {
   try {
     // Try IkyyXD twitterdl first (apikey + url)
-    const ikyyResult = await ikyyDl("twitterdl", url, { extraParams: { apikey: "kyzz" } });
+    const ikyyResult = await ikyyDl("twitterdl", url, { extraParams: { apikey: getApiKey("kyzz") } });
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
       // format owner 19 Sep — disamakan ke semua downloader

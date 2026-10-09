@@ -44,6 +44,23 @@ export const API_KEYS = {
     getLink: () => "https://discord.com/developers/applications",
     usedBy: ["bridge"],
   },
+  // ── PUSATISASI 10 Okt 2026: ampro + kyzz masuk registry pusat ──
+  ampro: {
+    label: "Ampro (AlightMotion Firebase)",
+    description: "Firebase web key Alight Motion — dipakai .ampro/.amrefresh",
+    getConfig: () => "",
+    getEnv: () => process.env.AMPRO_FIREBASE_KEY || "",
+    getLink: () => "",
+    usedBy: ["ampro"],
+  },
+  kyzz: {
+    label: "Kyzz (API Downloader)",
+    description: "Key API kyzz — downloader tiktok/ig/twitter/soundcloud/play dll",
+    getConfig: () => "",
+    getEnv: () => process.env.KYZZ_API_KEY || "",
+    getLink: () => "",
+    usedBy: ["tiktokdl", "instagramdl", "instagrammedia", "douyindl", "soundclouddl", "twitterdl", "play", "playvideo", "youtubeairich", "zerogptv2"],
+  },
   // ── AI / LLM ──────────────────────────────────
   gemini: {
     label: "Gemini (AI Multimodal)",
@@ -299,6 +316,7 @@ export function getApiKey(name) {
     // dipusatkan di src/lib/apikey/apikeys.json). Alias untuk nama registry
     // yang beda dengan nama field apikeys.json.
     const CENTER_ALIAS = {
+      ampro: "amproFirebase",    // fitur.amproFirebase (firebase web key AlightMotion)
       gemini: "google",          // raraai.google (aistudio)
       clipdrop: "clipdropApiKey",
       groq: "groqkey",

@@ -9,6 +9,7 @@ import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 import { getdlTikTokSearch } from "../../src/scraper/getdl-tiktok.js";
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -294,7 +295,7 @@ async function handler(m, { sock }) {
 
   try {
     // Try IkyyXD tiktok first (uses "query" param + apikey)
-    const ikyyResult = await ikyyDl("tiktok", text, { urlParam: "query", extraParams: { apikey: "kyzz" } });
+    const ikyyResult = await ikyyDl("tiktok", text, { urlParam: "query", extraParams: { apikey: getApiKey("kyzz") } });
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
       // format owner 19 Sep: judul/uploader/username/durasi/view/like/komentar/share/download

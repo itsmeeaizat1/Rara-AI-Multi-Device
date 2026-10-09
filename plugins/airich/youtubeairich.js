@@ -15,6 +15,7 @@
 // ============================================================
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import { sendRichResponse, notifyRichDownload } from "../../src/lib/rara-airich.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 
 const pluginConfig = {
   name: "youtubeairich",
@@ -73,7 +74,7 @@ export async function ytRichVideoUrl(url) {
     if (__ytHttp.video) return await __ytHttp.video(url); // seam e2e
     const axios = (await import("axios")).default;
     const { data } = await axios.get("https://api.ikyyxd.my.id/download/ytmp4", {
-      params: { q: url, apikey: "kyzz" }, timeout: 60000,
+      params: { q: url, apikey: getApiKey("kyzz") }, timeout: 60000,
     });
     const dl = data?.result?.VideoUrl?.url || data?.result?.download_url || data?.result?.url;
     if (data?.status && dl && /^https?:\/\//.test(dl)) return dl;

@@ -7,6 +7,7 @@ import instagramDownloader from "../../src/scraper/ig.js";
 import { raraGuide, raraSalah, raraWrap, raraLine, toSC, raraError, raraEmpty, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { mediaResultCard, probeMedia } from "../../src/lib/rara-media-result.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 
 // Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -79,7 +80,7 @@ async function handler(m, { sock }) {
       const res = await import("axios");
       const axiosMod = res.default;
       const response = await axiosMod.get("https://api.ikyyxd.my.id/download/instagram", {
-        params: { apikey: "kyzz", query: url },
+        params: { apikey: getApiKey("kyzz"), query: url },
         timeout: 60000,
       });
       const data = response.data;

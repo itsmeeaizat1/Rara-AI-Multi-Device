@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 
 const pluginConfig = {
   name: "ampro",
@@ -21,7 +22,9 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const KEY = "__REDACTED__";
+// PUSATISASI 10 Okt 2026: key pindah ke apikeys.json (fitur.amproFirebase).
+// Override runtime tetap bisa: .setkey ampro <key> / env AMPRO_FIREBASE_KEY.
+const KEY = getApiKey("ampro") || "";
 const IDT = "https://www.googleapis.com/identitytoolkit/v3/relyingparty";
 const STK = "https://securetoken.googleapis.com/v1/token";
 const VFY = "https://us-central1-alight-creative.cloudfunctions.net/verifyPurchase";

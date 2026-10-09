@@ -3,6 +3,7 @@
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";
 import { callAI, callIkyy } from "../../src/lib/rara-ai-service.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 
 const pluginConfig = {
   name: "zerogptv2", alias: ["zerogptv2"], aliases: ["zerogptv2", "zgptv2"],
@@ -21,7 +22,7 @@ async function handler(m, { sock }) {
     try {
       const detectRes = await callAI({
         providerKey: "ikyy_zerogpt",
-        apiKey: "kyzz",
+        apiKey: getApiKey("kyzz"),
         messages: [{ role: "user", content: text }],
         senderJid: m.sender,
       });

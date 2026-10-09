@@ -16,6 +16,7 @@ import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { offerConvert } from "../../src/lib/rara-convert.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 // kartu info media (batch download) - helper ringkas, best-effort tak pernah ganggu kirim
 async function dlCard(type, probe, request) {
   try {
@@ -125,7 +126,7 @@ async function searchYoutube(query) {
   // Try 1: IkyyXD search (always works)
   try {
     const { data } = await axios.get(`${IKYY}/search/youtube`, {
-      params: { query, apikey: "kyzz" },
+      params: { query, apikey: getApiKey("kyzz") },
       timeout: 15000,
     });
     if (data?.status && data?.result?.length) {
@@ -226,7 +227,7 @@ async function downloadAudio(url, kbps) {
   // Try 4: IkyyXD ytmp3
   try {
     const { data } = await axios.get(`${IKYY}/download/ytmp3`, {
-      params: { url, apikey: "kyzz" },
+      params: { url, apikey: getApiKey("kyzz") },
       timeout: 60000,
     });
     if (data?.status && data?.result?.audio?.url) {

@@ -3,6 +3,7 @@
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { raraError, raraGuide, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -60,7 +61,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     // IkyyXD soundclouddl uses apikey + url params
-    const result = await ikyyDl("soundclouddl", url, { extraParams: { apikey: "kyzz" } });
+    const result = await ikyyDl("soundclouddl", url, { extraParams: { apikey: getApiKey("kyzz") } });
 
     if (result?.medias?.length) {
       const audio = result.medias.find(m => m.type === "audio") || result.medias[0];
