@@ -226,9 +226,11 @@ function getMessageBody(message, type) {
 
   switch (type) {
     case "conversation":
-      return message.conversation || "";
+      // hardening QA Gate 4: conversation gak selalu string (malformed) —
+      // coerce biar parseCommand .startsWith() gak throw
+      return String(message.conversation ?? "");
     case "extendedTextMessage":
-      return messageContent.text || "";
+      return String(messageContent.text ?? "");
     case "imageMessage":
     case "videoMessage":
     case "documentMessage":

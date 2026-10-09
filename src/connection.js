@@ -9,6 +9,8 @@ import {
 import { Boom } from "@hapi/boom";
 // Router outbound multi-platform (29 Sep): scheduler kirim ke jid tg_... → bridge
 import { wrapOutboundSends } from "./lib/rarabridge/manager.js";
+// ANTREAN KIRIM PER-CHAT (QA Gate 3, owner 9 Okt): jeda acak human-like anti banned WA
+import { wrapSendQueue } from "./lib/rara-send-queue.js";
 // AI RICH (port engine lama): attach sock.aiRich() — kartu GenAI native WhatsApp
 // (markdown, code block tersorot, citation, hyperlink) — dipakai .hiaiagent/.aicard/tools hiai.
 import { AIRich } from "./lib/rara-airich-hi.js";
@@ -473,6 +475,9 @@ async function startConnection(options = {}) {
     },
     msgRetryCounterCache,
   });
+
+  // QA Gate 3: semua sendMessage lewat antrean per-chat + jeda acak human-like
+  wrapSendQueue(sock);
   // AI RICH (port engine lama 29 Sep): conn.aiRich() — dipakai tools hiai
   // (files/media) & .hiaiagent render jawaban codeblock; fallback teks biasa kalau gak didukung.
   sock.aiRich = () => new AIRich(sock);
