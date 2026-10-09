@@ -51,7 +51,7 @@
 
 ---
 
-## 🆕 Update Terbaru (Okt 2026)
+## Update Terbaru (Okt 2026)
 
 - **Repo Publik + Template API Key** — repo kini open source (MIT). Semua API key dikirim kosong sebagai template; isi via `.setkey` tanpa edit kode. Prioritas akses: `.setkey` (database) → `apikeys.json` → environment variable.
 - **Sentralisasi API Key** — seluruh 79 key tersebar di plugin & config lama dipusatkan ke `src/lib/apikey/apikeys.json` dengan label `fitur` + `web` per key, diakses lewat fungsi `getApiKey()`.
@@ -72,7 +72,7 @@
 
 ---
 
-## ✨ Fitur Unggulan
+## Fitur Unggulan
 
 ### AI & Agent
 - **AI Multi-Engine** — chat, gambar, suara, dan video dari puluhan model dengan rantai fallback otomatis; banyak endpoint gratis tanpa API key.
@@ -111,7 +111,7 @@
 
 ---
 
-## 📊 Statistik Bot
+## Statistik Bot
 
 | Metric | Jumlah |
 |--------|--------|
@@ -128,7 +128,7 @@
 
 ---
 
-## 🏗 Arsitektur
+## Arsitektur
 
 ```
 Rara-AI-Multi-Device/
@@ -157,7 +157,7 @@ Rara-AI-Multi-Device/
 
 ---
 
-## 🚀 Instalasi
+## Instalasi
 
 > **Catatan:** repo ini adalah **template publik tanpa API key**. Sebagian besar fitur jalan gratis; fitur premium (AI tertentu, downloader berat) butuh key yang dipasang via `.setkey`.
 
@@ -201,7 +201,7 @@ Tekan Enter tanpa mengisi nomor untuk mode **QR Code**.
 
 ---
 
-## ⚙️ Konfigurasi
+## Konfigurasi
 
 **Yang paling sering dipakai:**
 
@@ -227,7 +227,7 @@ Tekan Enter tanpa mengisi nomor untuk mode **QR Code**.
 
 ---
 
-## 💬 Command Penting
+## Command Penting
 
 | Command | Fungsi |
 |---------|--------|
@@ -254,7 +254,7 @@ Tekan Enter tanpa mengisi nomor untuk mode **QR Code**.
 
 ---
 
-## 🖥 Spesifikasi Server
+## Spesifikasi Server
 
 | Resource | Minimum | Rekomendasi |
 |----------|---------|-------------|
@@ -278,7 +278,7 @@ Cocok jalan di **Pterodactyl, VPS, Termux, dan Docker**.
 
 ---
 
-## 📚 Dokumentasi
+## Dokumentasi
 
 | Dokumen | Isi |
 |---------|-----|
@@ -292,7 +292,7 @@ Cocok jalan di **Pterodactyl, VPS, Termux, dan Docker**.
 
 ---
 
-## 🤝 Kontribusi & Lisensi
+## Kontribusi & Lisensi
 
 Repo ini dilisensikan under **[MIT License](LICENSE)** — bebas dipakai, dimodifikasi, dan didistribusikan ulang selama copyright notice disertakan.
 
