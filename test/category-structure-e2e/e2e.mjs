@@ -61,7 +61,7 @@ section("2. rename future → smart");
 check("2a. folder plugins/smart ada", fs.existsSync("plugins/smart") && fs.statSync("plugins/smart").isDirectory());
 check("2b. folder plugins/future GAK ada", !fs.existsSync("plugins/future"));
 const smartFiles = fs.readdirSync("plugins/smart").filter((f) => f.endsWith(".js"));
-check("2c. 93 file pindah utuh", smartFiles.length === 93, smartFiles.length);
+check("2c. 94 file pindah utuh (+botmood lab)", smartFiles.length === 94, smartFiles.length);
 const badSmart = smartFiles.filter((f) => pluginCat("plugins/smart/" + f) !== "smart");
 check("2d. semua kategori = smart", badSmart.length === 0, badSmart.slice(0, 5));
 const anyFuture = walkPlugins().filter((p) => pluginCat(p) === "future");

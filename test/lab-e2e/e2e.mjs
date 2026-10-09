@@ -81,7 +81,7 @@ function mkM(sender, chat, text, args = []) {
 {
   const { setLab } = await import(R("../../src/lib/rara-lab.js"));
   setLab(db, "botmood", true, { global: true });
-  rmSync(tmp + "/restart", { recursive: true, force: true });
+  db.flushAll?.(); // konvensi restart suite (ai-satuan/autosummary): flush dulu
   const { __resetDatabaseForTest } = await import(R("../../src/lib/rara-database.js"));
   __resetDatabaseForTest();
   await initDatabase(tmp + "/rara.json");
@@ -121,6 +121,7 @@ function mkM(sender, chat, text, args = []) {
 
   {
     const r = (await import(R("../../src/lib/rara-database.js"))).__resetDatabaseForTest;
+    db3.flushAll?.();
     r(); await initDatabase(tmp + "/rara.json");
     const d4 = getDatabase();
     const tm = (await import(R("../../src/lib/rara-lab.js"))).getLabData(d4).telemetry.botmood;
@@ -131,7 +132,8 @@ function mkM(sender, chat, text, args = []) {
 // ===== 4. GATE HANDLER + PLUGINS (.lab & .botmood) =====
 {
   const r = (await import(R("../../src/lib/rara-database.js"))).__resetDatabaseForTest;
-  r(); initDatabase(tmp + "/rara.json");
+  getDatabase().flushAll?.();
+  r(); await initDatabase(tmp + "/rara.json");
   const db5 = getDatabase();
   const lab = await import(R("../../src/lib/rara-lab.js"));
   const labPlug = (await import(R("../../plugins/owner/lab.js"))).default;
@@ -195,14 +197,26 @@ function mkM(sender, chat, text, args = []) {
     let executed = false;
     const fakeExp = { config: { command: "botmood", experimental: "botmood" }, handler: async () => { executed = true; } };
     const res = await handleLabGate(db5, fakeExp, mkM(USER, G1, ".botmood", []), mockSock);
-    t("4h. gate: eksperimen nyala → lanjut eksekusi (return true)", res === true && executed === true);
+    if (res === true) await fakeExp.handler(); // dispatch handler.js: gate lolos → handler dipanggil
+    t("4h. gate: eksperimen nyala → lolos & handler lanjut eksekusi", res === true && executed === true);
+  }
+
+  // wiring produksi: handler.js WAJIB pasang gate + telemetry sukses & gagal
+  {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync(R("../../src/handler.js"), "utf8");
+    const gate = src.includes("handleLabGate(getDatabase(), plugin, m, sock)");
+    const guard = /if \(plugin\.config\?\.experimental\)/.test(src) && src.includes("recordLabRun(getDatabase(), plugin.config.experimental, true, null)");
+    const fail = src.includes("recordLabRun(getDatabase(), plugin.config.experimental, false");
+    t("4i. wiring produksi handler.js: gate sebelum eksekusi + telemetry sukses/gagal", gate && guard && fail);
   }
 }
 
 // ===== 5. EKSPERIMEN PERTAMA .botmood: kartu mood dari telemetry nyata =====
 {
   const r = (await import(R("../../src/lib/rara-database.js"))).__resetDatabaseForTest;
-  r(); initDatabase(tmp + "/rara.json");
+  getDatabase().flushAll?.();
+  r(); await initDatabase(tmp + "/rara.json");
   const db6 = getDatabase();
   const { setLab } = await import(R("../../src/lib/rara-lab.js"));
   setLab(db6, "botmood", true, { global: true });
