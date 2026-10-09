@@ -1,11 +1,13 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // goodbye.js — pesan perpisahan member keluar (single design, engine text)
 import { raraError, raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
-import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { detectCountry, fillWelcomeTemplate } from "../../src/lib/rara-welcome-card.js";
 import config from "../../config.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// divider kartu promosi (konsisten sama bootdoctor/switch: pendek 14 kar biar gak hard-wrap WA)
+const DIV = "━━━━━━━━━━━━━━";
 
 // kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
 async function dlCard(type, probe, request) {
@@ -102,22 +104,27 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   ];
   const sapaanOut = SAPAAN_OUT[Math.floor(Math.random() * SAPAAN_OUT.length)];
 
-  const rows = [
-    `│ • 👤 Nama : ${displayName}`,
-    `│ • 📱 ${isBridgeJid ? "Akun" : "Nomor"} : @${handle}`,
-    `│ • 🌏 Negara : ${country}`,
-    `│ • 🏠 Grup : ${groupName}`,
-    `│ • 👥 Sisa Member : ${memberCount}`,
+  // REVISI 9 Okt (owner): teks promosi markdown khas kartu telegram-AI —
+  // seksi bold + emoji, divider, bullet ▪ label bold — biar gak polos/kaku.
+  const CTA_GOODBYE = [
+    "Semoga kita bertemu lagi suatu hari nanti 🌸",
+    "Titip pesan buat yang masih di sini — jaga kubu ya 🛡️",
+    "Pintu selalu terbuka kalau mau balik lagi 🚪✨",
   ];
-  if (customText) {
-    rows.push("│", `│ • 💌 ${customText}`);
-  }
-const engineText = raraGameBox({
-    title: "goodbye", icon: "🚪",
-    flavor: `🚪 *${sapaanOut}*`,
-    body: rows.join("\n"),
-    cta: gameCTA("goodbye"),
-  });
+  const engineText = raraWrap("Goodbye", [
+    `🚪 *${sapaanOut}*`,
+    ``,
+    `👤 *PROFIL MEMBER KELUAR*`,
+    DIV,
+    `▪ *Nama:* ${displayName}`,
+    `▪ *${isBridgeJid ? "Akun" : "Nomor"}:* @${handle}`,
+    `▪ *Negara:* ${country}`,
+    `▪ *Grup:* ${groupName}`,
+    `▪ *Sisa Member:* ${memberCount}`,
+    ...(customText ? [``, `💌 *PESAN PERPISAHAN*`, DIV, `▪ ${customText}`] : []),
+    ``,
+    `🎯 ${CTA_GOODBYE[Math.floor(Math.random() * CTA_GOODBYE.length)]}`,
+  ].join("\n"));
 
   // KARTU CANVAS DALAM PREVIEW (request owner 16 Sep 2026): kartu goodbye
   // ("Selamat tinggal" + foto profil circle + nama + pesan apresiasi random

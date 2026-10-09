@@ -1,11 +1,13 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // welcome.js — pesan sambutan member baru (single design, engine text)
 import { raraWrap, raraError, raraGuide } from "../../src/lib/rara-menu-style.js";
-import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { detectCountry, fillWelcomeTemplate } from "../../src/lib/rara-welcome-card.js";
 import config from "../../config.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+
+// divider kartu promosi (konsisten sama bootdoctor/switch: pendek 14 kar biar gak hard-wrap WA)
+const DIV = "━━━━━━━━━━━━━━";
 
 // kartu info media (batch group) — helper ringkas, best-effort tak pernah ganggu kirim
 async function dlCard(type, probe, request) {
@@ -277,23 +279,27 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   ];
   const sapaan = SAPAAN[Math.floor(Math.random() * SAPAAN.length)];
 
-  const rows = [
-    `│ • 👤 Nama : ${displayName}`,
-    `│ • 📱 ${isBridgeJid ? "Akun" : "Nomor"} : @${handle}`,
-    `│ • 🌏 Negara : ${country}`,
-    `│ • 🏠 Grup : ${groupName}`,
-    `│ • 👥 Total Member : ${memberCount}`,
+  // REVISI 9 Okt (owner): teks promosi markdown khas kartu telegram-AI —
+  // seksi bold + emoji, divider, bullet ▪ label bold — biar gak polos/kaku.
+  const CTA_WELCOME = [
+    "Semoga betah ya kak — butuh apa-apa tinggal ketik *.menu* 🤖",
+    "Kenalan sama bot? Ketik *.menu* buat lihat semua fitur ✨",
+    "Jangan sungkan kak, botnya suka diajak ngobrol — coba *.menu* 😉",
   ];
-  if (rulesText) {
-    rows.push("│", `│ • 📋 ${rulesText}`);
-  }
-
-  const engineText = raraGameBox({
-    title: "welcome", icon: "👋",
-    flavor: `👋 *${sapaan}*`,
-    body: rows.join("\n"),
-    cta: gameCTA("welcome"),
-  });
+  const engineText = raraWrap("Welcome", [
+    `👋 *${sapaan}*`,
+    ``,
+    `👤 *PROFIL MEMBER BARU*`,
+    DIV,
+    `▪ *Nama:* ${displayName}`,
+    `▪ *${isBridgeJid ? "Akun" : "Nomor"}:* @${handle}`,
+    `▪ *Negara:* ${country}`,
+    `▪ *Grup:* ${groupName}`,
+    `▪ *Total Member:* ${memberCount}`,
+    ...(rulesText ? [``, `📋 *DESKRIPSI GRUP*`, DIV, `▪ ${rulesText}`] : []),
+    ``,
+    `🎯 ${CTA_WELCOME[Math.floor(Math.random() * CTA_WELCOME.length)]}`,
+  ].join("\n"));
 
   // KARTU CANVAS DALAM PREVIEW (request owner 16 Sep 2026): kartu welcome
   // ("Selamat datang" + nama grup + foto circle + nama + member ke-X + total
