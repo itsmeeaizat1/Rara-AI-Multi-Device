@@ -447,6 +447,7 @@ async function startConnection(options = {}) {
       creds: state.creds,
       keys: makeCacheableSignalKeyStore(state.keys, logger),
     },
+    aiLabel: false, // FIX 8 Okt: matikan node biz_bot AI default (akar tombol pudar + thumbnail bisa disimpan)
     browser: ["Ubuntu", "Chrome", "20.0.0"],
     syncFullHistory: false,
     markOnlineOnConnect: false,
