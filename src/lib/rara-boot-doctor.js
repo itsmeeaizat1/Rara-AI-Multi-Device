@@ -313,56 +313,56 @@ const CATEGORY_META = {
 };
 
 export function buildBootReport(results, extraLines = []) {
+  // REVISI 9 Okt (owner: "tampilan chat bootdoctor dibikin markdown rapih,
+  // khas gaya chat promosi telegram yg dibuat AI") — laporan kini penuh
+  // markup: judul seksi *bold* + emoji, bullet ▪ per item, divider ━ pendek,
+  // label-value bold sebaris. Konten/label ASLI dipertahankan (Rest API:,
+  // Key apikeys.json:, Fitur kena dampak:, dsb) biar E2E & kebiasaan owner
+  // gak berubah — cuma tampilan. GOTCHA: WA hard-wrap garis panjang tanpa
+  // spasi → divider dibatasi pendek (14 kar), gak disamakan dgn lebar body.
   const byStatus = {};
   for (const r of results) (byStatus[r.status] ||= []).push(r);
 
+  const DIV = "━━━━━━━━━━━━━━";
   const lines = [];
-  // REVISI 20 Sep (owner): deskripsi polos di atas — jam pindah ke BAWAH
-  // dengan DETIK (HH.MM.SS), biar baris atas gak numpang lewat info lain.
-  lines.push("Cek kesehatan fitur pas bot nyala/restart");
-  lines.push("Total diperiksa: " + results.length + " (apikey + endpoint gratis)");
+  const problemCount = 0;
+
+  lines.push("🩺 *LAPORAN KESEHATAN FITUR*");
+  lines.push("Bot baru nyala — semua apikey + endpoint dicek sekali jalan");
+  lines.push("*Total diperiksa: " + results.length + "* (apikey + endpoint gratis)");
+  lines.push(DIV);
 
   const problems = Object.entries(CATEGORY_META).sort((a, b) => a[1].order - b[1].order);
-  let problemCount = 0;
-  const badKeys = []; // nama key apikeys.json yg key_invalid/quota — dikumpulin buat hint gabungan
+  let bad = 0;
+  const badKeys = []; // nama key apikeys.json yg key_invalid/quota — buat hint gabungan
   for (const [status, meta] of problems) {
     const items = byStatus[status] || [];
     if (!items.length) continue;
-    problemCount += items.length;
-    let firstItemInCat = true;
+    bad += items.length;
     lines.push("");
-    lines.push("");
-    lines.push(meta.icon + " " + meta.title + " (" + items.length + "):");
+    lines.push(meta.icon + " *" + meta.title + "* — *" + items.length + " DITEMUKAN*");
+    lines.push(DIV);
+    let first = true;
     for (const it of items) {
-      // FIX 19 Sep (owner: "g bsa bedain nama rest api dan mana nama fiturnya"):
-      // format LAMA "Cuki API — .gita .gpt4o — HTTP 401" nyampur jadi satu —
-      // gak keliatan mana nama SITUS rest api, mana nama FITUR. Sekarang tiap
-      // item pake baris berlabel eksplisit biar gak ketukar:
-      //   • Cuki API
-      //     Rest API: api.cuki.biz.id · key apikeys.json: cuki
-      //     Fitur kena dampak: .gita .gpt4o .nayaai — HTTP 401
-      // REVISI 20 Sep (owner: "ada yang gak dikasih baris baru jadinya bikin
-      // bingung"): tiap info SATU BARIS SENDIRI + jarak antar item biar gak
-      // nyempil — dulu "Rest API: x · key apikeys.json: y" nyatu satu baris.
-      if (!firstItemInCat) lines.push("");
-      firstItemInCat = false;
-      lines.push(it.label + ":");
+      if (!first) lines.push("");
+      first = false;
+      lines.push("▪ *" + it.label + "*");
       if (it.keyName) {
-        lines.push("Rest API: " + (it.host || "-"));
-        lines.push("Key apikeys.json: " + it.keyName);
+        lines.push("*Rest API: " + (it.host || "-") + "*");
+        lines.push("*Key apikeys.json: " + it.keyName + "*");
       } else if (it.host) {
-        lines.push("Rest API: " + it.host + " (tanpa key)");
+        lines.push("*Rest API: " + it.host + " (tanpa key)*");
       }
-      let dampak = "Fitur kena dampak: " + (it.features || "-");
+      let dampak = "*Fitur kena dampak: " + (it.features || "-");
       if (it.error) dampak += " — " + it.error;
       else if (it.httpStatus) dampak += " — HTTP " + it.httpStatus;
-      lines.push(dampak);
+      lines.push(dampak + "*");
       if (status === "ip_gate") {
         // key beneran valid — yang ditolak cuma IP bot. Whitelist di profile
         // dashboard REST API provider terkait.
-        lines.push("Key valid & dikenal — ketik .bootdoctor tidak perlu ganti key");
-        if (it.gateIp) lines.push("IP bot yang kena gerbang: " + it.gateIp);
-        lines.push("Solusi: whitelist IP bot di profile dashboard rest api (VIP) — fitur aktif otomatis setelahnya");
+        lines.push("*Key valid & dikenal — ketik .bootdoctor tidak perlu ganti key*");
+        if (it.gateIp) lines.push("*IP bot yang kena gerbang: " + it.gateIp + "*");
+        lines.push("*Solusi: whitelist IP bot di profile dashboard rest api (VIP) — fitur aktif otomatis setelahnya*");
       }
     }
     if (status === "key_invalid" || status === "quota") {
@@ -370,38 +370,41 @@ export function buildBootReport(results, extraLines = []) {
     }
   }
 
-  // hint GABUNGAN sekali (dulu per-kategori — key expired & quota kepisah,
-  // owner harus scan 2 tempat buat tau key mana aja yang diganti)
+  // hint GABUNAN sekali (dulu per-kategori — key expired & quota kepisah)
   if (badKeys.length) {
     lines.push("");
-    lines.push("💡 Key bermasalah di apikeys.json: " + badKeys.join(", ")
-      + " — ganti valuenya lalu ketik .reloadkey (tanpa restart)");
+    lines.push("💡 *Key bermasalah di apikeys.json: " + badKeys.join(", ") + "*");
+    lines.push("*Ganti valuenya lalu ketik .reloadkey — aktif tanpa restart*");
   }
 
   const okKeys = (byStatus.ok || []).filter(r => r.kind === "key").length;
   const okEps = (byStatus.ok || []).filter(r => r.kind === "endpoint").length;
   const nokey = (byStatus.nokey || []).length;
   lines.push("");
-  lines.push("✅ Sehat: " + okKeys + " apikey OK · " + okEps + " endpoint OK");
-  if (nokey) lines.push("ℹ Key kosong (fitur auto-skip/fallback): " + nokey);
-  lines.push("");
-  if (!problemCount) lines.push("Semua fitur sehat, gak ada yang perlu diganti 🎉");
-  lines.push("");
-  // jam + tanggal + DETIK paling bawah (contoh owner: "🕒 16.13:12, 20 Sep 2026")
-  const t = new Date().toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
-  const d = new Date().toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", year: "numeric" });
-  lines.push("🕒 " + t + ", " + d);
-  if (problemCount) lines.push("");
+  lines.push("✅ *Sehat: " + okKeys + " apikey OK · " + okEps + " endpoint OK*");
+  if (nokey) lines.push("ℹ *Key kosong (fitur auto-skip/fallback): " + nokey + "*");
+  if (!bad) {
+    lines.push("");
+    lines.push("*Semua fitur sehat, gak ada yang perlu diganti 🎉*");
+  }
+
   // seksi SALURAN WA (finalisasi 25 Sep — extraLines dari rara-saluran-hub;
   // muncul baik laporan sehat maupun ada masalah, SELALU sebelum penutup)
   if (Array.isArray(extraLines) && extraLines.length) {
     lines.push("");
-    lines.push("📡 SALURAN WA:");
+    lines.push("📡 *SALURAN WA*");
+    lines.push(DIV);
     for (const l of extraLines) lines.push(l);
   }
 
-  if (!problemCount) return raraWrap("Boot Doctor", lines);
-  lines.push("Ketik .bootdoctor buat cek ulang manual · .reloadkey setelah ganti key");
+  // jam + tanggal + DETIK paling bawah (contoh owner: "🕒 16.13:12, 20 Sep")
+  const t = new Date().toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+  const d = new Date().toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", year: "numeric" });
+  lines.push("");
+  lines.push("🕒 " + t + ", " + d);
+  if (bad) {
+    lines.push("*Ketik .bootdoctor buat cek ulang · .reloadkey setelah ganti key*");
+  }
 
   return raraWrap("Boot Doctor", lines);
 }
