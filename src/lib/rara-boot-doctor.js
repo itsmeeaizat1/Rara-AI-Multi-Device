@@ -494,12 +494,36 @@ export async function runAndReport({ send = true } = {}) {
   return { results, report, sent: willSend };
 }
 
-export function initBootDoctor(sock) {
+// FIX 9 Okt 2026 (owner: "bootdoctor gak usah cek berkali-kali — bisa
+// menghabiskan limit fitur; cukup sekali saat pairing pertama, sisanya
+// manual"): auto-probe di boot kini SEKALI SAJA. autoBootDone dicatet
+// setelah run pertama → boot/restart berikutnya SKIP TOTAL (probe gak
+// jalan = kuota 22 apikey fitur aman). Pairing ulang (creds belum
+// registered saat boot = firstPairing) selalu dianggap pairing pertama
+// → jalan sekali lagi. Manual .bootdoctor kapan pun tetap bebas.
+export function shouldAutoBootCheck(st, firstPairing) {
+  if (st && st.enabled === false) return false; // .bootdoctor off = gak probe sama sekali
+  if (st && st.autoBootDone && !firstPairing) return false; // udah pernah → skip
+  return true; // pairing pertama / belum pernah jalan
+}
+
+export function initBootDoctor(sock, { firstPairing = false } = {}) {
   sockInstance = sock;
+  const st = loadState();
+  if (!shouldAutoBootCheck(st, firstPairing)) {
+    console.log("[bootdoctor] auto-cek boot dilewati — " +
+      (st.enabled === false
+        ? "dimatikan via .bootdoctor off"
+        : "udah jalan pas pairing pertama (hemat limit fitur; cek manual: .bootdoctor)"));
+    return;
+  }
   setTimeout(async () => {
     try {
       await runAndReport();
-      console.log("[bootdoctor] cek kesehatan fitur selesai (laporan ke DM owner kalau ada perubahan)");
+      const s2 = loadState();
+      s2.autoBootDone = true; // tandai → boot/restart berikutnya gak probe lagi
+      saveState(s2);
+      console.log("[bootdoctor] cek kesehatan fitur selesai — auto-cek boot cuma sekali, selanjutnya manual .bootdoctor");
     } catch (e) {
       console.error("[bootdoctor] gagal:", e.message);
     }
@@ -510,6 +534,7 @@ export function getBootDoctorStatus() {
   const st = loadState();
   return {
     enabled: st.enabled !== false,
+    autoBootDone: !!st.autoBootDone,
     lastRun: st.lastRun,
     lastSent: st.lastSent,
     lastSummary: st.lastSummary,

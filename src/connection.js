@@ -778,7 +778,9 @@ connectionState.sock = sock;
       // 🔹 BOOT DOCTOR: cek apikey expired + endpoint down semua fitur → DM owner
       try {
         const { initBootDoctor } = await import("./lib/rara-boot-doctor.js");
-        initBootDoctor(sock);
+        // firstPairing: creds belum registered saat socket dibuat = pairing
+        // pertama → auto-cek boot jalan sekali; boot/restart biasa skip (hemat limit fitur)
+        initBootDoctor(sock, { firstPairing: !alreadyRegistered });
       } catch (e) {
         console.error("[bootdoctor] Failed to start boot doctor:", e.message);
       }

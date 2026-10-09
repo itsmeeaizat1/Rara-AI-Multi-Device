@@ -176,7 +176,7 @@ t("alias .doctor .healthcheck ada", plug.config.alias.includes("doctor") && plug
 
 w("\n— 7. hook terpasang di connection.js —");
 const connSrc = fs.readFileSync(path.join(REPO, "src/connection.js"), "utf8");
-t("connection.js manggil initBootDoctor pas open", connSrc.includes("rara-boot-doctor.js") && connSrc.includes("initBootDoctor(sock)"), "hook gak ketemu");
+t("connection.js manggil initBootDoctor pas open + flag firstPairing", connSrc.includes("rara-boot-doctor.js") && connSrc.includes("initBootDoctor(sock, { firstPairing: !alreadyRegistered })"), "hook gak ketemu");
 
 w("\n— 8. seksi SALURAN WA (finalisasi 25 Sep) —");
 // 8a: backward compat — buildBootReport TANPA extraLines → gak ada seksi saluran
@@ -210,6 +210,27 @@ t("8e. auto-react ON kebaca", R2.includes("auto-react") && /on/.test(R2.slice(R2
 t("8f. auto-reply 1 rule kebaca", R2.includes("auto-reply") && R2.includes("1 rule"), R2.slice(-240));
 t("8g. autobroadcast 1/15 event ON kebaca (serverCreated = event ke-15)", R2.includes("autobroadcast") && /1\/1[0-9]/.test(R2), R2.slice(-240));
 t("8h. seksi saluran gak ganggu klasifikasi utama (endpoint down tetep ada)", R2.includes("endpoint down"), R2.slice(0, 160));
+
+
+// ── 9. SEKALI SAJA PAS PAIRING PERTAMA (fix 9 Okt: hemat limit fitur) ──
+w("\n— 9. auto-cek boot sekali saja (pairing pertama) —");
+const sab = mod.shouldAutoBootCheck;
+t("9a. shouldAutoBootCheck terekspor", typeof sab === "function");
+if (typeof sab === "function") {
+  t("9b. state kosong (fresh install) → jalan", sab({}, false) === true);
+  t("9c. udah autoBootDone + boot biasa → SKIP (hemat kuota)", sab({ autoBootDone: true }, false) === false, "harus false");
+  t("9d. udah autoBootDone TAPI pairing pertama (re-pair) → jalan sekali lagi", sab({ autoBootDone: true }, true) === true);
+  t("9e. enabled false (bootdoctor off) → SKIP total walau pairing pertama", sab({ enabled: false }, true) === false && sab({ enabled: false }, false) === false);
+  t("9f. enabled true + belum pernah → jalan", sab({ enabled: true, autoBootDone: false }, false) === true);
+}
+const libSrc = fs.readFileSync(path.join(REPO, "src/lib/rara-boot-doctor.js"), "utf8");
+t("9g. initBootDoctor pakai guard shouldAutoBootCheck SEBELUM setTimeout probe", /if \(!shouldAutoBootCheck\(st, firstPairing\)\)/.test(libSrc), "guard gak ketemu");
+t("9h. setelah auto run pertama, autoBootDone dicatet ke state", /autoBootDone = true/.test(libSrc), "persist flag gak ketemu");
+t("9i. connection.js deteksi pairing pertama dari creds.registered", connSrc.includes("state.creds.registered === true") && connSrc.includes("firstPairing: !alreadyRegistered"), "deteksi pairing gak ketemu");
+const plugSrc = fs.readFileSync(path.join(REPO, "plugins/bot/bootdoctor.js"), "utf8");
+t("9j. kartu status nunjukin mode sekali-pairing", plugSrc.includes("Mode: sekali saat pairing pertama"), "baris mode gak ketemu");
+t("9k. pesan .bootdoctor off gak lagi bilang 'cek tetap jalan pas boot'", !plugSrc.includes("Cek tetap jalan pas boot"), "pesan lama masih ada");
+t("9l. getBootDoctorStatus expose autoBootDone", "autoBootDone" in mod.getBootDoctorStatus());
 
 fs.rmSync(tmpState, { force: true });
 w("\n═══════ BOOT DOCTOR E2E: " + pass + " pass · " + fail + " fail ═══════\n");

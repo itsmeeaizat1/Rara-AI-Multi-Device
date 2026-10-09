@@ -41,7 +41,11 @@ async function handler(m, { config: botConfig }) {
     if (sub === "status") {
       const st = getBootDoctorStatus();
       const lines = [];
-      lines.push("Laporan otomatis pas bot nyala/restart: " + (st.enabled ? "AKTIF" : "MATI"));
+      lines.push("Auto-cek kesehatan pas boot: " + (st.enabled ? "AKTIF" : "MATI"));
+      lines.push("Mode: sekali saat pairing pertama, sisanya manual " + prefix + "bootdoctor");
+      if (st.autoBootDone) {
+        lines.push("✔ Cek pertama udah jalan — boot/restart berikutnya dilewati (limit fitur aman)");
+      }
       if (st.lastRun) {
         lines.push("");
         lines.push("🕒 Cek terakhir: " + new Date(st.lastRun).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" }) + " WIB");
@@ -64,9 +68,11 @@ async function handler(m, { config: botConfig }) {
       const on = sub === "on" || sub === "aktif";
       const now = setBootDoctorEnabled(on);
       return m.reply(raraWrap("Boot Doctor", [
-        (on ? "✅" : "❌") + " Laporan otomatis pas boot: " + (now ? "AKTIF" : "MATI"),
+        (on ? "✅" : "❌") + " Auto-cek kesehatan pas boot: " + (now ? "AKTIF" : "MATI"),
         "",
-        on ? "Tiap bot nyala/restart, hasil cek kesehatan fitur otomatis ke DM kamu" : "Cek tetap jalan pas boot, cuma DM-nya dimatiin",
+        on
+          ? "Jalan sekali saat pairing pertama (hasil ke DM kamu), boot/restart berikutnya dilewati biar limit fitur gak keburu"
+          : "Probe kesehatan gak jalan sama sekali pas boot — limit fitur aman. Cek manual kapan aja: " + prefix + "bootdoctor",
       ]));
     }
 
