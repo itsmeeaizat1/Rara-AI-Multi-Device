@@ -17,6 +17,7 @@ import { raraWrap, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style
 import { tiktokCaption } from "../../src/lib/rara-tiktok-format.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
 import { mediaResultCard, probeMedia, probeBuffer } from "../../src/lib/rara-media-result.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 
 // Caption builder LOKAL (bukan shared lib - owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -70,7 +71,7 @@ async function fetchIgMedias(url) {
   let result = null;
   try {
     const response = await axios.get("https://api.ikyyxd.my.id/download/instagram", {
-      params: { apikey: "kyzz", query: url },
+      params: { apikey: getApiKey("kyzz"), query: url },
       timeout: 60000,
     });
     const r = response.data?.result;

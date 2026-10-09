@@ -25,6 +25,7 @@ import { haidarDouyin, sylvaticaDouyin } from "../../src/lib/rara-douyin-dl.js";
 import axios from "axios";
 import { raraWrap, raraLine, raraError, raraEmpty, raraGuide, raraNoInput, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
+import { getApiKey } from "../../src/lib/rara-api-keys.js";
 // kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
 async function dlCard(type, probe, request) {
   try {
@@ -250,7 +251,7 @@ async function handler(m, { sock }) {
     console.log("[douyin] SnapTik gagal:", snap?.message, "→ fallback IkyyXD...");
 
     // Step 1: Try IkyyXD (douyin endpoint → all-in-one fallback)
-    const result = await ikyyDownload(text, "douyin", { apikey: "kyzz" });
+    const result = await ikyyDownload(text, "douyin", { apikey: getApiKey("kyzz") });
 
     if (result?.medias?.length) {
       const video = result.medias.find(m => m.type === "video") || result.medias[0];

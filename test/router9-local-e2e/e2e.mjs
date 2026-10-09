@@ -347,11 +347,11 @@ section("7. isolasi dari 9routerv2 (cloud milik orang)");
 {
   const engSrc = fs.readFileSync(path.join(R, "src/lib/rara-9router-local.js"), "utf8");
   const plugSrc = fs.readFileSync(path.join(R, "plugins/ai/9router.js"), "utf8");
-  const cfgSrc = fs.readFileSync(path.join(R, "src/lib/apikey/9routerapikey.json"), "utf8");
+  const cfgSrc = JSON.stringify(JSON.parse(fs.readFileSync(path.join(R, "src/lib/apikey/apikeys.json"), "utf8")).router || {});
   const banned = /router9v2|ai9v2|cloudku|getTioBase|getTioEndpoint|env-loader|tio_|TIO_API|ROUTER_API_URL|ROUTER_API_KEY/;
   t("7a. engine lokal: gak ada referensi v2/cloudku/tio/env ROUTER_API", !banned.test(engSrc.replace(/^\s*\/\/.*$/gm, "")), (engSrc.match(banned) || ["?"])[0]);
   t("7b. plugin .9router: gak ada referensi v2/cloudku/tio", !banned.test(plugSrc), (plugSrc.match(banned) || ["?"])[0]);
-  t("7c. konfigurasi 9routerapikey.json: gak ada endpoint v2", !banned.test(cfgSrc), (cfgSrc.match(banned) || ["?"])[0]);
+  t("7c. konfigurasi router (apikeys.json): gak ada endpoint v2", !banned.test(cfgSrc), (cfgSrc.match(banned) || ["?"])[0]);
   t("7d. engine: default endpoint hardcoded 127.0.0.1 (lokal doang)", engSrc.includes("127.0.0.1") && /ROUTER9_URL \|\| `http:\/\/127\.0\.0\.1/.test(engSrc));
   t("7e. engine: cuma baca env ROUTER9_* (bukan ROUTER_API_*/TIO_*)", !/env\.(?!ROUTER9_)[A-Z_]+\b/.test([...engSrc.matchAll(/process\.env\.([A-Z0-9_]+)/g)].map((m) => "env." + m[1]).join("\n").replace(/env\.ROUTER9_[A-Z0-9_]*/g, "env.ROUTER9_X")));
   // bukti runtime: jalur lokal gak kepengaruh env v2 sama sekali

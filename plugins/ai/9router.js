@@ -4,7 +4,7 @@
 // Seakan-akan bot sudah menginstal & menjalankan 9router BENERAN di Node.js:
 // engine src/lib/rara-9router-local.js spawn `9router` bareng bot
 // (127.0.0.1:20128), gateway key di-auto-provision, key provider berbayar
-// di-sync dari src/lib/apikey/9routerapikey.json. Chat 100% lewat 9router
+// di-sync dari src/lib/apikey/apikeys.json (section "router"). Chat 100% lewat 9router
 // lokal — TANPA fallback ke AI API lain (nexai/ikyy/zhipu/groq/dll).
 //
 // Command (semua berawalan titik):
@@ -13,7 +13,7 @@
 //   .9router model [keyword]              → daftar model live (747 model)
 //   .9router setmodel <id>                → ganti model default chat ini
 //   .9router status                       → kondisi 9router lokal
-//   .9router sync                         → (owner) sync key dari 9routerapikey.json
+//   .9router sync                         → (owner) sync key dari apikeys.json (section "router")
 //   .9router start                        → (owner) paksa nyalain 9router
 //
 // + VISION NATIVE: kirim/reply foto + caption → model vision live (glm-4.6v
@@ -160,7 +160,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       `Model akhir  : ${st.lastModel || "-"}`,
       st.lastError ? `Error akhir : ${String(st.lastError).slice(0, 100)}` : null,
       "---",
-      `Key provider : src/lib/apikey/9routerapikey.json`,
+      `Key provider : src/lib/apikey/apikeys.json (section "router")`,
       `Sync ulang   : .9router sync (owner)`,
       `Model aktif  : ${getModelPref(m.chat)}`,
     ].filter(Boolean);
@@ -239,7 +239,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
     }
   }
 
-  // ── .9router sync (owner) — kirim key provider dari 9routerapikey.json ──
+  // ── .9router sync (owner) — kirim key provider dari apikeys.json (section "router") ──
   // ── .9router otak — OTAK AI AGENT (aisuperagent/anovaagent/raraagent) ──
   // 3 Okt 2026 (owner: "ganti dari qwen min1ai, migrasi ke 9router lokal"):
   // agent kini memakai 9router lokal dulu, rantai lama sebagai cadangan.
@@ -323,7 +323,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
         `Sudah ada (skip) : ${r.skipped}`,
       ];
       if (r.errors?.length) lines.push("---", "Gagal:", ...r.errors.map((x) => "• " + x));
-      lines.push("---", `Sumber: src/lib/apikey/9routerapikey.json`, `Status: .9router status`);
+      lines.push("---", `Sumber: src/lib/apikey/apikeys.json (section "router")`, `Status: .9router status`);
       return m.reply(raraBox("9Router — Sync Key Provider", lines));
     } catch (e) {
       await m.react("❌");

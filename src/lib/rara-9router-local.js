@@ -50,8 +50,12 @@ export function getRouter9Port() {
 export function getRouter9Base() {
   return (process.env.ROUTER9_URL || `http://127.0.0.1:${getRouter9Port()}`).replace(/\/+$/, "");
 }
+// PUSATISASI 10 Okt 2026 (request owner: semua key satu jalur): config 9router
+// dilebur ke src/lib/apikey/apikeys.json → section "router". File dedicated
+// 9routerapikey.json DIHAPUS. ROUTER9_CONFIG = override file dedicated
+// (schema lama {gateway, providers}) — dipertahankan buat seam test & env VPS.
 function getRouter9ConfigPath() {
-  return process.env.ROUTER9_CONFIG || path.join(ROUTER9_REPO_ROOT, "src", "lib", "apikey", "9routerapikey.json");
+  return process.env.ROUTER9_CONFIG || path.join(ROUTER9_REPO_ROOT, "src", "lib", "apikey", "apikeys.json");
 }
 function getRouter9DataDir() {
   return process.env.ROUTER9_DATA_DIR || path.join(os.homedir(), ".9router");
@@ -368,16 +372,33 @@ export async function killStalePort9Router({ port = getRouter9Port() } = {}) {
 
 // ── konfigurasi apikey (src/lib/apikey/9routerapikey.json) ──
 function readRouter9Config() {
+  const DEFAULT_CFG = { gateway: { apikey: "" }, providers: [] };
   try {
-    return JSON.parse(fs.readFileSync(getRouter9ConfigPath(), "utf8"));
+    if (process.env.ROUTER9_CONFIG) {
+      // override dedicated: schema lama {gateway, providers} polos
+      return JSON.parse(fs.readFileSync(process.env.ROUTER9_CONFIG, "utf8")) || DEFAULT_CFG;
+    }
+    // default: section "router" di apikeys.json (satu jalur pusat)
+    const raw = JSON.parse(fs.readFileSync(getRouter9ConfigPath(), "utf8"));
+    return raw?.router || DEFAULT_CFG;
   } catch {
-    return { gateway: { apikey: "" }, providers: [] };
+    return DEFAULT_CFG;
   }
 }
 function writeRouter9Config(cfg) {
+  if (process.env.ROUTER9_CONFIG) {
+    fs.mkdirSync(path.dirname(process.env.ROUTER9_CONFIG), { recursive: true });
+    fs.writeFileSync(process.env.ROUTER9_CONFIG, JSON.stringify(cfg, null, 2) + "\n");
+    return;
+  }
+  // default: tulis HANYA section router — section key lain di apikeys.json
+  // (aiSatuan/fitur/scraper/dll) gak boleh tersentuh sama sekali
   const p = getRouter9ConfigPath();
   fs.mkdirSync(path.dirname(p), { recursive: true });
-  fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\n");
+  let raw = {};
+  try { raw = JSON.parse(fs.readFileSync(p, "utf8")); } catch {}
+  raw.router = cfg;
+  fs.writeFileSync(p, JSON.stringify(raw, null, 2) + "\n");
 }
 
 // Gateway key: otomatis dibikin kalau belum ada — user gak perlu buka dashboard
