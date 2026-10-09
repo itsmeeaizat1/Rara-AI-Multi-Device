@@ -40,26 +40,31 @@ async function handler(m, { config: botConfig }) {
     // ── status ──
     if (sub === "status") {
       const st = getBootDoctorStatus();
+      // REVISI 9 Okt (owner): kartu handler ikut gaya promosi AI — label bold,
+      // bullet ▪, seksi berjudul + divider (nyambung sama laporan buildBootReport)
+      const fmtTgl = (ts) => new Date(ts).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" }) + " WIB";
       const lines = [];
-      lines.push("Auto-cek kesehatan pas boot: " + (st.enabled ? "AKTIF" : "MATI"));
-      lines.push("Mode: sekali saat pairing pertama, sisanya manual " + prefix + "bootdoctor");
+      lines.push("🩺 *STATUS*");
+      lines.push("━━━━━━━━━━━━━━");
+      lines.push("▪ *Auto-cek pas boot:* " + (st.enabled ? "✅ AKTIF" : "❌ MATI"));
+      lines.push("▪ *Mode:* sekali saat pairing pertama, sisanya manual " + prefix + "bootdoctor");
       if (st.autoBootDone) {
-        lines.push("✔ Cek pertama udah jalan — boot/restart berikutnya dilewati (limit fitur aman)");
-      }
-      if (st.lastRun) {
-        lines.push("");
-        lines.push("🕒 Cek terakhir: " + new Date(st.lastRun).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" }) + " WIB");
-        lines.push("📋 Hasil: " + (st.lastSummary || "belum ada data"));
-      } else {
-        lines.push("");
-        lines.push("Belum pernah jalan pas sesi ini");
-      }
-      if (st.lastSent) {
-        lines.push("");
-        lines.push("📤 DM terakhir terkirim: " + new Date(st.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" }) + " WIB");
+        lines.push("▪ *Cek pertama:* ✔ udah jalan — boot berikutnya dilewati (limit fitur aman)");
       }
       lines.push("");
-      lines.push("💡 Ketik " + prefix + "bootdoctor buat cek ulang sekarang");
+      lines.push("📊 *RIWAYAT*");
+      lines.push("━━━━━━━━━━━━━━");
+      if (st.lastRun) {
+        lines.push("▪ *Cek terakhir:* 🕒 " + fmtTgl(st.lastRun));
+        lines.push("▪ *Hasil:* " + (st.lastSummary || "belum ada data"));
+      } else {
+        lines.push("Belum ada riwayat — cek pertama belum jalan");
+      }
+      if (st.lastSent) {
+        lines.push("▪ *DM terakhir:* 📤 " + fmtTgl(st.lastSent));
+      }
+      lines.push("");
+      lines.push("💡 Ketik *" + prefix + "bootdoctor* buat cek ulang sekarang");
       return m.reply(raraWrap("Boot Doctor", lines));
     }
 
@@ -68,11 +73,11 @@ async function handler(m, { config: botConfig }) {
       const on = sub === "on" || sub === "aktif";
       const now = setBootDoctorEnabled(on);
       return m.reply(raraWrap("Boot Doctor", [
-        (on ? "✅" : "❌") + " Auto-cek kesehatan pas boot: " + (now ? "AKTIF" : "MATI"),
+        (on ? "✅" : "❌") + " *AUTO-CEK PAS BOOT: " + (now ? "AKTIF" : "MATI") + "*",
         "",
         on
-          ? "Jalan sekali saat pairing pertama (hasil ke DM kamu), boot/restart berikutnya dilewati biar limit fitur gak keburu"
-          : "Probe kesehatan gak jalan sama sekali pas boot — limit fitur aman. Cek manual kapan aja: " + prefix + "bootdoctor",
+          ? "*Jalan sekali saat pairing pertama* — hasil cek ke DM kamu, boot/restart berikutnya dilewati biar limit fitur gak keburu"
+          : "*Probe kesehatan gak jalan sama sekali pas boot* — limit fitur aman. Cek manual kapan aja: *" + prefix + "bootdoctor*",
       ]));
     }
 
@@ -84,11 +89,15 @@ async function handler(m, { config: botConfig }) {
     const bad = results.filter(r => r.status !== "ok" && r.status !== "nokey").length;
     if (!bad) return;
     return m.reply(raraWrap("Boot Doctor", [
-      "Ada " + bad + " fitur bermasalah — ganti key di src/lib/apikey/apikeys.json lalu ketik " + prefix + "reloadkey",
+      "❗ *" + bad + " FITUR BERMASALAH*",
+      "Ganti key di src/lib/apikey/apikeys.json lalu ketik *" + prefix + "reloadkey*",
     ]));
   } catch (e) {
     console.error("[bootdoctor] Error:", e.message);
-    return m.reply(raraWrap("Boot Doctor", ["❌ Gagal cek fitur: " + (e.message || e)]));
+    return m.reply(raraWrap("Boot Doctor", [
+      "❌ *GAGAL CEK FITUR*",
+      String(e.message || e),
+    ]));
   }
 }
 

@@ -229,9 +229,11 @@ t("9g. initBootDoctor pakai guard shouldAutoBootCheck SEBELUM setTimeout probe",
 t("9h. setelah auto run pertama, autoBootDone dicatet ke state", /autoBootDone = true/.test(libSrc), "persist flag gak ketemu");
 t("9i. connection.js deteksi pairing pertama dari creds.registered", connSrc.includes("state.creds.registered === true") && connSrc.includes("firstPairing: !alreadyRegistered"), "deteksi pairing gak ketemu");
 const plugSrc = fs.readFileSync(path.join(REPO, "plugins/bot/bootdoctor.js"), "utf8");
-t("9j. kartu status nunjukin mode sekali-pairing", plugSrc.includes("Mode: sekali saat pairing pertama"), "baris mode gak ketemu");
+t("9j. kartu status nunjukin mode sekali-pairing (label bold gaya promo)", plugSrc.includes("*Mode:* sekali saat pairing pertama"), "baris mode gak ketemu");
 t("9k. pesan .bootdoctor off gak lagi bilang 'cek tetap jalan pas boot'", !plugSrc.includes("Cek tetap jalan pas boot"), "pesan lama masih ada");
 t("9l. getBootDoctorStatus expose autoBootDone", "autoBootDone" in mod.getBootDoctorStatus());
+t("9m. kartu status gaya promo: seksi *STATUS* + bullet ▪ + divider", plugSrc.includes("🩺 *STATUS*") && plugSrc.includes("▪ *Auto-cek pas boot:*") && plugSrc.includes("📊 *RIWAYAT*"), "struktur promo gak ketemu");
+t("9n. semua kartu handler bebas '— ' dobel-dash nyambung di judul seksi", !/"\*[A-Z ]+ — \*"/.test(plugSrc));
 
 fs.rmSync(tmpState, { force: true });
 w("\n═══════ BOOT DOCTOR E2E: " + pass + " pass · " + fail + " fail ═══════\n");
