@@ -6,12 +6,11 @@ import {
   getAutoTargetConfig, setAutoTargetConfig, clearAutoTargetConfig,
   describeAutoTarget, listBotGroups, parseGroupPicks, toWaJid
 } from '../../src/lib/rara-auto-target.js'
-import { raraError, raraEmpty, raraGuide, raraNoInput } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { pluginStore } from '../../src/lib/rara-plugins.js'
 import {
   NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled, isNotifyEnabled
 } from '../../src/lib/rara-saluran-broadcast.js'
-import { toSC, raraWrap, bracketBox, tipText, separator, raraCaption } from '../../src/lib/rara-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 
@@ -482,12 +481,14 @@ function featureScopeInfo(name) {
   if (Object.keys(NOTIFY_EVENTS).some((k) => k.toLowerCase() === a)) return FEATURE_SCOPES.saluran
   return null
 }
-const scopeLine = (scope) => scope ? `${scope.icon} Berlaku: ${scope.label} — ${scope.desc}` : null
+const scopeLine = (scope) => scope ? `${scope.icon} *Berlaku:* ${scope.label} — ${scope.desc}` : null
 
-// ── Format status baru (request owner 10 Sep 2026): nama fitur smallcaps +
-// status ON/OFF smallcaps di AKHIR baris, contoh "bencanawatch on" ──
-const scStatus = (on) => toSC(on ? "on" : "off")
-const scLine = (name, enabled) => `${toSC(name)} ${scStatus(enabled)}`
+// ── Format promosi (request owner 9 Okt 2026): seksi bold + emoji, divider
+// pendek, bullet ▪ label-value bold — gak pake smallcaps lagi ──
+const DIV = '━━━━━━━━━━━━━━'
+const secTitle = (emoji, title, count) => `${emoji} *${title.toUpperCase()}${count != null ? ` (${count})` : ''}*`
+const stOn = (on) => (on ? '✅ ON' : '❌ OFF')
+const scLine = (name, enabled) => `▪ *${name}:* ${stOn(enabled)}`
 
 // ═══════════════════════════════════════════════════════════
 // PARSER INTENT & MODE
@@ -564,15 +565,21 @@ async function handleChannel(m, { sock, config: cfg, direct }) {
   if (!subCmd || subCmd === 'status' || subCmd === 'cek') {
     const statuses = getAllNotifyStatus()
     let onCount = 0, offCount = 0
-    let text = raraWrap("Switch Channel", `Channel: *${cfg?.saluran?.name || "Belum diset nih"}*
-Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\nSTATUS TOGGLE:\n\n"
+    let text = raraWrap("Switch Channel", [
+      `📢 *CHANNEL:* ${cfg?.saluran?.name || "Belum diset nih"}`,
+      DIV,
+      secTitle("🔔", "EVENT NOTIFIKASI", Object.keys(NOTIFY_EVENTS).length),
+      DIV,
+    ].join("\n"))
 
-    for (const [key, info] of Object.entries(statuses)) {
-      text += `${scLine(info.label, info.enabled)}\n`
-      text += `\`${prefix}switch channel ${key} ${info.enabled ? "off" : "on"}\`\n\n`
+    for (const [, info] of Object.entries(statuses)) {
+      text += `\n${scLine(info.label, info.enabled)}`
       if (info.enabled) onCount++; else offCount++
     }
-    text += "\n" + tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" + tipText(`Terpusat: \`${prefix}switch channel <event> on|off\` | semua: \`${prefix}switch channel all on/off\``)
+    text += "\n\n" + secTitle("📊", "RINGKASAN") + "\n" + DIV
+    text += `\n▪ *Aktif:* ${onCount} | *Mati:* ${offCount} | *Total:* ${onCount + offCount}`
+    text += `\n▪ *Atur 1 event:* \`${prefix}switch channel <event> on|off\``
+    text += `\n▪ *Semua:* \`${prefix}switch channel all on/off\``
     return m.reply(text)
   }
 
@@ -583,8 +590,13 @@ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\nSTATUS TOGGLE:\n\n"
     const enabled = action === 'on'
     let count = 0
     for (const key of Object.keys(NOTIFY_EVENTS)) { setNotifyEnabled(key, enabled); count++ }
-    return m.reply(raraWrap("Switch Channel", "🔔") + "\n\n" + raraWrap("SEMUA EVENT", `Status: *${enabled ? "ALL ON" : "ALL OFF"}*
-Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch channel\``))
+    return m.reply(raraWrap("Switch Channel", [
+        `🔔 *SEMUA EVENT: ${enabled ? "ALL ON" : "ALL OFF"}*`,
+        DIV,
+        `▪ *Total event:* ${count}`,
+        ``,
+        `*Cek status:* \`${prefix}switch channel\``,
+      ].join("\n")))
   }
 
   if (NOTIFY_EVENTS[subCmd]) {
@@ -595,29 +607,34 @@ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch chan
     const newVal = verb === 'on' ? true : verb === 'off' ? false : !current
     if (newVal === current && (verb === 'on' || verb === 'off'))
       return m.reply(raraWrap("Switch Channel", [
-        `Event: *${NOTIFY_EVENTS[subCmd]}*`,
-        `Sudah *${newVal ? "ON" : "OFF"}* — gak ada perubahan`,
-        ``,
-        scopeLine(FEATURE_SCOPES.saluran),
+        `🔔 *EVENT: ${NOTIFY_EVENTS[subCmd]}*`,
+        DIV,
+        `▪ *Status:* ${stOn(newVal)} — sudah dari sebelumnya`,
+        `▪ ${scopeLine(FEATURE_SCOPES.saluran)}`,
       ].join("\n")))
     setNotifyEnabled(subCmd, newVal)
     return m.reply(raraWrap("Switch Channel", [
-      `Event: *${NOTIFY_EVENTS[subCmd]}*`,
-      `Status: *${newVal ? "ON" : "OFF"}*`,
+      `🔔 *EVENT: ${NOTIFY_EVENTS[subCmd]}*`,
+      DIV,
+      `▪ *Status:* ${stOn(newVal)}`,
+      `▪ ${scopeLine(FEATURE_SCOPES.saluran)}`,
       ``,
-      scopeLine(FEATURE_SCOPES.saluran),
-    ].join("\n")) + "\n\n" + tipText(newVal ? "Notifikasi akan dikirim ke channel" : "Notifikasi dimatikan") + "\n" + tipText(`Cek semua: \`${prefix}switch channel\``))
+      newVal ? `*Notifikasi akan dikirim ke channel*` : `*Notifikasi dimatikan*`,
+      ``,
+      `*Cek semua:* \`${prefix}switch channel\``,
+    ].join("\n")))
   }
 
   let list = ""
   for (const [key, label] of Object.entries(NOTIFY_EVENTS)) list += `\`${key}\` — ${label}\n`
   return m.reply(raraWrap("Switch Channel", [
-    `Event *${subCmd}* tidak ada dalam daftar toggle.`,
+    `❗ *EVENT ${subCmd.toUpperCase()} TIDAK ADA*`,
     ``,
-    { subHeader: "Event Tersedia" },
-    ...list.trim().split("\n"),
+    secTitle("📋", "EVENT TERSEDIA"),
+    DIV,
+    ...list.trim().split("\n").map((l) => `▪ ${l}`),
     ``,
-    tipText(`Contoh: \`${prefix}switch channel sewaRegister\``),
+    `*Contoh:* \`${prefix}switch channel sewaRegister\``,
   ], "error"))
 }
 
@@ -633,17 +650,19 @@ async function sendGroupTargetPicker(m, sock, prefix, feature, featureName, forc
     .sort((a, b) => a.subject.localeCompare(b.subject))
 
   const text = raraWrap("Switch Group", [
-    `Fitur : ${feature.label}`,
-    `Mode : target terpusat`,
-    ``,
+    `📍 *FITUR:* ${feature.label}`,
+    DIV,
+    `▪ *Mode:* target terpusat`,
     list.length
-      ? `Total grup terdeteksi : ${list.length}`
-      : `Bot belum berada di grup mana pun.`,
+      ? `▪ *Grup terdeteksi:* ${list.length}`
+      : `▪ Bot belum berada di grup mana pun.`,
     ``,
-    `Aktif semua: \`${prefix}switch group ${featureName} ${forceOff ? "off" : "on"} all\``,
-    `Aktif manual: \`${prefix}switch group ${featureName} ${forceOff ? "off" : "on"} <jid-grup>\``,
+    secTitle("🎯", "CARA AKTIFKAN"),
+    DIV,
+    `▪ *Semua:* \`${prefix}switch group ${featureName} ${forceOff ? "off" : "on"} all\``,
+    `▪ *Manual:* \`${prefix}switch group ${featureName} ${forceOff ? "off" : "on"} <jid-grup>\``,
     ``,
-    `📍 Fitur ini hanya berlaku di grup — pilih grup target di atas`,
+    `📍 Fitur ini hanya berlaku di grup — pilih grup target lewat tombol bawah`,
   ].join("\n"))
 
   if (!list.length) return m.reply(text)
@@ -709,18 +728,20 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     const groupData = db.getGroup(m.chat) || {}
     let txt = ""
     for (const [cat, features] of Object.entries(GROUP_CATEGORIES)) {
-      txt += `*${toSC(cat)}*\n`
+      txt += secTitle("🏠", cat, features.length) + "\n" + DIV + "\n"
       for (const feat of features) {
         const f = GROUP_FEATURES[feat]
         if (!f) continue
         const current = groupData[f.dbKey]
         const active = isOn(current, f.on)
-        txt += `${scLine(feat, active)}\n`
+        txt += `${scLine(f.label, active)}\n`
       }
       txt += `\n`
     }
-    txt += tipText(`ON: \`${prefix}switch group <fitur>\` | OFF: \`${prefix}switch group <fitur> off\``)
-    txt += "\n" + tipText(`Target: \`${prefix}switch group <fitur> on <jid-grup>|all|list\` | SEMUA fitur: \`${prefix}switch group all on <target>\``)
+    txt += secTitle("🎯", "PERINTAH") + "\n" + DIV
+    txt += `\n▪ *ON:* \`${prefix}switch group <fitur>\` | *OFF:* \`${prefix}switch group <fitur> off\``
+    txt += `\n▪ *Target:* \`${prefix}switch group <fitur> on <jid-grup>|all|list\``
+    txt += `\n▪ *SEMUA fitur:* \`${prefix}switch group all on <target>\``
     return m.reply(txt.trim())
   }
 
@@ -743,18 +764,17 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
       const list = Object.values(groups)
       if (!list.length)
         return m.reply(raraWrap("Switch Group", [
-          `Fitur : SEMUA fitur grup`,
-          `Target : semua grup`,
-          ``,
-          `Bot belum berada di grup mana pun.`,
+          `🏠 *SEMUA FITUR GRUP*`,
+          DIV,
+          `▪ *Target:* semua grup`,
+          `▪ Bot belum berada di grup mana pun.`,
         ].join("\n")))
       for (const g of list) applyBulk(g.id)
       return m.reply(raraWrap("Switch Group", [
-        `Fitur : SEMUA fitur grup (${Object.keys(GROUP_FEATURES).length})`,
-        `Target : semua grup`,
-        `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
-        ``,
-        `Total grup: *${list.length}*`,
+        `🏠 *SEMUA FITUR GRUP (${Object.keys(GROUP_FEATURES).length})*`,
+        DIV,
+        `▪ *Status:* ${on ? "✅ ALL ON" : "❌ ALL OFF"}`,
+        `▪ *Target:* semua grup (${list.length})`,
       ].join("\n")))
     }
     const isJidLikeBulk = /@g\.us$/.test(target) || /^[0-9-]{8,}$/.test(target.replace(/@.*$/, ""))
@@ -762,43 +782,46 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
       let groupJid = target.endsWith('@g.us') ? target : `${target.replace(/[^0-9-]/g, "")}@g.us`
       if (!/^\d[\d-]{7,}@g\.us$/.test(groupJid))
         return m.reply(raraWrap("Switch Group", [
-          `JID grup tidak valid: *${groupJid}*`,
+          `❗ *JID GRUP TIDAK VALID: ${groupJid}*`,
           ``,
-          `Contoh benar: \`${prefix}switch group all ${verb} 12036302xxxxx@g.us\``,
+          `*Contoh benar:* \`${prefix}switch group all ${verb} 12036302xxxxx@g.us\``,
         ].join("\n"), "warn"))
       let subject = groupJid
       try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid } catch {
         return m.reply(raraWrap("Switch Group", [
-          `Fitur : SEMUA fitur grup`,
-          `Target : ${groupJid}`,
+          `🏠 *SEMUA FITUR GRUP*`,
+          DIV,
+          `▪ *Target:* ${groupJid}`,
+          `❗ Bot tidak menemukan grup itu`,
           ``,
-          `Bot tidak menemukan grup itu.`,
-          `Lihat daftar: \`${prefix}switch group all ${verb} list\``,
+          `*Lihat daftar:* \`${prefix}switch group all ${verb} list\``,
         ].join("\n")))
       }
       applyBulk(groupJid)
       return m.reply(raraWrap("Switch Group", [
-        `Fitur : SEMUA fitur grup (${Object.keys(GROUP_FEATURES).length})`,
-        `Target : ${subject}`,
-        `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
+        `🏠 *SEMUA FITUR GRUP (${Object.keys(GROUP_FEATURES).length})*`,
+        DIV,
+        `▪ *Status:* ${on ? "✅ ALL ON" : "❌ ALL OFF"}`,
+        `▪ *Target:* ${subject}`,
       ].join("\n")))
     }
     if (!String(m.chat || "").endsWith("@g.us")) {
       return m.reply(raraWrap("Switch Group", [
-        `Fitur : SEMUA fitur grup`,
-        `Lokasi : chat pribadi`,
+        `🏠 *SEMUA FITUR GRUP*`,
+        DIV,
+        `❗ *Dari DM wajib pakai target:*`,
         ``,
-        `Dari DM wajib pakai target:`,
-        `\`${prefix}switch group all ${verb} <jid-grup>\``,
-        `\`${prefix}switch group all ${verb} all\``,
-        `\`${prefix}switch group all ${verb} list\``,
+        `▪ \`${prefix}switch group all ${verb} <jid-grup>\``,
+        `▪ \`${prefix}switch group all ${verb} all\``,
+        `▪ \`${prefix}switch group all ${verb} list\``,
       ].join("\n")))
     }
     applyBulk(m.chat)
     return m.reply(raraWrap("Switch Group", [
-      `Fitur : SEMUA fitur grup (${Object.keys(GROUP_FEATURES).length})`,
-      `Grup : grup ini`,
-      `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
+      `🏠 *SEMUA FITUR GRUP (${Object.keys(GROUP_FEATURES).length})*`,
+      DIV,
+      `▪ *Status:* ${on ? "✅ ALL ON" : "❌ ALL OFF"}`,
+      `▪ *Grup:* grup ini`,
     ].join("\n")))
   }
 
@@ -807,9 +830,9 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
 
   if (!feature)
     return m.reply(raraWrap("Switch Group", [
-      `Fitur tidak ditemukan: *${featureName}*`,
+      `❗ *FITUR TIDAK DITEMUKAN: ${featureName}*`,
       ``,
-      `Ketik \`${prefix}switch group\` untuk melihat daftar`,
+      `*Ketik* \`${prefix}switch group\` *untuk melihat daftar*`,
     ].join("\n"), "error"))
 
   // ═══ DETEKSI KETERSEDIAAN (request owner 10 Sep 2026) ═══
@@ -820,16 +843,19 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     const gdInfo = inGrpInfo ? (db.getGroup(m.chat) || {}) : {}
     const activeInfo = inGrpInfo ? isOn(gdInfo[feature.dbKey], feature.on) : null
     return m.reply(raraWrap("Info Fitur", [
-      `Fitur : ${feature.label}`,
-      scopeLine(FEATURE_SCOPES.grup),
+      `📍 *FITUR:* ${feature.label}`,
+      DIV,
+      `▪ ${scopeLine(FEATURE_SCOPES.grup)}`,
       ``,
       inGrpInfo
-        ? `Status di grup ini : *${activeInfo ? "ON" : "OFF"}*`
-        : `Status : dari DM — fitur ini gak bisa aktif di DM`,
+        ? `▪ *Status di grup ini:* ${stOn(activeInfo)}`
+        : `▪ *Status:* dari DM — fitur ini gak bisa aktif di DM`,
       ``,
-      `Aktifkan : \`${prefix}switch ${featureName} on\` (di dalam grup)`,
-      `Dari DM : \`${prefix}switch ${featureName} on <jid-grup>|all|list\``,
-      `Matikan : \`${prefix}switch ${featureName} off\``,
+      secTitle("🎯", "PERINTAH"),
+      DIV,
+      `▪ *Aktifkan:* \`${prefix}switch ${featureName} on\` (di dalam grup)`,
+      `▪ *Dari DM:* \`${prefix}switch ${featureName} on <jid-grup>|all|list\``,
+      `▪ *Matikan:* \`${prefix}switch ${featureName} off\``,
     ].join("\n")))
   }
 
@@ -852,10 +878,10 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     const list = Object.values(groups)
     if (!list.length)
       return m.reply(raraWrap("Switch Group", [
-        `Fitur : ${feature.label}`,
-        `Target : semua grup`,
-        ``,
-        `Bot belum berada di grup mana pun.`,
+        `📍 *FITUR:* ${feature.label}`,
+        DIV,
+        `▪ *Target:* semua grup`,
+        `▪ Bot belum berada di grup mana pun.`,
       ].join("\n")))
     let count = 0
     for (const g of list) {
@@ -863,13 +889,11 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
       count++
     }
     return m.reply(raraWrap("Switch Group", [
-      `Fitur : ${feature.label}`,
-      `Target : semua grup`,
-      `Status : *${forceOff ? "OFF" : "ON"}*`,
-      ``,
-      `Total grup: *${count}*`,
-      ``,
-      scopeLine(FEATURE_SCOPES.grup),
+      `📍 *FITUR:* ${feature.label}`,
+      DIV,
+      `▪ *Status:* ${forceOff ? "❌ OFF" : "✅ ON"}`,
+      `▪ *Target:* semua grup (${count})`,
+      `▪ ${scopeLine(FEATURE_SCOPES.grup)}`,
     ].join("\n")))
   }
 
@@ -879,29 +903,28 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     let groupJid = target.endsWith('@g.us') ? target : `${target.replace(/[^0-9-]/g, "")}@g.us`
     if (!/^\d[\d-]{7,}@g\.us$/.test(groupJid))
       return m.reply(raraWrap("Switch Group", [
-          `JID grup tidak valid: *${groupJid}*`,
+          `❗ *JID GRUP TIDAK VALID: ${groupJid}*`,
           ``,
-          `Contoh benar: \`${prefix}switch group ${featureName} on 12036302xxxxx@g.us\``,
+          `*Contoh benar:* \`${prefix}switch group ${featureName} on 12036302xxxxx@g.us\``,
         ].join("\n"), "warn"))
     let subject = groupJid
     try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid } catch {
       return m.reply(raraWrap("Switch Group", [
-        `Fitur : ${feature.label}`,
-        `Target : ${groupJid}`,
+        `📍 *FITUR:* ${feature.label}`,
+        DIV,
+        `▪ *Target:* ${groupJid}`,
+        `❗ Bot tidak menemukan grup itu — pastikan bot masuk di grup tersebut dan JID benar`,
         ``,
-        `Bot tidak menemukan grup itu — pastikan bot`,
-        `masuk di grup tersebut dan JID benar.`,
-        ``,
-        `Lihat daftar: \`${prefix}switch group ${featureName} on list\``,
+        `*Lihat daftar:* \`${prefix}switch group ${featureName} on list\``,
       ].join("\n")))
     }
     db.setGroup(groupJid, forceOff ? { [feature.dbKey]: feature.off } : { [feature.dbKey]: feature.on })
     return m.reply(raraWrap("Switch Group", [
-      `Fitur : ${feature.label}`,
-      `Target : ${subject}`,
-      `Status : *${forceOff ? "OFF" : "ON"}*`,
-      ``,
-      scopeLine(FEATURE_SCOPES.grup),
+      `📍 *FITUR:* ${feature.label}`,
+      DIV,
+      `▪ *Status:* ${forceOff ? "❌ OFF" : "✅ ON"}`,
+      `▪ *Target:* ${subject}`,
+      `▪ ${scopeLine(FEATURE_SCOPES.grup)}`,
     ].join("\n")))
   }
 
@@ -914,7 +937,10 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
 
   if (forceOff) {
     db.setGroup(m.chat, { [feature.dbKey]: feature.off })
-    return m.reply(`${feature.label}: *OFF*\n` + (scopeLine(FEATURE_SCOPES.grup) || ""))
+    return m.reply(raraWrap("Switch Group", [
+      `❌ *${feature.label.toUpperCase()}: OFF*`,
+      `▪ ${scopeLine(FEATURE_SCOPES.grup)}`,
+    ].join("\n")))
   }
 
   let update = { [feature.dbKey]: feature.on }
@@ -924,12 +950,16 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     update[feature.extraKey] = mode
 
   db.setGroup(m.chat, update)
-  let txt = `${feature.label}: *ON*`
+  const onLines = []
   if (feature.modes) {
     const newMode = mode && feature.modes.includes(mode) ? mode : (groupData[feature.modeKey] || feature.modes[0])
-    txt += `\nMode: ${newMode}`
+    onLines.push(`▪ *Mode:* ${newMode}`)
   }
-  txt += `\n` + (scopeLine(FEATURE_SCOPES.grup) || "")
+  onLines.push(`▪ ${scopeLine(FEATURE_SCOPES.grup)}`)
+  let txt = raraWrap("Switch Group", [
+    `✅ *${feature.label.toUpperCase()}: ON*`,
+    ...onLines,
+  ].join("\n"))
   return m.reply(txt)
 }
 
@@ -967,9 +997,9 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       const act = (args[2] || '').toLowerCase()
       if (act !== 'on' && act !== 'off')
         return m.reply(raraWrap("Switch Auto", [
-          `Fitur : SEMUA fitur otomatis`,
-          ``,
-          `Gunakan: \`${prefix}switch auto all on\` atau \`${prefix}switch auto all off\``,
+          `⚡ *SEMUA FITUR OTOMATIS*`,
+          DIV,
+          `❗ *Gunakan:* \`${prefix}switch auto all on\` atau \`${prefix}switch auto all off\``,
         ].join("\n")))
       const on = act === 'on'
       let ok = 0, fail = 0
@@ -977,36 +1007,37 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
         try { reg.toggle(on); ok++ } catch { fail++ }
       }
       return m.reply(raraWrap("Switch Auto", [
-        `Fitur : SEMUA fitur otomatis`,
-        `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
+        `⚡ *SEMUA FITUR OTOMATIS: ${on ? "ALL ON" : "ALL OFF"}*`,
+        DIV,
+        `▪ *Berhasil:* ${ok} fitur`,
+        fail ? `▪ *Gagal:* ${fail} fitur` : ``,
         ``,
-        `Berhasil : *${ok}* fitur`,
-        fail ? `Gagal : *${fail}* fitur` : ``,
-        ``,
-        `Cek status: \`${prefix}switch auto\``,
+        `*Cek status:* \`${prefix}switch auto\``,
       ].filter(Boolean).join("\n")))
     }
     let txt = ""
     for (const [cat, features] of Object.entries(AUTO_CATEGORIES)) {
-      txt += `「 ${toSC(cat)} 」\n`
+      txt += secTitle("⚡", cat, features.length) + "\n" + DIV + "\n"
       for (const key of features) {
         const reg = AUTO_REGISTRY[key]
         if (!reg) continue
         const enabled = reg.getStatus()
-        txt += `${scLine(key, enabled)}\n`
+        txt += `${scLine(reg.label || key, enabled)}\n`
       }
       txt += `\n`
     }
-    txt += tipText(`ON: \`${prefix}switch auto <nama> on\` | OFF: \`${prefix}switch auto <nama> off\` | SEMUA: \`${prefix}switch auto all on/off\``)
+    txt += secTitle("🎯", "PERINTAH") + "\n" + DIV
+    txt += `\n▪ *ON:* \`${prefix}switch auto <nama> on\` | *OFF:* \`${prefix}switch auto <nama> off\``
+    txt += `\n▪ *SEMUA:* \`${prefix}switch auto all on/off\``
     return m.reply(raraWrap("Switch Auto", txt.trim()))
   }
 
   const reg = AUTO_REGISTRY[autoKey]
   if (!reg)
     return m.reply(raraWrap("Switch Auto", [
-      `Fitur tidak ditemukan: *${autoKey}*`,
+      `❗ *FITUR TIDAK DITEMUKAN: ${autoKey}*`,
       ``,
-      `Ketik \`${prefix}switch auto\` untuk melihat daftar`,
+      `*Ketik* \`${prefix}switch auto\` *untuk melihat daftar*`,
     ].join("\n"), "error"))
 
   // ═══ OPSET TARGET (request owner 8 Sep 2026): .switch auto <key> set ═══
@@ -1038,7 +1069,13 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       'webwatch', 'cryptoalert', 'autohealth', 'autorefill', 'autobackup',
     ]
     if (!TARGETABLE.includes(autoKey)) {
-      return m.reply(`*${reg.label}* gak mengirim notifikasi terjadwal — gak ada target yang bisa diset.\nFitur yang bisa diatur targetnya: ${TARGETABLE.map((k) => '\`' + k + '\`').join(', ')}`)
+      return m.reply(raraWrap("Switch Auto Target", [
+        `❗ *${reg.label.toUpperCase()}* gak mengirim notifikasi terjadwal — gak ada target yang bisa diset`,
+        ``,
+        secTitle("📋", "FITUR YANG BISA DIATUR TARGETNYA", TARGETABLE.length),
+        DIV,
+        ...TARGETABLE.map((k) => `▪ \`${k}\``),
+      ].join("\n")))
     }
 
     const cfg = getAutoTargetConfig(autoKey)
@@ -1047,17 +1084,32 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     // ── set reset ──
     if (opt === 'reset' || opt === 'default') {
       clearAutoTargetConfig(autoKey)
-      return m.reply(`✅ Target *${reg.label}* direset ke default (semua grup).`)
+      return m.reply(raraWrap("Switch Auto Target", [
+        `♻️ *TARGET DIRESET*`,
+        DIV,
+        `▪ *Fitur:* ${reg.label}`,
+        `▪ *Target:* default (semua grup)`,
+      ].join("\n")))
     }
 
     // ── set semua / gabungan (semua grup + semua DM) ──
     if (opt === 'semua' || opt === 'all' || opt === 'semua-grup') {
       setAutoTargetConfig(autoKey, { mode: 'semua', groups: [], dm: null })
-      return m.reply(`✅ *${reg.label}* sekarang dikirim ke **SEMUA GRUP** yang bot ikuti.`)
+      return m.reply(raraWrap("Switch Auto Target", [
+        `✅ *TARGET DITERAPKAN*`,
+        DIV,
+        `▪ *Fitur:* ${reg.label}`,
+        `▪ *Target:* SEMUA GRUP yang bot ikuti`,
+      ].join("\n")))
     }
     if (opt === 'semua-dm' || opt === 'semuadm' || opt === 'gabungan' || opt === 'kombinasi' || opt === 'semua+dm') {
       setAutoTargetConfig(autoKey, { mode: 'semua-dm', groups: [], dm: 'all' })
-      return m.reply(`✅ *${reg.label}* dikirim ke **SEMUA GRUP + SEMUA DM user yang sudah mendaftar bot**.`)
+      return m.reply(raraWrap("Switch Auto Target", [
+        `✅ *TARGET DITERAPKAN*`,
+        DIV,
+        `▪ *Fitur:* ${reg.label}`,
+        `▪ *Target:* SEMUA GRUP + SEMUA DM user terdaftar`,
+      ].join("\n")))
     }
 
     // ── set grup [nomor,nomor] ──
@@ -1080,15 +1132,19 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       if (picks.length) {
         setAutoTargetConfig(autoKey, { mode: 'grup', groups: picks, dm: null })
         const nama = picks.map((jid) => { const g = groups.find((x) => x.jid === jid); return g ? g.subject : jid })
-        return m.reply(`✅ *${reg.label}* dikirim ke **${picks.length} grup terpilih**:\n${nama.map((n, i) => `${i + 1}. ${n}`).join('\n')}`)
+        return m.reply(raraWrap("Switch Auto Target", [
+          `✅ *TARGET DITERAPKAN (${picks.length} GRUP)*`,
+          DIV,
+          ...nama.map((n, i) => `▪ ${i + 1}. ${n}`),
+        ].join("\n")))
       }
       // tanpa nomor → TOMBOT NAV (request owner 12 Sep: tombol biar gampang):
       // single_select daftar grup (kirim JID langsung) + quick_reply nav
       const body = raraWrap("Switch Auto Target", [
-        `Fitur : ${reg.label}`,
-        `Mode : pilih grup tujuan`,
-        ``,
-        `Total grup terdeteksi : ${groups.length}`,
+        `📍 *FITUR:* ${reg.label}`,
+        DIV,
+        `▪ *Mode:* pilih grup tujuan`,
+        `▪ *Grup terdeteksi:* ${groups.length}`,
         ``,
         `📍 Tekan tombol *Pilih Grup* di bawah, atau ketik \`${prefix}switch auto ${autoKey} set grup <nomor>\` (bisa banyak: 1,3,5)`,
       ].join("\n"))
@@ -1107,9 +1163,13 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
         })
       } catch {
         // fallback: teks polos
-        let txt = `🌐 *PILIH GRUP TUJUAN ${reg.label.toUpperCase()}*\n\n`
-        groups.slice(0, 30).forEach((g, i) => { txt += `  ${i + 1}. ${g.subject || g.jid}${g.jid === m.chat ? ' ← (chat ini)' : ''}\n` })
-        txt += `\n💡 Ketik: \`${prefix}switch auto ${autoKey} set grup <nomor>\`\n💡 Bisa pilih banyak: \`${prefix}switch auto ${autoKey} set grup 1,3,5\``
+        let txt = raraWrap("Switch Auto Target", [
+          `🌐 *PILIH GRUP TUJUAN ${reg.label.toUpperCase()}*`,
+          DIV,
+          ...groups.slice(0, 30).map((g, i) => `▪ ${i + 1}. ${g.subject || g.jid}${g.jid === m.chat ? ' ← (chat ini)' : ''}`),
+          ``,
+          `*Ketik:* \`${prefix}switch auto ${autoKey} set grup <nomor>\` (bisa banyak: 1,3,5)`,
+        ].join("\n"))
         await m.reply(txt)
       }
       return
@@ -1121,11 +1181,12 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       if (!sub) {
         // 🔹 TOMBOL NAV (request owner 12 Sep) — pilih via tombol atau ketik manual
         const body = raraWrap("Switch Auto Target", [
-          `Fitur : ${reg.label}`,
-          `Mode : pilih target DM`,
+          `📍 *FITUR:* ${reg.label}`,
+          DIV,
+          `▪ *Mode:* pilih target DM`,
           ``,
-          `1. DM nomor tertentu — ketik \`${prefix}switch auto ${autoKey} set dm 62812xxxxxxx\``,
-          `2. Semua DM user yang sudah mendaftar bot — tekan tombol di bawah`,
+          `▪ *DM nomor tertentu:* \`${prefix}switch auto ${autoKey} set dm 62812xxxxxxx\``,
+          `▪ *Semua DM user terdaftar:* tekan tombol di bawah`,
         ].join("\n"))
         try {
           await sock.sendButton(m.chat, null, body, m, {
@@ -1135,40 +1196,52 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
             ],
           })
         } catch {
-          await m.reply(
-            `📮 *PILIH TARGET DM UNTUK ${reg.label.toUpperCase()}*\n\n` +
-            `1. DM nomor tertentu:\n   \`${prefix}switch auto ${autoKey} set dm 62812xxxxxxx\`\n\n` +
-            `2. Semua DM user yang sudah mendaftar bot:\n   \`${prefix}switch auto ${autoKey} set dm semua\``
-          )
+          await m.reply(raraWrap("Switch Auto Target", [
+            `📮 *PILIH TARGET DM UNTUK ${reg.label.toUpperCase()}*`,
+            DIV,
+            `▪ *DM nomor tertentu:* \`${prefix}switch auto ${autoKey} set dm 62812xxxxxxx\``,
+            `▪ *Semua DM user terdaftar:* \`${prefix}switch auto ${autoKey} set dm semua\``,
+          ].join("\n")))
         }
         return
       }
       if (sub === 'semua' || sub === 'all' || sub === 'user' || sub === 'users') {
         setAutoTargetConfig(autoKey, { mode: 'dm', groups: [], dm: 'all' })
-        return m.reply(`✅ *${reg.label}* dikirim ke **SEMUA DM user yang sudah mendaftar bot**.`)
+        return m.reply(raraWrap("Switch Auto Target", [
+          `✅ *TARGET DITERAPKAN*`,
+          DIV,
+          `▪ *Fitur:* ${reg.label}`,
+          `▪ *Target:* SEMUA DM user terdaftar`,
+        ].join("\n")))
       }
       const jid = toWaJid(sub)
       if (!jid || jid.replace(/\D/g, '').length < 8) {
         return m.reply(raraWrap("switch", `⚠ Nomor tidak valid. Contoh: \`${prefix}switch auto ${autoKey} set dm 628123456789\``, "guide"))
       }
       setAutoTargetConfig(autoKey, { mode: 'dm', groups: [], dm: jid.replace('@s.whatsapp.net', '') })
-      return m.reply(`✅ *${reg.label}* dikirim ke **DM ${jid}**.`)
+      return m.reply(raraWrap("Switch Auto Target", [
+        `✅ *TARGET DITERAPKAN*`,
+        DIV,
+        `▪ *Fitur:* ${reg.label}`,
+        `▪ *Target:* DM ${jid}`,
+      ].join("\n")))
     }
 
     // ── set (tanpa opsi) → status + TOMBOL NAV (request owner 12 Sep: "tambah
     // tombol nav agar mempermudah") — pilih DM/grup/global via tombol, fallback teks
     const setCmd = (sub) => `${prefix}switch auto ${autoKey} set ${sub}`
     const body = raraWrap("Switch Auto Target", [
-      `Fitur : ${reg.label}`,
-      `Target sekarang : ${describeAutoTarget(cfg)}`,
+      `📍 *FITUR:* ${reg.label}`,
+      DIV,
+      `▪ *Target sekarang:* ${describeAutoTarget(cfg)}`,
       ``,
-      `🎯 Pilih mode pengiriman lewat tombol di bawah:`,
-      ``,
-      `🌐 Semua Grup — kirim ke semua grup yang bot ikuti`,
-      `📍 Grup Tertentu — pilih grup satu per satu`,
-      `📮 DM — nomor tertentu / semua user terdaftar`,
-      `🔀 Gabungan — semua grup + semua DM`,
-      `♻️ Reset — kembali ke default (semua grup)`,
+      secTitle("🎯", "PILIH MODE PENGIRIMAN"),
+      DIV,
+      `▪ *🌐 Semua Grup* — semua grup yang bot ikuti`,
+      `▪ *📍 Grup Tertentu* — pilih grup satu per satu`,
+      `▪ *📮 DM* — nomor tertentu / semua user terdaftar`,
+      `▪ *🔀 Gabungan* — semua grup + semua DM`,
+      `▪ *♻️ Reset* — kembali ke default (semua grup)`,
     ].join("\n"))
     try {
       await sock.sendButton(m.chat, null, body, m, {
@@ -1181,16 +1254,19 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
         ],
       })
     } catch {
-      await m.reply(
-        `🎯 *TARGET ${reg.label.toUpperCase()}*\n` +
-        `Sekarang: **${describeAutoTarget(cfg)}**\n\n` +
-        `Opsi:\n` +
-        `• \`${prefix}switch auto ${autoKey} set semua\` — semua grup\n` +
-        `• \`${prefix}switch auto ${autoKey} set grup\` — pilih grup tertentu\n` +
-        `• \`${prefix}switch auto ${autoKey} set dm\` — DM nomor tertentu / semua user\n` +
-        `• \`${prefix}switch auto ${autoKey} set gabungan\` — semua grup + semua DM\n` +
-        `• \`${prefix}switch auto ${autoKey} set reset\` — kembali ke default`
-      )
+      await m.reply(raraWrap("Switch Auto Target", [
+        `🎯 *TARGET ${reg.label.toUpperCase()}*`,
+        DIV,
+        `▪ *Sekarang:* ${describeAutoTarget(cfg)}`,
+        ``,
+        secTitle("📋", "OPSI"),
+        DIV,
+        `▪ \`${prefix}switch auto ${autoKey} set semua\` — semua grup`,
+        `▪ \`${prefix}switch auto ${autoKey} set grup\` — pilih grup tertentu`,
+        `▪ \`${prefix}switch auto ${autoKey} set dm\` — DM nomor / semua user`,
+        `▪ \`${prefix}switch auto ${autoKey} set gabungan\` — semua grup + semua DM`,
+        `▪ \`${prefix}switch auto ${autoKey} set reset\` — kembali ke default`,
+      ].join("\n")))
     }
     return
   }
@@ -1198,13 +1274,22 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
   // No action — show status + usage
   if (!action || (action !== 'on' && action !== 'off')) {
     const current = reg.getStatus()
-    let replyTxt = `${reg.label}: *${current ? "ON" : "OFF"}*\n\`${prefix}switch auto ${autoKey} on\` — aktifkan\n\`${prefix}switch auto ${autoKey} off\` — matikan`
+    let replyTxt = raraWrap("Switch Auto", [
+      `⚡ *FITUR:* ${reg.label}`,
+      DIV,
+      `▪ *Status:* ${stOn(current)}`,
+      ``,
+      secTitle("🎯", "PERINTAH"),
+      DIV,
+      `▪ *Aktifkan:* \`${prefix}switch auto ${autoKey} on\``,
+      `▪ *Matikan:* \`${prefix}switch auto ${autoKey} off\``,
+    ].join("\n"))
     // Fitur targetable: tampilkan target sekarang di status
     const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker', 'autoanimenotifier', 'autobolanotify', 'bencanawatch', 'autoanime', 'autoreengage', 'autoulah', 'autoreport', 'autorenewal', 'autoberitanotify', 'automovienotifier', 'autolinkedin', 'autorainnotify', 'webwatch', 'cryptoalert', 'autohealth', 'autorefill', 'autobackup']
     const SUBSCRIBER_FEATURES = { bencanawatch: 1, autoanime: 1, autoanimenotifier: 1, autobolanotify: 1, autolinkedin: 1, autoberitanotify: 1, automovienotifier: 1, autorainnotify: 1 }
     if (TARGETABLE.includes(autoKey)) {
       const cfg = getAutoTargetConfig(autoKey)
-      replyTxt += `\n🎯 Target: ${describeAutoTarget(cfg)} — atur: \`${prefix}switch auto ${autoKey} set\`` + (SUBSCRIBER_FEATURES[autoKey] ? '\nℹ️ Subscriber tetap dapat notif — target terpusat nambah jangkauan' : '')
+      replyTxt += `\n\n🎯 *Target:* ${describeAutoTarget(cfg)}\n▪ *Atur:* \`${prefix}switch auto ${autoKey} set\`` + (SUBSCRIBER_FEATURES[autoKey] ? '\n▪ ℹ️ Subscriber tetap dapat notif — target terpusat nambah jangkauan' : '')
     }
     return m.reply(replyTxt)
   }
@@ -1214,7 +1299,10 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
   try {
     reg.toggle(enable, { sock }) // sock dikasih buat fitur yang butuh (V1 winbu); entry lain nge-ignore
 
-    const base = `${reg.label}: *${enable ? "ON" : "OFF"}*\n` + (scopeLine(FEATURE_SCOPES.global) || "")
+    const base = raraWrap("Switch Auto", [
+      `${enable ? "✅" : "❌"} *${reg.label.toUpperCase()}: ${enable ? "ON" : "OFF"}*`,
+      `▪ ${scopeLine(FEATURE_SCOPES.global)}`,
+    ].join("\n"))
 
     // ── TOMBOL PILIH TARGET (request owner: "ngetik cmd ribet, mending tombol") ──
     // Begitu fitur ber-target di-ON, langsung tampilkan tombol DM/grup/gabungan
@@ -1242,17 +1330,17 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
         }
       }
       const body = raraWrap("Switch Auto Target", [
-        `${reg.label} : ON`,
+        `✅ *${reg.label.toUpperCase()}: ON*`,
+        DIV,
+        `▪ *Target sekarang:* ${describeAutoTarget(cfgNow)}`,
         ``,
-        `Target sekarang : ${describeAutoTarget(cfgNow)}`,
-        ``,
-        `🎯 Mau dikirim ke mana? Pilih lewat tombol di bawah:`,
-        ``,
-        `🌐 Semua Grup — semua grup yang bot ikuti`,
-        `📍 Grup Tertentu — pilih grup satu per satu`,
-        `📮 DM — nomor tertentu / semua user terdaftar`,
-        `🔀 Gabungan — semua grup + semua DM`,
-        `♻️ Reset — kembali ke default (semua grup)`,
+        secTitle("🎯", "MAU DIKIRIM KE MANA?"),
+        DIV,
+        `▪ *🌐 Semua Grup* — semua grup yang bot ikuti`,
+        `▪ *📍 Grup Tertentu* — pilih grup satu per satu`,
+        `▪ *📮 DM* — nomor tertentu / semua user terdaftar`,
+        `▪ *🔀 Gabungan* — semua grup + semua DM`,
+        `▪ *♻️ Reset* — kembali ke default (semua grup)`,
       ].join("\n")) + extraWarn
       const setCmd = (sub) => `${prefix}switch auto ${autoKey} set ${sub}`
       try {
@@ -1268,7 +1356,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
         return
       } catch {
         // fallback teks kalau tombol gak didukung di chat ini
-        return m.reply(base + `\n\nAtur target: \`${prefix}switch auto ${autoKey} set\``)
+        return m.reply(base + `\n\n▪ *Atur target:* \`${prefix}switch auto ${autoKey} set\``)
       }
     }
 
@@ -1303,16 +1391,19 @@ async function handleFitur(m, { sock, config: cfg }) {
 
   if (lower.includes('list')) {
     const allCats = [...(pluginStore.categories?.keys() || [])].sort()
-    let text = `KATEGORI (${allCats.length})\n`
+    let text = raraWrap("Switch Fitur", [
+      `⚙️ *KATEGORI (${allCats.length})*`,
+      DIV,
+    ].join("\n"))
     for (const cat of allCats) {
       const isOff = disabledCats.includes(cat)
-      text += `${isOff ? "OFF" : "ON"}  ${cat}\n`
+      text += `\n${scLine(cat, !isOff)}`
     }
     if (disabledCmds.length > 0) {
-      text += `\nCOMMAND NONAKTIF (${disabledCmds.length})\n`
-      for (const cmd of disabledCmds) text += `OFF  ${cmd}\n`
+      text += `\n\n` + secTitle("🚫", "COMMAND NONAKTIF", disabledCmds.length) + `\n` + DIV
+      for (const cmd of disabledCmds) text += `\n▪ *${cmd}:* ❌ OFF`
     }
-    return m.reply(text.trim())
+    return m.reply(text)
   }
 
   const verbIdx = lower.findIndex((a) => a === 'on' || a === 'off')
@@ -1332,14 +1423,21 @@ async function handleFitur(m, { sock, config: cfg }) {
   }
 
   if (!action) {
-    let text = `Panduan:\n`
-    text += `• \`${prefix}switch fitur rpg off\` atau \`off rpg\` → matikan kategori\n`
-    text += `• \`${prefix}switch fitur maker on\` atau \`on maker\` → hidupkan (2 urutan sama-sama jalan)\n`
-    text += `• \`${prefix}switch fitur list\` → lihat semua status\n\n`
-    text += `Kategori Nonaktif (OFF):\n`
-    text += disabledCats.length > 0 ? `${disabledCats.map(c => "`" + c + "`").join(", ")}\n` : `(semua kategori aktif)\n`
-    text += `\nCommand Nonaktif (OFF):\n`
-    text += disabledCmds.length > 0 ? `${disabledCmds.map(c => "`" + c + "`").join(", ")}\n` : `(semua command aktif)`
+    let text = raraWrap("Switch Fitur", [
+      `🎯 *PANDUAN*`,
+      DIV,
+      `▪ \`${prefix}switch fitur rpg off\` atau \`off rpg\` → matikan kategori`,
+      `▪ \`${prefix}switch fitur maker on\` atau \`on maker\` → hidupkan (2 urutan sama-sama jalan)`,
+      `▪ \`${prefix}switch fitur list\` → lihat semua status`,
+      ``,
+      secTitle("🚫", "KATEGORI NONAKTIF"),
+      DIV,
+      `▪ ${disabledCats.length > 0 ? disabledCats.map((c) => `*${c}*`).join(", ") : "semua kategori aktif"}`,
+      ``,
+      secTitle("🚫", "COMMAND NONAKTIF"),
+      DIV,
+      `▪ ${disabledCmds.length > 0 ? disabledCmds.map((c) => `*${c}*`).join(", ") : "semua command aktif"}`,
+    ].join("\n"))
     return m.reply(text)
   }
 
@@ -1367,7 +1465,12 @@ async function handleFitur(m, { sock, config: cfg }) {
   const SWITCH_ALIASES = ["switch", "enable", "disable", "togglefitur", "onofffitur", "onoff"]
   const isSwitchLockRisk = (isCommand && SWITCH_ALIASES.includes(name)) || (isCategory && name === 'owner')
   if (isSwitchLockRisk && mode !== 'on')
-    return m.reply(`❌ Tidak bisa menonaktifkan *${name}* — ini akan mengunci owner sendiri dari .switch (self-lockout). Command/kategori ini dikecualikan permanen.`)
+    return m.reply(raraWrap("Switch Fitur", [
+      `🔒 *TIDAK BISA MENONAKTIFKAN ${name.toUpperCase()}*`,
+      DIV,
+      `▪ Ini akan mengunci owner sendiri dari .switch (self-lockout)`,
+      `▪ Command/kategori ini dikecualikan permanen`,
+    ].join("\n")))
 
   const type = isCategory ? "kategori" : "command"
   const list = isCategory ? disabledCats : disabledCmds
@@ -1377,10 +1480,14 @@ async function handleFitur(m, { sock, config: cfg }) {
 
   if (mode === 'on') {
     if (isCurrentlyOff) { list.splice(idx, 1); newState = false }
-    else return m.reply(`✅ ${type} ${name} sudah aktif`)
+    else return m.reply(raraWrap("Switch Fitur", [
+      `✅ *${type.toUpperCase()} ${name.toUpperCase()} SUDAH AKTIF*`,
+    ].join("\n")))
   } else if (mode === 'off') {
     if (!isCurrentlyOff) { list.push(name); newState = true }
-    else return m.reply(`${type} \`${name}\` sudah nonaktif`)
+    else return m.reply(raraWrap("Switch Fitur", [
+      `❌ *${type.toUpperCase()} ${name.toUpperCase()} SUDAH NONAKTIF*`,
+    ].join("\n")))
   } else {
     if (isCurrentlyOff) { list.splice(idx, 1); newState = false }
     else { list.push(name); newState = true }
@@ -1390,7 +1497,9 @@ async function handleFitur(m, { sock, config: cfg }) {
   else db.setting("disabledCommands", disabledCmds)
 
   const status = newState ? "Nonaktif" : "Aktif"
-  return m.reply(`${type.charAt(0).toUpperCase() + type.slice(1)}: *${name}*\nStatus: ${status}`)
+  return m.reply(raraWrap("Switch Fitur", [
+    `${newState ? "❌" : "✅"} *${type.toUpperCase()} ${name.toUpperCase()}: ${newState ? "NONAKTIF" : "AKTIF"}*`,
+  ].join("\n")))
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1405,16 +1514,15 @@ async function handleMaster(m, { sock, config: cfg }) {
   const action = ((m.args || [])[1] || '').toLowerCase()
   if (action !== 'on' && action !== 'off')
     return m.reply(raraWrap("Switch Semua", [
-      `Mode : master switch terpusat`,
+      `🛑 *MASTER SWITCH TERPUSAT*`,
+      DIV,
+      `▪ *Auto* — semua fitur otomatis`,
+      `▪ *Saluran* — semua event notifikasi`,
+      `▪ *Group* — semua fitur grup, semua grup`,
       ``,
-      `Mengatur SEMUANYA sekaligus:`,
-      `• Auto — semua fitur otomatis`,
-      `• Saluran — semua event notifikasi`,
-      `• Group — semua fitur grup, semua grup`,
+      `*Gunakan:* \`${prefix}switch semua on\` atau \`${prefix}switch semua off\``,
       ``,
-      `Gunakan: \`${prefix}switch semua on\` atau \`${prefix}switch semua off\``,
-      ``,
-      `Butuh lebih halus? \`${prefix}switch auto all\`, \`${prefix}switch channel all\`, \`${prefix}switch group all\``,
+      `*Butuh lebih halus?* \`${prefix}switch auto all\`, \`${prefix}switch channel all\`, \`${prefix}switch group all\``,
     ].join("\n")))
 
   const on = action === 'on'
@@ -1444,14 +1552,13 @@ async function handleMaster(m, { sock, config: cfg }) {
   }
 
   return m.reply(raraWrap("Switch Semua", [
-    `Mode : master switch`,
-    `Status : *${on ? "SEMUA ON" : "SEMUA OFF"}*`,
+    `${on ? "✅" : "❌"} *SEMUA ${on ? "ON" : "OFF"}*`,
+    DIV,
+    `▪ *Auto:* ${autoOk} fitur${autoFail ? ` (gagal: ${autoFail})` : ""}`,
+    `▪ *Saluran:* ${channelCount} event`,
+    `▪ *Group:* ${featureCount} fitur × ${groupCount} grup`,
     ``,
-    `• Auto : *${autoOk}* fitur${autoFail ? ` (gagal: ${autoFail})` : ""}`,
-    `• Saluran : *${channelCount}* event`,
-    `• Group : *${featureCount}* fitur × *${groupCount}* grup`,
-    ``,
-    `Cek detail: \`${prefix}switch status all\``,
+    `*Cek detail:* \`${prefix}switch status all\``,
   ].join("\n")))
 }
 
@@ -1467,21 +1574,21 @@ async function handleStatusAll(m, { sock, config: cfg }) {
 
   // ── AUTO: semua kategori (🌍 global — grup & DM) ──
   for (const [cat, features] of Object.entries(AUTO_CATEGORIES)) {
-    txt += `🌍 *${toSC(cat)}*\n`
+    txt += secTitle("🌍", cat, features.length) + "\n" + DIV + "\n"
     for (const key of features) {
       const reg = AUTO_REGISTRY[key]
       if (!reg) continue
       const enabled = reg.getStatus()
       total++; enabled ? on++ : off++
-      txt += `${scLine(key, enabled)}\n`
+      txt += `${scLine(reg.label || key, enabled)}\n`
     }
     txt += `\n`
   }
 
   // ── SALURAN: semua event channel ──
   const statuses = getAllNotifyStatus()
-  txt += `📢 *${toSC("Saluran")}*\n`
-  for (const [key, info] of Object.entries(statuses)) {
+  txt += secTitle("📢", "Saluran", Object.keys(statuses).length) + "\n" + DIV + "\n"
+  for (const [, info] of Object.entries(statuses)) {
     total++; info.enabled ? on++ : off++
     txt += `${scLine(info.label, info.enabled)}\n`
   }
@@ -1490,14 +1597,14 @@ async function handleStatusAll(m, { sock, config: cfg }) {
   // ── GROUP: fitur grup chat ini (kalau dari dalam grup) ──
   if (String(m.chat || "").endsWith("@g.us")) {
     const groupData = db.getGroup(m.chat) || {}
-    txt += `📍 *${toSC("Group (Chat Ini)")}*\n`
-    for (const [cat, features] of Object.entries(GROUP_CATEGORIES)) {
+    txt += secTitle("📍", "Group (Chat Ini)", Object.keys(GROUP_FEATURES).length) + "\n" + DIV + "\n"
+    for (const [, features] of Object.entries(GROUP_CATEGORIES)) {
       for (const feat of features) {
         const gf = GROUP_FEATURES[feat]
         if (!gf) continue
         const active = isOn(groupData[gf.dbKey], gf.on)
         total++; active ? on++ : off++
-        txt += `${scLine(feat, active)}\n`
+        txt += `${scLine(gf.label, active)}\n`
       }
     }
     txt += `\n`
@@ -1506,14 +1613,15 @@ async function handleStatusAll(m, { sock, config: cfg }) {
   // ── FITUR: ringkasan command/kategori yang di-disable ──
   const disabledCmds = db.setting("disabledCommands") || []
   const disabledCats = db.setting("disabledCategories") || []
-  txt += `*${toSC("Fitur & Command")}*\n`
-  txt += `${toSC("command nonaktif")} ${toSC(String(disabledCmds.length))}\n`
-  txt += `${toSC("kategori nonaktif")} ${toSC(String(disabledCats.length))}\n`
-  if (disabledCats.length) txt += `${toSC(disabledCats.join(", "))}\n`
+  txt += secTitle("⚙️", "Fitur & Command") + "\n" + DIV
+  txt += `\n▪ *Command nonaktif:* ${disabledCmds.length}`
+  txt += `\n▪ *Kategori nonaktif:* ${disabledCats.length}`
+  if (disabledCats.length) txt += `\n▪ ${disabledCats.join(", ")}`
 
-  txt += "\n" + tipText(`📍 Grup (hanya di grup) | 🌍 Global (grup & DM) | 📢 Saluran (broadcast di saluran WA)`)
-  txt += "\n" + tipText(`Aktif: ${on} | Mati: ${off} | Total: ${total}`)
-  txt += "\n" + tipText(`Detail: \`${prefix}switch auto\` | \`${prefix}switch channel\` | \`${prefix}switch group\` | \`${prefix}switch fitur\``)
+  txt += "\n\n" + secTitle("📊", "RINGKASAN") + "\n" + DIV
+  txt += `\n▪ *Aktif:* ${on} | *Mati:* ${off} | *Total:* ${total}`
+  txt += `\n▪ *Legenda:* 📍 Grup (hanya di grup) | 🌍 Global (grup & DM) | 📢 Saluran (broadcast di saluran WA)`
+  txt += `\n▪ *Detail:* \`${prefix}switch auto\` | \`${prefix}switch channel\` | \`${prefix}switch group\` | \`${prefix}switch fitur\``
   return m.reply(raraWrap("Switch Status", txt.trim()))
 }
 
@@ -1522,33 +1630,18 @@ async function handleStatusAll(m, { sock, config: cfg }) {
 // ═══════════════════════════════════════════════════════════
 async function showMenu(m, sock) {
   const prefix = m.prefix || '.'
-  const text = `Pilih kategori toggle:
-
-📢 *saluran*
-   Notifikasi event ke channel WhatsApp
-   \`${prefix}switch channel\`
-
-🏠 *group*
-   Fitur grup (welcome, antilink, anti-toxic, dll)
-   \`${prefix}switch group\`
-
-⚡ *AUTO*
-   Semua fitur auto (backup, read, typing, BMKG, dll)
-   \`${prefix}switch auto\`
-
-⚙️ *fitur*
-   On/off command atau kategori plugin
-   \`${prefix}switch fitur\`
-
-🛑 *semua (master)*
-   SEMUANYA on/off sekaligus (auto + saluran + group)
-   \`${prefix}switch semua on\` | \`${prefix}switch semua off\`
-
-📊 *status semua*
-   Semua status switch yang aktif & mati
-   \`${prefix}switch status all\`
-
-Alias lama masih works: .enable .disable .togglefitur .autoread .autobackup dll`
+  const text = raraWrap("Switch", [
+    `🎛️ *PILIH KATEGORI TOGGLE*`,
+    DIV,
+    `▪ *📢 Saluran* — notifikasi event ke channel WhatsApp → \`${prefix}switch channel\``,
+    `▪ *🏠 Group* — fitur grup (welcome, antilink, dll) → \`${prefix}switch group\``,
+    `▪ *⚡ Auto* — semua fitur auto (backup, read, BMKG, dll) → \`${prefix}switch auto\``,
+    `▪ *⚙️ Fitur* — on/off command atau kategori plugin → \`${prefix}switch fitur\``,
+    `▪ *🛑 Semua (master)* — SEMUANYA on/off sekaligus → \`${prefix}switch semua on|off\``,
+    `▪ *📊 Status semua* — semua status aktif & mati → \`${prefix}switch status all\``,
+    ``,
+    `*Alias lama masih works:* .enable .disable .togglefitur .autoread .autobackup dll`,
+  ].join("\n"))
 
   try {
     const thumb = fs.readFileSync(path.join(process.cwd(), 'assets', 'images', 'rara.jpg'))

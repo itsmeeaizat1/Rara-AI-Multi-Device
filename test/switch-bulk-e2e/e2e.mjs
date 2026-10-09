@@ -14,8 +14,8 @@ await initDatabase("/tmp/switch-bulk-e2e/db.json")
 const db = getDatabase()
 
 const { handler: switchHandler } = await import(R + "/plugins/owner/switch.js")
-const { toSC } = await import(R + "/src/lib/rara-menu-style.js")
-const reSC = (s) => new RegExp(toSC(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")
+// Format promosi 9 Okt 2026: kartu switch pakai teks polos (bukan smallcaps)
+const reSC = (s) => new RegExp(s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")
 const { getAllNotifyStatus } = await import(R + "/src/lib/rara-saluran-broadcast.js")
 const config = (await import(R + "/config.js")).default
 
