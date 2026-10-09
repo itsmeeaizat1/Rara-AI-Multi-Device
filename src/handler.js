@@ -9,6 +9,7 @@ import { serialize } from "./lib/rara-serialize.js";
 import { noteChatActivity } from "./lib/rara-chat-revive.js";
 import { getPlugin, pluginStore } from "./lib/rara-plugins.js";
 import { recordPluginExecution, postExecutionCheck } from "./lib/rara-plugin-health-hook.js";
+import { handleLabGate, recordLabRun } from "./lib/rara-lab.js";
 import { getDatabase } from "./lib/rara-database.js";
 import { grantActivityExp } from "./lib/rara-activity-progress.js";
 import { ensureRpg, saveRpg } from "./lib/rara-rpg-service.js";
@@ -1156,6 +1157,16 @@ try {
     return;
   }
 
+  // 🔬 LAB EKSPERIMEN (10 Okt 2026): plugin bertanda config.experimental
+  // hanya jalan kalau eksperimennya dinyalakan via .lab (owner). Gate
+  // nolak → kartu Lab 🔬 terkirim & handler GAK dieksekusi.
+  try {
+    if (plugin.config?.experimental) {
+      const labAllowed = await handleLabGate(getDatabase(), plugin, m, sock);
+      if (!labAllowed) return;
+    }
+  } catch {}
+
   // === Anti-Spam Menu V2 (menu + fitur commands) ===
   try {
     const { checkMenuSpamV2 } = await import("../plugins/tools/antispammenu.js");
@@ -1359,6 +1370,7 @@ try {
     try {
       await plugin.handler(m, { sock: dispatchSock, conn: dispatchSock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000, isJadibot: !!jadibotCtx.isJadibot, jadibotId: jadibotCtx.jadibotId || null });
     } finally { /* tidak ada pembungkus kartu pusat */ }
+    if (plugin.config?.experimental) { try { recordLabRun(getDatabase(), plugin.config.experimental, true, null); } catch {} }
     recordPluginExecution(command, true, null);
 
     // 🎯 PROGRES LEVEL AKTIVITAS (13 Sep 2026, request owner: "setiap user
@@ -1412,6 +1424,7 @@ try {
     }
   } catch (error) {
     logger.error("plugin", `${command}: ${error.message}`);
+    if (plugin.config?.experimental) { try { recordLabRun(getDatabase(), plugin.config.experimental, false, error?.message || "unknown"); } catch {} }
     recordPluginExecution(command, false, error.message);
     if (config.dev?.debugLog) console.error(c.gray(error.stack));
     if (!m.isNewsletter) { try { await m.react("❌"); } catch {} }
