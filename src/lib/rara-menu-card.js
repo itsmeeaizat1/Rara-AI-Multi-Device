@@ -541,6 +541,11 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     // externalAdReply CUMA jadi fallback kalau upload header gagal. ContextInfo
     // proto: pill newsletter saja — TANPA forwarding (owner larang). ──
     let _mHeader = { title: "", hasMediaAttachment: false };
+    // OWNER 9 Okt 2026: hasMediaAttachment di-FALSE (eksperimen anti "simpan
+    // ke galeri" — identik struktur Elaina tapi flag-nya false, media tetap
+    // di-upload & nempel di header). Kalau header malah gak ke-render,
+    // balikin ke true.
+    let _mUploaded = false;
     if (rawBuffer) {
       try {
         const _mMediaPrep = await prepareWAMessageMedia(
@@ -548,9 +553,11 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
           { upload: sock.waUploadToServer }
         );
         if (_mIsVideo && _mMediaPrep?.videoMessage) {
-          _mHeader = { hasMediaAttachment: true, videoMessage: _mMediaPrep.videoMessage };
+          _mHeader = { hasMediaAttachment: false, videoMessage: _mMediaPrep.videoMessage };
+          _mUploaded = true;
         } else if (_mMediaPrep?.imageMessage) {
-          _mHeader = { hasMediaAttachment: true, imageMessage: _mMediaPrep.imageMessage };
+          _mHeader = { hasMediaAttachment: false, imageMessage: _mMediaPrep.imageMessage };
+          _mUploaded = true;
         }
       } catch (e) {
         console.error("[rara-menu-card] Upload banner header gagal, fallback link-preview:", e.message);
@@ -597,7 +604,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
         serverMessageId: 127,
       },
       // banner fallback HANYA kalau media header gagal di-upload
-      ...(!_mHeader.hasMediaAttachment && _mImageBuf ? { externalAdReply } : {}),
+      ...(!_mUploaded && _mImageBuf ? { externalAdReply } : {}),
     };
 
     // GUARD SMALLCAPS BODY + FOOTER (owner 2026-09-07: "seluruh semua
