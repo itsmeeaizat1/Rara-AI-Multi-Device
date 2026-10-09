@@ -166,7 +166,7 @@ w("\n===== 5. plugin .botdoctor (handler + registry) =====");
   const replies = [];
   const mkM = (args, text) => ({ sender: "6281111111111@s.whatsapp.net", pushName: "Owner", args, text: text ?? (".botdoctor " + args.join(" ")).trim(), react: async () => {}, reply: async (t) => { replies.push(t); } });
   await handler(mkM([]), { sock: { sendMessage: async () => {} }, config: {} });
-  check("tanpa arg → kartu + guide (2 reply)", replies.length === 2 && replies[0].includes("DOKTER BOT") && replies[1].includes("「"), replies.map(r => r.slice(0, 30)).join("||"));
+  check("tanpa arg → kartu + guide (2 reply)", replies.length === 2 && replies[0].includes("DOKTER BOT") && replies[1].includes("『"), replies.map(r => r.slice(0, 30)).join("||")); // 『 sejak revisi judul 8 Okt
   check("kartu live via runBotDoctorNow (samples terakhir)", replies[0].includes("Skor kesehatan:"), replies[0].slice(0, 100));
   replies.length = 0;
   await handler(mkM(["on", "23:00"]), { sock: {} });

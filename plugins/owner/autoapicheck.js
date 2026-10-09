@@ -20,7 +20,7 @@
  *   .autoapicheck list           — Lihat daftar API yang dimonitor
  */
 
-import { raraError, raraEmpty, raraGuide, raraNoInput, toSC, raraBox } from "../../src/lib/rara-menu-style.js";
+import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import config from "../../config.js";
 import te from "../../src/lib/rara-error.js";
@@ -199,12 +199,14 @@ async function notifyOwnerDown(downApis, sock) {
     return line;
   });
 
-  const msg = raraBox(toSC("API Health Alert"), [
-    `${downApis.length} API ${toSC("down")} — ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}`,
+  const msg = raraWrap("API Health Alert", [
+    `🚨 *${downApis.length} API DOWN*`,
+    `━━━━━━━━━━━━━━`,
+    `*Waktu: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}*`,
     ``,
     ...lines,
     ``,
-    toSC("Gunakan .autoapicheck now untuk re-check"),
+    `*Gunakan .autoapicheck now untuk re-check*`,
   ]);
 
   for (const num of ownerNums) {
@@ -261,34 +263,33 @@ async function handler(m, { sock, config: botConfig }) {
     const downCount = checked > 0 ? checked - upCount : 0;
 
     const lines = [
-      `Status: ${settings.enabled ? toSC("AKTIF") : toSC("MATI")}`,
-      `Interval: ${settings.intervalMin} ${toSC("menit")}`,
-      `Notify Owner: ${settings.notifyOwner ? toSC("ON") : toSC("OFF")}`,
-      `Total API: ${total}`,
-      ``,
-      checked > 0
-        ? `Last Check: ${upCount} OK / ${downCount} DOWN`
-        : `Last Check: ${toSC("belum pernah")}`,
+      `🩺 *STATUS*`,
+      `━━━━━━━━━━━━━━`,
+      `▪ *Monitoring:* ${settings.enabled ? "✅ AKTIF" : "❌ MATI"}`,
+      `▪ *Interval:* ${settings.intervalMin} menit`,
+      `▪ *Notify Owner:* ${settings.notifyOwner ? "ON" : "OFF"}`,
+      `▪ *Total API:* ${total}`,
     ];
 
     if (checked > 0) {
-      lines.push(``);
       const categories = {};
       for (const r of Object.values(lastCheckResults)) {
         if (!categories[r.category]) categories[r.category] = { up: 0, down: 0 };
         if (r.ok) categories[r.category].up++;
         else categories[r.category].down++;
       }
+      lines.push(``, `📊 *CEK TERAKHIR:* ${upCount} OK / ${downCount} DOWN`, `━━━━━━━━━━━━━━`);
       for (const [cat, counts] of Object.entries(categories)) {
         const status = counts.down > 0 ? `${counts.up}/${counts.up + counts.down}` : "OK";
-        lines.push(`${cat}: ${status}`);
+        lines.push(`▪ *${cat}:* ${status}`);
       }
+    } else {
+      lines.push(`▪ *Cek terakhir:* belum pernah`);
     }
 
-    lines.push(``);
-    lines.push(`${toSC("Ketik")} .autoapicheck now ${toSC("untuk cek")}`);
+    lines.push(``, `*Ketik .autoapicheck now untuk cek sekarang*`);
 
-    await m.reply(raraBox(toSC("API Health Monitor"), lines));
+    await m.reply(raraWrap("API Health Monitor", lines));
     return;
   }
 
@@ -297,13 +298,14 @@ async function handler(m, { sock, config: botConfig }) {
     const db = getDatabase();
     db.setting("apicheck_enabled", true);
     startMonitor(sock);
-    await m.reply(raraBox(toSC("API Health Monitor"), [
-      toSC("Monitoring AKTIF"),
-      `Interval: ${settings.intervalMin} ${toSC("menit")}`,
-      `Notify: ${settings.notifyOwner ? "ON" : "OFF"}`,
+    await m.reply(raraWrap("API Health Monitor", [
+      `✅ *MONITORING: AKTIF*`,
+      `━━━━━━━━━━━━━━`,
+      `▪ *Interval:* ${settings.intervalMin} menit`,
+      `▪ *Notify:* ${settings.notifyOwner ? "ON" : "OFF"}`,
       ``,
-      toSC("Bot akan cek API setiap") + ` ${settings.intervalMin} ` + toSC("menit"),
-      toSC("Owner akan dinotifikasi jika ada API down"),
+      `*Bot akan cek API setiap ${settings.intervalMin} menit*`,
+      `Owner akan dinotifikasi jika ada API down`,
     ]));
     return;
   }
@@ -313,9 +315,10 @@ async function handler(m, { sock, config: botConfig }) {
     const db = getDatabase();
     db.setting("apicheck_enabled", false);
     stopMonitor();
-    await m.reply(raraBox(toSC("API Health Monitor"), [
-      toSC("Monitoring DIMATIKAN"),
-      toSC("API tidak akan dicek otomatis"),
+    await m.reply(raraWrap("API Health Monitor", [
+      `❌ *MONITORING: MATI*`,
+      `━━━━━━━━━━━━━━`,
+      `*API tidak akan dicek otomatis*`,
     ]));
     return;
   }
@@ -325,9 +328,9 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
 
     const apis = getAllApis();
-    await m.reply(raraBox(toSC("API Health Check"), [
-      toSC("Mengecek") + ` ${apis.length} ` + toSC("API endpoints..."),
-      toSC("Mohon tunggu"),
+    await m.reply(raraWrap("API Health Check", [
+      `🕒 *Mengecek ${apis.length} API endpoints...*`,
+      `*Mohon tunggu*`,
     ]));
 
     const { results, downApis } = await checkAllApis();
@@ -356,24 +359,24 @@ async function handler(m, { sock, config: botConfig }) {
     const total = apis.length;
     const upN = Object.values(results).filter((r) => r.ok).length;
     const downN = total - upN;
-    lines.push(`${toSC("Hasil")}: ${upN} OK / ${downN} DOWN / ${total} Total`);
+    lines.push(`📊 *HASIL: ${upN} OK / ${downN} DOWN / ${total} TOTAL*`, `━━━━━━━━━━━━━━`);
     lines.push(``);
 
     for (const [cat, apiLines] of Object.entries(categories)) {
-      lines.push(`${toSC(cat.toUpperCase())}:`);
+      lines.push(`▪ *${cat.toUpperCase()}:*`);
       for (const line of apiLines) {
-        lines.push(`  ${line}`);
+        lines.push(`▪ ${line}`);
       }
       lines.push(``);
     }
 
     if (downN > 0) {
-      lines.push(`${downN} ${toSC("API down! Owner akan dinotifikasi")}`);
+      lines.push(`❗ *${downN} API down! Owner akan dinotifikasi*`);
     } else {
-      lines.push(toSC("Semua API sehat!"));
+      lines.push(`✅ *Semua API sehat!*`);
     }
 
-    await m.reply(raraBox(toSC("API Health Report"), lines));
+    await m.reply(raraWrap("API Health Report", lines));
 
     // Notify owner kalau ada yang down dan command dijalankan bukan owner
     if (downApis.length > 0) {
@@ -399,9 +402,10 @@ async function handler(m, { sock, config: botConfig }) {
       startMonitor(sock);
     }
 
-    await m.reply(raraBox(toSC("API Health Monitor"), [
-      `Interval: ${minutes} ${toSC("menit")}`,
-      settings.enabled ? toSC("Monitor direstart dengan interval baru") : toSC("Aktifkan dengan .autoapicheck on"),
+    await m.reply(raraWrap("API Health Monitor", [
+      `⚙️ *INTERVAL: ${minutes} MENIT*`,
+      `━━━━━━━━━━━━━━`,
+      settings.enabled ? `*Monitor direstart dengan interval baru*` : `*Aktifkan dengan .autoapicheck on*`,
     ]));
     return;
   }
@@ -433,11 +437,12 @@ async function handler(m, { sock, config: botConfig }) {
     custom.push({ name, url, backup, category });
     db.setting("apicheck_custom", custom);
 
-    await m.reply(raraBox(toSC("API Health Monitor"), [
-      `${toSC("API ditambahkan")}: ${name}`,
-      `URL: ${url}`,
-      backup ? `Backup: ${backup}` : `Backup: ${toSC("tidak ada")}`,
-      `Category: ${category}`,
+    await m.reply(raraWrap("API Health Monitor", [
+      `✅ *API DITAMBAHKAN: ${name}*`,
+      `━━━━━━━━━━━━━━`,
+      `▪ *URL:* ${url}`,
+      `▪ *Backup:* ${backup || "tidak ada"}`,
+      `▪ *Category:* ${category}`,
     ]));
     return;
   }
@@ -461,8 +466,8 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     db.setting("apicheck_custom", filtered);
-    await m.reply(raraBox(toSC("API Health Monitor"), [
-      `${toSC("API dihapus")}: ${name}`,
+    await m.reply(raraWrap("API Health Monitor", [
+      `🗑️ *API DIHAPUS: ${name}*`,
     ]));
     return;
   }
@@ -475,9 +480,10 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const db = getDatabase();
     db.setting("apicheck_notify", action === "on");
-    await m.reply(raraBox(toSC("API Health Monitor"), [
-      `Notify Owner: ${action === "on" ? "ON" : "OFF"}`,
-      action === "on" ? toSC("Owner akan dinotifikasi saat API down") : toSC("Notifikasi dimatikan"),
+    await m.reply(raraWrap("API Health Monitor", [
+      `🔔 *NOTIFY OWNER: ${action === "on" ? "ON" : "OFF"}*`,
+      `━━━━━━━━━━━━━━`,
+      action === "on" ? `*Owner akan dinotifikasi saat API down*` : `*Notifikasi dimatikan*`,
     ]));
     return;
   }
@@ -485,7 +491,7 @@ async function handler(m, { sock, config: botConfig }) {
   // .autoapicheck list — daftar semua API yang dimonitor
   if (subCmd === "list") {
     const apis = getAllApis();
-    const lines = [`Total: ${apis.length} API`, ``];
+    const lines = [`📋 *TOTAL: ${apis.length} API*`, `━━━━━━━━━━━━━━`];
 
     const categories = {};
     for (const api of apis) {
@@ -494,18 +500,18 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     for (const [cat, apiList] of Object.entries(categories)) {
-      lines.push(`${toSC(cat.toUpperCase())} (${apiList.length}):`);
+      lines.push(`▪ *${cat.toUpperCase()} (${apiList.length}):*`);
       for (const api of apiList) {
         const lastResult = lastCheckResults[api.name];
-        const status = lastResult ? (lastResult.ok ? "OK" : "DOWN") : "-";
+        const status = lastResult ? (lastResult.ok ? "✅ OK" : "❌ DOWN") : "➖ belum dicek";
         const backup = api.backup ? " +backup" : "";
-        lines.push(`  ${api.name}: ${status}${backup}`);
+        lines.push(`▪ ${api.name}: ${status}${backup}`);
       }
       lines.push(``);
     }
 
-    lines.push(`${toSC("Custom API:")} .autoapicheck add/del`);
-    await m.reply(raraBox(toSC("API Monitor List"), lines));
+    lines.push(`*Custom API:* .autoapicheck add/del`);
+    await m.reply(raraWrap("API Monitor List", lines));
     return;
   }
 

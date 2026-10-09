@@ -225,7 +225,7 @@ w("\n— plugin handler: status default off → on → scan → auto —");
   await docHandler({ ...m, args: ["auto", "on"] }, { db });
   check("auto on dari plugin", isDoctorAuto(db) === true && replies[4].toLowerCase().includes("nyala"));
   await docHandler({ ...m, args: ["clean"] }, { db });
-  check("clean jalan", replies[5].includes("log error") || replies[5].includes("dibersihin"));
+  check("clean jalan", /log error|dibersihin/i.test(replies[5])); // 9 Okt: header promo kini kapital
   // config plugin
   check("isOwner gate", docConfig.isOwner === true);
   check("alias ada dokter", docConfig.alias.includes("dokter"));

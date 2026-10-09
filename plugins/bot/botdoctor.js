@@ -70,40 +70,63 @@ async function handler(m, { config: botConfig }) {
       if (!JAM_RE.test(jam)) return m.reply(raraWrap("botdoctor", "Format jam gak valid. Contoh yang bener: .botdoctor on 23:00", "guide"));
       st.sched.on = true;
       st.sched.jam = jam.padStart(5, "0");
-      return m.reply(`Oke, dokter bot siap lapor tiap hari jam ${st.sched.jam} WIB ke DM kamu.`);
+      // REVISI 9 Okt (owner): balasan switch ikut gaya promosi AI khas tele
+      return m.reply(raraWrap("Dokter Bot", [
+        "✅ *LAPORAN OTOMATIS: AKTIF*",
+        `*Dokter bot siap lapor tiap hari jam ${st.sched.jam} WIB ke DM kamu*`,
+        `Diagnosa manual kapan aja: *.botdoctor*`,
+      ]));
     }
 
     // ── off ──
     if (sub === "off") {
       st.sched.on = false;
-      return m.reply("Laporan otomatis dokter bot dimati. Diagnosa manual tetep bisa: .botdoctor");
+      return m.reply(raraWrap("Dokter Bot", [
+        "❌ *LAPORAN OTOMATIS: MATI*",
+        "*Diagnosa manual tetep bisa kapan aja* — ketik *.botdoctor*",
+      ]));
     }
 
     // ── status / jam ──
     if (sub === "status" || sub === "jam") {
       const last = st.reports.length ? st.reports[st.reports.length - 1] : null;
       const lines = [
-        `Jadwal otomatis: ${st.sched.on ? "AKTIF" : "MATI"}`,
-        st.sched.on ? `Jam laporan: ${st.sched.jam} WIB tiap hari` : `Nyalain: .botdoctor on [HH:mm] (default 23:00)`,
-        `Sampel denyut tersimpan: ${st.samples.length} (≈${Math.round(st.samples.length / 180)} jam)`,
+        "📊 *STATUS*",
+        "━━━━━━━━━━━━━━",
+        `▪ *Jadwal otomatis:* ${st.sched.on ? "✅ AKTIF" : "❌ MATI"}`,
+        st.sched.on ? `▪ *Jam laporan:* ${st.sched.jam} WIB tiap hari` : `▪ *Nyalain:* .botdoctor on [HH:mm] (default 23:00)`,
+        `▪ *Sampel denyut tersimpan:* ${st.samples.length} (≈${Math.round(st.samples.length / 180)} jam)`,
       ];
-      if (last) lines.push(`Diagnosa terakhir: skor ${last.score}/100, ${last.temuan} temuan (${jamStr(last)})`);
-      return m.reply(lines.join("\n"));
+      if (last) lines.push(`▪ *Diagnosa terakhir:* skor ${last.score}/100, ${last.temuan} temuan (${jamStr(last)})`);
+      return m.reply(raraWrap("Dokter Bot", lines));
     }
 
     // ── riwayat ──
     if (sub === "riwayat") {
-      if (!st.reports.length) return m.reply("Belum ada riwayat diagnosa. Jalankan .botdoctor dulu.");
+      if (!st.reports.length) return m.reply(raraWrap("Dokter Bot", [
+        "📋 *RIWAYAT DIAGNOSA*",
+        "Belum ada riwayat diagnosa — jalankan *.botdoctor* dulu",
+      ]));
       const rows = st.reports.slice(-10).reverse().map((r) => {
         const bar = r.score >= 80 ? "🟢" : r.score >= 50 ? "🟡" : "🔴";
-        return `${bar} ${jamStr(r)} — skor ${r.score}/100, ${r.temuan} temuan`;
+        return `▪ ${bar} ${jamStr(r)} — skor ${r.score}/100, ${r.temuan} temuan`;
       });
-      return m.reply(`🩺 RIWAYAT DIAGNOSA (terbaru dulu):\n\n${rows.join("\n")}`);
+      return m.reply(raraWrap("Dokter Bot", [
+        "📋 *RIWAYAT DIAGNOSA* (terbaru dulu)",
+        "━━━━━━━━━━━━━━",
+        ...rows,
+      ]));
     }
 
-    return m.reply("Sub gak dikenal. Yang ada: on [HH:mm] · off · status · riwayat");
+    return m.reply(raraWrap("Dokter Bot", [
+      "❗ *Sub gak dikenal*",
+      "Yang ada: *on [HH:mm]* · *off* · *status* · *riwayat*",
+    ]));
   } catch (e) {
-    return m.reply(`Dokter bot gagal: ${e?.message || e}`);
+    return m.reply(raraWrap("Dokter Bot", [
+      "❌ *GAGAL DIAGNOSA*",
+      String(e?.message || e),
+    ]));
   }
 }
 

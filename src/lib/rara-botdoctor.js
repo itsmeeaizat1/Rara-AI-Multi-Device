@@ -139,22 +139,28 @@ export function buildDoctorCard(result = {}, now = Date.now()) {
   const d = new Date(now);
   const jam = d.toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).replaceAll(":", ".");
   const tgl = d.toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "long", year: "numeric" });
+  // REVISI 9 Okt (owner): kartu ikut gaya promosi AI — judul seksi *bold*,
+  // label-value bold sebaris, divider pendek (nyambung sama bootdoctor).
+  const DIV = "━━━━━━━━━━━━━━";
   const lines = [
-    `🩺 DOKTER BOT — DIAGNOSA 24 JAM`,
-    ``,
-    `Selesai: 🕒 ${jam}, ${tgl}`,
-    `Skor kesehatan: ${result.score}/100`,
-    ``,
+    `🩺 *DOKTER BOT — DIAGNOSA 24 JAM*`,
+    DIV,
+    `*Selesai: 🕒 ${jam}, ${tgl}*`,
+    `*Skor kesehatan: ${result.score}/100*`,
   ];
   const f = result.findings || [];
   if (!f.length) {
-    lines.push(`✅ Semua vital sehat — RAM stabil, koneksi WA kuat, tanpa error yang berarti. Besok dicek lagi.`);
+    lines.push(``, `✅ *Semua vital sehat — RAM stabil, koneksi WA kuat, tanpa error yang berarti. Besok dicek lagi 🎉*`);
   } else {
-    lines.push(`TEMUAN (${f.length}):`);
+    lines.push(``, `🔍 *TEMUAN (${f.length})*`, DIV);
     for (const x of f) {
       const tanda = x.tingkat === "kritis" ? "🚨" : x.tingkat === "waspada" ? "⚠️" : "ℹ️";
-      lines.push(``, `${tanda} ${x.tingkat.toUpperCase()} — ${x.gejala}`, `   Dugaan: ${x.dugaan}`, `   Saran: ${x.saran}`);
+      lines.push(`${tanda} *${x.tingkat.toUpperCase()} — ${x.gejala}*`);
+      lines.push(`*Dugaan: ${x.dugaan}*`);
+      lines.push(`*Saran: ${x.saran}*`);
+      lines.push(``);
     }
+    if (lines[lines.length - 1] === ``) lines.pop();
   }
   return lines.join("\n");
 }
