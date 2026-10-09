@@ -38,16 +38,16 @@
 
 ## Daftar Isi
 
-- [Update Terbaru](#-update-terbaru)
-- [Fitur Unggulan](#-fitur-unggulan)
-- [Statistik Bot](#-statistik-bot)
-- [Arsitektur](#-arsitektur)
-- [Instalasi](#-instalasi)
-- [Konfigurasi](#-konfigurasi)
-- [Command Penting](#-command-penting)
-- [Spesifikasi Server](#-spesifikasi-server)
-- [Dokumentasi](#-dokumentasi)
-- [Kontribusi & Lisensi](#-kontribusi--lisensi)
+- [Update Terbaru](#update-terbaru)
+- [Fitur Unggulan](#fitur-unggulan)
+- [Statistik Bot](#statistik-bot)
+- [Arsitektur](#arsitektur)
+- [Instalasi](#instalasi)
+- [Konfigurasi](#konfigurasi)
+- [Command Penting](#command-penting)
+- [Spesifikasi Server](#spesifikasi-server)
+- [Dokumentasi](#dokumentasi)
+- [Kontribusi & Lisensi](#kontribusi--lisensi)
 
 ---
 
