@@ -1,0 +1,769 @@
+{
+  "_note": "API KEY CONFIG — SATU FILE BUAT SEMUA (semua key dipusatkan di sini biar gampang diganti). CARA BACA (FIX 19 Sep 2026, biar jelas mana nama rest api & mana fiturnya): tiap key punya '_note_<nama key>' berbentuk BERLABEL — \"restapi\" = nama + endpoint rest api sumbernya, \"fitur\" = daftar fitur bot yang pakai key itu, \"catatan\" = status/pendaftaran/tambahan. REPO = TEMPLATE KOSONG (owner 10 Okt): SEMUA apikey/token di file ini kosong \"\" — versi key asli cuma ada di backup Drive (Whatsapp > Bot Whatsapp) + runtime VPS. Cara isi: .setkey <nama> <key> (DB, prioritas #1, tanpa restart) atau edit file ini lalu .reloadkey. GANTI KEY = edit nilai string key-nya, ketik .reloadkey (atau restart bot) — gak perlu ubah kode. Urutan baca key oleh bot (rara-api-keys.js): db runtime (.setkey) > file ini > config lama > env var. ATURAN URUTAN LABEL (owner 10 Okt, WAJIB): nama fitur (\"fitur\") DULU, baru nama web (\"web\"). ATURAN WEB (10 Okt 2026): tiap key WAJIB punya label \"web\" di _note_<key> = URL/nama website sumber key — pas key expired tinggal buka webnya buat bikin baru. Key yang emang gak punya web sumber → web: \"-\" (gak boleh kosong). Urutan label di _note: fitur, web, restapi, catatan.",
+  "aiSatuan": {
+    "_note": "KEY FITUR AI SATUAN & AI WRAPPER — tiap key punya '_note_<nama key>' BERLABEL: restapi = nama+endpoint rest api sumbernya, fitur = daftar fitur bot yang pakai key itu, catatan = status/pendaftaran/tambahan.",
+    "_note_haidar": {
+      "fitur": ".alldl/.alldownloader/.alldownloaderv3 (fallback downloader), .txt2vid, .tts haidar (text2speech), .img2style, .nanobanana (image gen), .ai haidar (blackbox chat), rara-haidar textpro suite, sumber soal game factory (zmaths dll), fallback rantai AI + douyin",
+      "web": "https://api.haidarxd.my.id",
+      "restapi": "HAIDARAPIS — api.haidarxd.my.id",
+      "catatan": "336 endpoint all-in-one, daftar gratis api.haidarxd.my.id/register"
+    },
+    "haidar": "",
+    "_note_ikyyxd": {
+      "fitur": "rantai AI cadangan ikyy_gemini/ikyy_gpt5mini/ikyy_cici/ikyy_gemma (.raraai & fitur AI otomatis), .ikyydl (downloader ytmp3/ytmp4/tiktok fallback), .getdltiktok, .snaptikdouyin, .unlimitedai, fallback AI satuan (rara-ai-fallback)",
+      "web": "https://api.ikyyxd.my.id",
+      "restapi": "IKYYXD — api.ikyyxd.my.id",
+      "catatan": "preset gratis key 'kyzz'"
+    },
+    "ikyyxd": "",
+    "_note_cuki": {
+      "fitur": ".gita, .gpt4o, .nayaai, .pakustad, .lahelu",
+      "web": "https://api.cuki.biz.id",
+      "restapi": "CUKI API — api.cuki.biz.id",
+      "catatan": "chatbot persona naya, dashboard key api.cuki.biz.id/auth/dashboard · STATUS 19 Sep: key baru dipasang dari owner (cukimwah-…), live probe OK"
+    },
+    "cuki": "",
+    "_note_termai": {
+      "fitur": "(dulu) .logicbell, .tourl, .animeapaini, .musikapaini, .qrcustom",
+      "restapi": "TERMAI — api.termai.cc (DILEPAS 1 Okt 2026)",
+      "catatan": "Jadi free-tier limit kecil (logic-bell 429 permanen, upload cepat kena limit) → semua fitur dimigrasi ke host upload publik rara-uploader (Kappa → Pone → Uguu). Zelapi gak dipakai: /tools/upload-nya mati. Key dibuang dari config."
+    },
+    "_note_voiceai": {
+      "fitur": ".suaraai (TTS suara AI)",
+      "web": "-",
+      "restapi": "VOICEAI — api.voiceai",
+      "catatan": "TTS suara AI"
+    },
+    "voiceai": "",
+    "_note_fishaudio": {
+      "fitur": ".voiceclone (fallback voice)",
+      "web": "https://fish.audio",
+      "restapi": "FISH AUDIO — fish.audio",
+      "catatan": "TTS voice clone · kosong = fitur skip fish.audio, pakai engine lain"
+    },
+    "fishaudio": "",
+    "_note_anabot": {
+      "fitur": ".izen (shortener analyzer)",
+      "web": "https://anabot.my.id",
+      "restapi": "ANABOT — anabot.my.id",
+      "catatan": "key default 'freeApikey' gratis"
+    },
+    "anabot": "",
+    "_note_autoresbot": {
+      "fitur": "",
+      "web": "https://api.autoresbot.com",
+      "restapi": "AUTORESBOT — api.autoresbot.com",
+      "catatan": "CADANGAN — kosong = skip, gak ada fitur wajib yang bergantung"
+    },
+    "autoresbot": "",
+    "_note_min1ai": {
+      "fitur": "urutan #1 rantai AI RaraAI (.raraai/.autonovaai/fitur AI otomatis), aiagent, fallback AI satuan. Model free: qwen3-8b",
+      "web": "https://api.1min.ai",
+      "restapi": "1MIN.AI — api.1min.ai/api/chat-with-ai",
+      "catatan": "auth header 'API-KEY', daftar app.1min.ai"
+    },
+    "min1ai": "",
+    "_note_fazzcode": {
+      "fitur": ".airoleplaychat (chatbot-role), .fazzroleplay",
+      "web": "https://api.fazzcode.eu.cc",
+      "restapi": "FAZZCODE — api.fazzcode.eu.cc",
+      "catatan": "auth Bearer"
+    },
+    "fazzcode": "",
+    "_note_searchapi": {
+      "fitur": ".googleaimode",
+      "web": "https://www.searchapi.io",
+      "restapi": "SEARCHAPI.IO — www.searchapi.io",
+      "catatan": "engine google_ai_mode, free trial ±100 req/bulan"
+    },
+    "searchapi": "",
+    "_note_zelapi": {
+      "fitur": "SEMUA suite z — .zchatgpt .zsearch (.zcookpad .zdetik .zdns .zgroupwa .zjadwaltv .zapkmody .zdeviant .ztwixtor .zacode), .zinfo (.ztokengratis .zgold .zgunung .zcrypto .zsaham .zongkir), .zff (free fire), .zeldl (downloader + .zspotify), .zeldetail (.zappstore .zplaystore .zgmaps .zchannel .zidnlive .zspeedtest .zxiaomi), .ztools/.ztools2 (.zqr .zmorse .zkurs .zepho dll), .jktai/.zjktai (18 persona JKT48), .jkt48 (showroom), .zlokal/.zkodepos/.zklasemen/.zbasa/.zquran/.zsound, fallback .sdxl",
+      "web": "https://zelapi.eu.cc",
+      "restapi": "ZELAPI — zelapi.eu.cc",
+      "catatan": "docs zelapi.eu.cc/docs, key 'zelapi-xxx'"
+    },
+    "zelapi": ""
+  },
+  "aiMultiprovider": {
+    "_note": "CONFIG MULTI-PROVIDER AI (pindahan ai-providers.json — sekarang satu file di apikeys.json). (1) 'chain' = urutan prioritas otak AI .raraai/.autonovaai/autoflow — down/rate-limit otomatis geser kebawah. (2) 'providers' = KEY semua provider buat fitur AI satuan (.grok/.openai/.claude/dll) & rantai — isi 'apikey' provider yang lo punya; kosong = di-skip otomatis. Provider ikyy (free) udah preset key 'kyzz'. Dibaca LIVE tiap pemanggilan — edit tanpa restart.",
+    "chain": [
+      "min1ai",
+      "nexai",
+      "groq",
+      "openai",
+      "ikyy_gemini",
+      "ikyy_gpt5mini",
+      "deepseek",
+      "zhipu",
+      "kimi",
+      "claude",
+      "ikyy_cici",
+      "ikyy_gemma"
+    ],
+    "providers": {
+      "groq": {
+        "label": "Groq API resmi (console.groq.com) — key baru 17 Sep 2026 (valid, 13 model: gpt-oss-20b chat aicall + whisper STT)",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "openai/gpt-oss-120b",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://console.groq.com"
+        }
+      },
+      "openai": {
+        "label": "OpenAI (resmi)",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "gpt-4o-mini",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://platform.openai.com"
+        }
+      },
+      "ikyy_gemini": {
+        "label": "IkyyXD Gemini — free (preset, gak perlu diisi)",
+        "url": "https://api.ikyyxd.my.id/ai/gemini",
+        "method": "get",
+        "textParam": "text",
+        "apikey": "",
+        "free": true,
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://api.ikyyxd.my.id"
+        }
+      },
+      "ikyy_gpt5mini": {
+        "label": "IkyyXD GPT-5 Mini — free (preset)",
+        "url": "https://api.ikyyxd.my.id/ai/gpt-5-mini",
+        "method": "get",
+        "textParam": "question",
+        "apikey": "",
+        "free": true,
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://api.ikyyxd.my.id"
+        }
+      },
+      "deepseek": {
+        "label": "DeepSeek",
+        "url": "https://api.deepseek.com/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "deepseek-chat",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://platform.deepseek.com"
+        }
+      },
+      "zhipu": {
+        "label": "Zhipu AI (GLM)",
+        "url": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "glm-4-flash",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://open.bigmodel.cn"
+        }
+      },
+      "kimi": {
+        "label": "Kimi (Moonshot AI)",
+        "url": "https://api.moonshot.cn/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "kimi-k2-0905-preview",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://platform.moonshot.cn"
+        }
+      },
+      "claude": {
+        "label": "Claude (Anthropic)",
+        "url": "https://api.anthropic.com/v1/messages",
+        "method": "post",
+        "format": "anthropic",
+        "model": "claude-sonnet-4-20250514",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://console.anthropic.com"
+        }
+      },
+      "ikyy_cici": {
+        "label": "IkyyXD Cici — cadangan free (preset)",
+        "url": "https://api.ikyyxd.my.id/ai/cici",
+        "method": "get",
+        "textParam": "prompt",
+        "apikey": "",
+        "free": true,
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://api.ikyyxd.my.id"
+        }
+      },
+      "ikyy_gemma": {
+        "label": "IkyyXD Gemma — cadangan terakhir free (preset)",
+        "url": "https://api.ikyyxd.my.id/ai/google-gemma",
+        "method": "get",
+        "textParam": "question",
+        "apikey": "",
+        "free": true,
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://api.ikyyxd.my.id"
+        }
+      },
+      "meta": {
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "-"
+        }
+      },
+      "openrouter": {
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://openrouter.ai"
+        }
+      },
+      "xai": {
+        "label": "xAI Grok resmi (console.x.ai) — key baru 17 Sep 2026 (valid; team BELUM punya kredit — beli di console.x.ai/team)",
+        "url": "https://api.x.ai/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "grok-3-mini",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://console.x.ai"
+        }
+      },
+      "gemini": {
+        "label": "Google Gemini (resmi, key aistudio.google.com — bukan Tio)",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://aistudio.google.com/apikey"
+        }
+      },
+      "qwen": {
+        "label": "Qwen (Alibaba Cloud)",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://dashscope.aliyun.com"
+        }
+      },
+      "cohere": {
+        "label": "Cohere",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://dashboard.cohere.com"
+        }
+      },
+      "perplexity": {
+        "label": "Perplexity",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://perplexity.ai/settings/api"
+        }
+      },
+      "fireworks": {
+        "label": "Fireworks AI",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://firework.ai"
+        }
+      },
+      "ai21": {
+        "label": "AI21 Labs",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://dashboard.ai21.com"
+        }
+      },
+      "reka": {
+        "label": "Reka AI",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://reka.ai"
+        }
+      },
+      "cerebras": {
+        "label": "Cerebras",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://cloud.cerebras.ai"
+        }
+      },
+      "huggingface": {
+        "label": "Hugging Face",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://huggingface.co/settings/tokens"
+        }
+      },
+      "voyage": {
+        "label": "Voyage AI",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://dash.voyageai.com"
+        }
+      },
+      "cloudflare": {
+        "label": "Cloudflare Workers AI",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://dash.cloudflare.com"
+        }
+      },
+      "stability": {
+        "label": "Stability AI",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://platform.stability.ai"
+        }
+      },
+      "jina": {
+        "label": "Jina AI",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://jina.ai"
+        }
+      },
+      "mistral": {
+        "label": "Mistral",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://console.mistral.ai"
+        }
+      },
+      "together": {
+        "label": "Together AI",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://api.together.xyz"
+        }
+      },
+      "grok": {
+        "label": "alias xAI Groq/Grok — key xai- 17 Sep 2026 (menunggu kredit team xAI)",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://console.x.ai"
+        }
+      },
+      "min1ai": {
+        "url": "https://api.1min.ai/api/chat-with-ai",
+        "model": "qwen3-8b",
+        "format": "min1ai",
+        "free": true,
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://api.1min.ai"
+        }
+      },
+      "nexai": {
+        "label": "NexAI APInex — 23 model, free/* zero-cost, default GLM (request owner 12 Sep)",
+        "url": "https://api.apinex.bond/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "free/glm-5.3-flash",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://api.apinex.bond"
+        }
+      },
+      "router9v2": {
+        "label": "9ROUTER V2 CLOUD (hosted 9router.cloudku.us.kg — OpenAI-compatible, key 17 Sep 2026)",
+        "model": "ag/gemini-pro-agent",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent/9router)",
+          "web": "https://9router.cloudku.us.kg"
+        }
+      },
+      "_note_router9v2": {
+        "fitur": ".ai9v2 / .9routerv2 (chat multi-model 21 model: gemini-pro-agent default (owner 17 Sep), claude, gpt-oss, agent variants) + endpoint /v1/models",
+        "restapi": "9ROUTER V2 — 9router.cloudku.us.kg",
+        "catatan": "BUKAN gateway npm 9router lokal, BUKAN fitur .ai9 lama · key valid live 17 Sep 2026 (models 200, chat 200)"
+      }
+    },
+    "pools": {
+      "_note": "RANCANGAN 9ROUTER — key pooling: list apikey per provider, diputar round-robin. Contoh: \"pools\": {\"groq\": [\"key1\", \"key2\"]}. Key kena 429/401 -> router otomatis pindah key berikutnya. Kosongkan/skip provider yang cuma punya 1 key (tetep pake providers.<nama>.apikey)."
+    }
+  },
+  "raraai": {
+    "_note": "KEY ENGINE RARA AI — otak fitur AI utama. Komentar berlabel per key di bawah (restapi/fitur/catatan).",
+    "_note_tioApiKey": {
+      "fitur": ".aitio, rantai AI rara-ai-service (.aichat/.aigrup/fitur AI otomatis semua), .aicaption, smartreply, fun-ai",
+      "web": "https://9router.cloudku.us.kg",
+      "restapi": "9ROUTER V2 — 9router.cloudku.us.kg (pengganti Tio, web gorouter/kktoken udah mati)",
+      "catatan": "key SAMA dengan providers.router9v2 · format OpenAI-compatible SAJA (anthropic/gemini format auto-dikonversi kode) · bisa override env TIO_API_URL"
+    },
+    "tioApiKey": "",
+    "_note_google": {
+      "fitur": "image gen gemini (.txt2img rantai), vision chain (baca gambar AI), .autoai",
+      "web": "https://aistudio.google.com/apikey",
+      "restapi": "GOOGLE GEMINI RESMI — aistudio.google.com/apikey",
+      "catatan": "BEDA dari key Tio"
+    },
+    "google": "",
+    "_note_groqkey": {
+      "fitur": "fallback aiagent + STT cepat (.stt, aiautointeractionvn)",
+      "web": "https://console.groq.com",
+      "restapi": "GROQ — console.groq.com"
+    },
+    "groqkey": "",
+    "_note_deepseekkey": {
+      "fitur": "provider utama aiagent",
+      "web": "https://platform.deepseek.com",
+      "restapi": "DEEPSEEK — platform.deepseek.com",
+      "catatan": "kosong = aiagent pakai fallback lain"
+    },
+    "deepseekkey": "",
+    "_note_inception": {
+      "fitur": ".ai-mercury (image gen cepat)",
+      "web": "https://inceptionlabs.ai",
+      "restapi": "INCEPTION LABS — inceptionlabs.ai",
+      "catatan": "mercury diffusion"
+    },
+    "inception": "",
+    "_note_sensenova": {
+      "fitur": ".ai-sensenova + fallback ke-2 vision chain",
+      "web": "https://token.sensenova.ai",
+      "restapi": "SENSENOVA — token.sensenova.ai",
+      "catatan": "4 model, 6.7/6.8 flash-lite vision gratis"
+    },
+    "sensenova": ""
+  },
+  "scraper": {
+    "_note": "KEY API SCRAPER DOWNLOADER/MAKER/STALKER — pernah hardcoded di root & file terpisah, sekarang satu tempat. Komentar berlabel per key (restapi/fitur/catatan).",
+    "_note_andaraz": {
+      "fitur": ".animecouple, .beritalengkap, .jobstreet, .alightmotion, .ampremv2",
+      "restapi": "ANDARAZ — api.andaraz.com"
+    },
+    "andaraz": {
+      "apikey": "ddc4f0b1",
+      "baseUrl": "https://api.andaraz.com"
+    },
+    "_note_sanka": {
+      "fitur": ".aiov2, .douyinv2, .facebookv2, .spotifyplay, .tiktokv2, .ytmp3v2, .ytmp4v2, .aronasanka, .comicsanka, .cpsanka, .quoteanimesanka, .quotessanka, .ttsnahidasanka",
+      "restapi": "SANKAVOLLEREI — www.sankavollerei.web.id"
+    },
+    "sanka": {
+      "apikey": "planaai",
+      "baseUrl": "https://www.sankavollerei.web.id"
+    },
+    "_note_kuroneko": {
+      "fitur": ".aivideo, .aivoiceceleb, .animetoreal",
+      "web": "-",
+      "restapi": "KURONEKO — api AI media"
+    },
+    "kuroneko": "",
+    "_note_lolhuman": {
+      "fitur": "downloader/stalker/info cadangan",
+      "web": "https://api.lolhuman.xyz",
+      "restapi": "LOLHUMAN — api.lolhuman.xyz",
+      "catatan": "key belum valid (placeholder) + API lagi bermasalah — isi key baru kalau mau dipakai"
+    },
+    "lolhuman": "",
+    "_note_neoxr": {
+      "fitur": ".anime-gen, .txt2img, .asupantiktok, .pixeldraindl",
+      "web": "https://api.neoxr.eu",
+      "restapi": "NEOXR — api.neoxr.eu",
+      "catatan": "sering rate-limit"
+    },
+    "neoxr": "",
+    "_note_fgsi": {
+      "fitur": ".editimg, .hdvid, .img2img",
+      "web": "https://fgsi.xyz",
+      "restapi": "FGSI — fgsi.xyz",
+      "catatan": "scraper media · key BANNED upstream — ganti kalau fiturnya mau dipakai"
+    },
+    "fgsi": "",
+    "_note_covenant": {
+      "fitur": "",
+      "web": "https://covenant.sbs",
+      "restapi": "COVENANT — covenant.sbs",
+      "catatan": "DEAD upstream — key disimpen buat arsip"
+    },
+    "covenant": "",
+    "_note_onlym": {
+      "fitur": "",
+      "web": "https://api.onlym.dev",
+      "restapi": "ONLYM — api.onlym.dev",
+      "catatan": "DEAD upstream — key disimpen buat arsip"
+    },
+    "onlym": "",
+    "_note_obscura": {
+      "fitur": "",
+      "web": "https://obscura.web.id",
+      "restapi": "OBSCURA — obscura.web.id",
+      "catatan": "DEAD upstream — key disimpen buat arsip"
+    },
+    "obscura": "",
+    "_note_firefly": {
+      "fitur": "",
+      "web": "https://firefly.maiku.my.id",
+      "restapi": "FIREFLY — firefly.maiku.my.id",
+      "catatan": "DEAD upstream — key disimpen buat arsip"
+    },
+    "firefly": "",
+    "kyzz": "",
+    "_note_kyzz": {
+      "fitur": "downloader tiktok/ig/twitter/soundcloud/play (key publik gratis IKYYXD)",
+      "web": "https://api.ikyyxd.my.id",
+      "restapi": "KYZZ — key publik gratis IKYYXD"
+    }
+  },
+  "fitur": {
+    "_note": "KEY FITUR NON-AI (cuaca, panel, berita, dll) — dulu hardcoded di src/lib/config/apikey.js & misc.json, sekarang satu tempat. Komentar berlabel per key (restapi/fitur/catatan).",
+    "_note_geminiStandalone": {
+      "fitur": ".autoai (otak AI interaksi otomatis)",
+      "web": "https://aistudio.google.com/apikey",
+      "restapi": "GEMINI STANDALONE — aistudio.google.com/apikey"
+    },
+    "geminiStandalone": "",
+    "_note_openWeatherKey": {
+      "fitur": ".weather/.cekcuacav2 (provider OWM), .hujannotif (nowcast hujan 30 menit)",
+      "web": "https://openweathermap.org",
+      "restapi": "OPENWEATHERMAP — openweathermap.org",
+      "catatan": "key ini juga buat One Call 3.0 nowcast per-menit · paket One Call 3.0 wajib di-subscribe di openweathermap.org/price (gratis 1000/hari)"
+    },
+    "openWeatherKey": "",
+    "_note_savenow": {
+      "fitur": "fallback .alldl (audio/video)",
+      "web": "https://4kdownload.to",
+      "restapi": "SAVENOW — 4kdownload.to"
+    },
+    "savenow": "",
+    "_note_deepai": {
+      "fitur": "",
+      "web": "https://api.deepai.org",
+      "restapi": "DEEPAI — api.deepai.org",
+      "catatan": "key expired — hd.js sekarang pakai sharp local. Diisi kalau mau balik ke API"
+    },
+    "deepai": "",
+    "_note_ptero": {
+      "fitur": ".createpanel suite (server1)",
+      "restapi": "PTERODACTYL PANEL — panel pterodactyl (domain + PTLA apikey + PTLC client apikey)",
+      "catatan": "tambah server2, server3... ikuti pola ptero_serverN_*"
+    },
+    "ptero_server1_domain": "",
+    "ptero_server1_apikey": "",
+    "ptero_server1_capikey": "",
+    "_note_vercel": {
+      "fitur": "deploy tools (opsional)",
+      "restapi": "VERCEL — vercel.com/account/tokens"
+    },
+    "vercelToken": "",
+    "_note_clipdrop": {
+      "fitur": ".nowm (watermark remover)",
+      "restapi": "CLIPDROP — clipdrop.co/apis",
+      "catatan": "gratis 100 credit"
+    },
+    "clipdropApiKey": "",
+    "_note_newsApiKey": {
+      "fitur": ".berita provider newsapi",
+      "web": "https://newsapi.org",
+      "restapi": "NEWSAPI.ORG — newsapi.org",
+      "catatan": "free 100 req/day"
+    },
+    "newsApiKey": "",
+    "_note_newsDataKey": {
+      "fitur": ".berita provider newsdata",
+      "web": "https://newsdata.io",
+      "restapi": "NEWSDATA.IO — newsdata.io",
+      "catatan": "free 200 req/day"
+    },
+    "newsDataKey": "",
+    "_note_rawgApiKey": {
+      "fitur": ".gamedb/info game",
+      "web": "https://rawg.io",
+      "restapi": "RAWG — rawg.io",
+      "catatan": "free game database"
+    },
+    "rawgApiKey": "",
+    "_note_binderbyte": {
+      "fitur": ".cekresi (cek resi kurir)",
+      "restapi": "BINDERBYTE — binderbyte.com"
+    },
+    "binderbyteKey": "",
+    "_note_fallbackApiKey": {
+      "fitur": "",
+      "web": "-",
+      "restapi": "FALLBACK KEY (generik — bukan rest api)",
+      "catatan": "dipakai kalau key per-format kosong"
+    },
+    "fallbackApiKey": "",
+    "_note_digitalOcean": {
+      "fitur": "tools VPS (opsional)",
+      "restapi": "DIGITALOCEAN — cloud.digitalocean.com"
+    },
+    "digitalOceanToken": "",
+    "_note_alightMotion": {
+      "fitur": ".alightmotion preset pro",
+      "restapi": "ALIGHT MOTION PREMIUM — api.znn.my.id",
+      "catatan": "token dari admin x-znn wa.me/6285348284121, IP server wajib di-whitelist"
+    },
+    "alightMotionToken": "",
+    "_note_weatherApiKey": {
+      "fitur": ".weather provider weatherapi",
+      "web": "https://weatherapi.com",
+      "restapi": "WEATHERAPI.COM — weatherapi.com",
+      "catatan": "provider cuaca berbayar"
+    },
+    "weatherApiKey": "",
+    "_note_emailOtp": {
+      "fitur": "OTP email masuk (opsional)",
+      "restapi": "EMAIL OTP — disarankan via env EMAILOTP_USER/EMAILOTP_PASS"
+    },
+    "emailOtpUser": "",
+    "emailOtpPass": "",
+    "amproFirebase": "",
+    "_note_amproFirebase": {
+      "fitur": ".ampro/.amrefresh (aktifin AlightMotion premium)",
+      "web": "-",
+      "restapi": "Firebase web key Alight Motion (baked di APK, gak daftar web)"
+    },
+    "_note_ptero_server1_domain": {
+      "fitur": "domain panel Ptero (dipakai .cpanel/.setpanel)",
+      "web": "-",
+      "catatan": "domain panel Ptero sendiri — bikin ulang di admin panel (Application > API Keys)"
+    },
+    "_note_ptero_server1_apikey": {
+      "fitur": "application key panel (create server/user)",
+      "web": "-",
+      "catatan": "application key panel — bikin ulang di admin panel (Application > API Keys)"
+    },
+    "_note_ptero_server1_capikey": {
+      "fitur": "client key panel (akun server user)",
+      "web": "-",
+      "catatan": "client key panel — bikin ulang di panel (Account > API Credentials)"
+    },
+    "_note_vercelToken": {
+      "fitur": "deploy .vercel",
+      "web": "https://vercel.com/account/tokens"
+    },
+    "_note_clipdropApiKey": {
+      "fitur": "image tools clipdrop",
+      "web": "https://clipdrop.co/apis"
+    },
+    "_note_binderbyteKey": {
+      "fitur": "cek resi .cekresi",
+      "web": "https://binderbyte.com"
+    },
+    "_note_digitalOceanToken": {
+      "fitur": "infra DO",
+      "web": "https://cloud.digitalocean.com"
+    },
+    "_note_alightMotionToken": {
+      "fitur": "preset alight motion premium",
+      "web": "https://api.znn.my.id"
+    },
+    "_note_emailOtpUser": {
+      "fitur": "email OTP (SMTP Gmail app password)",
+      "web": "https://myaccount.google.com/apppasswords"
+    },
+    "_note_emailOtpPass": {
+      "fitur": "email OTP (SMTP Gmail app password)",
+      "web": "https://myaccount.google.com/apppasswords"
+    }
+  },
+  "router": {
+    "gateway": {
+      "apikey": ""
+    },
+    "providers": [
+      {
+        "provider": "glm",
+        "label": "GLM / Zhipu",
+        "apikey": "",
+        "model": "",
+        "aktif": true
+      },
+      {
+        "provider": "kimi",
+        "label": "Moonshot Kimi",
+        "apikey": "",
+        "model": "",
+        "aktif": true
+      },
+      {
+        "provider": "minimax",
+        "label": "MiniMax",
+        "apikey": "",
+        "model": "",
+        "aktif": true
+      },
+      {
+        "provider": "openrouter",
+        "label": "OpenRouter",
+        "apikey": "",
+        "model": "",
+        "aktif": true
+      },
+      {
+        "provider": "groq",
+        "label": "Groq",
+        "apikey": "",
+        "model": "",
+        "aktif": true
+      },
+      {
+        "provider": "openai",
+        "label": "OpenAI",
+        "apikey": "",
+        "model": "",
+        "aktif": true
+      },
+      {
+        "provider": "anthropic",
+        "label": "Anthropic Claude",
+        "apikey": "",
+        "model": "",
+        "aktif": true
+      },
+      {
+        "provider": "gemini",
+        "label": "Google Gemini",
+        "apikey": "",
+        "model": "",
+        "aktif": true
+      },
+      {
+        "provider": "deepseek",
+        "label": "DeepSeek",
+        "apikey": "",
+        "model": "",
+        "aktif": true
+      }
+    ],
+    "_catatan": "PUSAT 10 Okt 2026: config 9router (gateway.apikey + providers) dilebur ke sini. Edit lewat .9router sync / otomatis. Override VPS/test: env ROUTER9_CONFIG ke file dedicated."
+  }
+}
