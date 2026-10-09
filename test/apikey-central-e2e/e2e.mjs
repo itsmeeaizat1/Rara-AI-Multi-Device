@@ -23,8 +23,10 @@ console.log("\n═══ 1. apikeys.json: section baru ═══");
 {
   const center = JSON.parse(readFileSync(R("src/lib/apikey/apikeys.json"), "utf8"));
   t("1a. section router ada (gateway + providers migrasi)", !!(center.router?.gateway && Array.isArray(center.router?.providers)), "router: " + (center.router ? "ada" : "hilang"));
-  t("1b. fitur.amproFirebase terisi (nilai AIza lama)", /^AIza[A-Za-z0-9_-]{20,}$/.test(center.fitur?.amproFirebase || ""), String(center.fitur?.amproFirebase || "").slice(0, 12) + "...");
-  t("1c. scraper.kyzz == 'kyzz' (key publik API gratis)", center.scraper?.kyzz === "kyzz", JSON.stringify(center.scraper?.kyzz));
+  // ATURAN owner 10 Okt (malam): repo = TEMPLATE KOSONG — semua apikey "".
+  // Key asli cuma ada di backup Drive + runtime VPS (.setkey / restore).
+  t("1b. fitur.amproFirebase KOSONG di repo (template)", (center.fitur?.amproFirebase || "") === "", "masih terisi");
+  t("1c. scraper.kyzz KOSONG di repo (template)", (center.scraper?.kyzz || "") === "", "masih terisi");
 }
 
 console.log("\n═══ 2. file 9routerapikey.json dilebur ═══");
@@ -44,7 +46,7 @@ console.log("\n═══ 3. ampro.js: literal AIza pindah ke pusat ═══");
   const amproCfg = ampro.default?.config || ampro.config;
   t("3c. plugin ampro tetap export config + handler", !!(amproCfg && (ampro.default?.handler || ampro.handler)), "export rusak");
   const { getApiKey } = await import(R("src/lib/rara-api-keys.js"));
-  t("3d. getApiKey('ampro') resolve ke nilai pusat", /^AIza[A-Za-z0-9_-]{20,}$/.test(getApiKey("ampro") || ""), String(getApiKey("ampro") || "").slice(0, 12));
+  t("3d. getApiKey('ampro') = kosong di repo (belum diset, fallback .setkey/env)", (getApiKey("ampro") || "") === "", "masih kebaca key");
 }
 
 console.log("\n═══ 4. 11 literal kyzz → pusat ═══");
@@ -62,7 +64,7 @@ console.log("\n═══ 4. 11 literal kyzz → pusat ═══");
   }
   t("4a. gak ada literal 'kyzz' tersisa di 10 file", masih.length === 0, masih.join(", "));
   const { getApiKey } = await import(R("src/lib/rara-api-keys.js"));
-  t("4b. getApiKey('kyzz') == 'kyzz'", getApiKey("kyzz") === "kyzz", JSON.stringify(getApiKey("kyzz")));
+  t("4b. getApiKey('kyzz') = kosong di repo (template, diisi via .setkey)", (getApiKey("kyzz") || "") === "", "masih kebaca key");
   const douyin = await import(R("plugins/download/douyindl.js"));
   const dCfg = douyin.default?.config || douyin.config;
   t("4c. douyindl tetap export config + handler", !!(dCfg && (douyin.default?.handler || douyin.handler)), "export rusak");
@@ -72,8 +74,8 @@ console.log("\n═══ 5. flatten & getter lain gak rusak ═══");
 {
   const { getApiKeys } = await import(R("src/lib/config/env-loader.js"));
   const flat = getApiKeys();
-  t("5a. flat.amproFirebase terbaca", !!flat.amproFirebase, "kosong");
-  t("5b. flat.kyzz terbaca", flat.kyzz === "kyzz", JSON.stringify(flat.kyzz));
+  t("5a. flat.amproFirebase ada di flat (nilai kosong, slot gak hilang)", "amproFirebase" in flat && flat.amproFirebase === "", "slot rusak");
+  t("5b. flat.kyzz ada di flat (nilai kosong, slot gak hilang)", "kyzz" in flat && flat.kyzz === "", "slot rusak");
   t("5c. key section lain tetap ada (geminiStandalone dsb)", Object.keys(flat).length > 40, Object.keys(flat).length + " key");
 }
 
@@ -123,6 +125,35 @@ console.log("\n═══ 5b. ATURAN WEB: tiap key punya label web di _note ═�
     if (typeof p === "object" && p) cekUrut("providers." + k, p._note);
   }
   t("5g. URUTAN WAJIB: label fitur sebelum web di semua note", salahUrut.length === 0, salahUrut.slice(0, 5).join(", "));
+}
+
+console.log("\n═══ 5h. REPO BERSIH SECRET: apikeys.json cuma placeholder ═══");
+{
+  // ATURAN owner 10 Okt (malam): versi repo = PLACEHOLDER saja — key asli
+  // cuma ada di backup Drive + runtime VPS (.setkey / restore dbbak).
+  // Yang BOLEH terisi di repo: key default PUBLIK (gratis, documented,
+  // baked di APK) — daftar whitelist nilai eksak di bawah. Selain itu
+  // wajib kosong "". Scraper murni (gak butuh key) gak kena aturan ini.
+  // revisi owner 10 Okt malam: repo = KOSONG SEMUA — gak ada pengecualian
+  // key publik pun dikosongin (fresh install isi sendiri via .setkey)
+  const center = JSON.parse(readFileSync(R("src/lib/apikey/apikeys.json"), "utf8"));
+  let bocor = [];
+  const cekVal = (label, v) => {
+    if (String(v ?? "").trim()) bocor.push(label);
+  };
+  for (const sec of ["aiSatuan", "raraai", "scraper", "fitur"]) {
+    for (const [k, v] of Object.entries(center[sec] || {})) {
+      if (k.startsWith("_") || typeof v !== "string") continue;
+      cekVal(sec + "." + k, v);
+    }
+  }
+  for (const [k, p] of Object.entries(center.aiMultiprovider?.providers || {})) {
+    if (k.startsWith("_") || typeof p !== "object" || !p) continue;
+    cekVal("providers." + k + ".apikey", p.apikey);
+  }
+  cekVal("router.gateway.apikey", center.router?.gateway?.apikey);
+  (center.router?.providers || []).forEach((p, i) => cekVal("router.providers[" + i + "].apikey", p.apikey));
+  t("5h. REPO TEMPLATE: SEMUA apikey/token kosong (gak ada nilai terisi)", bocor.length === 0, bocor.slice(0, 8).join(", "));
 }
 
 console.log("\n═══ 6. repo bersih literal key ═══");
