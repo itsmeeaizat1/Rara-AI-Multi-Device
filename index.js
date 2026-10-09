@@ -55,6 +55,7 @@ import {
 } from "./src/handler.js";
 import { loadPlugins, pluginStore } from "./src/lib/rara-plugins.js";
 import { initDatabase, getDatabase } from "./src/lib/rara-database.js";
+import { drainSendQueue, getQueueDepth } from "./src/lib/rara-send-queue.js";
 import { syncSewaOverrides } from "./src/lib/sewa/sewa.js";
 import {
   initScheduler,
@@ -254,28 +255,50 @@ function setupAntiCrash() {
     logger.warn("system", `${warning.name}: ${warning.message}`);
   });
 
-  process.on("SIGINT", async () => {
-    console.log("");
-    logger.system("system", "Received STOP signal (SIGINT)");
-    logger.info("database", "Saving data to local storage...");
-    try {
-      const db = getDatabase();
-      db.save();
-      logger.success("database", "All data successfully saved");
-    } catch (error) {
-      logger.warn("database", `save failed: ${error.message}`);
-    }
-    logger.info("system", "Engine stopped safely");
-    process.exit(0);
+  process.on("SIGINT", () => {
+    gracefulShutdown("SIGINT");
   });
 
   process.on("SIGTERM", () => {
-    console.log("");
-    logger.system("system", "Received TERMINATE signal (SIGTERM)");
-    process.exit(0);
+    gracefulShutdown("SIGTERM");
   });
 
   logger.success("system", "Anti-Crash Protection is Active");
+}
+
+// QA Gate 5: graceful shutdown — selesaikan reply yang nanggung di antrean
+// kirim dulu (drain), simpan DB, baru mati. Dipanggil SIGINT & SIGTERM.
+async function gracefulShutdown(signal) {
+  const guarded = gracefulShutdown.__ran;
+  if (guarded) return; // signal dobel (egg kirim SIGTERM+SIGINT) = jalan sekali
+  gracefulShutdown.__ran = true;
+  console.log("");
+  logger.system("system", `Received ${signal} signal`);
+
+  // 1) drain antrean kirim — reply nanggung harus sampai sebelum koneksi mati
+  try {
+    const depth = getQueueDepth();
+    if (depth > 0) {
+      logger.info("system", `Menyelesaikan ${depth} pesan yang masih di antrean...`);
+      const ok = await drainSendQueue(8000);
+      if (!ok) logger.warn("system", "Antrean belum kosong setelah 8 detik — lanjut shutdown");
+    }
+  } catch (error) {
+    logger.warn("system", `drain antrean gagal: ${error.message}`);
+  }
+
+  // 2) simpan database
+  logger.info("database", "Saving data to local storage...");
+  try {
+    const db = getDatabase();
+    db.save();
+    logger.success("database", "All data successfully saved");
+  } catch (error) {
+    logger.warn("database", `save failed: ${error.message}`);
+  }
+
+  logger.info("system", "Engine stopped safely");
+  process.exit(0);
 }
 
 async function main() {

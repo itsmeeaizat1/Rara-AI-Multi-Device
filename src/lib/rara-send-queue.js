@@ -102,3 +102,24 @@ export function wrapSendQueue(sock) {
 
   return sock;
 }
+
+// ── QA Gate 5: graceful shutdown ─────────────────────────────────────────────
+// Deploy/restart gak boleh motong reply yang lagi nanggung di antrean.
+// drainSendQueue nunggu semua job pending kekirim (atau timeout), dipanggil
+// dari SIGINT/SIGTERM handler sebelum koneksi dimatikan.
+
+export function getQueueDepth() {
+  let total = 0;
+  for (const c of _chains.values()) total += Math.max(0, c.pending);
+  return total;
+}
+
+export async function drainSendQueue(timeoutMs = 8000, pollMs = 50) {
+  const deadline = Date.now() + timeoutMs;
+  while (getQueueDepth() > 0) {
+    if (Date.now() >= deadline) return false;
+    const wait = Math.min(pollMs, Math.max(1, deadline - Date.now()));
+    await new Promise((r) => setTimeout(r, wait));
+  }
+  return true;
+}
