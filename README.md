@@ -288,7 +288,6 @@ Cocok jalan di **Pterodactyl, VPS, Termux, dan Docker**.
 | [panduan/AICALL.md](panduan/AICALL.md) | Stack panggilan suara AI |
 | [panduan/HIAI.md](panduan/HIAI.md) / [panduan/VOIPCALL.md](panduan/VOIPCALL.md) | AI agent MCP & telepon/video call |
 | [panduan/WEBPANEL.md](panduan/WEBPANEL.md) | Web dashboard |
-| [docs/list api.md](docs/list%20api.md) | Katalog 700+ API endpoint |
 
 ---
 
