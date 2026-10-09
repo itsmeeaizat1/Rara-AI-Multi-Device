@@ -111,7 +111,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
     "Titip pesan buat yang masih di sini — jaga kubu ya 🛡️",
     "Pintu selalu terbuka kalau mau balik lagi 🚪✨",
   ];
-  const engineText = raraWrap("Goodbye", [
+  const engineText = raraWrap("Sampai Jumpa", [
     `🚪 *${sapaanOut}*`,
     ``,
     `👤 *PROFIL MEMBER KELUAR*`,
@@ -126,10 +126,10 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
     `🎯 ${CTA_GOODBYE[Math.floor(Math.random() * CTA_GOODBYE.length)]}`,
   ].join("\n"));
 
-  // KARTU CANVAS DALAM PREVIEW (request owner 16 Sep 2026): kartu goodbye
-  // ("Selamat tinggal" + foto profil circle + nama + pesan apresiasi random
-  // buatan AI) digambar canvas → ditanam di PREVIEW (externalAdReply), bukan
-  // media langsung → gak bisa disimpan ke galeri.
+  // KARTU CANVAS DALAM PREVIEW (request owner 16 Sep 2026, desain ulang 9 Okt
+  // gaya promo telegram + teks Indonesia Title Case): kartu goodbye + pesan
+  // apresiasi random buatan AI digambar canvas → ditanam di PREVIEW
+  // (externalAdReply), bukan media langsung → gak bisa disimpan ke galeri.
   let ppBuffer = null;
   try {
     const ppUrl = await sock.profilePictureUrl(participantJid, "image");
@@ -162,7 +162,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
         mentionedJid: [participantJid],
         forwardingScore: 0, isForwarded: false,
         externalAdReply: {
-          title: "SELAMAT TINGGAL",
+          title: "Sampai Jumpa!",
           body: groupName,
           thumbnail: thumb,
           previewType: "PHOTO",

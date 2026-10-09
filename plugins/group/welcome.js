@@ -270,12 +270,13 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   if (rulesText.length > 200) rulesText = rulesText.slice(0, 197) + "...";
 
   // Sapaan acak biar gak monoton
+  // sapaan 100% bahasa Indonesia (revisi owner 9 Okt: jangan Inggris)
   const SAPAAN = [
-    `Halo kak @${handle}, selamat datang!`,
+    `Halo kak @${handle}, selamat datang ya!`,
     `Wew, akhirnya @${handle} nyampe juga!`,
-    `Ada member baru nih, welcome ya @${handle}!`,
+    `Ada member baru nih, sambut baik ya @${handle}!`,
     `Ketemu lagi di sini, selamat datang @${handle}!`,
-    `Tumben @${handle} mampir ke sini, haha welcome!`,
+    `Tumben @${handle} mampir ke sini, haha selamat datang!`,
   ];
   const sapaan = SAPAAN[Math.floor(Math.random() * SAPAAN.length)];
 
@@ -286,7 +287,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
     "Kenalan sama bot? Ketik *.menu* buat lihat semua fitur ✨",
     "Jangan sungkan kak, botnya suka diajak ngobrol — coba *.menu* 😉",
   ];
-  const engineText = raraWrap("Welcome", [
+  const engineText = raraWrap("Selamat Datang", [
     `👋 *${sapaan}*`,
     ``,
     `👤 *PROFIL MEMBER BARU*`,
@@ -301,10 +302,10 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
     `🎯 ${CTA_WELCOME[Math.floor(Math.random() * CTA_WELCOME.length)]}`,
   ].join("\n"));
 
-  // KARTU CANVAS DALAM PREVIEW (request owner 16 Sep 2026): kartu welcome
-  // ("Selamat datang" + nama grup + foto circle + nama + member ke-X + total
-  // member) digambar canvas → ditanam di PREVIEW (externalAdReply), bukan
-  // media langsung → gak bisa disimpan ke galeri.
+  // KARTU CANVAS DALAM PREVIEW (request owner 16 Sep 2026, desain ulang 9 Okt
+  // gaya promo telegram + teks Indonesia Title Case): kartu welcome digambar
+  // canvas → ditanam di PREVIEW (externalAdReply), bukan media langsung
+  // → gak bisa disimpan ke galeri.
   let ppBuffer = null;
   try {
     const ppUrl = await sock.profilePictureUrl(participantJid, "image");
@@ -329,7 +330,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
         mentionedJid: [participantJid],
         forwardingScore: 0, isForwarded: false,
         externalAdReply: {
-          title: "SELAMAT DATANG",
+          title: "Selamat Datang!",
           body: groupName,
           thumbnail: thumb,
           previewType: "PHOTO",

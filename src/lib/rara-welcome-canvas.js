@@ -101,30 +101,87 @@ function wrapText(ctx, text, maxWidth, maxLines = 2) {
  * _drawBase — background gradient + dekorasi lingkaran (tanpa network,
  * murni canvas → cepat & gak bisa gagal load di VPS/test)
  */
-function _drawBase(ctx, width, height, accent) {
+// REVISI 9 Okt (owner): desain ulang gaya promo telegram — clean, rata kiri,
+// badge pill, teks Indonesia Title Case ("Selamat Datang!", BUKAN ALL CAPS).
+function _roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function _glow(ctx, cx, cy, r, color) {
+  const rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+  rg.addColorStop(0, color);
+  rg.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = rg;
+  ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+}
+
+function _drawBase(ctx, width, height, glowTop, glowBottom) {
+  // bg deep navy → indigo (vibe kartu promo telegram)
   const g = ctx.createLinearGradient(0, 0, width, height);
-  g.addColorStop(0, "#141428");
-  g.addColorStop(0.5, "#1b2a4a");
-  g.addColorStop(1, "#0f3460");
+  g.addColorStop(0, "#0b1220");
+  g.addColorStop(0.55, "#111a33");
+  g.addColorStop(1, "#172554");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, width, height);
-  // dekorasi lingkaran transparan
-  ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
-  ctx.beginPath(); ctx.arc(70, 60, 130, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(width - 60, height - 40, 160, 0, Math.PI * 2); ctx.fill();
-  ctx.strokeStyle = "rgba(0, 242, 255, 0.15)";
-  ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.arc(width - 90, 90, 60, 0, Math.PI * 2); ctx.stroke();
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
-  ctx.lineWidth = 2;
-  ctx.strokeRect(8, 8, width - 16, height - 16);
-  // garis aksen bawah title
-  const ga = ctx.createLinearGradient(width / 2 - 120, 0, width / 2 + 120, 0);
-  ga.addColorStop(0, "rgba(0,242,255,0)");
-  ga.addColorStop(0.5, accent);
-  ga.addColorStop(1, "rgba(0,242,255,0)");
+  // glow lembut sudut (halus, gak norak)
+  _glow(ctx, width - 90, 80, 230, glowTop);
+  _glow(ctx, 60, height - 50, 210, glowBottom);
+}
+
+// badge pill kiri-atas: "MEMBER BARU" / "MEMBER KELUAR"
+function _drawBadge(ctx, text, accent) {
+  ctx.font = "bold 17px sans-serif";
+  const tw = ctx.measureText(text).width;
+  const w = tw + 44, h = 38, x = 40, y = 34, r = 19;
+  _roundRect(ctx, x, y, w, h, r);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+  ctx.fill();
+  ctx.strokeStyle = accent + "66";
+  ctx.lineWidth = 1.5;
+  _roundRect(ctx, x, y, w, h, r);
+  ctx.stroke();
+  // titik aksen kecil di dalam pill (accent label)
+  ctx.fillStyle = accent;
+  ctx.beginPath(); ctx.arc(x + 22, y + h / 2, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.textAlign = "left"; ctx.textBaseline = "middle";
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(text, x + 34, y + h / 2 + 1);
+}
+
+// judul Indonesia Title Case + subtitle grup + garis aksen pendek
+function _drawHeading(ctx, title, subtitle, accent, subColor) {
+  ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+  ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+  ctx.shadowBlur = 6;
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 46px sans-serif";
+  ctx.fillText(title, 40, 156);
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = subColor;
+  ctx.font = "italic 22px sans-serif";
+  ctx.fillText(subtitle, 40, 196);
+  const ga = ctx.createLinearGradient(40, 0, 260, 0);
+  ga.addColorStop(0, accent);
+  ga.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = ga;
-  ctx.fillRect(width / 2 - 120, 92, 240, 2);
+  ctx.fillRect(40, 212, 220, 3);
+}
+
+function _drawWatermark(ctx, width, height) {
+  ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+  ctx.font = "12px sans-serif";
+  ctx.fillText("RARA AI - MULTI DEVICE", 40, height - 18);
+  ctx.textAlign = "right";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
+  ctx.fillText("Aizat", width - 40, height - 18);
+  ctx.textAlign = "left";
 }
 
 /**
@@ -168,81 +225,63 @@ async function _drawAvatar(ctx, loadImage, ppBuffer, cx, cy, r, name) {
 }
 
 /**
- * generateWelcomeCard — "Selamat datang" + nama grup + foto circle + nama user
- * + "member ke-X" + total member (spec owner 16 Sep 2026). 800x450 PNG buffer.
+ * generateWelcomeCard — kartu promo telegram (revisi owner 9 Okt 2026):
+ * "Selamat Datang!" Title Case (bukan ALL CAPS), badge pill MEMBER BARU,
+ * rata kiri, foto circle + nama + member ke-X + total member. 800x450 PNG.
  */
 export async function generateWelcomeCard({ groupName, ppBuffer, name, memberKe, totalMember }) {
   const { createCanvas, loadImage } = await _canvasKit();
   const width = 800, height = 450;
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
-  _drawBase(ctx, width, height, "#00f2ff");
+  const accent = "#22d3ee";
+  _drawBase(ctx, width, height, "rgba(34, 211, 238, 0.20)", "rgba(59, 130, 246, 0.14)");
+  _drawBadge(ctx, "MEMBER BARU", accent);
+  _drawHeading(ctx, "Selamat Datang!", "di " + String(groupName || "Grup").slice(0, 40), accent, "#7dd3fc");
 
-  ctx.textAlign = "center";
-  ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
-  ctx.shadowBlur = 6;
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 46px sans-serif";
-  ctx.fillText("SELAMAT DATANG", width / 2, 62);
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = "#00f2ff";
-  ctx.font = "italic 24px sans-serif";
-  ctx.fillText(String(groupName || "Grup").slice(0, 40), width / 2, 122);
-
-  await _drawAvatar(ctx, loadImage, ppBuffer, width / 2, 240, 82, name);
-
-  ctx.textAlign = "center";
+  // profil kiri + info kanan (rata kiri, terstruktur ala kartu promo)
+  await _drawAvatar(ctx, loadImage, ppBuffer, 116, 322, 62, name);
+  ctx.textAlign = "left"; ctx.textBaseline = "middle";
   ctx.fillStyle = "#ffffff";
   ctx.font = "bold 30px sans-serif";
-  ctx.fillText(String(name || "Member Baru").slice(0, 26), width / 2, 360);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+  ctx.fillText(String(name || "Member Baru").slice(0, 26), 214, 306);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.78)";
   ctx.font = "20px sans-serif";
   ctx.fillText(
-    `Member ke-${memberKe ?? "-"}  •  Total ${totalMember ?? "-"} Member`,
-    width / 2, 396,
+    `Member ke-${memberKe ?? "-"}  •  Total ${totalMember ?? "-"} member`,
+    214, 342,
   );
-  ctx.textAlign = "left";
-  ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-  ctx.font = "12px sans-serif";
-  ctx.fillText(config.bot?.name || "Rara AI", 26, height - 18);
+  ctx.textBaseline = "alphabetic";
+  _drawWatermark(ctx, width, height);
   return canvas.toBuffer("image/png");
 }
 
 /**
- * generateGoodbyeCard — "Selamat tinggal" + foto profil circle + nama user
- * + pesan apresiasi AI (spec owner 16 Sep 2026). 800x450 PNG buffer.
+ * generateGoodbyeCard — kartu promo telegram (revisi owner 9 Okt 2026):
+ * "Sampai Jumpa!" Title Case, badge pill MEMBER KELUAR, rata kiri, foto
+ * circle + nama + pesan apresiasi AI. 800x450 PNG buffer.
  */
 export async function generateGoodbyeCard({ groupName, ppBuffer, name, apresiasi }) {
   const { createCanvas, loadImage } = await _canvasKit();
   const width = 800, height = 450;
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
-  _drawBase(ctx, width, height, "#ff6b6b");
+  const accent = "#fb7185";
+  _drawBase(ctx, width, height, "rgba(251, 113, 133, 0.18)", "rgba(168, 85, 247, 0.12)");
+  _drawBadge(ctx, "MEMBER KELUAR", accent);
+  _drawHeading(ctx, "Sampai Jumpa!", "dari " + String(groupName || "Grup").slice(0, 40), accent, "#fda4af");
 
-  ctx.textAlign = "center";
-  ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
-  ctx.shadowBlur = 6;
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 46px sans-serif";
-  ctx.fillText("SELAMAT TINGGAL", width / 2, 62);
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = "#ffb3b3";
-  ctx.font = "italic 24px sans-serif";
-  ctx.fillText(String(groupName || "Grup").slice(0, 40), width / 2, 122);
-
-  await _drawAvatar(ctx, loadImage, ppBuffer, width / 2, 240, 82, name);
-
-  ctx.textAlign = "center";
+  // profil kiri + nama & pesan apresiasi kanan
+  await _drawAvatar(ctx, loadImage, ppBuffer, 116, 322, 62, name);
+  ctx.textAlign = "left"; ctx.textBaseline = "middle";
   ctx.fillStyle = "#ffffff";
   ctx.font = "bold 30px sans-serif";
-  ctx.fillText(String(name || "Member").slice(0, 26), width / 2, 360);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+  ctx.fillText(String(name || "Member").slice(0, 26), 214, 296);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.72)";
   ctx.font = "italic 19px sans-serif";
-  const lines = wrapText(ctx, apresiasi, 640, 2);
-  lines.forEach((ln, i) => ctx.fillText(ln, width / 2, 392 + i * 26));
-  ctx.textAlign = "left";
-  ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-  ctx.font = "12px sans-serif";
-  ctx.fillText(config.bot?.name || "Rara AI", 26, height - 18);
+  const lines = wrapText(ctx, apresiasi, 540, 2);
+  lines.forEach((ln, i) => ctx.fillText(ln, 214, 336 + i * 26));
+  ctx.textBaseline = "alphabetic";
+  _drawWatermark(ctx, width, height);
   return canvas.toBuffer("image/png");
 }
