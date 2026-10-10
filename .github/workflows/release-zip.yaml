@@ -21,16 +21,16 @@ jobs:
         fetch-depth: 0
 
     # ── Tentukan tag ──────────────────────────────────────────────
-    # • event tag push  → pakai tag itu langsung, lanjut zip+upload
-    # • main/dispatch   → auto-bump patch dari tag terbaru (v24.2.8 → v24.2.9),
-    #   push tag-nya, lalu EXIT — run pemicu dari tag yang baru muncul akan
-    #   yang nge-zip + upload (satu penulis, gak dobel upload, gak loop)
+    # • event tag push (oleh manusia) → pakai tag itu langsung
+    # • event main/dispatch → auto-bump patch dari tag terbaru
+    #   (v24.2.8 → v24.2.9), push tag-nya, lalu build release di run INI.
+    #   CATATAN: tag yang di-push pakai GITHUB_TOKEN gak men-trigger run
+    #   baru (anti-recursion GitHub) → gak ada run dobel & gak infinite loop
     - name: Determine tag (auto-bump on main)
       id: tag
       run: |
         if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
           echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
-          echo "skip=false" >> "$GITHUB_OUTPUT"
         else
           LATEST=$(git tag -l 'v*' | sort -V | tail -1)
           if [ -z "$LATEST" ]; then LATEST="v24.2.0"; fi
@@ -42,20 +42,17 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "$NEW"
           git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$NEW"
-          echo "Created tag $NEW — release build dilanjutkan oleh run tag otomatis"
+          echo "Created tag $NEW"
           echo "tag=$NEW" >> "$GITHUB_OUTPUT"
-          echo "skip=true" >> "$GITHUB_OUTPUT"
         fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Zip repository (exclude .git & node_modules)
-      if: steps.tag.outputs.skip != 'true'
       run: |
         zip -r bot-source.zip . -x ".git/*" "node_modules/*" ".github/*"
 
     - name: Upload Release
-      if: steps.tag.outputs.skip != 'true'
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ steps.tag.outputs.tag }}
