@@ -1,21 +1,191 @@
-MIT License
+RARA AI - MULTI DEVICE - CUSTOM PROPRIETARY LICENSE
+Copyright (c) 2024-2026 Aizat (itsmeeaizat)
+All Rights Reserved.
 
-Copyright (c) 2026 Aizat — RARA AI - MULTI DEVICE
+=========================================================================
+ KETENTUAN DAN SYARAT LISENSI BOT RARA AI WHATSAPP
+=========================================================================
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Pemilik Hak Cipta (Copyright Holder):
+  Nama    : Aizat
+  GitHub  : github.com/itsmeeaizat1
+  Repo    : Rara-AI-Multi-Device
+  Tahun   : 2024-2026
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+=========================================================================
+ PASAL 1: DEFINISI
+=========================================================================
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. "Software" merujuk pada bot WhatsApp Rara AI beserta seluruh kode
+   sumber (source code), plugin, modul, library, dokumentasi, dan
+   file pendukung lainnya dalam repository ini.
+
+2. "Pembuat" / "Author" merujuk pada Aizat sebagai pemilik hak cipta
+   tunggal dan pengembang utama Software.
+
+3. "Pengguna" merujuk pada individu atau pihak yang menggunakan,
+   mendownload, men-deploy, atau mengakses Software ini.
+
+4. "Komersial" merujuk pada penggunaan Software untuk tujuan
+   menghasilkan keuntungan finansial, termasuk menjual, menyewakan,
+   atau memonetisasi fitur bot.
+
+=========================================================================
+ PASAL 2: HAK CIPTA
+=========================================================================
+
+Software ini adalah karya asli buatan Aizat (itsmeeaizat) yang dibuat
+di Indonesia. Seluruh hak cipta dilindungi oleh hukum yang berlaku
+di Republik Indonesia dan hukum internasional.
+
+Pembuat memiliki hak eksklusif untuk:
+  a. Menggunakan, memodifikasi, dan mendistribusikan Software
+  b. Memberikan atau mencabut izin penggunaan kepada pihak lain
+  c. Menentukan syarat dan ketentuan lisensi
+  d. Menuntut pihak yang melanggar ketentuan lisensi ini
+
+=========================================================================
+ PASAL 3: YANG DIPERBOLEHKAN
+=========================================================================
+
+Dengan lisensi ini, Pengguna DIPERBOLEHKAN:
+
+  1. Menggunakan Software untuk keperluan pribadi (personal use)
+     dan non-komersial
+  2. Mendownload dan men-deploy Software di server pribadi
+  3. Mempelajari kode sumber untuk tujuan edukasi
+  4. Melaporkan bug atau memberikan saran perbaikan kepada Pembuat
+  5. Membuat fork untuk kontribusi pengembangan (dengan persetujuan
+     Pembuat)
+  6. Menggunakan Software di grup WhatsApp pribadi atau komunitas
+     tanpa dipungut biaya
+
+=========================================================================
+ PASAL 4: YANG DILARANG
+=========================================================================
+
+Dengan lisensi ini, Pengguna DILARANG KERAS:
+
+  1. MENJUAL, menyewakan, atau memonetisasi Software atau bagian
+     dari Software tanpa izin tertulis dari Pembuat
+  2. MENGHAPUS atau mengubah watermark/copyright yang berbunyi
+     "// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA"
+     di seluruh file kode sumber
+  3. MENGKLAIM Software ini sebagai karya sendiri (plagiarisme)
+  4. MENDISTRIBUSIKAN ulang Software ini di platform publik
+     (GitHub, Telegram, WhatsApp, forum, dll) tanpa:
+     a. Menyertakan nama Pembuat (Aizat)
+     b. Menyertakan link repository asli
+     c. Menyertakan file LICENSE ini
+  5. MENGUBAH nama bot, brand, atau identitas Pembuat untuk
+     menyamarkan asal-usul Software
+  6. MENGKOMERSIALKAN plugin, fitur, atau modul apapun dari
+     Software ini sebagai produk terpisah
+  7. MELAKUKAN reverse engineering untuk membuat produk turunan
+     yang dikomersialkan
+  8. MENGHAPUS atau memodifikasi file LICENSE ini
+  9. MENGUBAH syarat dan ketentuan lisensi tanpa persetujuan
+     tertulis dari Pembuat
+ 10. MENDAFTARKAN hak cipta, merek dagang, paten, atau lisensi
+     baru atas nama Pengguna untuk Software ini maupun karya
+     turunan (derivative works) dari Software ini. Seluruh
+     karya turunan TETAP terikat pada lisensi ini
+ 11. MENAMBAHKAN atau mengganti lisensi lain (MIT, GPL, atau
+     lisensi apapun) pada distribusi ulang Software atau
+     karya turunannya
+
+=========================================================================
+ PASAL 5: SYARAT PENGGUNAAN KOMERSIAL
+=========================================================================
+
+Untuk penggunaan komersial (menyewakan bot, menjual akses premium,
+memonetisasi fitur), Pengguna WAJIB:
+
+  1. Mendapatkan izin tertulis dari Pembuat (Aizat)
+  2. Menyertakan kredit pembuat di semua materi promosi
+  3. Membayar royalti atau biaya lisensi sesuai kesepakatan
+  4. Tidak menghapus watermark dan file LICENSE
+
+Hubungi Pembuat via WhatsApp: +62 817-4887-770
+atau email yang tertera di profil GitHub untuk izin komersial.
+
+=========================================================================
+ PASAL 6: TANGGUNG JAWAB PENGGUNA
+=========================================================================
+
+  1. Pengguna bertanggung jawab penuh atas penggunaan Software
+     di lingkungannya masing-masing
+  2. Pembuat TIDAK bertanggung jawab atas penyalahgunaan Software
+     untuk aktivitas ilegal, spam, scam, atau pelanggaran
+     kebijakan WhatsApp/Meta
+  3. Pembuat TIDAK bertanggung jawab atas kerugian finansial,
+     banned account, atau masalah hukum yang timbul dari
+     penggunaan Software
+  4. Penggunaan Software untuk spam massal, harassment, atau
+     aktivitas merugikan pihak lain ADALAH DILARANG dan dapat
+     menyebabkan pencabutan lisensi
+
+=========================================================================
+ PASAL 7: GARANSI
+=========================================================================
+
+Software disediakan "SEBAGAIMANA ADANYA" (AS IS) tanpa garansi
+apapun, baik tersurat maupun tersirat, termasuk namun tidak
+terbatas pada garansi kelayakan jual atau kesesuaian untuk
+tujuan tertentu.
+
+Pembuat tidak menjamin Software akan bebas dari bug, error,
+atau gangguan. Update dan perbaikan dilakukan sebaik mungkin
+namun tidak ada jaminan waktu penyelesaian.
+
+=========================================================================
+ PASAL 8: PEMBARUAN LISENSI
+=========================================================================
+
+  1. Pembuat berhak mengubah syarat dan ketentuan lisensi ini
+     kapan saja tanpa pemberitahuan sebelumnya
+  2. Perubahan lisensi berlaku untuk versi Software terbaru
+  3. Pengguna yang sudah menggunakan versi sebelumnya tetap
+     terikat pada lisensi versi saat pertama kali download
+  4. Pengguna disarankan mengecek file LICENSE secara berkala
+
+=========================================================================
+ PASAL 9: PELANGGARAN LISENSI
+=========================================================================
+
+Pelanggaran terhadap syarat dan ketentuan lisensi ini dapat
+mengakibatkan:
+
+  1. Pencabutan lisensi penggunaan secara permanen
+  2. Tuntutan hukum sesuai peraturan perundang-undangan yang
+     berlaku di Republik Indonesia, khususnya:
+     a. Undang-Undang No. 28 Tahun 2014 tentang Hak Cipta
+     b. Undang-Undang No. 11 Tahun 2008 tentang ITE
+     c. Undang-Undang No. 19 Tahun 2016 tentang ITE
+  3. Permintaan penghapusan (DMCA takedown) ke platform
+     tempat Software dilanggar didistribusikan
+  4. Larangan penggunaan Software di masa mendatang
+
+=========================================================================
+ PASAL 10: KONTAK PEMBUAT
+=========================================================================
+
+Untuk pertanyaan, izin komersial, laporan pelanggaran, atau
+kerjasama pengembangan:
+
+  WhatsApp : +62 817-4887-770
+  GitHub   : github.com/itsmeeaizat
+  Repo     : github.com/itsmeeaizat1/Rara-AI-Multi-Device
+
+=========================================================================
+
+Dengan menggunakan Software ini, Pengguna dianggap membaca,
+memahami, dan menyetujui seluruh ketentuan dan syarat lisensi ini.
+
+Jika tidak setuju, Pengguna dilarang menggunakan Software ini.
+
+=========================================================================
+  RARA AI - MULTI DEVICE
+  Made in Indonesia by Aizat
+  Copyright (c) 2026
+=========================================================================

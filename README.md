@@ -10,7 +10,6 @@
   <img src="https://img.shields.io/badge/Command-6.700%2B-blueviolet?style=flat-square&logo=terminal">
   <img src="https://img.shields.io/badge/Kategori-54-green?style=flat-square&logo=folder">
   <img src="https://img.shields.io/badge/Node.js-22%2B-339933?style=flat-square&logo=node.js&logoColor=white">
-  <img src="https://img.shields.io/badge/License-MIT-000000?style=flat-square&logo=aboutdotme&logoColor=white">
 </p>
 
 </div>
@@ -49,7 +48,7 @@
 
 ## Update Terbaru (Okt 2026)
 
-- **Repo Publik + Template API Key** — repo kini open source (MIT). Semua API key dikirim kosong sebagai template; isi via `.setkey` tanpa edit kode. Prioritas akses: `.setkey` (database) → `apikeys.json` → environment variable.
+- **Repo Publik + Template API Key** — lisensi proprietary Aizat (bukan MIT). Semua API key dikirim kosong sebagai template; isi via `.setkey` tanpa edit kode. Prioritas akses: `.setkey` (database) → `apikeys.json` → environment variable.
 - **Sentralisasi API Key** — seluruh 79 key tersebar di plugin & config lama dipusatkan ke `src/lib/apikey/apikeys.json` dengan label `fitur` + `web` per key, diakses lewat fungsi `getApiKey()`.
 - **Laboratorium Fitur Eksperimen (`.lab`)** — kendali fitur eksperimental per-chat/global: nyalakan, matikan, dan pantau telemetri per fitur, auto-disable kalau error 5x beruntun.
 - **Mood Bot (`.botmood`)** — mood bot dihitung dari data nyata (error rate, uptime, aktivitas), bukan random.
@@ -289,7 +288,10 @@ Cocok jalan di **Pterodactyl, VPS, Termux, dan Docker**.
 
 ## Kontribusi & Lisensi
 
-Repo ini dilisensikan under **[MIT License](LICENSE)** — bebas dipakai, dimodifikasi, dan didistribusikan ulang selama copyright notice disertakan.
+Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat1)  
+All Rights Reserved. Made in Indonesia 🇮🇩
+
+Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
 
 - Menemukan bug? Buka [issue](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/issues)
 - Mau kontribusi fitur? Pull request ke branch fitur, maintainer merge
@@ -379,7 +381,7 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
 
 ## License
 
-Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat1) — [MIT License](LICENSE). Made in Indonesia 🇮🇩
+Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat1) — [Custom Proprietary License](LICENSE). Made in Indonesia 🇮🇩
 
 ---
 
