@@ -1,230 +1,230 @@
 RARA AI - MULTI DEVICE - CUSTOM PROPRIETARY LICENSE
-Copyright (c) 2024-2026 Aizat (itsmeeaizat)
-All Rights Reserved.
+COPYRIGHT (C) 2024-2026 AIZAT (ITSMEEAIZAT)
+ALL RIGHTS RESERVED.
 
 =========================================================================
  KETENTUAN DAN SYARAT LISENSI BOT RARA AI WHATSAPP
 =========================================================================
 
-Pemilik Hak Cipta (Copyright Holder):
-  Nama    : Aizat
-  GitHub  : github.com/itsmeeaizat1
-  Repo    : Rara-AI-Multi-Device
-  Tahun   : 2024-2026
+PEMILIK HAK CIPTA (COPYRIGHT HOLDER):
+  NAMA    : AIZAT
+  GITHUB  : GITHUB.COM/ITSMEEAIZAT1
+  REPO    : RARA-AI-MULTI-DEVICE
+  TAHUN   : 2024-2026
 
 =========================================================================
  PASAL 1: DEFINISI
 =========================================================================
 
-1. "Software" merujuk pada bot WhatsApp Rara AI beserta seluruh kode
-   sumber (source code), plugin, modul, library, dokumentasi, dan
-   file pendukung lainnya dalam repository ini.
+1. "SOFTWARE" MERUJUK PADA BOT WHATSAPP RARA AI BESERTA SELURUH KODE
+   SUMBER (SOURCE CODE), PLUGIN, MODUL, LIBRARY, DOKUMENTASI, DAN
+   FILE PENDUKUNG LAINNYA DALAM REPOSITORY INI.
 
-2. "Pembuat" / "Author" merujuk pada Aizat sebagai pemilik hak cipta
-   tunggal dan pengembang utama Software.
+2. "PEMBUAT" / "AUTHOR" MERUJUK PADA AIZAT SEBAGAI PEMILIK HAK CIPTA
+   TUNGGAL DAN PENGEMBANG UTAMA SOFTWARE.
 
-3. "Pengguna" merujuk pada individu atau pihak yang menggunakan,
-   mendownload, men-deploy, atau mengakses Software ini.
+3. "PENGGUNA" MERUJUK PADA INDIVIDU ATAU PIHAK YANG MENGGUNAKAN,
+   MENDOWNLOAD, MEN-DEPLOY, ATAU MENGAKSES SOFTWARE INI.
 
-4. "Komersial" merujuk pada penggunaan Software untuk tujuan
-   menghasilkan keuntungan finansial, termasuk menjual, menyewakan,
-   atau memonetisasi fitur bot.
+4. "KOMERSIAL" MERUJUK PADA PENGGUNAAN SOFTWARE UNTUK TUJUAN
+   MENGHASILKAN KEUNTUNGAN FINANSIAL, TERMASUK MENJUAL, MENYEWAKAN,
+   ATAU MEMONETISASI FITUR BOT.
 
 =========================================================================
  PASAL 2: HAK CIPTA
 =========================================================================
 
-Software ini adalah karya asli buatan Aizat (itsmeeaizat) yang dibuat
-di Indonesia, SEBAGIAN komponennya merupakan karya turunan (derivative
-work) dari pihak ketiga, khususnya library Baileys milik WhiskeySockets
-(github.com/WhiskeySockets/Baileys) yang dilisensikan di bawah MIT
-License, serta library pihak ketiga lain yang tercantum di package.json.
+SOFTWARE INI ADALAH KARYA ASLI BUATAN AIZAT (ITSMEEAIZAT) YANG DIBUAT
+DI INDONESIA, SEBAGIAN KOMPONENNYA MERUPAKAN KARYA TURUNAN (DERIVATIVE
+WORK) DARI PIHAK KETIGA, KHUSUSNYA LIBRARY BAILEYS MILIK WHISKEYSOCKETS
+(GITHUB.COM/WHISKEYSOCKETS/BAILEYS) YANG DILISENSIKAN DI BAWAH MIT
+LICENSE, SERTA LIBRARY PIHAK KETIGA LAIN YANG TERCANTUM DI PACKAGE.JSON.
 
-Hak cipta atas karya asli (source code, plugin, fitur, dan dokumentasi
-bot) sepenuhnya milik Pembuat. Komponen pihak ketiga TETAP tunduk pada
-lisensi aslinya (MIT) dan copyright notice-nya wajib dipertahankan pada
-setiap distribusi Software.
+HAK CIPTA ATAS KARYA ASLI (SOURCE CODE, PLUGIN, FITUR, DAN DOKUMENTASI
+BOT) SEPENUHNYA MILIK PEMBUAT. KOMPONEN PIHAK KETIGA TETAP TUNDUK PADA
+LISENSI ASLINYA (MIT) DAN COPYRIGHT NOTICE-NYA WAJIB DIPERTAHANKAN PADA
+SETIAP DISTRIBUSI SOFTWARE.
 
-Seluruh hak cipta dilindungi oleh hukum yang berlaku
-di Republik Indonesia dan hukum internasional.
+SELURUH HAK CIPTA DILINDUNGI OLEH HUKUM YANG BERLAKU
+DI REPUBLIK INDONESIA DAN HUKUM INTERNASIONAL.
 
-Pembuat memiliki hak eksklusif untuk:
-  a. Menggunakan, memodifikasi, dan mendistribusikan Software
-  b. Memberikan atau mencabut izin penggunaan kepada pihak lain
-  c. Menentukan syarat dan ketentuan lisensi
-  d. Menuntut pihak yang melanggar ketentuan lisensi ini
+PEMBUAT MEMILIKI HAK EKSKLUSIF UNTUK:
+  A. MENGGUNAKAN, MEMODIFIKASI, DAN MENDISTRIBUSIKAN SOFTWARE
+  B. MEMBERIKAN ATAU MENCABUT IZIN PENGGUNAAN KEPADA PIHAK LAIN
+  C. MENENTUKAN SYARAT DAN KETENTUAN LISENSI
+  D. MENUNTUT PIHAK YANG MELANGGAR KETENTUAN LISENSI INI
 
 =========================================================================
  PASAL 3: YANG DIPERBOLEHKAN
 =========================================================================
 
-Dengan lisensi ini, Pengguna DIPERBOLEHKAN:
+DENGAN LISENSI INI, PENGGUNA DIPERBOLEHKAN:
 
-  1. Menggunakan Software untuk keperluan pribadi (personal use)
-     dan non-komersial
-  2. Mendownload dan men-deploy Software di server pribadi
-  3. Mempelajari kode sumber untuk tujuan edukasi
-  4. Melaporkan bug atau memberikan saran perbaikan kepada Pembuat
-  5. Membuat fork untuk kontribusi pengembangan (dengan persetujuan
-     Pembuat)
-  6. Menggunakan Software di grup WhatsApp pribadi atau komunitas
-     tanpa dipungut biaya
-  7. Mengisi API key, menseting nama owner menjadi nama mereka,
-     dan menambahkan credit kontribusi (customisasi yang
-     diperbolehkan — lihat Pasal 5)
+  1. MENGGUNAKAN SOFTWARE UNTUK KEPERLUAN PRIBADI (PERSONAL USE)
+     DAN NON-KOMERSIAL
+  2. MENDOWNLOAD DAN MEN-DEPLOY SOFTWARE DI SERVER PRIBADI
+  3. MEMPELAJARI KODE SUMBER UNTUK TUJUAN EDUKASI
+  4. MELAPORKAN BUG ATAU MEMBERIKAN SARAN PERBAIKAN KEPADA PEMBUAT
+  5. MEMBUAT FORK UNTUK KONTRIBUSI PENGEMBANGAN (DENGAN PERSETUJUAN
+     PEMBUAT)
+  6. MENGGUNAKAN SOFTWARE DI GRUP WHATSAPP PRIBADI ATAU KOMUNITAS
+     TANPA DIPUNGUT BIAYA
+  7. MENGISI API KEY, MENSETING NAMA OWNER MENJADI NAMA MEREKA,
+     DAN MENAMBAHKAN CREDIT KONTRIBUSI (CUSTOMISASI YANG
+     DIPERBOLEHKAN — LIHAT PASAL 5)
 
 =========================================================================
  PASAL 4: YANG DILARANG
 =========================================================================
 
-Dengan lisensi ini, Pengguna DILARANG KERAS:
+DENGAN LISENSI INI, PENGGUNA DILARANG KERAS:
 
-  1. MENJUAL, menyewakan, atau memonetisasi Software atau bagian
-     dari Software tanpa izin tertulis dari Pembuat
-  2. MENGHAPUS atau mengubah watermark/copyright yang berbunyi
+  1. MENJUAL, MENYEWAKAN, ATAU MEMONETISASI SOFTWARE ATAU BAGIAN
+     DARI SOFTWARE TANPA IZIN TERTULIS DARI PEMBUAT
+  2. MENGHAPUS ATAU MENGUBAH WATERMARK/COPYRIGHT YANG BERBUNYI
      "// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA"
-     di seluruh file kode sumber
-  3. MENGKLAIM Software ini sebagai karya sendiri (plagiarisme)
-  4. MENDISTRIBUSIKAN ulang Software ini di platform publik
-     (GitHub, Telegram, WhatsApp, forum, dll) tanpa:
-     a. Menyertakan nama Pembuat (Aizat)
-     b. Menyertakan link repository asli
-     c. Menyertakan file LICENSE ini
-  5. MENGUBAH nama bot, brand, atau identitas Pembuat untuk
-     menyamarkan asal-usul Software
-  6. MENGKOMERSIALKAN plugin, fitur, atau modul apapun dari
-     Software ini sebagai produk terpisah
-  7. MELAKUKAN reverse engineering untuk membuat produk turunan
-     yang dikomersialkan
-  8. MENGHAPUS atau memodifikasi file LICENSE ini
-  9. MENGUBAH syarat dan ketentuan lisensi tanpa persetujuan
-     tertulis dari Pembuat
- 10. MENDAFTARKAN hak cipta, merek dagang, paten, atau lisensi
-     baru atas nama Pengguna untuk Software ini maupun karya
-     turunan (derivative works) dari Software ini. Seluruh
-     karya turunan TETAP terikat pada lisensi ini
- 11. MENAMBAHKAN atau mengganti lisensi lain (MIT, GPL, atau
-     lisensi apapun) pada distribusi ulang Software atau
-     karya turunannya
+     DI SELURUH FILE KODE SUMBER
+  3. MENGKLAIM SOFTWARE INI SEBAGAI KARYA SENDIRI (PLAGIARISME)
+  4. MENDISTRIBUSIKAN ULANG SOFTWARE INI DI PLATFORM PUBLIK
+     (GITHUB, TELEGRAM, WHATSAPP, FORUM, DLL) TANPA:
+     A. MENYERTAKAN NAMA PEMBUAT (AIZAT)
+     B. MENYERTAKAN LINK REPOSITORY ASLI
+     C. MENYERTAKAN FILE LICENSE INI
+  5. MENGUBAH NAMA BOT, BRAND, ATAU IDENTITAS PEMBUAT UNTUK
+     MENYAMARKAN ASAL-USUL SOFTWARE
+  6. MENGKOMERSIALKAN PLUGIN, FITUR, ATAU MODUL APAPUN DARI
+     SOFTWARE INI SEBAGAI PRODUK TERPISAH
+  7. MELAKUKAN REVERSE ENGINEERING UNTUK MEMBUAT PRODUK TURUNAN
+     YANG DIKOMERSIALKAN
+  8. MENGHAPUS ATAU MEMODIFIKASI FILE LICENSE INI
+  9. MENGUBAH SYARAT DAN KETENTUAN LISENSI TANPA PERSETUJUAN
+     TERTULIS DARI PEMBUAT
+ 10. MENDAFTARKAN HAK CIPTA, MEREK DAGANG, PATEN, ATAU LISENSI
+     BARU ATAS NAMA PENGGUNA UNTUK SOFTWARE INI MAUPUN KARYA
+     TURUNAN (DERIVATIVE WORKS) DARI SOFTWARE INI. SELURUH
+     KARYA TURUNAN TETAP TERIKAT PADA LISENSI INI
+ 11. MENAMBAHKAN ATAU MENGGANTI LISENSI LAIN (MIT, GPL, ATAU
+     LISENSI APAPUN) PADA DISTRIBUSI ULANG SOFTWARE ATAU
+     KARYA TURUNANNYA
 
 =========================================================================
  PASAL 5: ROYALTI DAN PENGGUNAAN KOMERSIAL
 =========================================================================
 
-Software ini ROYALTY-FREE: Pengguna TIDAK WAJIB membayar royalti,
-biaya lisensi, atau bentuk pembayaran apapun kepada Pembuat, baik
-untuk penggunaan pribadi, komunitas, maupun komersial.
+SOFTWARE INI ROYALTY-FREE: PENGGUNA TIDAK WAJIB MEMBAYAR ROYALTI,
+BIAYA LISENSI, ATAU BENTUK PEMBAYARAN APAPUN KEPADA PEMBUAT, BAIK
+UNTUK PENGGUNAAN PRIBADI, KOMUNITAS, MAUPUN KOMERSIAL.
 
-BATASAN MODIFIKASI (owner 10 Okt 2026):
-Pengguna DILARANG merombak, mengubah, menambah, atau menghapus
-bagian dari file kode sumber, struktur fitur, maupun fitur Software.
+BATASAN MODIFIKASI (OWNER 10 OKT 2026):
+PENGGUNA DILARANG MEROMBAK, MENGUBAH, MENAMBAH, ATAU MENGHAPUS
+BAGIAN DARI FILE KODE SUMBER, STRUKTUR FITUR, MAUPUN FITUR SOFTWARE.
 
-Customisasi yang DIPERBOLEHKAN HANYA TIGA:
-  1. Mengisi API key (via perintah .setkey, file apikeys.json,
-     atau environment variable)
-  2. Menseting nama owner menjadi nama Pengguna sendiri
-     (konfigurasi nama pemilik bot)
-  3. Menambahkan credit atas nama Pengguna untuk bagian yang
-     benar-benar mereka kontribusikan (mis. perbaikan bug,
-     penambahan fitur yang disetujui Pembuat, terjemahan, dll) —
-     credit Pembuat asli (Aizat) WAJIB tetap dicantumkan dan
-     TIDAK boleh digantikan
+CUSTOMISASI YANG DIPERBOLEHKAN HANYA TIGA:
+  1. MENGISI API KEY (VIA PERINTAH .SETKEY, FILE APIKEYS.JSON,
+     ATAU ENVIRONMENT VARIABLE)
+  2. MENSETING NAMA OWNER MENJADI NAMA PENGGUNA SENDIRI
+     (KONFIGURASI NAMA PEMILIK BOT)
+  3. MENAMBAHKAN CREDIT ATAS NAMA PENGGUNA UNTUK BAGIAN YANG
+     BENAR-BENAR MEREKA KONTRIBUSIKAN (MIS. PERBAIKAN BUG,
+     PENAMBAHAN FITUR YANG DISETUJUI PEMBUAT, TERJEMAHAN, DLL) —
+     CREDIT PEMBUAT ASLI (AIZAT) WAJIB TETAP DICANTUMKAN DAN
+     TIDAK BOLEH DIGANTIKAN
 
-Di luar tiga hal tersebut, Software WAJIB dipakai apa adanya
-(sebagaimana didistribusikan oleh Pembuat).
+DI LUAR TIGA HAL TERSEBUT, SOFTWARE WAJIB DIPAKAI APA ADANYA
+(SEBAGAIMANA DIDISTRIBUSIKAN OLEH PEMBUAT).
 
-Untuk penggunaan komersial (menyewakan bot, menjual akses premium,
-memonetisasi fitur), Pengguna cukup:
+UNTUK PENGGUNAAN KOMERSIAL (MENYEWAKAN BOT, MENJUAL AKSES PREMIUM,
+MEMONETISASI FITUR), PENGGUNA CUKUP:
 
-  1. Menyertakan kredit pembuat (Aizat) di semua materi promosi
-  2. Tidak menghapus watermark dan file LICENSE
+  1. MENYERTAKAN KREDIT PEMBUAT (AIZAT) DI SEMUA MATERI PROMOSI
+  2. TIDAK MENGHAPUS WATERMARK DAN FILE LICENSE
 
-TIDAK ADA kewajiban pembayaran royalti atau biaya lisensi.
-TIDAK ADA kebutuhan izin tertulis berbayar — cukup kredit dan
-attribusi yang benar.
+TIDAK ADA KEWAJIBAN PEMBAYARAN ROYALTI ATAU BIAYA LISENSI.
+TIDAK ADA KEBUTUHAN IZIN TERTULIS BERBAYAR — CUKUP KREDIT DAN
+ATTRIBUSI YANG BENAR.
 
-Hubungi Pembuat via WhatsApp: +62 817-4887-770
-atau email yang tertera di profil GitHub untuk izin komersial.
+HUBUNGI PEMBUAT VIA WHATSAPP: +62 817-4887-770
+ATAU EMAIL YANG TERTERA DI PROFIL GITHUB UNTUK IZIN KOMERSIAL.
 
 =========================================================================
  PASAL 6: TANGGUNG JAWAB PENGGUNA
 =========================================================================
 
-  1. Pengguna bertanggung jawab penuh atas penggunaan Software
-     di lingkungannya masing-masing
-  2. Pembuat TIDAK bertanggung jawab atas penyalahgunaan Software
-     untuk aktivitas ilegal, spam, scam, atau pelanggaran
-     kebijakan WhatsApp/Meta
-  3. Pembuat TIDAK bertanggung jawab atas kerugian finansial,
-     banned account, atau masalah hukum yang timbul dari
-     penggunaan Software
-  4. Penggunaan Software untuk spam massal, harassment, atau
-     aktivitas merugikan pihak lain ADALAH DILARANG dan dapat
-     menyebabkan pencabutan lisensi
+  1. PENGGUNA BERTANGGUNG JAWAB PENUH ATAS PENGGUNAAN SOFTWARE
+     DI LINGKUNGANNYA MASING-MASING
+  2. PEMBUAT TIDAK BERTANGGUNG JAWAB ATAS PENYALAHGUNAAN SOFTWARE
+     UNTUK AKTIVITAS ILEGAL, SPAM, SCAM, ATAU PELANGGARAN
+     KEBIJAKAN WHATSAPP/META
+  3. PEMBUAT TIDAK BERTANGGUNG JAWAB ATAS KERUGIAN FINANSIAL,
+     BANNED ACCOUNT, ATAU MASALAH HUKUM YANG TIMBUL DARI
+     PENGGUNAAN SOFTWARE
+  4. PENGGUNAAN SOFTWARE UNTUK SPAM MASSAL, HARASSMENT, ATAU
+     AKTIVITAS MERUGIKAN PIHAK LAIN ADALAH DILARANG DAN DAPAT
+     MENYEBABKAN PENCABUTAN LISENSI
 
 =========================================================================
  PASAL 7: GARANSI
 =========================================================================
 
-Software disediakan "SEBAGAIMANA ADANYA" (AS IS) tanpa garansi
-apapun, baik tersurat maupun tersirat, termasuk namun tidak
-terbatas pada garansi kelayakan jual atau kesesuaian untuk
-tujuan tertentu.
+SOFTWARE DISEDIAKAN "SEBAGAIMANA ADANYA" (AS IS) TANPA GARANSI
+APAPUN, BAIK TERSURAT MAUPUN TERSIRAT, TERMASUK NAMUN TIDAK
+TERBATAS PADA GARANSI KELAYAKAN JUAL ATAU KESESUAIAN UNTUK
+TUJUAN TERTENTU.
 
-Pembuat tidak menjamin Software akan bebas dari bug, error,
-atau gangguan. Update dan perbaikan dilakukan sebaik mungkin
-namun tidak ada jaminan waktu penyelesaian.
+PEMBUAT TIDAK MENJAMIN SOFTWARE AKAN BEBAS DARI BUG, ERROR,
+ATAU GANGGUAN. UPDATE DAN PERBAIKAN DILAKUKAN SEBAIK MUNGKIN
+NAMUN TIDAK ADA JAMINAN WAKTU PENYELESAIAN.
 
 =========================================================================
  PASAL 8: PEMBARUAN LISENSI
 =========================================================================
 
-  1. Pembuat berhak mengubah syarat dan ketentuan lisensi ini
-     kapan saja tanpa pemberitahuan sebelumnya
-  2. Perubahan lisensi berlaku untuk versi Software terbaru
-  3. Pengguna yang sudah menggunakan versi sebelumnya tetap
-     terikat pada lisensi versi saat pertama kali download
-  4. Pengguna disarankan mengecek file LICENSE secara berkala
+  1. PEMBUAT BERHAK MENGUBAH SYARAT DAN KETENTUAN LISENSI INI
+     KAPAN SAJA TANPA PEMBERITAHUAN SEBELUMNYA
+  2. PERUBAHAN LISENSI BERLAKU UNTUK VERSI SOFTWARE TERBARU
+  3. PENGGUNA YANG SUDAH MENGGUNAKAN VERSI SEBELUMNYA TETAP
+     TERIKAT PADA LISENSI VERSI SAAT PERTAMA KALI DOWNLOAD
+  4. PENGGUNA DISARANKAN MENGECEK FILE LICENSE SECARA BERKALA
 
 =========================================================================
  PASAL 9: PELANGGARAN LISENSI
 =========================================================================
 
-Pelanggaran terhadap syarat dan ketentuan lisensi ini dapat
-mengakibatkan:
+PELANGGARAN TERHADAP SYARAT DAN KETENTUAN LISENSI INI DAPAT
+MENGAKIBATKAN:
 
-  1. Pencabutan lisensi penggunaan secara permanen
-  2. Tuntutan hukum sesuai peraturan perundang-undangan yang
-     berlaku di Republik Indonesia, khususnya:
-     a. Undang-Undang No. 28 Tahun 2014 tentang Hak Cipta
-     b. Undang-Undang No. 11 Tahun 2008 tentang ITE
-     c. Undang-Undang No. 19 Tahun 2016 tentang ITE
-  3. Permintaan penghapusan (DMCA takedown) ke platform
-     tempat Software dilanggar didistribusikan
-  4. Larangan penggunaan Software di masa mendatang
+  1. PENCABUTAN LISENSI PENGGUNAAN SECARA PERMANEN
+  2. TUNTUTAN HUKUM SESUAI PERATURAN PERUNDANG-UNDANGAN YANG
+     BERLAKU DI REPUBLIK INDONESIA, KHUSUSNYA:
+     A. UNDANG-UNDANG NO. 28 TAHUN 2014 TENTANG HAK CIPTA
+     B. UNDANG-UNDANG NO. 11 TAHUN 2008 TENTANG ITE
+     C. UNDANG-UNDANG NO. 19 TAHUN 2016 TENTANG ITE
+  3. PERMINTAAN PENGHAPUSAN (DMCA TAKEDOWN) KE PLATFORM
+     TEMPAT SOFTWARE DILANGGAR DIDISTRIBUSIKAN
+  4. LARANGAN PENGGUNAAN SOFTWARE DI MASA MENDATANG
 
 =========================================================================
  PASAL 9.1: ATRIBUSI PIHAK KETIGA (BAILEYS - MIT)
 =========================================================================
 
-Sebagian dari Software ini turunan dari library Baileys
-(github.com/WhiskeySockets/Baileys) yang dilisensikan di bawah MIT
-License. Sesuai ketentuan MIT, notice berikut berlaku untuk bagian
-tersebut:
+SEBAGIAN DARI SOFTWARE INI TURUNAN DARI LIBRARY BAILEYS
+(GITHUB.COM/WHISKEYSOCKETS/BAILEYS) YANG DILISENSIKAN DI BAWAH MIT
+LICENSE. SESUAI KETENTUAN MIT, NOTICE BERIKUT BERLAKU UNTUK BAGIAN
+TERSEBUT:
 
-  Copyright (c) WhiskeySockets & contributors
+  COPYRIGHT (C) WHISKEYSOCKETS & CONTRIBUTORS
 
-  Permission is hereby granted, free of charge, to any person
-  obtaining a copy of this software and associated documentation
-  files (the "Software"), to deal in the Software without
-  restriction, including without limitation the rights to use,
-  copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the
-  Software is furnished to do so, subject to the following
-  conditions:
+  PERMISSION IS HEREBY GRANTED, FREE OF CHARGE, TO ANY PERSON
+  OBTAINING A COPY OF THIS SOFTWARE AND ASSOCIATED DOCUMENTATION
+  FILES (THE "SOFTWARE"), TO DEAL IN THE SOFTWARE WITHOUT
+  RESTRICTION, INCLUDING WITHOUT LIMITATION THE RIGHTS TO USE,
+  COPY, MODIFY, MERGE, PUBLISH, DISTRIBUTE, SUBLICENSE, AND/OR
+  SELL COPIES OF THE SOFTWARE, AND TO PERMIT PERSONS TO WHOM THE
+  SOFTWARE IS FURNISHED TO DO SO, SUBJECT TO THE FOLLOWING
+  CONDITIONS:
 
-  The above copyright notice and this permission notice shall be
-  included in all copies or substantial portions of the Software.
+  THE ABOVE COPYRIGHT NOTICE AND THIS PERMISSION NOTICE SHALL BE
+  INCLUDED IN ALL COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
 
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
@@ -239,22 +239,20 @@ tersebut:
  PASAL 10: KONTAK PEMBUAT
 =========================================================================
 
-Untuk pertanyaan, izin komersial, laporan pelanggaran, atau
-kerjasama pengembangan:
+UNTUK PERTANYAAN, IZIN KOMERSIAL, LAPORAN PELANGGARAN, ATAU
+KERJASAMA PENGEMBANGAN:
 
-  WhatsApp : +62 817-4887-770
-  GitHub   : github.com/itsmeeaizat
-  Repo     : github.com/itsmeeaizat1/Rara-AI-Multi-Device
+  WHATSAPP : +62 817-4887-770
+  GITHUB   : GITHUB.COM/ITSMEEAIZAT
+  REPO     : GITHUB.COM/ITSMEEAIZAT1/RARA-AI-MULTI-DEVICE
 
 =========================================================================
 
-Dengan menggunakan Software ini, Pengguna dianggap membaca,
-memahami, dan menyetujui seluruh ketentuan dan syarat lisensi ini.
-
-Jika tidak setuju, Pengguna dilarang menggunakan Software ini.
+DENGAN MENGGUNAKAN SOFTWARE INI, PENGGUNA DIANGGAP MEMBACA,
+MEMAHAMI, DAN MENYETUJUI SELURUH KETENTUAN DAN SYARAT LISENSI INI.
 
 =========================================================================
   RARA AI - MULTI DEVICE
-  Made in Indonesia by Aizat
-  Copyright (c) 2026
+  MADE IN INDONESIA BY AIZAT
+  COPYRIGHT (C) 2026
 =========================================================================
