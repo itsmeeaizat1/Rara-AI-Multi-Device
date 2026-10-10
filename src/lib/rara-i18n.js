@@ -403,3 +403,6 @@ export function needsTranslation(sender) {
 }
 
 export { UI_DICTIONARY };
+// dipakai rara-translate-tools.js (.transdoc/.transaudio/.transfoto) —
+// engine MyMemory batching + proteksi markup + cache persist yang sama
+export const translateTextMyMemory = myMemoryTranslate;
