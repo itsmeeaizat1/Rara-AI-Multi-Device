@@ -69,8 +69,9 @@ Dengan lisensi ini, Pengguna DIPERBOLEHKAN:
      Pembuat)
   6. Menggunakan Software di grup WhatsApp pribadi atau komunitas
      tanpa dipungut biaya
-  7. Mengisi API key dan menseting nama owner menjadi nama mereka
-     (satu-satunya customisasi yang diperbolehkan — lihat Pasal 5)
+  7. Mengisi API key, menseting nama owner menjadi nama mereka,
+     dan menambahkan credit kontribusi (customisasi yang
+     diperbolehkan — lihat Pasal 5)
 
 =========================================================================
  PASAL 4: YANG DILARANG
@@ -118,13 +119,18 @@ BATASAN MODIFIKASI (owner 10 Okt 2026):
 Pengguna DILARANG merombak, mengubah, menambah, atau menghapus
 bagian dari file kode sumber, struktur fitur, maupun fitur Software.
 
-Customisasi yang DIPERBOLEHKAN HANYA DUA:
+Customisasi yang DIPERBOLEHKAN HANYA TIGA:
   1. Mengisi API key (via perintah .setkey, file apikeys.json,
      atau environment variable)
   2. Menseting nama owner menjadi nama Pengguna sendiri
      (konfigurasi nama pemilik bot)
+  3. Menambahkan credit atas nama Pengguna untuk bagian yang
+     benar-benar mereka kontribusikan (mis. perbaikan bug,
+     penambahan fitur yang disetujui Pembuat, terjemahan, dll) —
+     credit Pembuat asli (Aizat) WAJIB tetap dicantumkan dan
+     TIDAK boleh digantikan
 
-Di luar dua hal tersebut, Software WAJIB dipakai apa adanya
+Di luar tiga hal tersebut, Software WAJIB dipakai apa adanya
 (sebagaimana didistribusikan oleh Pembuat).
 
 Untuk penggunaan komersial (menyewakan bot, menjual akses premium,
