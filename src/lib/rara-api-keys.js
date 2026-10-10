@@ -53,6 +53,22 @@ export const API_KEYS = {
     getLink: () => "",
     usedBy: ["ampro"],
   },
+  siliconflow: {
+    label: "SiliconFlow (Hunyuan-MT — engine translate kelas Immersive Translate)",
+    description: "API key SiliconFlow — dipakai engine translate HY-MT (menu translate & .transdoc/.transaudio/.transfoto). Tanpa key → fallback MyMemory",
+    getConfig: () => "",
+    getEnv: () => process.env.SILICONFLOW_API_KEY || "",
+    getLink: () => "https://cloud.siliconflow.cn",
+    usedBy: ["languagemenubot", "transdoc", "transaudio", "transfoto"],
+  },
+  siliconflow_model: {
+    label: "SiliconFlow Model ID (override model HY-MT)",
+    description: "Model id override untuk engine translate (default Hunyuan/Hunyuan-MT-7B)",
+    getConfig: () => "",
+    getEnv: () => process.env.SILICONFLOW_MODEL || "",
+    getLink: () => "",
+    usedBy: ["languagemenubot"],
+  },
   kyzz: {
     label: "Kyzz (API Downloader)",
     description: "Key API kyzz — downloader tiktok/ig/twitter/soundcloud/play dll",

@@ -6,6 +6,7 @@
 // "Coming Soon" + Cloudflare challenge — gak bisa dipakai langsung, 10 Okt).
 
 import { translateTextMyMemory } from "./rara-i18n.js";
+import { translateTextHYMT, hasHyMtKey } from "./rara-hymt.js";
 
 // ── normalisasi bahasa: kode + nama Indonesia umum ──
 const LANG_ALIAS = {
@@ -95,7 +96,13 @@ export async function translateTextFree(text, targetLang, sourceLang = "id") {
   if (!clean) return { translated: "", ok: false };
   const tgt = normalizeLang(targetLang);
   if (!tgt || tgt === sourceLang) return { translated: clean, ok: false };
-  const out = await translateTextMyMemory(clean, tgt, sourceLang);
+  // ENGINE CHAIN (owner 10 Okt 2026): HY-MT dulu (kelas Immersive Translate,
+  // aktif kalau key siliconflow ada), fallback MyMemory.
+  let out = null;
+  if (hasHyMtKey()) {
+    try { out = await translateTextHYMT(clean, tgt, sourceLang); } catch { out = null; }
+  }
+  if (!out) out = await translateTextMyMemory(clean, tgt, sourceLang);
   if (out && out.trim()) return { translated: out.trim(), ok: true };
   return { translated: clean, ok: false };
 }
