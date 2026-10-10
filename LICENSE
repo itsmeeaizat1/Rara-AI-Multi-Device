@@ -69,6 +69,8 @@ Dengan lisensi ini, Pengguna DIPERBOLEHKAN:
      Pembuat)
   6. Menggunakan Software di grup WhatsApp pribadi atau komunitas
      tanpa dipungut biaya
+  7. Mengisi API key dan menseting nama owner menjadi nama mereka
+     (satu-satunya customisasi yang diperbolehkan — lihat Pasal 5)
 
 =========================================================================
  PASAL 4: YANG DILARANG
@@ -111,6 +113,19 @@ Dengan lisensi ini, Pengguna DILARANG KERAS:
 Software ini ROYALTY-FREE: Pengguna TIDAK WAJIB membayar royalti,
 biaya lisensi, atau bentuk pembayaran apapun kepada Pembuat, baik
 untuk penggunaan pribadi, komunitas, maupun komersial.
+
+BATASAN MODIFIKASI (owner 10 Okt 2026):
+Pengguna DILARANG merombak, mengubah, menambah, atau menghapus
+bagian dari file kode sumber, struktur fitur, maupun fitur Software.
+
+Customisasi yang DIPERBOLEHKAN HANYA DUA:
+  1. Mengisi API key (via perintah .setkey, file apikeys.json,
+     atau environment variable)
+  2. Menseting nama owner menjadi nama Pengguna sendiri
+     (konfigurasi nama pemilik bot)
+
+Di luar dua hal tersebut, Software WAJIB dipakai apa adanya
+(sebagaimana didistribusikan oleh Pembuat).
 
 Untuk penggunaan komersial (menyewakan bot, menjual akses premium,
 memonetisasi fitur), Pengguna cukup:
