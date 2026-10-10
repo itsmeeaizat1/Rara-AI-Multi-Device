@@ -35,7 +35,17 @@ Pemilik Hak Cipta (Copyright Holder):
 =========================================================================
 
 Software ini adalah karya asli buatan Aizat (itsmeeaizat) yang dibuat
-di Indonesia. Seluruh hak cipta dilindungi oleh hukum yang berlaku
+di Indonesia, SEBAGIAN komponennya merupakan karya turunan (derivative
+work) dari pihak ketiga, khususnya library Baileys milik WhiskeySockets
+(github.com/WhiskeySockets/Baileys) yang dilisensikan di bawah MIT
+License, serta library pihak ketiga lain yang tercantum di package.json.
+
+Hak cipta atas karya asli (source code, plugin, fitur, dan dokumentasi
+bot) sepenuhnya milik Pembuat. Komponen pihak ketiga TETAP tunduk pada
+lisensi aslinya (MIT) dan copyright notice-nya wajib dipertahankan pada
+setiap distribusi Software.
+
+Seluruh hak cipta dilindungi oleh hukum yang berlaku
 di Republik Indonesia dan hukum internasional.
 
 Pembuat memiliki hak eksklusif untuk:
@@ -59,6 +69,8 @@ Dengan lisensi ini, Pengguna DIPERBOLEHKAN:
      Pembuat)
   6. Menggunakan Software di grup WhatsApp pribadi atau komunitas
      tanpa dipungut biaya
+  7. Mengisi API key dan menseting nama owner menjadi nama mereka
+     (satu-satunya customisasi yang diperbolehkan — lihat Pasal 5)
 
 =========================================================================
  PASAL 4: YANG DILARANG
@@ -95,16 +107,35 @@ Dengan lisensi ini, Pengguna DILARANG KERAS:
      karya turunannya
 
 =========================================================================
- PASAL 5: SYARAT PENGGUNAAN KOMERSIAL
+ PASAL 5: ROYALTI DAN PENGGUNAAN KOMERSIAL
 =========================================================================
 
-Untuk penggunaan komersial (menyewakan bot, menjual akses premium,
-memonetisasi fitur), Pengguna WAJIB:
+Software ini ROYALTY-FREE: Pengguna TIDAK WAJIB membayar royalti,
+biaya lisensi, atau bentuk pembayaran apapun kepada Pembuat, baik
+untuk penggunaan pribadi, komunitas, maupun komersial.
 
-  1. Mendapatkan izin tertulis dari Pembuat (Aizat)
-  2. Menyertakan kredit pembuat di semua materi promosi
-  3. Membayar royalti atau biaya lisensi sesuai kesepakatan
-  4. Tidak menghapus watermark dan file LICENSE
+BATASAN MODIFIKASI (owner 10 Okt 2026):
+Pengguna DILARANG merombak, mengubah, menambah, atau menghapus
+bagian dari file kode sumber, struktur fitur, maupun fitur Software.
+
+Customisasi yang DIPERBOLEHKAN HANYA DUA:
+  1. Mengisi API key (via perintah .setkey, file apikeys.json,
+     atau environment variable)
+  2. Menseting nama owner menjadi nama Pengguna sendiri
+     (konfigurasi nama pemilik bot)
+
+Di luar dua hal tersebut, Software WAJIB dipakai apa adanya
+(sebagaimana didistribusikan oleh Pembuat).
+
+Untuk penggunaan komersial (menyewakan bot, menjual akses premium,
+memonetisasi fitur), Pengguna cukup:
+
+  1. Menyertakan kredit pembuat (Aizat) di semua materi promosi
+  2. Tidak menghapus watermark dan file LICENSE
+
+TIDAK ADA kewajiban pembayaran royalti atau biaya lisensi.
+TIDAK ADA kebutuhan izin tertulis berbayar — cukup kredit dan
+attribusi yang benar.
 
 Hubungi Pembuat via WhatsApp: +62 817-4887-770
 atau email yang tertera di profil GitHub untuk izin komersial.
@@ -165,6 +196,38 @@ mengakibatkan:
   3. Permintaan penghapusan (DMCA takedown) ke platform
      tempat Software dilanggar didistribusikan
   4. Larangan penggunaan Software di masa mendatang
+
+=========================================================================
+ PASAL 9.1: ATRIBUSI PIHAK KETIGA (BAILEYS - MIT)
+=========================================================================
+
+Sebagian dari Software ini turunan dari library Baileys
+(github.com/WhiskeySockets/Baileys) yang dilisensikan di bawah MIT
+License. Sesuai ketentuan MIT, notice berikut berlaku untuk bagian
+tersebut:
+
+  Copyright (c) WhiskeySockets & contributors
+
+  Permission is hereby granted, free of charge, to any person
+  obtaining a copy of this software and associated documentation
+  files (the "Software"), to deal in the Software without
+  restriction, including without limitation the rights to use,
+  copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the
+  Software is furnished to do so, subject to the following
+  conditions:
+
+  The above copyright notice and this permission notice shall be
+  included in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  OTHER DEALINGS IN THE SOFTWARE.
 
 =========================================================================
  PASAL 10: KONTAK PEMBUAT
