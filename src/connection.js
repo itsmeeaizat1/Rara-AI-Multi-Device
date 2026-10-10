@@ -37,6 +37,7 @@ import { initAutoBackup } from "./lib/rara-auto-backup.js";
 import { initAutoReport } from "./lib/rara-auto-report.js";
 import { recordChatMessage } from "./lib/rara-chat-log.js";
 import { initAutoBirthday } from "./lib/rara-auto-birthday.js";
+import { initPiket } from "./lib/rara-piket.js";
 import { initHealthCheck } from "./lib/rara-auto-api-health.js";
 import { initReengage } from "./lib/rara-auto-reengage.js";
 import { handleParticipants as _autoflowHandleParticipants } from "./lib/autoflow.js";
@@ -1009,6 +1010,7 @@ connectionState.sock = sock;
         ["AutoBackup", () => initAutoBackup(sock), "debug"],
         ["AutoReport", () => initAutoReport(sock), "debug"],
         ["AutoBirthday", () => initAutoBirthday(sock), "debug"],
+        ["Piket", () => initPiket(sock), "debug"],
         ["ApiHealth", () => initHealthCheck(sock), "debug"],
         ["ReEngage", () => initReengage(sock), "debug"],
         ["AutoRefill", () => initRefill(sock), "debug"],
