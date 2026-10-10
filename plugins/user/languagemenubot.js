@@ -95,9 +95,16 @@ async function handler(m, { sock, config: botConfig }) {
     if (!subCmd || subCmd === "list" || subCmd === "cek" || subCmd === "status") {
       const currentLang = getUserLanguage(sender);
       const currentInfo = currentLang ? SUPPORTED_LANGUAGES[currentLang] : null;
+      // Engine translate (owner 10 Okt: kelas Immersive Translate via HY-MT)
+      let engineLine = "Engine: *MyMemory* (default, tanpa key)";
+      try {
+        const { hasHyMtKey, hyMtModel } = await import("../../src/lib/rara-hymt.js");
+        if (hasHyMtKey()) engineLine = "Engine: *HY-MT / SiliconFlow* (" + hyMtModel() + ", kelas Immersive Translate)";
+      } catch {}
       let text = raraWrap("Language Menu Bot", [
         `Bahasa saat ini: *${currentInfo ? currentInfo.native + " (" + currentInfo.name + ")" : "Indonesia (default)"}*`,
         `Total bahasa: *${Object.keys(SUPPORTED_LANGUAGES).length}*`,
+        engineLine,
       ].join("\n")) + "\n\nDAFTAR BAHASA:\n\n";
       let num = 1;
       for (const [code, info] of Object.entries(SUPPORTED_LANGUAGES)) {

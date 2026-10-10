@@ -83,7 +83,14 @@
       "restapi": "ZELAPI — zelapi.eu.cc",
       "catatan": "docs zelapi.eu.cc/docs, key 'zelapi-xxx'"
     },
-    "zelapi": ""
+    "zelapi": "",
+    "_note_siliconflow": {
+      "fitur": "engine translate HY-MT (menu translate & .transdoc/.transaudio/.transfoto/.kamusai) — kelas Immersive Translate, aktif otomatis begitu key terpasang, tanpa key fallback MyMemory",
+      "web": "https://cloud.siliconflow.cn",
+      "restapi": "SILICONFLOW (OpenAI-compatible) — api.siliconflow.cn, model default Hunyuan/Hunyuan-MT-7B (bisa override: setkey siliconflow_model <model-id>)",
+      "catatan": "daftar gratis cloud.siliconflow.cn → API key → .setkey siliconflow <key>"
+    },
+    "siliconflow": ""
   },
   "aiMultiprovider": {
     "_note": "CONFIG MULTI-PROVIDER AI (pindahan ai-providers.json — sekarang satu file di apikeys.json). (1) 'chain' = urutan prioritas otak AI .raraai/.autonovaai/autoflow — down/rate-limit otomatis geser kebawah. (2) 'providers' = KEY semua provider buat fitur AI satuan (.grok/.openai/.claude/dll) & rantai — isi 'apikey' provider yang lo punya; kosong = di-skip otomatis. Provider ikyy (free) udah preset key 'kyzz'. Dibaca LIVE tiap pemanggilan — edit tanpa restart.",

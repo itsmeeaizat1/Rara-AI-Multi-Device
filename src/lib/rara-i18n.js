@@ -23,6 +23,9 @@ const UN_SC = {
   "\u1d0d":"m","\u0274":"n","\u1d0f":"o","\u1d18":"p","\u0280":"r","\ua731":"s",
   "\u1d1b":"t","\u1d1c":"u","\u1d20":"v","\u1d21":"w","\u028f":"y","\u1d1e":"z",
 };
+// engine HY-MT (SiliconFlow) — dipakai translateUI sebelum MyMemory
+import { translateTextHYMT } from "./rara-hymt.js";
+
 export function unSmallcaps(text) {
   let out = String(text || "");
   for (const [glyph, ascii] of Object.entries(UN_SC)) {
@@ -323,10 +326,20 @@ export async function translateUI(text, sender) {
       return persisted;
     }
 
-    // 3. ENGINE: MyMemory (bukan Google — owner 10 Okt 2026). Kirim versi
-    // PLAIN; batching per-baris + separator § di dalam engine, kuat buat
-    // ribuan karakter (.menu/.allmenu) tanpa gagal senyap.
-    const translated = await myMemoryTranslate(plain, lang, "id");
+    // 3. ENGINE CHAIN (owner 10 Okt 2026, "jangan MyMemory, pakai kelas
+    // Immersive Translate"): HY-MT = Tencent Hunyuan-MT via SiliconFlow —
+    // model open-source yang jadi engine gratisan Immersive Translate.
+    // Aktif otomatis kalau key siliconflow terpasang (.setkey siliconflow),
+    // tanpa key → fallback MyMemory (engine lama tetap jalan).
+    let translated = null;
+    try {
+      translated = await translateTextHYMT(plain, lang, "id");
+    } catch { translated = null; }
+    if (!translated) {
+      // 3b. FALLBACK: MyMemory — batching per-baris + separator §, kuat
+      // buat ribuan karakter (.menu/.allmenu) tanpa gagal senyap.
+      translated = await myMemoryTranslate(plain, lang, "id");
+    }
 
     if (translated && translated.trim()) {
       persistSet(plain, lang, translated.trim());
