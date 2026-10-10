@@ -1,5 +1,6 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { request } from 'undici'
+import { getRandomUserAgent } from './rara-ua.js'
 const REQUEST_TIMEOUT = 60_000
 
 async function f(url, responseType = "json", method = "GET", headers = {}, body = null) {
@@ -10,7 +11,7 @@ async function f(url, responseType = "json", method = "GET", headers = {}, body 
         const response = await request(url, {
             method,
             headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "User-Agent": getRandomUserAgent(), // rotasi UA modern (rara-ua) — anti-block
                 ...headers
             },
             body,
