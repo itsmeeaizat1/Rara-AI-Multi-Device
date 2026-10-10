@@ -23,6 +23,7 @@ const t = (name, ok, extra) => { ok ? pass++ : fail++; w((ok ? "✅ " : "❌ ") 
 
 const {
   unSmallcaps, translateUI, translateButton, preTranslateButton, needsTranslation,
+  __resetI18nForTest,
 } = await import(R + "/src/lib/rara-i18n.js");
 const { makeLangAwareSock } = await import(R + "/src/lib/rara-i18n-sock.js");
 const { getDatabase } = await import(R + "/src/lib/rara-database.js");
@@ -37,30 +38,67 @@ db.setting("multiLangEnabled", true);
 db.setting("userLang_" + UID, "en");
 try { await db.save(); } catch {}
 
-// ── mock fetch: Google Translate endpoint → hasil deterministik ──
-const GT = "https://translate.googleapis.com/translate_a/single";
+// ── mock fetch: MyMemory API (engine i18n 10 Okt 2026) → hasil deterministik ──
+// Engine baru: batching per-baris pakai separator " § " (limit MyMemory 500
+// chars/request + gak terima newline) — mock WAJIB paham batch.
+const GT = "https://api.mymemory.translated.net/get";
 let fetchCalls = [];
+let mmFailSegs = []; // segmen yang disuruh gagal (untuk tes partial failure)
+let mmJunk = false; // sisip junk <ex id="_1"/> (tes sanitizer)
 const realFetch = global.fetch;
+const mmSeg = (seg) => {
+  // mock realistis: translate FRASA di dalam baris, struktur kartu + command utuh
+  // (persis perilaku MyMemory live: "│ ▪ *.menu* — tampilkan menu utama bot"
+  //  → "│ ▪ *.menu* — display the main bot menu")
+  const ql = seg.toLowerCase();
+  if (mmFailSegs.some((f) => ql.includes(f))) return null;
+  if (ql === "menu utama bot — pilih fitur") return "main bot menu, please choose a feature";
+  if (ql === "pilih fitur") return "choose a feature";
+  if (ql === "unduhan siap") return "download ready";
+  if (ql === "pilih kategori menu") return "choose menu category";
+  if (ql === "menu selengkapnya") return "more menu";
+  if (ql === "versi") return "version";
+  if (ql.includes("baris panjang")) return seg.replace(/baris panjang/ig, "long line");
+  // header box: core text (placeholder dibuang) = persis "menu utama"
+  // (jangan pakai includes("{p0}") — SEMUA baris masked mulai dengan {P0}!)
+  const core = ql.replace(/\{p\d+\}/g, "").replace(/\s+/g, " ").trim();
+  if (core === "menu utama") return seg.replace(/Menu Utama/, "Main Menu");
+  if (ql.includes("tampilkan menu utama bot")) return seg.replace("tampilkan menu utama bot", "display the main bot menu");
+  if (ql.includes("semua perintah bot")) return seg.replace(/semua perintah bot/g, "all bot commands").replace("tersedia setiap hari", "available every day");
+  if (ql.includes("bikin stiker")) return seg.replace("bikin stiker dari gambar", "create a sticker from image");
+  if (ql.includes("fitur bot nomor")) return seg.replace(/fitur bot nomor/ig, "bot feature number").replace("siap dipakai", "ready to use");
+  if (ql.includes("fitur nomor")) return seg.replace(/fitur nomor/ig, "feature number");
+  return seg;
+};
 global.fetch = async (url, opts) => {
   fetchCalls.push(String(url));
   if (String(url).startsWith(GT)) {
     const q = decodeURIComponent(String(url).match(/q=([^&]+)/)?.[1] || "");
-    const ql = q.toLowerCase();
-    let out = q;
-    if (ql.includes("menu utama bot")) out = "main bot menu, please choose a feature";
-    if (ql === "pilih fitur") out = "choose a feature";
-    if (ql === "unduhan siap") out = "download ready";
-    if (ql === "pilih kategori menu") out = "choose menu category";
-    if (ql === "menu selengkapnya") out = "more menu";
-    if (ql === "versi") out = "version";
-    if (ql.includes("baris panjang")) out = q.replace(/baris panjang/ig, "long line");
+    let out;
+    if (q.includes("§")) {
+      const segs = q.split(" § ");
+      const parts = segs.map(mmSeg);
+      if (parts.some((x) => x === null)) {
+        // MyMemory batch gagal → translatedText null (responseData.translatedText kosong)
+        return { ok: true, json: async () => ({ responseData: { translatedText: null }, responseStatus: 403 }) };
+      }
+      out = parts.join(" § ");
+    } else {
+      const one = mmSeg(q);
+      if (one === null) return { ok: true, json: async () => ({ responseData: { translatedText: null }, responseStatus: 403 }) };
+      out = one;
+    }
+    if (mmJunk && out.includes("choose")) out = out.replace("choose", `cho<ex id="_1"/>ose`);
+    // simulasi MyMemory live: nyelip spasi di sekitar placeholder (tes glue restore)
+    out = out.replace(/\{P(\d+)\}/g, " {P$1} ");
     return {
       ok: true,
-      json: async () => [[ [out, q, null, null], [null, null, "en"] ]],
+      json: async () => ({ responseData: { translatedText: out, match: 0.9 }, responseStatus: 200 }),
     };
   }
   return realFetch(url, opts);
 };
+const mmFetchMock = global.fetch; // seksi baru re-mock setelah restore line 263
 
 w("\n— unSmallcaps —");
 t("smallcaps ꜰɪᴛᴜʀ ᴍᴇɴᴜ → fitur menu (balikin sebelum translate)",
@@ -81,7 +119,7 @@ const menuSC = "ᴍᴇɴᴜ ᴜᴛᴀᴍᴀ ʙᴏᴛ — ᴘɪʟɪʜ ꜰɪᴛᴜ
 const out1 = await translateUI(menuSC, SENDER);
 t("teks smallcaps IKUT ke-translate (dulu: gagal senyap → tetap Indonesia)",
   out1 === "main bot menu, please choose a feature", "→ " + out1);
-t("query ke Google dikirim versi PLAIN (bukan glyph smallcaps)",
+t("query ke MyMemory dikirim versi PLAIN (bukan glyph smallcaps)",
   fetchCalls.some((u) => decodeURIComponent(u).includes("q=menu utama bot")),
   [...new Set(fetchCalls)].join(" "));
 t("teks polos tetap ke-translate seperti biasa",
@@ -90,7 +128,7 @@ t("teks polos tetap ke-translate seperti biasa",
 w("\n— translateUI: cache & guard —");
 fetchCalls = [];
 const out2 = await translateUI(menuSC, SENDER);
-t("cache hit: teks sama gak manggil Google lagi",
+t("cache hit: teks sama gak manggil MyMemory lagi",
   out2 === "main bot menu, please choose a feature" && fetchCalls.length === 0,
   "calls=" + fetchCalls.length);
 {
@@ -158,13 +196,13 @@ w("\n— translateUI: teks panjang (.menu/.allmenu) dipecah per-chunk —");
   // SENDIRI (beberapa fetch call), gagal sebagian != gagal semua.
   const longLine = "baris panjang nomor";
   const longText = Array.from({ length: 120 }, (_, i) => `${longLine} ${i}`).join("\n");
-  t("teks generate > MAX_CHUNK (1500)", longText.length > 1500, "len=" + longText.length);
+  t("teks generate > 1500 karakter (ukuran .allmenu)", longText.length > 1500, "len=" + longText.length);
   fetchCalls = [];
   const outLong = await translateUI(longText, SENDER);
   t("teks panjang KE-TRANSLATE (dulu: gagal senyap → tetap bahasa asli)",
     outLong.includes("long line") && !outLong.includes("baris panjang"),
     outLong.slice(0, 80));
-  t("dipecah jadi LEBIH DARI 1 request Google (bukan 1 request raksasa)",
+  t("dipecah jadi LEBIH DARI 1 request MyMemory (bukan 1 request raksasa)",
     fetchCalls.filter((u) => u.startsWith(GT)).length > 1,
     "calls=" + fetchCalls.filter((u) => u.startsWith(GT)).length);
   t("jumlah baris tetap utuh setelah disambung balik (gak ada baris ke-drop)",
@@ -234,6 +272,90 @@ global.fetch = realFetch;
 if (prevToggle === undefined) db.setting("multiLangEnabled", false); else db.setting("multiLangEnabled", prevToggle);
 if (prevLang === undefined) db.setting("userLang_" + UID, "id"); else db.setting("userLang_" + UID, prevLang);
 try { await db.save(); } catch {}
+
+w("\n— ENGINE MyMemory: menu/allmenu ribuan karakter (fitur inti owner 10 Okt) —");
+{
+  // seksi ini jalan SETELAH restore blok utama → fixture + MOCK wajib di-set ulang
+  db.setting("multiLangEnabled", true);
+  db.setting("userLang_" + UID, "en");
+  try { await db.save(); } catch {}
+  global.fetch = mmFetchMock; // (restore di line 263 bikin seksi ini nembak API live)
+
+  // menu realistis: box-drawing + command + judul + baris simbol murni
+  const menuLines = [
+    "╭─────『 *Menu Utama* 』",
+    "│ ▪ *.menu* — tampilkan menu utama bot",
+    "│ ▪ *.allmenu* — semua perintah bot",
+    "│ ▪ *.stiker* — bikin stiker dari gambar",
+  ];
+  for (let i = 0; i < 60; i++) menuLines.push("│ ▪ *.fitur" + i + "* — fitur bot nomor " + i + " siap dipakai");
+  menuLines.push("╰────────────√");
+  menuLines.push("_semua perintah bot tersedia setiap hari_");
+  const menuText = menuLines.join("\n");
+  t("fixture menu > 1500 karakter (skala .allmenu)", menuText.length > 1500, "len=" + menuText.length);
+
+  __resetI18nForTest();
+  fetchCalls = [];
+  const outMenu = await translateUI(menuText, SENDER);
+  t("MENU RIBUAN KARAKTER KE-TRANSLATE PENUH (dulu: gagal senyap, tetap Indonesia)",
+    outMenu.includes("display the main bot menu") && !outMenu.includes("tampilkan"),
+    outMenu.slice(0, 120));
+  t("struktur kartu utuh: jumlah baris identik",
+    outMenu.split("\n").length === menuLines.length,
+    outMenu.split("\n").length + " vs " + menuLines.length);
+  t("command gak ke-translate (*.menu* *.allmenu* *.stiker* utuh)",
+    ["*.menu*", "*.allmenu*", "*.stiker*"].every((c) => outMenu.includes(c)));
+  t("box drawing header ikut ke-translate (『 *Main Menu* 』)",
+    outMenu.includes("『 *Main Menu* 』"), outMenu.slice(0, 40));
+  t("SEMU A request ke MyMemory ≤ 500 chars (limit API dihormati)",
+    fetchCalls.every((u) => decodeURIComponent(u.match(/q=([^&]*)/)?.[1] || "").length <= 500),
+    "max=" + Math.max(0, ...fetchCalls.map((u) => decodeURIComponent(u.match(/q=([^&]*)/)?.[1] || "").length)));
+  t("baris box murni (╰────√) GAK dikirim ke API (hemat kuota)",
+    !fetchCalls.some((u) => decodeURIComponent(u).includes("╰")));
+
+  // ── sanitizer junk MyMemory <ex id="_1"/> ──
+  __resetI18nForTest();
+  mmJunk = true;
+  const junkOut = await translateUI("pilih kategori menu", SENDER);
+  mmJunk = false;
+  t("junk MyMemory <ex id=.../> disanitasi dari hasil",
+    junkOut.includes("choose menu category") && !junkOut.includes("<ex"), "→ " + junkOut);
+
+  // ── cache permanen: restart-sim (mem+persist di-reset) → 0 API call ──
+  __resetI18nForTest();
+  fetchCalls = [];
+  const cachedMenu = await translateUI(menuText, SENDER);
+  try { await db.save(); } catch {}
+  __resetI18nForTest(); // simulasi restart: memori kosong
+  fetchCalls = [];
+  const restarted = await translateUI(menuText, SENDER);
+  t("cache PERMANEN: setelah 'restart' menu gak manggil API lagi (0 call)",
+    fetchCalls.length === 0 && restarted === cachedMenu && restarted.includes("display the main bot menu"),
+    "calls=" + fetchCalls.length);
+}
+
+w("\n— EDGE: input gak valid / kekanan (QA gerbang 4) —");
+{
+  db.setting("multiLangEnabled", true);
+  db.setting("userLang_" + UID, "en");
+  try { await db.save(); } catch {}
+  global.fetch = mmFetchMock;
+
+  __resetI18nForTest();
+  const outEmpty = await translateUI("", SENDER);
+  t("teks kosong → balik utuh, gak throw", outEmpty === "");
+  const outWeird = await translateUI("╰────────────√\n\n123", SENDER);
+  t("teks tanpa huruf → utuh, TANPA panggilan API",
+    outWeird === "╰────────────√\n\n123");
+  let threw = false;
+  try { await translateUI(null, SENDER); } catch { threw = true; }
+  t("input null → gak throw (fallback asli)", !threw);
+  threw = false;
+  try { const o = await translateUI("pilih fitur", null); threw = o !== "pilih fitur"; } catch { threw = true; }
+  t("sender null → gak translate, gak throw", !threw);
+  const idOnly = await translateUI("pilih fitur", "6289990000@s.whatsapp.net");
+  t("user tanpa bahasa → teks asli utuh", idOnly === "pilih fitur");
+}
 
 w("\n===== " + pass + " PASS, " + fail + " FAIL =====");
 process.exit(fail ? 1 : 0);
