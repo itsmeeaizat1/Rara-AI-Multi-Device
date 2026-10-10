@@ -292,7 +292,7 @@ Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat1)
 All Rights Reserved. Made in Indonesia 🇮🇩
 
 - **Royalty-free** — penggunaan (pribadi maupun komersial) TIDAK dipungut royalti atau biaya lisensi; cukup kredit & attribusi yang benar.
-- **Tanpa modifikasi** — merombak/mengubah bagian file, struktur fitur, maupun fitur DILARANG. Customisasi hanya 2: mengisi API key & menseting nama owner sendiri.
+- **Tanpa modifikasi** — merombak/mengubah bagian file, struktur fitur, maupun fitur DILARANG. Customisasi hanya 3: mengisi API key, menseting nama owner sendiri, & menambahkan credit kontribusi (kredit Aizat tetap wajib ada).
 - Sebagian komponen adalah karya turunan library [Baileys (WhiskeySockets)](https://github.com/WhiskeySockets/Baileys) di bawah MIT License.
 
 Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
