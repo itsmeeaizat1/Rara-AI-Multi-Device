@@ -291,6 +291,9 @@ Cocok jalan di **Pterodactyl, VPS, Termux, dan Docker**.
 Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat1)  
 All Rights Reserved. Made in Indonesia 🇮🇩
 
+- **Royalty-free** — penggunaan (pribadi maupun komersial) TIDAK dipungut royalti atau biaya lisensi; cukup kredit & attribusi yang benar.
+- Sebagian komponen adalah karya turunan library [Baileys (WhiskeySockets)](https://github.com/WhiskeySockets/Baileys) di bawah MIT License.
+
 Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
 
 - Menemukan bug? Buka [issue](https://github.com/itsmeeaizat1/Rara-AI-Multi-Device/issues)
