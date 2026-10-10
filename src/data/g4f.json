@@ -1,0 +1,687 @@
+{
+ "source": "github.com/xtekky/gpt4free (commit 65bd285, GPLv3 — katalog informasi, bukan kode)",
+ "commit": "65bd285",
+ "count": 85,
+ "entries": [
+  {
+   "name": "AgentTools",
+   "url": "",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "BraveSearch",
+   "url": "",
+   "working": true,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "ChatGPT",
+   "url": "https://chatgpt.com",
+   "working": true,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "ChatGPTLightweight",
+   "url": "https://chatgpt.com",
+   "working": false,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "ChatGptOss",
+   "url": "https://chat-gpt-oss.com",
+   "working": true,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Cloudflare",
+   "url": "https://playground.ai.cloudflare.com",
+   "working": true,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Copilot",
+   "url": "https://copilot.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "CopilotApp",
+   "url": "https://play.google.com/store/apps/details?id=com.microsoft.office.officehubrow",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "CopilotSession",
+   "url": "https://copilot.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "DeepAI",
+   "url": "https://deepai.org/chat",
+   "working": true,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "DeepInfra",
+   "url": "https://deepinfra.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "OperaAria",
+   "url": "https://play.google.com/store/apps/details?id=com.opera.browser",
+   "working": true,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Perplexity",
+   "url": "",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "PhindAi",
+   "url": "https://phindai.org",
+   "working": true,
+   "stream": false,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Pollinations",
+   "url": "https://pollinations.ai",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Quillbot",
+   "url": "https://quillbot.com/ai-chat",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Qwen",
+   "url": "https://chat.qwen.ai",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "TeachAnything",
+   "url": "https://www.teach-anything.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Yqcloud",
+   "url": "https://chat9.yqcloud.top",
+   "working": true,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Yupp",
+   "url": "https://yupp.ai/api/trpc/reward.claim?batch=1",
+   "working": false,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "EdgeTTS",
+   "url": "",
+   "working": null,
+   "stream": null,
+   "auth": false,
+   "kategori": "audio"
+  },
+  {
+   "name": "ElevenLabs",
+   "url": "https://elevenlabs.io",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "audio"
+  },
+  {
+   "name": "MarkItDown",
+   "url": "",
+   "working": null,
+   "stream": null,
+   "auth": false,
+   "kategori": "audio"
+  },
+  {
+   "name": "OpenAIFM",
+   "url": "https://www.openai.fm",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "audio"
+  },
+  {
+   "name": "PollinationsAudio",
+   "url": "",
+   "working": true,
+   "stream": false,
+   "auth": false,
+   "kategori": "audio"
+  },
+  {
+   "name": "gTTS",
+   "url": "",
+   "working": null,
+   "stream": null,
+   "auth": false,
+   "kategori": "audio"
+  },
+  {
+   "name": "AIBadgr",
+   "url": "https://aibadgr.com",
+   "working": true,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "APIRoute",
+   "url": "https://www.api-route.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "CheaperInference",
+   "url": "https://cheaperinference.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "GithubCopilotAPI",
+   "url": "https://github.com/copilot",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "OpenaiAPI",
+   "url": "https://platform.openai.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "PerplexityApi",
+   "url": "https://www.perplexity.ai",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Replicate",
+   "url": "https://replicate.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "ThebApi",
+   "url": "https://theb.ai",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Together",
+   "url": "https://together.xyz",
+   "working": true,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "xAI",
+   "url": "https://console.x.ai",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "GithubCopilot",
+   "url": "https://github.com/copilot",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "BlackForestLabs_Flux1Dev",
+   "url": "https://black-forest-labs-flux-1-dev.hf.space",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "BlackForestLabs_Flux1KontextDev",
+   "url": "https://black-forest-labs-flux-1-kontext-dev.hf.space",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "CohereForAI_C4AI_Command",
+   "url": "https://coherelabs-c4ai-command.hf.space",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "StabilityAI_SD35Large",
+   "url": "https://stabilityai-stable-diffusion-3-5-large.hf.space",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Local",
+   "url": "",
+   "working": null,
+   "stream": true,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Ollama",
+   "url": "https://ollama.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "Airforce",
+   "url": "https://api.airforce",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Anthropic",
+   "url": "https://console.anthropic.com",
+   "working": true,
+   "stream": true,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Antigravity",
+   "url": "https://cloud.google.com/code-assist",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Arena",
+   "url": "https://arena.ai",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Azure",
+   "url": "https://ai.azure.com",
+   "working": false,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "BingCreateImages",
+   "url": "https://www.bing.com/images/create",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "BlackboxPro",
+   "url": "https://www.blackbox.ai",
+   "working": true,
+   "stream": true,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Cerebras",
+   "url": "https://chat.cerebras.ai",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Claude",
+   "url": "https://claude.ai",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Cohere",
+   "url": "https://cohere.com",
+   "working": true,
+   "stream": true,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Custom",
+   "url": "",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "DeepSeek",
+   "url": "",
+   "working": null,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Gemini",
+   "url": "https://gemini.google.com",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "GeminiCLI",
+   "url": "https://cloud.google.com/code-assist",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "GeminiPro",
+   "url": "https://ai.google.dev",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "GigaChat",
+   "url": "https://developers.sber.ru/gigachat",
+   "working": true,
+   "stream": true,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Grok",
+   "url": "https://grok.com",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Groq",
+   "url": "https://console.groq.com/playground",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "MetaAI",
+   "url": "https://www.meta.ai",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "MicrosoftDesigner",
+   "url": "https://designer.microsoft.com",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Nvidia",
+   "url": "https://build.nvidia.com",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "OpenRouter",
+   "url": "https://openrouter.ai",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "OpenaiAccount",
+   "url": "https://chatgpt.com",
+   "working": true,
+   "stream": true,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "OpenaiChat",
+   "url": "https://chatgpt.com",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Pi",
+   "url": "https://pi.ai/talk",
+   "working": true,
+   "stream": true,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Puter",
+   "url": "https://docs.puter.com/playground",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Reka",
+   "url": "",
+   "working": false,
+   "stream": true,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "Video",
+   "url": "",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "WhiteRabbitNeo",
+   "url": "https://www.whiterabbitneo.com",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "You",
+   "url": "https://you.com",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "HuggingChat",
+   "url": "",
+   "working": true,
+   "stream": true,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "HuggingFaceMedia",
+   "url": "https://huggingface.co",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "HailuoAI",
+   "url": "https://www.hailuo.ai",
+   "working": true,
+   "stream": true,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "MiniMax",
+   "url": "https://www.hailuo.ai/chat",
+   "working": true,
+   "stream": null,
+   "auth": true,
+   "kategori": "login"
+  },
+  {
+   "name": "QwenCode",
+   "url": "https://qwen.ai",
+   "working": false,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "CachedSearch",
+   "url": "https://g4f.dev",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "DDGS",
+   "url": "",
+   "working": null,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "GoogleSearch",
+   "url": "https://google.com",
+   "working": true,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "SearXNG",
+   "url": "",
+   "working": null,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "YouTube",
+   "url": "https://youtube.com",
+   "working": null,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "BackendApi",
+   "url": "",
+   "working": null,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  },
+  {
+   "name": "OpenaiTemplate",
+   "url": "",
+   "working": null,
+   "stream": null,
+   "auth": false,
+   "kategori": "chat"
+  }
+ ]
+}
