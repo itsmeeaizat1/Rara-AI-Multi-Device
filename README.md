@@ -127,25 +127,97 @@
 
 ## Arsitektur
 
+### Peta Folder Lengkap
+
 ```
 Rara-AI-Multi-Device/
-├── index.js                  # Entry point + graceful shutdown
-├── config.js                 # Thin aggregator config (359+ plugin import dari sini)
+├── index.js                      # Entry point bot + handler crash + graceful shutdown
+├── config.js                     # Thin aggregator — gabung semua config per kategori (359+ plugin import dari sini)
+├── ptero-panels.json             # [SETTING PANEL] daftar panel Pterodactyl — diisi via .setpanel
+│
 ├── src/
-│   ├── connection.js         # Koneksi Baileys + reconnect + send queue
+│   ├── connection.js             # Koneksi Baileys 2.0.3 + auto-reconnect + send queue
+│   ├── database/                 # 💾 SEMUA data runtime bot (auto-create, tahan restart)
+│   │   ├── owner/owner.json      #   └ daftar owner tambahan (via .addowner)
+│   │   ├── premium/premium.json  #   └ daftar user premium (via .addprem)
+│   │   ├── partner/partner.json  #   └ daftar partner reseller
+│   │   ├── user/users.json       #   └ data user (limit, energi, exp)
+│   │   ├── group/groups.json     #   └ setting per-grup (welcome, antilink, dll)
+│   │   ├── settings/settings.json#   └ mode self (.self) & setting global
+│   │   ├── settings/kv.json      #   └ persistensi API key .setkey + setingan ekstra
+│   │   ├── sewa/sewa.json        #   └ sewa grup berbayar
+│   │   ├── game/ · rpg/          #   └ state sesi game & RPG
+│   │   └── main/ · ai/ · auto/ · panel/ · stats/ · chathistory/
+│   ├── data/
+│   │   └── ptero-panels.json     # [SETTING PANEL] sumber kebenaran panel (menang dari config)
+│   ├── scraper/
+│   │   ├── mori/                 # Engine Mori downloader — 17 platform/35 method (scrapr 1.2.1)
+│   │   └── mori-bridge.js        # Bridge ESM → scraper Mori + resolver link
 │   ├── lib/
-│   │   ├── apikey/           # Pusat API key: apikeys.json + getApiKey()
-│   │   ├── rara-send-queue.js # Antrean FIFO per-chat anti-ban
-│   │   ├── rara-database.js  # Database JSON + persistensi kv (tahan restart)
-│   │   ├── rara-plugins.js   # Plugin loader & registry
-│   │   ├── panel/            # Klien Pterodactyl & provisioning server
-│   │   └── rara-9router-local.js # Gateway AI lokal self-heal
-│   └── database/             # Store runtime (template kosong di repo publik)
-├── plugins/                  # 2.079+ plugin, 54 kategori folder
-├── assets/                   # Thumbnail per fitur, game HTML, media
-├── panduan/                  # Dokumentasi deep-dive (VPS, 9router, AICALL...)
-└── test/                     # 115+ suite E2E & regresi
+│   │   ├── config/              # ⚙️ SEMUA config kode ada di sini, per kategori:
+│   │   │   ├── bot-identity.js   #   ├── [SETTING INTI] owner.name, owner.number[], nomor bot
+│   │   │   │                     #   │   (pairingNumber), nama bot, versi, mode, prefix, sticker, saluran
+│   │   │   ├── apikey.js         #   ├── struktur API key (template kosong di repo publik)
+│   │   │   ├── ai.js             #   ├── persona AI, provider chain, default model
+│   │   │   ├── features.js       #   ├── fitur default, welcome/goodbye, energi
+│   │   │   ├── messages.js       #   ├── template pesan & proteksi grup
+│   │   │   ├── ui.js             #   ├── gaya kartu & tampilan
+│   │   │   ├── external.js       #   ├── default panel/Vercel/DO/AM
+│   │   │   ├── payment.js        #   ├── payment & donasi
+│   │   │   ├── schedulers.js     #   ├── jadwal cuaca/loker otomatis
+│   │   │   ├── session-cli.js    #   └ nomor bot dari argumen CLI (npm start <nomor>)
+│   │   ├── apikey/
+│   │   │   ├── apikeys.json      # 🔑 [SETTING API KEY] pusat key — diisi manual atau .setkey
+│   │   │   └── index.js          #   └ getApiKey('nama') — prioritas DB > apikeys.json > env
+│   │   ├── rara-database.js      # Database JSON + persistensi kv (tahan restart)
+│   │   ├── rara-plugins.js       # Plugin loader & registry command
+│   │   ├── rara-send-queue.js    # Antrean FIFO per-chat + jeda human-like (anti-ban)
+│   │   ├── rara-menu-card.js    # Kartu menu media + thumbnail
+│   │   ├── rara-menu-style.js    # Gaya kartu 『 *Judul* 』 + usage/guide
+│   │   ├── rara-premium-db.js    # Owner/premium/partner runtime (isOwner/isPremium)
+│   │   ├── rara-boot-doctor.js   # Health check semua API & fitur saat boot
+│   │   ├── panel/               # Klien Pterodactyl + provisioning server (cpanel, 1gb)
+│   │   └── rara-9router-local.js# Gateway AI lokal self-heal
+│
+├── plugins/                      # 🧩 2.079+ plugin command, 54 kategori folder:
+│   ├── main/ · owner/ · user/    #   menu, akses owner, profil, limit
+│   ├── ai/ · ai-agent/ · airich/ #   AI chat, agent native tool-call, 21 game arcade
+│   ├── download/                 #   morialldownloader (17 platform), yt, tiktok, dll
+│   ├── convert/ · sticker/ · media/ · maker/
+│   ├── group/ · anonim/ · confess-menfess/ · telegram/
+│   ├── rpg/ · game/ · clan/     #   RPG lengkap + mini game
+│   ├── panel/ · vps/             #   .cpanel, .setpanel, .1gb, tools VPS
+│   ├── tools/ · utility/ · search/ · info/ · education/ · islami/
+│   ├── berita/ · cuaca/ · loker/ · jkt48/ · cecan/ · anime/ · asupan/
+│   ├── nsfw/ · store/ · sewa-premium/ · tts/ · browser/ · html/ · jpm/
+│   └── (54 folder total — lihat .allmenu)
+│
+├── assets/                       # Thumbnail per fitur/kategori, media kartu menu
+├── session/                      # Session WhatsApp runtime (creds.json — jangan commit!)
+├── panduan/                      # Dokumentasi deep-dive (VPS-PANEL, AICALL, 9ROUTER...)
+├── docs/ · changelogs/ · tools/ · builder/ · web/ · skills/ · case/
+└── test/                         # 115+ suite E2E & regresi (wajib hijau sebelum merge)
 ```
+
+### Peta Setting — Nomor Owner, Nomor Bot & Lainnya
+
+| Yang mau diubah | Lokasi file | Cara runtime (tanpa edit kode) |
+|---|---|---|
+| **Nomor owner** | `src/lib/config/bot-identity.js` → `owner.number: ["62xxx"]` | `.addowner 62xxx` (owner tambahan, tersimpan di `src/database/owner/`) |
+| **Nama owner** | `src/lib/config/bot-identity.js` → `owner.name` | — |
+| **Nomor bot** (yang dipairing) | `src/lib/config/bot-identity.js` → `session.pairingNumber` | `npm start 6281234567890` (argumen CLI) atau isi saat prompt pairing |
+| **Nama bot / versi / developer** | `src/lib/config/bot-identity.js` → `bot.name` | — |
+| **Mode self/public** | `src/lib/config/bot-identity.js` → `mode: "self"` | `.self` untuk mode self (tersimpan di `src/database/settings/settings.json`) |
+| **Prefix command** | `src/lib/config/bot-identity.js` → `command.prefix: "."` | — |
+| **Nama sticker pack** | `src/lib/config/bot-identity.js` → `sticker.packname/author` | — |
+| **Saluran WhatsApp** | `src/lib/config/bot-identity.js` → `saluran` | `.setsaluan <link>` |
+| **API key** (semua provider) | `src/lib/apikey/apikeys.json` | `.setkey <provider> <key>` — prioritas DB > apikeys.json > env |
+| **Panel Pterodactyl** | `src/data/ptero-panels.json` | `.setpanel <id> <domain> <apikey>` |
+| **User premium / partner** | `src/database/premium/` & `partner/` | `.addprem 62xxx <durasi>` |
+| **Setting per-grup** | `src/database/group/groups.json` | `.antilink on`, `.welcome on`, dll (di grup) |
+| **Website & grup WA info** | `src/lib/config/bot-identity.js` → `info.website/grupwa` | — |
+
+> **Urutan prioritas setting:** runtime command (tersimpan di `src/database/`, tahan restart) > `apikeys.json`/`ptero-panels.json` > kode default di `src/lib/config/`. Repo publik berisi template kosong — semua key & nomor dipasang sendiri via command atau edit file di atas.
 
 **Prinsip desain:**
 - **API key terpusat** — `getApiKey('nama')` dengan prioritas `.setkey` (DB) → `apikeys.json` → env; repo publik berisi template kosong.
