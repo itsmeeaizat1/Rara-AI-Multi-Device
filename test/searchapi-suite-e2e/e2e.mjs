@@ -19,6 +19,9 @@ await initDatabase(TMP + "/db.json");
 
 const { fromSC } = await import("../../src/lib/styler.js");
 const scr = await import("../../src/scraper/searchapi.js");
+// key dummy — handler ngecek key SEBELUM fetch (strict satuan 14 Sep);
+// tanpa ini semua case konten mentok di kartu "key belum di-set" (pre-existing)
+scr._setSearchApiKeyForTest("sk-test-suite-123");
 const lib = await import("../../src/lib/rara-sapi-render.js");
 const norm = (s) => fromSC(String(s)).toLowerCase();
 

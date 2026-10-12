@@ -1032,6 +1032,36 @@ Kalau semua hijau, cek panel admin → node harus ONLINE (bukan merah), lalu di 
 
 ---
 
+## Langkah 18 — OpenSERP: Google Search Asli Tanpa API Key
+
+Backend mesin `google` di `.search`. Container docker [karust/openserp](https://github.com/karust/openserp) (MIT, Go + headless Chrome) — Google dirender pakai **browser asli**, jadi gak kena blok "enable JavaScript". Scrape HTTP langsung ke Google udah MATI di IP datacenter (verifikasi live 12 Okt 2026: googlethis = 0 hasil, Startpage = captcha, SearXNG publik = anti-bot). Kalau container mati → bot auto-fallback ke bing, gak ada fitur yang rusak.
+
+### A. Pasang container di VPS HOST (sekali doang)
+```bash
+docker run -d --name openserp --restart unless-stopped -p 7000:7000 karust/openserp:latest serve -a 0.0.0.0 -p 7000
+# tunggu ±20 dtk (tarik image ~1 GB), lalu cek:
+curl http://127.0.0.1:7000/health
+curl "http://127.0.0.1:7000/google/search?text=cuaca+jakarta&lang=id" | head -c 300   # harus JSON results
+```
+Catatan keamanan: cloud firewall provider cuma buka 22/80/443 dari luar → port 7000 gak bisa diakses publik. Ekstra opsional: `ufw allow from 172.16.0.0/12 to any port 7000` lalu `ufw deny 7000`.
+
+### B. Sambungkan bot (container ptero nyampe host via gateway bridge)
+```
+$ ip route | awk '/default/ {print $3}'      # di chat bot → mis. 172.18.0.1
+```
+Edit `.env` bot → `OPENSERP_URL=http://172.18.0.1:7000` → `.restart`. Tanpa .env default-nya `http://127.0.0.1:7000` (cuma cocok kalau bot jalan langsung di host).
+
+### C. Verifikasi
+- `.search google cuaca jakarta` → kartu `📡 Mesin: Google (OpenSERP)`.
+- Muncul `(openserp mati — google dialihkan ke bing)` → container mati atau `OPENSERP_URL` salah.
+
+### D. Resource & catatan
+- RAM ±300-500 MB saat render, disk image ~1 GB. Reset: `docker restart openserp`.
+- Google bisa kasih CAPTCHA kalau dipakai gila-gilaan; openserp punya cache internal (header `X-Cache`) — pemakaian bot ringan aman.
+- Bisa juga engine lain dari openserp: `yandex`, `baidu`, `ecosia` (endpoint sama, ganti path).
+
+---
+
 ## Catatan Penting
 
 1. **Urutan keamanan DULUAN:** ganti password + ganti port + SSH key itu langkah PERTAMA setelah login. Jangan install apa-apa sebelum itu selesai.

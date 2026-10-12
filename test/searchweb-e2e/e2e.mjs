@@ -3,17 +3,20 @@
 // Semua HTTP di-inject (offline). Reaksi 🕒→🐣 wajib.
 import { initDatabase } from "../../src/lib/rara-database.js";
 import { smallcapsText } from "../../src/lib/styler.js";
-import { setWebSearchHttp, setPreviewHttp, setLinkResolverHttp, resetWebSearchDeps } from "../../src/lib/rara-websearch.js";
+import { setWebSearchHttp, setPreviewHttp, setLinkResolverHttp, resetWebSearchDeps, setOpenserpHttp } from "../../src/lib/rara-websearch.js";
+
+// suite ini OFFLINE — openserp dipaksa gagal biar fallback bing deterministik
+setOpenserpHttp(async () => { throw new Error("offline-test"); });
 
 await initDatabase("/tmp/searchweb-e2e-db.json");
 
 // ── HTML mock ala hasil asli (bing live verified 10 Sep) ──
 const BING_HTML = `<!DOCTYPE html><html><body>
 <li class="b_algo"><h2><a href="https://www.facebook.com/login.php">Log into Facebook</a></h2>
-<div class="b_caption"><p>Log in to Facebook to start sharing.</p></div></li>
-<li class="b_algo"><h2><a href="https://bing.com/ck/a?u=a1aHR0cHM6Ly9pZC53aWtpcGVkaWEub3JnL3dpa2kvS3VjaW5n&ntb=1">Kucing - Wikipedia</a></h2>
-<div class="b_caption"><p>Kucing adalah hewan mamalia karnivora.</p></div></li>
-<li class="b_algo"><h2><a href="https://www.detik.com/berita">Berita detikcom</a></h2><div class="b_caption"><p>Portal berita Indonesia.</p></div></li>
+<div class="b_caption"><p>Facebook login — masuk buat mulai sharing dan connecting.</p></div></li>
+<li class="b_algo"><h2><a href="https://bing.com/ck/a?u=a1aHR0cHM6Ly9pZC53aWtpcGVkaWEub3JnL3dpa2kvS3VjaW5n&ntb=1">Facebook Login — Panduan & Kucing Wiki</a></h2>
+<div class="b_caption"><p>Cara login facebook plus ensiklopedia kucing.</p></div></li>
+<li class="b_algo"><h2><a href="https://www.detik.com/berita">Berita Facebook Login Hari Ini</a></h2><div class="b_caption"><p>Portal berita Indonesia soal facebook login.</p></div></li>
 </body></html>`;
 
 const DDG_HTML = `<!DOCTYPE html><html><body><table>
@@ -52,9 +55,9 @@ setWebSearchHttp(async (url, opts = {}) => {
 });
 
 const BAIDU_HTML = `<!DOCTYPE html><html><body>
-<div class="result c-container"><h3 class="t"><a href="http://www.baidu.com/link?url=BD1">Hasil Baidu Pertama</a></h3></div>
-<div class="result c-container"><h3 class="t"><a href="http://www.baidu.com/link?url=BD2">Hasil Baidu Zhihu</a></h3></div>
-<div class="result c-container"><h3 class="t"><a href="http://www.baidu.com/link?url=BD3">Hasil Baidu WeChat</a></h3></div>
+<div class="result c-container"><h3 class="t"><a href="http://www.baidu.com/link?url=BD1">HP Terkenal — Hasil Baidu Pertama</a></h3></div>
+<div class="result c-container"><h3 class="t"><a href="http://www.baidu.com/link?url=BD2">HP Terkenal di Zhihu</a></h3></div>
+<div class="result c-container"><h3 class="t"><a href="http://www.baidu.com/link?url=BD3">HP Terkenal di WeChat</a></h3></div>
 </body></html>`;
 
 const SOGOU_HTML = `<!DOCTYPE html><html><body>
@@ -183,7 +186,7 @@ setWebSearchHttp(async (url) => {
   throw new Error("unknown url");
 });
 replies.length = 0; sent.length = 0;
-await handler(mockM(["google", "kucing"]), { sock: mockSock });
+await handler(mockM(["google", "facebook", "login"]), { sock: mockSock });
 const gText = String(sent[0]?.payload?.text || "");
 check("engine google: dialihkan bing + note", gText.includes(smallcapsText("Log into Facebook")) && gText.includes(smallcapsText("google dialihkan")));
 
