@@ -4,7 +4,7 @@
 // happymod, kyiodl, threaddl). Pola: video/gambar → caption kartu; audio →
 // kartu teks SETELAH voice note; dokumen (aio2/aio2dl/ytmp4 >16MB/
 // dailymotion) → caption document; helper lokal dipatch sekali (zeldl,
-// alldownloader, alldownloaderv3, alldownloaderv4); multi-foto → kartu
+// alldownloader, morialldownloader (ex-alldownloaderv3), alldownloaderv4); multi-foto → kartu
 // ringkasan (douyindl, tiktokv3 photos).
 
 import { readFile } from "node:fs/promises";
@@ -51,7 +51,7 @@ for (const f of ["an1.js", "googlesearch.js", "happymod.js", "kyiodl.js", "threa
 
 console.log("── 3. header dinamis pluginConfig.name ──");
 {
-  const files = senders.filter((f) => !["zeldl.js", "alldownloader.js", "alldownloaderv3.js", "alldownloaderv4.js"].includes(f));
+  const files = senders.filter((f) => !["zeldl.js", "alldownloader.js", "morialldownloader.js", "alldownloaderv4.js"].includes(f));
   for (const f of files) {
     const s = await src(`plugins/download/${f}`);
     const nm = /name:\s*['"]([^'"]+)['"]/.exec(s) || /name:\s*\[\s*['"]([^'"]+)['"]/.exec(s);
@@ -72,7 +72,7 @@ console.log("── 4. keluarga audio: kartu teks SETELAH kirim ──");
 
 console.log("── 5. helper lokal dipatch sekali ──");
 {
-  for (const f of ["zeldl.js", "alldownloaderv3.js", "alldownloaderv4.js"]) {
+  for (const f of ["zeldl.js", "morialldownloader.js", "alldownloaderv4.js"]) {
     const s = await src(`plugins/download/${f}`);
     const fn = /async function sendMedia/.exec(s);
     const cardInHelper = fn && s.slice(fn.index, fn.index + 2500).includes("dlCard");

@@ -1,7 +1,7 @@
 {
   "name": "rara-scrape-mori",
-  "version": "1.0.0",
-  "description": "Scrapers dari github.com/coflyn/scrapr (Mori) — cadangan engine, CommonJS. Jangan diubah, upgrade via repo upstream.",
+  "version": "1.2.1",
+  "description": "Scrapers dari github.com/coflyn/scrapr 1.2.1 (engine Mori, MIT) — cadangan engine, CommonJS. Jangan diubah, upgrade via repo upstream. Terakhir di-upgrade 12 Okt 2026 (bareng Mori v4.4.0: reddit/rapidsave, terabox/sechno, rednote, pixiv, resolver, bandcamp.direct, bilibili.direct, douyin ttwid PoW, ytmp3 cache-buster, spotisaver/soundloaders spotimate, tikdownloader, savetwt, downreels dihapus upstream).",
   "type": "commonjs",
   "license": "MIT"
 }

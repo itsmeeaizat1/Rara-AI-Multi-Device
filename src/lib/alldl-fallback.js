@@ -9,7 +9,7 @@ import { raraWrap } from "./rara-menu-style.js";
 const VERSIONS = {
   v1: { label: ".alldl (V1)", file: "../../plugins/download/alldl.js" },
   v2: { label: ".alldownloader (V2)", file: "../../plugins/download/alldownloader.js" },
-  v3: { label: ".alldl3 (V3)", file: "../../plugins/download/alldownloaderv3.js" },
+  v3: { label: ".morialldownloader (V3)", file: "../../plugins/download/morialldownloader.js" },
   v4: { label: ".alldl4 (V4)", file: "../../plugins/download/alldownloaderv4.js" },
 };
 

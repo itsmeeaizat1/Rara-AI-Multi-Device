@@ -1,5 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// plugins/download/alldownloaderv3.js — ALLDOWNLOADER V3 (MORI-STYLE)
+// plugins/download/morialldownloader.js — MORI ALLDOWNLOADER (v3 Mori-style, rename dari alldownloaderv3)
 //
 // Referensi arsitektur: github.com/coflyn/Mori — client-side downloader
 // 14 platform dengan multi-engine fallback. Di-port ke Rara:
@@ -14,7 +14,7 @@
 //       (image/multi-page/ugoira→mp4) + Bandcamp scrape (track/album).
 //       Bilibili diriset — API-nya nolak dari server (412 anti-bot).
 //
-// Command: .alldl3 (alias: alldownloader3, allv3, adl3, all3)
+// Command: .morialldownloader (alias: morialldl, moridl — alias lama alldl3/all3 dihapus, nama ganti total)
 // V1 (.alldl/.dl) & V2 (.alldownloader/.alldl2) gak disentuh.
 
 import { runAllDlFallback } from "../../src/lib/alldl-fallback.js";
@@ -85,12 +85,12 @@ function mediaCaption({
 
 
 const pluginConfig = {
-  name: "alldownloaderv3",
-  alias: ["alldl3", "alldownloader3", "allv3", "adl3", "all3"],
+  name: "morialldownloader",
+  alias: ["morialldl", "moridl"],
   category: "download",
-  description: "Universal downloader v3 ala Mori — 14 platform, multi-engine fallback (report engine winner), batch multi-link, engine direct Pixiv + Bandcamp",
-  usage: ".alldl3 <url> — download otomatis (format terbaik)\n.alldl3 <url1> <url2> ... — batch multi-link (max 5)\n.alldl3 engines — daftar platform + engine chain",
-  example: ".alldl3 https://www.pixiv.net/artworks/99172382\n.alldl3 https://music.monstercat.com/track/crab-rave\n.alldl3 https://vt.tiktok.com/xxx https://www.instagram.com/reel/xxx",
+  description: "Universal downloader v3 ala Mori — 17 platform (baru: Reddit, TeraBox, RedNote, Pixiv), multi-engine fallback (report engine winner), batch multi-link",
+  usage: ".morialldownloader <url> — download otomatis (format terbaik)\n.morialldownloader <url1> <url2> ... — batch multi-link (max 5)\n.morialldownloader engines — daftar platform + engine chain\n(alias: .morialldl / .moridl)",
+  example: ".morialldownloader https://www.pixiv.net/artworks/99172382\n.morialldownloader https://music.monstercat.com/track/crab-rave\n.morialldownloader https://vt.tiktok.com/xxx https://www.instagram.com/reel/xxx",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -101,7 +101,7 @@ const pluginConfig = {
 };
 
 // ═══════════════════════════════════════════════
-// PLATFORM MATRIX (14 platform ala Mori)
+// PLATFORM MATRIX (17 platform ala Mori v4.4.0 — scrapr 1.2.1)
 // ═══════════════════════════════════════════════
 
 const PLATFORMS = {
@@ -117,6 +117,8 @@ const PLATFORMS = {
   soundcloud:  { icon: "☁️", name: "SoundCloud",   match: (u) => /(?:^|\.)soundcloud\.com/.test(u) },
   pinterest:   { icon: "📌", name: "Pinterest",    match: (u) => /(?:^|\.)pinterest\.[a-z.]+|pin\.it/.test(u) },
   rednote:     { icon: "📕", name: "RedNote/XHS", match: (u) => /(?:^|\.)(?:xiaohongshu\.com|xhslink\.com|rednote\.com)/.test(u) },
+  reddit:      { icon: "👽", name: "Reddit",       match: (u) => /(?:^|\.)(?:reddit\.com|redd\.it)/.test(u) },
+  terabox:     { icon: "📦", name: "TeraBox",      match: (u) => /(?:^|\.)(?:terabox\.com|teraboxapp\.com|1024tera\.com|teraboxlink\.\w+|terabox\.\w+)/.test(u) },
   pixiv:       { icon: "🎨", name: "Pixiv",        match: (u) => /(?:^|\.)pixiv\.net/.test(u) },
   // Bandcamp match: /track/ atau /album/ di domain APAPUN — banyak band
   // pakai custom domain bandcamp-pro (mis. music.monstercat.com). Dicek
@@ -129,7 +131,7 @@ const PLATFORMS = {
 };
 
 function detectPlatform(url) {
-  for (const key of ["pixiv", "rednote", "douyin", "bilibili", "tiktok", "instagram", "facebook", "twitter", "threads", "spotify", "applemusic", "soundcloud", "pinterest", "youtube", "bandcamp"]) {
+  for (const key of ["pixiv", "rednote", "reddit", "terabox", "douyin", "bilibili", "tiktok", "instagram", "facebook", "twitter", "threads", "spotify", "applemusic", "soundcloud", "pinterest", "youtube", "bandcamp"]) {
     if (PLATFORMS[key].match(url)) return key;
   }
   return "generic";
@@ -185,27 +187,41 @@ const ENGINES = {
   // diawali "Mori" biar keliatan di caption mana yang punya Mori.
   // Bilibili SnapTik... eh, SnapWC = satu-satunya jalur bilibili yang
   // bisa jalan dari server (direct API kemarin kena anti-bot 412).
+  // Bilibili sekarang direct (snapwc lama kena nolak RSA Node 20+, dihapus upstream).
   // Scraper browser Mori (savetik/fdown/snapinsta) LAZY — aktif
   // otomatis begitu Chrome/Playwright diinstal di server.
   ...Object.fromEntries(
     [
       ["applemusic", "aplmate", "AplMate"],
       ["bandcamp", "bandcampdownloader", "BandcampDownloader"],
-      ["bilibili", "snapwc", "SnapWC"],
+      ["bandcamp", "direct", "BandcampDirect"],
+      ["bilibili", "direct", "BilibiliDirect"],
       ["douyin", "direct", "DouyinDirect"],
       ["facebook", "snapsave", "SnapSave"],
       ["instagram", "indown", "InDown"],
-      ["instagram", "downreels", "DownReels"],
+      ["instagram", "snapsave", "SnapSaveIG"],
+      ["instagram", "direct", "IGDirect"],
       ["pinterest", "pindown", "PinDown"],
+      ["pinterest", "direct", "PinterestDirect"],
+      ["pixiv", "ajax", "PixivAjax"],
+      ["reddit", "rapidsave", "RapidSave"],
+      ["rednote", "direct", "RedNoteDirect"],
       ["soundcloud", "klickaud", "KlickAud"],
-      ["spotify", "spotmate", "SpotMate"],
+      ["spotify", "spotisaver", "Spotisaver"],
+      ["spotify", "soundloaders", "SoundLoaders"],
       ["spotify", "spotidown", "SpotiDown"],
+      ["spotify", "spotmate", "SpotMate"],
+      ["terabox", "sechno", "Sechno"],
       ["threads", "threadster", "Threadster"],
+      ["tiktok", "tikdownloader", "TikDownloader"],
       ["tiktok", "tiktokio", "TikTokIO"],
       ["tiktok", "snaptik", "SnapTik"],
       ["tiktok", "ssstik", "SSSTik"],
+      ["twitter", "savetwt", "SaveTWT"],
       ["twitter", "tweeload", "Tweeload"],
       ["twitter", "tvd", "TVD"],
+      ["twitter", "direct", "TwitterDirect"],
+      ["youtube", "ytmp3gg", "YTmp3GG"],
       ["youtube", "ytmp3", "YTmp3"],
       ["tiktok", "savetik", "SaveTik"],
       ["facebook", "fdown", "FDown"],
@@ -385,21 +401,23 @@ function pickBest(medias) {
 
 // ── Platform → engine chain (Mori: multi-engine fallback) ──
 const CHAINS = {
-  pixiv:      ["pixivDirect"],
-  bandcamp:   ["bandcampDirect", "moriBandcampDownloader", "haidar", "ikyy", "omnify", "valore"],
-  bilibili:   ["moriSnapWC"],
-  tiktok:     ["tiktokYuu", "moriTikTokIO", "moriSnapTik", "moriSSSTik", "haidar", "ikyy", "moriSaveTik"],
-  douyin:     ["douyinDirect", "snaptikDy", "moriDouyinDirect", "haidar"],
-  instagram:  ["igNovav1", "moriInDown", "moriDownReels", "haidar", "ikyy", "moriSnapInsta"],
+  pixiv:      ["pixivDirect", "moriPixivAjax", "haidar"],
+  bandcamp:   ["bandcampDirect", "moriBandcampDirect", "moriBandcampDownloader", "haidar", "ikyy", "omnify", "valore"],
+  bilibili:   ["moriBilibiliDirect", "haidar", "ikyy"],
+  tiktok:     ["tiktokYuu", "moriTikDownloader", "moriTikTokIO", "moriSnapTik", "moriSSSTik", "haidar", "ikyy", "moriSaveTik"],
+  douyin:     ["douyinDirect", "moriDouyinDirect", "snaptikDy", "haidar"],
+  instagram:  ["igNovav1", "moriInDown", "moriSnapSaveIG", "moriIGDirect", "haidar", "ikyy", "moriSnapInsta"],
   facebook:   ["moriSnapSave", "haidar", "ikyy", "omnify", "moriFDown"],
-  twitter:    ["x2twitter", "moriTweeload", "moriTVD", "haidar", "ikyy"],
+  twitter:    ["x2twitter", "moriSaveTWT", "moriTVD", "moriTwitterDirect", "moriTweeload", "haidar", "ikyy"],
   threads:    ["moriThreadster", "haidar", "ikyy", "omnify"],
-  spotify:    ["moriSpotMate", "moriSpotiDown", "haidar", "ikyy"],
+  spotify:    ["moriSpotisaver", "moriSoundLoaders", "moriSpotiDown", "moriSpotMate", "haidar", "ikyy"],
   applemusic: ["moriAplMate", "haidar", "ikyy"],
   soundcloud: ["soundcloudDl", "moriKlickAud", "haidar", "ikyy"],
-  pinterest:  ["pinDl", "moriPinDown", "haidar"],
-  rednote:    ["rednoteDirect", "haidar"],
-  youtube:    ["haidar", "ikyy", "moriYTmp3", "omnify"],
+  pinterest:  ["pinDl", "moriPinterestDirect", "moriPinDown", "haidar"],
+  rednote:    ["rednoteDirect", "moriRedNoteDirect", "haidar"],
+  reddit:     ["moriRapidSave", "haidar", "ikyy"],
+  terabox:    ["moriSechno", "haidar"],
+  youtube:    ["haidar", "ikyy", "moriYTmp3GG", "moriYTmp3", "omnify"],
   generic:    ["haidar", "ikyy", "omnify", "valore"],
 };
 
@@ -477,7 +495,7 @@ async function handlePixiv(sock, m, platform, r, progressLabel) {
         caption: urls.length > 1 ? `🖼️ ${r.title} (${i + 1}/${urls.length})` : null,
       });
     } catch (e) {
-      console.error("[alldl3] pixiv page fail:", e.message);
+      console.error("[morialldl] pixiv page fail:", e.message);
     }
   }
 }
@@ -503,7 +521,7 @@ async function handleBandcamp(sock, m, platform, r, progressLabel) {
         fileName: `${safeName(t.title || r.title)}.mp3`,
       }, { quoted: m });
     } catch (e) {
-      console.error("[alldl3] bandcamp track fail:", e.message);
+      console.error("[morialldl] bandcamp track fail:", e.message);
     }
   }
 }
@@ -551,14 +569,14 @@ async function handlerCore(m, { sock }) {
     }
     body.push("");
     body.push(`Batch: tempel beberapa link sekaligus (maks ${MAX_BATCH}).`);
-    await m.reply(raraWrap("Downloader V3", body));
+    await m.reply(raraWrap("Mori All Downloader", body));
     await m.react("🐣");
     return true;
   }
 
   const urls = extractUrls(m.text || args.join(" "));
   if (!urls.length) {
-    await m.reply(raraGuide("alldl3", "Universal downloader v3 ala Mori — 14 platform, multi-engine fallback, batch multi-link.", ".alldl3 <url>", `Tempel beberapa link sekaligus untuk batch (maks ${MAX_BATCH}). Lihat .alldl3 engines`));
+    await m.reply(raraGuide("morialldownloader", "Universal downloader ala Mori — 17 platform (Reddit & TeraBox baru), multi-engine fallback, batch multi-link.", ".morialldownloader <url>", `Tempel beberapa link sekaligus untuk batch (maks ${MAX_BATCH}). Lihat .morialldownloader engines`));
     await m.react("❗");
     return true;
   }
@@ -610,12 +628,12 @@ async function handlerCore(m, { sock }) {
       okCount++;
     } catch (e) {
       failLogs.push(`[${i + 1}] ${String(e.message || e).slice(0, 140)}`);
-      console.error("[alldl3] fail:", url, e.message);
+      console.error("[morialldl] fail:", url, e.message);
     }
   }
 
   if (okCount === 0) {
-    await m.reply(raraWrap("Downloader V3", [
+    await m.reply(raraWrap("Mori All Downloader", [
       "❌ Semua link gagal — semua engine di chain udah dicoba.",
       "",
       ...failLogs.map((l) => l.slice(0, 160)),
@@ -632,7 +650,7 @@ async function handlerCore(m, { sock }) {
     for (const l of failLogs) body.push("❌ " + l);
   }
   if (batch.length > 1 || failLogs.length || skipped) {
-    await m.reply(raraWrap("Downloader V3", body, "success"));
+    await m.reply(raraWrap("Mori All Downloader", body, "success"));
   }
   await m.react("🐣");
   return true;
