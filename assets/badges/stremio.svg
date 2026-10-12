@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="126" height="20" viewBox="0 0 126 20" role="img">
+<title>Stremio Cinemeta</title>
+<rect width="126" height="20" rx="4" fill="#0D1117"/>
+<g transform="translate(5.00,3.00) scale(0.5833)" fill="#685CEE"><path d="M12 0a1.2 1.2 0 0 0-.85.354L.353 11.15c-.47.47-.47 1.227 0 1.697L11.15 23.647a1.2 1.2 0 0 0 1.7 0l10.797-10.8c.47-.47.47-1.226 0-1.696L12.85.354A1.2 1.2 0 0 0 12 0zm-1.674 7.586a.2.2 0 0 1 .002 0 .2.2 0 0 1 .129.04l5.729 4.214a.2.2 0 0 1 0 .323l-5.73 4.213a.2.2 0 0 1-.317-.16v-8.43a.2.2 0 0 1 .187-.2z"/></g>
+<text x="72.3" y="13.9" text-anchor="middle" font-family="Segoe UI, Verdana, DejaVu Sans, sans-serif" font-size="11" fill="#E6EDF3">Stremio Cinemeta</text>
+</svg>
