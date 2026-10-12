@@ -235,6 +235,14 @@ Rara-AI-Multi-Device/
 ```bash
 git clone https://github.com/itsmeeaizat1/Rara-AI-Multi-Device.git
 cd Rara-AI-Multi-Device
+```
+
+> **Penting:** pustaka Baileys kustom bot ini (alias `rara` = `@itsmee_aizat.id/baileys2`) sedang tersuspend di npm — tarballnya 404. Sebelum `npm install`, restore dari **backup resmi** (integrity identik dengan package-lock, terverifikasi):
+
+```bash
+curl -L -o /tmp/bailey-backup.zip https://cdn.jsdelivr.net/gh/itsmeeaizat1/itsmee-aizat-id-bailey2@backup-8okt/bailey-backup-aizat.zip
+unzip -o /tmp/bailey-backup.zip tarball-2.0.2-published-original.tgz -d /tmp
+npm cache add /tmp/tarball-2.0.2-published-original.tgz
 npm install
 ```
 
@@ -272,7 +280,7 @@ Bot bisa jalan langsung di HP Android via Termux — pas buat nyoba atau jalanin
 
 ```bash
 pkg update && pkg upgrade -y
-pkg install git nodejs-lts python make clang binutils -y
+pkg install git nodejs-lts python make clang binutils unzip -y
 ```
 
 **Install & Jalankan**
@@ -280,6 +288,12 @@ pkg install git nodejs-lts python make clang binutils -y
 ```bash
 git clone https://github.com/itsmeeaizat1/Rara-AI-Multi-Device.git
 cd Rara-AI-Multi-Device
+
+# restore baileys2 (tarball npm tersuspend — detail di langkah 1)
+curl -L -o /tmp/bailey-backup.zip https://cdn.jsdelivr.net/gh/itsmeeaizat1/itsmee-aizat-id-bailey2@backup-8okt/bailey-backup-aizat.zip
+unzip -o /tmp/bailey-backup.zip tarball-2.0.2-published-original.tgz -d /tmp
+npm cache add /tmp/tarball-2.0.2-published-original.tgz
+
 npm install
 npm start
 ```
