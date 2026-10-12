@@ -1,6 +1,10 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
-// Plugin .voipcall / .voipvideocall — telepon WA dengan pemutar media (port engine lama)
+// Plugin .raratelepon / .rarateleponvideo — telepon WA dengan pemutar media (port engine lama)
 // Engine: src/lib/hivoip/ — OWNER-ONLY (anti penyalahgunaan, owner 28 Sep 2026)
+// RENAME 12 Okt 2026 (owner: "ubah cmd voipcall jadi raratelepon, voipcallvideo
+// jadi rarateleponvideo, aicall jadi aitelepon"): .voipcall → .raratelepon,
+// .voipvideocall → .rarateleponvideo, alias .aicall → .aitelepon.
+// .voipend/.voipsilent tetap (nggak ikut di-rename).
 // REVISI 1 Okt 2026 (owner: "2 mode .voipcall telepon biasa untuk default klo
 // .voipvideocall untuk telepon video"): .voipcall = TELEPON BIASA (voice call,
 // media video dimainkan audionya aja), .voipvideocall = TELEPON VIDEO (video
@@ -12,18 +16,15 @@ import Voip from "../../src/lib/hivoip/index.js";
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 
 const pluginConfig = {
-  name: "voipcall",
-  // FIX LATEN 1 Okt: voipend/voipsilent gak pernah ke-registrasi — selama ini
-  // .voipend/.voipsilent kena jalur command-not-found (suggestion), gak nyamper
-  // ke handler sama sekali. Ditambah voipvideocall/videocall buat mode video.
-  // ALIAS .aicall (1 Okt 2026, revisi owner: "ibaratkan voip ini fitur aicall
-  // bawaan"): .aicall = pintu utama fitur telepon bawaan bot (tanpa konfigurasi
-  // tambahan) — fitur AI voice call yang butuh service Go pindah ke .aicall2.
-  alias: ["voip", "aicall", "voipvideocall", "videocall", "voipend", "voipsilent"],
+  name: "raratelepon",
+  // RENAME 12 Okt 2026 (owner): voipcall → raratelepon, voipvideocall →
+  // rarateleponvideo, aicall → aitelepon. Nama lama dihapus (pola rename
+  // morialldownloader). .voipend/.voipsilent tetap (fix laten 1 Okt).
+  alias: ["aitelepon", "rarateleponvideo", "voipend", "voipsilent"],
   category: "owner",
-  description: "Telepon nomor WA lewat bot + putar audio/video (alias .aicall): .voipcall telepon biasa, .voipvideocall telepon video",
-  usage: ".voipcall <nomor> [url_media] [240p-1080p] [auto] [loop] (telepon biasa) | .voipvideocall <nomor> [url_video] (telepon video) | .voipend [force] | .voipsilent",
-  example: ".voipcall 6281234567890 https://contoh.com/lagu.mp3 auto | .voipvideocall 6281234567890 https://contoh.com/video.mp4",
+  description: "Telepon nomor WA lewat bot + putar audio/video (alias .aitelepon): .raratelepon telepon biasa, .rarateleponvideo telepon video",
+  usage: ".raratelepon <nomor> [url_media] [240p-1080p] [auto] [loop] (telepon biasa) | .rarateleponvideo <nomor> [url_video] (telepon video) | .voipend [force] | .voipsilent",
+  example: ".raratelepon 6281234567890 https://contoh.com/lagu.mp3 auto | .rarateleponvideo 6281234567890 https://contoh.com/video.mp4",
   isOwner: true,
   isPremium: false,
   isGroup: true,
@@ -97,44 +98,47 @@ async function handler(m, { sock, config: botConfig }) {
   const prefix = botConfig.command?.prefix || ".";
   try {
     const raw = m.text?.trim() || "";
-    const parts = raw.replace(new RegExp(`^${prefix}voip(call|videocall|end|silent)\\s*`, "i"), "").trim();
+    // RENAME 12 Okt: cmd baru raratelepon/rarateleponvideo/aitelepon + voipend/voipsilent.
+    // urutan alternasi PENTING: rarateleponvideo HARUS sebelum raratelepon (regex first-match).
+    const CMD_RE = "rarateleponvideo|raratelepon|aitelepon|voipend|voipsilent";
+    const parts = raw.replace(new RegExp(`^${prefix}(?:${CMD_RE})\\s*`, "i"), "").trim();
     const bodyArgs = parts ? parts.split(/\s+/) : [];
-    const cmd = (raw.match(/voip(call|videocall|end|silent)/i) || [])[1]?.toLowerCase() || "call";
-    // MODE (revisi owner 1 Okt): .voipcall = telepon biasa, .voipvideocall = telepon video
-    const callType = cmd === "videocall" ? "video" : "audio";
+    const cmd = (raw.match(new RegExp(`(${CMD_RE})`, "i")) || [])[1]?.toLowerCase() || "raratelepon";
+    // MODE (revisi owner 1 Okt): .raratelepon = telepon biasa, .rarateleponvideo = telepon video
+    const callType = cmd === "rarateleponvideo" ? "video" : "audio";
     const voip = getVoip(sock);
 
-    if (cmd === "end") {
+    if (cmd === "voipend") {
       await m.react("🧠");
       await voip.end(bodyArgs[0] === "force");
       activeCalls.delete(m.chat);
       await m.react("⚡");
-      await m.reply(raraWrap("VOIP", bodyArgs[0] === "force" ? "State VOIP di-force-reset." : "Hangup diminta..."));
+      await m.reply(raraWrap("Rara Telepon", bodyArgs[0] === "force" ? "State VOIP di-force-reset." : "Hangup diminta..."));
       return { handled: true };
     }
 
-    if (cmd === "silent") {
+    if (cmd === "voipsilent") {
       await m.react("🧠");
       const entry = activeCalls.get(m.chat);
       if (!entry) {
         await m.react("🐣");
-        await m.reply(raraError("VOIP", "Gak ada call berjalan di chat ini"));
+        await m.reply(raraError("Rara Telepon", "Gak ada call berjalan di chat ini"));
         return { handled: true };
       }
       const nowSilenced = await entry.call.silent();
       await m.react("⚡");
-      await m.reply(raraWrap("VOIP", nowSilenced ? "Mic dimute, video dipause." : "Lanjut lagi."));
+      await m.reply(raraWrap("Rara Telepon", nowSilenced ? "Mic dimute, video dipause." : "Lanjut lagi."));
       return { handled: true };
     }
 
-    // voipcall
+    // raratelepon (rename 12 Okt dari voipcall)
     await m.react("🧠");
     if (!bodyArgs[0]) {
       await m.react("🐣");
       await m.reply(raraGuide(
-        "voipcall",
-        `Telepon nomor WA lewat bot + putar media. 2 mode: ${prefix}voipcall = TELEPON BIASA (media video dimainkan audionya saja), ${prefix}voipvideocall = TELEPON VIDEO (tanpa URL video = black screen).`,
-        `${prefix}voipcall 6281234567890 auto`,
+        "raratelepon",
+        `Telepon nomor WA lewat bot + putar media. 2 mode: ${prefix}raratelepon = TELEPON BIASA (media video dimainkan audionya saja), ${prefix}rarateleponvideo = TELEPON VIDEO (tanpa URL video = black screen). Alias: ${prefix}aitelepon = ${prefix}raratelepon.`,
+        `${prefix}raratelepon 6281234567890 auto`,
         `Opsi: resolusi 240p-1080p (mode video) · auto (auto hangup habis media) · loop (replay) · playlist URL di-support, reply audio/video juga bisa. Akhiri: ${prefix}voipend · mute: ${prefix}voipsilent. Butuh ffmpeg+ffprobe di server.`
       ));
       return { handled: true };
@@ -142,14 +146,14 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (activeCalls.has(m.chat)) {
       await m.react("🐣");
-      await m.reply(raraError("VOIP", `Masih ada call berjalan di chat ini — akhiri dulu pakai ${prefix}voipend`));
+      await m.reply(raraError("Rara Telepon", `Masih ada call berjalan di chat ini — akhiri dulu pakai ${prefix}voipend`));
       return { handled: true };
     }
 
     const phoneNumber = bodyArgs[0].replace(/\D/g, "");
     if (!phoneNumber) {
       await m.react("❌");
-      await m.reply(raraError("VOIP", "Nomor gak valid"));
+      await m.reply(raraError("Rara Telepon", "Nomor gak valid"));
       return { handled: true };
     }
 
@@ -168,7 +172,7 @@ async function handler(m, { sock, config: botConfig }) {
         media.unshift(quotedPath);
       }
     } catch (e) {
-      console.error("[voipcall]: quoted media:", e.message);
+      console.error("[raratelepon]: quoted media:", e.message);
     }
 
     if (media.length === 0) media = "silence";
@@ -178,7 +182,7 @@ async function handler(m, { sock, config: botConfig }) {
     // (video media nanti dimainkan audionya aja oleh engine).
     const willBeVideo = callType === "video";
 
-    const sent = await m.reply(raraWrap("VOIP", `Ngelpon ${phoneNumber}...${willBeVideo ? " (telepon video)" : " (telepon biasa)"} — akhiri ${prefix}voipend`));
+    const sent = await m.reply(raraWrap("Rara Telepon", `Ngelpon ${phoneNumber}...${willBeVideo ? " (telepon video)" : " (telepon biasa)"} — akhiri ${prefix}voipend`));
     const key = sent?.key;
 
     const cleanupTempFiles = () => {
@@ -195,7 +199,7 @@ async function handler(m, { sock, config: botConfig }) {
     let connectedAtMs = null;
     let phase = 0; // 1=berdering 2=diangkat 3=terhubung 4=berakhir
     const editStatus = (text) => {
-      key && sock.sendMessage(m.chat, { text: raraWrap("VOIP", text), edit: key }).catch(() => {});
+      key && sock.sendMessage(m.chat, { text: raraWrap("Rara Telepon", text), edit: key }).catch(() => {});
     };
 
     call.on("ringing", () => {
@@ -216,7 +220,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
     call.on("item", ({ index, kind }) => {
       if (index === 0) return;
-      sock.sendMessage(m.chat, { text: raraWrap("VOIP", `Putar item ${index + 1} (${kind})`) }).catch(() => {});
+      sock.sendMessage(m.chat, { text: raraWrap("Rara Telepon", `Putar item ${index + 1} (${kind})`) }).catch(() => {});
     });
     call.on("ended", (reason) => {
       activeCalls.delete(m.chat);
@@ -228,14 +232,14 @@ async function handler(m, { sock, config: botConfig }) {
     });
     call.on("error", (err) => {
       activeCalls.delete(m.chat);
-      sock.sendMessage(m.chat, { text: raraError("VOIP", `Error call: ${String(err?.message || err).slice(0, 100)}`) }).catch(() => {});
+      sock.sendMessage(m.chat, { text: raraError("Rara Telepon", `Error call: ${String(err?.message || err).slice(0, 100)}`) }).catch(() => {});
       cleanupTempFiles();
     });
     await m.react("⚡");
   } catch (error) {
-    console.error("[voipcall]:", error.message);
+    console.error("[raratelepon]:", error.message);
     await m.react("❌");
-    await m.reply(raraError("VOIP", toFriendlyVoipError(error?.message || error)));
+    await m.reply(raraError("Rara Telepon", toFriendlyVoipError(error?.message || error)));
   }
 
   return { handled: true };

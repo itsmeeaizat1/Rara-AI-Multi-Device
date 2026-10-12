@@ -60,7 +60,7 @@ const scLine = (line) => {
 
 // LEBAR SERAGAM KARTU USAGE (owner 1 Okt 2026: "aku mau semua pesan menu
 // gelembung ukuran lebarnya standarnya kyk menu allmenu" — kartu usage V2
-// (.aicard, .voipcall, dst) gelembungnya LEBIH LEBAR dari allmenu karena
+// (.aicard, .raratelepon, dst) gelembungnya LEBIH LEBAR dari allmenu karena
 // kalimat sapaan/cara/note dikirim sebagai SATU baris fisik panjang tanpa
 // \n — WhatsApp yang hard-wrap sendiri gak konsisten lebarnya antar pesan.
 // FIX: potong manual ≤ BOX_WRAP_WIDTH char/baris SEBELUM dikirim (persis

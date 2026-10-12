@@ -1,4 +1,6 @@
-// E2E hivoip — engine VOIP + plugin (call flow nyata cuma bisa di VPS live)
+// E2E hivoip — engine VOIP + plugin raratelepon (call flow nyata cuma bisa di VPS live)
+// RENAME 12 Okt 2026: .voipcall → .raratelepon, .voipvideocall → .rarateleponvideo,
+// alias .aicall → .aitelepon; .voipend/.voipsilent tetap.
 let pass = 0, total = 0;
 function ok(name, cond, detail = "") {
   total++;
@@ -20,15 +22,17 @@ ok("resolver: kandidat utama 'rara'", (await resolver.resolveBaileysModule()).ji
 
 const plugin = await import("../../plugins/owner/voipcall.js");
 ok("plugin config & handler ter-ekspor", !!plugin.config?.name && typeof plugin.handler === "function");
-ok("cmd voipcall/voip (gak bentrok call/aicall)", plugin.config.name === "voipcall" && !["call", "aicall"].includes(plugin.config.name));
+ok("cmd raratelepon (rename 12 Okt dari voipcall)", plugin.config.name === "raratelepon" && !["call", "aicall", "voipcall"].includes(plugin.config.name));
+ok("alias rename: aitelepon + rarateleponvideo ke-registrasi", plugin.config.alias.includes("aitelepon") && plugin.config.alias.includes("rarateleponvideo"));
+ok("nama lama dihapus (voip/aicall/voipvideocall/videocall)", !plugin.config.alias.some((a) => ["voip", "aicall", "voipvideocall", "videocall"].includes(a)));
 ok("owner-only (anti penyalahgunaan)", plugin.config.isOwner === true);
 
 // handler: usage tanpa argumen → guide (gak nelpon)
 let replied = null;
-const fakeM = { text: ".voipcall", chat: "x@s.whatsapp.net", sender: "x@s.whatsapp.net", isOwner: true,
+const fakeM = { text: ".raratelepon", chat: "x@s.whatsapp.net", sender: "x@s.whatsapp.net", isOwner: true,
   react: async () => {}, reply: async (t) => { replied = t; return { key: { id: "K" } }; }, quoted: null };
 const res = await plugin.handler(fakeM, { sock: { user: { id: "b@s.whatsapp.net" }, sendMessage: async () => ({}) }, config: { command: { prefix: "." } } });
-ok("handler: usage → raraGuide (gak nelpon)", res?.handled === true && /voipcall|Cara Pakai|cara pakai/i.test(String(replied)));
+ok("handler: usage → raraGuide (gak nelpon)", res?.handled === true && /raratelepon|Cara Pakai|cara pakai/i.test(String(replied)));
 
 // ═══ BUG REPORT OWNER 1 Okt 2026: .voipcall gagal "No device sessions to
 // encrypt the call offer for <nomor>@s.whatsapp.net" — dump teknis mentah ke
@@ -81,8 +85,8 @@ ok("handler: usage → raraGuide (gak nelpon)", res?.handled === true && /voipca
 // ini GAK pernah ke-registrasi sebagai alias → kena jalur command-not-found,
 // gak pernah nyamper ke handler.
 {
-  ok("alias: voipvideocall & videocall ke-registrasi", plugin.config.alias.includes("voipvideocall") && plugin.config.alias.includes("videocall"));
-  ok("FIX LATEN: voipend & voipsilent ke-registrasi (selama ini kena not-found)", plugin.config.alias.includes("voipend") && plugin.config.alias.includes("voipsilent"));
+  ok("RENAME: rarateleponvideo ke-registrasi (ganti voipvideocall)", plugin.config.alias.includes("rarateleponvideo") && !plugin.config.alias.includes("voipvideocall"));
+  ok("FIX LATEN tetap: voipend & voipsilent ke-registrasi", plugin.config.alias.includes("voipend") && plugin.config.alias.includes("voipsilent"));
 
   // routing isVideo (helper engine, tanpa socket beneran)
   const { resolveIsVideoCall } = await import("../../src/lib/hivoip/index.js");
@@ -92,27 +96,32 @@ ok("handler: usage → raraGuide (gak nelpon)", res?.handled === true && /voipca
   ok("routing: mode audio tanpa media → telepon biasa", resolveIsVideoCall("audio", "audio") === false);
   ok("routing: auto (default) = perilaku lama (video iff item pertama video)", resolveIsVideoCall("auto", "video") === true && resolveIsVideoCall("auto", "audio") === false);
 
-  // plugin parsing: .voipvideocall ke-detect sebagai cmd videocall
-  const rawTest = ".voipvideocall 6281234567890";
-  const cmdParsed = (rawTest.match(/voip(call|videocall|end|silent)/i) || [])[1]?.toLowerCase();
-  ok("parsing: '.voipvideocall' ke-detect sebagai cmd videocall (bukan 'call')", cmdParsed === "videocall", cmdParsed);
+  // plugin parsing: .rarateleponvideo ke-detect sebagai cmd video (rename 12 Okt)
+  const CMD_RE = "rarateleponvideo|raratelepon|aitelepon|voipend|voipsilent";
+  const rawTest = ".rarateleponvideo 6281234567890";
+  const cmdParsed = (rawTest.match(new RegExp(`(${CMD_RE})`, "i")) || [])[1]?.toLowerCase();
+  ok("parsing: '.rarateleponvideo' ke-detect sebagai cmd video (bukan 'raratelepon')", cmdParsed === "rarateleponvideo", cmdParsed);
   const rawTest2 = ".voipend force";
-  const cmdParsed2 = (rawTest2.match(/voip(call|videocall|end|silent)/i) || [])[1]?.toLowerCase();
-  ok("parsing: '.voipend' tetap ke-detect sebagai cmd end", cmdParsed2 === "end", cmdParsed2);
+  const cmdParsed2 = (rawTest2.match(new RegExp(`(${CMD_RE})`, "i")) || [])[1]?.toLowerCase();
+  ok("parsing: '.voipend' tetap ke-detect sebagai cmd end", cmdParsed2 === "voipend", cmdParsed2);
+  const rawTest3 = ".aitelepon 6281234567890";
+  const cmdParsed3 = (rawTest3.match(new RegExp(`(${CMD_RE})`, "i")) || [])[1]?.toLowerCase();
+  ok("parsing: '.aitelepon' ke-detect (mode telepon biasa)", cmdParsed3 === "aitelepon", cmdParsed3);
 
-  // strip args: nomor kebaca bener untuk kedua mode
-  const stripRe = /^\.voip(call|videocall|end|silent)\s*/i;
-  ok("strip: args .voipvideocall bersih (nomor doang)", ".voipvideocall 6281234567890 x.mp4".replace(stripRe, "").trim() === "6281234567890 x.mp4");
-  ok("strip: args .voipcall bersih (nomor doang)", ".voipcall 6281234567890 auto".replace(stripRe, "").trim() === "6281234567890 auto");
+  // strip args: nomor kebaca bener untuk semua nama baru
+  const stripRe = new RegExp(`^\\.(?:${CMD_RE})\\s*`, "i");
+  ok("strip: args .rarateleponvideo bersih (nomor doang)", ".rarateleponvideo 6281234567890 x.mp4".replace(stripRe, "").trim() === "6281234567890 x.mp4");
+  ok("strip: args .raratelepon bersih (nomor doang)", ".raratelepon 6281234567890 auto".replace(stripRe, "").trim() === "6281234567890 auto");
+  ok("strip: args .aitelepon bersih (nomor doang)", ".aitelepon 6281234567890".replace(stripRe, "").trim() === "6281234567890");
 
   // guide nyebut 2 mode
   let guide2 = null;
-  await plugin.handler({ text: ".voipcall", chat: "x@s.whatsapp.net", sender: "x@s.whatsapp.net", isOwner: true,
+  await plugin.handler({ text: ".raratelepon", chat: "x@s.whatsapp.net", sender: "x@s.whatsapp.net", isOwner: true,
     react: async () => {}, reply: async (t) => { guide2 = t; return { key: { id: "K2" } }; }, quoted: null },
     { sock: { user: { id: "b@s.whatsapp.net" }, sendMessage: async () => ({}) }, config: { command: { prefix: "." } } });
   const { fromSC: __fromSC } = await import("../../src/lib/styler.js");
-  const guideNorm = __fromSC(String(guide2 || "")).toLowerCase();
-  ok("guide: nyebut .voipcall = telepon biasa", guideNorm.includes("telepon biasa") && guideNorm.includes("voipvideocall") && guideNorm.includes("telepon video"), guideNorm.slice(0, 90));
+  const guideNorm = __fromSC(String(guide2 || "")).replace(/\s+/g, " ").toLowerCase(); // hard-wrap kartu nyela kata → normalisasi spasi dulu
+  ok("guide: nyebut .raratelepon = telepon biasa + .rarateleponvideo + alias .aitelepon", guideNorm.includes("telepon biasa") && guideNorm.includes("rarateleponvideo") && guideNorm.includes("telepon video") && guideNorm.includes("aitelepon"), guideNorm.slice(0, 90));
 
   // engine: media video di mode audio dimainkan sebagai AUDIO (guard struktur)
   const engineSrc = fsHere("../../src/lib/hivoip/index.js");
