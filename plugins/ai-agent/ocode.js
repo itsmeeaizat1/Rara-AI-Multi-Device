@@ -4,7 +4,7 @@
 // ".ocode perbaiki bug di fitur cuaca" → agent 9router baca file repo,
 // edit kode, lapor balik ke chat. Versi 9router dari guide OpenCode
 // (TANPA install OpenCode CLI, TANPA key Groq/GLM baru — pake key
-// router9v2 yang udah ada; endpoint ikut satu pintu .ai9v2 endpoint).
+// router9v2 yang udah ada; endpoint satu pintu env-loader TIO_API_URL/_router9v2Endpoint).
 //
 // ⚠ SANKSI KEAMANAN (padan guide): agent ini BISA mengedit file server.
 // Remote code execution via WA → OWNER ONLY, gak ada pengecualian.
@@ -197,7 +197,7 @@ async function handler(m, { sock, args, config: botConfig }) {
                 "Aktif: " + ocodeModel(db),
                 "---",
                 "Ganti: .ocode model <id-9router>",
-                "Daftar: .ai9v2 list",
+                "Daftar model: dashboard 9router (kalau lokal) / docs 9router.com",
             ]));
         }
         if (!db.data.ocode) db.data.ocode = {};

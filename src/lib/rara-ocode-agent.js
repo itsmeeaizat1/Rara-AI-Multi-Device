@@ -302,7 +302,7 @@ Balas HANYA dengan satu atau lebih blok aksi berikut — JSON murni dalam fence 
 → daftar isi folder.
 
 \`\`\`ocode
-{"action":"read","path":"plugins/ai/ai9v2.js","start":1,"end":200}
+{"action":"read","path":"plugins/ai/raraai.js","start":1,"end":200}
 \`\`\`
 → baca file (maks 400 baris per kali — file panjang dibaca bertahap).
 

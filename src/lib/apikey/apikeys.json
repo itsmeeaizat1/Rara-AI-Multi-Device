@@ -448,9 +448,9 @@
         }
       },
       "_note_router9v2": {
-        "fitur": ".ai9v2 / .9routerv2 (chat multi-model 21 model: gemini-pro-agent default (owner 17 Sep), claude, gpt-oss, agent variants) + endpoint /v1/models",
-        "restapi": "9ROUTER V2 — 9router.cloudku.us.kg",
-        "catatan": "BUKAN gateway npm 9router lokal, BUKAN fitur .ai9 lama · key valid live 17 Sep 2026 (models 200, chat 200)"
+        "fitur": "key rantai AI (.aitio/.aigrup/smartreply/fun-ai) + otak ocode",
+        "restapi": "9ROUTER — cloudku hosted MATI (502, 12 Okt); endpoint via TIO_API_URL/ROUTER_API_URL/_router9v2Endpoint (bisa 9router lokal npm)",
+        "catatan": "fitur command .ai9v2/.9routerv2 DIHAPUS 12 Okt 2026 (web hosted mati) · key + modul router9v2 TETAP (dipakai rantai AI & ocode)"
       }
     },
     "pools": {
