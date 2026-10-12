@@ -41,7 +41,7 @@
 - [Arsitektur](#arsitektur)
 - [Instalasi](#instalasi)
 - [Konfigurasi](#konfigurasi)
-- [Command Penting](#command-penting)
+- [Perintah Penting](#perintah-penting)
 - [Spesifikasi Server](#spesifikasi-server)
 - [Dokumentasi](#dokumentasi)
 - [Kontribusi & Lisensi](#kontribusi--lisensi)
@@ -71,7 +71,7 @@
 
 ## Fitur Unggulan
 
-### AI & Agent
+### AI & Agen
 - **AI Multi-Engine** — chat, gambar, suara, dan video dari puluhan model dengan rantai fallback otomatis; banyak endpoint gratis tanpa API key.
 - **AI Agent Cerdas** — tugas multi-langkah dengan 4.727 skill (katalog skills.sh), loop kerja iteratif (rencana → kerja → kritik → koreksi), memori jangka panjang per pengguna, dan izin berjenjang member/premium/owner.
 - **9Router Agent** — AI agent level superagent: web search live, browse halaman web, dan eksekusi command bot langsung dari agent.
@@ -82,7 +82,7 @@
 - **21 Game Interaktif** — arcade HTML dimainkan langsung di browser HP: sudoku, minesweeper, 2048, connect four AI, tetris, flappy, snake, dan lainnya.
 - **Animasi Sinematik** — tiap game punya animasi khas dari pustaka animasi terpusat.
 
-### Media & Downloader
+### Media & Pengunduh
 - **Downloader Multi-Platform** — YouTube, TikTok, Instagram, Facebook, Spotify, SoundCloud, Threads, dan lainnya dengan deteksi platform otomatis + fallback multi-provider.
 - **Sticker & Maker** — stiker, efek gambar, 80+ gaya AI (ghibli, disney, pixel, dll), canvas kreatif.
 - **Pencarian Tempat + Pin Lokasi** — hasil lengkap dengan ulasan, jam buka, dan pin lokasi asli WhatsApp.
@@ -296,7 +296,7 @@ Tekan Enter tanpa mengisi nomor untuk mode **QR Code**.
 
 ---
 
-## Command Penting
+## Perintah Penting
 
 | Command | Fungsi |
 |---------|--------|
@@ -377,7 +377,7 @@ Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
 
 ---
 
-## About
+## Tentang
 
 Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkembangan atau menghubungi saya, temukan saya di media sosial:
 
@@ -388,7 +388,7 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
 </p>
 
 <div align="center">
-  <p><b>Powered by:</b></p>
+  <p><b>Dibangun dengan:</b></p>
   <img src="https://img.shields.io/badge/Node.js-20--22-339933?style=flat-square&logo=node.js&logoColor=white">
   <img src="https://img.shields.io/badge/JavaScript-ES2023+-F7DF1E?style=flat-square&logo=javascript&logoColor=black">
   <img src="https://img.shields.io/badge/YAML-CI%20%7C%20Actions-CC1018?style=flat-square&logo=yaml&logoColor=white">
@@ -402,7 +402,7 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
 </div>
 
 <div align="center">
-  <p><b>Sponsored:</b></p>
+  <p><b>Sponsor:</b></p>
   <a href="https://openai.com"><img src="https://img.shields.io/badge/OpenAI-GPT--4%20%7C%20o3%20%7C%20o4-412991?style=flat-square&logo=openai&logoColor=white"></a>
   <a href="https://deepmind.google/technologies/gemini/"><img src="https://img.shields.io/badge/Google-Gemini%20Pro%20%7C%20Flash-8E75B2?style=flat-square&logo=googlegemini&logoColor=white"></a>
   <a href="https://www.anthropic.com/claude"><img src="https://img.shields.io/badge/Anthropic-Claude%20Sonnet%20%7C%20Haiku-D97757?style=flat-square&logo=anthropic&logoColor=white"></a>
@@ -433,7 +433,7 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
 </div>
 
 <div align="center">
-  <p><b>Realtime Data & Public API:</b></p>
+  <p><b>Data Realtime & API Publik:</b></p>
   <a href="https://www.bmkg.go.id"><img src="assets/badges/bmkg.svg" alt="BMKG"></a>
   <a href="https://www.usgs.gov"><img src="assets/badges/usgs.svg" alt="USGS"></a>
   <a href="https://www.jma.go.jp"><img src="assets/badges/jma.svg" alt="JMA"></a>
@@ -457,7 +457,7 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
   <img src="assets/badges/winbu.svg" alt="Winbu">
 </div>
 
-**Languages & Tech**
+**Bahasa & Teknologi**
 
 ![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![Node.js](https://img.shields.io/badge/-Node.js-339933?style=flat-square&logo=node.js&logoColor=white)
@@ -477,13 +477,13 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
 ![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
 ![npm](https://img.shields.io/badge/-npm-CB3837?style=flat-square&logo=npm&logoColor=white)
 
-## License
+## Lisensi
 
 Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat1) — [Custom Proprietary License](LICENSE). Made in Indonesia 🇮🇩
 
 ---
 
-## Donate
+## Donasi
 
 <p align="center">
   <a href="https://files.catbox.moe/zewra8.jpeg">
