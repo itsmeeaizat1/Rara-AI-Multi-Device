@@ -75,6 +75,7 @@
 - **AI Multi-Engine** — chat, gambar, suara, dan video dari puluhan model dengan rantai fallback otomatis; banyak endpoint gratis tanpa API key.
 - **AI Agent Cerdas** — tugas multi-langkah dengan 4.727 skill (katalog skills.sh), loop kerja iteratif (rencana → kerja → kritik → koreksi), memori jangka panjang per pengguna, dan izin berjenjang member/premium/owner.
 - **9Router Agent** — AI agent level superagent: web search live, browse halaman web, dan eksekusi command bot langsung dari agent.
+- **Rea AI Agent** — reverse engineering beneran via MCP server [REA](https://github.com/morluto/rea): analisis aplikasi JS/Electron, binary, file (apk/asar/zip/wasm) tanpa source code, hasil pakai bukti Evidence — reply file + `.reaaiagent <pertanyaan>`.
 - **TTS & Voice** — multi-voice, voice clone, pengenal lagu, dan voice note natural.
 
 ### RPG & Game
