@@ -261,7 +261,55 @@ Tekan Enter tanpa mengisi nomor untuk mode **QR Code**.
 2. Clone repo di dalam server, `npm install`
 3. Start — pairing code muncul di console
 
-### 4. Mulai Pakai
+### 4. Termux (Android)
+
+Bot bisa jalan langsung di HP Android via Termux — pas buat nyoba atau jalanin bot 24 jam dengan HP cadangan.
+
+**Persiapan Termux**
+
+1. Install Termux dari **F-Droid** ([f-droid.org/packages/com.termux](https://f-droid.org/packages/com.termux/)) — **bukan** Play Store (versi Play Store sudah basi, sering error).
+2. Update paket dan install dependensi:
+
+```bash
+pkg update && pkg upgrade -y
+pkg install git nodejs-lts python make clang binutils -y
+```
+
+**Install & Jalankan**
+
+```bash
+git clone https://github.com/itsmeeaizat1/Rara-AI-Multi-Device.git
+cd Rara-AI-Multi-Device
+npm install
+npm start
+```
+
+> **Penting:** clone di *home* Termux (`$HOME`), **bukan** di `/sdcard` — `npm install` di shared storage sering gagal karena isu symlink & permission. Pairing sama seperti langkah 2 (kode 8 digit / QR).
+
+**Agar Bot Gak Mati di HP**
+
+```bash
+termux-wake-lock                  # cegah Android membunuh proses saat layar mati
+```
+
+- Matikan **optimasi baterai** untuk aplikasi Termux di pengaturan Android.
+- Auto-restart saat bot crash / HP reboot — pakai PM2:
+
+```bash
+npm install -g pm2
+pm2 start index.js --name rara
+pm2 logs rara                     # lihat log
+pm2 restart rara                  # restart manual
+```
+
+**Catatan Fitur di Termux**
+
+- Fitur utama (chat AI, downloader, sticker, game RPG, panel Pterodactyl) jalan normal.
+- Fitur yang butuh browser (screenshot web, dsb.) — install Chromium Termux dulu: `pkg install chromium`, lalu set `PUPPETEER_EXECUTABLE_PATH` ke binary-nya di `.env`.
+- OpenSERP (Google search asli) dan APK Builder dirancang untuk server/VPS, bukan Termux.
+- RAM HP minimal disarankan **4 GB** (bot + canvas/sticker lumayan makan memori).
+
+### 5. Mulai Pakai
 
 - `.menu` — menu ringkas, `.allmenu` — 54 kategori lengkap
 - `.setkey <provider> <key>` — pasang API key tanpa edit kode
