@@ -1,2 +1,3 @@
-const snapwc = require("./snapwc").scrape;
-module.exports = { snapwc };
+const direct = require("./direct").scrape;
+
+module.exports = { direct };

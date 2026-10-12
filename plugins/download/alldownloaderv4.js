@@ -184,7 +184,7 @@ async function handler(m, { sock, args }) {
         "alldl4",
         "Universal downloader v4 — engine NixDL, 22 platform, auto-detect dari link",
         `${m.command || ".alldl4"} https://vt.tiktok.com/xxx\n${m.command || ".alldl4"} link1 link2 (batch max 5)\n${m.command || ".alldl4"} platforms`,
-        "V1 .alldl / V2 .alldownloader / V3 .alldl3 tetep ada, gak diganti."
+        "V1 .alldl / V2 .alldownloader / V3 .morialldownloader tetep ada, gak diganti."
       )
     );
   }
@@ -274,7 +274,7 @@ async function handler(m, { sock, args }) {
 
   if (!ok) {
     await m.react("❌");
-    return m.reply(raraWrap("All Downloader V4", `Gagal: ${errors[0] || "link gak bisa diproses"}\n\nCoba ulang beberapa detik lagi (resolver publik kadang cold start), atau pakai .alldl / .alldownloader / .alldl3 sebagai alternatif.`));
+    return m.reply(raraWrap("All Downloader V4", `Gagal: ${errors[0] || "link gak bisa diproses"}\n\nCoba ulang beberapa detik lagi (resolver publik kadang cold start), atau pakai .alldl / .alldownloader / .morialldl sebagai alternatif.`));
   }
 
   await m.react("🐣");

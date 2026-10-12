@@ -1,14 +1,13 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-
-const userAgents = [
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-];
+const crypto = require("crypto");
 
 async function scrape(url) {
   try {
-    const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+    const cleanUrl = url.trim();
+    const userAgent =
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
+
     const client = axios.create({
       baseURL: "https://pindown.io",
       headers: {
@@ -16,85 +15,156 @@ async function scrape(url) {
         Referer: "https://pindown.io/",
         Origin: "https://pindown.io",
       },
-      withCredentials: true,
+      timeout: 15000,
     });
 
     const { data: homeHtml, headers: homeHeaders } = await client.get("/");
     const $home = cheerio.load(homeHtml);
 
-    const tokenInput = $home('input[type="hidden"]').not('[name="lang"]');
-    const tokenName = tokenInput.attr("name");
-    const tokenValue = tokenInput.attr("value");
-
-    if (!tokenName || !tokenValue) {
-      throw new Error("Could not find session token on pindown.io");
+    const cfgVal =
+      $home("input[data-challenge-config]").attr("value") ||
+      $home("input[data-challenge-config]").val();
+    let config = { seedParts: ["PinDown.io", ":browser:", "challenge:v1"], lang: "en" };
+    if (cfgVal) {
+      try {
+        config = { ...config, ...JSON.parse(cfgVal) };
+      } catch (_) {}
     }
 
-    const cookies = homeHeaders["set-cookie"];
-    const cookieHeader = cookies ? cookies.map((c) => c.split(";")[0]).join("; ") : "";
+    const homeCookies = (homeHeaders["set-cookie"] || [])
+      .map((c) => c.split(";")[0])
+      .join("; ");
+
+    const { data: tokenData, headers: tokenHeaders } = await client.post(
+      "/api/token",
+      { url: cleanUrl },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Form-Language": config.lang || "en",
+          "X-Requested-With": "XMLHttpRequest",
+          Cookie: homeCookies,
+        },
+      }
+    );
+
+    const { id, p } = tokenData || {};
+    if (!id || !p) {
+      throw new Error("Could not acquire challenge token from pindown.io.");
+    }
+
+    const key = crypto
+      .createHash("sha256")
+      .update(config.seedParts.join("") + ":" + id)
+      .digest();
+    const bytes = Buffer.from(p, "base64");
+    const decipher = crypto.createDecipheriv("aes-256-cbc", key, bytes.slice(0, 16));
+    const challenge = JSON.parse(
+      Buffer.concat([decipher.update(bytes.slice(16)), decipher.final()]).toString("utf8")
+    );
+
+    let answer;
+    switch (challenge.t) {
+      case "r":
+        answer = challenge.n.reduce((s, n) => s + n, 0) * 2 + 1;
+        break;
+      case "b":
+        answer = ((challenge.a ^ challenge.b) >> challenge.shift) & 255;
+        break;
+      case "c":
+        answer = challenge.word.charCodeAt(challenge.index) * challenge.multiplier;
+        break;
+      case "m":
+        answer = ((challenge.a + challenge.b) % 100) * challenge.multiplier;
+        break;
+      case "n":
+        answer =
+          challenge.a * challenge.b +
+          challenge.b * challenge.c +
+          challenge.c * challenge.a -
+          challenge.a;
+        break;
+      default:
+        throw new Error("Unknown challenge type from pindown.io.");
+    }
+
+    const verify = `${id}:${answer}:${challenge._e}:${challenge._h}`;
+    const tokenCookies = (tokenHeaders["set-cookie"] || [])
+      .map((c) => c.split(";")[0])
+      .join("; ");
+    const allCookies = [homeCookies, tokenCookies].filter(Boolean).join("; ");
 
     const formData = new URLSearchParams();
-    formData.append("url", url);
-    formData.append(tokenName, tokenValue);
-    formData.append("lang", "en");
+    formData.append("url", cleanUrl);
+    formData.append("lang", config.lang || "en");
 
     const { data: actionData } = await client.post("/action", formData.toString(), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "X-Verify": verify,
         "X-Requested-With": "XMLHttpRequest",
-        Cookie: cookieHeader,
+        Cookie: allCookies,
       },
     });
 
     if (!actionData.success || !actionData.html) {
-      throw new Error(actionData.message || "Failed to fetch download links from pindown.io");
+      throw new Error(actionData.message || "Failed to process pin on pindown.io.");
     }
 
     const $ = cheerio.load(actionData.html);
     const downloads = [];
+    const seen = new Set();
 
-    $(".columns .column").each((i, el) => {
-      const $el = $(el);
-      const title = $el.find(".is-size-6").text().trim();
-      const $btn = $el.find(".button");
-      let downloadUrl = $btn.attr("href");
-      const isApi = $btn.attr("onclick") && $btn.attr("onclick").includes("fetchVideoUrl");
+    $("table tr").each((_, tr) => {
+      const $tr = $(tr);
+      const rowText = $tr.text().trim();
+      const $btn = $tr.find("a[href^='http']").first();
+      const dlUrl = $btn.attr("href");
 
-      if (isApi) {
-        const match = $btn.attr("onclick").match(/'([^']+)'/);
-        if (match) {
-          downloadUrl = "https://pindown.io" + match[1];
-        }
-      }
-
-      if (downloadUrl) {
+      if (dlUrl && !seen.has(dlUrl)) {
+        seen.add(dlUrl);
+        const isVideo = rowText.toLowerCase().includes("video") || dlUrl.includes(".mp4");
         downloads.push({
-          quality: title || "High Quality",
-          url: downloadUrl,
-          isApi: !!isApi,
-          type: downloadUrl.includes(".mp3") ? "audio" : downloadUrl.includes(".png") || downloadUrl.includes(".jpg") ? "image" : "video",
+          quality: rowText.replace(/download/i, "").trim() || (isVideo ? "720p" : "orig"),
+          type: isVideo ? "video" : "image",
+          url: dlUrl,
         });
       }
     });
 
-    for (let dl of downloads) {
-      if (dl.isApi) {
-        try {
-          const { data: apiData } = await client.get(dl.url, {
-            headers: { Cookie: cookieHeader },
+    if (downloads.length === 0) {
+      $("a[href^='http']").each((_, a) => {
+        const href = $(a).attr("href");
+        if (href && !href.includes("pindown.io") && !seen.has(href)) {
+          seen.add(href);
+          const isVideo = href.includes(".mp4");
+          downloads.push({
+            quality: isVideo ? "video" : "image",
+            type: isVideo ? "video" : "image",
+            url: href,
           });
-          if (apiData.success && apiData.url) {
-            dl.url = apiData.url;
-          }
-        } catch (e) {
-          console.error("Failed to resolve API URL:", dl.url);
         }
-        delete dl.isApi;
-      }
+      });
     }
 
-    const title = $("h3").first().text().trim() || "Pinterest Content";
-    const thumbnail = $(".image img").attr("src") || "";
+    if (downloads.length === 0) {
+      throw new Error("No download links found from pindown.io.");
+    }
+
+    let thumbnail = "";
+    try {
+      const firstToken = downloads[0].url.split("token=")[1];
+      if (firstToken) {
+        const payloadJson = Buffer.from(firstToken.split(".")[1], "base64").toString("utf8");
+        const payload = JSON.parse(payloadJson);
+        thumbnail = payload.cover || "";
+      }
+    } catch (_) {}
+
+    const title =
+      $(".columns .column").first().find("h2, .title, p").first().text().trim() ||
+      $(".columns .column").first().text().trim().split("\n")[0].trim() ||
+      "Pinterest Media";
 
     return {
       status: true,

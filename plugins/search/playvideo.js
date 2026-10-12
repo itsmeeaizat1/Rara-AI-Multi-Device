@@ -4,6 +4,7 @@
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/rara-ytdlp.js";
+import { moriScrape } from "../../src/scraper/mori-bridge.js";
 import { toWhatsAppVideo } from "../../src/lib/rara-ffmpeg.js";
 import { raraGuide, raraSalah, raraWrap, raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
@@ -130,7 +131,23 @@ async function downloadVideo(url, quality) {
     console.error("[PlayVideo] rara-ytdlp error:", e.message);
   }
 
-  // Try 2: IkyyXD ytmp4 (tanpa kontrol kualitas — biasanya 720p)
+  // Try 2: Mori scrapr youtube ytmp3gg (mp4 — jalur convert1s CDN,
+  // kandidat jalan saat YouTube kena bot-check IP)
+  try {
+    const r = await moriScrape("youtube", "ytmp3gg", url, { format: "mp4", quality: `${quality || 480}p` });
+    const vid = (r.downloads || []).find((d) => String(d.type || "").toLowerCase() === "video") || (r.downloads || [])[0];
+    if (vid?.url) {
+      const { data: buf } = await axios.get(vid.url, { responseType: "arraybuffer", timeout: 180000 });
+      const buffer = Buffer.from(buf);
+      if (buffer.length > 10000) {
+        return { buffer, title: r.title || "Video" };
+      }
+    }
+  } catch (e) {
+    console.error("[PlayVideo] Mori ytmp3gg error:", e.message);
+  }
+
+  // Try 3: IkyyXD ytmp4 (tanpa kontrol kualitas — biasanya 720p)
   try {
     const { data } = await axios.get(`${IKYY}/download/ytmp4`, {
       params: { q: url, apikey: getApiKey("kyzz") },
@@ -153,7 +170,7 @@ async function downloadVideo(url, quality) {
     console.error("[PlayVideo] IkyyXD ytmp4 error:", e.message);
   }
 
-  // Try 3: ytdl.js mp4
+  // Try 4: ytdl.js mp4
   try {
     const result = await ytdl(url, "mp4");
     if (result?.status && result?.dl) {

@@ -11,6 +11,7 @@ import axios from "axios";
 import config from "../../config.js";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/rara-ytdlp.js";
+import { moriScrape } from "../../src/scraper/mori-bridge.js";
 import { raraWrap, raraBerhasil, raraGagal, raraGangguan, raraGuide, raraSalah } from "../../src/lib/rara-menu-style.js";
 import { sendUsageCard } from "../../src/lib/rara-menu-card.js";
 import { mediaPreviewCard } from "../../src/lib/rara-media-card.js";
@@ -211,7 +212,27 @@ async function downloadAudio(url, kbps) {
     console.error("[Play] Cuki error:", e.message);
   }
 
-  // Try 3: ytdl.js (ymcdn)
+  // Try 3: Mori scrapr youtube (ytmp3gg lalu ytmp3 — engine coflyn/scrapr,
+  // jalur convert1s CDN, kandidat jalan saat YouTube kena bot-check IP)
+  for (const [method, label] of [["ytmp3gg", "YTmp3GG"], ["ytmp3", "YTmp3"]]) {
+    try {
+      const r = method === "ytmp3gg"
+        ? await moriScrape("youtube", method, url, { format: "mp3" })
+        : await moriScrape("youtube", method, url, "mp3");
+      const audio = (r.downloads || []).find((d) => /mp3|audio/i.test(String(d.type || "")) || /\.mp3/i.test(String(d.url || ""))) || (r.downloads || [])[0];
+      if (audio?.url) {
+        const { data: buf } = await axios.get(audio.url, { responseType: "arraybuffer", timeout: 120000 });
+        const buffer = Buffer.from(buf);
+        if (buffer.length > 10000) {
+          return { buffer, title: r.title || "Audio" };
+        }
+      }
+    } catch (e) {
+      console.error(`[Play] Mori ${label} error:`, e.message);
+    }
+  }
+
+  // Try 4: ytdl.js (ymcdn)
   try {
     const result = await ytdl(url, "mp3");
     if (result?.status && result?.dl) {
@@ -224,7 +245,7 @@ async function downloadAudio(url, kbps) {
     console.error("[Play] ytdl.js error:", e.message);
   }
 
-  // Try 4: IkyyXD ytmp3
+  // Try 5: IkyyXD ytmp3
   try {
     const { data } = await axios.get(`${IKYY}/download/ytmp3`, {
       params: { url, apikey: getApiKey("kyzz") },
