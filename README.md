@@ -4,6 +4,8 @@
 
 **Bot WhatsApp multi-device berbasis Baileys (Node.js) dengan 6.700+ command, 2.079+ plugin, dan 54 kategori — AI, RPG, downloader, panel Pterodactyl, dan otomasi lengkap dalam satu bot.**
 
+**Dibuat dan dikembangkan oleh [Aizat](https://github.com/itsmeeaizat1) — made in Indonesia. 🇮🇩**
+
 <p>
   <img src="https://img.shields.io/badge/Version-24.2.8-orange?style=flat-square&logo=git&logoColor=white">
   <img src="https://img.shields.io/badge/Plugin-2.079%2B-blue?style=flat-square&logo=fire">
