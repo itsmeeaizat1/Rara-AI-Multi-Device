@@ -104,6 +104,7 @@ async function scrape(url) {
       if (!dataVal && !trackToken) return;
 
       let tid = "";
+      let trackInfo = { title: "", artist: "", thumbnail: "" }; // fix: upstream 373d605 hapus deklarasi tapi masih pakai (ReferenceError)
       if (dataVal) {
         try {
           const decoded = JSON.parse(Buffer.from(dataVal, "base64").toString());

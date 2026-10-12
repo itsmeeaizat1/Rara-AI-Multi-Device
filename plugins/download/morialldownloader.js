@@ -36,7 +36,7 @@ import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { haidarAio } from "../../src/lib/rara-haidar.js";
 import { pixivDownload, pixivUgoiraToMp4 } from "../../src/scraper/pixiv.js";
 import { bandcampDownload } from "../../src/scraper/bandcamp.js";
-import { moriScrape } from "../../src/scraper/mori-bridge.js";
+import { moriScrape, moriResolve } from "../../src/scraper/mori-bridge.js";
 import { raraWrap, raraGuide, toSC } from "../../src/lib/rara-menu-style.js";
 import { mediaResultCard, probeBuffer, probeMedia } from "../../src/lib/rara-media-result.js";
 // kartu info media (batch download) — helper ringkas, best-effort tak pernah ganggu kirim
@@ -137,6 +137,24 @@ function detectPlatform(url) {
   return "generic";
 }
 
+// RESOLVER (link unwrap ala scrapr) — safelink/sub2unlock/rekonise/mediafire/
+// sfile + shortener umum otomatis di-resolve ke link tujuan sebelum download.
+const RESOLVERS = {
+  mediafire:  { icon: "📦", name: "MediaFire",   match: (u) => /(?:^|\/\/|\.)mediafire\.com/i.test(u) },
+  sfile:      { icon: "📁", name: "Sfile.mobi",  match: (u) => /(?:^|\/\/|\.)sfile\.mobi/i.test(u) },
+  safelinku:  { icon: "🔗", name: "Safelinku",    match: (u) => /(?:^|\/\/|\.)safelinku\.(?:com|net)/i.test(u) },
+  sub2unlock: { icon: "🔗", name: "Sub2Unlock",   match: (u) => /(?:^|\/\/|\.)sub2unlock\.(?:com|io)/i.test(u) },
+  rekonise:   { icon: "🔗", name: "Rekonise",    match: (u) => /(?:^|\/\/|\.)rekonise\.com/i.test(u) },
+  unshorten:  { icon: "✂️", name: "Shortener", match: (u) => /(?:^|\/\/|\.)(?:bit\.ly|cutt\.ly|tinyurl\.com|t\.co|is\.gd|rb\.gy|shorturl\.at|aka\.ms|s\.id|ow\.ly|buff\.ly|rebrand\.ly)/i.test(u) },
+};
+
+function detectResolver(url) {
+  for (const key of Object.keys(RESOLVERS)) {
+    if (RESOLVERS[key].match(url)) return key;
+  }
+  return null;
+}
+
 // ═══════════════════════════════════════════════
 // ENGINE ADAPTERS — semua return bentuk uniform:
 //   { kind, title, author, thumb, medias: [{url, type, quality, ...}] }
@@ -232,6 +250,11 @@ const ENGINES = {
         name: `Mori ${label}`,
         fn: async (url) => {
           const r = await moriScrape(plat, method, url);
+          // Spotify playlist (scrapr upstream 373d605): multi-track → alur playlist sendiri
+          if (plat === "spotify" && r.trackCount > 1 && Array.isArray(r.tracks) && r.tracks.length) {
+            const pm = (r.downloads || []).map((d) => ({ url: d.url, type: "audio", quality: d.quality || "320kbps" })).filter((m) => m.url);
+            return { kind: "spotifyplaylist", title: r.title, author: null, thumb: r.thumbnail, medias: pm, tracks: r.tracks.slice(0, 50) };
+          }
           const medias = (r.downloads || []).map((d) => ({
             url: d.url,
             type: normType(d.type, d.url),
@@ -501,6 +524,51 @@ async function handlePixiv(sock, m, platform, r, progressLabel) {
 }
 
 // ── Bandcamp album: kirim max 5 track ──
+// Spotify playlist (scrapr upstream 373d605): kirim lagu pertama sebagai preview
+// + kartu daftar track (maks 15) + hint download per lagu via track_url.
+async function handleSpotifyPlaylist(sock, m, platform, r, progressLabel) {
+  const tracks = r.tracks || [];
+  const shown = tracks.slice(0, 15);
+  const list = shown.map((t, i) => `${i + 1}. ${t.title || "?"}${t.artist ? " — " + t.artist : ""}`).join("\n");
+  const more = tracks.length > shown.length ? `\n… dan ${tracks.length - shown.length} lagu lagi` : "";
+  const cap = mediaCaption({
+    platformIcon: platform.icon,
+    platformName: platform.name,
+    title: r.title,
+    author: null,
+    format: `🎶 Playlist ${tracks.length} track — preview lagu 1`,
+    method: "Mori SpotMate",
+  });
+  await m.reply((progressLabel ? progressLabel + "\n" : "") + cap);
+
+  // Preview audio track pertama
+  const first = (r.medias || [])[0];
+  if (first?.url) {
+    try {
+      const buf = await downloadBuffer(first.url);
+      if (buf?.length) {
+        await sock.sendMessage(m.chat, {
+          audio: buf, mimetype: "audio/mpeg", ptt: false,
+          fileName: `${safeName(tracks[0]?.title || r.title)}.mp3`,
+        }, { quoted: m });
+      }
+    } catch (e) {
+      console.error("[morialldl] spotify playlist preview fail:", e.message);
+    }
+  }
+
+  // Daftar track + hint per lagu
+  const body = [
+    `Total ${tracks.length} lagu — ${shown.length} ditampilkan:`,
+    "",
+    list + more,
+    "",
+    "Mau lagu tertentu? Kirim link lagunya ke bot ini:",
+    ...(tracks[0]?.track_url ? [tracks[0].track_url] : []),
+  ];
+  await m.reply(raraWrap("Spotify Playlist", body, "success"));
+}
+
 async function handleBandcamp(sock, m, platform, r, progressLabel) {
   const tracks = r.medias.slice(0, 5);
   const cap = mediaCaption({
@@ -534,7 +602,7 @@ async function resolveUrl(url, platformKey) {
     const engine = ENGINES[key];
     try {
       const r = await engine.fn(url);
-      if (!r || (!r.medias?.length && !["ugoira", "pixivimages", "album"].includes(r.kind))) {
+      if (!r || (!r.medias?.length && !["ugoira", "pixivimages", "album", "spotifyplaylist"].includes(r.kind))) {
         throw new Error("hasil kosong");
       }
       return { result: r, engine: engine.name };
@@ -568,6 +636,9 @@ async function handlerCore(m, { sock }) {
       body.push(`${p.icon} ${toSC(p.name)} — ${chain.map((c) => ENGINES[c].name).join(" → ")}`);
     }
     body.push("");
+    body.push("『 *Resolver Link* 』");
+    body.push("📦 MediaFire/Sfile · 🔗 Safelinku/Sub2Unlock/Rekonise · ✂️ shortener (bit.ly, tinyurl, s.id, dll) — otomatis di-resolve ke link asli, lalu didownload.");
+    body.push("");
     body.push(`Batch: tempel beberapa link sekaligus (maks ${MAX_BATCH}).`);
     await m.reply(raraWrap("Mori All Downloader", body));
     await m.react("🐣");
@@ -591,9 +662,33 @@ async function handlerCore(m, { sock }) {
     const url = batch[i];
     const progressLabel = batch.length > 1 ? `📥 [${i + 1}/${batch.length}]` : null;
     try {
-      const platformKey = detectPlatform(url);
+      // Resolver (scrapr): safelink/sub2unlock/rekonise/mediafire/sfile/shortener
+      // → unwrap dulu ke link tujuan, baru lanjut alur download biasa.
+      let targetUrl = url;
+      const resKey = detectResolver(url);
+      if (resKey) {
+        const res = await moriResolve(resKey, url);
+        const dest = res?.url || res?.destinationUrl;
+        if (!dest) throw new Error("resolver: link tujuan kosong");
+        if (detectPlatform(dest) === "generic") {
+          // bukan platform download yang dikenal → kartu link langsung
+          const body = [
+            `Judul: ${res.title || res.filename || String(dest).split("?")[0].split("/").pop() || "File"}`,
+            ...(res.size && res.size !== "Unknown" ? [`Ukuran: ${res.size}`] : []),
+            "",
+            "Link langsung:",
+            String(dest),
+          ];
+          if (progressLabel) await m.reply(progressLabel);
+          await m.reply(raraWrap("Mori Resolver", body, "success"));
+          okCount++;
+          continue;
+        }
+        targetUrl = dest; // lanjut didownload sebagai platform tujuan
+      }
+      const platformKey = detectPlatform(targetUrl);
       const platform = PLATFORMS[platformKey] || { icon: "🌐", name: "Lainnya" };
-      const { result: r, engine } = await resolveUrl(url, platformKey);
+      const { result: r, engine } = await resolveUrl(targetUrl, platformKey);
       // Bandcamp hasil multi-track (album via Mori/cadangan) → alur album
       if (platformKey === "bandcamp" && r.kind !== "album" && (r.medias || []).filter((m) => m.type === "audio").length > 1) {
         r.kind = "album";
@@ -607,6 +702,12 @@ async function handlerCore(m, { sock }) {
       }
       if (r.kind === "album") {
         await handleBandcamp(sock, m, platform, r, progressLabel);
+        okCount++;
+        continue;
+      }
+      // Spotify playlist (scrapr 373d605) — lagu pertama + daftar track + link per lagu
+      if (r.kind === "spotifyplaylist") {
+        await handleSpotifyPlaylist(sock, m, platform, r, progressLabel);
         okCount++;
         continue;
       }
