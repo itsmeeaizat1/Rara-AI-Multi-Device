@@ -61,6 +61,31 @@ export const API_KEYS = {
     getLink: () => "https://cloud.siliconflow.cn",
     usedBy: ["languagemenubot", "transdoc", "transaudio", "transfoto"],
   },
+  // ── AI AGENT NATIVE TOOL-CALL (12 Okt 2026 — .aiagent) ──
+  githubmodels: {
+    label: "GitHub Models (AI Agent tool-call native)",
+    description: "GitHub PAT buat otak .aiagent — provider OpenAI-compatible models.github.ai, gratis 150 request/hari (gpt-4o/deepseek/llama). Key = PAT GitHub (Settings → Developer settings)",
+    getConfig: () => "",
+    getEnv: () => process.env.GITHUB_MODELS_TOKEN || "",
+    getLink: () => "https://github.com/settings/personal-access-tokens",
+    usedBy: ["aiagent"],
+  },
+  githubmodels_model: {
+    label: "GitHub Models Model ID (override .aiagent)",
+    description: "Model id override buat .aiagent (default openai/gpt-4o) — contoh openai/gpt-4o-mini, deepseek/DeepSeek-V3-0324",
+    getConfig: () => "",
+    getEnv: () => process.env.GITHUB_MODELS_MODEL || "",
+    getLink: () => "https://models.github.ai",
+    usedBy: ["aiagent"],
+  },
+  groq_model: {
+    label: "Groq Model ID (override .aiagent)",
+    description: "Model id override buat .aiagent (default llama-3.3-70b-versatile) — contoh openai/gpt-oss-120b, qwen/qwen3-32b",
+    getConfig: () => "",
+    getEnv: () => process.env.GROQ_MODEL || "",
+    getLink: () => "https://console.groq.com/docs/models",
+    usedBy: ["aiagent"],
+  },
   siliconflow_model: {
     label: "SiliconFlow Model ID (override model HY-MT)",
     description: "Model id override untuk engine translate (default Hunyuan/Hunyuan-MT-7B)",

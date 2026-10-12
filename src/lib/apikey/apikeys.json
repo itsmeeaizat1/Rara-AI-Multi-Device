@@ -90,7 +90,25 @@
       "restapi": "SILICONFLOW (OpenAI-compatible) — api.siliconflow.cn, model default Hunyuan/Hunyuan-MT-7B (bisa override: setkey siliconflow_model <model-id>)",
       "catatan": "daftar gratis cloud.siliconflow.cn → API key → .setkey siliconflow <key>"
     },
-    "siliconflow": ""
+    "siliconflow": "",
+    "_note_githubmodels": {
+      "fitur": ".aiagent (AI agent tool-call native) + cadangan rantai AI",
+      "web": "https://github.com/settings/personal-access-tokens",
+      "catatan": "key = GitHub PAT scope Models — gratis 150 request/hari"
+    },
+    "githubmodels": "",
+    "_note_githubmodels_model": {
+      "fitur": "override model GitHub Models buat .aiagent",
+      "web": "https://models.github.ai",
+      "catatan": "contoh: openai/gpt-4o-mini"
+    },
+    "githubmodels_model": "",
+    "_note_groq_model": {
+      "fitur": "override model Groq buat .aiagent (default llama-3.3-70b-versatile)",
+      "web": "https://console.groq.com/docs/models",
+      "catatan": "contoh: openai/gpt-oss-120b"
+    },
+    "groq_model": ""
   },
   "aiMultiprovider": {
     "_note": "CONFIG MULTI-PROVIDER AI (pindahan ai-providers.json — sekarang satu file di apikeys.json). (1) 'chain' = urutan prioritas otak AI .raraai/.autonovaai/autoflow — down/rate-limit otomatis geser kebawah. (2) 'providers' = KEY semua provider buat fitur AI satuan (.grok/.openai/.claude/dll) & rantai — isi 'apikey' provider yang lo punya; kosong = di-skip otomatis. Provider ikyy (free) udah preset key 'kyzz'. Dibaca LIVE tiap pemanggilan — edit tanpa restart.",
@@ -98,6 +116,7 @@
       "min1ai",
       "nexai",
       "groq",
+      "githubmodels",
       "openai",
       "ikyy_gemini",
       "ikyy_gpt5mini",
@@ -119,6 +138,20 @@
         "_note": {
           "fitur": "provider rantai AI (.raraai/aiagent/9router)",
           "web": "https://console.groq.com"
+        }
+      },
+      "githubmodels": {
+        "label": "GitHub Models (models.github.ai — OpenAI-compatible, PAT GitHub, gratis 150 req/hari)",
+        "url": "https://models.github.ai/inference/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "openai/gpt-4o",
+        "apikey": "",
+        "_note": {
+          "fitur": "provider rantai AI (.raraai/aiagent) + otak .aiagent tool-call native (key via .setkey githubmodels)",
+          "web": "https://github.com/settings/personal-access-tokens",
+          "restapi": "GITHUB MODELS — models.github.ai",
+          "catatan": "PAT GitHub (fine-grained, Models:read atau classic repo:public). Free tier 150 request/hari. Model lain: openai/gpt-4o-mini, deepseek/DeepSeek-V3-0324, meta/Llama-4-Scout-17B"
         }
       },
       "openai": {
