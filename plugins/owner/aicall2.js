@@ -2,7 +2,7 @@
 // .aicall2 — Panggilan suara WhatsApp kesambung AI (service aicall/ Go)
 // RENAME 1 Okt 2026 (owner: "fitur .aicall ubah jadi .aicall2 krna btuh
 // konfigurasi — ibaratkan voip ini fitur aicall bawaan"): command .aicall
-// diserahkan ke plugin VOIP (plugins/owner/voipcall.js, telepon WA + media),
+// diserahkan ke plugin VOIP (plugins/owner/voipcall.js — kini command .raratelepon, alias .aitelepon; sebelumnya .aicall),
 // plugin ini (butuh service Go aicall/ berjalan) pindah ke .aicall2.
 // Request owner 17 Sep 2026: "gmna supaya bot aku support tlpon kesambung ai
 // pakai fitur ini: github.com/krsna081/assisten-ai-call"
