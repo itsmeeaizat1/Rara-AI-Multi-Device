@@ -46,7 +46,7 @@ const { loadPlugins, getPlugin } = await import(pathToFileURL(path.join(REPO, "s
 const loaded = await loadPlugins(pluginsDir);
 t("loadPlugins jalan (≥ 1000 plugin)", loaded >= 1000, "cuma " + loaded);
 // REGRESI 17 Sep 2026: resolve command kritis via loader beneran
-for (const cmd of ["raraagent", "aisuperagent", "mcp", "memory", "telpon", "doctor", "ai9v2", "9routerv2", "connlog"]) {
+for (const cmd of ["raraagent", "aisuperagent", "mcp", "memory", "telpon", "doctor", "connlog"]) {
   const p = getPlugin(cmd);
   t(`.${cmd} ke-resolve`, !!p, "unknown command");
 }

@@ -164,12 +164,12 @@ export const API_KEYS = {
     usedBy: ["stt", "aiautointeractionvn", "aicall", "groq"],
   },
   router9v2: {
-    label: "9Router V2 Cloud (hosted)",
-    description: "Gateway OpenAI-compatible 9router.cloudku.us.kg — chat multi-model (.ai9v2)",
+    label: "9Router (gateway AI)",
+    description: "Gateway OpenAI-compatible 9router — key rantai AI (.aitio/smartreply/fun-ai) + otak ocode. Fitur command .ai9v2 dihapus 12 Okt (web hosted mati); endpoint bisa diarah ke 9router lokal",
     getConfig: () => config.APIkey?.router9v2 || "",
     getEnv: () => process.env.ROUTER_API_KEY || "",
     getLink: () => getTioBase(), // satu pintu env-loader (bisa 9router lokal)
-    usedBy: ["ai9v2", "9routerv2"],
+    usedBy: ["aitio", "aiagent", "ocode", "smartreply"],
   },
   xai: {
     label: "xAI Grok (AI Call Otak Utama)",

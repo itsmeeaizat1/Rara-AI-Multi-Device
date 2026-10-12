@@ -23,7 +23,6 @@ const { getTioEndpoint, getTioBase, setTioEndpoint, resetTioEndpoint, _setEndpoi
 const { aiHelp } = await import(R + "/src/lib/config/ai.js");
 const r9 = await import(R + "/src/scraper/router9v2.js");
 const { router9v2Models, _setRouter9v2HttpForTest, _setRouter9v2KeyForTest } = r9;
-const ai9v2 = await import(R + "/plugins/ai/ai9v2.js");
 
 const CLOUDKU = "https://9router.cloudku.us.kg/v1/chat/completions";
 const LOKAL = "http://localhost:20128/v1/chat/completions";
@@ -80,38 +79,6 @@ console.log("\n— section 3: scraper call-time —");
   _setRouter9v2HttpForTest(undefined); _setRouter9v2KeyForTest(undefined);
 }
 
-// ═══ SECTION 4: command .ai9v2 endpoint (plugin) ═══
-console.log("\n— section 4: command .ai9v2 endpoint —");
-{
-  _setRouter9v2KeyForTest("sk-test");
-  const mkM = (args, isOwner = true) => {
-    const replies = [];
-    return { m: { isOwner, args, react: async () => {}, reply: async (txt) => { replies.push(String(txt)); return txt; } }, replies };
-  };
-
-  // lihat status
-  let { m, replies } = mkM(["endpoint"]);
-  await ai9v2.handler(m, { sock: null, args: ["endpoint"] });
-  t("4a. .ai9v2 endpoint nunjukin endpoint aktif (cloudku)", replies[0]?.toLowerCase().includes("cloudku"), replies[0]?.slice(0, 80));
-
-  // non-owner ditolak
-  ({ m, replies } = mkM(["endpoint", "lokal"], false));
-  await ai9v2.handler(m, { sock: null, args: ["endpoint", "lokal"] });
-  t("4b. non-owner DITOLAK (khusus owner)", /khusus owner/i.test(replies[0] || ""), replies[0]?.slice(0, 60));
-
-  // switch ke lokal
-  ({ m, replies } = mkM(["endpoint", "lokal"]));
-  await ai9v2.handler(m, { sock: null, args: ["endpoint", "lokal"] });
-  t("4c. .ai9v2 endpoint lokal → berhasil + persist", /berhasil/i.test(replies[0] || ""), replies[0]?.slice(0, 80));
-  t("4d. endpoint aktif jadi localhost:20128", getTioEndpoint() === LOKAL, getTioEndpoint());
-
-  // balik default
-  ({ m, replies } = mkM(["endpoint", "default"]));
-  await ai9v2.handler(m, { sock: null, args: ["endpoint", "default"] });
-  t("4e. .ai9v2 endpoint default → balik cloudku", /default/i.test(replies[0] || "") && getTioEndpoint() === CLOUDKU, replies[0]?.slice(0, 80));
-
-  _setRouter9v2KeyForTest(undefined);
-}
 
 _setEndpointWriterForTest(undefined);
 console.log("\n===== " + pass + " PASS, " + fail + " FAIL =====");

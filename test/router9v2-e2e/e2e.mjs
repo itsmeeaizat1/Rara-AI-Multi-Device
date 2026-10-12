@@ -1,4 +1,5 @@
-// E2E 9ROUTER V2 — .ai9v2 (hosted gateway 9router.cloudku.us.kg, 17 Sep 2026)
+// E2E 9ROUTER V2 — MODUL router9v2.js (17 Sep 2026; plugin .ai9v2 DIHAPUS
+// 12 Okt 2026 karena web hosted mati — modul tetap dipakai ocode & rantai AI).
 // Semua http di-mock via seam _setRouter9v2HttpForTest. STRICT SATUAN:
 // key kosong / status != 200 / balas kosong → error asli keluar.
 // GOTCHA LIVE: sebagian model balas SSE walau stream:false — dua-duanya dites.
@@ -6,7 +7,6 @@ import fs from "node:fs";
 import { initDatabase } from "../../src/lib/rara-database.js";
 import { fromSC } from "../../src/lib/styler.js";
 import * as mod from "../../src/scraper/router9v2.js";
-import plug from "../../plugins/ai/ai9v2.js";
 
 const {
   router9v2Models, router9v2Chat, router9v2Key,
@@ -192,84 +192,6 @@ setRouter9v2Pref("62812@g.us", "ag/claude-sonnet-4-6");
 t("  set → kebaca balik", getRouter9v2Pref("62812@g.us") === "ag/claude-sonnet-4-6");
 t("  persist ke file state", JSON.parse(fs.readFileSync(STATE, "utf8"))["62812@g.us"] === "ag/claude-sonnet-4-6");
 setRouter9v2Pref("62812@g.us", ROUTER9V2_DEFAULT_MODEL);
-
-// ═══ 4. PLUGIN — struktur & handler ═══
-w("\n— plugin ai9v2 —");
-t("  default export: pluginConfig + handler", !!plug.pluginConfig?.name && typeof plug.handler === "function");
-const named = await import("../../plugins/ai/ai9v2.js");
-t("  NAMED export config+handler (GOTCHA loader)", !!named.config?.name && typeof named.handler === "function");
-t("  alias 9routerv2 + routerv2 terdaftar",
-  plug.pluginConfig.alias.includes("9routerv2") && plug.pluginConfig.alias.includes("routerv2"));
-
-// kosong → help
-let m = mkM("", []);
-await plug.handler(m, { sock: {}, args: [] });
-t("  tanpa pesan → box panduan",
-  m.replyed.length === 1 && sc(m.replyed[0]).includes(sc("Contoh")) && m.replyed[0].includes(".ai9v2"), sc(m.replyed[0]).slice(0, 60));
-
-// list
-_setRouter9v2HttpForTest(async () => ({ status: 200, data: MODELS_JSON }));
-m = mkM(".ai9v2 list", ["list"]);
-await plug.handler(m, { sock: {}, args: ["list"] });
-t("  list → total model + default + panah default",
-  m.replyed.length === 1 && sc(m.replyed[0]).includes("5") && m.replyed[0].includes("→"), sc(m.replyed[0]).slice(0, 60));
-
-// model gak ada
-m = mkM(".ai9v2 model sukijan", ["model", "sukijan"]);
-await plug.handler(m, { sock: {}, args: ["model", "sukijan"] });
-t("  model nyasar → ditolak + arah .ai9v2 list",
-  m.replyed.length === 1 && sc(m.replyed[0]).includes(sc("gak ada")) && m.replyed[0].includes(".ai9v2 list"));
-
-// model valid tanpa pesan → set default
-m = mkM(".ai9v2 model ag/claude-sonnet-4-6", ["model", "ag/claude-sonnet-4-6"]);
-await plug.handler(m, { sock: {}, args: ["model", "ag/claude-sonnet-4-6"] });
-t("  model valid → default chat diganti",
-  m.replyed.length === 1 && sc(m.replyed[0]).includes("claude-sonnet-4-6") && getRouter9v2Pref("62812@g.us") === "ag/claude-sonnet-4-6");
-
-// chat pakai default (model claude dari pref) — cek request bawa model pref
-let seenModel = "";
-_setRouter9v2HttpForTest(async (cfg) => { seenModel = cfg.data.model; return { status: 200, data: CHAT_JSON }; });
-m = mkM("bikin pantun", ["bikin", "pantun"]);
-await plug.handler(m, { sock: {}, args: ["bikin", "pantun"] });
-t("  chat → jawaban + footer via 9router v2",
-  m.replyed.length === 1 && m.replyed[0].includes("Siap.") && m.replyed[0].includes("— via 9router v2"), m.replyed[0]?.slice(0, 60));
-t("  model pref terpakai (bukan default bot)", seenModel === "ag/claude-sonnet-4-6", "→ " + seenModel);
-t("  reaksi 🧠 → 🐣", m.reacts[0] === "🧠" && m.reacts.includes("🐣"));
-
-// model one-shot: .ai9v2 model <id> <pesan> — mock HARUS branch per-URL
-// (router9v2Chat & router9v2Models dua-duanya manggil http seam yang sama)
-_setRouter9v2HttpForTest(async (cfg) => {
-  if (String(cfg.url).endsWith("/v1/models")) return { status: 200, data: MODELS_JSON };
-  seenModel = cfg.data.model;
-  return { status: 200, data: CHAT_JSON };
-});
-m = mkM(".ai9v2 model ag/gpt-oss-120b-medium buat pantun", ["model", "ag/gpt-oss-120b-medium", "buat", "pantun"]);
-await plug.handler(m, { sock: {}, args: ["model", "ag/gpt-oss-120b-medium", "buat", "pantun"] });
-t("  one-shot model <id> <pesan> → terkirim tanpa ubah default",
-  m.replyed[0].includes("Siap.") && seenModel === "ag/gpt-oss-120b-medium" && getRouter9v2Pref("62812@g.us") === "ag/claude-sonnet-4-6");
-
-// balas panjang → berantai
-const LONG = Array.from({ length: 900 }, (_, i) => "baris ke-" + i).join("\n");
-_setRouter9v2HttpForTest(async () => ({ status: 200, data: { choices: [{ message: { content: LONG } }], model: "gemini-3.8-flash" } }));
-m = mkM("panjang", ["panjang"]);
-await plug.handler(m, { sock: {}, args: ["panjang"] });
-t("  jawaban >6000 char dikirim berantai (footer cuma di chunk terakhir)",
-  m.replyed.length > 1 && m.replyed.at(-1).includes("— via 9router v2") && !m.replyed[0].includes("— via 9router v2"), "→ " + m.replyed.length + " chunk");
-
-// error → box error + arah fallback .ai9
-_setRouter9v2HttpForTest(async () => ({ status: 503, data: "down" }));
-m = mkM("tes gagal", ["tes", "gagal"]);
-await plug.handler(m, { sock: {}, args: ["tes", "gagal"] });
-t("  error → box pesan + saran .ai9 list + .ai9 lama",
-  m.replyed.length === 1 && sc(m.replyed[0]).includes("503") && m.replyed[0].includes(".ai9 "), sc(m.replyed[0]).slice(0, 70));
-t("  reaksi error ❌", m.reacts.includes("❌"));
-
-// key kosong → arahan set key
-_setRouter9v2KeyForTest("");
-m = mkM("tes", ["tes"]);
-await plug.handler(m, { sock: {}, args: ["tes"] });
-t("  key kosong → arah apikeys.json", m.replyed.length === 1 && m.replyed[0].includes("apikeys.json"));
-_setRouter9v2KeyForTest("sk-e2e-9router");
 
 // ═══ 5. LIVE (opsional, skip kalau offline) ═══
 w("\n— live probe (hosted 9router) —");
