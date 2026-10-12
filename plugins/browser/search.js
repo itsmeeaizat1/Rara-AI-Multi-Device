@@ -20,7 +20,7 @@ const pluginConfig = {
   name: "search",
   alias: ["serach", "googlesearch", "googleserach", "searchweb", "websearch", "gsearch", "gsweb", "caridweb", "gogleserach"],
   category: "browser",
-  description: "Nyari web pake mesin pilihan (bing/brave/duckduckgo) — list 1..N, ketik nomor buat buka preview halaman",
+  description: "Nyari web pake mesin pilihan (google asli via OpenSERP/bing/brave/duckduckgo) — list 1..N, ketik nomor buat buka preview halaman",
   usage: ".search <engine> <query> | .search list | .search <nomor>",
   example: ".search bing daftar hp terkenal",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
@@ -28,7 +28,7 @@ const pluginConfig = {
 };
 
 const READMORE = "\u200E".repeat(4001);
-const ENGINE_KEYS = ["bing", "brave", "duckduckgo", "google", "baidu", "sogou"];
+const ENGINE_KEYS = ["bing", "brave", "duckduckgo", "google", "openserp", "baidu", "sogou"];
 
 function domainOf(url) {
   try {
@@ -66,7 +66,7 @@ async function handleSearch(m, sock, query, engine) {
   saveSearchSession(m.chat, query, r.items);
 
   const srcNote = r.engineNote
-    ? `\n📡 *${r.source}* (google dialihkan — google ngeblok bot)`
+    ? `\n📡 *${r.source}* (openserp mati — google dialihkan ke bing)`
     : `\n📡 Mesin: *${r.source}* • ${r.items.length} hasil`;
   const lines = r.items.map((it, i) =>
     `${i + 1}. *${it.title.slice(0, 60)}*\n   🔗 ${domainOf(it.url)}` +

@@ -22,10 +22,13 @@ let linkResolverHttp = defaultLinkResolverHttp;
 export function setWebSearchHttp(fn) { webSearchHttp = fn || defaultWebSearchHttp; }
 export function setLinkResolverHttp(fn) { linkResolverHttp = fn || defaultLinkResolverHttp; }
 export function setPreviewHttp(fn) { previewHttp = fn || defaultPreviewHttp; }
+let openserpHttp = null; // seam E2E buat openserp (di-set setOpenserpHttp)
+
 export function resetWebSearchDeps() {
   webSearchHttp = defaultWebSearchHttp;
   previewHttp = defaultPreviewHttp;
   linkResolverHttp = defaultLinkResolverHttp;
+  openserpHttp = null;
 }
 
 async function defaultWebSearchHttp(url, opts = {}) {
@@ -185,6 +188,49 @@ async function resolveSogouLink(url) {
   return url;
 }
 
+// ── OpenSERP (owner 12 Okt 2026: ".search google beneran jalan tanpa key") ──
+// Self-hosted SERP API karust/openserp (MIT, Go + headless Chrome) — container
+// docker di VPS host. Google dirender pakai browser ASLI → shell "enable
+// JavaScript"-nya kelewati, TANPA API KEY. Bukti riset live 12 Okt: scrape HTTP
+// langsung ke google MATI di IP datacenter (200 cuma shell JS, googlethis = 0
+// hasil, Startpage = captcha, SearXNG publik = anti-bot) → satu-satunya jalan
+// keyless = browser-rendered self-hosted. Kalau container gak kepasang/mati →
+// otomatis fallback ke bing (perilaku lama) — bot gak pernah rusak.
+// Endpoint (openapi openserp): GET {OPENSERP_URL}/google/search?text=<q>&lang=id
+// Envelope: { query, meta, results: [ {title, url, snippet, ...} ] }
+// URL default 127.0.0.1:7000 (container VPS); override via env OPENSERP_URL
+// (mis. http://172.18.0.1:7000 kalau bot jalan di container ptero).
+const OPENSERP_TIMEOUT_MS = 30000; // render chrome butuh 5-15 dtk
+export function getOpenserpUrl() {
+  return String(process.env.OPENSERP_URL || "http://127.0.0.1:7000").replace(/\/+$/, "");
+}
+export function setOpenserpHttp(fn) { openserpHttp = fn; }
+export function resetOpenserpHttp() { openserpHttp = null; }
+async function defaultOpenserpHttp(url) {
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(OPENSERP_TIMEOUT_MS),
+    headers: { Accept: "application/json" },
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.json();
+}
+/** Query openserp → items {title,url,snippet}. Throw kalau container mati. */
+export async function openserpSearch(q, { engine = "google", limit = MAX_RESULTS } = {}) {
+  const eng = String(engine || "google").trim().toLowerCase();
+  const url = `${getOpenserpUrl()}/${eng}/search?text=${encodeURIComponent(q)}&lang=id`;
+  const fn = openserpHttp || defaultOpenserpHttp;
+  const d = await fn(url);
+  const seen = new Set();
+  return (Array.isArray(d && d.results) ? d.results : [])
+    .map((r) => ({
+      title: String((r && r.title) || "").trim(),
+      url: String((r && r.url) || "").trim(),
+      snippet: String((r && r.snippet) || "").trim(),
+    }))
+    .filter((it) => it.title && /^https?:\/\//i.test(it.url) && !seen.has(it.url) && seen.add(it.url))
+    .slice(0, limit);
+}
+
 const ENGINES = {
   bing: { label: "Bing", chain: [parseBing], url: (q, n) => `https://www.bing.com/search?q=${encodeURIComponent(q)}&count=${Math.max(1, Math.min(n, 10))}`, get: false },
   brave: { label: "Brave Search", chain: [parseBrave], url: (q) => `https://search.brave.com/search?q=${encodeURIComponent(q)}`, get: false },
@@ -220,11 +266,19 @@ function parseDdgLite(html) {
 export async function searchWeb(query, { engine = "bing", limit = MAX_RESULTS } = {}) {
   const q = String(query || "").trim();
   if (!q) return { error: "query kosong" };
-  // google gak bisa di-scrape (blok bot) → dialihkan ke bing + note
+  // google: scrape HTTP-nya diblok google (shell JS) → ditembak via OpenSERP
+  // (browser-rendered, self-hosted, tanpa key); mati → fallback bing + note
   let engineNote = "";
   const reqEngine = String(engine || "bing").toLowerCase();
   let engKey = reqEngine;
-  if (reqEngine === "google" || reqEngine === "googlecom" || reqEngine === "gg") {
+  if (reqEngine === "google" || reqEngine === "googlecom" || reqEngine === "gg" || reqEngine === "openserp") {
+    try {
+      const items = await openserpSearch(q, { engine: "google", limit });
+      if (items.length) return { source: "Google (OpenSERP)", engine: "google", engineNote: "", items };
+      console.error("[rara-websearch] openserp 0 hasil → fallback bing");
+    } catch (e) {
+      console.error("[rara-websearch] openserp gak kejangkau (" + e.message + ") → fallback bing");
+    }
     engKey = "bing";
     engineNote = "google";
   }
@@ -320,7 +374,7 @@ export function listEngines() {
     { key: "bing", label: "Bing", note: "default — paling stabil" },
     { key: "brave", label: "Brave Search", note: "privasi, hasil beragam" },
     { key: "duckduckgo", label: "DuckDuckGo", note: "privasi, tanpa tracking" },
-    { key: "google", label: "Google (auto-Bing)", note: "google ngeblok bot — auto dialihkan ke bing" },
+    { key: "google", label: "Google", note: "asli via OpenSERP (container VPS) — kalau mati auto-bing" },
     { key: "baidu", label: "Baidu 百度", note: "mesin search cina no.1" },
     { key: "sogou", label: "Sogou 搜狗", note: "mesin cina — konten WeChat/Zhihu (kadang ngeblok bot → auto fallback)" },
   ];
