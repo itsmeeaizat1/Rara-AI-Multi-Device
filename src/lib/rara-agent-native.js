@@ -45,7 +45,7 @@ const __libFilename = fileURLToPath(import.meta.url);
 const DEFAULT_ROOT = path.resolve(path.dirname(__libFilename), "..", "..");
 
 // ── KONFIGURASI PROVIDER (OpenAI-compatible + native tools) ──
-const PROVIDER_DEFS = {
+export const PROVIDER_DEFS = {
   githubmodels: {
     label: "GitHub Models",
     url: () => "https://models.github.ai/inference/chat/completions",
@@ -100,7 +100,7 @@ export function _resetNativeDepsForTest() {
 }
 const cmdTimeout = () => _cmdTimeoutForTest || CMD_TIMEOUT_MS;
 
-function readKey(name) {
+export function readKey(name) {
   if (_keysForTest && Object.prototype.hasOwnProperty.call(_keysForTest, name)) {
     return String(_keysForTest[name] || "").trim();
   }
@@ -338,7 +338,7 @@ export function listNativeProviders() {
 }
 
 // ── SATU PERMINTAAN CHAT COMPLETIONS ──
-async function chatOnce(provider, def, key, model, messages, tools, timeoutMs) {
+export async function chatOnce(provider, def, key, model, messages, tools, timeoutMs) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs || 60000);
   let res;
